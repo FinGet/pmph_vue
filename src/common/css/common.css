@@ -46,11 +46,11 @@ button a,button a:hover,button a:active{
 /*表格相关公共样式*/
 /*表头背景色*/
 .el-table th {
-  background-color: rgb(42, 63, 84);
+  background-color: #d4d9dd;
 }
 .el-table__footer-wrapper thead div, .el-table__header-wrapper thead div {
-  background-color: rgb(42, 63, 84);
-  color: rgb(255, 255, 255);
+  background-color: #d4d9dd;
+  color: #5b6877;
 }
 .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
   color: #ffffff;
@@ -61,15 +61,7 @@ button a,button a:hover,button a:active{
 .el-table__body-wrapper{
   overflow-x: hidden;
 }
-/*文件共享页面表头*/
-#groupfiletable th,#groupfilemanagetable th {
-  background-color: #d4d9dd;
-}
-#groupfiletable .el-table__footer-wrapper thead div,#groupfiletable .el-table__header-wrapper thead div,
-#groupfilemanagetable .el-table__footer-wrapper thead div,#groupfilemanagetable .el-table__header-wrapper thead div{
-  background-color: #d4d9dd;
-  color: #5b6877;
-}
+
 
 
 /*按钮*/

@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-table id="groupfiletable"
+      <el-table
         :data="tableData"
         stripe
         border
@@ -78,7 +78,7 @@
     </el-row>
   <!--弹出层-->
     <el-dialog title="文件管理" :visible.sync="dialogTableVisible" size="large">
-      <el-table id="groupfilemanagetable"
+      <el-table
                 :data="tableData"
                 stripe
                 border
