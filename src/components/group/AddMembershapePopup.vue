@@ -9,8 +9,15 @@
             <div class="tabsContainer">
               <el-row>
                 <el-col :span="6">
-                  <span>教材书籍 :</span>
-                  <el-input placeholder="选择书籍"></el-input>
+                  <el-row>
+                    <el-col :span="9">
+                      <span>教材书籍 :</span>
+                    </el-col>
+                    <el-col :span="15">
+
+                      <el-input placeholder="选择书籍"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-col>
                 <el-col :span="6">
                   <span>教材书籍 :</span>
