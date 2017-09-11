@@ -308,7 +308,7 @@
        */
       delet() {
         //console.log(this.multipleSelection)
-        this.tableData.splice(this.multipleSelection,1)
+        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
       }
     }
 	}
