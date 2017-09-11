@@ -10,26 +10,43 @@
               <el-row>
                 <el-col :span="6">
                   <el-row>
-                    <el-col :span="9">
-                      <span>教材书籍 :</span>
+                    <el-col :span="6">
+                      <span class="searchTitle">教材书籍 :</span>
                     </el-col>
-                    <el-col :span="15">
-
+                    <el-col :span="18">
                       <el-input placeholder="选择书籍"></el-input>
                     </el-col>
                   </el-row>
                 </el-col>
                 <el-col :span="6">
-                  <span>教材书籍 :</span>
-                  <el-input placeholder="选择书籍"></el-input>
+                  <el-row>
+                    <el-col :span="6">
+                      <span class="searchTitle">教材书籍 :</span>
+                    </el-col>
+                    <el-col :span="18">
+                      <el-input placeholder="选择书籍"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-col>
                 <el-col :span="6">
-                  <span>教材书籍 :</span>
-                  <el-input placeholder="选择书籍"></el-input>
+                  <el-row>
+                    <el-col :span="6">
+                      <span class="searchTitle">教材书籍 :</span>
+                    </el-col>
+                    <el-col :span="18">
+                      <el-input placeholder="选择书籍"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-col>
                 <el-col :span="6">
-                  <span>教材书籍 :</span>
-                  <el-input placeholder="选择书籍"></el-input>
+                  <el-row>
+                    <el-col :span="6">
+                      <span>教材书籍 :</span>
+                    </el-col>
+                    <el-col :span="18">
+                      <el-input placeholder="选择书籍"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-col>
               </el-row>
               <div class="tableContainer groupmanageTable">
@@ -183,6 +200,9 @@
   }
   .tabsContainer el-input{
     display: inline-block;
+  }
+  .searchTitle{
+    line-height: 36px;
   }
 
 </style>
