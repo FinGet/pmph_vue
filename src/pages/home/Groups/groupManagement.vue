@@ -25,7 +25,7 @@
         <!--<button @click="fold"></button>-->
       </el-col>
       <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap">
-        <MembersList></MembersList>
+        <MembersList @addNewMember="addNewMember"></MembersList>
       </el-col>
     </el-row>
   </div>
@@ -99,6 +99,9 @@
         this.currentView = view
       },
       setting(){//点击成员列表下的setting图标按钮
+
+      },
+      addNewMember(){
 
       },
     },

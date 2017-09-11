@@ -10,32 +10,28 @@
             </span>
           </p>
         </div>
-        <div class="meberlist" :class="{memberSetting:setting}">
-          <div v-for="(item,index) in memberListData">
-            <el-checkbox class="meberlist-checkBox" v-show="setting&&(index!=0)" @change="checkBoxChange"></el-checkbox>
-            <MemberHead :data="item" :key="item.id"></MemberHead>
-          </div>
+        <div class="meberlist">
+          <MemberHead v-for="(item,index) in memberListData" :data="item" :key="item.id"></MemberHead>
         </div>
-        <transition name="el-fade-in" v-if="setting">
+        <transition name="el-fade-in">
           <div class="addMemberWrapper text-center">
-            <el-button type="text">
-              设为管理员
-            </el-button>
-            <el-button type="text">
-              删除
+            <el-button type="text" icon="plus" @click="addNewMember">
+              新增成员
             </el-button>
           </div>
         </transition>
       </div>
+      <AddMembershapePopup :close.sync="addMembershapePopupShow"></AddMembershapePopup>
     </div>
 </template>
 
 <script>
   import MemberHead from './UserMembertThumb.vue'
+  import AddMembershapePopup from './AddMembershapePopup.vue'
     export default{
         data(){
             return {
-              setting:false,
+              addMembershapePopupShow:false,
               memberListData:[
                 {name:'人卫社小组',id:123,permission:'创建者'},
                 {name:'成都医科大学内部',id:234,permission:'管理员'},
@@ -45,27 +41,28 @@
         },
       methods:{
         settingClick(){
-            this.setting=!this.setting;
+
         },
-        checkBoxChange(){
-          //当选中了CheckBox要做的操作
+        addNewMember(){
+          this.addMembershapePopupShow=true;
         },
       },
       components:{
-        MemberHead
+        MemberHead,
+        AddMembershapePopup
       }
     }
 </script>
 
 <style scoped>
   .memberlist-wrpper{
-    position: relative;
     height: 100%;
     padding-top: 78px;
     overflow: hidden;
     box-sizing: border-box;
   }
   .meberlist-inner{
+    position: relative;
     height: 100%;
     border-top: 1px solid #e6e7e8;
     border-left: 1px solid #e6e7e8;

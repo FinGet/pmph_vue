@@ -148,6 +148,9 @@
 </script>
 
 <style scoped>
+  .groupfile{
+
+  }
   .filenum{
     float: left;
     height: 56px;
