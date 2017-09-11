@@ -20,6 +20,7 @@
               </el-table-column>
               <el-table-column
                 prop="filename"
+                label="文件"
                 header-align="center"
                 width="500">
                 <template scope="scope">
@@ -31,7 +32,7 @@
                 prop="date"
                 align="center"
                 label="上传时间"
-                width="120">
+                width="200">
               </el-table-column>
               <el-table-column
                 prop="uploader"
@@ -127,6 +128,26 @@
           date: '2016-05-02',
           uploader: '王小虎',
           downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
         }]
       }
     },
@@ -154,6 +175,7 @@
       handleSelectionChange(val) {
         // console.log(val)
         this.multipleSelection = val
+        this.count = this.multipleSelection.length
       },
       /**
        * 删除选中数据

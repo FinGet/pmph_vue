@@ -5,8 +5,8 @@
         <el-col :span="4">
           <div class="filenum">共{{fileNum}}个文件</div>
         </el-col>
-        <el-col :span="20">
-          <div class="btn-group">
+        <div class="clearfix pull-right">
+          <div class="search">
             <el-input class="fileinput"
                       v-model="input"
                       placeholder="请输入内容"
@@ -15,14 +15,14 @@
             ></el-input>
           </div>
           <div class="manmageFile">
-            <i class="el-icon-menu" @click="manageFile"></i>
+            <i class="icon-manage" @click="manageFile"></i>
           </div>
           <div class="fileupload">
-            <el-upload class="upload" action="#" :on-preview="handlePreview" :on-remove="handleRemove">
-              <i class="el-icon-upload2"></i><i class="el-icon-caret-bottom el-icon--right"></i>
+            <el-upload class="upload" action="#">
+              <i class="icon-upload"></i>
             </el-upload>
           </div>
-        </el-col>
+        </div>
       </el-col>
     </el-row>
     <el-row>
@@ -30,6 +30,7 @@
         :data="tableData"
         stripe
         border
+                max-height="750"
         style="width: 100%">
         <el-table-column
           prop="filename"
@@ -46,7 +47,7 @@
           prop="date"
           align="center"
           label="上传时间"
-          width="120">
+          width="200">
         </el-table-column>
         <el-table-column
           prop="uploader"
@@ -129,6 +130,61 @@
           date: '2016-05-02',
           uploader: '王小虎',
           downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
+        }, {
+          filename:'颜值并没有那么重要.docx',
+          date: '2016-05-02',
+          uploader: '王小虎',
+          downcount: '10'
         }]
       }
 		},
@@ -148,6 +204,9 @@
 </script>
 
 <style scoped>
+  .groupfile{
+    padding:0 30px 10px 30px;
+  }
   .filenum{
     float: left;
     height: 56px;
@@ -160,6 +219,7 @@
     display: inline-block;
     font-size: 30px;
     color: #a2a2a2;
+    margin-left: 40px;
   }
   .manmageFile{
     color: #a2a2a2;
@@ -167,5 +227,23 @@
     padding-top: 6px;
     display: inline-block;
     cursor: pointer;
+    margin-left: 40px;
+  }
+  .icon-manage{
+    display: inline-block;
+    vertical-align: bottom;
+    width: 26px;
+    height: 26px;
+    background:url("../../common/images/manage.png");
+  }
+  .icon-upload{
+    display: inline-block;
+    vertical-align: bottom;
+    width: 25px;
+    height:25px;
+    background: url("../../common/images/upload.png");
+  }
+  .search{
+    display: inline-block;
   }
 </style>

@@ -12,8 +12,7 @@
             class="upload"
             action="#"
             :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList">
+            :on-remove="handleRemove">
             <el-button size="small" type="primary">上传头像</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
@@ -43,8 +42,7 @@
     },
     data() {
       return {
-        defaultImage:'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png',
-        fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+        defaultImage:'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png'
       };
     },
     methods: {
