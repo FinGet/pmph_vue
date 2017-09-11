@@ -70,7 +70,13 @@ button a,button a:hover,button a:active{
   background-color: #d4d9dd;
   color: #5b6877;
 }
-
+.groupmanageTable  .el-table__footer-wrapper thead div,.groupmanageTable  .el-table__header-wrapper thead div{
+  background-color: #d4d9dd;
+  color: #5b6877;
+}
+.groupmanageTable th,.groupmanageTable  th {
+  background-color: #d4d9dd;
+}
 
 /*按钮*/
 .btn{
