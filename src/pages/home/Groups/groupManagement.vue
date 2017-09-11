@@ -160,7 +160,9 @@
     padding-bottom: 8px;
   }
   .tab .active{
-    border-bottom: 2px solid #1abb9c;
+    border-bottom: 3px solid #1abb9c;
+    margin-bottom: -2px;
+    border-radius: 2px;
   }
 
 

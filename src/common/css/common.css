@@ -61,6 +61,16 @@ button a,button a:hover,button a:active{
 .el-table__body-wrapper{
   overflow-x: hidden;
 }
+/*文件共享页面表头*/
+#groupfiletable th,#groupfilemanagetable th {
+  background-color: #d4d9dd;
+}
+#groupfiletable .el-table__footer-wrapper thead div,#groupfiletable .el-table__header-wrapper thead div,
+#groupfilemanagetable .el-table__footer-wrapper thead div,#groupfilemanagetable .el-table__header-wrapper thead div{
+  background-color: #d4d9dd;
+  color: #5b6877;
+}
+
 
 /*按钮*/
 .btn{

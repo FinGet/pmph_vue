@@ -2,47 +2,78 @@
 	<div class="groupfile">
     <el-row>
       <el-col :span="24">
-        <div class="filenum">共{{fileNum}}个文件</div>
-        <div class="btn-group">
-          <el-input class="fileinput" v-model="input" placeholder="请输入内容"></el-input>
-          <el-button type="primary" icon="search">搜索</el-button>
-          <el-button type="primary" @click="manageFile">管理</el-button>
-        </div>
-        <el-upload class="upload" action="#">
-          <el-button type="primary">上传当前小组</el-button>
-        </el-upload>
-        <el-upload class="upload" action="#">
-          <el-button type="primary">上传所有小组</el-button>
-        </el-upload>
+        <el-col :span="4">
+          <div class="filenum">共{{fileNum}}个文件</div>
+        </el-col>
+        <el-col :span="20">
+          <div class="btn-group">
+            <el-input class="fileinput"
+                      v-model="input"
+                      placeholder="请输入内容"
+                      icon="search"
+                      :on-icon-click="Search"
+            ></el-input>
+          </div>
+          <div class="manmageFile">
+            <i class="el-icon-menu" @click="manageFile"></i>
+          </div>
+          <div class="fileupload">
+            <el-upload class="upload" action="#" :on-preview="handlePreview" :on-remove="handleRemove">
+              <i class="el-icon-upload2"></i><i class="el-icon-caret-bottom el-icon--right"></i>
+            </el-upload>
+          </div>
+        </el-col>
       </el-col>
     </el-row>
     <el-row>
-      <el-table
+      <el-table id="groupfiletable"
         :data="tableData"
         stripe
         border
         style="width: 100%">
         <el-table-column
           prop="filename"
+          header-align="center"
           label="文件"
-          width="320">
+          width="320"
+          >
+          <template scope="scope">
+            <i class="fa fa-file-word-o"></i>
+            <span style="margin-left: 10px">{{ scope.row.filename }}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="date"
+          align="center"
           label="上传时间"
           width="120">
         </el-table-column>
         <el-table-column
           prop="uploader"
           width="120"
+          align="center"
           label="分享者">
         </el-table-column>
         <el-table-column
           prop="downcount"
+          align="center"
           label="下载次数">
         </el-table-column>
+        <el-table-column
+          label="下载"
+          type="download"
+          width="80"
+          align="center"
+        >
+          <template scope="scope">
+            <el-button
+              type="text"
+              size="small">
+              <i class="fa fa-download"></i>
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
-
     </el-row>
     <FileManage :close.sync="manageShow"></FileManage>
 	</div>
@@ -108,6 +139,9 @@
     methods: {
       manageFile() {
           this.manageShow = true
+      },
+      Search() {
+        console.log('search')
       }
     }
 	}
@@ -122,9 +156,16 @@
   .fileinput{
     width: 150px;
   }
-  .upload{
-    width:120px;
-    float: left;
-    margin:10px;
+  .fileupload{
+    display: inline-block;
+    font-size: 30px;
+    color: #a2a2a2;
+  }
+  .manmageFile{
+    color: #a2a2a2;
+    font-size:30px;
+    padding-top: 6px;
+    display: inline-block;
+    cursor: pointer;
   }
 </style>

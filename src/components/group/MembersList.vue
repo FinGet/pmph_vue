@@ -5,25 +5,27 @@
         <div class="head-title">
           <p>
             小组成员
-            <span class="pull-right" @click="settiing">
+            <span class="pull-right" @click="settingClick">
               <i class="fa fa-cog fa-lg"></i>
             </span>
           </p>
         </div>
-        <div>
-          <MemberHead
-            v-for="(item,index) in memberListData"
-            :data="item"
-          ></MemberHead>
+        <div class="meberlist" :class="{memberSetting:setting}">
+          <div v-for="(item,index) in memberListData">
+            <el-checkbox class="meberlist-checkBox" v-show="setting&&(index!=0)" @change="checkBoxChange"></el-checkbox>
+            <MemberHead :data="item" :key="item.id"></MemberHead>
+          </div>
         </div>
-        <div class="addMemberWrapper text-center">
-          <el-button type="text">
-            设为管理员
-          </el-button>
-          <el-button type="text">
-            删除
-          </el-button>
-        </div>
+        <transition name="el-fade-in" v-if="setting">
+          <div class="addMemberWrapper text-center">
+            <el-button type="text">
+              设为管理员
+            </el-button>
+            <el-button type="text">
+              删除
+            </el-button>
+          </div>
+        </transition>
       </div>
     </div>
 </template>
@@ -33,16 +35,20 @@
     export default{
         data(){
             return {
+              setting:false,
               memberListData:[
                 {name:'人卫社小组',id:123,permission:'创建者'},
-                {name:'成都医科大学内部',permission:'管理员'},
-                {name:'个人小组'},
-                {name:'第九轮教材申报讨论组123'}],
+                {name:'成都医科大学内部',id:234,permission:'管理员'},
+                {name:'个人小组',id:2345},
+                {name:'第九轮教材申报讨论组123',id:2346}],
             }
         },
       methods:{
-        settiing(){
-            console.log('跳转到哪呢')
+        settingClick(){
+            this.setting=!this.setting;
+        },
+        checkBoxChange(){
+          //当选中了CheckBox要做的操作
         },
       },
       components:{
@@ -80,4 +86,18 @@
 
   z-index: 10;
 }
+.meberlist>div{
+  box-sizing: border-box;
+  position: relative;
+  padding-left: 0;
+}
+  .memberSetting>div{
+    padding-left: 30px;
+  }
+  .meberlist-checkBox{
+    position: absolute;
+    top:50%;
+    left: 10px;
+    margin-top: -12px;
+  }
 </style>

@@ -17,7 +17,10 @@
       <div class="ChatInputTool">
         <div>
           <span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>
-          <span><i class="fa fa-paperclip fa-lg" @click="sendMessage"></i></span>
+          <span class="ChatInputFileBtn">
+            <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
+            <input type="file">
+          </span>
         </div>
         <div class="pull-right"></div>
 
@@ -227,4 +230,20 @@
     right: 0;
     margin: 0;
   }
+  .ChatInputFileBtn{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+.ChatInputFileBtn input{
+  display: block;
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height:100%;
+  opacity:0;
+  z-index: 1;
+  cursor: pointer;
+}
 </style>
