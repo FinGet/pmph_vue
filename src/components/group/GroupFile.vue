@@ -18,9 +18,20 @@
             <i class="icon-manage" @click="dialogTableVisible = true"></i>
           </div>
           <div class="fileupload">
-            <el-upload class="upload" action="#">
-              <i class="icon-upload"></i>
-            </el-upload>
+            <el-badge :value="12" class="item itemSup">
+              <el-upload class="upload myupload" action="#">
+                  <i class="icon-upload"></i>
+              </el-upload>
+            </el-badge>
+            <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>仅上传当前小组</el-dropdown-item>
+                <el-dropdown-item>上传所有小组</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </el-col>
@@ -342,6 +353,17 @@
     width: 25px;
     height:25px;
     background: url("../../common/images/upload.png");
+  }
+  .el-icon-caret-bottom{
+    color: #777;
+    display: inline-block;
+    margin-left:0;
+    font-size: 17px;
+    width: 20px;
+    height:20px;
+    position: relative;
+    top: 5px;
+    left: 2px;
   }
   .search{
     display: inline-block;
