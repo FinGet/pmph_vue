@@ -71,7 +71,6 @@
     <div class="table-wrapper">
       <el-table
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           prop="name"
@@ -79,10 +78,46 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="申报账号"
-          label="地址">
+          prop="code"
+          label="申报账号">
+        </el-table-column>
+        <el-table-column
+          prop="applicationOrganization"
+          label="申报单位">
+        </el-table-column>
+        <el-table-column
+          prop="workOrganization"
+          label="工作单位">
+        </el-table-column>
+        <el-table-column
+          prop="position"
+          label="职务">
+        </el-table-column>
+        <el-table-column
+          prop="professionalTitle"
+          label="职称">
+        </el-table-column>
+        <el-table-column
+          prop="chooseBookJob"
+          label="所选书籍与职务">
+        </el-table-column>
+        <el-table-column
+          prop="schoolCheck"
+          label="学校审核">
+        </el-table-column>
+        <el-table-column
+          prop="pressCheck"
+          label="出版社审核">
         </el-table-column>
       </el-table>
+    </div>
+    <div class="pagination-wrapper">
+      <el-pagination
+        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-size="30"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -92,22 +127,138 @@
     data() {
       return {
         tableData: [{
-          date: '2016-05-02',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+          code: 'wangxiaohu',
+          applicationOrganization:'四川大学',
+          workOrganization:'成都医科大学',
+          position:'无',
+          professionalTitle:'副教授',
+          chooseBookJob:'中医学-副主编',
+          schoolCheck:'已审核',
+          pressCheck:'未收到纸质表'
+        },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          },
+          {
+            name: '王小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'已审核',
+            pressCheck:'未收到纸质表'
+          }
+        ]
       }
     }
   }
