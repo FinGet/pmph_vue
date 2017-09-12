@@ -145,7 +145,6 @@
 </template>
 
 <script>
-  import Search from 'base/search'
 	export default {
 		data() {
 			return {
@@ -271,7 +270,6 @@
       }
     },
     components:{
-      Search
     },
     methods: {
       manageFile() {

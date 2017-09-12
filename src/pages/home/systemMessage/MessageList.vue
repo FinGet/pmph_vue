@@ -4,7 +4,7 @@
       <el-col :span="12">
         <div class="search-title">消息标题:</div>
         <el-col :span="6" class="search-10">
-          <el-input v-model="input" :placeholder="placeholder"></el-input>
+          <el-input v-model="input" placeholder="请输入搜索内容"></el-input>
         </el-col>
         <el-button class="btn" type="primary"  icon="search">搜索</el-button>
       </el-col>
@@ -81,7 +81,6 @@
 </template>
 
 <script>
-  import Search from 'base/search'
   import PreviewPopup from 'components/PreviewPopup'
   export default {
     data() {
@@ -208,7 +207,6 @@
       }
     },
     components: {
-      Search,
       PreviewPopup
     }
   }

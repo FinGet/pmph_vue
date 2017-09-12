@@ -13,7 +13,10 @@
           </el-radio-group>
         </el-col>
         <el-col :span="12">
-          <Search placeholder="请输入收件人或单位"></Search>
+          <el-col :span="6" class="search-10">
+            <el-input v-model="input" placeholder="请输入收件人或单位"></el-input>
+          </el-col>
+          <el-button class="btn" type="primary"  icon="search">搜索</el-button>
         </el-col>
       </el-col>
     </el-row>
@@ -83,7 +86,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Search from 'base/search'
   export default {
     data() {
       return {
@@ -235,7 +237,6 @@
       }
     },
     components: {
-      Search
     }
   }
 </script>
