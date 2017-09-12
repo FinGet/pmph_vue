@@ -29,12 +29,12 @@ export default {
 	},
 	methods:{
 		routerChange(tag){
-             this.$router.push('/applicationrouter/applicationnav/'+tag.name);
+             this.$router.push(tag.name);
 		}
     },
     created(){
        // console.log(this.$router);
-        this.activeTagName=this.$router.currentRoute.name;
+        this.activeTagName=this.$router.currentRoute.meta.applicationName;
     }
 }
 </script>
