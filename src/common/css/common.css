@@ -102,6 +102,43 @@ button a,button a:hover,button a:active{
   top:13px;
 }
 
+/*公共条件搜索区域样式*/
+.searchBox-wrapper{
+  box-sizing: border-box;
+  display: inline-block;
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+.searchBox-wrapper .searchName{
+  float: left;
+  display: inline-block;
+  line-height: 36px;
+  width: 90px;
+  height: 36px;
+  text-align: justify;
+  vertical-align: middle;
+}
+.searchBox-wrapper .searchName > span { display: inline-block /* Opera */; padding-left: 100%; }
+.searchBox-wrapper .searchInput{
+  margin-left: 94px;
+  box-sizing: border-box;
+}
+.searchBox-wrapper.lg{
+  width: 50%;
+}
+.searchBox-wrapper.searchBtn{
+  width: 80px;
+}
+.operation-wrapper{
+  text-align: right;
+  clear: both;
+}
+.table-wrapper{
+  margin: 10px 0;
+}
+
 
 
 
