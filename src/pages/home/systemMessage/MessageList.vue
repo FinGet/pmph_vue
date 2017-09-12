@@ -9,7 +9,18 @@
         <el-button class="btn" type="primary"  icon="search">搜索</el-button>
       </el-col>
      <div class="pull-right">
-       <el-button class="btn" type="danger" icon="delete">批量删除</el-button>
+       <el-popover
+         ref="popover"
+         placement="top"
+         width="160"
+         v-model="visible">
+         <p>选中的文件确定删除吗？</p>
+         <div style="text-align: right; margin: 0">
+           <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+           <el-button type="primary" size="mini" @click="visible = false,delet()">确定</el-button>
+         </div>
+       </el-popover>
+       <el-button class="btn" type="danger" icon="delete"  :disabled="isSelected" v-popover:popover>批量删除</el-button>
        <el-button class="btn" type="info" icon="edit">
          <router-link :to="{ name: '编辑消息'}">发送新消息</router-link>
        </el-button>
@@ -87,6 +98,7 @@
       return {
         previewShow:false,
         input:'',
+        visible: false,
         currentPage: 4, // 分页当前页
         tableData: [{
           title: '国家卫生和计划生育委员会住院医师',
@@ -168,7 +180,19 @@
         multipleSelection: []
       }
     },
-
+    computed:{
+      /**
+       * 判断当前是否有选中项来设置删除按钮是否可以点击
+       * @returns {boolean}
+       */
+      isSelected() {
+        if (this.multipleSelection.length > 0) {
+          return false
+        } else {
+          return true
+        }
+      }
+    },
     methods: {
 //      toggleSelection(rows) {
 //        if (rows) {
@@ -204,6 +228,11 @@
         if(event.label==='信息标题'){
           this.previewShow=true;
         }
+      },
+      delet() {
+        console.log(1)
+        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
+        this.$refs.multipleTable.clearSelection()
       }
     },
     components: {
