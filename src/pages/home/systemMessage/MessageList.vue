@@ -2,7 +2,11 @@
   <div class="message-list">
     <el-row>
       <el-col :span="12">
-        <Search title="消息标题:"> </Search>
+        <div class="search-title">消息标题:</div>
+        <el-col :span="6" class="search-10">
+          <el-input v-model="input" :placeholder="placeholder"></el-input>
+        </el-col>
+        <el-button class="btn" type="primary"  icon="search">搜索</el-button>
       </el-col>
      <div class="pull-right">
        <el-button class="btn" type="danger" icon="delete">批量删除</el-button>
