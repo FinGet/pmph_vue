@@ -60,7 +60,13 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content file-upload-wrapper">
-          <My-upload></My-upload>
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :file-list="fileList">
+            <span> <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
+            <div slot="tip" class="el-upload__tip">文件大小不超过100M</div>
+          </el-upload>
         </div>
       </el-col>
     </el-row>
@@ -78,7 +84,6 @@
 
 <script>
   import Editor from 'components/Editor'
-  import MyUpload from '@/base/My-upload'
   import PreviewPopup from 'components/PreviewPopup'
   export default {
     data: function() {
@@ -86,6 +91,7 @@
         title:'',
         radio2:3,
         previewShow:false,
+        fileList: [],
       }
     },
     methods:{
@@ -96,7 +102,6 @@
     },
     components: {
       Editor,
-      MyUpload,
       PreviewPopup
     }
 	}

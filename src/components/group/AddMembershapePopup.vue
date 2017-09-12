@@ -47,8 +47,7 @@
                   :data="tableData3"
                   border
                   tooltip-effect="dark"
-                  style="width: 100%"
-                  @selection-change="handleSelectionChange">
+                  style="width: 100%">
                   <el-table-column
                     type="selection"
                     width="55">
@@ -72,9 +71,6 @@
                   </el-table-column>
                 </el-table>
                 <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage4"
                   :page-sizes="[30,50,100, 200, 300, 400]"
                   :page-size="30"
                   layout="total, sizes, prev, pager, next, jumper"
@@ -129,8 +125,7 @@
                   :data="tableData3"
                   border
                   tooltip-effect="dark"
-                  style="width: 100%"
-                  @selection-change="handleSelectionChange">
+                  style="width: 100%">
                   <el-table-column
                     type="selection"
                     width="55">
@@ -154,9 +149,6 @@
                   </el-table-column>
                 </el-table>
                 <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage4"
                   :page-sizes="[30,50,100, 200, 300, 400]"
                   :page-size="30"
                   layout="total, sizes, prev, pager, next, jumper"
@@ -274,6 +266,7 @@
           },
         ],
         selectValue:'',
+        options:[],
       }
     },
     computed:{
