@@ -13,8 +13,8 @@
             <div class="header_title_tips">
                 <p >全国高等职业教育临床医学院</p>
                 <div class="tips_icon"></div>
-            </div> 
-            
+            </div>
+
 		<router-view></router-view>
 		</div>
 	</div>
@@ -51,7 +51,7 @@ export default {
   border: 1px solid rgb(209, 217, 229);
   box-sizing: border-box;
   border-top:0;
-  padding:15px 0;
+  padding:15px 20px;
   float:left;
   width:100%;
 }
@@ -61,7 +61,7 @@ export default {
     color:#fff;
     width:100%;
     position: relative;
-    left:-8px;
+    left:-28px;
 }
 .bottom_tab_content .header_title_tips p{
     float:left;
