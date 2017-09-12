@@ -21,7 +21,7 @@
          </div>
        </el-popover>
        <el-button class="btn" type="danger" icon="delete"  :disabled="isSelected" v-popover:popover>批量删除</el-button>
-       <el-button class="btn" type="info" icon="edit">
+       <el-button class="btn" type="primary" icon="edit">
          <router-link :to="{ name: '编辑消息'}">发送新消息</router-link>
        </el-button>
      </div>
@@ -70,7 +70,7 @@
             @click="handleReissue(scope.$index, scope.row)">补发</el-button>
           <el-button
             size="small"
-            type="info"
+            type="primary"
             @click="handleState(scope.$index, scope.row)">消息状态</el-button>
         </template>
       </el-table-column>
