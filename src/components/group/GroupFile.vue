@@ -79,6 +79,7 @@
   <!--弹出层-->
     <el-dialog title="文件管理" :visible.sync="dialogTableVisible" size="large">
       <el-table
+                ref="multipleTable"
                 :data="tableData"
                 stripe
                 border
@@ -297,7 +298,8 @@
        */
       delet() {
         //console.log(this.multipleSelection)
-        this.tableData.splice(this.multipleSelection,1)
+        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
+        this.$refs.multipleTable.clearSelection()
       }
     }
 	}
