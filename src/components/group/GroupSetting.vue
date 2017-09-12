@@ -58,7 +58,7 @@
 
 <style scoped>
   .groupsetting{
-    padding: 10px;
+    padding: 10px 30px;
   }
   .name{
     color:rgb(131, 143, 165);
