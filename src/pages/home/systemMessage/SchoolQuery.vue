@@ -3,26 +3,12 @@
         <el-row>
           <el-col :span="24">
             <div>
-
               <ul class="tags">
                 <li>
                   <div class="cate"><span class="category">历史:</span></div>
                   <div class="alltags history" ref="history">
                     <span class="tag">全部</span>
-                    <span class="tag">教材申报测09.05</span>
-                    <span class="tag active">全国高等学校健康服务与管理专业第一轮规划教材</span>
-                    <span class="tag">全国高等职业教育临床医学专业（3加2）教材第八轮修订</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等职业教育临床医学专业（3加2）教材第八轮修订</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等职业教育临床医学专业（3加2）教材第八轮修订</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等职业教育临床医学专业（3加2）教材第八轮修订</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
-                    <span class="tag">全国高等学校本科应用心理学专业第三轮规划教材</span>
+                    <span class="tag" v-for="item in historyDatas" :key="item.id">{{item}}</span>
                   </div>
                   <span class="more" :class="open?'moreup':'moredown'" @click="toogleopen"></span>
                 </li>
@@ -55,51 +41,7 @@
                   </div>
                   <div class="school">
                     <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="school1 in schools1" :label="school1" :key="school1">{{school1}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="school1 in schools1" :label="school1" :key="school1">{{school1}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="school1 in schools1" :label="school1" :key="school1">{{school1}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="school1 in schools1" :label="school1" :key="school1">{{school1}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="school1 in schools1" :label="school1" :key="school1">{{school1}}</el-checkbox>
+                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                 </li>
@@ -110,7 +52,7 @@
                 <el-button type="primary">
                   <router-link :to="{ name: '编辑消息'}">上一步</router-link>
                 </el-button>
-                <el-button type="primary">发布</el-button>
+                <el-button type="primary" @click="publish">发布</el-button>
               </div>
             </div>
           </el-col>
@@ -119,12 +61,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const schools1 = ['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-                    '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
-                    ];
   const provinces = ['全部','北京市','天津市','河北省','山西','内蒙古自治区','辽宁省','吉林省','黑龙江省','上海市','江苏省','浙江省',
-                    '安徽省','福建省','江西省','河南省','湖北省','湖南省','广东省','四川省','贵州省','广西壮族自治区','云南省','西藏自治区',
-                    '陕西省','甘肃省','宁夏回族自治区','台湾省'];
+                    '安徽省','福建省','江西省','山东省','河南省','湖北省','湖南省','广东省','广西壮族自治区','海南省','重庆市','四川省','贵州省',
+                    '云南省','西藏自治区','陕西省','甘肃省','青海省','宁夏回族自治区','新疆维吾尔自治区','台湾省','香港特别行政区','澳门特别行政区'];
+  const schools = ['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
+    '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
+  ];
   export default {
     data() {
       return {
@@ -132,19 +74,20 @@
         provinces:provinces,
         checkAll: true,
         checkedCities: ['清华大学', '北京大学'],
-        schools1: schools1,
-        isIndeterminate: true
+        schools: schools,
+        isIndeterminate: true,
+        historyDatas:['教材申报测09.05','全国高等学校健康服务与管理专业第一轮规划教材','全国高等职业教育临床医学专业（3加2）教材第八轮修订','全国高等学校本科应用心理学专业第三轮规划教材']
       };
     },
     methods: {
       handleCheckAllChange(event) {
-        this.checkedCities = event.target.checked ? schools1 : [];
+        this.checkedCities = event.target.checked ? schools : [];
         this.isIndeterminate = false;
       },
       handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
-        this.checkAll = checkedCount === this.school1.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.school1.length;
+        this.checkAll = checkedCount === this.schools.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.schools.length;
       },
       toogleopen() {
          console.log(1)
@@ -154,6 +97,9 @@
         } else {
           this.$refs.history.style.height = ''
         }
+      },
+      publish(val) {
+        this.$emit('publish',val)
       }
     }
   }
