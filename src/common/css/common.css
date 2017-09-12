@@ -1,0 +1,113 @@
+/*css初始化*/
+body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,input,textarea,select{margin:0;padding:0}
+body{font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-size:14px;background:#f7f7f7;-webkit-text-size-adjust:100%;color: rgb(31, 43, 61);}
+a{text-decoration:none; color: #333;}
+a:hover{text-decoration:underline}
+em{font-style:normal}
+li{list-style:none}
+img{border:0;vertical-align:middle}
+table{border-collapse:collapse;border-spacing:0}
+p{word-wrap:break-word}
+
+/*主题色 rgb(42, 63, 84)*/
+
+/*公共样式*/
+.text-center{text-align: center;}
+.text-left{text-align: left}
+.text-right{text-align: right}
+
+/*color相关*/
+.color-error{
+  color: #ff4949;
+}
+
+/*清除浮动*/
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+/*搜索框*/
+.search-10{
+  margin: 10px;
+}
+
+/*左浮动，右浮动*/
+.pull-left{
+  float: left;
+}
+.pull-right{
+  float: right;
+}
+
+/*重置默认样式*/
+button a,button a:hover,button a:active{
+  text-decoration: none;
+  color: inherit;
+}
+
+/*表格相关公共样式*/
+/*表头背景色*/
+.el-table th {
+  background-color: #d4d9dd;
+}
+.el-table__footer-wrapper thead div, .el-table__header-wrapper thead div {
+  background-color: #d4d9dd;
+  color: #5b6877;
+}
+.el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
+  color: #ffffff;
+}
+.el-menu--dark {
+  background-color: rgb(42, 63, 84);
+}
+.el-table__body-wrapper{
+  overflow-x: hidden;
+}
+
+
+
+/*按钮*/
+.btn{
+  margin: 10px;
+}
+.btn-info{
+  color: #fff;
+  background-color: #0cb995;
+  border-color: #0cb995;
+}
+.btn-group{
+  margin:10px;
+  float: left;
+}
+/*重置小组搜索输入框*/
+#groupListSearch .el-input__inner{
+  background-color: rgba(255,255,255,.8);
+}
+
+/*必填项 * 图标*/
+.required-fields:after{
+  content: ' *';
+  color: red;
+  font-size: 120%;
+
+}
+/*分割线-虚线*/
+.cutLine-dashed{
+  display: block;
+  height: 0;
+  margin:5px 0;
+  border-bottom: 1px dashed #c8c8c8;
+}
+
+/*badge*/
+.myupload + .el-badge__content.is-fixed{
+  top:13px;
+}
+
+
+
+
+
+
+
+
+/*重置editor样式*/
+@import "./resetEditor.css";
