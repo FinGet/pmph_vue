@@ -12,7 +12,7 @@
           <i class="fa fa-book fa-fw"></i>
           <span slot="title">规划教材申报</span>
         </template>
-        <el-menu-item index="/applicationlist">教材申报</el-menu-item>
+        <el-menu-item index="/applicationrouter/applicationlist">教材申报</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">

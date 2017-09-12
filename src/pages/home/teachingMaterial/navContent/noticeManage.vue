@@ -1,6 +1,6 @@
 <template>
-    <div class="application_list">
-      
+    <div class="notice_manage">
+     23232
     </div>
 </template>
 <style>

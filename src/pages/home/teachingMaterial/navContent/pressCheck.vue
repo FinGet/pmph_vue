@@ -1,6 +1,6 @@
 <template>
-    <div class="application_list">
-      
+    <div class="press_check">
+      出版社审核1111
     </div>
 </template>
 <style>

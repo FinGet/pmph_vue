@@ -1,6 +1,6 @@
 <template>
-    <div class="application_list">
-      
+    <div class="application_router">
+      <router-view></router-view>
     </div>
 </template>
 <style>
@@ -15,3 +15,4 @@
         }
     }
 </script>
+
