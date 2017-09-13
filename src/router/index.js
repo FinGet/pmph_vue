@@ -10,6 +10,7 @@ import BooksSelect from '../pages/home/teachingMaterial/navContent/booksSelect'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
 import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
+import ProjectEditorsCheck from 'pages/home/teachingMaterial/navContent/projectEditorsCheck'
 import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
@@ -34,6 +35,7 @@ export default new Router({
               { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 2,applicationName:'booksselect' } },
               { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
               { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
+              { path: 'projecteditorscheck', name:'项目编辑-编委审核', component:ProjectEditorsCheck, meta:{breadNumber: 2 ,applicationName:'projecteditorscheck'}}
             ]
           },
          ]
