@@ -10,11 +10,10 @@
 			<el-tab-pane label="查询数据"></el-tab-pane>
 		</el-tabs>
 		<div class="bottom_tab_content">
-            <div class="header_title_tips">
-                <p >全国高等职业教育临床医学院</p>
-                <div class="tips_icon"></div>
-            </div>
-
+      <div class="header_title_tips">
+        <p >全国高等职业教育临床医学院</p>
+        <div class="tips_icon"></div>
+      </div>
 		<router-view></router-view>
 		</div>
 	</div>
@@ -29,13 +28,13 @@ export default {
 	},
 	methods:{
 		routerChange(tag){
-             this.$router.push(tag.name);
+      this.$router.push(tag.name);
 		}
-    },
-    created(){
-       // console.log(this.$router);
-        this.activeTagName=this.$router.currentRoute.meta.applicationName;
-    }
+  },
+  created(){
+     // console.log(this.$router);
+    this.activeTagName=this.$router.currentRoute.meta.applicationName;
+  }
 }
 </script>
 
