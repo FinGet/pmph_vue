@@ -1,0 +1,9 @@
+/**
+  此文件用于css媒体查询设置
+
+ */
+@media (max-width: 1367px ){
+  .powerSearch .searchBox-wrapper{
+    width: 35%;
+  }
+}

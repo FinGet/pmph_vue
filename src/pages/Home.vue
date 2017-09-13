@@ -91,6 +91,7 @@
   }
   .app-main-inner{
     padding: 15px 20px;
+    overflow: hidden;
   }
   .nav-top{
     height:38px;
