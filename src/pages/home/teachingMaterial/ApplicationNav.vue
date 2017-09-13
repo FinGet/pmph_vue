@@ -1,19 +1,17 @@
 <template>
-	<div class="application_list">
+	<div class="application_nav">
+        <div class="tab_nav_outbox">
 		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange">
-			<el-tab-pane label="通知管理" name="noticemanage"></el-tab-pane>
-			<el-tab-pane label="出版社审核" name="presscheck"></el-tab-pane>
-			<el-tab-pane label="遴选主编/副主编"></el-tab-pane>
-			<el-tab-pane label="分配策划编辑"></el-tab-pane>
-			<el-tab-pane label="编委预选"></el-tab-pane>
-			<el-tab-pane label="编委审核"></el-tab-pane>
-			<el-tab-pane label="查询数据"></el-tab-pane>
+			<el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
+            <el-tab-pane label="教材遴选" name="booksselect"></el-tab-pane>
 		</el-tabs>
-		<div class="bottom_tab_content">
-      <div class="header_title_tips">
+        </div>
+        <div class="header_title_tips">
           <p >全国高等职业教育临床医学院</p>
           <div class="tips_icon"></div>
       </div>
+		<div class="bottom_tab_content">
+      
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -25,30 +23,57 @@
 export default {
 	data() {
 		return {
-			activeTagName:'noticemanage'
+			activeTagName:'presscheck'
 		}
 	},
 	methods: {
     routerChange(tag) {
       this.$router.push('/applicationrouter/applicationnav/' + tag.name);
+      this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
-    created() {
+    
+  },
+  created() {
       // console.log(this.$router);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
-    }
-  }
+    },
 }
 </script>
 
 <style >
-.application_list .tab_nav{
-	box-shadow: none;
-	border-bottom:0;
+.application_nav{
+   float: left;
+   width:100%;
+  position: relative;
 }
-.application_list .tab_nav .el-tabs__content{
+ .application_nav .tab_nav_outbox{
+     float: left;
+     width:100%;
+     background-color: rgb(238, 241, 246);
+     border: 1px solid rgb(209, 217, 229);
+     box-sizing: border-box;
+ }
+.application_nav .tab_nav{
+	box-shadow: none;
+    border-bottom:0;
+    float: right;
+    border:0;
+    box-sizing: border-box;
+    
+}
+.application_nav .tab_nav  .el-tabs__header{
+    border-bottom:0 ;
+}
+.application_nav .tab_nav .el-tabs__nav .el-tabs__item{
+    border-bottom: 1px solid rgb(209, 217, 229);
+}
+.application_nav .tab_nav .el-tabs__nav .is-active{
+    border-bottom:0;
+}
+.application_nav .tab_nav .el-tabs__content{
 	padding:0 ;
 }
-.application_list .bottom_tab_content{
+.application_nav .bottom_tab_content{
   border: 1px solid rgb(209, 217, 229);
   box-sizing: border-box;
   border-top:0;
@@ -56,21 +81,21 @@ export default {
   float:left;
   width:100%;
 }
-.bottom_tab_content .header_title_tips{
+.application_nav .header_title_tips{
     margin-bottom:15px;
     float:left;
     color:#fff;
-    width:100%;
-    position: relative;
-    left:-28px;
+    position: absolute;
+    left:-8px;
+    top:8px;
 }
-.bottom_tab_content .header_title_tips p{
+.application_nav .header_title_tips p{
     float:left;
     background-color: #1F2D3D;
     font-size:16px;
     padding:2px 40px 2px 15px;
 }
-.bottom_tab_content .header_title_tips .tips_icon{
+.application_nav .header_title_tips .tips_icon{
     border:4px solid #475669;
     position: absolute;
     left: 0;
