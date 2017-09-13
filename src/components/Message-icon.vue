@@ -18,14 +18,14 @@
           </span>
         </a>
       </el-dropdown-item>
-      <el-dropdown-iterm>
+      <el-dropdown-item>
         <a class="message-iterm">
           <span class="message message-all">
             查看全部
             <i class="el-icon-d-arrow-right"></i>
           </span>
         </a>
-      </el-dropdown-iterm>
+      </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 </template>
