@@ -39,7 +39,7 @@
                   </div>
                 </div>
               <div class="searchBtn-wrapper text-right">
-                <el-button  type="primary">查询</el-button>
+                <el-button  type="primary" icon="search">搜索</el-button>
               </div>
               <div class="tableContainer groupmanageTable">
                 <el-table
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="searchBtn-wrapper text-right">
-                <el-button  type="primary">查询</el-button>
+                <el-button  type="primary" icon="search">搜索</el-button>
               </div>
               <div class="tableContainer groupmanageTable">
                 <el-table
