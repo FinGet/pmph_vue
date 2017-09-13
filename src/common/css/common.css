@@ -21,6 +21,9 @@ p{word-wrap:break-word}
 .color-error{
   color: #ff4949;
 }
+.gray{
+  color:#c8c8c8;
+}
 
 /*清除浮动*/
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
@@ -96,6 +99,14 @@ button a,button a:hover,button a:active{
   margin:5px 0;
   border-bottom: 1px dashed #c8c8c8;
 }
+.vertical-line{
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  border-left: 2px;
+  background: #ccc;
+  vertical-align: middle;
+}
 
 /*badge*/
 .myupload + .el-badge__content.is-fixed{
@@ -168,6 +179,10 @@ a.table-link{
 }
 a.table-link:hover{
   color: #23527c;
+}
+
+.table-wrapper .el-button.el-button--text{
+  color:#337ab7;
 }
 
 
