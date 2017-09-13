@@ -170,6 +170,12 @@ button a,button a:hover,button a:active{
 .powerSearch .searchBox-wrapper .searchInput{
   margin-left: 114px;
 }
+.pagination-wrapper{
+  clear: both;
+}
+.pagination-wrapper>div{
+  float: right;
+}
 /*end*/
 
 /*表格里的样式设置*/

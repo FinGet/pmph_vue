@@ -200,7 +200,7 @@
                 planningEditor:'张强',
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
-                editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
               },{
                 editing:true,
                 bookid:'123456',
@@ -211,7 +211,7 @@
                 planningEditor:'张强',
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
-                editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
               },{
                 editing:true,
                 bookid:'123456',
@@ -222,7 +222,18 @@
                 planningEditor:'张强',
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
-                editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
+              },{
+                editing:true,
+                bookid:'123456',
+                bookorder:1,
+                bookname: '细胞生物学和医学遗传学',
+                edition: 9,
+                applyNumber:188,
+                planningEditor:'张强',
+                chiefEditor:'张三',
+                subeditor:['张思','王五','赵六','李思是'],
+                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
               },{
                 editing:true,
                 bookid:'123456',

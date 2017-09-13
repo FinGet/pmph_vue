@@ -412,6 +412,45 @@
             email:'13699999999@qq.com'
           },
           {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
+          },
+          {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
+          },
+          {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
+          },
+          {
             name: '王小虎',
             code: 'wangxiaohu',
             applicationOrganization:'四川大学',
