@@ -35,7 +35,7 @@ export default new Router({
               { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 2,applicationName:'booksselect' } },
               { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
               { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
-              { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 2 ,applicationName:'chooseeditors'}}
+              { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 3 ,applicationName:'chooseeditors'}}
             ]
           },
          ]

@@ -159,16 +159,36 @@
         <el-table-column
           label="申报单位/工作单位">
           <template scope="scope">
-            <p title="申报单位">{{scope.row.applicationOrganization}}</p>
-            <p title="工作单位">{{scope.row.workOrganization}}</p>
+            <el-tooltip class="item" effect="dark" content="申报单位" placement="top">
+              <p>
+                <i class="fa fa-university"></i>
+                {{scope.row.applicationOrganization}}
+              </p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
+              <p>
+                <i class="fa fa-briefcase"></i>
+                {{scope.row.workOrganization}}
+              </p>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
           label="职务/职称"
         >
           <template scope="scope">
-            <p title="职务">{{scope.row.position}}</p>
-            <p title="职称">{{scope.row.professionalTitle}}</p>
+            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
+              <p>
+                <i class="fa fa-tags"></i>
+                {{scope.row.position}}
+              </p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
+              <p>
+                <i class="fa fa-graduation-cap"></i>
+                {{scope.row.professionalTitle}}
+              </p>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -180,7 +200,7 @@
               {{scope.row.phone}}
             </p>
             <p>
-              <i class="fa fa-envelope-o fa-fw" v-if="scope.row.email"></i>
+              <i class="fa fa-at fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </p>
           </template>
