@@ -38,11 +38,7 @@ export default {
 	},
 	methods:{
 		routerChange(tag){
-<<<<<<< HEAD
-             this.$router.push('/applicationrouter/applicationnav/'+tag.name);
-=======
-      this.$router.push(tag.name);
->>>>>>> 14ce0aaedfa457f11dfb074feee5b586494df9e0
+      this.$router.push('/applicationrouter/applicationnav/'+tag.name);
 		}
   },
   created(){
