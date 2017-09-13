@@ -190,8 +190,12 @@ a.table-link:hover{
 .table-wrapper .el-button.el-button--text{
   color:#337ab7;
 }
-
-
+.table-wrapper a{
+  color:#337ab7;
+}
+.table-wrapper a :hover{
+  color: #23527c;
+}
 
 
 
