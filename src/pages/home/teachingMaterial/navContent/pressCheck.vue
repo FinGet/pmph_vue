@@ -40,9 +40,9 @@
       <div class="searchBox-wrapper">
         <div class="searchName">申报职务：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="positionValue" placeholder="请选择">
+          <el-select v-model="positionValueChoose" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in positionValue"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -61,7 +61,14 @@
       <div class="searchBox-wrapper">
         <div class="searchName">纸质表：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="全部" class="searchInputEle"></el-input>
+          <el-select v-model="positionValueChoose" placeholder="请选择">
+            <el-option
+              v-for="item in positionValue"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </div>
       </div>
       <!--姓名搜索-->
@@ -133,7 +140,20 @@
   export default {
     data() {
       return {
-        positionValue:['全部','主编','副主编','编委'],
+        positionValue:[{
+          value:1,
+          label:'全部'
+        },{
+          value:2,
+          label:'主编'
+        },{
+          value:3,
+          label:'副主编'
+        },{
+          value:4,
+          label:'编委'
+        }],
+        positionValueChoose:1,
         tableData: [{
           name: '王小虎',
           code: 'wangxiaohu',
