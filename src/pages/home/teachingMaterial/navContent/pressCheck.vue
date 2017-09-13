@@ -105,7 +105,15 @@
             </el-option>
           </el-select>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-select v-model="booksChooseValue5" multiple placeholder="请选择" v-if="powerSearchValue===1">
+              <el-option
+                v-for="item in booksChooseOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-input placeholder="全部" class="searchInputEle" v-else></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -125,34 +133,57 @@
     <div class="table-wrapper">
       <el-table
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
-          label="姓名">
+          label="账号"
+          width="120">
+          <template scope="scope">
+            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.code}}</router-link>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="姓名"
+          width="100"
+        >
           <template scope="scope">
             {{scope.row.name}}
             <i class="fa fa-mars"></i>
           </template>
         </el-table-column>
         <el-table-column
-          prop="code"
-          label="申报账号">
+          sortable
+          prop="birthdate"
+          label="出生时间"
+          width="120">
         </el-table-column>
         <el-table-column
           label="申报单位/工作单位">
           <template scope="scope">
-            <p>{{scope.row.applicationOrganization}}</p>
-            <p>{{scope.row.workOrganization}}</p>
+            <p title="申报单位">{{scope.row.applicationOrganization}}</p>
+            <p title="工作单位">{{scope.row.workOrganization}}</p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="position"
-          label="职务"
+          label="职务/职称"
         >
+          <template scope="scope">
+            <p title="职务">{{scope.row.position}}</p>
+            <p title="职称">{{scope.row.professionalTitle}}</p>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="professionalTitle"
-          label="职称">
+          label="联系方式"
+        >
+          <template scope="scope">
+            <p>
+              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
+              {{scope.row.phone}}
+            </p>
+            <p>
+              <i class="fa fa-envelope-o fa-fw" v-if="scope.row.email"></i>
+              {{scope.row.email}}
+            </p>
+          </template>
         </el-table-column>
         <el-table-column
           prop="chooseBookJob"
@@ -193,6 +224,10 @@
       return {
         powerSearch:true,
         powerSearchList:[
+          {
+            value:0,
+            label:'账号'
+          },
           {
             value:1,
             label:'书名'
@@ -257,29 +292,38 @@
           professionalTitle:'副教授',
           chooseBookJob:'中医学-副主编',
           schoolCheck:'已审核',
-          pressCheck:'已收到纸质表'
+          pressCheck:'已收到纸质表',
+          phone:'13699999999',
+          email:'13699999999@qq.com',
+          birthdate:'1988-8-8'
         },
           {
             name: '张小虎',
-            code: 'wangxiaohu',
+            code: '1823333333u',
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
-            position:'无',
+            position:'课程负责人',
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'未审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com',
+            birthdate:'1988-8-8'
           },
           {
             name: '人卫社',
             code: 'wangxiaohu',
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
-            position:'无',
+            position:'教研室主任',
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'未审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com',
+            birthdate:'1988-8-8'
           },
           {
             name: '王小虎',
@@ -290,7 +334,10 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'已审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com',
+            birthdate:'1988-8-8'
           },
           {
             name: '小虎',
@@ -301,7 +348,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'已审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            birthdate:'1988-8-8'
           },
           {
             name: '王小虎',
@@ -312,7 +361,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'未审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            email:'13699999999@qq.com',
+            birthdate:'1988-8-8'
           },
           {
             name: '大小虎',
@@ -323,7 +374,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'待审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
           },
           {
             name: '大小虎',
@@ -334,7 +387,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'待审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
           },
           {
             name: '王小虎',
@@ -345,7 +400,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'待审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
           },
           {
             name: '李小虎',
@@ -356,7 +413,9 @@
             professionalTitle:'副教授',
             chooseBookJob:'中医学-副主编',
             schoolCheck:'已审核',
-            pressCheck:'未收到纸质表'
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
           }
         ]
       }
