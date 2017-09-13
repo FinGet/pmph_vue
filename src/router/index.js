@@ -27,15 +27,15 @@ export default new Router({
       name: '首页',
       component: Home,
       children: [
-        {path:'applicationrouter',name:'教材申报',component:ApplicationRouter,
+        {path:'applicationrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2 },
          children:[
-           {path:'applicationlist',name:'教材申报',component:ApplicationList},
+           {path:'applicationlist',name:'教材申报',component:ApplicationList, meta: { breadNumber: 2 }},
           {
             path: 'applicationnav', name: '教材申报', component: ApplicationNav, children: [
-              { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 2,applicationName:'booksselect' } },
-              { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
-              { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
-              { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 3 ,applicationName:'chooseeditors'}}
+              { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
+              { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
+              { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
+              { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 4 ,applicationName:'chooseeditors'}}
             ]
           },
          ]
