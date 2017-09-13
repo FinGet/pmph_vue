@@ -28,7 +28,7 @@ export default new Router({
             { path: 'noticemanage', name: '通知管理', component: ApplicationList, meta: { breadNumber: 2,applicationName:'noticemanage' } },
             { path: 'presscheck', name: '出版社审核', component: PressCheck, meta: { breadNumber: 2 ,applicationName:'presscheck'} },
           ]
-        },,
+        },
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },
         { path: 'messagelist', name: '系统消息', component: MessageList, meta: { breadNumber: 2 } }, // 消息列表页面
         { path: 'messagestate', name: '消息状态', component: MessageState, meta: { breadNumber: 3 } },

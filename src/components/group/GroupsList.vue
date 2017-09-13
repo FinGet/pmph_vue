@@ -14,6 +14,7 @@
       <div class="memberShape">
         <Group-head
           v-for="(item,index) in groupListData"
+          :key="item.id"
           :data="item"
           :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
         ></Group-head>
