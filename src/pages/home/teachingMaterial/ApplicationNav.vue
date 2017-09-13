@@ -29,7 +29,7 @@ export default {
 	},
 	methods:{
 		routerChange(tag){
-             this.$router.push(tag.name);
+             this.$router.push('/applicationrouter/applicationnav/'+tag.name);
 		}
     },
     created(){
