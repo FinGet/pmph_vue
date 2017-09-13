@@ -66,7 +66,7 @@
       </div>
       <!--姓名搜索-->
       <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary">查询</el-button>
+        <el-button  type="primary" icon="search">搜索</el-button>
       </div>
     </div>
     <!--操作按钮-->
@@ -78,6 +78,7 @@
     <div class="table-wrapper">
       <el-table
         :data="tableData"
+        border
         style="width: 100%">
         <el-table-column
           prop="name"
