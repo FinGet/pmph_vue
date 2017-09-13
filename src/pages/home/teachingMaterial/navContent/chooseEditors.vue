@@ -86,12 +86,8 @@
                   label="联系方式"
                 >
                   <template scope="scope">
-                    <el-tooltip :content="'电话:'+scope.row.mobile" placement="top-start">
-                      <p><i class="fa fa-phone"></i> {{scope.row.mobile}}</p>
-                    </el-tooltip>
-                    <el-tooltip :content="'邮箱:'+scope.row.email" placement="top-start">
-                      <p><i class="fa fa-at"></i> {{scope.row.email}}</p>
-                    </el-tooltip>
+                    <p><i class="fa fa-phone"></i> {{scope.row.mobile}}</p>
+                    <p><i class="fa fa-at"></i> {{scope.row.email}}</p>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -225,6 +221,66 @@
           {
             number:'wangjie',
             name: '王姐',
+            sex:1,
+            birthday: '1965-06-02',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            mobile: '1344444444',
+            email: '123321@qq.com'
+          },
+          {
+            number:'zhangsan',
+              name: '张三',
+              sex:0,
+              birthday: '1965-06-02',
+              applicationOrganization:'四川大学',
+              workOrganization:'成都医科大学',
+              duty: '无',
+              jobTitle: '教授',
+              mobile: '1344444444',
+              email: '123321@qq.com'
+          },
+          {
+            number:'lisi',
+              name: '李四',
+            sex:0,
+            birthday: '1965-06-02',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            mobile: '1344444444',
+            email: '123321@qq.com'
+          },
+          {
+            number:'xiaohong',
+              name: '小红',
+            sex:1,
+            birthday: '1965-06-02',
+            applicationOrganization:'成都医科大学',
+            workOrganization:'成都医科大学',
+            duty: '主任',
+            jobTitle: '副教授',
+            mobile: '1344444444',
+            email: '123321@qq.com'
+          },
+          {
+            number:'wangmazi',
+              name: '王麻子',
+            sex:0,
+            birthday: '1965-06-02',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            mobile: '1344444444',
+            email: '123321@qq.com'
+          },
+          {
+            number:'wangjie',
+              name: '王姐',
             sex:1,
             birthday: '1965-06-02',
             applicationOrganization:'四川大学',
