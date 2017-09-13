@@ -103,6 +103,9 @@ button a,button a:hover,button a:active{
 }
 
 /*公共条件搜索区域样式*/
+.teachingMaterial-search{
+
+}
 .searchBox-wrapper{
   box-sizing: border-box;
   display: inline-block;
@@ -127,9 +130,12 @@ button a,button a:hover,button a:active{
 }
 .searchBox-wrapper.lg{
   width: 50%;
+
 }
 .searchBox-wrapper.searchBtn{
-  width: 80px;
+  width: 100px;
+  line-height: 36px;
+  padding: 0;
 }
 .searchBox-wrapper .searchInput .el-select{
   width: 100%;
@@ -141,6 +147,18 @@ button a,button a:hover,button a:active{
 .table-wrapper{
   margin: 10px 0;
 }
+/*高级搜索样式*/
+.powerSearch .operation-wrapper{
+  display: inline-block;
+  float: right;
+  clear: none;
+}
+.powerSearch .searchName{
+  width: 110px;
+}
+.powerSearch .searchBox-wrapper .searchInput{
+  margin-left: 114px;
+}
 
 
 
@@ -151,3 +169,4 @@ button a,button a:hover,button a:active{
 
 /*重置editor样式*/
 @import "./resetEditor.css";
+@import "responsive.css";
