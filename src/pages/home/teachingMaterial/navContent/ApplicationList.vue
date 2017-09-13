@@ -58,7 +58,7 @@
                         <el-button type="text" class="op_button">设置书目录</el-button>
                         <el-dropdown trigger="click">
                                 <span class="el-dropdown-link more_button">
-                                  更多
+                                  更多<i class="el-icon-caret-bottom el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
                                   <el-dropdown-item>消息状态</el-dropdown-item>
