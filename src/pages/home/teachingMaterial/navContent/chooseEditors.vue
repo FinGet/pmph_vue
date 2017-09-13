@@ -20,6 +20,11 @@
                 </el-select>
               </el-col>
               <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+              <div class="pull-right">
+                <el-button class="btn" type="primary" >拟定编委</el-button>
+                <el-button class="btn" type="danger" @click="Ldelet">移除</el-button>
+                <el-button class="btn" type="primary" >增加候选人</el-button>
+              </div>
             </el-col>
             <el-table
               ref="multipleTable"
@@ -30,6 +35,10 @@
               max-height="750"
               style="width: 100%"
               @selection-change="handleSelectionChange">
+              <el-table-column
+                type="selection"
+                width="55">
+              </el-table-column>
               <el-table-column
                 label="申报账号"
                 prop="number"
@@ -99,11 +108,16 @@
           </el-col>
           <el-col :span="5" class="pull-right">
             <el-col>
-              <div class="search-title">姓名:</div>
               <el-col :span="10" class="search-10">
-                <el-input v-model="input1" placeholder="请输入姓名"></el-input>
+                <el-input class="fileinput"
+                          v-model="input"
+                          placeholder="请输入内容"
+                          icon="search"
+                          :on-icon-click="Search"
+                ></el-input>
               </el-col>
-              <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+              <el-button class="btn" type="primary">保存</el-button>
+              <el-button class="btn" type="primary">导出</el-button>
             </el-col>
             <el-table
               :data="tableData1"
@@ -123,11 +137,12 @@
                 </template>
               </el-table-column>
               <el-table-column
+                align="center"
                 label="操作">
                 <template scope="scope">
                   <el-button
                     size="small"
-                    @click="delet(scope.$index)">去除</el-button>
+                    @click="delet(scope.$index)">移除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -143,6 +158,7 @@
       return {
         input:'',
         input1:'',
+        multipleSelection: [],
         options: [{
           value: '选项1',
           label: '全部'
@@ -244,15 +260,24 @@
           type: 'success'
         });
       },
-      handleSelectionChange() {
-
+      handleSelectionChange(val) {
+        this.multipleSelection = val
       },
+      // 右边表格移除
       delet(index) {
         this.tableData1.splice(index,1)
         this.$message({
           message: '已成功移除！',
           type: 'success'
         });
+      },
+      // 左边表格移除
+      Ldelet(){
+        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
+        this.$refs.multipleTable.clearSelection()
+      },
+      Search(){
+
       }
     }
   }
