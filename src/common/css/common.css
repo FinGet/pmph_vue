@@ -131,6 +131,9 @@ button a,button a:hover,button a:active{
 .searchBox-wrapper.searchBtn{
   width: 80px;
 }
+.searchBox-wrapper .searchInput .el-select{
+  width: 100%;
+}
 .operation-wrapper{
   text-align: right;
   clear: both;
