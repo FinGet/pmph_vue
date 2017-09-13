@@ -19,25 +19,29 @@
                     <router-link :to="{name:'申报表审核',query:{bookid:scope.row.bookid}}">{{scope.row.textBookName}}</router-link>
                 </template>
             </el-table-column>
-            <el-table-column label="日期" width="135" >
+            <el-table-column label="显示结束日期" width="130" >
                 <template scope="scope">
                     <p>
-                        <el-tooltip class="item" effect="dark" content="显示结束日期" placement="top">
-                            <i class="fa fa-calendar-o"></i>
-                        </el-tooltip>
                         {{scope.row.showEndTime}}
-                    </p>
-                    <p>
-                        <el-tooltip class="item" effect="dark" content="实际结束日期" placement="bottom">
-                            <i class="fa fa-calendar"></i>
-                        </el-tooltip>
-                        {{scope.row.factEndTime}}
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人" width="320" >
+            <el-table-column label="实际结束日期" width="130" >
+                    <template scope="scope">
+                        <p>
+                            {{scope.row.factEndTime}}
+                        </p>
+                    </template>
+                </el-table-column>
+            <el-table-column label="联系人" width="350" >
                 <template scope="scope">
-                    <p class="contact_p"><span>{{scope.row.name}}</span><span>{{scope.row.phoneNumber}}</span><span>{{scope.row.eMail}}</span></p>
+                    <p class="contact_p">
+                        <span>{{scope.row.name}}</span>
+                        <i class="fa fa-phone"></i>
+                        <span>{{scope.row.phoneNumber}}</span>
+                        <i class="fa fa-envelope-o"></i>
+                        <span>{{scope.row.eMail}}</span>
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="状态" width="90"  :filters="[{ text: '已公布', value: '已公布' }, { text: '进行中', value: '进行中' }, { text: '已结束', value: '已结束' }]"
@@ -46,14 +50,24 @@
                     {{scope.row.status}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" >
+            <el-table-column label="操作" width="270">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button">修改</el-button><span class="op_span">|</span>
                         <el-button type="text" class="op_button">发布</el-button><span class="op_span">|</span>
-                        <el-button type="text" class="op_button">消息状态</el-button><span class="op_span">|</span>
-                        <el-button type="text" class="op_button">结果统计</el-button><span class="op_span">|</span>
-                        <el-button type="text" class="op_button">设置选题</el-button>
+                        <el-button type="text" class="op_button">设置书目录</el-button>
+                        <el-dropdown trigger="click">
+                                <span class="el-dropdown-link more_button">
+                                  更多
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                  <el-dropdown-item>消息状态</el-dropdown-item>
+                                  <el-dropdown-item>通知详情</el-dropdown-item>
+                                  <el-dropdown-item>结果统计</el-dropdown-item>
+                                  <el-dropdown-item>设置选题号</el-dropdown-item>
+                                  <el-dropdown-item>删除</el-dropdown-item>
+                                </el-dropdown-menu>
+                              </el-dropdown>
                     </p>
                 </template>
             </el-table-column>
@@ -72,7 +86,7 @@
     export default {
         data() {
             return {
-                selectValue: '',
+                selectValue: '选项1',
                 selectOptions: [{
                     value: '选项1',
                     label: '教材名称'
@@ -265,7 +279,6 @@
 
     .table_list .contact_p span {
         margin-right: 10px;
-        float: left;
     }
 
     .table_list .operation_p {
@@ -282,6 +295,16 @@
         margin: 0 5px;
         float: left;
         line-height: 32px;
+    }
+    .table_list .operation_p .more_button{
+         cursor: pointer;
+         line-height: 34px;
+         margin-left:20px;
+         color:#337ab7;
+    }
+    .table_list .operation_p .more_button:hover{
+         
+         color:#23527c;
     }
     .application_list .pagination{
         float:right;
