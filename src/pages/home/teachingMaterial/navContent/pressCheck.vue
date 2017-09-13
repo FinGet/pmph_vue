@@ -200,7 +200,7 @@
               {{scope.row.phone}}
             </p>
             <p>
-              <i class="fa fa-at fa-fw" v-if="scope.row.email"></i>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </p>
           </template>
