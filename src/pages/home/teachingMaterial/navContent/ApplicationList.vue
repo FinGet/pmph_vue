@@ -12,7 +12,7 @@
                 <el-checkbox label="未发布"></el-checkbox>
                 <el-checkbox label="已结束"></el-checkbox>
             </el-checkbox-group> 
-
+            
         </p>
     </div>
 </template>
@@ -36,8 +36,10 @@ export default {
 .search_p {
     overflow: hidden;
     width:100%;
+    padding:0 20px;
+    box-sizing: border-box;
     line-height: 36px;
-
+    background-color: #fff;
 }
 .search_radio{
      line-height: 36px;

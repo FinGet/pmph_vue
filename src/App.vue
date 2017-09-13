@@ -36,5 +36,10 @@
     overflow: hidden;
     font-family: "Helvetica Neue","PingFang SC",Arial,sans-serif;
   }
-
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .3s ease;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+}
 </style>

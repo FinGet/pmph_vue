@@ -14,8 +14,9 @@
                 <p >全国高等职业教育临床医学院</p>
                 <div class="tips_icon"></div>
             </div>
-
-		<router-view></router-view>
+<transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
 		</div>
 	</div>
 </template>
