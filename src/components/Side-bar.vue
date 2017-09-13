@@ -7,13 +7,10 @@
     </div>
 
     <el-menu default-active="1-4-1" theme="dark" class="sildbar-list" unique-opened router>
-      <el-submenu index="index">
-        <template slot="title">
-          <i class="fa fa-book fa-fw"></i>
-          <span slot="title">规划教材申报</span>
-        </template>
-        <el-menu-item index="/applicationrouter/applicationlist">教材申报</el-menu-item>
-      </el-submenu>
+      <el-menu-item index="/applicationrouter/applicationlist">
+        <i class="fa fa-book fa-fw"></i>
+        <span slot="title">规划教材申报</span>
+      </el-menu-item>
       <el-submenu index="2">
         <template slot="title">
           <i class="fa fa-tasks fa-fw"></i>

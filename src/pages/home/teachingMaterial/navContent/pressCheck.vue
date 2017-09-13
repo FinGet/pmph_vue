@@ -200,7 +200,7 @@
               {{scope.row.phone}}
             </p>
             <p>
-              <i class="fa fa-at fa-fw" v-if="scope.row.email"></i>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </p>
           </template>
@@ -384,6 +384,45 @@
             pressCheck:'未收到纸质表',
             email:'13699999999@qq.com',
             birthdate:'1988-8-8'
+          },
+          {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
+          },
+          {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
+          },
+          {
+            name: '大小虎',
+            code: 'wangxiaohu',
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            position:'无',
+            professionalTitle:'副教授',
+            chooseBookJob:'中医学-副主编',
+            schoolCheck:'待审核',
+            pressCheck:'未收到纸质表',
+            phone:'13699999999',
+            email:'13699999999@qq.com'
           },
           {
             name: '大小虎',

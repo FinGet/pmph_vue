@@ -170,6 +170,12 @@ button a,button a:hover,button a:active{
 .powerSearch .searchBox-wrapper .searchInput{
   margin-left: 114px;
 }
+.pagination-wrapper{
+  clear: both;
+}
+.pagination-wrapper>div{
+  float: right;
+}
 /*end*/
 
 /*表格里的样式设置*/
@@ -184,8 +190,12 @@ a.table-link:hover{
 .table-wrapper .el-button.el-button--text{
   color:#337ab7;
 }
-
-
+.table-wrapper a{
+  color:#337ab7;
+}
+.table-wrapper a :hover{
+  color: #23527c;
+}
 
 
 
