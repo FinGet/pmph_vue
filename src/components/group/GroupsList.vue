@@ -17,7 +17,6 @@
           :key="item.id"
           :data="item"
           :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
-          :key="item.id"
         ></Group-head>
       </div>
       <div class="addGroupWrapper text-center">

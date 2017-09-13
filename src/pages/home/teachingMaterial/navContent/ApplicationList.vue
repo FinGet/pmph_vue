@@ -11,8 +11,8 @@
                 <el-checkbox label="已发布"></el-checkbox>
                 <el-checkbox label="未发布"></el-checkbox>
                 <el-checkbox label="已结束"></el-checkbox>
-            </el-checkbox-group> 
-            
+            </el-checkbox-group>
+
         </p>
     </div>
 </template>
@@ -45,14 +45,6 @@ export default {
      line-height: 36px;
     float:left;
 }
- .application_list .search_radio .is-checked .el-radio__inner {
-     border-color: #1ab194;
-     background: #1ab194;
- }
- .application_list .search_check .is-checked .el-checkbox__inner{
-     border-color: #1ab194;
-     background: #1ab194;
- }
 .search_check{
     float:left;
 }

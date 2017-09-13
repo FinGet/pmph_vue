@@ -10,21 +10,13 @@
 			<el-tab-pane label="查询数据"></el-tab-pane>
 		</el-tabs>
 		<div class="bottom_tab_content">
-<<<<<<< HEAD
-            <div class="header_title_tips">
-                <p >全国高等职业教育临床医学院</p>
-                <div class="tips_icon"></div>
-            </div>
-<transition name="fade" mode="out-in">
-            <router-view></router-view>
-          </transition>
-=======
       <div class="header_title_tips">
-        <p >全国高等职业教育临床医学院</p>
-        <div class="tips_icon"></div>
+          <p >全国高等职业教育临床医学院</p>
+          <div class="tips_icon"></div>
       </div>
-		<router-view></router-view>
->>>>>>> 14ce0aaedfa457f11dfb074feee5b586494df9e0
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
 		</div>
 	</div>
 </template>
@@ -36,18 +28,14 @@ export default {
 			activeTagName:'noticemanage'
 		}
 	},
-	methods:{
-		routerChange(tag){
-<<<<<<< HEAD
-             this.$router.push('/applicationrouter/applicationnav/'+tag.name);
-=======
-      this.$router.push(tag.name);
->>>>>>> 14ce0aaedfa457f11dfb074feee5b586494df9e0
-		}
-  },
-  created(){
-     // console.log(this.$router);
-    this.activeTagName=this.$router.currentRoute.meta.applicationName;
+	methods: {
+    routerChange(tag) {
+      this.$router.push('/applicationrouter/applicationnav/' + tag.name);
+    },
+    created() {
+      // console.log(this.$router);
+      this.activeTagName = this.$router.currentRoute.meta.applicationName;
+    }
   }
 }
 </script>
