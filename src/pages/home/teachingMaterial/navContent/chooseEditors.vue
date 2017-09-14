@@ -3,252 +3,125 @@
       <div class="history" ref="history">
         <div class="history-icon" @click="showHistory"></div>
         <div class="history-list" ref="historyList">
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
         </div>
       </div>
       <el-row>
         <el-col :span="24">
-          <el-col :span="18">
-            <el-col>
-              <div class="search-title">姓名:</div>
-              <el-col :span="4" class="search-10">
-                <el-input v-model="input" placeholder="请输入姓名"></el-input>
-              </el-col>
-              <div class="search-title">申报职位:</div>
-              <el-col :span="4" class="search-10">
-                <el-select v-model="value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-col>
-              <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-              <div class="pull-right">
-                <el-button class="btn" type="primary" >拟定编委</el-button>
-                <el-button class="btn" type="danger" @click="Ldelet" :disabled="isSelected">移除</el-button>
-                <el-button class="btn" type="primary" >增加候选人</el-button>
-              </div>
+          <el-col>
+            <div class="search-title">姓名:</div>
+            <el-col :span="4" class="search-10">
+              <el-input v-model="input" placeholder="请输入姓名"></el-input>
             </el-col>
-            <el-table
-              ref="multipleTable"
-              :data="tableData"
-              border
-              stripe
-              tooltip-effect="dark"
-              max-height="750"
-              style="width: 100%"
-              @selection-change="handleSelectionChange">
+            <div class="search-title">申报职位:</div>
+            <el-col :span="4" class="search-10">
+              <el-select v-model="value" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+          </el-col>
+          <el-table
+            ref="multipleTable"
+            :data="tableData"
+            border
+            stripe
+            tooltip-effect="dark"
+            max-height="750"
+            style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column
+              label="姓名"
+            >
+              <template scope="scope">
+                <el-tooltip :content="scope.row.sex === 0? '男' : '女'" placement="top-start">
+                  <p>{{scope.row.name}} <i class="fa" :class="scope.row.sex === 0? 'fa-mars' : 'fa-venus'"></i></p>
+                </el-tooltip>
+              </template>
+            </el-table-column>
               <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                label="申报账号"
-                prop="number"
-               >
-              </el-table-column>
-              <el-table-column
-                label="姓名"
+                label="申报单位/工作单位"
               >
                 <template scope="scope">
-                  <el-tooltip :content="scope.row.sex === 0? '男' : '女'" placement="top-start">
-                    <p>{{scope.row.name}} <i class="fa" :class="scope.row.sex === 0? 'fa-mars' : 'fa-venus'"></i></p>
+                  <el-tooltip :content="'申报单位:'+scope.row.applicationOrganization" placement="top-start">
+                    <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
+                  </el-tooltip>
+                  <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
+                    <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="birthday"
-                label="出生年月"
-                >
-              </el-table-column>
-                <el-table-column
-                  label="申报单位/工作单位"
-                >
-                  <template scope="scope">
-                    <el-tooltip :content="'申报单位:'+scope.row.applicationOrganization" placement="top-start">
-                      <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
-                    </el-tooltip>
-                    <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
-                      <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="职务/职称"
-                >
-                  <template scope="scope">
-                    <el-tooltip :content="'职务:'+scope.row.duty" placement="top-start">
-                      <p><i class="fa fa-tags fa-fw"></i> {{scope.row.duty}}</p>
-                    </el-tooltip>
-                    <el-tooltip :content="'职称:'+scope.row.jobTitle" placement="top-start">
-                      <p><i class="fa fa-graduation-cap fa-fw"></i> {{scope.row.jobTitle}}</p>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="联系方式"
-                  width="200"
-                >
-                  <template scope="scope">
-                    <p><i class="fa fa-phone fa-fw"></i> {{scope.row.mobile}}</p>
-                    <p><i class="fa fa-envelope fa-fw"></i> {{scope.row.email}}</p>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="操作"
-                  align="center"
-                >
-                  <template scope="scope">
-                    <el-button
-                      size="small"
-                      @click="add(scope.$index)">添加</el-button>
-                  </template>
-                </el-table-column>
-            </el-table>
-          </el-col>
-          <el-col :span="5" class="pull-right">
-            <el-col>
-              <el-col :span="10" class="search-10">
-                <el-input class="fileinput"
-                          v-model="input"
-                          placeholder="请输入内容"
-                          icon="search"
-                          :on-icon-click="Search"
-                ></el-input>
-              </el-col>
-              <el-button class="btn" type="primary">保存</el-button>
-              <el-button class="btn" type="primary">导出</el-button>
-            </el-col>
-            <el-table
-              :data="tableData1"
-              border
-              stripe
-              max-height="750"
-              style="width: 100%">
-              <el-table-column
-                label="姓名">
-                <template scope="scope">
-                  <el-tooltip placement="top-start">
-                    <div slot="content">申报单位:{{scope.row.applicationOrganization}}<br/>工作单位:{{scope.row.workOrganization}}
-                      <br/>职务:{{scope.row.duty}}<br/>职称:{{scope.row.jobTitle}}<br/>电话:{{scope.row.mobile}}<br/>邮箱:{{scope.row.email}}
-                    </div>
-                    <p>{{scope.row.name}} <i class="fa" :class="scope.row.sex === 0? 'fa-mars' : 'fa-venus'"></i></p>
-                  </el-tooltip>
-                </template>
+              <el-table-column label="申请职位"
+                prop="jobApplication"
+              >
               </el-table-column>
               <el-table-column
+                label="学校审核"
+                width="100"
                 align="center"
-                label="操作">
+              >
                 <template scope="scope">
-                  <el-button
-                    size="small"
-                    @click="delet(scope.$index)">移除</el-button>
+                  <el-popover trigger="hover" placement="top">
+                    <p>状态: {{ scope.row.schoolSaudit }}</p>
+                    <div slot="reference" class="name-wrapper">
+                      <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
+                    </div>
+                  </el-popover>
                 </template>
               </el-table-column>
-            </el-table>
-          </el-col>
+            <el-table-column
+              label="出版社审核"
+              width="130"
+              align="center"
+            >
+              <template scope="scope">
+                <el-popover trigger="hover" placement="top">
+                  <p>状态: {{ scope.row.pressAudit }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="是否主编"
+              width="100"
+              align="center"
+            >
+              <template scope="scope">
+                <el-checkbox v-model="scope.row.isChiefEditor" @change="change(scope.$index)"></el-checkbox>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="排位"
+                             width="80"
+                             align="center">
+              <template scope="scope">
+                <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor" size="mini"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="是否副主编"
+              width="120"
+              align="center">
+              <template scope="scope">
+                <el-checkbox v-model="scope.row.isSubeditor" @change="change(scope.$index)"></el-checkbox>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="排位"
+                             width="80"
+                             align="center">
+              <template scope="scope">
+                <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor" size="mini"></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-col>
       </el-row>
     </div>
@@ -278,138 +151,19 @@
         value: '全部',
         tableData:[
           {
-            number:'zhangsan',
             name: '张三',
             sex:0,
-            birthday: '1965-06-02',
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
             jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'lisi',
-            name: '李四',
-            sex:0,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'xiaohong',
-            name: '小红',
-            sex:1,
-            birthday: '1965-06-02',
-            applicationOrganization:'成都医科大学',
-            workOrganization:'成都医科大学',
-            duty: '主任',
-            jobTitle: '副教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'wangmazi',
-            name: '王麻子',
-            sex:0,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'wangjie',
-            name: '王姐',
-            sex:1,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'zhangsan',
-              name: '张三',
-              sex:0,
-              birthday: '1965-06-02',
-              applicationOrganization:'四川大学',
-              workOrganization:'成都医科大学',
-              duty: '无',
-              jobTitle: '教授',
-              mobile: '1344444444',
-              email: '123321@qq.com'
-          },
-          {
-            number:'lisi',
-              name: '李四',
-            sex:0,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'xiaohong',
-              name: '小红',
-            sex:1,
-            birthday: '1965-06-02',
-            applicationOrganization:'成都医科大学',
-            workOrganization:'成都医科大学',
-            duty: '主任',
-            jobTitle: '副教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'wangmazi',
-              name: '王麻子',
-            sex:0,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          },
-          {
-            number:'wangjie',
-              name: '王姐',
-            sex:1,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
-          }
-        ],
-        tableData1:[
-          {
-            number:'zhangsan',
-            name: '张三',
-            sex:0,
-            birthday: '1965-06-02',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            mobile: '1344444444',
-            email: '123321@qq.com'
+            jobApplication:'主编',
+            schoolSaudit:'已审核',
+            pressAudit:'已收到纸质表',
+            isChiefEditor:false,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
           }
         ]
       }
@@ -428,30 +182,10 @@
       }
     },
     methods:{
-      // 点击添加
-      add(index) {
-        this.tableData1.push(this.tableData[index])
-        this.$message({
-          message: '已成功添加！',
-          type: 'success'
-        });
-      },
       handleSelectionChange(val) {
         this.multipleSelection = val
       },
-      // 右边表格移除
-      delet(index) {
-        this.tableData1.splice(index,1)
-        this.$message({
-          message: '已成功移除！',
-          type: 'success'
-        });
-      },
-      // 左边表格移除
-      Ldelet(){
-        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
-        this.$refs.multipleTable.clearSelection()
-      },
+      // 搜索
       Search(){
       },
       // 展示历史记录
@@ -463,6 +197,11 @@
           this.$refs.history.style.right = `-500px`
           this.showhistory = !this.showhistory
         }
+      },
+      change(index) {
+        console.log(this.tableData[index].isChiefEditor,this.tableData[index].isSubeditor)
+//        this.tableData[index].isChiefEditor = !this.tableData[index].isChiefEditor
+//        this.tableData[index].isSubeditor = !this.tableData[index].isSubeditor
       }
     }
   }
