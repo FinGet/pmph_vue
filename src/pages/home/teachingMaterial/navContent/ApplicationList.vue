@@ -8,7 +8,7 @@
             <el-input class="input" v-model="searchValue"></el-input>
             <el-button type="primary" class="button" icon="search">搜索</el-button>
             <el-checkbox v-model="searchChecked" class="check">仅查看我的</el-checkbox>
-            <el-button class="right_button" type="primary">新建遴选教材</el-button>
+            <router-link :to="{name:'新建遴选教材'}"><el-button class="right_button" type="primary">新建遴选教材</el-button></router-link>
         </p>
 
         <el-table :data="tableData" border style="width: 100%" class="table_list table-wrapper">
@@ -74,9 +74,9 @@
         </el-table>
         <el-pagination
          class="pagination"
-         @size-change="handleSizeChange" 
-         @current-change="handleCurrentChange" 
-         :current-page="currentPage" 
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange"
+         :current-page="currentPage"
          :page-sizes="[100, 200, 300, 400]"
             :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="totalPage">
         </el-pagination>
@@ -272,7 +272,7 @@
     }
 
     .table_list .contact_p {
-       
+
         overflow: hidden;
         width: 100%;
     }
@@ -283,7 +283,7 @@
 
     .table_list .operation_p {
         float: left;
-      
+
     }
 
     .table_list .operation_p .op_button {
@@ -303,7 +303,7 @@
          color:#337ab7;
     }
     .table_list .operation_p .more_button:hover{
-         
+
          color:#23527c;
     }
     .application_list .pagination{
