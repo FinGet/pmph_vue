@@ -8,7 +8,8 @@
                 <span class="grey_span">第{{formData.round}}轮</span>
             </el-form-item>
             <el-form-item label="教材分类：">
-                <el-form-item>
+                <span class="grey_span">{{formData.releaseText}}</span>
+                <!-- <el-form-item>
                     <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
                     <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
                     <el-button type="text" class="classify_button">删除</el-button>
@@ -24,7 +25,7 @@
                             <el-button size="small" type="primary">点击上传</el-button>
                         </el-upload>
                     </el-form-item>
-                </el-form-item>
+                </el-form-item> -->
             </el-form-item>
             <el-form-item label="扩展项：">
                 <table class="extend_list">
@@ -78,12 +79,6 @@
             </div> 
         <!-- 教材分类选择弹框 -->
   
-        <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisible" size="tiny">
-            <div style="overflow:hidden;">
-                <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
-                <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -93,53 +88,11 @@ export default {
         return {
             formData: {
                 bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
+                releaseText:'学校教育>本科教育>临床教材',
                 round: 3,
                 classify: ''
             },
-            dialogVisible: false,
-            chooseBookData: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }]
-            }],
-            checkedTreeData: {},
-            defaultProps: {
-                children: 'children',
-                label: 'label'
-            },
-            fileList: [
-                //  { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }, { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
-            ],
+
             extendListData: [
                 {
                     orderNum: 1,

@@ -55,7 +55,7 @@
                     <p class="operation_p">
                         <el-button type="text" class="op_button">修改</el-button><span class="op_span">|</span>
                         <el-button type="text" class="op_button">发布</el-button><span class="op_span">|</span>
-                        <el-button type="text" class="op_button">设置书目录</el-button>
+                        <el-button type="text" class="op_button" @click="$router.push('/applicationrouter/newbookrelease')">设置书目录</el-button>
                         <el-dropdown trigger="click">
                                 <span class="el-dropdown-link more_button">
                                   更多<i class="el-icon-caret-bottom el-icon--right"></i>
