@@ -99,8 +99,6 @@
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-button type="text">确定</el-button>
-                <el-button type="text">发布</el-button>
               </p>
               <p class="gray" v-else>( 空 )</p>
             </template>
@@ -117,7 +115,6 @@
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-button type="text">确定</el-button>
               </p>
               <p class="gray" v-else>( 空 )</p>
             </template>
