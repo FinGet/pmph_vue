@@ -11,6 +11,7 @@ import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
 import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
 import ChooseEditors from 'pages/home/teachingMaterial/navContent/chooseEditors'
+import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
 import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
@@ -29,15 +30,16 @@ export default new Router({
       children: [
         {path:'applicationrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2 },
          children:[
-           {path:'applicationlist',name:'教材申报',component:ApplicationList, meta: { breadNumber: 2 }},
-          {
-            path: 'applicationnav', name: '教材申报', component: ApplicationNav, children: [
-              { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
-              { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
-              { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
-              { path: 'chooseeditors', name:'遴选编委', component:ChooseEditors, meta:{breadNumber: 4 ,applicationName:'chooseeditors'}}
-            ]
-          },
+            {path:'applicationlist',name:'教材申报',component:ApplicationList, meta: { breadNumber: 2 }},
+            {
+              path: 'applicationnav', name: '教材申报', component: ApplicationNav, children: [
+                { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
+                { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
+                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
+                { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 4 ,applicationName:'chooseeditors'}}
+              ]
+            },
+            { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3,applicationName:'newchoosebooks'}}
          ]
       },
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },
