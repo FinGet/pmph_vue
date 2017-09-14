@@ -16,6 +16,26 @@
               </el-col>
             </el-form-item>
 
+            <el-form-item label="教材分类：">
+              <el-form-item>
+                <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
+                <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
+                <el-button type="text" class="classify_button">删除</el-button>
+              </el-form-item>
+              <el-form-item>
+                <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
+              </el-form-item>
+              <el-form-item>
+                <el-form-item>
+                        <span class="grey_span" style="float:left;">请按照模板格式上传（
+                            <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
+                  <el-upload class="upload" action="" :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                  </el-upload>
+                </el-form-item>
+              </el-form-item>
+            </el-form-item>
+
             <el-form-item label="结束日期:" required>
               <el-col :span="4">
                 <el-form-item prop="endDate">
@@ -217,12 +237,20 @@
 
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
-              <el-button type="primary" @click="submitForm('ruleForm')">保存,下一步</el-button>
+              <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
             </el-form-item>
 
           </el-form>
         </el-col>
       </el-row>
+      <!-- 教材分类选择弹框 -->
+
+      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisible" size="tiny">
+        <div style="overflow:hidden;">
+          <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
+          <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -235,6 +263,16 @@
         jobradio:'1',
         mainContent:'',
         remark:'',
+        dialogVisible: false,
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        formData: {
+          bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
+          round: 3,
+          classify: ''
+        },
         fileList:[],
         tableData:[
           {
@@ -325,6 +363,41 @@
           address:'北京市朝阳区潘家园南里19号人卫大厦B座',
           uploadImg:''
         },
+        chooseBookData: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
         rules: {
           name: [
             { required: true, message: '请输入教材名称', trigger: 'blur' }
@@ -352,18 +425,31 @@
     },
     methods: {
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+        this.$message({
+          message: '保存成功，设置书目录即可发布！',
+          type: 'success'
         });
+        this.$router.push('applicationlist')
+
+//        this.$refs[formName].validate((valid) => {
+//          if (valid) {
+//            alert('submit!');
+//          } else {
+//            console.log('error submit!!');
+//            return false;
+//          }
+//        });
       },
       // 返回上一级
       back() {
         this.$router.push('applicationlist')
+      },
+      handleNodeClick(data) {
+        this.checkedTreeData = data;
+        console.log(data);
+      },
+      getTreeNode() {
+
       },
       /**
        *
@@ -388,7 +474,47 @@
 
 <style>
   .newChoose{
-    background-color: #fff;
-    padding:10px;
+    border: 1px solid rgb(209, 217, 229);
+    padding:15px 20px;
+  }
+  .grey_span {
+    color: #9c9c9c;
+  }
+  .upload {
+    float: left;
+  }
+
+  .red_span {
+    color: #f5596e;
+  }
+  .classify_input {
+    width: 600px;
+    margin-right: 20px;
+  }
+
+ .classify_button {
+    color: #1abb9c;
+  }
+
+  .classify_button:hover {
+    opacity: .9;
+  }
+  .checkTree_dialog .button {
+    float: right;
+  }
+  .checkTree_dialog .tree_box {
+    box-sizing: border-box;
+    width: calc(100% - 100px);
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    float: left;
+  }
+  .checkTree_dialog .tree_box::-webkit-scrollbar {
+    display: none;
+  }
+
+  .checkTree_dialog .button {
+    float: right;
   }
 </style>
