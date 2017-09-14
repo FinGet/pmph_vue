@@ -11,7 +11,7 @@
           <div class="tips_icon"></div>
       </div>
 		<div class="bottom_tab_content">
-      
+
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -31,7 +31,7 @@ export default {
       this.$router.push('/applicationrouter/applicationnav/' + tag.name);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
-    
+
   },
   created() {
       // console.log(this.$router);
@@ -59,7 +59,7 @@ export default {
     float: right;
     border:0;
     box-sizing: border-box;
-    
+
 }
 .application_nav .tab_nav  .el-tabs__header{
     border-bottom:0 ;
