@@ -66,7 +66,7 @@
         window.removeEventListener("resize", this.refresh);
         this.autoResize();
       }
-      //如果组件传入scrollbar，则监听滚动事件
+      //如果显示滚动条，则监听滚动事件
       if(this.scrollbar){
         beautyScrollInner.addEventListener("scroll",this.resetScrollBarPosition);
       }

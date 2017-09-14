@@ -35,8 +35,6 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">结果公布</el-button>
-          <el-button type="primary">主编副主编确认</el-button>
         </div>
       </div>
       <!--表格-->
