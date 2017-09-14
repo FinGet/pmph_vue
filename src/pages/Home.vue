@@ -83,7 +83,7 @@
   }
   .app-main{
     position: relative;
-    min-height: 100%;
+    height: 100%;
     transition: all .28s ease-out;
     margin-left: 200px;
     margin-top: 38px;

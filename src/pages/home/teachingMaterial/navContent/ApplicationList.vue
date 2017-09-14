@@ -6,9 +6,9 @@
                 </el-option>
             </el-select>
             <el-input class="input" v-model="searchValue"></el-input>
-            <el-button type="primary" class="button">搜索</el-button>
+            <el-button type="primary" class="button" icon="search">搜索</el-button>
             <el-checkbox v-model="searchChecked" class="check">仅查看我的</el-checkbox>
-            <el-button class="right_button" type="primary">新建遴选公告</el-button>
+            <el-button class="right_button" type="primary">新建遴选教材</el-button>
         </p>
 
         <el-table :data="tableData" border style="width: 100%" class="table_list table-wrapper">
@@ -19,21 +19,21 @@
                     <router-link :to="{name:'申报表审核',query:{bookid:scope.row.bookid}}">{{scope.row.textBookName}}</router-link>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="130" >
+            <el-table-column label="显示结束日期" width="123" >
                 <template scope="scope">
                     <p>
                         {{scope.row.showEndTime}}
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="130" >
+            <el-table-column label="实际结束日期" width="123" >
                     <template scope="scope">
                         <p>
                             {{scope.row.factEndTime}}
                         </p>
                     </template>
                 </el-table-column>
-            <el-table-column label="联系人" width="350" >
+            <el-table-column label="联系人" >
                 <template scope="scope">
                     <p class="contact_p">
                         <span>{{scope.row.name}}</span>
@@ -44,13 +44,13 @@
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="90"  :filters="[{ text: '已公布', value: '已公布' }, { text: '进行中', value: '进行中' }, { text: '已结束', value: '已结束' }]"
+            <el-table-column prop="status" label="状态" width="85"  :filters="[{ text: '已公布', value: '已公布' }, { text: '进行中', value: '进行中' }, { text: '已结束', value: '已结束' }]"
                 :filter-method="filterTag" filter-placement="bottom-end">
                 <template scope="scope">
                     {{scope.row.status}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="270">
+            <el-table-column label="操作" width="260">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button">修改</el-button><span class="op_span">|</span>
@@ -272,7 +272,7 @@
     }
 
     .table_list .contact_p {
-        text-align: center;
+       
         overflow: hidden;
         width: 100%;
     }

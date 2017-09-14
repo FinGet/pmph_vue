@@ -80,6 +80,7 @@ export default {
   padding:15px 20px;
   float:left;
   width:100%;
+  background-color: #fff;
 }
 .application_nav .header_title_tips{
     margin-bottom:15px;
