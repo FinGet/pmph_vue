@@ -68,47 +68,16 @@
             width="80">
           </el-table-column>
           <el-table-column
-            label="策划编辑">
-            <template scope="scope">
-              <p v-if="scope.row.planningEditor">
-                {{scope.row.planningEditor}}
-                <el-tooltip class="item" effect="dark" content="点击进入编辑策划编辑" placement="top">
-                  <el-button type="text">
-                    <i class="fa fa-pencil fa-fw"></i>
-                  </el-button>
-                </el-tooltip>
-              </p>
-              <p class="gray" v-else>( 空 )</p>
-            </template>
+            prop="planningEditor"
+            label="策划编辑"
+            width="100">
           </el-table-column>
           <el-table-column
-            label="主编/副主编">
+            label="遴选主编/副主编/编委">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
-                {{scope.row.subeditor[0]}}等{{scope.row.subeditor.length}}人
-
-                <el-tooltip class="item" effect="dark" content="已有用户正在编辑中,请稍后" placement="top" v-if="scope.row.editing">
-                  <el-button type="text">
-                    <i class="fa fa-pencil fa-fw gray"></i>
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编" placement="top" v-else>
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
-                    <el-button type="text">
-                      <i class="fa fa-pencil fa-fw"></i>
-                    </el-button>
-                  </router-link>
-                </el-tooltip>
-              </p>
-              <p class="gray" v-else>( 空 )</p>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="拟选编委">
-            <template scope="scope">
-              <p v-if="scope.row.chiefEditor">
-                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入拟选编委" placement="top">
+                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
                   <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
