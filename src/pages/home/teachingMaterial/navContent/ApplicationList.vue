@@ -219,6 +219,46 @@
                         status: '已公布',
                         bookid:'1'
                     },
+                    {
+                        textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                        showEndTime: '2017-06-03',
+                        factEndTime: '2017-09-09',
+                        name: '邹洁',
+                        phoneNumber: '010-59787102',
+                        eMail: 'zoujie@XXXXX.XXX',
+                        status: '已公布',
+                        bookid:'1'
+                    },
+                    {
+                        textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                        showEndTime: '2017-06-03',
+                        factEndTime: '2017-09-09',
+                        name: '邹洁',
+                        phoneNumber: '010-59787102',
+                        eMail: 'zoujie@XXXXX.XXX',
+                        status: '已公布',
+                        bookid:'1'
+                    },
+                    {
+                        textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                        showEndTime: '2017-06-03',
+                        factEndTime: '2017-09-09',
+                        name: '邹洁',
+                        phoneNumber: '010-59787102',
+                        eMail: 'zoujie@XXXXX.XXX',
+                        status: '已公布',
+                        bookid:'1'
+                    },
+                    {
+                        textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                        showEndTime: '2017-06-03',
+                        factEndTime: '2017-09-09',
+                        name: '邹洁',
+                        phoneNumber: '010-59787102',
+                        eMail: 'zoujie@XXXXX.XXX',
+                        status: '已公布',
+                        bookid:'1'
+                    },
                 ]
 
             }
