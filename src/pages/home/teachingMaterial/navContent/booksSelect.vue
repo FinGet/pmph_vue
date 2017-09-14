@@ -44,31 +44,28 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%">
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--type="selection"-->
+            <!--width="55">-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="bookorder"
-            sortable
             label="书序"
-            width="88">
+            width="68">
           </el-table-column>
           <el-table-column
-            sortable
             prop="edition"
             label="版次"
-            width="88">
+            width="68">
           </el-table-column>
           <el-table-column
             prop="bookname"
             label="书名">
           </el-table-column>
           <el-table-column
-            sortable
             prop="applyNumber"
             label="申报数"
-            width="100">
+            width="80">
           </el-table-column>
           <el-table-column
             label="策划编辑">
@@ -96,7 +93,7 @@
                   </el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编" placement="top" v-else>
-                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
@@ -114,7 +111,7 @@
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入拟选编委" placement="top">
-                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
@@ -154,6 +151,7 @@
     export default{
         data(){
             return{
+              level:undefined,
               booksChooseValue5:'',
               booksChooseOptions: [{
                 value: '选项1',
@@ -355,6 +353,9 @@
                   editorialBoard:['李建国','王尔尔','赵三三','一一一','二二人','三三'],
                 }],
             }
+        },
+        created(){
+          this.level = this.$route.query.level;
         }
     }
 </script>
