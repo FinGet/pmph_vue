@@ -35,8 +35,6 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">结果公布</el-button>
-          <el-button type="primary">主编副主编确认</el-button>
         </div>
       </div>
       <!--表格-->
@@ -46,83 +44,46 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%">
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--type="selection"-->
+            <!--width="55">-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="bookorder"
-            sortable
             label="书序"
-            width="88">
+            width="68">
           </el-table-column>
           <el-table-column
-            sortable
             prop="edition"
             label="版次"
-            width="88">
+            width="68">
           </el-table-column>
           <el-table-column
             prop="bookname"
             label="书名">
           </el-table-column>
           <el-table-column
-            sortable
             prop="applyNumber"
             label="申报数"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="planningEditor"
+            label="策划编辑"
             width="100">
           </el-table-column>
           <el-table-column
-            label="策划编辑">
-            <template scope="scope">
-              <p v-if="scope.row.planningEditor">
-                {{scope.row.planningEditor}}
-                <el-tooltip class="item" effect="dark" content="点击进入编辑策划编辑" placement="top">
-                  <el-button type="text">
-                    <i class="fa fa-pencil fa-fw"></i>
-                  </el-button>
-                </el-tooltip>
-              </p>
-              <p class="gray" v-else>( 空 )</p>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="主编/副主编">
+            label="遴选主编/副主编/编委">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
-                {{scope.row.subeditor[0]}}等{{scope.row.subeditor.length}}人
-
-                <el-tooltip class="item" effect="dark" content="已有用户正在编辑中,请稍后" placement="top" v-if="scope.row.editing">
-                  <el-button type="text">
-                    <i class="fa fa-pencil fa-fw gray"></i>
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编" placement="top" v-else>
-                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
+                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-button type="text">确定</el-button>
-                <el-button type="text">发布</el-button>
-              </p>
-              <p class="gray" v-else>( 空 )</p>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="拟选编委">
-            <template scope="scope">
-              <p v-if="scope.row.chiefEditor">
-                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入拟选编委" placement="top">
-                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
-                    <el-button type="text">
-                      <i class="fa fa-pencil fa-fw"></i>
-                    </el-button>
-                  </router-link>
-                </el-tooltip>
-                <el-button type="text">确定</el-button>
               </p>
               <p class="gray" v-else>( 空 )</p>
             </template>
@@ -156,6 +117,7 @@
     export default{
         data(){
             return{
+              level:undefined,
               booksChooseValue5:'',
               booksChooseOptions: [{
                 value: '选项1',
@@ -357,6 +319,9 @@
                   editorialBoard:['李建国','王尔尔','赵三三','一一一','二二人','三三'],
                 }],
             }
+        },
+        created(){
+          this.level = this.$route.query.level;
         }
     }
 </script>
