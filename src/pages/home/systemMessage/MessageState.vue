@@ -73,7 +73,7 @@
         </el-table>
       </el-col>
     </el-row>
-    <el-pagination v-show="tableData.length > 0"
+    <el-pagination class="pull-right" v-show="tableData.length > 0"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
