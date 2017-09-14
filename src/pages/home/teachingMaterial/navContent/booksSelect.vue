@@ -35,6 +35,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
+          <el-button  type="primary" icon="search" v-if="level==2">主编/副主编确认</el-button>
         </div>
       </div>
       <!--表格-->
@@ -67,13 +68,14 @@
             label="申报数"
             width="80">
           </el-table-column>
-          <el-table-column
+          <!--主任 start-->
+          <el-table-column  v-if="level===1"
             prop="planningEditor"
             label="策划编辑"
             width="100">
           </el-table-column>
           <el-table-column
-            label="遴选主编/副主编/编委">
+            label="遴选主编/副主编/编委" v-if="level===1">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
@@ -88,20 +90,75 @@
               <p class="gray" v-else>( 空 )</p>
             </template>
           </el-table-column>
+          <!--主任 end-->
+
+          <!--项目编辑start-->
+          <el-table-column  v-if="level===2"
+                            prop="planningEditor"
+                            label="策划编辑"
+                            width="100">
+          </el-table-column>
+          <el-table-column
+            label="遴选主编/副主编/编委" v-if="level===2">
+            <template scope="scope">
+              <p v-if="scope.row.chiefEditor">
+                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </p>
+              <p class="gray" v-else>( 空 )</p>
+            </template>
+          </el-table-column>
+          <!--项目编辑end-->
+
+          <!--策划编辑start-->
+          <el-table-column  v-if="level===3"
+                            prop="planningEditor"
+                            label="策划编辑"
+                            width="100">
+          </el-table-column>
+          <el-table-column
+            label="遴选主编/副主编/编委" v-if="level===3">
+            <template scope="scope">
+              <p v-if="scope.row.chiefEditor">
+                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </p>
+              <p class="gray" v-else>( 空 )</p>
+            </template>
+          </el-table-column>
+          <!--策划编辑end-->
+
           <el-table-column
             label="审核操作">
             <template scope="scope">
-              <el-button type="text">通过</el-button>
-              <span class="vertical-line"></span>
-              <el-button type="text">结果公布</el-button>
-              <span class="vertical-line"></span>
-              <el-button type="text">导出Excel</el-button>
+              <div v-if="level===1">
+                <el-button type="text">通过</el-button>
+                <span class="vertical-line"></span>
+                <el-button type="text">结果公布</el-button>
+                <span class="vertical-line"></span>
+                <el-button type="text">导出Excel</el-button>
+              </div>
+              <div v-else>
+                <el-button type="text">导出Excel</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="pagination-wrapper">
-        <el-pagination
+        <el-pagination v-if="level===1"
           :page-sizes="[30,50,100, 200, 300, 400]"
           :page-size="30"
           layout="total, sizes, prev, pager, next, jumper"
@@ -322,6 +379,13 @@
         },
         created(){
           this.level = this.$route.query.level;
+          this.level = this.level?parseInt(this.level):1;
+          console.log(this.level);
+
+          //模拟下当是策划编辑时少一点数据
+          if(this.level!==1){
+            this.tableData.splice(8);
+          }
         }
     }
 </script>
