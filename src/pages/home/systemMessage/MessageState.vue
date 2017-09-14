@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <el-col :span="4">
-          <el-button class="btn" type="parmary" icon="arrow-left" @click="back">返回</el-button>
+          <el-button class="btn" type="primary" icon="arrow-left" @click="back">返回</el-button>
         </el-col>
         <el-col :span="4" class="radio">
           <el-radio-group v-model="radio">
