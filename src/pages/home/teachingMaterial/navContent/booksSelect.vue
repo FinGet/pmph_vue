@@ -98,7 +98,7 @@
                   </el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编" placement="top" v-else>
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
@@ -116,7 +116,7 @@
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入拟选编委" placement="top">
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'遴选编委',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
