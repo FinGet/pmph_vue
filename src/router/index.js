@@ -10,6 +10,7 @@ import BooksSelect from '../pages/home/teachingMaterial/navContent/booksSelect'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
 import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
+import newBookRelease from '../pages/home/teachingMaterial/navContent/newBookRelease'
 import ChooseEditors from 'pages/home/teachingMaterial/navContent/chooseEditors'
 import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
 import MessageList from 'pages/home/systemMessage/MessageList'
@@ -31,6 +32,7 @@ export default new Router({
         {path:'applicationrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2 },
          children:[
             {path:'applicationlist',name:'教材申报',component:ApplicationList, meta: { breadNumber: 2 }},
+            {path:'newbookrelease',name:'新建遴选教材',component:newBookRelease, meta: { breadNumber: 2 }},
             {
               path: 'applicationnav', name: '教材申报', component: ApplicationNav, children: [
                 { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
