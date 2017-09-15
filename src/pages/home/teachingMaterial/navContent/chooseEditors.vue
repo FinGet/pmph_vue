@@ -71,12 +71,9 @@
                 align="center"
               >
                 <template scope="scope">
-                  <el-popover trigger="hover" placement="top">
-                    <p>状态: {{ scope.row.schoolSaudit }}</p>
-                    <div slot="reference" class="name-wrapper">
-                      <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
-                    </div>
-                  </el-popover>
+                  <el-tooltip :content="'状态:'+scope.row.schoolSaudit" placement="top-start">
+                    <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
+                  </el-tooltip>
                 </template>
               </el-table-column>
             <el-table-column
@@ -85,12 +82,9 @@
               align="center"
             >
               <template scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>状态: {{ scope.row.pressAudit }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
-                  </div>
-                </el-popover>
+                <el-tooltip :content="'状态:'+scope.row.pressAudit" placement="top-start">
+                  <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
 
@@ -100,7 +94,7 @@
               align="center"
             >
               <template scope="scope">
-                <el-checkbox v-model="scope.row.isChiefEditor" @change="change(scope.$index)"></el-checkbox>
+                <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"></el-checkbox>
               </template>
             </el-table-column>
 
@@ -116,7 +110,7 @@
               width="120"
               align="center">
               <template scope="scope">
-                <el-checkbox v-model="scope.row.isSubeditor" @change="change(scope.$index)"></el-checkbox>
+                <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"></el-checkbox>
               </template>
             </el-table-column>
 
@@ -279,10 +273,28 @@
           this.showhistory = !this.showhistory
         }
       },
-      change(index) {
-        console.log(this.tableData[index].isChiefEditor,this.tableData[index].isSubeditor)
-//        this.tableData[index].isChiefEditor = !this.tableData[index].isChiefEditor
-//        this.tableData[index].isSubeditor = !this.tableData[index].isSubeditor
+//      change(index,val1,val2) {
+//        console.log(this.tableData[index].isChiefEditor,this.tableData[index].isSubeditor)
+////        this.tableData[index].isChiefEditor = !this.tableData[index].isChiefEditor
+////        this.tableData[index].isSubeditor = !this.tableData[index].isSubeditor
+////        if(this.tableData[index].isChiefEditor){
+////          this.tableData[index].isSubeditor = false
+////          this.tableData[index].isChiefEditor = true
+////        }else {
+////          this.tableData[index].isSubeditor = true
+////          this.tableData[index].isChiefEditor = false
+////        }
+//      }
+      // checkbox实现单选功能
+      changeSubeditor(index) {
+        if (this.tableData[index].isChiefEditor){
+          this.tableData[index].isChiefEditor = false
+        }
+      },
+      changeChiefEditor(index) {
+        if (this.tableData[index].isSubeditor){
+          this.tableData[index].isSubeditor = false
+        }
       }
     }
   }
