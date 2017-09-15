@@ -1,10 +1,12 @@
 <template>
 	<div class="application_nav">
         <div class="tab_nav_outbox">
+            <el-button type="text"  class="back_button" icon="arrow-left">返回</el-button>
 		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange">
 			<el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
             <el-tab-pane label="教材遴选" name="booksselect"></el-tab-pane>
 		</el-tabs>
+        
         </div>
         <div class="header_title_tips">
           <p >全国高等职业教育临床医学院</p>
@@ -53,6 +55,12 @@ export default {
      border: 1px solid rgb(209, 217, 229);
      box-sizing: border-box;
  }
+ .application_nav .tab_nav_outbox .back_button{
+     float:right;
+     margin-right:20px;
+     margin-left:20px;
+     line-height: 20px;
+ }
 .application_nav .tab_nav{
 	box-shadow: none;
     border-bottom:0;
@@ -92,7 +100,7 @@ export default {
 }
 .application_nav .header_title_tips p{
     float:left;
-    background-color: #1F2D3D;
+    background-color: #12806b;
     font-size:16px;
     padding:2px 40px 2px 15px;
 }
