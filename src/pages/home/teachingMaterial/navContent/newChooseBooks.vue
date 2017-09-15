@@ -60,54 +60,83 @@
               </el-col>
             </el-form-item>
 
+            <!--<el-form-item label="联系人:">-->
+              <!--<el-col :span="12">-->
+                <!--<el-button type="primary" class="pull-right" size="small">选择联系人</el-button>-->
+                <!--<br>-->
+                <!--<el-table-->
+                  <!--:data="tableData"-->
+                  <!--border-->
+                  <!--style="width: 100%">-->
+                  <!--<el-table-column-->
+                    <!--prop="name"-->
+                    <!--label="姓名"-->
+                    <!--width="180">-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="电话"-->
+                    <!--width="180">-->
+                    <!--<template scope="scope">-->
+                      <!--{{ scope.row.phone }}-->
+                      <!--<el-tooltip class="item" effect="dark" content="编辑" placement="top-start">-->
+                        <!--<i class="fa fa-pencil"></i>-->
+                      <!--</el-tooltip>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="邮箱">-->
+                    <!--<template scope="scope">-->
+                      <!--{{ scope.row.email }}-->
+                      <!--<el-tooltip class="item" effect="dark" content="编辑" placement="top-start">-->
+                        <!--<i class="fa fa-pencil"></i>-->
+                      <!--</el-tooltip>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="操作"-->
+                    <!--width="150"-->
+                    <!--align="center"-->
+                  <!--&gt;-->
+                    <!--<template scope="scope">-->
+                      <!--<el-button-->
+                        <!--size="small"-->
+                        <!--type="danger"-->
+                        <!--@click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                <!--</el-table>-->
+              <!--</el-col>-->
+            <!--</el-form-item>-->
             <el-form-item label="联系人:">
-              <el-col :span="12">
-                <el-button type="primary" class="pull-right" size="small">选择联系人</el-button>
-                <br>
-                <el-table
-                  :data="tableData"
-                  border
-                  style="width: 100%">
-                  <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="180">
-                  </el-table-column>
-                  <el-table-column
-                    label="电话"
-                    width="180">
-                    <template scope="scope">
-                      {{ scope.row.phone }}
-                      <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-                        <i class="fa fa-pencil"></i>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="邮箱">
-                    <template scope="scope">
-                      {{ scope.row.email }}
-                      <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-                        <i class="fa fa-pencil"></i>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="操作"
-                    width="150"
-                    align="center"
-                  >
-                    <template scope="scope">
-                      <el-button
-                        size="small"
-                        type="danger"
-                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-col>
+              <table class="extend_list">
+                <tr class="table-header">
+                  <th>姓名</th>
+                  <th>电话</th>
+                  <th>邮箱</th>
+                  <th>
+                    <el-button type="text"  class="add_button">选择联系人</el-button>
+                  </th>
+                </tr>
+                <tr v-for="(item,index) in extendListData" :key="index">
+                  <td>
+                    {{item.orderNum}}
+                  </td>
+                  <td>
+                            <span v-if="!item.bookNameVisible">{{item.bookName}}
+                                <i class="el-icon-edit" @click="item.bookNameVisible=true"></i>
+                            </span>
+                    <el-input v-model="item.bookName" :ref="'input'+index+'_2'" v-if="item.bookNameVisible" @blur="item.bookNameVisible=false"  style="width:80%;"></el-input>
+                  </td>
+                  <td>
+                            <span v-if="!item.editionVisible">{{item.edition}}
+                                <i class="el-icon-edit" @click="item.editionVisible=true"></i>
+                            </span>
+                    <el-input v-model="item.edition" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>
+                  </td>
+                  <td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>
+                </tr>
+              </table>
             </el-form-item>
-
             <el-form-item label="邮寄地址:">
               <el-col :span="6">
                 <el-input v-model="ruleForm.address"></el-input>
@@ -363,7 +392,8 @@
           address:'北京市朝阳区潘家园南里19号人卫大厦B座',
           uploadImg:''
         },
-        chooseBookData: [{
+        chooseBookData: [
+          {
           label: '一级 1',
           children: [{
             label: '二级 1-1',
@@ -371,14 +401,16 @@
               label: '三级 1-1-1'
             }]
           }]
-        }, {
+        },
+          {
           label: '一级 2',
           children: [{
             label: '二级 2-1',
             children: [{
               label: '三级 2-1-1'
             }]
-          }, {
+          },
+            {
             label: '二级 2-2',
             children: [{
               label: '三级 2-2-1'
@@ -420,7 +452,33 @@
           uploadFile: [
             { required: true, message: '请上传文件', trigger: 'blur' }
           ]
-        }
+        },
+        extendListData: [
+          {
+            orderNum: '张三',
+            orderNumVisible: false,
+            bookName:'请填写书名',
+            bookNameVisible:false,
+            edition:'请填写版次',
+            editionVisible:false
+          },
+          {
+            orderNum: '李四',
+            orderNumVisible: false,
+            bookName:'请填写书名',
+            bookNameVisible:false,
+            edition:'请填写版次',
+            editionVisible:false
+          },
+          {
+            orderNum: '王二',
+            orderNumVisible: false,
+            bookName:'请填写书名',
+            bookNameVisible:false,
+            edition:'请填写版次',
+            editionVisible:false
+          },
+        ]
       };
     },
     methods: {
@@ -467,6 +525,26 @@
       },
       handlePreview(file) {
         console.log(file);
+      },
+      showInput(index, str) {
+        this.extendListData[index].orderNumVisible = true;
+        console.log(index,str);
+        console.log(this.$refs);
+        console.log(this.$refs.input0_1) ;
+        //this.$refs[str].$refs.input.focus();
+      },
+      deleteExtendItem(index){
+        this.extendListData.splice(index,1);
+      },
+      addExtendItem(){
+        this.extendListData.push({
+          orderNum: 1,
+          orderNumVisible: false,
+          bookName:'请填写书名',
+          bookNameVisible:false,
+          edition:'请填写版次',
+          editionVisible:false
+        });
       }
     }
   }
@@ -516,5 +594,38 @@
 
   .checkTree_dialog .button {
     float: right;
+  }
+  .extend_list {
+    width: 50%;
+  }
+  .extend_list .table-header{
+    background-color: #d4d9dd;
+  }
+  .extend_list tr {
+    border: 1px solid #d4d4d4;
+  }
+
+  .extend_list tr td {
+    width: 25%;
+    color: #5e5e5e;
+    text-align: center;
+    padding:5px 0;
+  }
+
+  .extend_list tr td i {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  .extend_list .add_button{
+    color:#1ab194;
+  }
+  .out_bottom_box {
+    width:100%;
+    overflow: hidden;
+  }
+  .out_bottom_box .bottom_box{
+    float:left;
+    margin-left:50%;
+    transform: translateX(-50%);
   }
 </style>
