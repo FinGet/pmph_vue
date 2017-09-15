@@ -9,7 +9,7 @@
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
             <div  v-if="!iterm.hasComplete">
-              <div class="searchBox-wrapper" v-if="iterm.isNew">
+              <div class="searchBox-wrapper marginR20" v-if="iterm.isNew">
                 <div class="searchName">图书：<span></span></div>
                 <div class="searchInput">
                   <el-select v-model="iterm.bookname" placeholder="请选择">
@@ -25,7 +25,7 @@
                 <div>图书：<span></span></div>
                 <div>{{iterm.bookname}}</div>
               </div>
-              <el-radio-group v-model="radio2" class="paddingL10 paddingR10">
+              <el-radio-group v-model="radio2" class="">
                 <el-radio :label="3">主编</el-radio>
                 <el-radio :label="6">副主编</el-radio>
                 <el-radio :label="9">编委</el-radio>
