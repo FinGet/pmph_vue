@@ -54,6 +54,8 @@
 .info_detail .grey_p {
     color: #626262;
     line-height: 30px;
+    box-sizing: border-box;
+    padding-right:90px;
 }
 
 .info_detail .grey_p:first-child {
@@ -68,7 +70,7 @@
 
 .info_content {
     text-align: center;
-    padding: 0 30px 0 50px;
+    padding: 0 90px 0 0px;
     box-sizing: border-box;
 }
 
@@ -98,6 +100,6 @@
 }
 
 .info_content img {
-    min-height: 600px;
+    max-width: 500px;
 }
 </style>
