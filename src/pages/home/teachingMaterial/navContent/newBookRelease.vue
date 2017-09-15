@@ -55,13 +55,13 @@
                                 <i class="el-icon-edit" @click="item.editionVisible=true"></i>
                             </span>
                             <el-input v-model="item.edition" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>
-                        </td> 
-                         <td><el-button type="text" @click="deleteExtendItem(index)" class="delete_button">删除</el-button></td>
+                        </td>
+                         <td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>
                     </tr>
                     <!--  <tr>
                              <td>
-                                 1<i class="el-icon-edit"></i>  
-                                 <el-input style="width:100px;" size="mini"></el-input>      
+                                 1<i class="el-icon-edit"></i>
+                                 <el-input style="width:100px;" size="mini"></el-input>
                                 </td>
                              <td>请填写书名 <i class="el-icon-edit"></i></td>
                              <td>请填写版次<i class="el-icon-edit"></i></td>
@@ -73,12 +73,12 @@
 
         <div class="out_bottom_box">
             <div class="bottom_box">
-                <el-button type="primary" class="bottom_button">保存但不发布</el-button>    
-                <el-button type="primary" class="bottom_button">保存并发布</el-button>  
+                <el-button type="primary" class="bottom_button">保存但不发布</el-button>
+                <el-button type="primary" class="bottom_button">保存并发布</el-button>
             </div>
-            </div> 
+            </div>
         <!-- 教材分类选择弹框 -->
-  
+
     </div>
 </template>
 
@@ -225,9 +225,6 @@ export default {
 }
 .extend_list .add_button{
     color:#1ab194;
-}
-.extend_list .delete_button{
-    color:#e57e2f;
 }
 .out_bottom_box {
     width:100%;
