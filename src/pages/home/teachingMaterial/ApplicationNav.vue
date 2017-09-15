@@ -28,15 +28,14 @@ export default {
 	},
 	methods: {
     routerChange(tag) {
-      this.$router.push({name: '教材遴选'});
-      this.activeTagName = this.$router.currentRoute.meta.applicationName;
-    },
-
+      this.$router.push(this.activeTagName);
+    }
   },
-  created() {
-      // console.log(this.$router);
+  watch: {
+    $route () {
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
-    },
+    }
+  },
 }
 </script>
 

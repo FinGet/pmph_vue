@@ -35,6 +35,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
+          <el-button  type="primary" icon="search" v-if="level==2">主编/副主编确认</el-button>
         </div>
       </div>
       <!--表格-->
@@ -67,13 +68,14 @@
             label="申报数"
             width="80">
           </el-table-column>
-          <el-table-column
-            prop="planningEditor"
-            label="策划编辑"
-            width="100">
+          <!--主任 start-->
+          <el-table-column  v-if="level===1"
+                            prop="planningEditor"
+                            label="策划编辑"
+                            width="100">
           </el-table-column>
           <el-table-column
-            label="遴选主编/副主编/编委">
+            label="遴选主编/副主编/编委" v-if="level===1">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
@@ -88,20 +90,126 @@
               <p class="gray" v-else>( 空 )</p>
             </template>
           </el-table-column>
+          <!--主任 end-->
+
+          <!--项目编辑start-->
           <el-table-column
-            label="审核操作">
+            v-if="level===2"
+            label="策划编辑"
+            width="100">
             <template scope="scope">
-              <el-button type="text">通过</el-button>
-              <span class="vertical-line"></span>
-              <el-button type="text">结果公布</el-button>
-              <span class="vertical-line"></span>
-              <el-button type="text">导出Excel</el-button>
+              <p>
+                {{scope.row.planningEditor}}
+                <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="主编/副主编" v-if="level===2">
+            <template scope="scope">
+              <p v-if="scope.row.chiefEditor">
+                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
+                <el-tag type="warning" v-else>待确认</el-tag>
+              </p>
+              <p class="gray" v-else>( 空 )</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="编委审核" v-if="level===2">
+            <template scope="scope">
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-eye fa-lg"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+                <el-tag type="success" v-if="scope.row.editorialBoardHasChoose">已提交</el-tag>
+                <el-tag type="warning" v-else>暂存</el-tag>
+              </p>
+              <p class="gray" v-else>等待主编提交名单</p>
+            </template>
+          </el-table-column>
+          <!--项目编辑end-->
+
+          <!--策划编辑start-->
+          <el-table-column
+            label="编委预选" v-if="level===3">
+            <template scope="scope">
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw" v-if="!scope.row.subeditorHasChoose"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </p>
+              <p class="gray" v-else>( 空 )</p>
+            </template>
+          </el-table-column>
+
+          <el-table-column  v-if="level===3"
+                            prop="chiefEditor"
+                            label="第一主编"
+                            width="100">
+          </el-table-column>
+          <el-table-column
+            label="编委审核" v-if="level===3">
+            <template scope="scope">
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-eye fa-fg"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
+                <el-tag type="warning" v-else>待确认</el-tag>
+              </p>
+              <p class="gray" v-else>等待主编提交名单</p>
+            </template>
+          </el-table-column>
+          <!--策划编辑end-->
+
+          <el-table-column
+            label="操作">
+            <template scope="scope">
+              <div v-if="level===1">
+                <el-button type="text">通过</el-button>
+                <span class="vertical-line"></span>
+                <el-button type="text">结果公布</el-button>
+                <span class="vertical-line"></span>
+                <el-button type="text">导出Excel</el-button>
+              </div>
+              <div v-else>
+                <el-button type="text">导出Excel</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="pagination-wrapper">
-        <el-pagination
+        <el-pagination v-if="level===1"
           :page-sizes="[30,50,100, 200, 300, 400]"
           :page-size="30"
           layout="total, sizes, prev, pager, next, jumper"
@@ -162,7 +270,20 @@
                 planningEditor:'张强',
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
+                editorialBoard:[],
+              },{
+                editing:true,
+                bookid:'123456',
+                bookorder:1,
+                bookname: '细胞生物学和医学遗传学',
+                edition: 9,
+                applyNumber:188,
+                planningEditor:'张强',
+                chiefEditor:'张三',
+                subeditor:['张思','王五','赵六','李思是'],
+                subeditorHasChoose:true,
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoardHasChoose:true,
               },{
                 editing:true,
                 bookid:'123456',
@@ -174,17 +295,7 @@
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
-              },{
-                editing:true,
-                bookid:'123456',
-                bookorder:1,
-                bookname: '细胞生物学和医学遗传学',
-                edition: 9,
-                applyNumber:188,
-                planningEditor:'张强',
-                chiefEditor:'张三',
-                subeditor:['张思','王五','赵六','李思是'],
-                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoardHasChoose:true,
               },{
                 editing:true,
                 bookid:'123456',
@@ -322,6 +433,13 @@
         },
         created(){
           this.level = this.$route.query.level;
+          this.level = this.level?parseInt(this.level):1;
+          console.log(this.level);
+
+          //模拟下当是策划编辑时少一点数据
+          if(this.level!==1){
+            this.tableData.splice(8);
+          }
         }
     }
 </script>
