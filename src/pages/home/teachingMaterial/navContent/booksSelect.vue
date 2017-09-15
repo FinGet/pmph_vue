@@ -116,7 +116,7 @@
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid,level:level}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
