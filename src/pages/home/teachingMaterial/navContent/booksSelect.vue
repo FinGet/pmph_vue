@@ -149,6 +149,11 @@
           <!--项目编辑end-->
 
           <!--策划编辑start-->
+          <el-table-column  v-if="level===3"
+                            prop="chiefEditor"
+                            label="第一主编"
+                            width="100">
+          </el-table-column>
           <el-table-column
             label="编委预选" v-if="level===3">
             <template scope="scope">
@@ -164,12 +169,6 @@
               </p>
               <p class="gray" v-else>( 空 )</p>
             </template>
-          </el-table-column>
-
-          <el-table-column  v-if="level===3"
-                            prop="chiefEditor"
-                            label="第一主编"
-                            width="100">
           </el-table-column>
           <el-table-column
             label="编委审核" v-if="level===3">
