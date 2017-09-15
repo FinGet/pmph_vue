@@ -1,8 +1,8 @@
 <template>
 	<div class="application_nav">
         <div class="tab_nav_outbox">
-            <el-button type="text"  class="back_button" icon="arrow-left">返回</el-button>
-		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange">
+            <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
+		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
 			<el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
             <el-tab-pane label="教材遴选" name="booksselect"></el-tab-pane>
 		</el-tabs>
@@ -26,7 +26,8 @@ export default {
 	data() {
 		return {
 			activeTagName:'presscheck',
-      contentH:'auto'
+           contentH:'auto',
+           isShowTabs:true,
 		}
 	},
 	methods: {
@@ -34,7 +35,9 @@ export default {
       this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
-
+  },
+  watch:{
+ 
   },
   created() {
       // console.log(this.$router);
