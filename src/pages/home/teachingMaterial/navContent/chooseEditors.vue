@@ -44,17 +44,23 @@
               </template>
             </el-table-column>
               <el-table-column
-                label="申报单位/工作单位"
+                label="申报单位"
               >
                 <template scope="scope">
                   <el-tooltip :content="'申报单位:'+scope.row.applicationOrganization" placement="top-start">
                     <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
                   </el-tooltip>
-                  <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
-                    <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
-                  </el-tooltip>
                 </template>
               </el-table-column>
+            <el-table-column
+              label="工作单位"
+            >
+              <template scope="scope">
+                <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
+                  <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
+                </el-tooltip>
+              </template>
+            </el-table-column>
               <el-table-column label="申请职位"
                 prop="jobApplication"
               >
@@ -161,6 +167,81 @@
             schoolSaudit:'已审核',
             pressAudit:'已收到纸质表',
             isChiefEditor:false,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
+          },
+          {
+            name: '李四',
+            sex:1,
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            jobApplication:'主编',
+            schoolSaudit:'已审核',
+            pressAudit:'未收到纸质表',
+            isChiefEditor:false,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
+          },
+          {
+            name: '王二',
+            sex:0,
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            jobApplication:'主编',
+            schoolSaudit:'未审核',
+            pressAudit:'已收到纸质表',
+            isChiefEditor:true,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
+          },
+          {
+            name: '张三',
+            sex:0,
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            jobApplication:'主编',
+            schoolSaudit:'已审核',
+            pressAudit:'已收到纸质表',
+            isChiefEditor:false,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
+          },
+          {
+            name: '李四',
+            sex:1,
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            jobApplication:'主编',
+            schoolSaudit:'已审核',
+            pressAudit:'未收到纸质表',
+            isChiefEditor:false,
+            chiefEditorNo:'',
+            isSubeditor:false,
+            subeditorNo:''
+          },
+          {
+            name: '王二',
+            sex:0,
+            applicationOrganization:'四川大学',
+            workOrganization:'成都医科大学',
+            duty: '无',
+            jobTitle: '教授',
+            jobApplication:'主编',
+            schoolSaudit:'未审核',
+            pressAudit:'已收到纸质表',
+            isChiefEditor:true,
             chiefEditorNo:'',
             isSubeditor:false,
             subeditorNo:''
