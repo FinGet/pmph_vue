@@ -103,7 +103,7 @@
 
             <el-table-column
               v-if="edit"
-              label="是否进入遴选名单"
+              label="是否进入编委预选名单"
               align="center"
             >
               <template scope="scope">

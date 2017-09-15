@@ -46,6 +46,9 @@ export default {
    width:100%;
   position: relative;
 }
+.bottom_tab_content{
+  background-color: #fff;
+}
  .application_nav .tab_nav_outbox{
      float: left;
      width:100%;

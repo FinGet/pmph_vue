@@ -30,7 +30,7 @@
                 <el-radio :label="6">副主编</el-radio>
                 <el-radio :label="9">编委</el-radio>
               </el-radio-group>
-              <div class="info-iterm-text widthAuto">
+              <div class="info-iterm-text widthAuto marginL10">
                 <div>教学大纲：<span></span></div>
                 <div>
                   <el-upload
