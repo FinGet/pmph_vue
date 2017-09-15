@@ -4,62 +4,65 @@
         <el-col>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
 
-            <el-form-item label="教材名称:" prop="name">
-              <el-col :span="6">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="教材名称:" prop="name" class="pull-left">
+              <el-col>
+                <el-input v-model="ruleForm.name" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="教材轮次:" prop="turn">
-              <el-col :span="4">
-                <el-input v-model="ruleForm.turn"></el-input>
+            <el-form-item label="教材轮次:" prop="turn" class="pull-left">
+              <el-col>
+                <el-input v-model="ruleForm.turn" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="教材分类：">
-              <el-form-item>
-                <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
-                <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
-                <el-button type="text" class="classify_button">删除</el-button>
-              </el-form-item>
-              <el-form-item>
-                <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
-              </el-form-item>
-              <el-form-item>
-                <el-form-item>
-                        <span class="grey_span" style="float:left;">请按照模板格式上传（
-                            <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
-                  <el-upload class="upload" action="" :file-list="fileList">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                  </el-upload>
-                </el-form-item>
-              </el-form-item>
-            </el-form-item>
 
-            <el-form-item label="结束日期:" required>
-              <el-col :span="4">
+
+            <el-form-item label="结束日期:" required class="pull-left">
+              <el-col>
                 <el-form-item prop="endDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.endDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="展示结束日期:" required>
-              <el-col :span="4">
+            <el-form-item label="展示结束日期:" required class="pull-left">
+              <el-col>
                 <el-form-item prop="playEndDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.playEndDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="年龄计算截止日期:" required>
-              <el-col :span="4">
+            <el-form-item label="年龄计算截止日期:" required class="pull-left">
+              <el-col>
                 <el-form-item prop="ageDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.ageDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
-
+            <div class="clearfix"></div>
+            <el-form-item label="教材分类:">
+              <el-col>
+                <el-form-item>
+                  <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
+                  <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
+                  <el-button type="text" class="classify_button">删除</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
+                </el-form-item>
+                <el-form-item>
+                  <el-form-item>
+                      <span class="grey_span" style="float:left;">请按照模板格式上传（
+                          <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
+                    <el-upload class="upload" action="" :file-list="fileList">
+                      <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
+                  </el-form-item>
+                </el-form-item>
+              </el-col>
+            </el-form-item>
             <!--<el-form-item label="联系人:">-->
               <!--<el-col :span="12">-->
                 <!--<el-button type="primary" class="pull-right" size="small">选择联系人</el-button>-->
@@ -107,6 +110,7 @@
                 <!--</el-table>-->
               <!--</el-col>-->
             <!--</el-form-item>-->
+            <div class="clearfix"></div>
             <el-form-item label="联系人:">
               <table class="extend_list">
                 <tr class="table-header">
@@ -122,10 +126,10 @@
                     {{item.orderNum}}
                   </td>
                   <td>
-                            <span v-if="!item.bookNameVisible">{{item.bookName}}
-                                <i class="el-icon-edit" @click="item.bookNameVisible=true"></i>
+                            <span v-if="!item.phoneVisible">{{item.phone}}
+                                <i class="el-icon-edit" @click="item.phoneVisible=true"></i>
                             </span>
-                    <el-input v-model="item.bookName" :ref="'input'+index+'_2'" v-if="item.bookNameVisible" @blur="item.bookNameVisible=false"  style="width:80%;"></el-input>
+                    <el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>
                   </td>
                   <td>
                             <span v-if="!item.editionVisible">{{item.edition}}
@@ -137,23 +141,23 @@
                 </tr>
               </table>
             </el-form-item>
-            <el-form-item label="邮寄地址:">
-              <el-col :span="6">
-                <el-input v-model="ruleForm.address"></el-input>
+            <el-form-item label="邮寄地址:" class="pull-left">
+              <el-col>
+                <el-input v-model="ruleForm.address" class="input-600"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="书籍多选:">
+            <el-form-item label="书籍多选:" class="pull-left">
               <el-radio class="radio" v-model="bookradio" label="1">是</el-radio>
               <el-radio class="radio" v-model="bookradio" label="2">否</el-radio>
             </el-form-item>
-            <el-form-item label="职位多选:">
+            <el-form-item label="职位多选:" class="pull-left">
               <el-radio class="radio" v-model="jobradio" label="1">是</el-radio>
               <el-radio class="radio" v-model="jobradio" label="2">否</el-radio>
             </el-form-item>
-
+            <div class="clearfix"></div>
             <el-form-item label="列表项:">
-              <el-col :span="12">
+              <el-col>
                 <el-table
                   :data="listTableData"
                   border
@@ -195,7 +199,10 @@
                     label="名称"
                   >
                     <template scope="scope">
-                      <el-input v-model="scope.row.name" placeholder="请输入名称"></el-input>
+                      <span v-if="!scope.row.isNameInput">{{scope.row.name}}
+                        <i class="el-icon-edit" @click="scope.row.isNameInput=!scope.row.isNameInput"></i>
+                      </span>
+                      <el-input v-model="scope.row.name" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -317,7 +324,8 @@
         ],
         extensionData:[
           {
-            name:'',
+            name:'请输入名字',
+            isNameInput:false,
             needradio:'1'
           }
         ],
@@ -457,25 +465,25 @@
           {
             orderNum: '张三',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
           {
             orderNum: '李四',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
           {
             orderNum: '王二',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
         ]
@@ -596,7 +604,7 @@
     float: right;
   }
   .extend_list {
-    width: 50%;
+    width: 100%;
   }
   .extend_list .table-header{
     background-color: #d4d9dd;

@@ -131,8 +131,13 @@ button a,button a:hover,button a:active{
 .el-table__body-wrapper{
   overflow-x: hidden;
 }
-
-
+/*自定义的输入框宽度*/
+.input-217{
+  width:217px;
+}
+.input-600{
+  width:600px;
+}
 
 /*按钮*/
 .btn{
