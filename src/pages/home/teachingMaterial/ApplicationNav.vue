@@ -29,13 +29,14 @@ export default {
 	methods: {
     routerChange(tag) {
       this.$router.push(this.activeTagName);
-    }
-  },
-  watch: {
-    $route () {
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
-    }
+    },
+
   },
+  created() {
+      // console.log(this.$router);
+      this.activeTagName = this.$router.currentRoute.meta.applicationName;
+    },
 }
 </script>
 

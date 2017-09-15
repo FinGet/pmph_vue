@@ -151,7 +151,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          sortable
           prop="birthdate"
           label="出生时间"
           width="120">
@@ -473,6 +472,9 @@
       filterPressCheck(value, row){
         return row.pressCheck === value;
       },
+      /**
+       * 此方法用于展开与收起高级搜索区域
+       */
       toggleSearchType(){
         this.powerSearch=!this.powerSearch;
       },

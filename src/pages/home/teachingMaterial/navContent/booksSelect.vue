@@ -133,8 +133,8 @@
             <template scope="scope">
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                <el-tooltip class="item" effect="dark" content="点击进入编委审核" placement="top">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-eye fa-lg"></i>
                     </el-button>
@@ -149,13 +149,18 @@
           <!--项目编辑end-->
 
           <!--策划编辑start-->
+          <el-table-column  v-if="level===3"
+                            prop="chiefEditor"
+                            label="第一主编"
+                            width="100">
+          </el-table-column>
           <el-table-column
             label="编委预选" v-if="level===3">
             <template scope="scope">
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                <el-tooltip class="item" effect="dark" content="点击进入遴选编委" placement="top">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw" v-if="!scope.row.subeditorHasChoose"></i>
                     </el-button>
@@ -165,19 +170,13 @@
               <p class="gray" v-else>( 空 )</p>
             </template>
           </el-table-column>
-
-          <el-table-column  v-if="level===3"
-                            prop="chiefEditor"
-                            label="第一主编"
-                            width="100">
-          </el-table-column>
           <el-table-column
             label="编委审核" v-if="level===3">
             <template scope="scope">
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top">
-                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-eye fa-fg"></i>
                     </el-button>
