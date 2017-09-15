@@ -35,7 +35,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button  type="primary" icon="search" v-if="level==2">主编/副主编确认</el-button>
+          <el-button  type="primary" v-if="level==2">主编/副主编确认</el-button>
         </div>
       </div>
       <!--表格-->
