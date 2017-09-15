@@ -19,6 +19,7 @@
               <!--</el-select>-->
             <!--</el-col>-->
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+            <el-button class="btn pull-right" type="primary">提交</el-button>
           </el-col>
           <el-table
             ref="multipleTable"
@@ -29,12 +30,6 @@
             max-height="750"
             style="width: 100%"
             @selection-change="handleSelectionChange">
-            <el-table-column label="申报账号"
-            prop="id">
-            </el-table-column>
-            <el-table-column label="出生年月"
-                             prop="age">
-            </el-table-column>
             <el-table-column
               label="姓名"
             >
@@ -45,60 +40,66 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="申报单位/工作单位"
+              label="申报单位"
             >
               <template scope="scope">
                 <el-tooltip :content="'申报单位:'+scope.row.applicationOrganization" placement="top-start">
                   <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
                 </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="工作单位"
+            >
+              <template scope="scope">
                 <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
                   <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column
-              label="职务/职称"
+            <el-table-column label="申请职位"
+                             prop="jobApplication"
             >
-              <template scope="scope">
-                <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.duty" placement="top">
-                  <p>
-                    <i class="fa fa-tags"></i>
-                    {{scope.row.duty}}
-                  </p>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.jobTitle" placement="top">
-                  <p>
-                    <i class="fa fa-graduation-cap"></i>
-                    {{scope.row.jobTitle}}
-                  </p>
-                </el-tooltip>
-              </template>
             </el-table-column>
             <el-table-column
-              label="联系方式"
-            >
-              <template scope="scope">
-                <el-tooltip class="item" effect="dark" :content="'电话:'+scope.row.phone" placement="top">
-                  <p>
-                    <i class="fa fa-phone fw"></i>
-                    {{scope.row.phone}}
-                  </p>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="'邮箱:'+scope.row.email" placement="top">
-                  <p>
-                    <i class="fa fa-envelope fw"></i>
-                    {{scope.row.email}}
-                  </p>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="是否编委"
+              label="学校审核"
               width="100"
               align="center"
             >
               <template scope="scope">
-                <el-checkbox v-model="scope.row.isMember" @change="change(scope.$index)"></el-checkbox>
+                <el-tooltip :content="'状态:'+scope.row.schoolSaudit" placement="top-start">
+                  <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="出版社审核"
+              width="130"
+              align="center"
+            >
+              <template scope="scope">
+                <el-tooltip :content="'状态:'+scope.row.pressAudit" placement="top-start">
+                  <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-if="edit"
+              label="是否进入遴选名单"
+              align="center"
+            >
+              <template scope="scope">
+                <el-checkbox v-model="scope.row.isJoinMember"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="!edit"
+              label="是否编委"
+              align="center"
+            >
+              <template scope="scope">
+                <el-tag :type="scope.row.isMember==='编委'?'success':'danger'">{{ scope.row.isMember}}</el-tag>
               </template>
             </el-table-column>
           </el-table>
@@ -126,73 +127,68 @@
 //          label: '编委'
 //        }],
 //        value: '全部',
+        edit:'',
         tableData:[
           {
-            id:'zhangsan',
             name: '张三',
-            age:'1965-06-03',
             sex:0,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
             jobTitle: '教授',
-            phone:'1383838438',
-            email:'123321@qq.com',
-            isMember:false,
+            jobApplication:'编委',
+            schoolSaudit:'已审核',
+            pressAudit:'已收到纸质表',
+            isJoinMember:false,
+            isMember:'编委',
           },
           {
-            id:'zhangsan',
             name: '张三',
-            age:'1965-06-03',
             sex:0,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
             jobTitle: '教授',
-            phone:'1383838438',
-            email:'123321@qq.com',
-            isMember:false,
+            jobApplication:'编委',
+            schoolSaudit:'已审核',
+            pressAudit:'已收到纸质表',
+            isJoinMember:false,
+            isMember:'编委',
           },
           {
-            id:'zhangsan',
             name: '张三',
-            age:'1965-06-03',
             sex:0,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
             jobTitle: '教授',
-            phone:'1383838438',
-            email:'123321@qq.com',
-            isMember:false,
+            jobApplication:'编委',
+            schoolSaudit:'未审核',
+            pressAudit:'已收到纸质表',
+            isJoinMember:false,
+            isMember:'编委',
           },
           {
-            id:'zhangsan',
             name: '张三',
-            age:'1965-06-03',
             sex:0,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
             jobTitle: '教授',
-            phone:'1383838438',
-            email:'123321@qq.com',
-            isMember:false,
-          },
-          {
-            id:'zhangsan',
-            name: '张三',
-            age:'1965-06-03',
-            sex:0,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            phone:'1383838438',
-            email:'123321@qq.com',
-            isMember:false,
+            jobApplication:'编委',
+            schoolSaudit:'已审核',
+            pressAudit:'已收到纸质表',
+            isJoinMember:false,
+            isMember:'编委',
           }
         ]
+      }
+    },
+    created(){
+      if(this.$route.query.edit===1) {
+        this.edit=true
+      }else {
+        this.edit=false
       }
     },
     methods:{
