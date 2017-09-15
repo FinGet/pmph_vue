@@ -28,7 +28,7 @@ export default {
 	},
 	methods: {
     routerChange(tag) {
-      this.$router.push({name: '教材遴选'});
+      this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
 
