@@ -279,7 +279,7 @@ export default {
              this.$router.push('/applicationrouter/infodetail');
          }
         },
-      
+
     }
 }
 
@@ -291,6 +291,7 @@ export default {
     box-sizing: border-box;
     padding: 15px 20px;
     overflow: hidden;
+  background: #fff;
 }
 
 .header_search_p {
