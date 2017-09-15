@@ -24,6 +24,7 @@
               </el-select>
             </el-col>
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+            <el-button class="pull-right" type="primary">确认</el-button>
           </el-col>
           <el-table
             ref="multipleTable"
