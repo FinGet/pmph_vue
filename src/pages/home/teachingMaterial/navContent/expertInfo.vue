@@ -388,7 +388,7 @@
       }
     }
 </script>
-<style>
+<style scoped>
   .info-wrapper{
   }
   .expert-info-box{
