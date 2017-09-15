@@ -9,7 +9,7 @@
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
             <div  v-if="!iterm.hasComplete">
-              <div class="searchBox-wrapper">
+              <div class="searchBox-wrapper" v-if="iterm.isNew">
                 <div class="searchName">图书：<span></span></div>
                 <div class="searchInput">
                   <el-select v-model="iterm.bookname" placeholder="请选择">
@@ -20,6 +20,10 @@
                     </el-option>
                   </el-select>
                 </div>
+              </div>
+              <div class="info-iterm-text" v-else>
+                <div>图书：<span></span></div>
+                <div>{{iterm.bookname}}</div>
               </div>
               <el-radio-group v-model="radio2" class="paddingL10 paddingR10">
                 <el-radio :label="3">主编</el-radio>
@@ -54,7 +58,7 @@
             </div>
           </div>
           <div v-if="hasNewAddbook">
-            <el-button type="primary">保存图书</el-button>
+            <el-button type="primary" @click="saveBook">保存图书</el-button>
           </div>
           <div class="expert_info-buttonWrapper">
             <el-button type="primary" @click="addNewBook">添加图书</el-button>
@@ -384,6 +388,14 @@
          */
         deleteNew(index){
           this.addBookList.splice(index, 1);
+        },
+        /**
+         * 保存图书，保存成功后就将图书isNew状态改为false
+         */
+        saveBook(){
+          for(let iterm of this.addBookList){
+            iterm.isNew = false;
+          }
         },
       }
     }
