@@ -10,7 +10,7 @@
           <p >全国高等职业教育临床医学院</p>
           <div class="tips_icon"></div>
       </div>
-		<div class="bottom_tab_content">
+		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
         <router-view></router-view>
@@ -23,7 +23,8 @@
 export default {
 	data() {
 		return {
-			activeTagName:'presscheck'
+			activeTagName:'presscheck',
+      contentH:'auto'
 		}
 	},
 	methods: {
@@ -37,6 +38,11 @@ export default {
       // console.log(this.$router);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
+  mounted(){
+    //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
+    var windowH = document.documentElement.clientHeight;
+    this.contentH = windowH-100+'px';
+  },
 }
 </script>
 
