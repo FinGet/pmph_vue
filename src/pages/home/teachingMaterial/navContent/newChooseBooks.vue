@@ -189,7 +189,7 @@
 
             <el-form-item label="扩展项:">
               <el-col :span="12">
-                <el-button type="primary" class="pull-right" size="small">新增扩展项</el-button>
+                <el-button type="primary" class="pull-right" size="small" @click="addExtend">新增扩展项</el-button>
                 <br>
                 <el-table
                   :data="extensionData"
@@ -221,7 +221,7 @@
                       <el-button
                         size="small"
                         type="danger"
-                        @click="handleDelete1(scope.$index, scope.row)">删除</el-button>
+                        @click="deleteExtend(scope.$index, scope.row)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -544,15 +544,15 @@
       deleteExtendItem(index){
         this.extendListData.splice(index,1);
       },
-      addExtendItem(){
-        this.extendListData.push({
-          orderNum: 1,
-          orderNumVisible: false,
-          bookName:'请填写书名',
-          bookNameVisible:false,
-          edition:'请填写版次',
-          editionVisible:false
+      addExtend(){
+        this.extensionData.push({
+          name:'请输入名字',
+          isNameInput:false,
+          needradio:'1'
         });
+      },
+      deleteExtend(index){
+        this.extensionData.splice(index,1);
       }
     }
   }
