@@ -59,17 +59,17 @@
                         <el-button type="text" class="op_button">发布</el-button>
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="$router.push('/applicationrouter/newbookrelease')">设置书目录</el-button>
-                        <el-dropdown trigger="click">
+                        <el-dropdown trigger="click" @command="handleClickDrop" >
                             <span class="el-dropdown-link more_button">
                                 更多
                                 <i class="el-icon-caret-bottom el-icon--right"></i>
                             </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>消息状态</el-dropdown-item>
-                                <el-dropdown-item>通知详情</el-dropdown-item>
-                                <el-dropdown-item>结果统计</el-dropdown-item>
-                                <el-dropdown-item>设置选题号</el-dropdown-item>
-                                <el-dropdown-item>删除</el-dropdown-item>
+                            <el-dropdown-menu slot="dropdown" >
+                                <el-dropdown-item command="messageStatus">消息状态</el-dropdown-item>
+                                <el-dropdown-item command="infoDetail">通知详情</el-dropdown-item>
+                                <el-dropdown-item command="resultCount">结果统计</el-dropdown-item>
+                                <el-dropdown-item command="set">设置选题号</el-dropdown-item>
+                                <el-dropdown-item command="delete">删除</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </p>
@@ -271,7 +271,15 @@ export default {
         },
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
-        }
+        },
+        //下拉点击
+        handleClickDrop(command){
+        // console.log(command,str,a);
+         if(command=='infoDetail'){
+             this.$router.push('/applicationrouter/infodetail');
+         }
+        },
+      
     }
 }
 
