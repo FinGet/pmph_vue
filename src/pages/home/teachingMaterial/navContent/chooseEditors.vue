@@ -121,6 +121,15 @@
                 <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor" size="mini"></el-input>
               </template>
             </el-table-column>
+
+            <el-table-column
+              label="是否编委"
+              width="120"
+              align="center">
+              <template scope="scope">
+                <el-checkbox v-model="scope.row.isMember"></el-checkbox>
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
       </el-row>
@@ -163,7 +172,9 @@
             isChiefEditor:false,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:true
+
           },
           {
             name: '李四',
