@@ -18,7 +18,7 @@
           </div>
           <div class="info-iterm-text">
             <div>性别：<span></span></div>
-            <div>女</div>
+            <div>男</div>
           </div>
           <div class="info-iterm-text">
             <div> 职称：<span></span></div>
@@ -62,7 +62,7 @@
           </div>
           <div class="info-iterm-text">
             <div>证件号码：<span></span></div>
-            <div>411755222222*******</div>
+            <div>411755222222123456</div>
           </div>
         </div>
       </div>
