@@ -6,13 +6,13 @@
 
             <el-form-item label="教材名称:" prop="name" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.name"></el-input>
+                <el-input v-model="ruleForm.name" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="教材轮次:" prop="turn" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.turn"></el-input>
+                <el-input v-model="ruleForm.turn" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
@@ -41,7 +41,8 @@
                 </el-form-item>
               </el-col>
             </el-form-item>
-            <el-form-item label="教材分类:" class="pull-left">
+            <div class="clearfix"></div>
+            <el-form-item label="教材分类:">
               <el-col>
                 <el-form-item>
                   <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
@@ -125,10 +126,10 @@
                     {{item.orderNum}}
                   </td>
                   <td>
-                            <span v-if="!item.bookNameVisible">{{item.bookName}}
-                                <i class="el-icon-edit" @click="item.bookNameVisible=true"></i>
+                            <span v-if="!item.phoneVisible">{{item.phone}}
+                                <i class="el-icon-edit" @click="item.phoneVisible=true"></i>
                             </span>
-                    <el-input v-model="item.bookName" :ref="'input'+index+'_2'" v-if="item.bookNameVisible" @blur="item.bookNameVisible=false"  style="width:80%;"></el-input>
+                    <el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>
                   </td>
                   <td>
                             <span v-if="!item.editionVisible">{{item.edition}}
@@ -142,7 +143,7 @@
             </el-form-item>
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.address"></el-input>
+                <el-input v-model="ruleForm.address" class="input-600"></el-input>
               </el-col>
             </el-form-item>
 
@@ -187,7 +188,7 @@
             </el-form-item>
 
             <el-form-item label="扩展项:">
-              <el-col>
+              <el-col :span="12">
                 <el-button type="primary" class="pull-right" size="small">新增扩展项</el-button>
                 <br>
                 <el-table
@@ -198,7 +199,10 @@
                     label="名称"
                   >
                     <template scope="scope">
-                      <el-input v-model="scope.row.name" placeholder="请输入名称"></el-input>
+                      <span v-if="!scope.row.isNameInput">{{scope.row.name}}
+                        <i class="el-icon-edit" @click="scope.row.isNameInput=!scope.row.isNameInput"></i>
+                      </span>
+                      <el-input v-model="scope.row.name" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -320,7 +324,8 @@
         ],
         extensionData:[
           {
-            name:'',
+            name:'请输入名字',
+            isNameInput:false,
             needradio:'1'
           }
         ],
@@ -460,25 +465,25 @@
           {
             orderNum: '张三',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
           {
             orderNum: '李四',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
           {
             orderNum: '王二',
             orderNumVisible: false,
-            bookName:'请填写书名',
-            bookNameVisible:false,
-            edition:'请填写版次',
+            phone:'请填写电话',
+            phoneVisible:false,
+            edition:'请填写邮箱',
             editionVisible:false
           },
         ]
