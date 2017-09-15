@@ -124,6 +124,7 @@
             </el-table-column>
 
             <el-table-column
+              v-if="level<2"
               label="是否编委"
               width="120"
               align="center">
@@ -141,6 +142,7 @@
   export default {
     data() {
       return {
+        level:undefined,
         input:'',
         input1:'',
         showhistory: false,
@@ -267,6 +269,10 @@
           return true
         }
       }
+    },
+    created(){
+      this.level = this.$route.query.level;
+      this.level = this.level?parseInt(this.level):1;
     },
     methods:{
       handleSelectionChange(val) {
