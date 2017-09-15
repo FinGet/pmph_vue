@@ -26,7 +26,7 @@
                 <el-radio :label="6">副主编</el-radio>
                 <el-radio :label="9">编委</el-radio>
               </el-radio-group>
-              <div class="info-iterm-text">
+              <div class="info-iterm-text widthAuto">
                 <div>教学大纲：<span></span></div>
                 <div>
                   <el-upload
@@ -441,7 +441,10 @@
   .chooseBook{
     margin-bottom: 10px;
   }
-  .chooseBook .searchBox-wrapper,.chooseBook .info-iterm-text{
+  .chooseBook .searchBox-wrapper{
+    width: auto;
+  }
+  .widthAuto{
     width: auto;
   }
 </style>

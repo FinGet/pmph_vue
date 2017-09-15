@@ -134,7 +134,7 @@
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入编委审核" placement="top">
-                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:0}}">
                     <el-button type="text">
                       <i class="fa fa-eye fa-lg"></i>
                     </el-button>
@@ -160,7 +160,7 @@
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入遴选编委" placement="top">
-                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:1}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw" v-if="!scope.row.subeditorHasChoose"></i>
                     </el-button>
@@ -176,7 +176,7 @@
               <p v-if="scope.row.editorialBoard.length">
                 {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top">
-                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid}}">
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:0}}">
                     <el-button type="text">
                       <i class="fa fa-eye fa-fg"></i>
                     </el-button>
