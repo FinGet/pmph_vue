@@ -37,11 +37,11 @@ export default new Router({
               path: 'applicationnav', name: '教材申报', component: ApplicationNav, children: [
                 { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
-                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
-                { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 4 ,applicationName:'chooseeditors'}}
+                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 4 } },
+                { path: 'chooseeditors', name:'遴选主编/副主编', component:ChooseEditors, meta:{breadNumber: 4}}
               ]
             },
-            { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3,applicationName:'newchoosebooks'}}
+            { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3}}
          ]
       },
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },

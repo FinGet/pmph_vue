@@ -70,9 +70,9 @@
           </el-table-column>
           <!--主任 start-->
           <el-table-column  v-if="level===1"
-            prop="planningEditor"
-            label="策划编辑"
-            width="100">
+                            prop="planningEditor"
+                            label="策划编辑"
+                            width="100">
           </el-table-column>
           <el-table-column
             label="遴选主编/副主编/编委" v-if="level===1">
@@ -93,13 +93,25 @@
           <!--主任 end-->
 
           <!--项目编辑start-->
-          <el-table-column  v-if="level===2"
-                            prop="planningEditor"
-                            label="策划编辑"
-                            width="100">
+          <el-table-column
+            v-if="level===2"
+            label="策划编辑"
+            width="100">
+            <template scope="scope">
+              <p>
+                {{scope.row.planningEditor}}
+                <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
-            label="遴选主编/副主编/编委" v-if="level===2">
+            label="主编/副主编" v-if="level===2">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
                 {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
@@ -110,27 +122,42 @@
                     </el-button>
                   </router-link>
                 </el-tooltip>
+                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
+                <el-tag type="warning" v-else>待确认</el-tag>
               </p>
               <p class="gray" v-else>( 空 )</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="编委审核" v-if="level===2">
+            <template scope="scope">
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-eye fa-lg"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+                <el-tag type="success" v-if="scope.row.editorialBoardHasChoose">已提交</el-tag>
+                <el-tag type="warning" v-else>暂存</el-tag>
+              </p>
+              <p class="gray" v-else>等待主编提交名单</p>
             </template>
           </el-table-column>
           <!--项目编辑end-->
 
           <!--策划编辑start-->
-          <el-table-column  v-if="level===3"
-                            prop="planningEditor"
-                            label="策划编辑"
-                            width="100">
-          </el-table-column>
           <el-table-column
-            label="遴选主编/副主编/编委" v-if="level===3">
+            label="编委预选" v-if="level===3">
             <template scope="scope">
-              <p v-if="scope.row.chiefEditor">
-                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
                 <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
                   <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
-                      <i class="fa fa-pencil fa-fw"></i>
+                      <i class="fa fa-pencil fa-fw" v-if="!scope.row.subeditorHasChoose"></i>
                     </el-button>
                   </router-link>
                 </el-tooltip>
@@ -138,10 +165,34 @@
               <p class="gray" v-else>( 空 )</p>
             </template>
           </el-table-column>
+
+          <el-table-column  v-if="level===3"
+                            prop="chiefEditor"
+                            label="第一主编"
+                            width="100">
+          </el-table-column>
+          <el-table-column
+            label="编委审核" v-if="level===3">
+            <template scope="scope">
+              <p v-if="scope.row.editorialBoard.length">
+                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+                <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-eye fa-fg"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
+                <el-tag type="warning" v-else>待确认</el-tag>
+              </p>
+              <p class="gray" v-else>等待主编提交名单</p>
+            </template>
+          </el-table-column>
           <!--策划编辑end-->
 
           <el-table-column
-            label="审核操作">
+            label="操作">
             <template scope="scope">
               <div v-if="level===1">
                 <el-button type="text">通过</el-button>
@@ -219,7 +270,20 @@
                 planningEditor:'张强',
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
+                editorialBoard:[],
+              },{
+                editing:true,
+                bookid:'123456',
+                bookorder:1,
+                bookname: '细胞生物学和医学遗传学',
+                edition: 9,
+                applyNumber:188,
+                planningEditor:'张强',
+                chiefEditor:'张三',
+                subeditor:['张思','王五','赵六','李思是'],
+                subeditorHasChoose:true,
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoardHasChoose:true,
               },{
                 editing:true,
                 bookid:'123456',
@@ -231,17 +295,7 @@
                 chiefEditor:'张三',
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
-              },{
-                editing:true,
-                bookid:'123456',
-                bookorder:1,
-                bookname: '细胞生物学和医学遗传学',
-                edition: 9,
-                applyNumber:188,
-                planningEditor:'张强',
-                chiefEditor:'张三',
-                subeditor:['张思','王五','赵六','李思是'],
-                editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
+                editorialBoardHasChoose:true,
               },{
                 editing:true,
                 bookid:'123456',
