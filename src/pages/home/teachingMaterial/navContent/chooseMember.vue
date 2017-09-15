@@ -19,7 +19,8 @@
               <!--</el-select>-->
             <!--</el-col>-->
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-            <el-button class="btn pull-right" type="primary">提交</el-button>
+            <el-button v-if="edit" class="btn pull-right" type="primary">提交</el-button>
+            <el-button v-if="!edit" class="btn pull-right" type="primary">确认</el-button>
           </el-col>
           <el-table
             ref="multipleTable"
