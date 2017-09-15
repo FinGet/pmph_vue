@@ -95,6 +95,24 @@
             </el-table-column>
             <el-table-column
               v-if="!edit"
+              label="是否主编"
+              align="center"
+            >
+              <template scope="scope">
+                <el-tag :type="scope.row.isChiefEditor==='是'?'success':'danger'">{{ scope.row.isChiefEditor}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="!edit"
+              label="是否副主编"
+              align="center"
+            >
+              <template scope="scope">
+                <el-tag :type="scope.row.isSubeditor==='是'?'success':'danger'">{{ scope.row.isSubeditor}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="!edit"
               label="是否编委"
               align="center"
             >
@@ -140,7 +158,9 @@
             schoolSaudit:'已审核',
             pressAudit:'已收到纸质表',
             isJoinMember:false,
-            isMember:'编委',
+            isChiefEditor:'是',
+            isSubeditor:'是',
+            isMember:'编委'
           },
           {
             name: '张三',
@@ -153,7 +173,9 @@
             schoolSaudit:'已审核',
             pressAudit:'已收到纸质表',
             isJoinMember:false,
-            isMember:'编委',
+            isChiefEditor:'是',
+            isSubeditor:'是',
+            isMember:'编委'
           },
           {
             name: '张三',
@@ -166,7 +188,9 @@
             schoolSaudit:'未审核',
             pressAudit:'已收到纸质表',
             isJoinMember:false,
-            isMember:'编委',
+            isChiefEditor:'是',
+            isSubeditor:'是',
+            isMember:'编委'
           },
           {
             name: '张三',
@@ -179,7 +203,9 @@
             schoolSaudit:'已审核',
             pressAudit:'已收到纸质表',
             isJoinMember:false,
-            isMember:'编委',
+            isChiefEditor:'是',
+            isSubeditor:'是',
+            isMember:'编委'
           }
         ]
       }
