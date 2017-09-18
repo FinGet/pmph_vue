@@ -16,8 +16,6 @@
               </el-col>
             </el-form-item>
 
-
-
             <el-form-item label="结束日期:" required class="pull-left">
               <el-col>
                 <el-form-item prop="endDate">
@@ -49,68 +47,23 @@
                   <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
                   <el-button type="text" class="classify_button">删除</el-button>
                 </el-form-item>
-                <el-form-item>
-                  <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
-                </el-form-item>
-                <el-form-item>
-                  <el-form-item>
-                      <span class="grey_span" style="float:left;">请按照模板格式上传（
-                          <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
-                    <el-upload class="upload" action="" :file-list="fileList">
-                      <el-button size="small" type="primary">点击上传</el-button>
-                    </el-upload>
-                  </el-form-item>
-                </el-form-item>
+                <!--<el-form-item>-->
+                  <!--<span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                  <!--<el-form-item>-->
+                      <!--<span class="grey_span" style="float:left;">请按照模板格式上传（-->
+                          <!--<el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>-->
+                    <!--<el-upload class="upload" action="" :file-list="fileList">-->
+                      <!--<el-button size="small" type="primary">点击上传</el-button>-->
+                    <!--</el-upload>-->
+                  <!--</el-form-item>-->
+                <!--</el-form-item>-->
               </el-col>
             </el-form-item>
-            <!--<el-form-item label="联系人:">-->
-              <!--<el-col :span="12">-->
-                <!--<el-button type="primary" class="pull-right" size="small">选择联系人</el-button>-->
-                <!--<br>-->
-                <!--<el-table-->
-                  <!--:data="tableData"-->
-                  <!--border-->
-                  <!--style="width: 100%">-->
-                  <!--<el-table-column-->
-                    <!--prop="name"-->
-                    <!--label="姓名"-->
-                    <!--width="180">-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="电话"-->
-                    <!--width="180">-->
-                    <!--<template scope="scope">-->
-                      <!--{{ scope.row.phone }}-->
-                      <!--<el-tooltip class="item" effect="dark" content="编辑" placement="top-start">-->
-                        <!--<i class="fa fa-pencil"></i>-->
-                      <!--</el-tooltip>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="邮箱">-->
-                    <!--<template scope="scope">-->
-                      <!--{{ scope.row.email }}-->
-                      <!--<el-tooltip class="item" effect="dark" content="编辑" placement="top-start">-->
-                        <!--<i class="fa fa-pencil"></i>-->
-                      <!--</el-tooltip>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="操作"-->
-                    <!--width="150"-->
-                    <!--align="center"-->
-                  <!--&gt;-->
-                    <!--<template scope="scope">-->
-                      <!--<el-button-->
-                        <!--size="small"-->
-                        <!--type="danger"-->
-                        <!--@click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
-                <!--</el-table>-->
-              <!--</el-col>-->
-            <!--</el-form-item>-->
+
             <div class="clearfix"></div>
+
             <el-form-item label="联系人:">
               <table class="extend_list">
                 <tr class="table-header">
@@ -126,18 +79,21 @@
                     {{item.orderNum}}
                   </td>
                   <td>
-                            <span v-if="!item.phoneVisible">{{item.phone}}
-                                <i class="el-icon-edit" @click="item.phoneVisible=true"></i>
-                            </span>
+                    <span v-if="!item.phoneVisible">{{item.phone}}
+                        <i class="el-icon-edit" @click="item.phoneVisible=true"></i>
+                    </span>
                     <el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>
                   </td>
                   <td>
-                            <span v-if="!item.editionVisible">{{item.edition}}
-                                <i class="el-icon-edit" @click="item.editionVisible=true"></i>
-                            </span>
+                    <span v-if="!item.editionVisible">{{item.edition}}
+                        <i class="el-icon-edit" @click="item.editionVisible=true"></i>
+                    </span>
                     <el-input v-model="item.edition" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>
                   </td>
                   <td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>
+                </tr>
+                <tr v-show="extendListData.length===0">
+                  <td colspan="4">暂无数据</td>
                 </tr>
               </table>
             </el-form-item>
@@ -274,6 +230,7 @@
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
               <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+              <el-button type="primary" >保存,下一步</el-button>
             </el-form-item>
 
           </el-form>
@@ -300,6 +257,7 @@
         mainContent:'',
         remark:'',
         dialogVisible: false,
+        checkedTreeData:[],
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -563,15 +521,8 @@
     border: 1px solid rgb(209, 217, 229);
     padding:15px 20px;
   }
-  .grey_span {
-    color: #9c9c9c;
-  }
   .upload {
     float: left;
-  }
-
-  .red_span {
-    color: #f5596e;
   }
   .classify_input {
     width: 600px;
@@ -626,14 +577,5 @@
   }
   .extend_list .add_button{
     color:#1ab194;
-  }
-  .out_bottom_box {
-    width:100%;
-    overflow: hidden;
-  }
-  .out_bottom_box .bottom_box{
-    float:left;
-    margin-left:50%;
-    transform: translateX(-50%);
   }
 </style>
