@@ -129,7 +129,7 @@
               width="120"
               align="center">
               <template scope="scope">
-                <el-checkbox v-model="scope.row.isMember"></el-checkbox>
+                <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)"></el-checkbox>
               </template>
             </el-table-column>
           </el-table>
@@ -176,7 +176,7 @@
             chiefEditorNo:'',
             isSubeditor:false,
             subeditorNo:'',
-            isMember:true
+            isMember:false
 
           },
           {
@@ -192,7 +192,8 @@
             isChiefEditor:false,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:false
           },
           {
             name: '王二',
@@ -207,7 +208,8 @@
             isChiefEditor:true,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:false
           },
           {
             name: '张三',
@@ -222,7 +224,8 @@
             isChiefEditor:false,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:false
           },
           {
             name: '李四',
@@ -237,7 +240,8 @@
             isChiefEditor:false,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:false
           },
           {
             name: '王二',
@@ -252,7 +256,8 @@
             isChiefEditor:true,
             chiefEditorNo:'',
             isSubeditor:false,
-            subeditorNo:''
+            subeditorNo:'',
+            isMember:false
           }
         ]
       }
@@ -291,27 +296,23 @@
           this.showhistory = !this.showhistory
         }
       },
-//      change(index,val1,val2) {
-//        console.log(this.tableData[index].isChiefEditor,this.tableData[index].isSubeditor)
-////        this.tableData[index].isChiefEditor = !this.tableData[index].isChiefEditor
-////        this.tableData[index].isSubeditor = !this.tableData[index].isSubeditor
-////        if(this.tableData[index].isChiefEditor){
-////          this.tableData[index].isSubeditor = false
-////          this.tableData[index].isChiefEditor = true
-////        }else {
-////          this.tableData[index].isSubeditor = true
-////          this.tableData[index].isChiefEditor = false
-////        }
-//      }
       // checkbox实现单选功能
       changeSubeditor(index) {
-        if (this.tableData[index].isChiefEditor){
+        if (this.tableData[index].isSubeditor){
           this.tableData[index].isChiefEditor = false
+          this.tableData[index].isMember = false
         }
       },
       changeChiefEditor(index) {
-        if (this.tableData[index].isSubeditor){
+        if (this.tableData[index].isChiefEditor){
           this.tableData[index].isSubeditor = false
+          this.tableData[index].isMember = false
+        }
+      },
+      changeMember(index) {
+        if (this.tableData[index].isMember){
+          this.tableData[index].isSubeditor = false
+          this.tableData[index].isChiefEditor = false
         }
       }
     }

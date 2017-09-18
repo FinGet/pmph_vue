@@ -276,7 +276,7 @@ export default {
         handleClickDrop(command){
         // console.log(command,str,a);
          if(command=='infoDetail'){
-             this.$router.push('/applicationrouter/infodetail');
+             this.$router.push({name:'通知详情'});
          }
         },
 
