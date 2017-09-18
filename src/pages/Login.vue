@@ -36,6 +36,8 @@ import {mapActions } from 'vuex'
           window.alert('请输入用户名');
         }
       }
+    },
+    created(){
     }
 	}
 </script>

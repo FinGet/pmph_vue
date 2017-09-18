@@ -19,19 +19,19 @@
         <i class="fa fa-university fa-fw"></i>
         <span slot="title">学校/教师审核</span>
       </el-menu-item>
-      <el-menu-item index="/groupmanage">
+      <el-menu-item index="/groupmanage" v-if="userLevel<=4">
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">小组功能</span>
       </el-menu-item>
-      <el-menu-item index="/messagelist">
+      <el-menu-item index="/messagelist" v-if="userLevel<=3">
         <i class="fa fa-comments-o fa-fw"></i>
         <span slot="title">系统消息</span>
       </el-menu-item>
-      <el-menu-item index="1">
+      <el-menu-item index="1" v-if="userLevel<=2">
         <i class="fa fa-file-text-o fa-fw"></i>
         <span slot="title">系统日志</span>
       </el-menu-item>
-      <el-submenu index="/userrouter/pmphuser">
+      <el-submenu index="/userrouter/pmphuser" v-if="userLevel<=1">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户信息管理</span>
@@ -93,7 +93,7 @@
         <el-menu-item index="9-1">用户统计</el-menu-item>
         <el-menu-item index="9-2">流量统计</el-menu-item>
       </el-submenu> -->
-      <el-submenu index="10">
+      <el-submenu index="10" v-if="userLevel==0">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统管理</span>
@@ -130,14 +130,28 @@
     props:{
       sidebarFlod:{
         type:Boolean,
-        default:true
+        default:true,
+        
       }
     },
     data() {
-      return {};
+      return {
+        userLevel:0
+      };
+    },
+    methods:{
+       initUserInfo(){
+         if(sessionStorage.getItem('currentUser')!=null){
+           var user =JSON.parse(sessionStorage.getItem('currentUser'));
+              this.userLevel=user.level;
+              console.log(this.userLevel);
+         }else{
+           this.$router.push('/login');
+         }
+       }
     },
     created(){
-     // console.log(this.$store);
+      this.initUserInfo();
     }
   }
 </script>

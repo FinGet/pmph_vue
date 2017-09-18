@@ -49,7 +49,9 @@ const actions = {
     setTimeout(()=>{
       const userdata = loginData[data.username]||{};
       commit(types.DO_LOGIN,userdata);
-      router.push({path:'/'})
+      //当前用户写入本地storage
+      sessionStorage.setItem('currentUser',JSON.stringify(userdata));
+      router.push('/index');
     },1000);
   }
 }

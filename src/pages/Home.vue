@@ -17,11 +17,9 @@
     </div>
     <div class="app-main" ref="main">
       <div class="app-main-inner">
-        <keep-alive>
           <transition name="fade" mode="out-in">
             <router-view></router-view>
           </transition>
-        </keep-alive>
       </div>
     </div>
 	</div>
@@ -59,6 +57,12 @@
       User,
       MessageIcon,
       Breadcrumb,
+    },
+    created(){
+   
+    },
+    mounted(){
+     
     }
 	}
 </script>
