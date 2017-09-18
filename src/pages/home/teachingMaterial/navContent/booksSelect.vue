@@ -433,9 +433,7 @@
             }
         },
         created(){
-          this.level = this.$route.query.level;
-          this.level = this.level?parseInt(this.level):1;
-          console.log(this.level);
+          this.level = this.$store.getters.getUserLevel;
 
           //模拟下当是策划编辑时少一点数据
           if(this.level!==1){

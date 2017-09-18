@@ -56,7 +56,7 @@ const actions = {
 
 // mutations
 const mutations = {
-  [types.DO_LOGIN] (state, {name,level}) {
+  [types.DO_LOGIN] (state, {userid,name,level}) {
     state.userData.userid = userid;
     state.userData.username = name;
     state.userData.userlevel = level;
