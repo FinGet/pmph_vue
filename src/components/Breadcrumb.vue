@@ -1,5 +1,5 @@
 <template>
-  <el-breadcrumb separator="/">
+  <el-breadcrumb separator="/" class="my-breadcrumb">
     <el-breadcrumb-item v-for="(iterm, index) in breadcrumb"  :to="{ path: iterm.path }" :key="index">{{iterm.name}}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
@@ -33,5 +33,8 @@
 </script>
 
 <style scoped>
-
+.my-breadcrumb{
+  font-size: 16px;
+  line-height: 38px;
+}
 </style>

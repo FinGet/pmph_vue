@@ -6,10 +6,10 @@
 			<el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
             <el-tab-pane label="教材遴选" name="booksselect"></el-tab-pane>
 		</el-tabs>
-        
+
         </div>
         <div class="header_title_tips">
-          <p >全国高等职业教育临床医学院</p>
+          <p >{{title}}</p>
           <div class="tips_icon"></div>
       </div>
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
@@ -28,6 +28,7 @@ export default {
 			activeTagName:'presscheck',
            contentH:'auto',
            isShowTabs:true,
+      title:'全国高等职业教育临床医学院',
 		}
 	},
 	methods: {
@@ -37,11 +38,16 @@ export default {
     },
   },
   watch:{
- 
+
   },
   created() {
       // console.log(this.$router);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
+      if(this.$router.currentRoute.name=='新建遴选教材'){
+        this.title='新建教材申报'
+      }else{
+        this.title='全国高等职业教育临床医学院'
+      }
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
