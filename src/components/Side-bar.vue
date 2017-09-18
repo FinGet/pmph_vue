@@ -7,23 +7,40 @@
     </div>
 
     <el-menu default-active="1-4-1" theme="dark" class="sildbar-list" unique-opened router>
-      <el-menu-item index="/applicationrouter/applicationlist">
+      <el-menu-item index="/index">
+        <i class="fa fa-home fa-fw"></i>
+        <span slot="title">个人中心</span>
+      </el-menu-item>
+      <el-menu-item index="/materialrouter/materials">
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">规划教材申报</span>
       </el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="fa fa-tasks fa-fw"></i>
-          <span slot="title">学校/教师审核</span>
-        </template>
-        <el-menu-item index="2-1">学校管理员审核</el-menu-item>
-        <el-menu-item index="2-2">教师审核</el-menu-item>
-      </el-submenu>
+      <el-menu-item index="3">
+        <i class="fa fa-university fa-fw"></i>
+        <span slot="title">学校/教师审核</span>
+      </el-menu-item>
       <el-menu-item index="/groupmanage">
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">小组功能</span>
       </el-menu-item>
-      <el-submenu index="4">
+      <el-menu-item index="/messagelist">
+        <i class="fa fa-comments-o fa-fw"></i>
+        <span slot="title">系统消息</span>
+      </el-menu-item>
+      <el-menu-item index="1">
+        <i class="fa fa-file-text-o fa-fw"></i>
+        <span slot="title">系统日志</span>
+      </el-menu-item>
+      <el-submenu index="/userrouter/pmphuser">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">用户信息管理</span>
+        </template>
+        <el-menu-item index="/userrouter/pmphuser">社内用户</el-menu-item>
+        <el-menu-item index="/userrouter/writeruser">作家用户</el-menu-item>
+        <el-menu-item index="/userrouter/orguser">机构用户</el-menu-item>
+      </el-submenu> 
+     <!--  <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-user-times fa-fw"></i>
           <span slot="title">教材纠错</span>
@@ -59,23 +76,23 @@
         <el-menu-item index="7-1">文章栏目</el-menu-item>
         <el-menu-item index="7-2">文章管理</el-menu-item>
         <el-menu-item index="7-3">广告管理</el-menu-item>
-      </el-submenu>
-      <el-submenu index="8">
+      </el-submenu> -->
+      <!-- <el-submenu index="8">
         <template slot="title">
           <i class="fa fa-sticky-note-o fa-fw"></i>
           <span slot="title">问卷调查</span>
         </template>
         <el-menu-item index="8-1">问卷设置</el-menu-item>
         <el-menu-item index="8-2">问卷列表</el-menu-item>
-      </el-submenu>
-      <el-submenu index="9">
+      </el-submenu> -->
+      <!-- <el-submenu index="9">
         <template slot="title">
           <i class="fa fa-bar-chart fa-fw"></i>
           <span slot="title">查询统计</span>
         </template>
         <el-menu-item index="9-1">用户统计</el-menu-item>
         <el-menu-item index="9-2">流量统计</el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
       <el-submenu index="10">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
@@ -90,12 +107,8 @@
         <el-menu-item index="10-7">积分管理</el-menu-item>
       </el-submenu>
 
-      <el-menu-item index="/messagelist">
-        <i class="fa fa-comments-o fa-fw"></i>
-        <span slot="title">系统消息</span>
-      </el-menu-item>
 
-      <el-submenu index="12">
+<!--       <el-submenu index="12">
         <template slot="title">
           <i class="fa fa-pie-chart fa-fw"></i>
           <span slot="title">基础数据维护</span>
@@ -105,16 +118,8 @@
         <el-menu-item index="12-3">社内部门维护</el-menu-item>
         <el-menu-item index="12-4">敏感词维护</el-menu-item>
         <el-menu-item index="12-5">标签管理</el-menu-item>
-      </el-submenu>
-      <el-submenu index="13">
-        <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
-          <span slot="title">用户信息管理</span>
-        </template>
-        <el-menu-item index="13-1">作家用户</el-menu-item>
-        <el-menu-item index="13-2">编辑用户</el-menu-item>
-        <el-menu-item index="13-3">学校机构用户</el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
+      
     </el-menu>
 
 	</div>
@@ -131,6 +136,9 @@
     data() {
       return {};
     },
+    created(){
+     // console.log(this.$store);
+    }
   }
 </script>
 

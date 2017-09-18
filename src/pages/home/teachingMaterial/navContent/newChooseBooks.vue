@@ -495,7 +495,7 @@
           message: '保存成功，设置书目录即可发布！',
           type: 'success'
         });
-        this.$router.push('applicationlist')
+        this.$router.push('/applicationrouter/applicationlist');
 
 //        this.$refs[formName].validate((valid) => {
 //          if (valid) {
