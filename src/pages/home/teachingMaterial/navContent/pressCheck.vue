@@ -147,7 +147,6 @@
         >
           <template scope="scope">
             {{scope.row.name}}
-            <i class="fa fa-mars"></i>
           </template>
         </el-table-column>
         <el-table-column

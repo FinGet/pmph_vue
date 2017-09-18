@@ -1,16 +1,18 @@
 <template>
 	<div class="application_nav">
         <div class="tab_nav_outbox">
-		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange">
+            <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
+		<el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
 			<el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
             <el-tab-pane label="教材遴选" name="booksselect"></el-tab-pane>
 		</el-tabs>
+        
         </div>
         <div class="header_title_tips">
           <p >全国高等职业教育临床医学院</p>
           <div class="tips_icon"></div>
       </div>
-		<div class="bottom_tab_content">
+		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
         <router-view></router-view>
@@ -23,7 +25,9 @@
 export default {
 	data() {
 		return {
-			activeTagName:'presscheck'
+			activeTagName:'presscheck',
+           contentH:'auto',
+           isShowTabs:true,
 		}
 	},
 	methods: {
@@ -31,12 +35,19 @@ export default {
       this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
-
+  },
+  watch:{
+ 
   },
   created() {
       // console.log(this.$router);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
+  mounted(){
+    //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
+    var windowH = document.documentElement.clientHeight;
+    this.contentH = windowH-100+'px';
+  },
 }
 </script>
 
@@ -46,12 +57,21 @@ export default {
    width:100%;
   position: relative;
 }
+.bottom_tab_content{
+  background-color: #fff;
+}
  .application_nav .tab_nav_outbox{
      float: left;
      width:100%;
      background-color: rgb(238, 241, 246);
      border: 1px solid rgb(209, 217, 229);
      box-sizing: border-box;
+ }
+ .application_nav .tab_nav_outbox .back_button{
+     float:right;
+     margin-right:20px;
+     margin-left:20px;
+     line-height: 20px;
  }
 .application_nav .tab_nav{
 	box-shadow: none;
@@ -92,7 +112,7 @@ export default {
 }
 .application_nav .header_title_tips p{
     float:left;
-    background-color: #1F2D3D;
+    background-color: #12806b;
     font-size:16px;
     padding:2px 40px 2px 15px;
 }
