@@ -44,7 +44,7 @@ export default new Router({
             
             {path:'notice',name:'通知详情',component:Notice, meta: { breadNumber: 3 }},
             {
-              path: 'materialnav', name: '教材申报', component: ApplicationNav, children: [
+              path: 'materialnav', name: '书目列表', component: ApplicationNav, children: [
                 { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
                 { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3,isShowTags:true}},
@@ -58,9 +58,9 @@ export default new Router({
          ]
       },
       {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 },children:[
-       {path:'pmphuser',name:'社内用户',component:pmphUser,meta: { breadNumber: 3 }},
-       {path:'writeruser',name:'作家用户',component:writerUser,meta: { breadNumber: 3 }},
-       {path:'orguser',name:'机构用户',component:orgUser,meta: { breadNumber: 3 }},
+       {path:'pmphuser',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
+       {path:'writeruser',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
+       {path:'orguser',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},
       ]},
 
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },
