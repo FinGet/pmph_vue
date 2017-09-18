@@ -8,6 +8,9 @@ const mutations = {
   [types.BREADCRUM](state,data) {
     let len = state.breadcrumb.length;
     if(data.breadNumber>len){
+      while(data.breadNumber<=state.breadcrumb[state.breadcrumb.length-1].breadNumber){
+        state.breadcrumb.splice(state.breadcrumb.length-1);
+      }
       state.breadcrumb.push( data);
       return;
     }
