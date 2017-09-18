@@ -57,11 +57,12 @@ const actions = {
 // mutations
 const mutations = {
   [types.DO_LOGIN] (state, {name,level}) {
+    state.userData.userid = userid;
     state.userData.username = name;
     state.userData.userlevel = level;
     console.log(state)
   },
-}
+};
 
 export default {
   state,
