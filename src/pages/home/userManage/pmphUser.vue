@@ -48,14 +48,20 @@
           label="所属院校">
         </el-table-column>
         <el-table-column
-          prop="phone"
           label="手机号"
-          width="140">
+          width="150">
+          <template scope="scope">
+            <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
+            {{scope.row.phone}}
+          </template>
         </el-table-column>
         <el-table-column
-          prop="email"
           label="邮箱"
           width="180">
+          <template scope="scope">
+            <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+            {{scope.row.email}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="position"

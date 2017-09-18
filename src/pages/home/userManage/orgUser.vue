@@ -47,14 +47,20 @@
             width="110">
           </el-table-column>
           <el-table-column
-            prop="phone"
             label="手机号"
-            width="140">
+            width="150">
+            <template scope="scope">
+              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
+              {{scope.row.phone}}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="email"
             label="邮箱"
             width="180">
+            <template scope="scope">
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+              {{scope.row.email}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="position"
@@ -84,7 +90,7 @@
             label="操作"
             width="120">
             <template scope="scope">
-              <el-button type="text">修改</el-button>
+              <el-button type="text" @click="eidtInfo(scope.$index)">修改</el-button>
               <el-button type="text">登录</el-button>
             </template>
           </el-table-column>
@@ -103,6 +109,7 @@
       <el-dialog
         title="新增机构用户"
         :visible.sync="dialogVisible"
+        :before-close="dialogClose"
         size="tiny">
         <el-form :model="form"  label-width="100px" class="padding20">
           <el-form-item label="用户代码：">
@@ -118,7 +125,7 @@
             <el-input v-model="form.phone" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="所属组织：">
-            <el-select v-model="form.usercode" placeholder="全部">
+            <el-select v-model="form.organisation" placeholder="全部">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -417,7 +424,34 @@
         methods:{
           addUser(){
             this.dialogVisible=true;
-          }
+          },
+          eidtInfo(index){
+            for(let key in this.form){
+              this.form[key] = this.tableData[index][key];
+            }
+            this.dialogVisible=true;
+          },
+          dialogClose(done){
+            console.log(123456);
+            var initForm = {
+              schoolname:'',
+              usercode:'',
+              username:'',
+              phone:'',
+              email:'',
+              position:'',
+              zhicheng:'',
+              address: '',
+              postcode:'',
+              enabled:true,
+              organisation:'',
+              remark:'',
+            }
+            for(let key in initForm){
+              this.form[key] = initForm[key];
+            }
+            done();
+          },
         },
     }
 </script>
