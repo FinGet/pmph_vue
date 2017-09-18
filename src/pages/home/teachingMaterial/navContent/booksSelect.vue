@@ -17,7 +17,7 @@
         </div>
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
-          <div class="searchName">处理状态：<span></span></div>
+          <div class="searchName">进度：<span></span></div>
           <div class="searchInput">
             <el-select v-model="currentState" placeholder="全部">
               <el-option
@@ -60,8 +60,10 @@
             width="68">
           </el-table-column>
           <el-table-column
-            prop="bookname"
             label="书名">
+            <template scope="scope">
+              <router-link to="#">{{scope.row.bookname}}</router-link>
+            </template>
           </el-table-column>
           <el-table-column
             prop="applyNumber"
