@@ -63,6 +63,9 @@ const mutations = {
     state.userData.username = name;
     state.userData.userlevel = level;
   },
+  [types.UPDATE_LEVEL] (state, {level}) {
+    state.userData.userlevel = level;
+  },
 };
 
 export default {

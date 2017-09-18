@@ -433,6 +433,7 @@
             }
         },
         created(){
+          this.$store.commit('UPDATE_LEVEL',{level:this.$route.query.level});
           this.level = this.$store.getters.getUserLevel;
           console.log(this.$store.getters.getUserData)
           console.log(this.$store.getters.getUserLevel)
@@ -440,6 +441,12 @@
           if(this.level!==1){
             this.tableData.splice(8);
           }
-        }
+        },
+        watch: {
+          $route () {
+            this.$store.commit('UPDATE_LEVEL',{level:this.$route.query.level});
+            this.level = this.$store.getters.getUserLevel;
+          }
+        },
     }
 </script>
