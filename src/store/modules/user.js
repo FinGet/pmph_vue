@@ -37,7 +37,7 @@ var loginData = {
 // getters
 const getters = {
   getUserData: state => state.userData,
-  getUserLevel:state => state.userData.level,
+  getUserLevel:state => state.userData.userlevel,
 };
 
 // actions
@@ -60,7 +60,6 @@ const mutations = {
     state.userData.userid = userid;
     state.userData.username = name;
     state.userData.userlevel = level;
-    console.log(state)
   },
 };
 

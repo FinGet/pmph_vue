@@ -434,7 +434,8 @@
         },
         created(){
           this.level = this.$store.getters.getUserLevel;
-
+          console.log(this.$store.getters.getUserData)
+          console.log(this.$store.getters.getUserLevel)
           //模拟下当是策划编辑时少一点数据
           if(this.level!==1){
             this.tableData.splice(8);

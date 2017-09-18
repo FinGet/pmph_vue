@@ -3,7 +3,7 @@
       <div class="login-page-inner">
         <div class="input-text-wrapper">
           <span class="justify-align">用户名：</span>
-          <el-input v-model="userName" placeholder="请输入用户名"></el-input>
+          <el-input v-model="userName" placeholder="请输入用户名" @keyup.enter="submit"></el-input>
         </div>
         <div class="input-text-wrapper marginT30">
           <el-button type="primary" @click="submit">登录</el-button>
