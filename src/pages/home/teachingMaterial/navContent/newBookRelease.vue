@@ -278,14 +278,11 @@ export default {
 .extend_list .add_button {
     color: #1ab194;
 }
-<<<<<<< HEAD
 
 .extend_list .delete_button {
     color: #e57e2f;
 }
 
-=======
->>>>>>> ce1eb04ae165185368d5f15ddb9567d101444bc3
 .out_bottom_box {
     width: 100%;
     overflow: hidden;
