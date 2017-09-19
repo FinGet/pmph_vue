@@ -12,7 +12,7 @@
         </el-input>
       </div>
       <div class="memberShape">
-        <beauty-scroll>
+        <beauty-scroll scrollbar ref="beautyScroll">
           <!--小组头像-->
           <div class="groupHead"
                v-for="(item,index) in groupListData"
@@ -43,7 +43,8 @@
 
 <script>
   import {DEFAULT_USER_IMAGE} from 'common/config.js';
-  import beautyScroll from '@/base/beautyScroll.vue'
+  import beautyScroll from '@/base/beautyScroll.vue';
+  import {mapGetters} from 'vuex'
   export default{
     data(){
        return {
@@ -54,8 +55,27 @@
              {name:'人卫社小组',id:123,lastMesTime:'昨天'},
            {name:'成都医科大学内部',lastMesTime:"7-28"},
            {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
+           {name:'个人小组',lastMesTime:"8-28"},
            {name:'第九轮教材申报讨论组123',lastMesTime:"去年"}],
        }
+    },
+    computed:{
+      ...mapGetters([
+        'sidebarFlod'
+      ])
     },
     components:{
       beautyScroll
@@ -63,6 +83,15 @@
     methods:{
       handleIconClick(ev) {
         console.log(ev);
+      },
+    },
+    watch:{
+      /**
+       * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+       */
+      sidebarFlod(){
+        this.$refs.beautyScroll.refresh(280);
+
       },
     }
   }
@@ -78,14 +107,20 @@
     position: relative;
   }
   .groupList-inner{
-    padding: 10px 0 0;
-    min-height: 100%;
+    box-sizing: border-box;
+    padding: 70px 0 42px;
+    height: 100%;
+    position: relative;
   }
   .searchBox{
     padding: 0 10px;
+    position: absolute;
+    top: 10px;
+    left: 0;
   }
   .memberShape{
-    margin-top: 25px;
+    height: 100%;
+    position: relative;
   }
   .addGroupWrapper{
     position: absolute;
