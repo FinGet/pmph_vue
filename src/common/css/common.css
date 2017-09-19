@@ -139,6 +139,9 @@ button a,button a:hover,button a:active{
 .input-600{
   width:600px;
 }
+.input-500{
+  width:500px;
+}
 
 /*按钮*/
 .btn{

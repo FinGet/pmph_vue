@@ -19,7 +19,7 @@ import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBook
 import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
-import SchoolQuery from 'pages/home/systemMessage/SchoolQuery'
+import SchoolQuery from 'components/SchoolQuery'
 import GroupManage from 'pages/home/Groups/groupManagement'
 /* 用户信息管理 */
 import UserRouter from '../pages/home/userManage/userRouter'
@@ -42,7 +42,7 @@ export default new Router({
         {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2, replaceName:'通知列表'},
          children:[
             {path:'materials',name:'通知列表',component:ApplicationList, meta: { breadNumber: 3 ,replaceName:false}},
-            
+
             {path:'notice',name:'通知详情',component:Notice, meta: { breadNumber: 3 }},
             {
               path: 'materialnav', name: '书目列表', component: ApplicationNav ,meta:{replaceName:'申报表审核'},children: [

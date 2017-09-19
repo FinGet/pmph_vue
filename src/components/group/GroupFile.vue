@@ -19,9 +19,7 @@
           </div>
           <div class="fileupload">
             <el-badge :value="12" class="myupload">
-              <el-upload class="upload" action="#" :show-file-list="false" :multiple="true" :on-success="uploadSuccess">
-                <i class="icon-upload"></i>
-              </el-upload>
+              <i class="icon-upload" @click="dialogChooseGroup = true"></i>
             </el-badge>
           </div>
         </div>
@@ -57,6 +55,12 @@
           label="分享者">
         </el-table-column>
         <el-table-column
+          prop="groupcount"
+          align="center"
+          width="120"
+          label="上传小组数">
+        </el-table-column>
+        <el-table-column
           prop="downcount"
           align="center"
           width="100"
@@ -86,7 +90,7 @@
                 stripe
                 border
                 max-height="550"
-                @selection-change="handleSelectionChange"
+                @selection-change="fileSelectionChange"
                 style="width: 100%">
         <el-table-column
           type="selection"
@@ -115,6 +119,12 @@
           label="分享者">
         </el-table-column>
         <el-table-column
+          prop="groupcount"
+          align="center"
+          width="120"
+          label="上传小组数">
+        </el-table-column>
+        <el-table-column
           prop="downcount"
           align="center"
           width="100"
@@ -124,7 +134,7 @@
       <br>
       <el-row>
         <el-col>
-          <el-col :span="6">已选中{{count}}个文件</el-col>
+          <el-col :span="6">已选中{{fileCount}}个文件</el-col>
           <el-col :span="6" class="pull-right">
             <el-popover
               ref="popover"
@@ -143,6 +153,31 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!--选择上传小组 弹出层-->
+    <el-dialog title="选择上传小组" :visible.sync="dialogChooseGroup">
+      <el-table
+        ref="multipleTable"
+        :data="groupData"
+        border
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="groupSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="小组名称"
+          prop="name"
+        >
+        </el-table-column>
+      </el-table>
+      <el-col>
+        <el-upload class="marginT10 marginB10 pull-right" action="#" :show-file-list="false" :multiple="true" :on-success="uploadSuccess">
+          <el-button type="primary" @click="dialogChooseGroup = false">上传</el-button>
+        </el-upload>
+      </el-col>
+    </el-dialog>
 	</div>
 </template>
 
@@ -152,106 +187,148 @@
 			return {
         input:'',
         dialogTableVisible: false,
-        count:0,
+        dialogChooseGroup: false,
+        fileCount:0,
         visible: false,
-        multipleSelection: [],
+        fileSelection: [],
+        groupSelection: [],
         //currentPage: 1, //当前分页
-        tableData: [{
+        tableData: [
+          {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'7',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'8',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'1',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'3',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'5',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'20',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'6',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
         }, {
           filename:'颜值并没有那么重要.docx',
           date: '2016-05-02',
           uploader: '王小虎',
+          groupcount:'4',
           downcount: '10'
-        }]
+        }],
+        groupData:[
+          {
+            name:'人卫小组1'
+          },
+          {
+            name:'人卫小组2'
+          },
+          {
+            name:'人卫小组3'
+          }
+          ,{
+            name:'人卫小组4'
+          }
+          ,{
+            name:'人卫小组5'
+          }
+          ,{
+            name:'人卫小组6'
+          }
+        ]
       }
 		},
     computed:{
@@ -264,7 +341,7 @@
        * @returns {boolean}
        */
       isSelected() {
-        if (this.multipleSelection.length > 0) {
+        if (this.fileSelection.length > 0) {
           return false
         } else {
           return true
@@ -292,16 +369,19 @@
        * 当选中项变化是，把选中项赋值个multipSelection从而实现了isSelected
        * @param val
        */
-      handleSelectionChange(val) {
+      fileSelectionChange(val) {
         //console.log(val)
-        this.multipleSelection = val
-        this.count = this.multipleSelection.length
+        this.fileSelection = val
+        this.fileCount = this.fileSelection.length
+      },
+      groupSelectionChange(val) {
+        this.groupSelection = val
       },
       /**
        * 删除选中数据
        */
       deleted() {
-        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
+        this.tableData.splice(this.fileSelection,this.fileSelection.length)
         this.$refs.multipleTable.clearSelection()
         this.$message({
           message: `恭喜你，成功删除数据`,
@@ -354,5 +434,8 @@
   }
   .search{
     display: inline-block;
+  }
+  .myupload{
+    cursor: pointer;
   }
 </style>

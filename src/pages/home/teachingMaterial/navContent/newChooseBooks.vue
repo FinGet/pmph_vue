@@ -99,7 +99,7 @@
             </el-form-item>
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.address" class="input-600"></el-input>
+                <el-input v-model="ruleForm.address" class="input-500"></el-input>
               </el-col>
             </el-form-item>
 
