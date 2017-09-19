@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="messageIterm clearfix messageIterm-text" v-else>
-      <p>{{message.username}}上传了{{message.messageData}}文件{{message.time}}</p>
+      <p><span class="username">{{message.username}} </span> 上传了 {{message.messageData}} 文件 {{message.time}}</p>
     </div>
 </template>
 
@@ -226,7 +226,18 @@
 .messageIterm.my-message .messageTime{
   left: -140px;
 }
-  .messageIterm-text{
-    text-align: center;
-  }
+.messageIterm-text{
+  text-align: center;
+  color:#8c8c8c;
+}
+.messageIterm-text>p{
+  display: inline-block;
+  background: #e1e3e7;
+  padding: 4px 20px;
+  border-radius: 14px;
+  margin-top: 18px;
+}
+.messageIterm-text .username{
+  color: #6565e4;
+}
 </style>
