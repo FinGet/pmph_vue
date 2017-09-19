@@ -2,12 +2,12 @@
   <div class="groupmanage" ref="groupmanage" :style="{height:wrapperHeight+'px'}">
     <el-row class="groupmanage-row">
       <el-col :span="grouplistColDefaultWidth" class="border-right-1 groupmanage-col">
-        <Groups-list></Groups-list>
+        <Groups-list @clickItem="setGroupName"></Groups-list>
       </el-col>
       <el-col :span="chartColDefaultWidth" class="groupmanage-col">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>人卫社小组</p>
+            <p>{{currentGroup.name}}</p>
           </div>
           <ul class="tab clearfix">
             <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :class="{active:currentActive===index}">
@@ -33,7 +33,6 @@
 
 <script>
   import GroupsList from 'components/group/GroupsList'
-  import GroupHead from 'components/group/GroupHead'
   import GroupChat from 'components/group/GroupChat'
   import GroupFile from 'components/group/GroupFile'
   import GroupSetting from 'components/group/GroupSetting'
@@ -48,7 +47,7 @@
         memberColDefaultWidth:4,
         currentActive: 0, // 当前tab
         currentView: 'GroupChat',
-        currentGroup:{name:'人卫社小组'},
+        currentGroup:{name:''},
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
@@ -101,13 +100,15 @@
       setting(){//点击成员列表下的setting图标按钮
 
       },
+      setGroupName(group) {
+        this.currentGroup.name = group.name
+      },
       addNewMember(){
 
       },
     },
     components:{
       GroupsList,
-      GroupHead,
       GroupChat,
       GroupFile,
       GroupSetting,

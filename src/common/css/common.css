@@ -24,6 +24,7 @@ p{word-wrap:break-word}
 .gray{
   color:#c8c8c8;
 }
+.blue{color: blue;}
 /*字体相关*/
 .lineheight-36{line-height: 36px;}
 
@@ -190,8 +191,8 @@ button a,button a:hover,button a:active{
 }
 .justify-align > span { display: inline-block /* Opera */; padding-left: 100%; }
 
-/*badge*/
-.myupload + .el-badge__content.is-fixed{
+/* 小组功能文件共享页面 badge*/
+.myupload .el-badge__content.is-fixed{
   top:13px;
 }
 
