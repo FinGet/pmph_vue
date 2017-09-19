@@ -18,9 +18,11 @@
             <i class="icon-manage" @click="dialogTableVisible = true"></i>
           </div>
           <div class="fileupload">
-            <el-upload class="upload" action="#">
-              <i class="icon-upload"></i>
-            </el-upload>
+            <el-badge :value="12" class="myupload">
+              <el-upload class="upload" action="#" :show-file-list="false" :multiple="true" :on-success="uploadSuccess">
+                <i class="icon-upload"></i>
+              </el-upload>
+            </el-badge>
           </div>
         </div>
       </el-col>
@@ -83,7 +85,7 @@
                 :data="tableData"
                 stripe
                 border
-                max-height="650"
+                max-height="550"
                 @selection-change="handleSelectionChange"
                 style="width: 100%">
         <el-table-column
@@ -132,7 +134,7 @@
               <p>选中的文件确定删除吗？</p>
               <div style="text-align: right; margin: 0">
                 <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="visible = false,delet()">确定</el-button>
+                <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
               </div>
             </el-popover>
 
@@ -282,6 +284,10 @@
       Search() {
         console.log('search')
       },
+      // 文件上传成功
+      uploadSuccess() {
+        console.log('1')
+      },
       /**
        * 当选中项变化是，把选中项赋值个multipSelection从而实现了isSelected
        * @param val
@@ -294,10 +300,13 @@
       /**
        * 删除选中数据
        */
-      delet() {
-        //console.log(this.multipleSelection)
+      deleted() {
         this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
         this.$refs.multipleTable.clearSelection()
+        this.$message({
+          message: `恭喜你，成功删除数据`,
+          type: 'success'
+        });
       }
     }
 	}
