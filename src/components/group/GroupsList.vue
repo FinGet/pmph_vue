@@ -12,22 +12,24 @@
         </el-input>
       </div>
       <div class="memberShape">
-        <!--小组头像-->
-        <div class="groupHead"
-             v-for="(item,index) in groupListData"
-             :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
-             :key="index"
-        >
-          <div class="groupHead-inner">
+        <beauty-scroll>
+          <!--小组头像-->
+          <div class="groupHead"
+               v-for="(item,index) in groupListData"
+               :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
+               :key="index"
+          >
+            <div class="groupHead-inner">
             <span class="groupHeadImg">
               <img :src="item.image?item.image:DEFAULT_USER_IMAGE" alt="小组头像">
             </span>
-            <div class="groupHeadName">
-              <span>{{item.name}}</span>
+              <div class="groupHeadName">
+                <span>{{item.name}}</span>
+              </div>
+              <span class="lastMessageTime">{{item.lastMesTime}}</span>
             </div>
-            <span class="lastMessageTime">{{item.lastMesTime}}</span>
           </div>
-        </div>
+        </beauty-scroll>
       </div>
       <div class="addGroupWrapper text-center">
         <span>
@@ -40,7 +42,8 @@
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
+  import {DEFAULT_USER_IMAGE} from 'common/config.js';
+  import beautyScroll from '@/base/beautyScroll.vue'
   export default{
     data(){
        return {
@@ -55,6 +58,7 @@
        }
     },
     components:{
+      beautyScroll
     },
     methods:{
       handleIconClick(ev) {

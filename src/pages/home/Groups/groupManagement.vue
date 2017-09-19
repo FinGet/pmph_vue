@@ -33,7 +33,6 @@
 
 <script>
   import GroupsList from 'components/group/GroupsList'
-  import GroupHead from 'components/group/GroupHead'
   import GroupChat from 'components/group/GroupChat'
   import GroupFile from 'components/group/GroupFile'
   import GroupSetting from 'components/group/GroupSetting'
@@ -107,7 +106,6 @@
     },
     components:{
       GroupsList,
-      GroupHead,
       GroupChat,
       GroupFile,
       GroupSetting,
