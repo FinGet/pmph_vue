@@ -133,14 +133,13 @@
           <el-input v-model="form.role" placeholder="请输入您的手机"></el-input>
         </el-form-item>
         <el-form-item label="启用:">
-          <el-select :value="form.use?'启用':'停用'" placeholder="是否启用">
+          <el-select v-model="form.use" placeholder="是否启用">
             <el-option label="启用" value="true"></el-option>
             <el-option label="停用" value="false"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="danger" @click="resetForm('form'),dialogVisible = false">关闭</el-button>
-          <el-button @click="resetForm('form')">重置</el-button>
           <el-button type="primary" @click="save">保存</el-button>
         </el-form-item>
       </el-form>
@@ -296,6 +295,22 @@
               role:'主任项目编辑',
               phone:'1383838438',
               use:false
+            },
+            {
+              name:'王二',
+              username:'zs',
+              email:'123@qq.com',
+              role:'主任项目编辑',
+              phone:'1383838438',
+              use:false
+            },
+            {
+              name:'赵武',
+              username:'zs',
+              email:'123@qq.com',
+              role:'主任项目编辑',
+              phone:'1383838438',
+              use:true
             }
           ]
         }
@@ -319,6 +334,11 @@
           //this.form = data[index]
           for (var key in data[index]){
             this.form[key] = data[index][key]
+            if (this.form.use){
+              this.form.use = "启用"
+            } else {
+              this.form.use = "停用"
+            }
           }
         },
         // 保存修改
