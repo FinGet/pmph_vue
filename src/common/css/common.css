@@ -190,8 +190,8 @@ button a,button a:hover,button a:active{
 }
 .justify-align > span { display: inline-block /* Opera */; padding-left: 100%; }
 
-/*badge*/
-.myupload + .el-badge__content.is-fixed{
+/* 小组功能文件共享页面 badge*/
+.myupload .el-badge__content.is-fixed{
   top:13px;
 }
 

@@ -2,25 +2,28 @@
 	<div class="groupsetting">
     <el-row>
       <el-col>
-        <el-col :span="5">
-          <img :src="group.image?data.image:defaultImage" alt="小组头像">
-        </el-col>
+        <div class="pull-left marginR30">
+          <img class="avatar" :src="group.image?data.image:defaultImage" alt="小组头像">
+        </div>
         <el-col :span="8">
           <span class="name">小组名称:</span><el-input v-model="name"></el-input>
           <br>
-          <el-upload
-            class="upload"
-            action="#"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove">
-            <el-button size="small" type="primary">上传头像</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
         </el-col>
       </el-col>
       <el-col>
+        <el-upload
+          class="marginT10 marginL10"
+          action="#"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <el-button size="small" type="primary">上传头像</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+      </el-col>
+      <el-col>
         <div class="cutLine-dashed clearfix"></div>
-        <el-button class="pull-right" type="primary">确认修改</el-button>
+        <el-button class="pull-right" type="primary" @click="change">确认修改</el-button>
       </el-col>
     </el-row>
 	</div>
@@ -46,11 +49,29 @@
       };
     },
     methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
+      // 头像上传成功
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
       },
-      handlePreview(file) {
-        console.log(file);
+      // 限制用户上传头像类型与大小
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG/png 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      // 确认修改
+      change() {
+        this.$message({
+          message: '恭喜你，修改成功！',
+          type: 'success'
+        });
       }
     }
 	}
@@ -65,7 +86,8 @@
     padding-bottom: 5px;
     display: inline-block;
   }
-  .upload{
-    margin-top: 10px;
+  .avatar{
+    width: 100px;
+    height:100px;
   }
 </style>
