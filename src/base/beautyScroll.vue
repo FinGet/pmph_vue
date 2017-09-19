@@ -43,7 +43,7 @@
       },
       scrollbarcolor:{
         type:String,
-        default:'rgba(0,0,0,.2)'
+        default:'rgba(0,0,0,.15)'
       }
     },
     data() {
@@ -58,12 +58,12 @@
       var _self = this;
       var beautyScrollInner = this.$refs.beautyScrollInner;
       //先初始化滚动区域的宽样式
-      this.refresh();
+      this.render();
       //监听窗口大小改变事件
-      window.addEventListener("resize", this.refresh);
+      window.addEventListener("resize", this.render);
       //如果设置了自动监听resize事件
       if(this.autoresize){
-        window.removeEventListener("resize", this.refresh);
+        window.removeEventListener("resize", this.render);
         this.autoResize();
       }
       //如果显示滚动条，则监听滚动事件
@@ -73,9 +73,28 @@
     },
     methods:{
       /**
+       * 提供一个refresh方法重新计算滚动条的位置和宽度
+       * @param {Number} time 此时间段内实时刷新
+       */
+      refresh(time){
+        if(!time){
+          this.render();
+          return;
+        }
+        /*提供*/
+        let timer = 0;
+        let haddlerTimer = setInterval(() => {
+          this.render();
+          timer+=20;
+          if(timer>time){
+            clearInterval(haddlerTimer);
+          }
+        }, 20);
+      },
+      /**
        * 提供一个render方法重新计算滚动条的位置和宽度
        */
-      refresh(){
+      render(){
         var beautyScroll = this.$refs.beautyScroll;
         var beautyScrollInnerDiv = this.$refs.beautyScrollInnerDiv;
         //初始化beautyScroll-inner宽度，超出外层20px
@@ -90,8 +109,7 @@
       autoResize(){
         var self = this;
         setInterval(() => {
-          console.log('刷新了')
-          self.refresh()
+          self.render()
         }, 20);
       },
       /**
