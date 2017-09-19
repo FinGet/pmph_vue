@@ -36,17 +36,18 @@ export default new Router({
       path: '/',
       name: '首页',
       component: Home,
+      meta:{ replaceName:'个人中心'},
       children: [
-        {path:'index',name:'个人中心',component:Index,meta: { breadNumber: 2 }},
-        {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2 },
+        {path:'index',name:'个人中心',component:Index,meta: { breadNumber: 2 ,replaceName:false}},
+        {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2, replaceName:'通知列表'},
          children:[
-            {path:'materials',name:'通知列表',component:ApplicationList, meta: { breadNumber: 3 }},
+            {path:'materials',name:'通知列表',component:ApplicationList, meta: { breadNumber: 3 ,replaceName:false}},
             
             {path:'notice',name:'通知详情',component:Notice, meta: { breadNumber: 3 }},
             {
-              path: 'materialnav', name: '书目列表', component: ApplicationNav, children: [
+              path: 'materialnav', name: '书目列表', component: ApplicationNav ,meta:{replaceName:'申报表审核'},children: [
                 { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
-                { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck'} },
+                { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck',replaceName:false} },
                 { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3,isShowTags:true}},
                 {path:'book-list',name:'设置书目录',component:BookList, meta: { breadNumber: 4 ,isShowTags:true}},
                 { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 4 } },
@@ -57,7 +58,7 @@ export default new Router({
 
          ]
       },
-      {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 },children:[
+      {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:'社内用户'},children:[
        {path:'pmphuser',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
        {path:'writeruser',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
        {path:'orguser',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},
