@@ -33,12 +33,23 @@
         </beauty-scroll>
       </div>
       <div class="addGroupWrapper text-center">
-        <span>
-          <i class="fa fa-plus fa-lg"></i>
+        <el-button type="text" icon="plus" @click="addNew" class="button">
           新建小组
-        </span>
+        </el-button>
       </div>
     </div>
+    <!--新增成员弹窗-->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      size="tiny">
+        <div class="addNewPopup">
+
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -49,6 +60,7 @@
   export default{
     data(){
        return {
+         dialogVisible:false,
          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
          currentActiveGroupId:1237,
          inputSearchGroup:'',
@@ -88,6 +100,10 @@
       clickGroup(groupid,group){
         this.currentActiveGroupId = groupid;
         this.$emit('clickItem',group)
+      },
+      /*点击新建小组按钮*/
+      addNew(){
+        this.dialogVisible = !this.dialogVisible
       },
     },
     watch:{
@@ -138,6 +154,9 @@
     border-top: 1px solid rgba(0,0,0,.1);
     z-index: 10;
     cursor: pointer;
+  }
+  .addGroupWrapper .button{
+    color:#fff;
   }
 
   .groupHead{

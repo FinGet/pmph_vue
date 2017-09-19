@@ -38,7 +38,7 @@
         </div>
         <transition name="el-fade-in">
           <div class="addMemberWrapper text-center">
-            <el-button type="text" icon="plus" @click="addNewMember" class="button">
+            <el-button type="text" icon="plus" @click="addNew" class="button">
               新增成员
             </el-button>
           </div>
@@ -85,7 +85,7 @@
         settingClick(){
 
         },
-        addNewMember(){
+        addNew(){
           this.addMembershapePopupShow=true;
         },
       },
@@ -139,7 +139,7 @@
   width: 100%;
   color: #fff;
   border-top: 1px solid #c8c8c8;
-  background-color: #ccc;
+  background-color: #e9e9e9;
   z-index: 10;
 }
   .meberlist{
