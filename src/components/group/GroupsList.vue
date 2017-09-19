@@ -18,7 +18,7 @@
                v-for="(item,index) in groupListData"
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
-               @click="clickGroup(item.id)"
+               @click="clickGroup(item.id,item)"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
@@ -85,8 +85,9 @@
       handleIconClick(ev) {
         console.log(ev);
       },
-      clickGroup(groupid){
+      clickGroup(groupid,group){
         this.currentActiveGroupId = groupid;
+        this.$emit('clickItem',group)
       },
     },
     watch:{
