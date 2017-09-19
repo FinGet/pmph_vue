@@ -18,6 +18,7 @@
                v-for="(item,index) in groupListData"
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
+               @click="clickGroup(item.id)"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
@@ -34,7 +35,7 @@
       <div class="addGroupWrapper text-center">
         <span>
           <i class="fa fa-plus fa-lg"></i>
-          新增
+          新建小组
         </span>
       </div>
     </div>
@@ -52,24 +53,24 @@
          currentActiveGroupId:1237,
          inputSearchGroup:'',
          groupListData:[
-             {name:'人卫社小组',id:123,lastMesTime:'昨天'},
+           {name:'人卫社小组',id:1231,lastMesTime:'昨天'},
            {name:'成都医科大学内部',lastMesTime:"7-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'个人小组',lastMesTime:"8-28"},
-           {name:'第九轮教材申报讨论组123',lastMesTime:"去年"}],
+           {name:'个人小组',id:1232,lastMesTime:"8-28"},
+           {name:'个人小组',id:1233,lastMesTime:"8-28"},
+           {name:'个人小组',id:1234,lastMesTime:"8-28"},
+           {name:'个人小组',id:1235,lastMesTime:"8-28"},
+           {name:'个人小组',id:1236,lastMesTime:"8-28"},
+           {name:'个人小组',id:1237,lastMesTime:"8-28"},
+           {name:'个人小组',id:1238,lastMesTime:"8-28"},
+           {name:'个人小组',id:1239,lastMesTime:"8-28"},
+           {name:'个人小组',id:1230,lastMesTime:"8-28"},
+           {name:'个人小组',id:12311,lastMesTime:"8-28"},
+           {name:'个人小组',id:12322,lastMesTime:"8-28"},
+           {name:'个人小组',id:12333,lastMesTime:"8-28"},
+           {name:'个人小组',id:12344,lastMesTime:"8-28"},
+           {name:'个人小组',id:12355,lastMesTime:"8-28"},
+           {name:'个人小组',id:12366,lastMesTime:"8-28"},
+           {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年"}],
        }
     },
     computed:{
@@ -83,6 +84,9 @@
     methods:{
       handleIconClick(ev) {
         console.log(ev);
+      },
+      clickGroup(groupid){
+        this.currentActiveGroupId = groupid;
       },
     },
     watch:{
@@ -138,6 +142,7 @@
   .groupHead{
     height: 68px;
     border-radius: 4px;
+    cursor: pointer;
   }
   .groupHead:hover{
     background: rgba(255,255,255,.15);
@@ -146,7 +151,7 @@
     background: rgba(255,255,255,.2);
   }
   .groupHead.firstIterm{
-    background: rgba(255,255,255,.1);
+    /*background: rgba(255,255,255,.1);*/
   }
   .groupHead-inner{
     position: relative;
