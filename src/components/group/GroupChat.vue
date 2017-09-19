@@ -17,10 +17,17 @@
       <div class="ChatInputTool">
         <div>
           <span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>
-          <span class="ChatInputFileBtn">
-            <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
-            <input type="file">
-          </span>
+          <!--上传文件按钮-->
+          <el-upload
+            class="ChatInputFileBtn"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :file-list="filelist"
+            :on-success="uploadFileSuccess">
+            <span class="">
+              <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
+            </span>
+          </el-upload>
         </div>
         <div class="pull-right"></div>
 
@@ -66,6 +73,7 @@
 	export default {
 		data() {
 			return {
+        filelist:[],
         editingTextarea:"",
         currientCursorposition:{text: "", start: 2, end: 2},//text是选中文案，start起始位置，end终点位置
         textAreaIsFocus:false,
@@ -105,7 +113,7 @@
 
         message.time = getNowFormatDate();
 
-        message.messageData = emoji(this.editingTextarea);
+        message.messageData = emoji(this.editingTextarea.trim());
         if(!message.messageData){
             this.sendMessageIsEmpty();
             return;
@@ -153,6 +161,33 @@
       },
       sendMessageIsEmpty(){
         console.log('消息不能为空');
+      },
+      /**
+       * 当聊天窗口中上传文件组件上传成功后执行此回调
+       */
+      uploadFileSuccess(response, file, fileList){
+        var message = {
+          type:'text',
+          isNew:true,
+          userId:'123456',
+          header:DEFAULT_USER_IMAGE,
+          username:'我的测试账号',
+          messageData:'这是个测试数据，01234，测试测试',
+          time:'2012-12-12 12:12:00'
+        };
+        message.time = getNowFormatDate();
+        message.messageData = file.name.trim();
+        if(!message.messageData){
+          this.sendMessageIsEmpty();
+          return;
+        }
+        this.messagesList.push(message);
+
+        //to-do list 这部分后面需要重写，消息组件加载完成后再重置滚动条位置
+        setTimeout(()=> {
+          //将聊天消息窗口滚动条滚动到底部
+          this.scollBottom(this.$refs.chatContainer);
+        },20)
       },
     },
     components:{
@@ -248,4 +283,5 @@
   z-index: 1;
   cursor: pointer;
 }
+
 </style>

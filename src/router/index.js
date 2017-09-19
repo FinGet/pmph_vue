@@ -58,7 +58,7 @@ export default new Router({
 
          ]
       },
-      {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:'社内用户'},children:[
+      {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:false},children:[
        {path:'pmphuser',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
        {path:'writeruser',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
        {path:'orguser',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},

@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <el-menu default-active="1-4-1" theme="dark" class="sildbar-list" unique-opened router>
+    <el-menu :default-active="activeIndex" theme="dark" class="sildbar-list" unique-opened router>
       <el-menu-item index="/index">
         <i class="fa fa-home fa-fw"></i>
         <span slot="title">个人中心</span>
@@ -31,7 +31,7 @@
         <i class="fa fa-file-text-o fa-fw"></i>
         <span slot="title">系统日志</span>
       </el-menu-item>
-      <el-submenu index="/userrouter/pmphuser" v-if="userLevel<=1">
+      <el-submenu index="/userrouter" v-if="userLevel<=1">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户信息管理</span>
@@ -136,10 +136,12 @@
     },
     data() {
       return {
-        userLevel:0
+        userLevel:0,
+        activeIndex:'/index',
       };
     },
     methods:{
+      //用户信息级别初始化
        initUserInfo(){
          if(sessionStorage.getItem('currentUser')!=null){
            var user =JSON.parse(sessionStorage.getItem('currentUser'));
@@ -148,10 +150,26 @@
          }else{
            this.$router.push('/login');
          }
+       },
+       //初始化列表active状态
+       initActiveIndex(){
+         var str =this.$router.currentRoute.path.split('/')[1];
+         this.activeIndex=this.$router.currentRoute.path;
+        /*  if(str=='userrouter'){
+            this.activeIndex=this.$router.currentRoute.path;
+         } */
+         if(str=='materialrouter'){
+           this.activeIndex='/materialrouter/materials';
+         }
+           
        }
+    },
+    watch:{
+       '$route':'initActiveIndex'
     },
     created(){
       this.initUserInfo();
+      this.initActiveIndex();
     }
   }
 </script>
