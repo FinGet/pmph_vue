@@ -1,6 +1,6 @@
 <template>
   <el-breadcrumb separator="/" class="my-breadcrumb">
-    <el-breadcrumb-item v-for="(iterm, index) in breadcrumb"  :to="{ path: iterm.path }" :key="index">{{iterm.name}}</el-breadcrumb-item>
+    <el-breadcrumb-item v-for="(item, index) in breadData" v-if="item.meta.replaceName!=false" :to="{ name: item.meta.replaceName?item.meta.replaceName:item.name }" :key="index">{{item.name}}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
@@ -8,7 +8,9 @@
   import {mapGetters} from 'vuex'
 	export default {
 		data() {
-			return {}
+			return {
+        breadData:[]
+      }
 		},
     computed:{
       ...mapGetters([
@@ -17,6 +19,7 @@
     },
     watch: {
       $route () {
+        this.initBreadData();
         this.$store.commit('BREADCRUM',{
           path:this.$route.path,
           name:this.$route.name,
@@ -25,10 +28,14 @@
       }
     },
     methods:{
-      test(){
-        console.log(this.breadcrumbData)
+      initBreadData(){
+       this.breadData=this.$router.currentRoute.matched;
       }
     },
+    created(){
+      console.log(this.$router);
+      this.initBreadData();
+    }
 	}
 </script>
 
