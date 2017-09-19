@@ -87,9 +87,11 @@
           width="120">
         </el-table-column>
         <el-table-column
-          prop="enabled"
           label="启用"
           width="80">
+          <template scope="scope">
+            {{scope.row.enabled?'启用':'未启用'}}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"

@@ -12,12 +12,22 @@
         </el-input>
       </div>
       <div class="memberShape">
-        <Group-head
-          v-for="(item,index) in groupListData"
-          :data="item"
-          :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
-          :key="index"
-        ></Group-head>
+        <!--小组头像-->
+        <div class="groupHead"
+             v-for="(item,index) in groupListData"
+             :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
+             :key="index"
+        >
+          <div class="groupHead-inner">
+            <span class="groupHeadImg">
+              <img :src="item.image?item.image:DEFAULT_USER_IMAGE" alt="小组头像">
+            </span>
+            <div class="groupHeadName">
+              <span>{{item.name}}</span>
+            </div>
+            <span class="lastMessageTime">{{item.lastMesTime}}</span>
+          </div>
+        </div>
       </div>
       <div class="addGroupWrapper text-center">
         <span>
@@ -30,10 +40,11 @@
 </template>
 
 <script>
-  import GroupHead from 'components/group/GroupHead'
+  import {DEFAULT_USER_IMAGE} from 'common/config.js'
   export default{
     data(){
        return {
+         DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
          currentActiveGroupId:1237,
          inputSearchGroup:'',
          groupListData:[
@@ -44,7 +55,6 @@
        }
     },
     components:{
-      GroupHead,
     },
     methods:{
       handleIconClick(ev) {
@@ -84,5 +94,52 @@
     border-top: 1px solid rgba(0,0,0,.1);
     z-index: 10;
     cursor: pointer;
+  }
+
+  .groupHead{
+    height: 68px;
+    border-radius: 4px;
+  }
+  .groupHead:hover{
+    background: rgba(255,255,255,.15);
+  }
+  .groupHead.active{
+    background: rgba(255,255,255,.2);
+  }
+  .groupHead.firstIterm{
+    background: rgba(255,255,255,.1);
+  }
+  .groupHead-inner{
+    position: relative;
+    padding: 10px 32px 10px 68px;
+  }
+  .groupHeadImg{
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 50px;
+    height:50px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  .groupHeadImg>img{
+    display: block;
+    width: 100%;
+  }
+  .lastMessageTime{
+    position: absolute;
+    right: 4px;
+    top:20px;
+    width: 28px;
+    height: 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,.5);
+  }
+  .groupHeadName{
+    font-size: 14px;
+    line-height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
   }
 </style>
