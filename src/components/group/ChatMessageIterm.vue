@@ -2,7 +2,7 @@
 *  小组聊天单条消息组件
 */
 <template>
-    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId}">
+    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId}" v-if="message.type=='message'">
       <div class="messageIterm-inner">
         <div class="messageUserHead text-center">
           <div>
@@ -31,6 +31,9 @@
         </div>
       </div>
     </div>
+    <div class="messageIterm clearfix messageIterm-text" v-else>
+      <p>{{message.username}}上传了{{message.messageData}}文件{{message.time}}</p>
+    </div>
 </template>
 
 <script>
@@ -38,10 +41,10 @@
     export default{
         props:{
           groupId:{
-              type:String
+            type:String
           },
           currentUserId:{
-                type:String,
+            type:String,
             default:'123456'
           },
           isNew:{
@@ -52,6 +55,7 @@
             type:Object,
             default:()=>{
                 return{
+                  type:'messgae',
                   userId:'123456',
                   header:DEFAULT_USER_IMAGE,
                   username:'人卫社001号',
@@ -70,6 +74,9 @@
               },
               state:'completed',//默认是已完成状态
             }
+        },
+        computed:{
+
         },
         created(){
           //当组件创建完毕判断消息类型，如果是新增消息，则开始ajax请求
@@ -219,4 +226,7 @@
 .messageIterm.my-message .messageTime{
   left: -140px;
 }
+  .messageIterm-text{
+    text-align: center;
+  }
 </style>

@@ -72,6 +72,7 @@
         showEmoji:false,
         messagesList:[//消息列表
           {
+            type:'message',
             userId:'123476',
             header:DEFAULT_USER_IMAGE,
             username:'人卫社001号',
@@ -80,6 +81,7 @@
           },
           {
             userId:'123756',
+            type:'message',
             header:DEFAULT_USER_IMAGE,
             username:'人卫社001号',
             messageData:'这是个测试数据，01234，测试测试',
@@ -92,8 +94,8 @@
       sendMessage(){
         var self = this;
         var message = {
-          type:'text',
-          isNew:true,
+          type:'message',
+          isNew:false,
           userId:'123456',
           header:DEFAULT_USER_IMAGE,
           username:'我的测试账号',

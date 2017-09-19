@@ -175,7 +175,7 @@
     position: absolute;
     right: 4px;
     top:20px;
-    width: 28px;
+    width: 30px;
     height: 14px;
     font-size: 12px;
     color: rgba(255,255,255,.5);
