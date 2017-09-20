@@ -38,42 +38,298 @@
         </div>
         <transition name="el-fade-in">
           <div class="addMemberWrapper text-center">
-            <el-button type="text" icon="plus" @click="addNew" class="button">
+            <el-button type="text" icon="plus" @click="dialogVisible = true" class="button">
               新增成员
             </el-button>
           </div>
         </transition>
       </div>
-      <AddMembershapePopup :close.sync="addMembershapePopupShow"></AddMembershapePopup>
+
+      <!--新增成员弹窗-->
+      <el-dialog
+        :visible.sync="dialogVisible"
+        size="large"
+        top="30px">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="作家用户" name="first">
+            <div class="tabsContainer">
+              <div class="searchBox-wrapper">
+                <span>教材书籍：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>遴选职位：</span>
+                <div>
+                  <el-select v-model="selectValue" placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>用户名：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>真实姓名：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBtn-wrapper text-right">
+                <el-button  type="primary" icon="search">搜索</el-button>
+              </div>
+              <div class="tableContainer groupmanageTable">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData3"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%">
+                  <el-table-column
+                    type="selection"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="code"
+                    label="用户名">
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="真实姓名">
+                  </el-table-column>
+                  <el-table-column
+                    prop="position"
+                    label="遴选职位">
+                  </el-table-column>
+                  <el-table-column
+                    prop="work"
+                    label="工作单位"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                </el-table>
+                <el-pagination
+                  :page-sizes="[30,50,100, 200, 300, 400]"
+                  :page-size="30"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="400">
+                </el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="社内用户" name="second">
+
+            <div class="tabsContainer">
+              <div class="searchBox-wrapper">
+                <span>社内用户：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>遴选职位：</span>
+                <div>
+                  <el-select v-model="selectValue" placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>用户名：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBox-wrapper">
+                <span>真实姓名：</span>
+                <div>
+                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+                </div>
+              </div>
+              <div class="searchBtn-wrapper text-right">
+                <el-button  type="primary" icon="search">搜索</el-button>
+              </div>
+              <div class="tableContainer groupmanageTable">
+                <el-table
+                  ref="multipleTable"
+                  :data="tableData3"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%">
+                  <el-table-column
+                    type="selection"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="真实姓名">
+                  </el-table-column>
+                  <el-table-column
+                    prop="code"
+                    label="用户名">
+                  </el-table-column>
+                  <el-table-column
+                    prop="code"
+                    label="遴选职位">
+                  </el-table-column>
+                  <el-table-column
+                    prop="work"
+                    label="工作单位"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                </el-table>
+                <el-pagination
+                  :page-sizes="[30,50,100, 200, 300, 400]"
+                  :page-size="30"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="400">
+                </el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        <span slot="footer" class="dialog-footer">
+          <el-button  type="primary" @click="dialogVisible = false">添加成员</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 
 <script>
-  import AddMembershapePopup from './AddMembershapePopup.vue'
   import beautyScroll from '@/base/beautyScroll.vue';
   import {mapGetters} from 'vuex'
   import {DEFAULT_USER_IMAGE} from 'common/config.js';
     export default{
         data(){
             return {
-              defaultImage:DEFAULT_USER_IMAGE,
-              addMembershapePopupShow:false,
-              memberListData:[
-                {name:'人卫社小组',id:123,permission:'创建者'},
-                {name:'成都医科大学内部',id:234,permission:'管理员'},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'个人小组',id:2345},
-                {name:'第九轮教材申报讨论组123',id:2346}],
+              dialogVisible: false,
+              defaultImage: DEFAULT_USER_IMAGE,
+              addMembershapePopupShow: false,
+              memberListData: [
+                {name: '人卫社小组', id: 123, permission: '创建者'},
+                {name: '成都医科大学内部', id: 234, permission: '管理员'},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '个人小组', id: 2345},
+                {name: '第九轮教材申报讨论组123', id: 2346}],
+
+
+              /**
+               * 新增小组成员的弹窗数据
+               */
+              activeName:'first',
+              tableData3: [{
+                code: 'wangxiaohu',
+                name: '王小虎',
+                position:'副主编',
+                work: '福建卫生职业技术学院'
+              },
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+
+                {
+                  code: 'wangxiaohu',
+                  name: '王小虎',
+                  position:'副主编',
+                  work: '福建卫生职业技术学院'
+                },
+              ],
+              selectValue:'',
+              options:[],
             }
         },
       computed:{
@@ -90,7 +346,6 @@
         },
       },
       components:{
-        AddMembershapePopup,
         beautyScroll
       },
       watch:{
@@ -202,5 +457,33 @@
     position: absolute;
     right: 14px;
     top: 16px;
+  }
+
+  /*新增成员弹窗样式*/
+  .btn-wrapper{
+    margin-top: 20px;
+  }
+  .tabsContainer el-input{
+    display: inline-block;
+  }
+  .searchBox-wrapper{
+    box-sizing: border-box;
+    display: inline-block;
+    max-width: 320px;
+    padding: 0 10px;
+    margin-bottom: 6px;
+  }
+  .searchBox-wrapper>span{
+    float: left;
+    line-height: 36px;
+    width: 90px;
+    vertical-align: middle;
+  }
+  .searchBox-wrapper>div{
+    margin-left: 90px;
+    box-sizing: border-box;
+  }
+  .searchBtn-wrapper{
+    margin-bottom: 16px;
   }
 </style>

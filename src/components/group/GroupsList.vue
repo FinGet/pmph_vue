@@ -40,11 +40,37 @@
     </div>
     <!--新增成员弹窗-->
     <el-dialog
-      title="提示"
+      title="新增小组"
       :visible.sync="dialogVisible"
       size="tiny">
         <div class="addNewPopup">
-
+          <el-row class="marginB30">
+            <el-col :span="6">
+              <p class="lineHeight-100">小组头像：</p>
+            </el-col>
+            <el-col :span="18">
+              <div class="headImageWrapper">
+                <!--上传文件按钮-->
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess">
+                  <img v-if="newGroupData.headImage" :src="newGroupData.headImage" class="avatar">
+                  <img v-else :src="DEFAULT_USER_IMAGE" class="avatar">
+                  <i class="el-icon-plus avatar-uploader-icon headImageUploadBtn"></i>
+                </el-upload>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <p>小组名称：</p>
+            </el-col>
+            <el-col :span="18">
+              <el-input v-model="newGroupData.name" placeholder="请输入小组名称"></el-input>
+            </el-col>
+          </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -83,6 +109,11 @@
            {name:'个人小组',id:12355,lastMesTime:"8-28"},
            {name:'个人小组',id:12366,lastMesTime:"8-28"},
            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年"}],
+            filelist:[],
+            newGroupData : {
+              headImage:null,
+              name:null
+            },
        }
     },
     computed:{
@@ -104,6 +135,10 @@
       /*点击新建小组按钮*/
       addNew(){
         this.dialogVisible = !this.dialogVisible
+      },
+      /*小组头像上传成功后的回调*/
+      handleAvatarSuccess(response, file, fileList){
+        this.newGroupData.headImage = URL.createObjectURL(file.raw);
       },
     },
     watch:{
@@ -205,5 +240,68 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow:ellipsis;
+  }
+  /*新增小组弹窗*/
+  .lineHeight-100{line-height: 100px;}
+  .addNewPopup{
+    line-height: 36px;
+    padding: 0 20px;
+  }
+  .addNewPopup .headImageWrapper{
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+  .headImageWrapper:hover .inputFileBtn{
+    opacity: 0.5;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  .headImageUploadBtn{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border:2px solid #fff;
+    color: #fff;
+    opacity: 0;
+    z-index: 2;
+    transition: all .28s;
+  }
+  .headImageUploadBtn:after{
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height:100%;
+    z-index: -1;
+    background: rgba(0,0,0,.5);
+  }
+  .headImageWrapper:hover .headImageUploadBtn{
+    opacity: 1;
   }
 </style>
