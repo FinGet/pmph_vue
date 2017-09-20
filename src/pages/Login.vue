@@ -38,6 +38,14 @@ import {mapActions } from 'vuex'
       }
     },
     created(){
+      /* this.$axios({
+        method:'get',
+        url:'',
+      }).then(function(res){
+          
+      }).catch(function(err){
+
+      }) */
     }
 	}
 </script>
