@@ -21,9 +21,11 @@
          </div>
        </el-popover>
        <el-button class="btn" type="danger" icon="delete"  :disabled="isSelected" v-popover:popover>批量删除</el-button>
+       <router-link :to="{ name: '编辑消息'}">
        <el-button class="btn" type="primary" icon="edit">
-         <router-link :to="{ name: '编辑消息'}">发送新消息</router-link>
+         发送新消息
        </el-button>
+       </router-link>
      </div>
     </el-row>
     <div class="cutLine-dashed"></div>
