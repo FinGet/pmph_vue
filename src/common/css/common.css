@@ -283,7 +283,10 @@ a.table-link:hover{
   color: #23527c;
 }
 
-
+/*重置tab选择样式哦*/
+.memberlist-wrpper .el-tabs__item.is-active{
+  background: rgba(0,0,0,.1);
+}
 
 
 

@@ -7,7 +7,7 @@
       <el-col :span="chartColDefaultWidth" class="groupmanage-col">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>{{currentGroup.name}}</p>
+            <p>{{currentGroup.name?currentGroup.name:'人卫社小组'}}</p>
           </div>
           <ul class="tab clearfix">
             <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :class="{active:currentActive===index}">
@@ -159,7 +159,7 @@
     float: left;
     text-align: left;
     cursor: pointer;
-    padding:2px 4px;
+    padding:2px 18px;
     margin-right: 30px;
     padding-bottom: 8px;
   }
@@ -167,6 +167,7 @@
     border-bottom: 3px solid #1abb9c;
     margin-bottom: -2px;
     border-radius: 2px;
+    background: rgba(0,0,0,.1);
   }
 
 
