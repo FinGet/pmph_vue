@@ -17,6 +17,9 @@
       user:function () {
         return this.$store.getters.getUserData;
       }
+    },
+    created(){
+
     }
   }
 </script>

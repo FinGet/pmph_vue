@@ -146,7 +146,7 @@
          if(sessionStorage.getItem('currentUser')!=null){
            var user =JSON.parse(sessionStorage.getItem('currentUser'));
               this.userLevel=user.level;
-              console.log(this.userLevel);
+
          }else{
            this.$router.push('/login');
          }

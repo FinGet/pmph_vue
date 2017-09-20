@@ -43,7 +43,7 @@ const getters = {
 // actions
 const actions = {
   doLogin ({ commit, state }, data) {
-    console.log(data);
+  
 
     //模拟登录
     setTimeout(()=>{
