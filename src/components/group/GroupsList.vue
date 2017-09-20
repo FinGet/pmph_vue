@@ -280,11 +280,10 @@
   }
   .headImageUploadBtn{
     position: absolute;
-    left: 8px;
-    top: 8px;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     border:2px solid #fff;
     color: #fff;
     opacity: 0;
@@ -295,13 +294,14 @@
     content: "";
     display: inline-block;
     position: absolute;
-    top:-10px;
-    left:-10px;
-    width: 100px;
-    height:100px;
-    background: rgba(0,0,0,.2);
+    top:0;
+    left:0;
+    width: 100%;
+    height:100%;
+    z-index: -1;
+    background: rgba(0,0,0,.5);
   }
   .headImageWrapper:hover .headImageUploadBtn{
-    opacity: .5;
+    opacity: 1;
   }
 </style>
