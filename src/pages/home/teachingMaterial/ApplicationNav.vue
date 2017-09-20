@@ -41,6 +41,7 @@ export default {
       var level = undefined;
       if(path.includes('booksselect')){
         level=parseInt(path);
+        this.$router.replace({path:'materialnav'});
         this.$router.push({path:'booksselect',query:{level:level}});
         return;
       }

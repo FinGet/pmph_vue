@@ -290,11 +290,9 @@ export default {
 <style scoped>
 .application_list {
     width: 100%;
-    border: 1px solid rgb(209, 217, 229);
     box-sizing: border-box;
     padding: 15px 20px;
     overflow: hidden;
-  background: #fff;
 }
 
 .header_search_p {
