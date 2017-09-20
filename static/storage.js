@@ -1,3 +1,4 @@
+//获取sessionStorage
 function getSessionStorage(key,format){
      var data;
     if(sessionStorage.getItem(key)){
@@ -11,7 +12,7 @@ function getSessionStorage(key,format){
     }
     return data;
 }
-
+//写入sessionStorage
 function setSessionStorage(key,content,format){
     var data;
     if(format=='json'){

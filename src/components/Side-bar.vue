@@ -36,9 +36,9 @@
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户信息管理</span>
         </template>
-        <el-menu-item index="/userrouter/pmphuser">社内用户</el-menu-item>
-        <el-menu-item index="/userrouter/writeruser">作家用户</el-menu-item>
-        <el-menu-item index="/userrouter/orguser">机构用户</el-menu-item>
+        <el-menu-item index="/user/pmph">社内用户</el-menu-item>
+        <el-menu-item index="/user/writer">作家用户</el-menu-item>
+        <el-menu-item index="/user/org">机构用户</el-menu-item>
       </el-submenu> 
      <!--  <el-submenu index="4">
         <template slot="title">
