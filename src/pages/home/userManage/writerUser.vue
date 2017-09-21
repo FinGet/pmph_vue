@@ -47,7 +47,10 @@
           prop="schoolname"
           label="所属院校">
         </el-table-column>
+
+        <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
         <el-table-column
+          v-if="screenWidth_lg"
           label="手机号"
           width="150">
           <template scope="scope">
@@ -56,6 +59,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="screenWidth_lg"
           label="邮箱"
           width="180">
           <template scope="scope">
@@ -63,16 +67,57 @@
             {{scope.row.email}}
           </template>
         </el-table-column>
+
         <el-table-column
+          v-if="!screenWidth_lg"
+          label="联系方式"
+          width="180">
+          <template scope="scope">
+            <p>
+              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
+              {{scope.row.phone}}
+            </p>
+            <p>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+              {{scope.row.email}}
+            </p>
+          </template>
+        </el-table-column>
+
+        <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
+        <el-table-column
+          v-if="screenWidth_lg"
           prop="position"
           label="职务"
           width="100">
         </el-table-column>
         <el-table-column
+          v-if="screenWidth_lg"
           prop="zhicheng"
           label="职称"
           width="100">
         </el-table-column>
+
+        <el-table-column
+          v-if="!screenWidth_lg"
+          label="职务/职称"
+          width="100">
+          <template scope="scope">
+            <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
+              <p>
+                <i class="fa fa-tags"></i>
+                {{scope.row.position}}
+              </p>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.zhicheng" placement="top">
+              <p>
+                <i class="fa fa-graduation-cap"></i>
+                {{scope.row.zhicheng}}
+              </p>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+
         <el-table-column
           prop="address"
           label="地址">
@@ -147,14 +192,15 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
         </span>
     </el-dialog>
   </div>
 </template>
 <script>
+  import ScreenSize from 'common/mixins/ScreenSize.js'
   export default{
+    mixins:[ScreenSize],
     data(){
       return {
         options: [{

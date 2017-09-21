@@ -62,6 +62,7 @@
               prop="use"
               label="启用"
               align="center"
+              width="80"
             >
               <template scope="scope">
                 {{scope.row.use? '启用' : '停用'}}
