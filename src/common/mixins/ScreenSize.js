@@ -1,8 +1,9 @@
 module.exports={
   data(){
     return{
-      screenWidth:0,
-      screenHeight:0,
+      //默认设为1366*768
+      screenWidth:1366,
+      screenHeight:768,
     }
   },
   computed:{

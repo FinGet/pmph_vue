@@ -39,7 +39,7 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content">
-          <!-- <Editor :config="{}" :defaultMsg="'123'"></Editor> -->
+           <Editor :config="{}" :defaultMsg="'123'"></Editor>
         </div>
       </el-col>
     </el-row>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
- /*  import Editor from 'components/Editor' */
+  import Editor from 'components/Editor'
   import PreviewPopup from 'components/PreviewPopup'
   export default {
     data: function() {
@@ -101,7 +101,7 @@
       }
     },
     components: {
-     /*  Editor, */
+      Editor,
       PreviewPopup
     }
 	}
