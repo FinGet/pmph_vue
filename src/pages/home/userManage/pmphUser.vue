@@ -62,6 +62,7 @@
               prop="use"
               label="启用"
               align="center"
+              width="80"
             >
               <template scope="scope">
                 {{scope.row.use? '启用' : '停用'}}
@@ -72,7 +73,7 @@
               align="center"
             >
               <template scope="scope">
-                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, tableData)" size="mini" >修改</el-button>
+                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, tableData)">修改</el-button>
                 <el-button type="text">登录</el-button>
               </template>
             </el-table-column>
@@ -352,6 +353,7 @@
           type: 'success'
         });
       },
+      // 重置表单
       resetForm(formName) {
         this.$refs[formName].resetFields()
       }

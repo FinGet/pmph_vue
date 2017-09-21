@@ -449,7 +449,6 @@
           $route () {
             this.$store.commit('UPDATE_LEVEL',{level:this.$route.query.level});
             this.level = this.$store.getters.getUserLevel;
-
           }
         },
     }

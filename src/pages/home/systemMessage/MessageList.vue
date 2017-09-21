@@ -215,6 +215,7 @@
       // 点击补发
       handleReissue(index, row) {
         console.log(index, row);
+        this.$router.push({name:'选择学校'});
       },
       // 点击消息状态
       handleState(index, row) {
