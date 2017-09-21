@@ -58,10 +58,10 @@ export default new Router({
 
          ]
       },
-      {path:'userrouter',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:false},children:[
-       {path:'pmphuser',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
-       {path:'writeruser',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
-       {path:'orguser',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},
+      {path:'user',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:false},children:[
+       {path:'pmph',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
+       {path:'writer',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
+       {path:'org',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},
       ]},
 
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },

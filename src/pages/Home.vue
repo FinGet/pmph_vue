@@ -17,10 +17,12 @@
     </div>
     <div class="app-main" ref="main">
       <div class="app-main-inner">
+        
           <transition name="fade" mode="out-in">
             <router-view></router-view>
           </transition>
       </div>
+      <div class="back_to_top" v-if="isShowBackTop"  @click="backToTop"></div>
     </div>
 	</div>
 </template>
@@ -35,6 +37,7 @@
   export default {
 		data() {
 			return {
+        isShowBackTop:false
       }
 		},
     computed:{
@@ -50,6 +53,23 @@
           if(!this.sidebarFlod){
             this.$store.commit("TOGGLE_SILDBAR");
           }
+      },
+      backToTop(){
+        this.$refs['main'].scrollTop=0;
+      },
+      //回到顶部事件初始化
+      initBackTop(){
+            var _this=this;
+       this.$refs['main'].onscroll=function(){
+       //  console.log(_this.$refs['main'].scrollTop,_this.$refs['main'].offsetHeight);
+         if(_this.$refs['main'].scrollTop>=_this.$refs['main'].offsetHeight){
+           
+           _this.isShowBackTop=true;
+         }else{
+           _this.isShowBackTop=false;
+         }
+
+       }
       }
     },
     components:{
@@ -59,10 +79,10 @@
       Breadcrumb,
     },
     created(){
-   
+     
     },
     mounted(){
-     
+       this.initBackTop();
     }
 	}
 </script>
@@ -91,7 +111,22 @@
     transition: all .28s ease-out;
     margin-left: 200px;
     margin-top: 38px;
+    transition: all .3s;
     overflow: scroll;
+  }
+  .app-main .back_to_top{
+    position: fixed;
+    width:46px;
+    height: 46px;
+    right:30px;
+    bottom:60px;
+    background: url('../common/images/back_to_top.png')no-repeat 100%;
+    background-position: 0px 0px;
+    z-index: 999;
+    transition: all .3s;
+  }
+  .app-main .back_to_top:hover{
+    background-position: 0px -46px;
   }
   .app-main-inner{
     padding: 15px 20px;

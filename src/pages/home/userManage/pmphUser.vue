@@ -73,7 +73,7 @@
               align="center"
             >
               <template scope="scope">
-                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, tableData)" size="mini" >修改</el-button>
+                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, tableData)">修改</el-button>
                 <el-button type="text">登录</el-button>
               </template>
             </el-table-column>
