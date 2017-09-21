@@ -5,7 +5,7 @@
         <div class="pull-left">共有{{memberCount}}个成员</div>
         <div class="pull-right clearfix">
           <div class="disinline">
-            <el-input></el-input>
+            <el-input placeholder="请输入姓名"></el-input>
           </div>
           <div class="disinline">
             <el-button type="primary" @click="setManage">设为管理员</el-button>
@@ -16,7 +16,7 @@
               placement="top"
               width="160"
               v-model="visible">
-              <p>选中的文件确定删除吗？</p>
+              <p>选中的成员确定删除吗？</p>
               <div style="text-align: right; margin: 0">
                 <el-button size="mini" type="text" @click="visible = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
