@@ -2,11 +2,12 @@
 	<div class="login_page">
       <div class="login-page-inner">
         <div class="input-text-wrapper">
-          <span class="justify-align">用户名：</span>
+          <div class="login-logo paddingB40"><img src="../common/images/logo-text.png" alt=""></div>
           <el-input v-model="userName" placeholder="请输入用户名" @keyup.enter="submit"></el-input>
+          <el-input v-model="password" placeholder="请输入密码" @keyup.enter="submit" class="marginT10"></el-input>
         </div>
-        <div class="input-text-wrapper marginT30">
-          <el-button type="primary" @click="submit">登录</el-button>
+        <div class="input-text-wrapper marginT30 text-center">
+          <el-button type="primary" @click="submit" class="loginBtn">登录</el-button>
         </div>
         <div class="note marginT30">
           <p>最高权限:root</p>
@@ -16,16 +17,19 @@
           <p>密码任意</p>
         </div>
       </div>
+    <div id="canvas"></div>
 	</div>
 </template>
 
 <script>
 //  初始化一些数据
 import {mapActions } from 'vuex'
+import {CanvasBackground} from 'common/js/canvas_bg.js'
 	export default {
 		data() {
 			return {
         userName:'',
+        password:'',
       }
 		},
     methods:{
@@ -37,15 +41,13 @@ import {mapActions } from 'vuex'
         }
       }
     },
-    created(){
-      /* this.$axios({
-        method:'get',
-        url:'',
-      }).then(function(res){
-          
-      }).catch(function(err){
-
-      }) */
+    mounted(){
+      var bg=new CanvasBackground({
+        canvasContainerID:"canvas",
+        circleColor:"rgba(49,210,142,0.8)",
+        lineColor:"rgba(49,210,142,1)",
+        canvasOpacity:0.2
+      });
     }
 	}
 </script>
@@ -61,8 +63,32 @@ import {mapActions } from 'vuex'
     color: red;
     font-size: 120%;
   }
+
+  .login_page{
+    width: 100%;
+    height: 100%;
+  }
   .login-page-inner{
-    max-width: 680px;
-    margin: 100px auto 0;
+    height: 420px;
+    max-width: 300px;
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    padding: 20px;
+    margin-top: -300px;
+    z-index: 10;
+  }
+
+  .login-logo{
+    text-align: center;
+  }
+  #canvas{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+  }
+  .loginBtn{
+    width: 100%;
   }
 </style>

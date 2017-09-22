@@ -36,12 +36,18 @@ p{word-wrap:break-word}
 .paddingT10 { padding-top: 10px; }
 .paddingT15 { padding-top: 15px; }
 .paddingT20 { padding-top: 20px; }
+.paddingT30 { padding-top: 30px; }
+.paddingT40 { padding-top: 40px; }
+.paddingT50 { padding-top: 50px; }
 
 .paddingB0 { padding-bottom: 0; }
 .paddingB5  { padding-bottom: 5px; }
 .paddingB10 { padding-bottom: 10px; }
 .paddingB15 { padding-bottom: 15px; }
 .paddingB20 { padding-bottom: 20px; }
+.paddingB30 { padding-bottom: 30px; }
+.paddingB40 { padding-bottom: 40px; }
+.paddingB50 { padding-bottom: 50px; }
 
 .paddingL0 { padding-left: 0; }
 .paddingL5  { padding-left: 5px; }
@@ -127,7 +133,7 @@ button a,button a:hover,button a:active{
   color: #ffffff;
 }
 .el-menu--dark {
-  background-color: rgb(42, 63, 84);
+  background-color: transparent;
 }
 .el-table__body-wrapper{
   overflow-x: hidden;

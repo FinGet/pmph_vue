@@ -39,7 +39,7 @@
         <el-menu-item index="/user/pmph">社内用户</el-menu-item>
         <el-menu-item index="/user/writer">作家用户</el-menu-item>
         <el-menu-item index="/user/org">机构用户</el-menu-item>
-      </el-submenu> 
+      </el-submenu>
      <!--  <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-user-times fa-fw"></i>
@@ -119,7 +119,7 @@
         <el-menu-item index="12-4">敏感词维护</el-menu-item>
         <el-menu-item index="12-5">标签管理</el-menu-item>
       </el-submenu> -->
-      
+
     </el-menu>
 
 	</div>
@@ -131,7 +131,7 @@
       sidebarFlod:{
         type:Boolean,
         default:true,
-        
+
       }
     },
     data() {
@@ -161,7 +161,7 @@
          if(str=='materialrouter'){
            this.activeIndex='/materialrouter/materials';
          }
-           
+
        }
     },
     watch:{
@@ -180,6 +180,8 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
+    position: relative;
+    z-index: 10;
 
   }
   .userHead{

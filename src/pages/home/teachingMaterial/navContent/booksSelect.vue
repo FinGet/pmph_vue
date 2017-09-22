@@ -62,7 +62,7 @@
           <el-table-column
             label="书名">
             <template scope="scope">
-              <router-link to="#">{{scope.row.bookname}}</router-link>
+              {{scope.row.bookname}}
             </template>
           </el-table-column>
           <el-table-column
