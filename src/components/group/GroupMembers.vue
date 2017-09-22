@@ -8,6 +8,9 @@
             <el-input placeholder="请输入姓名"></el-input>
           </div>
           <div class="disinline">
+            <el-button type="warning" @click="disManage">取消管理员</el-button>
+          </div>
+          <div class="disinline">
             <el-button type="primary" @click="setManage">设为管理员</el-button>
           </div>
           <div class="disinline marginL10">
@@ -44,6 +47,13 @@
             width="120">
           </el-table-column>
           <el-table-column
+            label="身份"
+            width="120">
+            <template scope="scope">
+              {{scope.row.rank=='1'?'创建人':scope.row.rank=='2'?'管理员':'成员'}}
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="address"
             label="工作单位"
             show-overflow-tooltip>
@@ -61,25 +71,31 @@ export default {
       tableData:[
         {
           name: '张三',
+          rank: '1',
           address: '成都中医药大学'
         },
         {
           name: '张三',
+          rank: '2',
           address: '成都中医药大学'
         },
         {
           name: '张三',
+          rank: '3',
           address: '成都中医药大学'
         },
         {
           name: '张三',
+          rank: '3',
           address: '成都中医药大学'
         },{
           name: '张三',
+          rank: '2',
           address: '成都中医药大学'
         },
         {
           name: '张三',
+          rank: '2',
           address: '成都中医药大学'
         }
       ],
@@ -101,7 +117,7 @@ export default {
       } else {
         return true
       }
-    }
+    },
   },
   methods: {
     handleSelectionChange (val) {
@@ -109,6 +125,10 @@ export default {
     },
     // 设置管理员
     setManage () {
+
+    },
+    // 取消管理员
+    disManage(){
 
     },
     // deleted

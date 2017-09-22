@@ -232,10 +232,15 @@
           this.previewShow=true;
         }
       },
+      // 删除消息
       delet() {
-        console.log(1)
+        // console.log(1)
         this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
         this.$refs.multipleTable.clearSelection()
+        this.$message({
+          message: '恭喜你，删除成功！',
+          type: 'success'
+        });
       }
     },
     components: {

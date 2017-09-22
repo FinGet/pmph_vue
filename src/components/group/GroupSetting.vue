@@ -23,7 +23,32 @@
       </el-col>
       <el-col>
         <div class="cutLine-dashed clearfix"></div>
-        <el-button class="pull-right" type="primary" @click="change">确认修改</el-button>
+        <div class="pull-right">
+          <el-popover
+            ref="popover"
+            placement="top"
+            width="160"
+            v-model="visible">
+            <p>确认解散小组吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="dismiss">确定</el-button>
+            </div>
+          </el-popover>
+          <el-button class="pull-left" type="danger" v-popover:popover>解散小组</el-button>
+          <el-popover
+            ref="popover1"
+            placement="top"
+            width="160"
+            v-model="visible1">
+            <p>确认修改小组吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="change">确定</el-button>
+            </div>
+          </el-popover>
+          <el-button class="pull-left marginL10" type="primary" v-popover:popover1>确认修改</el-button>
+        </div>
       </el-col>
     </el-row>
 	</div>
@@ -45,6 +70,8 @@
     },
     data() {
       return {
+        visible:false,
+        visible1:false,
         defaultImage:'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png'
       };
     },
@@ -68,8 +95,17 @@
       },
       // 确认修改
       change() {
+        this.visible1 = false
         this.$message({
           message: '恭喜你，修改成功！',
+          type: 'success'
+        });
+      },
+      // 解散小组
+      dismiss() {
+        this.visible = false
+        this.$message({
+          message: '恭喜你，解散成功！',
           type: 'success'
         });
       }
