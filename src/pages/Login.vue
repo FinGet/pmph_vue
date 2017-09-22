@@ -75,7 +75,6 @@ import {CanvasBackground} from 'common/js/canvas_bg.js'
     position: relative;
     top: 50%;
     padding: 20px;
-    background: rgb(247,247,247);
     margin-top: -300px;
     z-index: 10;
   }
