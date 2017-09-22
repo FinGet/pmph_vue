@@ -133,7 +133,7 @@ button a,button a:hover,button a:active{
   color: #ffffff;
 }
 .el-menu--dark {
-  background-color: rgb(42, 63, 84);
+  background-color: transparent;
 }
 .el-table__body-wrapper{
   overflow-x: hidden;
