@@ -65,7 +65,7 @@
           prop="date"
           align="center"
           label="上传时间"
-          width="160">
+          width="130">
         </el-table-column>
         <el-table-column
           prop="uploader"
