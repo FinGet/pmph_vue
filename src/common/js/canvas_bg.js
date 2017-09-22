@@ -83,7 +83,7 @@ CanvasBackground.prototype._initLine=function(ctx,bx,by,cx,cy,opacity){
 CanvasBackground.prototype.render=function(){
   var self=this;
   self.context.clearRect(0,0,self.options.canvasWidth,self.options.canvasHeight);
-  for(var i=0;i<40;i++){
+  for(var i=0;i<this.options.circleNum;i++){
     var changeCircle=self.circleArr[i];
     changeCircle.centerX+=self.moveArr[i].x;
     changeCircle.centerY+=self.moveArr[i].y;
@@ -103,8 +103,8 @@ CanvasBackground.prototype.render=function(){
     }
 
   }
-  for(var j=0;j<40;j++){
-    for(var k=0;k<40;k++){
+  for(var j=0;j<this.options.circleNum;j++){
+    for(var k=0;k<this.options.circleNum;k++){
       var bx=self.circleArr[j].centerX;
       var by=self.circleArr[j].centerY;
       var cx=self.circleArr[k].centerX;
