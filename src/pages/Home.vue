@@ -1,5 +1,5 @@
 <template>
-	<div class="app-wrapper" :class="{sidebarFlod:!sidebarFlod}">
+  <div class="app-wrapper" :class="{sidebarFlod:!sidebarFlod}">
     <div class="sidebar-wrapper" @click="sidebarWrapperClick">
       <Side-bar :sidebarFlod="sidebarFlod"></Side-bar>
       <canvas id="cas"></canvas>
@@ -19,13 +19,13 @@
     <div class="app-main" ref="main">
       <div class="app-main-inner">
 
-          <transition name="fade" mode="out-in">
-            <router-view></router-view>
-          </transition>
+        <transition name="fade" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </div>
       <div class="back_to_top" v-if="isShowBackTop"  @click="backToTop"></div>
     </div>
-	</div>
+  </div>
 </template>
 
 <script>
@@ -36,11 +36,11 @@
   import Breadcrumb from 'components/Breadcrumb'
 
   export default {
-		data() {
-			return {
+    data() {
+      return {
         isShowBackTop:false
       }
-		},
+    },
     computed:{
       ...mapGetters([
         'sidebarFlod'
@@ -51,26 +51,26 @@
         this.$store.commit("TOGGLE_SILDBAR");
       },
       sidebarWrapperClick(){
-          if(!this.sidebarFlod){
-            this.$store.commit("TOGGLE_SILDBAR");
-          }
+        if(!this.sidebarFlod){
+          this.$store.commit("TOGGLE_SILDBAR");
+        }
       },
       backToTop(){
         this.$refs['main'].scrollTop=0;
       },
       //回到顶部事件初始化
       initBackTop(){
-            var _this=this;
-       this.$refs['main'].onscroll=function(){
-       //  console.log(_this.$refs['main'].scrollTop,_this.$refs['main'].offsetHeight);
-         if(_this.$refs['main'].scrollTop>=_this.$refs['main'].offsetHeight){
+        var _this=this;
+        this.$refs['main'].onscroll=function(){
+          //  console.log(_this.$refs['main'].scrollTop,_this.$refs['main'].offsetHeight);
+          if(_this.$refs['main'].scrollTop>=_this.$refs['main'].offsetHeight){
 
-           _this.isShowBackTop=true;
-         }else{
-           _this.isShowBackTop=false;
-         }
+            _this.isShowBackTop=true;
+          }else{
+            _this.isShowBackTop=false;
+          }
 
-       }
+        }
       }
     },
     components:{
@@ -130,7 +130,7 @@
           y: y,
           xa: xa,
           ya: ya,
-          max: 10000
+          max: 8000
         })
       }
 
@@ -203,7 +203,7 @@
         RAF(animate);
       }
     },
-	}
+  }
 </script>
 
 <style>
@@ -310,8 +310,8 @@
     margin-left: 64px;
   }
   .app-wrapper.sidebarFlod .sidebar-wrapper{
-     width: 64px;
-   }
+    width: 64px;
+  }
   .app-wrapper.sidebarFlod .sidebar-wrapper .el-submenu__title span{
     display: none;
   }
@@ -324,14 +324,14 @@
   }
   /*鼠标悬浮*/
   /*.app-wrapper.sidebarFlod .sidebar-wrapper:hover{*/
-    /*width: 200px;*/
+  /*width: 200px;*/
   /*}*/
   /*.app-wrapper.sidebarFlod .sidebar-wrapper:hover .el-submenu__title span{*/
-    /*display: inline-block;*/
+  /*display: inline-block;*/
   /*}*/
   /*.app-wrapper.sidebarFlod .sidebar-wrapper:hover .el-submenu .el-menu{*/
-    /*height: auto;*/
-    /*overflow: auto;*/
+  /*height: auto;*/
+  /*overflow: auto;*/
   /*}*/
   /*鼠标悬浮end*/
 
