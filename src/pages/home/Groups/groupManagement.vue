@@ -37,6 +37,7 @@
   import GroupFile from 'components/group/GroupFile'
   import GroupSetting from 'components/group/GroupSetting'
   import MembersList from 'components/group/MembersList'
+  import GroupMembers from 'components/group/GroupMembers'
   export default {
     data() {
       return {
@@ -51,7 +52,8 @@
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
-          {type:'小组设置',view:'GroupSetting'}
+          {type:'小组设置',view:'GroupSetting'},
+          {type:'成员管理',view:'GroupMembers'}
         ]
       }
     },
@@ -112,7 +114,8 @@
       GroupChat,
       GroupFile,
       GroupSetting,
-      MembersList
+      MembersList,
+      GroupMembers
     }
   }
 </script>

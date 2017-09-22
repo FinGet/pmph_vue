@@ -38,37 +38,37 @@ export default new Router({
       component: Home,
       meta:{ replaceName:'个人中心'},
       children: [
-        {path:'index',name:'个人中心',component:Index,meta: { breadNumber: 2 ,replaceName:false}},
-        {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: { breadNumber: 2, replaceName:'通知列表'},
+        {path:'index',name:'个人中心',component:Index,meta: { replaceName:false}},
+        {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: {replaceName:'通知列表'},
          children:[
-            {path:'materials',name:'通知列表',component:ApplicationList, meta: { breadNumber: 3 ,replaceName:false}},
+            {path:'materials',name:'通知列表',component:ApplicationList, meta: { replaceName:false}},
 
-            {path:'notice',name:'通知详情',component:Notice, meta: { breadNumber: 3 }},
+            {path:'notice',name:'通知详情',component:Notice},
             {
               path: 'materialnav', name: '书目列表', component: ApplicationNav ,meta:{replaceName:'申报表审核'},children: [
-                { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: { breadNumber: 3,applicationName:'booksselect' } },
-                { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { breadNumber: 3 ,applicationName:'presscheck',replaceName:false} },
-                { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{breadNumber:3,isShowTags:true}},
-                {path:'book-list',name:'设置书目录',component:BookList, meta: { breadNumber: 4 ,isShowTags:true}},
-                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { breadNumber: 4 } },
-                { path: 'chief', name:'遴选主编/副主编', component:Chief, meta:{breadNumber: 4}},
-                { path: 'pre-select', name:'预选编委', component:preSelect, meta:{breadNumber: 4}}
+                { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: {applicationName:'booksselect' } },
+                { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: {applicationName:'presscheck',replaceName:false} },
+                { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{isShowTags:true}},
+                {path:'book-list',name:'设置书目录',component:BookList, meta: { isShowTags:true}},
+                { path: 'expertinfo', name: '专家信息', component: ExpertInfo },
+                { path: 'chief', name:'遴选主编/副主编', component:Chief},
+                { path: 'pre-select', name:'预选编委', component:preSelect}
               ]
             },
 
          ]
       },
-      {path:'user',name:'用户信息管理',component:UserRouter,meta: { breadNumber: 2 , replaceName:false},children:[
-       {path:'pmph',name:'社内用户',component:pmphUser,meta: { breadNumber: 2}},
-       {path:'writer',name:'作家用户',component:writerUser,meta: { breadNumber: 2 }},
-       {path:'org',name:'机构用户',component:orgUser,meta: { breadNumber: 2}},
+      {path:'user',name:'用户信息管理',component:UserRouter,meta: { replaceName:false},children:[
+       {path:'pmph',name:'社内用户',component:pmphUser},
+       {path:'writer',name:'作家用户',component:writerUser},
+       {path:'org',name:'机构用户',component:orgUser},
       ]},
 
-        { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { breadNumber: 2 } },
-        { path: 'messagelist', name: '系统消息', component: MessageList, meta: { breadNumber: 2 } }, // 消息列表页面
-        { path: 'messagestate', name: '消息状态', component: MessageState, meta: { breadNumber: 3 } },
-        { path: 'messageEdit', name: '编辑消息', component: MessageEdit, meta: { breadNumber: 3 } },
-        { path: 'schoolquery', name: '选择学校', component: SchoolQuery, meta: { breadNumber: 4 } }//消息编辑页面
+        { path: 'groupmanage', name: '小组管理', component: GroupManage },
+        { path: 'messagelist', name: '系统消息', component: MessageList }, // 消息列表页面
+        { path: 'messagestate', name: '消息状态', component: MessageState },
+        { path: 'messageEdit', name: '编辑消息', component: MessageEdit},
+        { path: 'schoolquery', name: '选择学校', component: SchoolQuery }//消息编辑页面
       ]
     },
     { path: '/*', name: '404', component: NoFind }
