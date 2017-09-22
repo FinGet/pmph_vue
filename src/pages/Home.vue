@@ -366,7 +366,7 @@
     position: absolute;
     left: 0;
     top:0;
-    width: 100%;
+    width: 200px;
     height: 100%;
     z-index: 0;
   }
