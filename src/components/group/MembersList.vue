@@ -5,9 +5,9 @@
         <div class="head-title">
           <p>
             小组成员
-            <span class="pull-right" @click="settingClick">
-              <i class="fa fa-cog fa-lg"></i>
-            </span>
+            <!--<span class="pull-right" @click="settingClick">-->
+              <!--<i class="fa fa-cog fa-lg"></i>-->
+            <!--</span>-->
           </p>
         </div>
         <div class="meberlist">

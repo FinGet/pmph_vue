@@ -15,7 +15,19 @@
             ></el-input>
           </div>
           <div class="manmageFile">
-            <i class="icon-manage" @click="dialogTableVisible = true"></i>
+            <i class="icon-manage" @click="isManage = true" v-if="!isManage"></i>
+            <el-popover
+              ref="popover"
+              placement="top"
+              width="160"
+              v-model="visible">
+              <p>选中的文件确定删除吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
+              </div>
+            </el-popover>
+            <el-button class="pull-right p-btn" type="danger" @click="visible = true"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
           </div>
           <div class="fileupload">
             <el-badge :value="12" class="myupload">
@@ -31,7 +43,14 @@
         stripe
         border
         max-height="750"
+        ref="multipleTable"
+        @selection-change="fileSelectionChange"
         style="width: 100%">
+        <el-table-column
+          v-if="isManage"
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column
           prop="filename"
           header-align="center"
@@ -82,81 +101,10 @@
         </el-table-column>
       </el-table>
     </el-row>
-  <!--弹出层-->
-    <el-dialog title="文件管理" :visible.sync="dialogTableVisible" size="large">
-      <el-table
-                ref="multipleTable"
-                :data="tableData"
-                stripe
-                border
-                max-height="550"
-                @selection-change="fileSelectionChange"
-                style="width: 100%">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
-          prop="filename"
-          header-align="center"
-          label="文件"
-        >
-          <template scope="scope">
-            <i class="fa fa-file-word-o"></i>
-            <span style="margin-left: 10px">{{ scope.row.filename }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          align="center"
-          label="上传时间"
-          width="160">
-        </el-table-column>
-        <el-table-column
-          prop="uploader"
-          width="120"
-          align="center"
-          label="分享者">
-        </el-table-column>
-        <el-table-column
-          prop="groupcount"
-          align="center"
-          width="120"
-          label="上传小组数">
-        </el-table-column>
-        <el-table-column
-          prop="downcount"
-          align="center"
-          width="100"
-          label="下载次数">
-        </el-table-column>
-      </el-table>
-      <br>
-      <el-row>
-        <el-col>
-          <el-col :span="6">已选中{{fileCount}}个文件</el-col>
-          <el-col :span="6" class="pull-right">
-            <el-popover
-              ref="popover"
-              placement="top"
-              width="160"
-              v-model="visible">
-              <p>选中的文件确定删除吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
-              </div>
-            </el-popover>
-
-            <el-button class="pull-right" type="danger" :disabled="isSelected" v-popover:popover>删除</el-button>
-          </el-col>
-        </el-col>
-      </el-row>
-    </el-dialog>
     <!--选择上传小组 弹出层-->
     <el-dialog title="选择上传小组" :visible.sync="dialogChooseGroup">
       <el-table
-        ref="multipleTable"
+        ref="fileTable"
         :data="groupData"
         border
         tooltip-effect="dark"
@@ -174,7 +122,7 @@
       </el-table>
       <el-col>
         <el-upload class="marginT10 marginB10 pull-right" action="#" :show-file-list="false" :multiple="true" :on-success="uploadSuccess">
-          <el-button type="primary" @click="dialogChooseGroup = false">上传</el-button>
+          <el-button type="primary" :disabled="groupSelection.length==0" @click="uploadFile">上传文件</el-button>
         </el-upload>
       </el-col>
     </el-dialog>
@@ -186,10 +134,10 @@
 		data() {
 			return {
         input:'',
-        dialogTableVisible: false,
         dialogChooseGroup: false,
         fileCount:0,
         visible: false,
+        isManage: false,
         fileSelection: [],
         groupSelection: [],
         //currentPage: 1, //当前分页
@@ -351,9 +299,6 @@
     components:{
     },
     methods: {
-      manageFile() {
-          this.manageShow = true
-      },
       /**
        * 搜索
        * @constructor
@@ -376,6 +321,14 @@
       },
       groupSelectionChange(val) {
         this.groupSelection = val
+      },
+      // 上传文件事件
+      uploadFile(){
+        // console.log(this.groupSelection)
+        this.dialogChooseGroup = false
+        this.groupSelection = []
+        this.$refs.fileTable.clearSelection()
+        // console.log(this.groupSelection)
       },
       /**
        * 删除选中数据
@@ -417,6 +370,10 @@
     display: inline-block;
     cursor: pointer;
     margin-left: 40px;
+  }
+  .p-btn {
+    position: relative;
+    top: 13px;
   }
   .icon-manage{
     display: inline-block;
