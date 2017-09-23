@@ -1,6 +1,11 @@
 <template>
     <div class="chooseMember">
       <el-row>
+        <el-col>
+          <p class="bookTitle">医学心理学与精神病学（第4版）</p>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="24">
           <el-col>
             <div class="search-title">姓名:</div>

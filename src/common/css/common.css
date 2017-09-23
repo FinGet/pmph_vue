@@ -162,6 +162,12 @@ button a,button a:hover,button a:active{
   margin:10px;
   float: left;
 }
+
+.bookTitle{
+  font-size: 16px;
+  font-weight: 700;
+}
+
 /*重置小组搜索输入框*/
 #groupListSearch .el-input__inner{
   background-color: rgba(255,255,255,.8);
