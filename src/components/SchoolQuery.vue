@@ -231,6 +231,9 @@
         return this.checkedCities.length
       }
     },
+    created() {
+      this.$route.query.history=='1'?this.hasHistory=true:this.hasHistory=false
+    },
     methods: {
       handleCheckAllChange(event) {
         this.checkedCities = event.target.checked ? schools : [];
