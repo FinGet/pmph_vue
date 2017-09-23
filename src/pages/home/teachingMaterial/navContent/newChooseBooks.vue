@@ -230,7 +230,7 @@
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
               <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-              <el-button type="primary" >保存,下一步</el-button>
+              <el-button type="primary" @click="$router.push({ name: '设置书目录' })">保存,下一步</el-button>
             </el-form-item>
 
           </el-form>

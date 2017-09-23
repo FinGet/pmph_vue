@@ -74,8 +74,8 @@
 
     <div class="nextStep-wrapper text-center">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary">
-        <router-link :to="{ name: '选择学校'}">下一步</router-link>
+      <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
+        下一步
       </el-button>
     </div>
 

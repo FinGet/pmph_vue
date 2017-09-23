@@ -75,7 +75,7 @@
 
         <div class="out_bottom_box">
             <div class="bottom_box">
-                <el-button type="primary" class="bottom_button">保存但不发布</el-button>
+                <el-button type="primary" class="bottom_button" @click="$router.go(-2)" >保存但不发布</el-button>
                 <el-button type="primary" class="bottom_button">保存并发布</el-button>
             </div>
         </div>
