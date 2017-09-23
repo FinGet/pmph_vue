@@ -24,8 +24,20 @@
               <!--</el-select>-->
             <!--</el-col>-->
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-            <el-button v-if="edit" class="btn pull-right" type="primary">提交</el-button>
+            <el-popover
+              ref="popover"
+              placement="top"
+              width="160"
+              v-model="visible">
+              <p>是否确认提交？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
+              </div>
+            </el-popover>
+            <el-button v-if="edit" class="btn pull-right" type="primary" v-popover:popover>提交</el-button>
             <el-button v-if="!edit" class="btn pull-right" type="primary">确认</el-button>
+            <el-button v-if="edit" class="btn pull-right" type="warning">重置</el-button>
           </el-col>
           <el-table
             ref="multipleTable"
@@ -47,10 +59,6 @@
               <template scope="scope">
                 <p>{{scope.row.sex === 0? '男' : '女'}}</p>
               </template>
-            </el-table-column>
-            <el-table-column label="年龄"
-            prop="age">
-
             </el-table-column>
             <el-table-column
               label="申报单位/工作单位"
@@ -156,6 +164,7 @@
     data() {
       return {
         input:'',
+        visible:false,
 //        options: [{
 //          value: '选项1',
 //          label: '全部'
@@ -175,7 +184,6 @@
           {
             name: '张三',
             sex:0,
-            age:56,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             duty: '无',
@@ -192,7 +200,6 @@
           {
             name: '张三',
             sex:0,
-            age:56,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             position:'无',
@@ -208,7 +215,6 @@
           {
             name: '张三',
             sex:0,
-            age:56,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             position:'无',
@@ -224,7 +230,6 @@
           {
             name: '张三',
             sex:0,
-            age:56,
             applicationOrganization:'四川大学',
             workOrganization:'成都医科大学',
             position:'无',
@@ -241,6 +246,7 @@
       }
     },
     created(){
+      // console.log(this.edit)
       if(this.$route.query.edit===1) {
         this.edit=true
       }else {
