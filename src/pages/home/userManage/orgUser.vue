@@ -154,7 +154,7 @@
       </div>
       <!--增加新用户弹窗-->
       <el-dialog
-        title="新增机构用户"
+        :title="isNew?'新增机构用户':'修改用户信息'"
         :visible.sync="dialogVisible"
         :before-close="dialogClose"
         size="tiny">
@@ -200,6 +200,7 @@
       mixins:[ScreenSize],
         data(){
             return {
+              isNew:true,
               options: [{
                 value: '选项1',
                 label: '全部'
@@ -228,7 +229,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -241,7 +242,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -254,7 +255,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -267,7 +268,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -280,7 +281,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -293,7 +294,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -306,7 +307,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -319,7 +320,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -332,7 +333,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -345,7 +346,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -358,7 +359,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -371,7 +372,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -384,7 +385,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -397,7 +398,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -410,7 +411,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -423,7 +424,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -436,7 +437,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },{
@@ -449,7 +450,7 @@
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
-                enabled:true,
+                enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
               },],
@@ -464,7 +465,7 @@
                 zhicheng:'',
                 address: '',
                 postcode:'',
-                enabled:true,
+                enabled:'启用',
                 organisation:'',
                 remark:'',
               }
@@ -472,9 +473,11 @@
         },
         methods:{
           addUser(){
+            this.isNew=true;
             this.dialogVisible=true;
           },
           eidtInfo(index){
+            this.isNew=false;
             for(let key in this.form){
               this.form[key] = this.tableData[index][key];
             }
