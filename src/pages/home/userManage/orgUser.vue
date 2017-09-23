@@ -51,7 +51,7 @@
           <el-table-column
             v-if="screenWidth_lg"
             label="手机号"
-            width="150">
+            width="160">
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
               {{scope.row.phone}}
