@@ -46,6 +46,7 @@
       <div class="table-wrapper">
         <el-table
           ref="multipleTable"
+          border
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%">

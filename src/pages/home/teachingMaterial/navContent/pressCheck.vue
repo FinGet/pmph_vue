@@ -161,7 +161,7 @@
     </div>
     <!--表格-->
     <div class="table-wrapper">
-      <el-table
+      <el-table border
         :data="tableData"
         style="width: 100%">
         <el-table-column
