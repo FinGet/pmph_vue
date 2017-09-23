@@ -35,7 +35,8 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button  type="primary" v-if="level==2">主编/副主编确认</el-button>
+          <el-button  type="primary" v-if="level==2">批量导出Excel</el-button>
+          <el-button  type="primary" v-if="level==2">查看遴选表</el-button>
           <el-button type="primary" v-if="level==1">通过</el-button>
           <el-button type="primary" v-if="level==1">结果公布</el-button>
           <el-button type="primary" v-if="level==1">导出Excel表</el-button>
@@ -48,10 +49,10 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%">
-          <!--<el-table-column-->
-            <!--type="selection"-->
-            <!--width="55">-->
-          <!--</el-table-column>-->
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
           <el-table-column
             prop="bookorder"
             label="书序"
@@ -124,7 +125,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="当前进度">
+            label="当前进度" v-if="level===1">
             <template scope="scope">
               <span v-if="scope.row.state==0">名单未产生</span>
               <span v-if="scope.row.state==1">名单已确认</span>
@@ -143,10 +144,11 @@
           <el-table-column
             v-if="level===2"
             label="策划编辑"
-            width="100">
+            width="110">
             <template scope="scope">
               <p>
-                {{scope.row.planningEditor}}
+                <span v-if="scope.row.state==0">(待分配)</span>
+                <span v-else>{{scope.row.planningEditor}}</span>
                 <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
                   <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
@@ -161,16 +163,26 @@
             label="主编/副主编" v-if="level===2">
             <template scope="scope">
               <p v-if="scope.row.chiefEditor">
-                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+                <span v-if="scope.row.state==0">待遴选</span>
+                <span v-else-if="scope.row.state==1">李雪华，陈朝阳</span>
+                <span v-else-if="scope.row.state==2">刘德华，黎明等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
+                <span v-else-if="scope.row.state==3">傅松滨<el-tag type="warning">暂存</el-tag></span>
+                <span v-else-if="scope.row.state==4">陈朝阳</span>
+                <span v-else>陈朝阳</span>
+                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top" v-if="scope.row.state==3||scope.row.state==0">
                   <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid,level:level}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
-                <el-tag type="warning" v-else>待确认</el-tag>
+                <el-tooltip class="item" effect="dark" content="点击进入查看主编/副主编/编委" placement="top" v-else>
+                  <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:0}}">
+                    <el-button type="text">
+                      <i class="fa fa-eye fa-lg"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
               </p>
               <p class="gray" v-else>( 空 )</p>
             </template>
@@ -178,8 +190,14 @@
           <el-table-column
             label="编委审核" v-if="level===2">
             <template scope="scope">
-              <p v-if="scope.row.editorialBoard.length">
-                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
+              <p class="gray"  v-if="scope.row.state==0||scope.row.state==3">-</p>
+              <p v-else>
+                <span v-if="scope.row.state==1">共13人 <el-tag type="warning">待确认</el-tag></span>
+                <span v-else-if="scope.row.state==2">共13人 <el-tag type="warning">变动</el-tag></span>
+                <span v-else-if="scope.row.state==4">等待主编提供名单</span>
+                <span v-else-if="scope.row.state==5">共13人 <el-tag type="success">结果已公布</el-tag></span>
+                <span v-else-if="scope.row.state==6">共13人 <el-tag type="success">已确认</el-tag></span>
+                <span v-else-if="scope.row.state==7">共13人 <el-tag type="success">审核通过</el-tag></span>
                 <el-tooltip class="item" effect="dark" content="点击进入编委审核" placement="top">
                   <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:0}}">
                     <el-button type="text">
@@ -187,29 +205,27 @@
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-tag type="success" v-if="scope.row.editorialBoardHasChoose">已提交</el-tag>
-                <el-tag type="warning" v-else>暂存</el-tag>
               </p>
-              <p class="gray" v-else>等待主编提交名单</p>
             </template>
           </el-table-column>
           <!--项目编辑end-->
 
           <!--策划编辑start-->
           <el-table-column  v-if="level===3"
-                            label="第一主编"
-                            width="100">
+                            label="主编/副主编">
             <template scope="scope">
-              <p v-if="scope.row.chiefEditor">{{scope.row.chiefEditor}}</p>
-              <p v-else>(空)</p>
+              <p v-if="scope.row.state!=0">刘德华，黎明等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</p>
+              <p v-else>项目编辑遴选中</p>
             </template>
           </el-table-column>
           <el-table-column
             label="编委预选" v-if="level===3">
             <template scope="scope">
               <p v-if="scope.row.editorialBoard.length">
-                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入遴选编委" placement="top">
+                <span v-if="scope.row.state==3">待预选</span>
+                <span v-else-if="scope.row.state==2">已选3人 <el-tag type="warning">暂存</el-tag></span>
+                <span v-else>已选{{scope.row.editorialBoard.length}}人</span>
+                <el-tooltip class="item" effect="dark" content="点击进入遴选编委" placement="top" v-if="scope.row.state==2||scope.row.state==3||scope.row.state==4||scope.row.state==5">
                   <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:1}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw" v-if="!scope.row.subeditorHasChoose"></i>
@@ -224,18 +240,23 @@
             label="编委审核" v-if="level===3">
             <template scope="scope">
               <p v-if="scope.row.editorialBoard.length">
-                {{scope.row.editorialBoard[0]}}等{{scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top">
+                <span v-if="scope.row.state==2||scope.row.state==3">-</span>
+                <span v-else-if="scope.row.state==1">共13人 <el-tag type="warning">待确认</el-tag></span>
+                <span v-else-if="scope.row.state==4">等待主编提交名单</span>
+                <span v-else-if="scope.row.state==5">共13人 <el-tag type="success">结果已公布</el-tag></span>
+                <span v-else-if="scope.row.state==6">共13人 <el-tag type="success">已确认</el-tag></span>
+                <span v-else-if="scope.row.state==7">共13人 <el-tag type="warning">变动</el-tag></span>
+                <span v-else-if="scope.row.state==8">共13人 <el-tag type="success">审核通过</el-tag></span>
+                <span v-else>-</span>
+                <el-tooltip class="item" effect="dark" content="点击查看编委" placement="top" v-if="scope.row.state!=2&&scope.row.state!=3">
                   <router-link :to="{name:'预选编委',query:{bookid:scope.row.bookid,edit:0}}">
                     <el-button type="text">
-                      <i class="fa fa-eye fa-fg"></i>
+                      <i class="fa fa-eye fa-lg"></i>
                     </el-button>
                   </router-link>
                 </el-tooltip>
-                <el-tag type="success" v-if="scope.row.subeditorHasChoose">已确认</el-tag>
-                <el-tag type="warning" v-else>待确认</el-tag>
               </p>
-              <p class="gray" v-else>等待主编提交名单</p>
+              <p class="gray" v-else>-</p>
             </template>
           </el-table-column>
           <!--策划编辑end-->
@@ -246,8 +267,10 @@
               <div v-if="level===1">
                 <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">通过</el-button>
                 <el-button type="text" v-else>通过</el-button>
+                <span class="vertical-line"></span>
                 <el-button type="text" v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
                 <el-button type="text" :disabled="true" v-else>结果公布</el-button>
+                <span class="vertical-line"></span>
                 <el-button type="text">导出Excel</el-button>
               </div>
               <div v-else>
