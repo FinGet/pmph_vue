@@ -1,18 +1,28 @@
 <template>
     <div class="query">
-        <el-row>
-          <el-col class="marginT10 marginL10">
+        <el-row class="top-search paddingB5">
+          <el-col class="marginT10 marginL10 paddingR20">
             <el-col :span="3">
               <el-input  placeholder="请输入内容"></el-input>
             </el-col>
             <el-col :span="3" class="marginL10">
               <el-button type="primary" icon="search">搜索</el-button>
             </el-col>
+            <div class="nextStep-wrapper text-right" style="width: 85%">
+              <el-button type="primary">
+                <router-link :to="{ name: '编辑消息'}">上一步</router-link>
+              </el-button>
+              <el-button type="primary" @click="publish">发布</el-button>
+              <span class="schoolCount">已选中{{count}}个学校</span>
+            </div>
           </el-col>
+        </el-row>
+        <br>
+        <el-row>
           <el-col :span="24">
             <div>
               <ul class="tags">
-                <li>
+                <li v-if="hasHistory">
                   <div class="cate"><span class="category">历史:</span></div>
                   <div class="alltags history" ref="history">
                     <span class="tag"
@@ -186,14 +196,6 @@
                 </li>
                 <div class="cutLine-dashed"></div>
               </ul>
-              <br>
-              <div class="nextStep-wrapper text-center">
-                <el-button type="primary">
-                  <router-link :to="{ name: '编辑消息'}">上一步</router-link>
-                </el-button>
-                <el-button type="primary" @click="publish">发布</el-button>
-                <span class="schoolCount">已选中{{count}}个学校</span>
-              </div>
             </div>
           </el-col>
         </el-row>
@@ -211,6 +213,7 @@
     data() {
       return {
         open: false,
+        hasHistory:false,
         provinces:provinces,
         checkAll: true,
         checkedCities: ['清华大学', '北京大学'],
@@ -280,6 +283,13 @@
     background: #fff;
     min-height: 100%;
     position: absolute;
+  }
+  .top-search{
+    position: fixed;
+    z-index: 10;
+    top: 36px;
+    width: 100%;
+    background: #fff;
   }
   .query .cate{
     padding: 5px 0;

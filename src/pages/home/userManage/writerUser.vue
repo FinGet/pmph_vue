@@ -32,6 +32,7 @@
     <div class="table-wrapper">
       <el-table
         :data="tableData"
+        border
         style="width: 100%">
         <el-table-column
           prop="username"
@@ -52,7 +53,7 @@
         <el-table-column
           v-if="screenWidth_lg"
           label="手机号"
-          width="150">
+          width="160">
           <template scope="scope">
             <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
             {{scope.row.phone}}
@@ -101,7 +102,7 @@
         <el-table-column
           v-if="!screenWidth_lg"
           label="职务/职称"
-          width="100">
+          width="120">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
               <p>
@@ -120,7 +121,8 @@
 
         <el-table-column
           prop="address"
-          label="地址">
+          label="地址"
+          show-overflow-tooltip>
         </el-table-column>
         <el-table-column
           prop="usertype"
@@ -222,21 +224,21 @@
         value: '选项1',
 
         tableData: [{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
           phone:'18600000011',
           email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
           usertype:1,
           enabled:true,
         },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
           email:'eassss@sina.com',
           position:'副科长',
           zhicheng:'教员',
