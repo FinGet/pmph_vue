@@ -61,15 +61,17 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="申报单位/工作单位"
+              label="工作单位"
             >
               <template scope="scope">
-                <el-tooltip :content="'申报单位:'+scope.row.applicationOrganization" placement="top-start">
-                  <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
-                </el-tooltip>
-                <el-tooltip :content="'工作单位:'+scope.row.workOrganization" placement="top-start">
-                  <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
-                </el-tooltip>
+                <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="申报单位"
+            >
+              <template scope="scope">
+                <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
               </template>
             </el-table-column>
             <el-table-column
