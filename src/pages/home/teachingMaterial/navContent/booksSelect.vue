@@ -36,6 +36,9 @@
         <!--操作按钮-->
         <div class="operation-wrapper">
           <el-button  type="primary" v-if="level==2">主编/副主编确认</el-button>
+          <el-button type="primary" v-if="level==1">通过</el-button>
+          <el-button type="primary" v-if="level==1">结果公布</el-button>
+          <el-button type="primary" v-if="level==1">导出Excel表</el-button>
         </div>
       </div>
       <!--表格-->
@@ -72,24 +75,66 @@
           </el-table-column>
           <!--主任 start-->
           <el-table-column  v-if="level===1"
-                            prop="planningEditor"
                             label="策划编辑"
                             width="100">
+            <template scope="scope">
+              <p v-if="scope.row.state==0">
+                待分配
+                <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
+                  <el-button type="text">
+                    <i class="fa fa-pencil fa-fw"></i>
+                  </el-button>
+                </el-tooltip>
+              </p>
+              <p v-else>
+                {{scope.row.planningEditor}}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
-            label="遴选主编/副主编/编委" v-if="level===1">
+            label="遴选主编/副主编/编委" v-if="level===1" width="230">
             <template scope="scope">
-              <p v-if="scope.row.chiefEditor">
-                {{scope.row.chiefEditor}}等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人
-                <el-tooltip class="item" effect="dark" content="点击进入遴选主编/副主编/编委" placement="top">
+              <span class="scopeSpan1">
+                <span v-if="scope.row.state==0"></span>
+                <span v-else>共{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
+              </span>
+              <span class="scopeSpan2">
+                <span v-if="scope.row.state==0">待遴选</span>
+                <span v-if="scope.row.state==1">
+                  <span>策划编辑已确认</span>
+                  <span>项目编辑已确认</span>
+                </span>
+                <span v-if="scope.row.state==2">策划编辑已确认</span>
+                <span v-if="scope.row.state==3">项目编辑已确认</span>
+                <span v-if="scope.row.state==4"></span>
+                <span v-if="scope.row.state==5">通过</span>
+                <span v-if="scope.row.state==6">结果已公布</span>
+                <span v-if="scope.row.state==7">通过 <el-tag type="warning">变动</el-tag></span>
+                <span v-if="scope.row.state==8">结果公布 <el-tag type="warning">变动</el-tag></span>
+              </span>
+              <span class="scopeSpan3">
+                <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
                   <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
                     <el-button type="text">
                       <i class="fa fa-pencil fa-fw"></i>
                     </el-button>
                   </router-link>
                 </el-tooltip>
-              </p>
-              <p class="gray" v-else>( 空 )</p>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="当前进度">
+            <template scope="scope">
+              <span v-if="scope.row.state==0">名单未产生</span>
+              <span v-if="scope.row.state==1">名单已确认</span>
+              <span v-if="scope.row.state==2">遴选中</span>
+              <span v-if="scope.row.state==3">遴选中</span>
+              <span v-if="scope.row.state==4">遴选中</span>
+              <span v-if="scope.row.state==5">通过</span>
+              <span v-if="scope.row.state==6">结果公布</span>
+              <span v-if="scope.row.state==7">再次修改</span>
+              <span v-if="scope.row.state==8">再次修改</span>
             </template>
           </el-table-column>
           <!--主任 end-->
@@ -199,10 +244,10 @@
             label="操作">
             <template scope="scope">
               <div v-if="level===1">
-                <el-button type="text">通过</el-button>
-                <span class="vertical-line"></span>
-                <el-button type="text">结果公布</el-button>
-                <span class="vertical-line"></span>
+                <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">通过</el-button>
+                <el-button type="text" v-else>通过</el-button>
+                <el-button type="text" v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
+                <el-button type="text" :disabled="true" v-else>结果公布</el-button>
                 <el-button type="text">导出Excel</el-button>
               </div>
               <div v-else>
@@ -222,9 +267,6 @@
       </div>
     </div>
 </template>
-<style>
-
-</style>
 <script type="text/javascript">
     export default{
         data(){
@@ -265,6 +307,7 @@
                 label:'...'
               }],
               tableData: [{
+                state:0,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -276,6 +319,7 @@
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:[],
               },{
+                state:1,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -289,6 +333,7 @@
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
                 editorialBoardHasChoose:true,
               },{
+                state:2,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -301,6 +346,7 @@
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
                 editorialBoardHasChoose:true,
               },{
+                state:3,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -312,6 +358,7 @@
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:4,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -323,6 +370,7 @@
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:5,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -334,6 +382,7 @@
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:6,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -345,6 +394,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:7,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -356,6 +406,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:8,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -367,6 +418,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:0,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -378,6 +430,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:0,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -389,6 +442,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:0,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -400,6 +454,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:0,
                 editing:false,
                 bookid:'123456',
                 bookorder:1,
@@ -411,6 +466,7 @@
                 subeditor:['张思','王五','赵六','李思是','','',''],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                state:0,
                 editing:true,
                 bookid:'123456',
                 bookorder:1,
@@ -422,6 +478,7 @@
                 subeditor:['张思','王五','赵六','李思是'],
                 editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
               },{
+                  state:0,
                   editing:false,
                   bookid:'223456',
                   bookorder:1,
@@ -453,3 +510,20 @@
         },
     }
 </script>
+<style>
+  .scopeSpan1{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .scopeSpan2{
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 110px;
+    padding: 0 0 0 10px;
+    text-align: center;
+  }
+  .scopeSpan3{
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>
