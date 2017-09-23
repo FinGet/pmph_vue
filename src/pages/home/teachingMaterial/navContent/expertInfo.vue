@@ -424,6 +424,10 @@
          */
         saveBook(){
           for(let iterm of this.addBookList){
+            if(!iterm.bookname){
+              this.$message.error('请选择图书');
+              return false;
+            }
             iterm.isNew = false;
           }
         },
