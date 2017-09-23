@@ -6,7 +6,6 @@
         <div class="pull-right clearfix">
           <div class="disinline">
             <el-input class="fileinput"
-                      v-model="input"
                       placeholder="请输入姓名"
                       icon="search"
                       :on-icon-click="Search"
