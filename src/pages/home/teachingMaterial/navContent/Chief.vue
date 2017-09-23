@@ -29,7 +29,8 @@
               </el-select>
             </el-col>
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-            <el-button class="pull-right" type="primary">确认</el-button>
+            <el-button class="btn pull-right" type="primary">确认</el-button>
+            <el-button class="btn pull-right" type="warning">重置</el-button>
           </el-col>
           <el-table
             ref="multipleTable"
@@ -286,6 +287,7 @@
     created(){
       this.level = this.$route.query.level;
       this.level = this.level?parseInt(this.level):1;
+
     },
     methods:{
       handleSelectionChange(val) {

@@ -5,7 +5,11 @@
         <div class="pull-left">共有{{memberCount}}个成员</div>
         <div class="pull-right clearfix">
           <div class="disinline">
-            <el-input placeholder="请输入姓名"></el-input>
+            <el-input class="fileinput"
+                      placeholder="请输入姓名"
+                      icon="search"
+                      :on-icon-click="Search"
+            ></el-input>
           </div>
           <div class="disinline">
             <el-button type="warning" @click="disManage">取消管理员</el-button>
@@ -151,6 +155,9 @@ export default {
     },
     // 取消管理员
     disManage(){
+
+    },
+    Search(){
 
     },
     // deleted
