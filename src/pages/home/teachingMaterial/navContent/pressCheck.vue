@@ -18,7 +18,7 @@
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper">
-          <div class="searchName">职务：<span></span></div>
+          <div class="searchName">用户名/姓名：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="全部" class="searchInputEle"></el-input>
           </div>
@@ -44,6 +44,13 @@
             <el-input placeholder="全部" class="searchInputEle"></el-input>
           </div>
         </div>
+        <!--申报单位搜索-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">申报单位：<span></span></div>
+          <div class="searchInput">
+            <el-input placeholder="全部" class="searchInputEle"></el-input>
+          </div>
+        </div>
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报职务：<span></span></div>
@@ -59,26 +66,33 @@
           </div>
         </div>
         <!--学校审核搜索-->
-        <!--<div class="searchBox-wrapper">-->
-          <!--<div class="searchName">学校审核：<span></span></div>-->
-          <!--<div class="searchInput">-->
-            <!--<el-input placeholder="全部" class="searchInputEle"></el-input>-->
-          <!--</div>-->
-        <!--</div>-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">学校审核：<span></span></div>
+          <div class="searchInput">
+            <el-select placeholder="请选择">
+              <el-option
+                v-for="item in booksChooseOptions2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
         <!--纸质表搜索-->
-        <!--<div class="searchBox-wrapper">-->
-          <!--<div class="searchName">纸质表：<span></span></div>-->
-          <!--<div class="searchInput">-->
-            <!--<el-select v-model="positionValueChoose" placeholder="请选择">-->
-              <!--<el-option-->
-                <!--v-for="item in positionValue"-->
-                <!--:key="item.value"-->
-                <!--:label="item.label"-->
-                <!--:value="item.value">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</div>-->
-        <!--</div>-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">纸质表：<span></span></div>
+          <div class="searchInput">
+            <el-select placeholder="请选择">
+              <el-option
+                v-for="item in booksChooseOptions3"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search">搜索</el-button>
@@ -95,7 +109,7 @@
       </div>
       <!--高级搜索-->
       <div v-else>
-        <div class="searchBox-wrapper" :class="{lg : powerSearchValue===1}">
+        <div class="searchBox-wrapper powerSearch" :class="{lg : powerSearchValue===1}">
           <el-select v-model="powerSearchValue" class="searchName" placeholder="请选择">
             <el-option
               v-for="item in powerSearchList"
@@ -113,7 +127,23 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="全部" class="searchInputEle" v-else></el-input>
+            <el-select  multiple placeholder="请选择" v-else-if="powerSearchValue===7">
+              <el-option
+                v-for="item in booksChooseOptions2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-select  multiple placeholder="请选择" v-else-if="powerSearchValue===8">
+              <el-option
+                v-for="item in booksChooseOptions3"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-input placeholder="请输入" class="searchInputEle" v-else></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -135,7 +165,7 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
-          label="账号"
+          label="用户名"
           width="120">
           <template scope="scope">
             <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.code}}</router-link>
@@ -148,11 +178,6 @@
           <template scope="scope">
             {{scope.row.name}}
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="birthdate"
-          label="出生时间"
-          width="120">
         </el-table-column>
         <el-table-column
           label="申报单位/工作单位">
@@ -210,17 +235,11 @@
         <el-table-column
           prop="schoolCheck"
           label="学校审核"
-          :filters="[{ text: '已审核', value: '已审核' }, { text: '待审核', value: '待审核' }, { text: '未审核', value: '未审核' }]"
-          :filter-method="filterSchoolCheck"
-          filter-placement="bottom-end"
         >
         </el-table-column>
         <el-table-column
           prop="pressCheck"
           label="出版社审核"
-          :filters="[{ text: '已收到纸质表', value: '已收到纸质表' }, { text: '未收到纸质表', value: '未收到纸质表' }]"
-          :filter-method="filterPressCheck"
-          filter-placement="bottom-end"
         >
         </el-table-column>
       </el-table>
@@ -244,14 +263,14 @@
         powerSearchList:[
           {
             value:0,
-            label:'账号'
+            label:'用户名/姓名'
           },
           {
             value:1,
             label:'书名'
           },{
             value:2,
-            label:'姓名'
+            label:'申报单位'
           },{
             value:3,
             label:'职务'
@@ -264,7 +283,14 @@
           },{
             value:6,
             label:'申报职务'
-          }
+          },{
+            value:7,
+            label:'学校审核'
+          },{
+            value:8,
+            label:'出版社审核'
+          },
+
         ],
         powerSearchValue:2,
         positionValue:[{
@@ -298,6 +324,20 @@
         }, {
           value: '选项5',
           label: '眼耳鼻咽喉口腔科护理学'
+        }],
+        booksChooseOptions2:[{
+          value: '选项1',
+          label: '已审核'
+        }, {
+          value: '选项2',
+          label: '待审核'
+        }],
+        booksChooseOptions3:[{
+          value: '选项1',
+          label: '已收到纸质表'
+        }, {
+          value: '选项2',
+          label: '未收到纸质表'
         }],
         booksChooseValue5: [],
         positionValueChoose:1,
@@ -482,5 +522,10 @@
 </script>
 
 <style scoped>
-
+  .searchBox-wrapper .searchName{
+    width: 130px;
+  }
+  .searchBox-wrapper .searchInput{
+    margin-left: 134px;
+  }
 </style>
