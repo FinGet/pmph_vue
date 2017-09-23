@@ -42,19 +42,19 @@
                             <!-- <span v-if="!item.orderNumVisible">{{item.orderNum}}
                                             <i class="el-icon-edit" @click="showInput(index,'input'+index+'_1','orderNumVisible')"></i>
                                         </span> -->
-                            <el-input v-model="item.orderNum" :ref="'input'+index+'_1'" style="width:90px;"></el-input>
+                            <el-input :placeholder="item.orderNum" :ref="'input'+index+'_1'" style="width:50px;"></el-input>
                         </td>
                         <td>
                             <!--  <span v-if="!item.bookNameVisible">{{item.bookName}} -->
                             <!--  <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_2','bookNameVisible')"></i> -->
-                            </span>
-                            <el-input v-model="item.bookName" :ref="'input'+index+'_2'" style="width:80%;"></el-input>
+                            <!--</span>-->
+                            <el-input :placeholder="item.bookName" :ref="'input'+index+'_2'" style="width:99%;"></el-input>
                         </td>
                         <td>
                             <!--  <span v-if="!item.editionVisible">{{item.edition}} -->
                             <!-- <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_3','editionVisible')"></i> -->
-                            </span>
-                            <el-input v-model="item.edition" :ref="'input'+index+'_3'" style="width:80%;"></el-input>
+                            <!--</span>-->
+                            <el-input :placeholder="item.edition" :ref="'input'+index+'_3'" style="width:30%;"></el-input>
                         </td>
                         <td>
                             <el-button type="text" @click="deleteExtendItem(index)" class="delete_button">删除</el-button>
@@ -62,8 +62,8 @@
                     </tr>
                     <!--  <tr>
                                              <td>
-                                                 1<i class="el-icon-edit"></i>  
-                                                 <el-input style="width:100px;" size="mini"></el-input>      
+                                                 1<i class="el-icon-edit"></i>
+                                                 <el-input style="width:100px;" size="mini"></el-input>
                                                 </td>
                                              <td>请填写书名 <i class="el-icon-edit"></i></td>
                                              <td>请填写版次<i class="el-icon-edit"></i></td>
@@ -266,7 +266,7 @@ export default {
 .extend_list tr td {
     width: 25%;
     color: #5e5e5e;
-    text-align: center;
+    /*text-align: center;*/
     padding: 5px 0;
 }
 
