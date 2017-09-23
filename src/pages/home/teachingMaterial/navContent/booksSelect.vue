@@ -39,7 +39,7 @@
           <el-button  type="primary" v-if="level==2">查看遴选表</el-button>
           <el-button type="primary" v-if="level==1">通过</el-button>
           <el-button type="primary" v-if="level==1">结果公布</el-button>
-          <el-button type="primary" v-if="level==1">导出Excel表</el-button>
+          <el-button type="primary" v-if="level==1">批量导出Excel</el-button>
         </div>
       </div>
       <!--表格-->
