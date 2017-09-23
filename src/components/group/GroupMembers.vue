@@ -47,11 +47,21 @@
             width="120">
           </el-table-column>
           <el-table-column
+            prop="userName"
+            label="用户名"
+            width="120">
+          </el-table-column>
+          <el-table-column
             label="身份"
             width="120">
             <template scope="scope">
               {{scope.row.rank=='1'?'创建人':scope.row.rank=='2'?'管理员':'成员'}}
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="jobPos"
+            label="职位"
+            width="120">
           </el-table-column>
           <el-table-column
             prop="address"
@@ -70,32 +80,44 @@ export default {
     return {
       tableData:[
         {
-          name: '张三',
+          name: '吴可幽',
+          userName:'wukeyou',
           rank: '1',
+          jobPos:'副主编',
           address: '成都中医药大学'
         },
         {
-          name: '张三',
+          name: '李中山',
+          userName:'lizhongshan',
           rank: '2',
+          jobPos:'编委',
           address: '成都中医药大学'
         },
         {
-          name: '张三',
+          name: '李承叡',
+          userName:'lichengrui',
           rank: '3',
+          jobPos:'主编',
           address: '成都中医药大学'
         },
         {
-          name: '张三',
+          name: '袁扬',
+          userName:'yuanyang',
           rank: '3',
+          jobPos:'编委',
           address: '成都中医药大学'
         },{
-          name: '张三',
+          name: '赵杰',
+          userName:'zhaojie',
           rank: '2',
+          jobPos:'编委',
           address: '成都中医药大学'
         },
         {
-          name: '张三',
+          name: '赵羽泽',
+          userName:'zhaoyuze',
           rank: '2',
+          jobPos:'副主编',
           address: '成都中医药大学'
         }
       ],

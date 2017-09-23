@@ -33,11 +33,14 @@
             @selection-change="handleSelectionChange">
             <el-table-column
               label="姓名"
+              prop="name"
+            >
+            </el-table-column>
+            <el-table-column
+              label="性别"
             >
               <template scope="scope">
-                <el-tooltip :content="scope.row.sex === 0? '男' : '女'" placement="top-start">
-                  <p>{{scope.row.name}} <i class="fa" :class="scope.row.sex === 0? 'fa-mars' : 'fa-venus'"></i></p>
-                </el-tooltip>
+                <p>{{scope.row.sex === 0? '男' : '女'}}</p>
               </template>
             </el-table-column>
             <el-table-column label="年龄"
