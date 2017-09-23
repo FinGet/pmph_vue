@@ -20,8 +20,8 @@
         </p>
 
         <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper" border>
-            <el-table-column type="selection" width="55">
-            </el-table-column>
+            <!--<el-table-column type="selection" width="55">-->
+            <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
                     <router-link :to="{name:'申报表审核',query:{bookid:scope.row.bookid}}">{{scope.row.textBookName}}</router-link>
@@ -129,7 +129,7 @@ export default {
             }],
             searchValue: '',
             selectState: '',
-            searchChecked: false,
+            searchChecked: true,
             currentPage: 1,
             totalPage: 400,
             tableData: [
