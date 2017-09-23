@@ -3,51 +3,78 @@
     <div class="info-wrapper">
 
       <!--图书选择-->
-      <div class="expert-info-box">
+      <div class="expert-info-box expert-operation-wrapper">
         <p class="info-box-title operation">图书选择（书籍可以多选，一本书职位可以多选）</p>
         <div>
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
             <div  v-if="!iterm.hasComplete">
-              <div class="searchBox-wrapper marginR20" v-if="iterm.isNew">
-                <div class="searchName">图书：<span></span></div>
-                <div class="searchInput">
-                  <el-select v-model="iterm.bookname" placeholder="请选择">
-                    <el-option
-                      v-for="(item,index) in bookList"
-                      :key="index"
-                      :value="item">
-                    </el-option>
-                  </el-select>
+              <div v-if="iterm.isNew">
+                <div class="searchBox-wrapper marginR20">
+                  <div class="searchName">图书：<span></span></div>
+                  <div class="searchInput">
+                    <el-select v-model="iterm.bookname" placeholder="请选择">
+                      <el-option
+                        v-for="(item,index) in bookList"
+                        :key="index"
+                        :value="item">
+                      </el-option>
+                    </el-select>
+                  </div>
                 </div>
-              </div>
-              <div class="info-iterm-text" v-else>
-                <div>图书：<span></span></div>
-                <div>{{iterm.bookname}}</div>
-              </div>
-              <el-radio-group v-model="radio2" class="">
-                <el-radio :label="3">主编</el-radio>
-                <el-radio :label="6">副主编</el-radio>
-                <el-radio :label="9">编委</el-radio>
-              </el-radio-group>
-              <div class="info-iterm-text widthAuto marginL10">
-                <div>教学大纲：<span></span></div>
-                <div>
-                  <el-upload
-                    class="upload"
-                    action="#"
-                    multipl="true">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                  </el-upload>
+                <el-radio-group v-model="iterm.position" class="">
+                  <el-radio :label="'主编'">主编</el-radio>
+                  <el-radio :label="'副主编'">副主编</el-radio>
+                  <el-radio :label="'编委'">编委</el-radio>
+                </el-radio-group>
+                <div class="info-iterm-text widthAuto marginL10">
+                  <div>教学大纲：<span></span></div>
+                  <div>
+                    <el-upload
+                      class="upload"
+                      action="https://jsonplaceholder.typicode.com/posts/"
+                      :on-change="uploadFile"
+                      :show-file-list="false"
+                      multipl="true">
+                      <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
+                  </div>
                 </div>
+                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
-              <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+              <div v-else>
+                <div class="info-iterm-text">
+                  <div>图书：<span></span></div>
+                  <div>{{iterm.bookname}}</div>
+                </div>
+                <div class="info-iterm-text">
+                  <div>职位：<span></span></div>
+                  <div>{{iterm.position}}</div>
+                </div>
+                <div class="info-iterm-text">
+                  <div>教学大纲：<span></span></div>
+                  <div>
+                    <a href="javascript:" v-if="iterm.filename">{{iterm.filename}}</a>
+                    <span v-else>（无）</span>
+                  </div>
+                </div>
+                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+              </div>
+
             </div>
             <!--已有书籍-->
             <div v-else>
               <div class="info-iterm-text">
                 <div>图书：<span></span></div>
                 <div>{{iterm.bookname}}</div>
+              </div>
+              <div class="info-iterm-text">
+                <div>职位：<span></span></div>
+                <div>{{iterm.position}}</div>
+              </div>
+              <div class="info-iterm-text">
+                <div>教学大纲：<span></span></div>
+                <div><a href="javascript:">{{iterm.filename}}</a></div>
               </div>
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
@@ -63,6 +90,8 @@
           <div class="expert_info-buttonWrapper">
             <el-button type="primary" @click="addNewBook">添加图书</el-button>
             <el-button type="primary">确认收到纸质表</el-button>
+            <el-button type="warning">退回</el-button>
+            <el-button type="primary">通过</el-button>
             <el-button type="primary">打印</el-button>
           </div>
         </div>
@@ -342,6 +371,7 @@
               addBookList:[{
                 bookname:'基础化学',
                 position:'编委',
+                filename:'第九轮基础化学教学大纲.jpg',
                 hasComplete:true
               }],
               radio2:9,
@@ -377,7 +407,7 @@
           var initObj = {
             isNew:true,
             bookname:undefined,
-            position:undefined,
+            position:'编委',
             file:[]
           }
           this.addBookList.push(initObj);
@@ -394,9 +424,21 @@
          */
         saveBook(){
           for(let iterm of this.addBookList){
+            if(!iterm.bookname){
+              this.$message.error('请选择图书');
+              return false;
+            }
             iterm.isNew = false;
           }
         },
+        /**
+         * 点击上传按钮执行此方法
+         * @param file
+         * @param fileList
+         */
+        uploadFile(file, fileList){
+          console.log(file.name);
+        }
       }
     }
 </script>
@@ -458,5 +500,9 @@
   }
   .widthAuto{
     width: auto;
+  }
+
+  .expert-operation-wrapper .info-iterm-text{
+    width: 24%;
   }
 </style>

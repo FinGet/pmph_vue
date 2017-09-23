@@ -3,9 +3,11 @@ import Router from 'vue-router';
 
 import Login from 'pages/Login.vue';
 import Home from 'pages/Home.vue';
-import Index from '../pages/Index';
+const Index = () => import(/* webpackChunkName: "group-foo" */ '../pages/Index');
+/* import Index from '../pages/Index'; */
 import NoFind from 'pages/404.vue';
-import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList';
+/* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
+const ApplicationList=() => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
 import BooksSelect from '../pages/home/teachingMaterial/navContent/booksSelect'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'

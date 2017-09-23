@@ -6,6 +6,12 @@
                 </el-option>
             </el-select>
             <el-input class="input" v-model="searchValue"></el-input>
+            <span style="margin-left:25px;">状态：</span>
+            <el-select v-model="selectState" class="select_input" style="float:none;" placeholder="请选择">
+                <el-option label="已公布" value="1"></el-option>
+                <el-option label="未公布" value="2"></el-option>
+                <el-option label="已结束" value="-1"></el-option>
+            </el-select>
             <el-button type="primary" class="button" icon="search">搜索</el-button>
             <el-checkbox v-model="searchChecked" class="check">仅查看我的</el-checkbox>
             <router-link :to="{name:'新建遴选教材'}">
@@ -13,7 +19,7 @@
             </router-link>
         </p>
 
-        <el-table :data="tableData"  style="width: 100%" class="table_list table-wrapper">
+        <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper">
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column label="教材名称">
@@ -21,14 +27,14 @@
                     <router-link :to="{name:'申报表审核',query:{bookid:scope.row.bookid}}">{{scope.row.textBookName}}</router-link>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="123">
+            <el-table-column label="显示结束日期" width="125">
                 <template scope="scope">
                     <p>
                         {{scope.row.showEndTime}}
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="123">
+            <el-table-column label="实际结束日期" width="125">
                 <template scope="scope">
                     <p>
                         {{scope.row.factEndTime}}
@@ -37,16 +43,45 @@
             </el-table-column>
             <el-table-column label="联系人">
                 <template scope="scope">
+
                     <p class="contact_p">
                         <span>{{scope.row.name}}</span>
                         <i class="fa fa-phone"></i>
                         <span>{{scope.row.phoneNumber}}</span>
                         <i class="fa fa-envelope-o"></i>
                         <span>{{scope.row.eMail}}</span>
+                        <el-dropdown>
+                            <span class="el-dropdown-link" style="cursor:pointer;">
+                                ...
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <p>
+                                        <span>{{scope.row.name}}</span>
+                                        <i class="fa fa-phone"></i>
+                                        <span>{{scope.row.phoneNumber}}</span>
+                                        <i class="fa fa-envelope-o"></i>
+                                        <span>{{scope.row.eMail}}</span>
+                                    </p>
+                                </el-dropdown-item>
+                                 <el-dropdown-item>
+                                    <p>
+                                        <span>{{scope.row.name}}</span>
+                                        <i class="fa fa-phone"></i>
+                                        <span>{{scope.row.phoneNumber}}</span>
+                                        <i class="fa fa-envelope-o"></i>
+                                        <span>{{scope.row.eMail}}</span>
+                                    </p>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </p>
+
+                    <!--  -->
+
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="85" :filters="[{ text: '已公布', value: '已公布' }, { text: '进行中', value: '进行中' }, { text: '已结束', value: '已结束' }]" :filter-method="filterTag" filter-placement="bottom-end">
+            <el-table-column prop="status" label="状态" width="85">
                 <template scope="scope">
                     {{scope.row.status}}
                 </template>
@@ -58,15 +93,15 @@
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="$router.push({name:'选择学校'})">发布</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="$router.push({name:'设置书目录'})">设置书目录</el-button>
-                        <el-dropdown trigger="click" @command="handleClickDrop" >
+                        <el-button type="text" class="op_button" @click="$router.push({name:'通知详情'})">通知详情</el-button>
+                        <el-dropdown trigger="click" @command="handleClickDrop">
                             <span class="el-dropdown-link more_button">
                                 更多
                                 <i class="el-icon-caret-bottom el-icon--right"></i>
                             </span>
-                            <el-dropdown-menu slot="dropdown" >
+                            <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="messagestate">消息状态</el-dropdown-item>
-                                <el-dropdown-item command="infoDetail">通知详情</el-dropdown-item>
+                                <el-dropdown-item command="setBookList">设置书目录</el-dropdown-item>
                                 <el-dropdown-item command="resultCount">结果统计</el-dropdown-item>
                                 <el-dropdown-item command="set">设置选题号</el-dropdown-item>
                                 <el-dropdown-item command="delete">删除</el-dropdown-item>
@@ -93,6 +128,7 @@ export default {
                 label: '联系人'
             }],
             searchValue: '',
+            selectState: '',
             searchChecked: false,
             currentPage: 1,
             totalPage: 400,
@@ -108,7 +144,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '第四轮全国高等卫生职业教育护理、助产专业‘十三五‘规划教材',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -117,6 +153,46 @@ export default {
                     status: '已公布',
                     bookid: '1'
                 },
+                {
+                    textBookName: '全国高等学校本科应用心理学专业第三轮规划教材',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '第四轮全国高等学校医药学成人学历教育（专科）护理学专业',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '全国高等学校五年制临床医学专业第九轮规划教材',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '第四轮全国高等学校医药学成人学历教育',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                }  ,
                 {
                     textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
                     showEndTime: '2017-06-03',
@@ -128,7 +204,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '第四轮全国高等卫生职业教育护理、助产专业‘十三五‘规划教材',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -137,6 +213,46 @@ export default {
                     status: '已公布',
                     bookid: '1'
                 },
+                {
+                    textBookName: '全国高等学校本科应用心理学专业第三轮规划教材',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '第四轮全国高等学校医药学成人学历教育（专科）护理学专业',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '全国高等学校五年制临床医学专业第九轮规划教材',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                },
+                {
+                    textBookName: '第四轮全国高等学校医药学成人学历教育',
+                    showEndTime: '2017-06-03',
+                    factEndTime: '2017-09-09',
+                    name: '邹洁',
+                    phoneNumber: '010-59787102',
+                    eMail: 'zoujie@XXXXX.XXX',
+                    status: '已公布',
+                    bookid: '1'
+                }  ,
                 {
                     textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
                     showEndTime: '2017-06-03',
@@ -148,7 +264,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '第四轮全国高等卫生职业教育护理、助产专业‘十三五‘规划教材',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -158,7 +274,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '全国高等学校本科应用心理学专业第三轮规划教材',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -168,7 +284,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '第四轮全国高等学校医药学成人学历教育（专科）护理学专业',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -178,7 +294,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '全国高等学校五年制临床医学专业第九轮规划教材',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -188,7 +304,7 @@ export default {
                     bookid: '1'
                 },
                 {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
+                    textBookName: '第四轮全国高等学校医药学成人学历教育',
                     showEndTime: '2017-06-03',
                     factEndTime: '2017-09-09',
                     name: '邹洁',
@@ -196,76 +312,16 @@ export default {
                     eMail: 'zoujie@XXXXX.XXX',
                     status: '已公布',
                     bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
-                {
-                    textBookName: '全国高等学校健康服务与管理专业人第一轮规划教材',
-                    showEndTime: '2017-06-03',
-                    factEndTime: '2017-09-09',
-                    name: '邹洁',
-                    phoneNumber: '010-59787102',
-                    eMail: 'zoujie@XXXXX.XXX',
-                    status: '已公布',
-                    bookid: '1'
-                },
+                }           
             ]
 
         }
     },
     methods: {
         //table状态过滤
-        filterTag(value, row) {
-            return row.status === value;
-        },
+        /*   filterTag(value, row) {
+              return row.status === value;
+          }, */
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
         },
@@ -273,18 +329,18 @@ export default {
             console.log(`当前页: ${val}`);
         },
         //下拉点击
-        handleClickDrop(command){
-        // console.log(command,str,a);
-         if(command=='infoDetail'){
-             this.$router.push({name:'通知详情'});
-         }
-          if(command=='messagestate'){
-            this.$router.push({name:'消息状态'});
-          }
+        handleClickDrop(command) {
+            // console.log(command,str,a);
+            if (command == 'setBookList') {
+                this.$router.push({ name: '设置书目录' });
+            }
+            if (command == 'messagestate') {
+                this.$router.push({ name: '消息状态' });
+            }
         },
 
     },
-    created(){
+    created() {
 
     }
 }
