@@ -294,6 +294,10 @@ a.table-link:hover{
 .table-wrapper a :hover{
   color: #23527c;
 }
+.table-wrapper .el-button.is-disabled, .table-wrapper .el-button.is-disabled:focus, .table-wrapper .el-button.is-disabled:hover{
+  color: #bfcbd9;
+  cursor: not-allowed;
+}
 
 /*重置tab选择样式哦*/
 .memberlist-wrpper .el-tabs__item.is-active{
