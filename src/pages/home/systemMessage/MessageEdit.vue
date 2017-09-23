@@ -25,7 +25,8 @@
           <el-radio-group v-model="radio2">
             <el-radio :label="3">学校管理员</el-radio>
             <el-radio :label="6">所有人</el-radio>
-            <el-radio :label="9">制定对象</el-radio>
+            <el-radio :label="9">特定对象</el-radio>
+            <el-radio :label="10">教材报名者</el-radio>
           </el-radio-group>
         </div>
       </el-col>
