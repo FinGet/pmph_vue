@@ -2,13 +2,7 @@
   <div class="orgUser">
     <div class="clearfix">
       <div class="searchBox-wrapper">
-        <div class="searchName">用户名：<span></span></div>
-        <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle"></el-input>
-        </div>
-      </div>
-      <div class="searchBox-wrapper">
-        <div class="searchName">姓名：<span></span></div>
+        <div class="searchName">用户名/姓名：<span></span></div>
         <div class="searchInput">
           <el-input placeholder="请输入" class="searchInputEle"></el-input>
         </div>
@@ -17,6 +11,20 @@
         <div class="searchName">所属院校：<span></span></div>
         <div class="searchInput">
           <el-input placeholder="请输入" class="searchInputEle"></el-input>
+        </div>
+      </div>
+      <!--申报职务搜索-->
+      <div class="searchBox-wrapper">
+        <div class="searchName">用户类型：<span></span></div>
+        <div class="searchInput">
+          <el-select v-model="value" placeholder="全部">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </div>
       </div>
       <div class="searchBox-wrapper searchBtn">
@@ -127,9 +135,6 @@
         <el-table-column
           prop="usertype"
           label="用户类型"
-          :filters="[{ text: '普通用户', value: 1 }, { text: '教师用户', value: 2 }, { text: '作家用户', value: 3 }, { text: '专家用户', value: 4 }]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end"
           :formatter="formatter"
           width="120">
         </el-table-column>
@@ -144,7 +149,7 @@
           label="操作"
           width="120">
           <template scope="scope">
-            <el-button type="text">修改</el-button>
+            <el-button type="text" @click="eidtInfo(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
           </template>
         </el-table-column>
@@ -161,7 +166,7 @@
     </div>
     <!--增加新用户弹窗-->
     <el-dialog
-      title="新增机构用户"
+      :title="isNew?'新增作家用户':'修改用户信息'"
       :visible.sync="dialogVisible"
       size="tiny">
       <el-form :model="form"  label-width="100px" class="padding20">
@@ -205,6 +210,7 @@
     mixins:[ScreenSize],
     data(){
       return {
+        isNew:true,
         options: [{
           value: '选项1',
           label: '全部'
@@ -233,7 +239,7 @@
           zhicheng:'副教授',
           address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'福建卫生职业技术学院',
           usercode:'gonghairong',
@@ -244,7 +250,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -255,7 +261,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -266,7 +272,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -277,7 +283,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -288,7 +294,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -299,7 +305,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -310,7 +316,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -321,7 +327,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -332,7 +338,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -343,7 +349,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -354,7 +360,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -365,7 +371,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -376,7 +382,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -387,7 +393,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -398,7 +404,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -409,7 +415,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
-          enabled:true,
+          enabled:'启用',
         },{
           schoolname:'安徽医学高等专科学校',
           usercode:'xxxx001',
@@ -420,7 +426,7 @@
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:2,
-          enabled:true,
+          enabled:'启用',
         },],
         dialogVisible:false,
         form:{
@@ -433,7 +439,7 @@
           zhicheng:'',
           address: '',
           postcode:'',
-          enabled:true,
+          enabled:'启用',
           organisation:'',
           remark:'',
         }
@@ -441,6 +447,15 @@
     },
     methods:{
       addUser(){
+        this.isNew=true;
+        this.dialogVisible=true;
+      },
+      eidtInfo(index){
+        this.isNew=false;
+
+        for(let key in this.form){
+          this.form[key] = this.tableData[index][key];
+        }
         this.dialogVisible=true;
       },
       formatter(row, column) {

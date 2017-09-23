@@ -168,6 +168,7 @@
         <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
           <el-table
+            border
             :data="tableData"
             style="width: 100%">
             <el-table-column
@@ -200,7 +201,7 @@
       <div class="expert-info-box">
         <p class="info-box-title">主要工作经历</p>
         <div class="no-padding">
-          <el-table
+          <el-table border
             :data="tableData2"
             style="width: 100%">
             <el-table-column
@@ -229,7 +230,7 @@
       <div class="expert-info-box">
         <p class="info-box-title">主要教学经历</p>
         <div class="no-padding">
-          <el-table
+          <el-table border
             :data="tableData3"
             style="width: 100%">
             <el-table-column
@@ -258,7 +259,7 @@
       <div class="expert-info-box">
         <p class="info-box-title">主要学术兼职</p>
         <div class="no-padding">
-          <el-table
+          <el-table border
             :data="tableData4"
             style="width: 100%">
             <el-table-column

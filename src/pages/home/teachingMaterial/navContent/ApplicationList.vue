@@ -19,7 +19,7 @@
             </router-link>
         </p>
 
-        <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper">
+        <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper" border>
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column label="教材名称">
@@ -312,7 +312,7 @@ export default {
                     eMail: 'zoujie@XXXXX.XXX',
                     status: '已公布',
                     bookid: '1'
-                }           
+                }
             ]
 
         }
