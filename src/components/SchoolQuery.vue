@@ -9,11 +9,11 @@
               <el-button type="primary" icon="search">搜索</el-button>
             </el-col>
             <div class="nextStep-wrapper text-right" style="width: 85%">
-              <el-button type="primary">
-                <router-link :to="{ name: '编辑消息'}">上一步</router-link>
-              </el-button>
-              <el-button type="primary" @click="publish">发布</el-button>
+              <!--<el-button type="primary">-->
+                <!--<router-link :to="{ name: '编辑消息'}">上一步</router-link>-->
+              <!--</el-button>-->
               <span class="schoolCount">已选中{{count}}个学校</span>
+              <el-button type="primary" @click="publish">发布</el-button>
             </div>
           </el-col>
         </el-row>
@@ -22,7 +22,7 @@
           <el-col :span="24">
             <div>
               <ul class="tags">
-                <li v-if="hasHistory">
+                <li v-if="">
                   <div class="cate"><span class="category">历史:</span></div>
                   <div class="alltags history" ref="history">
                     <span class="tag"
@@ -328,7 +328,7 @@
     margin-right: 15px;
   }
   .history{
-    height:27px;
+    height:26px;
     overflow: hidden;
   }
   .more{
