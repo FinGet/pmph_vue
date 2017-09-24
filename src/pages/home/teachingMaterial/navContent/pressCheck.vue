@@ -169,14 +169,14 @@
           width="100"
         >
           <template scope="scope">
-            {{scope.row.name}}
+            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.name}}</router-link>
           </template>
         </el-table-column>
         <el-table-column
           label="账号"
           width="120">
           <template scope="scope">
-            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.code}}</router-link>
+            {{scope.row.code}}
           </template>
         </el-table-column>
 
