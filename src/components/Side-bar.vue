@@ -23,7 +23,7 @@
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">我的小组</span>
       </el-menu-item>
-      <el-menu-item index="/messagelist" v-if="userLevel<=3">
+      <el-menu-item index="/message/messagelist" v-if="userLevel<=3">
         <i class="fa fa-comments-o fa-fw"></i>
         <span slot="title">系统消息</span>
       </el-menu-item>
