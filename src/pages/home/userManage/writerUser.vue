@@ -2,7 +2,7 @@
   <div class="orgUser">
     <div class="clearfix">
       <div class="searchBox-wrapper">
-        <div class="searchName">用户名/姓名：<span></span></div>
+        <div class="searchName">账号/姓名：<span></span></div>
         <div class="searchInput">
           <el-input placeholder="请输入" class="searchInputEle"></el-input>
         </div>
@@ -49,7 +49,7 @@
         </el-table-column>
         <el-table-column
           prop="usercode"
-          label="用户名"
+          label="账号"
           width="100">
         </el-table-column>
         <el-table-column

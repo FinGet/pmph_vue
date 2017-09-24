@@ -18,37 +18,37 @@
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper">
-          <div class="searchName">用户名/姓名：<span></span></div>
+          <div class="searchName">账号/姓名：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"></el-input>
           </div>
         </div>
         <!--职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职务：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"></el-input>
           </div>
         </div>
         <!--职称搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"></el-input>
           </div>
         </div>
         <!--工作单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">工作单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"></el-input>
           </div>
         </div>
         <!--申报单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="全部" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"></el-input>
           </div>
         </div>
         <!--申报职务搜索-->
@@ -165,13 +165,6 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
-          label="用户名"
-          width="120">
-          <template scope="scope">
-            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.code}}</router-link>
-          </template>
-        </el-table-column>
-        <el-table-column
           label="姓名"
           width="100"
         >
@@ -179,6 +172,14 @@
             {{scope.row.name}}
           </template>
         </el-table-column>
+        <el-table-column
+          label="账号"
+          width="120">
+          <template scope="scope">
+            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.code}}</router-link>
+          </template>
+        </el-table-column>
+
         <el-table-column
           label="申报单位/工作单位">
           <template scope="scope">
@@ -263,7 +264,7 @@
         powerSearchList:[
           {
             value:0,
-            label:'用户名/姓名'
+            label:'账号/姓名'
           },
           {
             value:1,

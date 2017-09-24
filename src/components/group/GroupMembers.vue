@@ -4,7 +4,7 @@
       <el-col :span="24">
         <div class="disinline pull-left">
           <el-input class="fileinput"
-                    placeholder="请输入姓名"
+                    placeholder="请输入"
                     icon="search"
                     :on-icon-click="Search"
           ></el-input>
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column
             prop="userName"
-            label="用户名"
+            label="账号"
             width="120">
           </el-table-column>
           <el-table-column

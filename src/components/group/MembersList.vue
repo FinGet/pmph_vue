@@ -73,13 +73,7 @@
                 </div>
               </div>
               <div class="searchBox-wrapper">
-                <span>用户名：</span>
-                <div>
-                  <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
-                </div>
-              </div>
-              <div class="searchBox-wrapper">
-                <span>真实姓名：</span>
+                <span>账号/姓名：</span>
                 <div>
                   <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
                 </div>
@@ -99,12 +93,12 @@
                     width="55">
                   </el-table-column>
                   <el-table-column
-                    prop="code"
-                    label="用户名">
+                    prop="name"
+                    label="姓名">
                   </el-table-column>
                   <el-table-column
-                    prop="name"
-                    label="真实姓名">
+                    prop="code"
+                    label="账号">
                   </el-table-column>
                   <el-table-column
                     prop="position"
@@ -138,13 +132,9 @@
               </el-col>
               <el-col :span="17" :offset="1">
                 <el-col class="marginB10">
-                  <span class="pull-left s-title">用户名:</span>
+                  <span class="pull-left s-title">账号/姓名:</span>
                   <el-col :span="4">
-                    <el-input placeholder="请输入用户名"></el-input>
-                  </el-col>
-                  <span class="pull-left s-title marginL10">姓名:</span>
-                  <el-col :span="4">
-                    <el-input placeholder="请输入姓名"></el-input>
+                    <el-input placeholder="请输入"></el-input>
                   </el-col>
                   <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
                 </el-col>
@@ -162,7 +152,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="username"
-                    label="用户名"
+                    label="账号"
                     width="120">
                   </el-table-column>
                   <el-table-column

@@ -14,13 +14,9 @@
       </el-col>
       <el-col :span="17" :offset="1">
         <el-col>
-          <span class="pull-left s-title">用户名:</span>
+          <span class="pull-left s-title">账号/姓名:</span>
           <el-col :span="4">
             <el-input placeholder="请输入用户名"></el-input>
-          </el-col>
-          <span class="pull-left s-title marginL10">姓名:</span>
-          <el-col :span="4">
-            <el-input placeholder="请输入姓名"></el-input>
           </el-col>
           <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
         </el-col>
@@ -40,7 +36,7 @@
             </el-table-column>
             <el-table-column
               prop="username"
-              label="用户名"
+              label="账号"
               width="120">
             </el-table-column>
             <el-table-column
