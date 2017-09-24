@@ -49,8 +49,10 @@
       <el-table-column
         label="信息标题"
         width="400"
-        prop="title"
         show-overflow-tooltip>
+        <template scope="scope">
+          <a href="javascript:;">{{scope.row.title}}</a>
+        </template>
       </el-table-column>
       <el-table-column
         prop="name"
@@ -256,5 +258,8 @@
     float: left;
     height:36px;
     line-height: 36px;
+  }
+  table a{
+    color: #337ab7;
   }
 </style>

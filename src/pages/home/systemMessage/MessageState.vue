@@ -2,8 +2,11 @@
   <div class="messagestate">
     <el-row>
       <el-col :span="24">
-        <el-col :span="4">
-          <el-button class="btn" type="primary" icon="arrow-left" @click="back">返回</el-button>
+        <el-col :span="8">
+          <el-col :span="14" class="search-10">
+            <el-input v-model="input" placeholder="请输入收件人或单位"></el-input>
+          </el-col>
+          <el-button class="btn" type="primary"  icon="search">搜索</el-button>
         </el-col>
         <el-col :span="4" class="radio">
           <el-radio-group v-model="radio">
@@ -12,12 +15,7 @@
             <el-radio :label="3">未读</el-radio>
           </el-radio-group>
         </el-col>
-        <el-col :span="12">
-          <el-col :span="6" class="search-10">
-            <el-input v-model="input" placeholder="请输入收件人或单位"></el-input>
-          </el-col>
-          <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-        </el-col>
+        <el-button class="btn pull-right" type="primary" icon="arrow-left" @click="back">返回</el-button>
       </el-col>
     </el-row>
     <div class="cutLine-dashed"></div>
@@ -54,7 +52,14 @@
           >
           </el-table-column>
           <el-table-column
+            prop="Mobile"
+            label="联系方式"
+          >
+          </el-table-column>
+          <el-table-column
             label="状态"
+            width="80"
+            align="center"
           >
             <template scope="scope">
               <el-popover trigger="hover" placement="top">
@@ -64,11 +69,6 @@
                 </div>
               </el-popover>
             </template>
-          </el-table-column>
-          <el-table-column
-            prop="Mobile"
-            label="联系方式"
-          >
           </el-table-column>
         </el-table>
       </el-col>
