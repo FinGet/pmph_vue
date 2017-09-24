@@ -2,15 +2,15 @@
   <div class="groupmember">
     <el-row>
       <el-col :span="24">
-        <div class="pull-left">共有{{memberCount}}个成员</div>
+        <div class="disinline pull-left">
+          <el-input class="fileinput"
+                    placeholder="请输入姓名"
+                    icon="search"
+                    :on-icon-click="Search"
+          ></el-input>
+        </div>
+        <div class="pull-left marginT10 marginL10 textcolor">共有{{memberCount}}个成员</div>
         <div class="pull-right clearfix">
-          <div class="disinline">
-            <el-input class="fileinput"
-                      placeholder="请输入姓名"
-                      icon="search"
-                      :on-icon-click="Search"
-            ></el-input>
-          </div>
           <div class="disinline">
             <el-button type="warning" @click="disManage">取消管理员</el-button>
           </div>
@@ -75,6 +75,15 @@
         </el-table>
       </el-col>
     </el-row>
+    <el-pagination class="pull-right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[100, 200, 300, 400]"
+      :page-size="100"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="400">
+    </el-pagination>
   </div>
 </template>
 
@@ -127,6 +136,7 @@ export default {
       ],
       selections: {},
       visible: false,
+      currentPage: 5
     }
   },
   computed: {
@@ -146,6 +156,12 @@ export default {
     },
   },
   methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
     handleSelectionChange (val) {
       this.selections = val
     },
@@ -179,5 +195,8 @@ export default {
   }
   .disinline{
     display: inline-block;
+  }
+  .textcolor{
+    color: rgba(2, 2, 2, 0.29);
   }
 </style>
