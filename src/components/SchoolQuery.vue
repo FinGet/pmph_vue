@@ -292,6 +292,7 @@
     z-index: 10;
     top: 36px;
     width: 100%;
+    padding-right: 50px;
     background: #fff;
   }
   .query .cate{

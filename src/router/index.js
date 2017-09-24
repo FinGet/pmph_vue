@@ -22,6 +22,7 @@ import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
 import SchoolQuery from 'components/SchoolQuery'
+import ApplicationSchoolQuery from 'components/chooseSchool'
 import GroupManage from 'pages/home/Groups/groupManagement'
 /* 用户信息管理 */
 import UserRouter from '../pages/home/userManage/userRouter'
@@ -54,7 +55,8 @@ export default new Router({
                 {path:'book-list',name:'设置书目录',component:BookList, meta: { isShowTags:true}},
                 { path: 'expertinfo', name: '专家信息', component: ExpertInfo },
                 { path: 'chief', name:'遴选主编/副主编', component:Chief},
-                { path: 'pre-select', name:'预选编委', component:preSelect}
+                { path: 'pre-select', name:'预选编委', component:preSelect},
+              { path: 'applicationschoolquery', name:'教材申报选择学校', component:ApplicationSchoolQuery,meta:{isShowTags:true}},
               ]
             },
 
