@@ -84,7 +84,7 @@
     mounted(){
 
       this.initBackTop();
-      
+
     },
   }
 </script>

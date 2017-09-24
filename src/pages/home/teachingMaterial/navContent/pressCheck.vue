@@ -522,10 +522,10 @@
 </script>
 
 <style scoped>
-  .searchBox-wrapper .searchName{
+  .searchBox-wrapper.powerSearch .searchName{
     width: 130px;
   }
-  .searchBox-wrapper .searchInput{
+  .searchBox-wrapper.powerSearch .searchInput{
     margin-left: 134px;
   }
 </style>
