@@ -96,7 +96,7 @@
       <el-submenu index="10" v-if="userLevel==0">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
-          <span slot="title">系统管理</span>
+          <span slot="title">系统设置</span>
         </template>
         <el-menu-item index="10-1">角色</el-menu-item>
         <el-menu-item index="10-2">权限</el-menu-item>
