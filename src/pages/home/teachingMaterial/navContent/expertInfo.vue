@@ -372,7 +372,7 @@
               addBookList:[{
                 bookname:'基础化学',
                 position:'编委',
-                filename:'第九轮基础化学教学大纲.jpg',
+                filename:'基础化学大纲.jpg',
                 hasComplete:true
               }],
               radio2:9,
@@ -505,5 +505,12 @@
 
   .expert-operation-wrapper .info-iterm-text{
     width: 24%;
+  }
+
+  .info-iterm-text a{
+    color:#337ab7;
+  }
+  .info-iterm-text a:hover{
+    color: #23527c;
   }
 </style>
