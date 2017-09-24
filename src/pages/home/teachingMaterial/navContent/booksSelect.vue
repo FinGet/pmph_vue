@@ -268,9 +268,23 @@
             <template scope="scope">
               <div v-if="level===1">
                 <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">通过</el-button>
-                <el-button type="text" v-else>通过</el-button>
+                <el-tooltip placement="top" v-else>
+                  <div slot="content">
+                    您要通过《{{scope.row.bookname}}》的名单吗？
+                    <br/>
+                    名单通过后，除您以外的其他编辑和主编将无法继续变动名单
+                  </div>
+                  <el-button type="text">通过</el-button>
+                </el-tooltip>
                 <span class="vertical-line"></span>
-                <el-button type="text" v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
+                <el-tooltip placement="top"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">
+                  <div slot="content">
+                    您要公布《{{scope.row.bookname}}》的遴选结果吗？
+                    <br/>
+                    结果公布后您仍然可以修改名单并再次公布
+                  </div>
+                  <el-button type="text">结果公布</el-button>
+                </el-tooltip>
                 <el-button type="text" :disabled="true" v-else>结果公布</el-button>
                 <span class="vertical-line"></span>
                 <el-button type="text">导出Excel</el-button>
