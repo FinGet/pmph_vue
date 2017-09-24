@@ -52,6 +52,7 @@
           style="width: 100%">
           <el-table-column
             type="selection"
+            v-if="level==2||level==1"
             width="55">
           </el-table-column>
           <el-table-column
