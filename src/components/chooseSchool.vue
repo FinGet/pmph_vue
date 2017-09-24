@@ -24,7 +24,7 @@
           <ul class="tags">
             <li v-if="">
               <div class="cate"><span class="category">历史:</span></div>
-              <div class="alltags history" ref="history">
+              <div class="alltags history-schoolQuery" ref="history">
                     <span class="tag"
                           v-for="(item,index) in historyDatas"
                           :key="item.id"
