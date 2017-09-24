@@ -12,7 +12,10 @@ p{word-wrap:break-word}
 
 /*主题色 rgb(42, 63, 84)*/
 
-/*公共样式*/
+/*=================================================================
+  文字相关
+  =================================================================*/
+.fontsize-sm{font-size: 12px;}
 .text-center{text-align: center;}
 .text-left{text-align: left}
 .text-right{text-align: right}
@@ -24,7 +27,7 @@ p{word-wrap:break-word}
 .gray{
   color:#c8c8c8;
 }
-.blue{color: blue;}
+.blue{color: #337ab7;}
 /*字体相关*/
 .lineheight-36{line-height: 36px;}
 

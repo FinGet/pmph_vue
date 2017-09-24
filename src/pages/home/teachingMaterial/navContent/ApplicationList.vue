@@ -51,9 +51,9 @@
                         <i class="fa fa-envelope-o"></i>
                         <span>{{scope.row.eMail}}</span>
                         <el-dropdown>
-                            <span class="el-dropdown-link" style="cursor:pointer;">
-                                ...
-                            </span>
+                            <a href="javascript:" class="el-dropdown-link fontsize-sm" style="cursor:pointer;color:#337ab7;">
+                                更多
+                            </a>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>
                                     <p>
