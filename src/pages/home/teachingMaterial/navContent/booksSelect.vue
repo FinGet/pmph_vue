@@ -37,8 +37,8 @@
         <div class="operation-wrapper">
           <el-button  type="primary" v-if="level==2">批量导出Excel</el-button>
           <el-button  type="primary" v-if="level==2">查看遴选表</el-button>
-          <el-button type="primary" v-if="level==1">通过</el-button>
-          <el-button type="primary" v-if="level==1">结果公布</el-button>
+          <el-button type="primary" @click="showDialog(1)" v-if="level==1">批量通过</el-button>
+          <el-button type="primary" @click="showDialog(0)" v-if="level==1">批量结果公布</el-button>
           <el-button type="primary" v-if="level==1">批量导出Excel</el-button>
         </div>
       </div>
@@ -268,23 +268,9 @@
             <template scope="scope">
               <div v-if="level===1">
                 <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">通过</el-button>
-                <el-tooltip placement="top" v-else>
-                  <div slot="content">
-                    您要通过《{{scope.row.bookname}}》的名单吗？
-                    <br/>
-                    名单通过后，除您以外的其他编辑和主编将无法继续变动名单
-                  </div>
-                  <el-button type="text">通过</el-button>
-                </el-tooltip>
+                <el-button type="text" v-else @click="showDialog(1,scope.row)">通过</el-button>
                 <span class="vertical-line"></span>
-                <el-tooltip placement="top"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">
-                  <div slot="content">
-                    您要公布《{{scope.row.bookname}}》的遴选结果吗？
-                    <br/>
-                    结果公布后您仍然可以修改名单并再次公布
-                  </div>
-                  <el-button type="text">结果公布</el-button>
-                </el-tooltip>
+                <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
                 <el-button type="text" :disabled="true" v-else>结果公布</el-button>
                 <span class="vertical-line"></span>
                 <el-button type="text">导出Excel</el-button>
@@ -304,6 +290,16 @@
           :total="400">
         </el-pagination>
       </div>
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        size="tiny">
+        <p v-html="dialogContent"></p>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 <script type="text/javascript">
@@ -529,7 +525,27 @@
                   subeditor:['张思','王五','赵六','李思是'],
                   editorialBoard:['李建国','王尔尔','赵三三','一一一','二二人','三三'],
                 }],
+              dialogVisible:false,
+              dialogContent:''
             }
+        },
+        methods:{
+          /**
+           * 显示出取人弹出框，
+           * @param type 0代表通过按钮，1代表点击结果公布按钮
+           * @param data 数据，当为空时代表批量导出或公布
+           */
+          showDialog(type,data){
+            var html = '';
+            if(type==1){
+                html = `您要通过${data?'《'+data.bookname+'》':'所有选中'}的名单吗？<br/>名单通过后，除您以外的其他编辑和主编将无法继续变动名单`
+            }else{
+              html = `您要公布${data?'《'+data.bookname+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+            }
+            this.dialogContent = html;
+
+            this.dialogVisible=!this.dialogVisible;
+          }
         },
         created(){
           this.$store.commit('UPDATE_LEVEL',{level:this.$route.query.level});
