@@ -328,7 +328,7 @@
     border-radius: 12px;
     margin-right: 15px;
   }
-  .history{
+  .history-schoolQuery{
     height:26px;
     overflow: hidden;
   }
