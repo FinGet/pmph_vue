@@ -29,7 +29,8 @@ import UserRouter from '../pages/home/userManage/userRouter'
 import pmphUser from '../pages/home/userManage/pmphUser'
 import writerUser from '../pages/home/userManage/writerUser'
 import orgUser from '../pages/home/userManage/orgUser'
-
+/* 系统消息 */
+import MessageRouter from '../pages/home/systemMessage/MessageRouter'
 Vue.use(Router)
 
 export default new Router({
@@ -67,12 +68,16 @@ export default new Router({
        {path:'writer',name:'作家用户',component:writerUser},
        {path:'org',name:'机构用户',component:orgUser},
       ]},
-
-        { path: 'groupmanage', name: '小组管理', component: GroupManage },
-        { path: 'messagelist', name: '系统消息', component: MessageList }, // 消息列表页面
+      {path:'message',name:'系统消息',component:MessageRouter,meta: { replaceName:'消息列表'},children:[
+        { path: 'messagelist', name: '消息列表', component: MessageList ,meta: { replaceName:false}}, // 消息列表页面
         { path: 'messagestate', name: '消息状态', component: MessageState },
-        { path: 'messageEdit', name: '编辑消息', component: MessageEdit},
-        { path: 'schoolquery', name: '选择学校', component: SchoolQuery }//消息编辑页面
+        { path: 'messageEdit', name: '编辑消息', component: MessageEdit}, //消息编辑页面
+      ]},
+        { path: 'groupmanage', name: '小组管理', component: GroupManage },
+        
+        
+        
+        { path: 'schoolquery', name: '选择学校', component: SchoolQuery }
       ]
     },
     { path: '/*', name: '404', component: NoFind }
