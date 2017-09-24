@@ -281,7 +281,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .query{
     background: #fff;
     min-height: 100%;
