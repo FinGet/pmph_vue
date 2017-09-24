@@ -9,7 +9,7 @@
     <el-menu :default-active="activeIndex" theme="dark" class="sildbar-list" unique-opened router>
       <el-menu-item index="/index">
         <i class="fa fa-home fa-fw"></i>
-        <span slot="title">个人中心</span>
+        <span slot="title">个人中心(首页)</span>
       </el-menu-item>
       <el-menu-item index="/materialrouter/materials">
         <i class="fa fa-book fa-fw"></i>
@@ -21,7 +21,7 @@
       </el-menu-item>
       <el-menu-item index="/groupmanage" v-if="userLevel<=4">
         <i class="fa fa-group fa-fw"></i>
-        <span slot="title">小组功能</span>
+        <span slot="title">我的小组</span>
       </el-menu-item>
       <el-menu-item index="/messagelist" v-if="userLevel<=3">
         <i class="fa fa-comments-o fa-fw"></i>
@@ -34,7 +34,7 @@
       <el-submenu index="/userrouter" v-if="userLevel<=1">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
-          <span slot="title">用户信息管理</span>
+          <span slot="title">用户管理</span>
         </template>
         <el-menu-item index="/user/pmph">社内用户</el-menu-item>
         <el-menu-item index="/user/writer">作家用户</el-menu-item>
@@ -98,13 +98,12 @@
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统管理</span>
         </template>
-        <el-menu-item index="10-1">角色管理</el-menu-item>
-        <el-menu-item index="10-2">权限管理</el-menu-item>
-        <el-menu-item index="10-3">功能菜单管理</el-menu-item>
-        <el-menu-item index="10-4">日志管理</el-menu-item>
-        <el-menu-item index="10-5">数据字典</el-menu-item>
-        <el-menu-item index="10-6">密码管理</el-menu-item>
-        <el-menu-item index="10-7">积分管理</el-menu-item>
+        <el-menu-item index="10-1">角色</el-menu-item>
+        <el-menu-item index="10-2">权限</el-menu-item>
+        <el-menu-item index="10-3">菜单</el-menu-item>
+        <el-menu-item index="10-4">地区</el-menu-item>
+        <el-menu-item index="10-5">院校机构</el-menu-item>
+        <el-menu-item index="10-6">社内部门</el-menu-item>
       </el-submenu>
 
 

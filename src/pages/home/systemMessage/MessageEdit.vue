@@ -1,5 +1,11 @@
 <template>
 	<div class="message-edit">
+    <div class="nextStep-wrapper text-right">
+      <el-button type="primary" @click="preview">预览</el-button>
+      <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
+        下一步
+      </el-button>
+    </div>
     <!--输入标题-->
     <el-row class="">
       <el-col :span="3" class="text-right">
@@ -72,13 +78,6 @@
       </el-col>
     </el-row>
 
-    <div class="nextStep-wrapper text-center">
-      <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
-        下一步
-      </el-button>
-    </div>
-
     <Preview-popup :close.sync="previewShow"></Preview-popup>
 	</div>
 </template>
@@ -136,5 +135,8 @@
   .file-upload-wrapper{
     width: 60%;
     max-width: 240px;
+  }
+  .nextStep-wrapper{
+    padding-right: 48px;
   }
 </style>
