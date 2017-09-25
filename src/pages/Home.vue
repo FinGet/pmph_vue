@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="app-main" ref="main">
-      <div class="app-main-inner">
+      <div class="app-main-inner"  :class="{'app_main_border':isShowBorder}">
 
         <transition name="fade" mode="out-in">
           <router-view></router-view>
@@ -37,7 +37,8 @@
   export default {
     data() {
       return {
-        isShowBackTop:false
+        isShowBackTop:false,
+        isShowBorder:true
       }
     },
     computed:{
@@ -70,6 +71,18 @@
           }
 
         }
+      },
+      initIsShowBorder(){
+        console.log(this.$router.currentRoute);
+            var str=this.$router.currentRoute.fullPath.split('/')[1];
+        if(str=='materialrouter'||str=='groupmanage'){
+          this.isShowBorder=false;
+        }
+        if(this.$router.currentRoute.name=="通知列表"){
+          this.isShowBorder=true;
+        }else{
+          this.isShowBorder=true;
+        }
       }
     },
     components:{
@@ -84,8 +97,12 @@
     mounted(){
 
       this.initBackTop();
+      this.initIsShowBorder()
 
     },
+    watch:{
+      '$route':'initIsShowBorder'
+    }
   }
 </script>
 
@@ -109,12 +126,14 @@
   }
   .app-main{
     position: relative;
-    height: 100%;
+    height: calc(100% - 38px) ;
     transition: all .28s ease-out;
     margin-left: 200px;
     margin-top: 38px;
+    padding:15px 20px;
     transition: all .3s;
-    overflow: scroll;
+    overflow-y: scroll;
+    box-sizing: border-box;
   }
   .app-main .back_to_top{
     position: fixed;
@@ -131,8 +150,14 @@
     background-position: 0px -46px;
   }
   .app-main-inner{
-    padding: 15px 20px;
-    overflow: hidden;
+    
+    float:left;
+    width:100%;
+    box-sizing: border-box;
+  }
+  .app_main_border{
+      border: 1px solid rgb(209, 217, 229);
+      padding:15px 20px;
   }
   .nav-top{
     height:38px;

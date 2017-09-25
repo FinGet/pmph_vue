@@ -350,7 +350,6 @@ export default {
 .application_list {
     width: 100%;
     box-sizing: border-box;
-    padding: 15px 20px;
     overflow: hidden;
 }
 

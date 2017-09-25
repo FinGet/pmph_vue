@@ -285,15 +285,17 @@
   .query{
     background: #fff;
     min-height: 100%;
-    position: absolute;
+    
   }
   .top-search{
     position: fixed;
     z-index: 10;
-    top: 36px;
-    width: 100%;
+    top: 54px;
+    width: calc(100% - 280px);
+    box-sizing: border-box;
     padding-right: 50px;
     background: #fff;
+    transition: all .3s;
   }
   .query .cate{
     padding: 5px 0;

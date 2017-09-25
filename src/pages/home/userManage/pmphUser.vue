@@ -382,8 +382,8 @@
 </script>
 <style>
   .writer{
-    padding: 15px 20px;
     width: 100%;
+    box-sizing: border-box;
   }
   .writer .s-title{
     line-height: 36px;
