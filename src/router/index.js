@@ -18,9 +18,6 @@ import Notice from '../pages/home/teachingMaterial/navContent/Notice'
 import Chief from '../pages/home/teachingMaterial/navContent/Chief'
 import preSelect from '../pages/home/teachingMaterial/navContent/preSelect'
 import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
-import MessageList from 'pages/home/systemMessage/MessageList'
-import MessageState from 'pages/home/systemMessage/MessageState'
-import MessageEdit from 'pages/home/systemMessage/MessageEdit'
 import SchoolQuery from 'components/SchoolQuery'
 import ApplicationSchoolQuery from 'components/chooseSchool'
 import GroupManage from 'pages/home/Groups/groupManagement'
@@ -31,6 +28,13 @@ import writerUser from '../pages/home/userManage/writerUser'
 import orgUser from '../pages/home/userManage/orgUser'
 /* 系统消息 */
 import MessageRouter from '../pages/home/systemMessage/MessageRouter'
+import MessageList from 'pages/home/systemMessage/MessageList'
+import MessageState from 'pages/home/systemMessage/MessageState'
+import MessageEdit from 'pages/home/systemMessage/MessageEdit'
+/* 系统设置 */
+import systemRouter from '../pages/home/systemSet/systemRouter'
+import Roles from '../pages/home/systemSet/roles'
+import Authority from '../pages/home/systemSet/authority'
 Vue.use(Router)
 
 export default new Router({
@@ -72,6 +76,11 @@ export default new Router({
         { path: 'messagelist', name: '消息列表', component: MessageList ,meta: { replaceName:false}}, // 消息列表页面
         { path: 'messagestate', name: '消息状态', component: MessageState },
         { path: 'messageEdit', name: '编辑消息', component: MessageEdit}, //消息编辑页面
+      ]},
+      /* 系统设置 */
+      {path:'set',name:'系统设置',component:systemRouter ,meta: { replaceName:false},children:[
+        {path:'roles',name:'角色管理',component:Roles},
+        {path:'authority',name:'权限管理',component:Authority},
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage },
         

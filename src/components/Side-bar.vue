@@ -98,8 +98,8 @@
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统设置</span>
         </template>
-        <el-menu-item index="10-1">角色</el-menu-item>
-        <el-menu-item index="10-2">权限</el-menu-item>
+        <el-menu-item index="/set/roles">角色</el-menu-item>
+        <el-menu-item index="/set/authority">权限</el-menu-item>
         <el-menu-item index="10-3">菜单</el-menu-item>
         <el-menu-item index="10-4">地区</el-menu-item>
         <el-menu-item index="10-5">院校机构</el-menu-item>
