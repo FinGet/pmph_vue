@@ -222,7 +222,7 @@ button a,button a:hover,button a:active{
   box-sizing: border-box;
   display: inline-block;
   float: left;
-  width: 25%;
+  width: 300px;
   padding: 0 10px;
   margin-bottom: 6px;
 }
@@ -242,6 +242,7 @@ button a,button a:hover,button a:active{
 }
 .searchBox-wrapper.lg{
   width: 50%;
+  max-width: 800px;
 
 }
 .searchBox-wrapper.searchBtn{
@@ -254,7 +255,7 @@ button a,button a:hover,button a:active{
 }
 .operation-wrapper{
   text-align: right;
-  clear: both;
+  float: right;
 }
 .table-wrapper{
   margin: 10px 0;
