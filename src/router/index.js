@@ -83,9 +83,6 @@ export default new Router({
         {path:'authority',name:'权限管理',component:Authority},
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage },
-        
-        
-        
         { path: 'schoolquery', name: '选择学校', component: SchoolQuery }
       ]
     },

@@ -75,12 +75,11 @@
       initIsShowBorder(){
         console.log(this.$router.currentRoute);
             var str=this.$router.currentRoute.fullPath.split('/')[1];
+            this.isShowBorder=true;
         if(str=='materialrouter'||str=='groupmanage'){
           this.isShowBorder=false;
         }
         if(this.$router.currentRoute.name=="通知列表"){
-          this.isShowBorder=true;
-        }else{
           this.isShowBorder=true;
         }
       }
@@ -150,7 +149,7 @@
     background-position: 0px -46px;
   }
   .app-main-inner{
-    
+    min-height: 100%;
     float:left;
     width:100%;
     box-sizing: border-box;
