@@ -35,6 +35,7 @@ import MessageEdit from 'pages/home/systemMessage/MessageEdit'
 import systemRouter from '../pages/home/systemSet/systemRouter'
 import Roles from '../pages/home/systemSet/roles'
 import Authority from '../pages/home/systemSet/authority'
+import Departments from 'pages/home/systemSet/departments'
 Vue.use(Router)
 
 export default new Router({
@@ -81,11 +82,12 @@ export default new Router({
       {path:'set',name:'系统设置',component:systemRouter ,meta: { replaceName:false},children:[
         {path:'roles',name:'角色管理',component:Roles},
         {path:'authority',name:'权限管理',component:Authority},
+        {path:'departments',name:'社内部门设置',component:Departments}
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage },
-        
-        
-        
+
+
+
         { path: 'schoolquery', name: '选择学校', component: SchoolQuery }
       ]
     },

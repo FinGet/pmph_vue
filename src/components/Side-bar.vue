@@ -103,7 +103,7 @@
         <el-menu-item index="10-3">菜单</el-menu-item>
         <el-menu-item index="10-4">地区</el-menu-item>
         <el-menu-item index="10-5">院校机构</el-menu-item>
-        <el-menu-item index="10-6">社内部门</el-menu-item>
+        <el-menu-item index="/set/departments">社内部门</el-menu-item>
       </el-submenu>
 
 
