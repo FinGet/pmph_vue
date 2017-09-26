@@ -101,7 +101,7 @@
         <el-menu-item index="/set/roles">角色</el-menu-item>
         <el-menu-item index="/set/authority">权限</el-menu-item>
         <el-menu-item index="10-3">菜单</el-menu-item>
-        <el-menu-item index="10-4">地区</el-menu-item>
+        <el-menu-item index="/set/area">地区</el-menu-item>
         <el-menu-item index="/set/orgs">院校机构</el-menu-item>
         <el-menu-item index="/set/departments">社内部门</el-menu-item>
       </el-submenu>
