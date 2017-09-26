@@ -103,7 +103,7 @@
         var self = this;
         var message = {
           type:'message',
-          isNew:false,
+          isNew:true,
           userId:'123456',
           header:DEFAULT_USER_IMAGE,
           username:'我的测试账号',

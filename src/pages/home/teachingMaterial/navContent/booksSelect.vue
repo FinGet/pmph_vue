@@ -79,7 +79,7 @@
           <!--主任 start-->
           <el-table-column  v-if="level===1"
                             label="策划编辑"
-                            width="100">
+                            width="106">
             <template scope="scope">
               <p v-if="scope.row.state==0">
                 待分配

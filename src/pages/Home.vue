@@ -155,8 +155,10 @@
     box-sizing: border-box;
   }
   .app_main_border{
-      border: 1px solid rgb(209, 217, 229);
-      padding:15px 20px;
+      /*border: 1px solid rgb(209, 217, 229);*/
+      /*padding:15px 20px;*/
+      /*background: #fff;*/
+      /*min-height: 100%;*/
   }
   .nav-top{
     height:38px;
