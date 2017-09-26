@@ -104,7 +104,7 @@
 
     <!--增加弹窗-->
     <el-dialog
-      :title="isNew?'新增作家用户':'修改用户信息'"
+      :title="isNew?'新增院校机构':'修改院校机构信息'"
       :visible.sync="dialogVisible"
       size="tiny">
       <el-form :model="form"  label-width="100px" class="padding20">
@@ -140,7 +140,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
+      </span>
     </el-dialog>
   </div>
 </template>
