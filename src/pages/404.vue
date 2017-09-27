@@ -15,7 +15,7 @@
       </div>
       <div class="content_right_404">
         <div class="title_404">可以尝试:</div>
-        <span class="returnIndex_page" @click="$router.go(-1)">返回首页</span>
+        <router-link :to="{name:'首页'}" class="returnIndex_page">返回首页</router-link>
       </div>
     </div>
 	</div>
