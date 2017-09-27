@@ -1,56 +1,82 @@
 <template>
 	<div>
-      <h1>404</h1>
-      <h2>页面未找到</h2>
-    <el-date-picker
-      v-model="value1"
-      type="date"
-      placeholder="选择日期"
-      :picker-options="pickerOptions0">
-    </el-date-picker>
+    <div class="top_404">
+      <div>404</div>
+      <div>SORRY您访问的页面弄丢了</div>
+    </div>
+    <div class="main_content_404">
+      <div class="content_left_404">
+        <div class="title_404">可能原因:</div>
+        <ul class="reasonBox">
+          <li>1. 网络信号差</li>
+          <li>2. 找不到请求的页面</li>
+          <li>3. 输入的网址不正确</li>
+        </ul>
+      </div>
+      <div class="content_right_404">
+        <div class="title_404">可以尝试:</div>
+        <span class="returnIndex_page" @click="$router.go(-1)">返回首页</span>
+      </div>
+    </div>
 	</div>
 </template>
 
 <script>
 	export default {
 		data() {
-			return {
-        pickerOptions0: {
-          disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
-          }
-        },
-        pickerOptions1: {
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
-        },
-        value1: '',
-        value2: '',
-      }
+			return {}
 		}
 	}
 </script>
 
 <style scoped>
-h1,h2{
-  text-align: center;
-}
+  .main_content_404{
+    text-align:center;
+    margin-top:60px;
+  }
+  .top_404{
+    padding:100px 0 70px;
+    background-color:#2dc9a7;
+    color:white;
+    text-align:center;
+  }
+  .top_404>div:first-child{
+    font-size:72px;
+  }
+  .returnIndex_page{
+    text-decoration:none;
+    color:#2dc9a7;
+    display:inline-block;
+    width:120px;
+    border:2px solid #2dc9a7;
+    border-radius:4px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    margin-top:20px;
+    cursor: pointer;
+  }
+  .reasonBox{
+    list-style-type:none;
+    color:#2dc9a7;
+    line-height:30px;
+    padding-left:0;
+    margin-bottom:0;
+  }
+  .title_404{
+    font-size:28px;
+    color:#2dc9a7;
+    font-weight:500;
+  }
+  .content_left_404{
+    display: inline-block;
+    text-align: left;
+  }
+  .content_right_404{
+    display: inline-block;
+    padding-left: 100px;
+    border-left: 1px solid #2dc9a7;
+    margin-left: 100px;
+    margin-top:-6px;
+  }
 </style>
