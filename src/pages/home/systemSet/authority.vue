@@ -32,7 +32,9 @@
             <p class="header_p">
                 <el-button type="primary" style="float:right;">保存设置</el-button>
             </p>
-            <el-tree :data="treeData" class="tree" show-checkbox :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+            <div class="tree_box">
+                <el-tree :data="treeData" class="tree" show-checkbox :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+            </div>
         </div>
     </div>
 </template>
@@ -45,11 +47,39 @@ export default {
             rolesData: [
                 {
                     rolesCode: 1000,
-                    rolesName: '',
+                    rolesName: '系统管理员',
+                    sortNum: 1,
+                    remark: 'no_edit',
+                    isOnusing: true
+                },
+                {
+                    rolesCode: 1001,
+                    rolesName: '其他用户',
+                    sortNum: 2,
+                    remark: '',
+                    isOnusing: true
+                },
+                {
+                    rolesCode: 1008,
+                    rolesName: '主任',
                     sortNum: 1,
                     remark: '',
                     isOnusing: true
-                }
+                },
+                {
+                    rolesCode: 1009,
+                    rolesName: '项目编辑',
+                    sortNum: 1,
+                    remark: '',
+                    isOnusing: true
+                },
+                {
+                    rolesCode: 1010,
+                    rolesName: '数字编辑',
+                    sortNum: 20,
+                    remark: '2017-08-09',
+                    isOnusing: true
+                },
             ],
             treeData: [{
                 label: '系统管理',
@@ -152,7 +182,11 @@ export default {
     overflow: hidden;
     margin-bottom: 22px;
 }
-.func_list_box .tree{
-    
+.func_list_box .tree_box{
+    width:100%;
+    position: relative;
+    height: 400px;
+    overflow-y: scroll;
 }
+
 </style>

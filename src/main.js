@@ -12,8 +12,12 @@ import 'common/css/common.css'
 import {mySessionStorage} from '../static/storage.js'
 import axios from 'axios'
 
+/* import VueKindEditor from 'vue-kindeditor'
+import 'kindeditor/kindeditor-all-min.js'
+import 'kindeditor/themes/default/default.css'
 
-
+Vue.use(VueKindEditor)
+ */
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);

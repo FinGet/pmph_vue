@@ -9,23 +9,23 @@
             </p>
 
             <el-table :data="rolesListData" class="table-wrapper" border>
-                <el-table-column prop="roleNum" label="角色代码" width="90">
+                <el-table-column prop="roleNum" label="角色代码" >
                 </el-table-column>
                 <el-table-column prop="roleName" label="角色名称">
                 </el-table-column>
-                <el-table-column prop="sortNum" label="排序码" width="80">
+                <el-table-column prop="sortNum" label="排序码" >
                 </el-table-column>
-                <el-table-column prop="isOnUsing" label="是否启用" width="95">
+                <el-table-column prop="isOnUsing" label="是否启用" >
                     <template scope="scope">
                         <p v-if="scope.row.isOnUsing">启用</p>
                         <p v-if="!scope.row.isOnUsing">禁用</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="110">
+                <el-table-column label="操作" width="140">
                     <template scope="scope">
                         <el-button type="text">修改</el-button>
                         <span style="line-height:16px">|</span>
-                        <el-button type="text">删除</el-button>
+                        <el-button type="text">更新权限</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -60,7 +60,7 @@
             </span>
         </el-dialog>
         <!-- 角色用户列表 -->
-        <div class="roles_user_list">
+        <!-- <div class="roles_user_list">
             <h4>角色用户列表</h4>
             <p>
                 <el-input class="input" placeholder="请输入用户名或姓名"></el-input>
@@ -88,7 +88,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!-- 用户列表弹框 -->
+
             <el-dialog title="角色用户管理" :visible.sync="userDialogVisible" class="user_dialog" size="small">
                 <div class="left_tree_box">
                     <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
@@ -113,23 +113,15 @@
 
                         </el-table-column>
                     </el-table>
-                    <el-pagination
-                    style="float:right;"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="userCurrentPage"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="userTotalPage">
-    </el-pagination>
+                    <el-pagination style="float:right;" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="userCurrentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="userTotalPage">
+                    </el-pagination>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="userDialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="userDialogVisible = false">确 定</el-button>
                 </span>
             </el-dialog>
-        </div>
+        </div> -->
     </div>
 </template>
 <script type="text/javascript">
@@ -172,7 +164,7 @@ export default {
             rolesForm: {
                 roleNum: '',
                 roleName: '',
-                isOnUsing: true,
+                isOnUsing: '',
                 sortNum: '',
                 remark: ''
             },
@@ -210,32 +202,32 @@ export default {
             ],
             userDialogVisible: false,
             userSearchInput: '',
-            userCurrentPage:1,
-            userTotalPage:400,
+            userCurrentPage: 1,
+            userTotalPage: 400,
             userListData: [
                 {
                     userName: '李长生',
                     passName: 'lcs',
                     isOnUsing: true,
-                    remark:''
+                    remark: ''
                 },
                 {
                     userName: '严雪梅',
                     passName: 'yanxm',
                     isOnUsing: true,
-                    remark:''
+                    remark: ''
                 },
                 {
                     userName: '宁丹',
                     passName: 'nd',
                     isOnUsing: true,
-                    remark:''
+                    remark: ''
                 },
                 {
                     userName: '黄亮',
                     passName: 'huangliang',
                     isOnUsing: true,
-                    remark:''
+                    remark: ''
                 },
             ],
             treeData: [{
@@ -284,12 +276,12 @@ export default {
             console.log(data);
         },
         //分页
-          handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      }
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+        }
     }
 }
 </script>
@@ -300,7 +292,7 @@ export default {
 }
 
 .system_roles .roles_list {
-    width: 48%;
+    width: 100%;
     float: left;
 }
 
@@ -324,9 +316,11 @@ export default {
 .system_roles .roles_dialog .el-dialog {
     min-width: 550px;
 }
-.system_roles .user_dialog .el-dialog{
+
+.system_roles .user_dialog .el-dialog {
     min-width: 900px;
 }
+
 .system_roles .user_dialog .el-dialog__body {
     overflow: hidden;
 }

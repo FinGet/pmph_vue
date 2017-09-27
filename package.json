@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "element-ui": "^1.4.3",
+    "element-ui": "^1.4.5",
     "es6-promise": "^4.1.1",
     "vue": "^2.4.2",
+    "vue-kindeditor": "^0.2.1",
     "vue-router": "^2.7.0",
     "vuex": "^2.4.0"
   },
@@ -47,6 +48,7 @@
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "url-loader": "^0.5.8",
+    "vue-kindeditor": "^0.2.1",
     "vue-loader": "^13.0.4",
     "vue-quill-editor": "^2.3.2",
     "vue-style-loader": "^3.0.1",

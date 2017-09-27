@@ -47,6 +47,10 @@
       <el-col :span="20">
         <div class="col-content">
            <Editor :config="{}" :defaultMsg="'123'"></Editor>
+           <!-- <editor id="editor_id" height="500px" :content="editorText"
+        pluginsPath="/static/kindeditor/plugins/"
+        :loadStyleMode="false"
+        @on-content-change="onContentChange"></editor> -->
         </div>
       </el-col>
     </el-row>
@@ -84,7 +88,9 @@
 
 <script>
   import Editor from 'components/Editor'
+ 
   import PreviewPopup from 'components/PreviewPopup'
+
   export default {
     data: function() {
       return {
@@ -92,13 +98,17 @@
         radio2:3,
         previewShow:false,
         fileList: [],
+        editorText:''
       }
     },
     methods:{
       preview(){
         this.previewShow=true;
         console.log(this.previewShow)
-      }
+      },
+    /*   onContentChange (val) {
+      this.editorText = val
+    } */
     },
     components: {
       Editor,
