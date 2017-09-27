@@ -16,18 +16,23 @@ p{word-wrap:break-word}
   文字相关
   =================================================================*/
 .fontsize-sm{font-size: 12px;}
+.fontsize-normal{font-size: 14px;}
+.fontsize-lg{font-size: 16px;}
+.fontsize-18{font-size: 18px;}
+.fontsize-20{font-size: 20px;}
+.fontsize-28{font-size: 28px;}
+
+.fontBold{font-weight: bold;}
+
 .text-center{text-align: center;}
 .text-left{text-align: left}
 .text-right{text-align: right}
 
 /*color相关*/
-.color-error{
-  color: #ff4949;
-}
-.gray{
-  color:#c8c8c8;
-}
+.color-error{color: #ff4949;}
+.gray{color:#c8c8c8;}
 .blue{color: #337ab7;}
+.orange{color:#fe955e;}
 /*字体相关*/
 .lineheight-36{line-height: 36px;}
 
@@ -57,12 +62,14 @@ p{word-wrap:break-word}
 .paddingL10 { padding-left: 10px; }
 .paddingL15 { padding-left: 15px; }
 .paddingL20 { padding-left: 20px; }
+.paddingL30 { padding-left: 30px; }
 
 .paddingR0 { padding-right: 0; }
 .paddingR5  { padding-right: 5px; }
 .paddingR10 { padding-right: 10px; }
 .paddingR15 { padding-right: 15px; }
 .paddingR20 { padding-right: 20px; }
+.paddingR30 { padding-right: 30px; }
 
 .padding0{padding: 0;}
 .padding20 { padding:  20px; }
@@ -101,6 +108,21 @@ p{word-wrap:break-word}
 .marginB50 { margin-bottom: 50px; }
 .marginB60 { margin-bottom: 60px; }
 
+/*=================================================================
+  border
+  =================================================================*/
+.border-T{
+  border-top: 1px solid #ccc;
+}
+.border-B{
+  border-bottom: 1px solid #ccc;
+}
+.border-dashed-T{
+  border-top: 1px dashed #ccc;
+}
+.border-dashed-B{
+  border-bottom: 1px dashed #ccc;
+}
 
 /*清除浮动*/
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
