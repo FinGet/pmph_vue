@@ -21,11 +21,13 @@
                         <p v-if="!scope.row.isOnUsing">禁用</p>
                     </template>
                 </el-table-column>
+                <el-table-column prop="remark" label="备注" >
+                </el-table-column>
                 <el-table-column label="操作" width="140">
                     <template scope="scope">
                         <el-button type="text">修改</el-button>
                         <span style="line-height:16px">|</span>
-                        <el-button type="text">更新权限</el-button>
+                        <el-button type="text" @click="powerTreeVisible=true">更新权限</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -37,7 +39,7 @@
                     <el-form-item label="角色代码：">
                         <el-input v-model="rolesForm.roleNum" placeholder="请输入角色代码"></el-input>
                     </el-form-item>
-                    <el-form-item label="用户名称：">
+                    <el-form-item label="角色名称：">
                         <el-input v-model="rolesForm.roleName" placeholder="请输入用户名称"></el-input>
                     </el-form-item>
                     <el-form-item label="启用：">
@@ -59,6 +61,20 @@
                 <el-button type="primary" @click="rolesDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 权限树弹框 -->
+         <el-dialog 
+        title="角色权限设置"
+          :visible.sync="powerTreeVisible"
+          size="tiny"
+         >
+         <div>
+          <el-tree class="tree_box" :data="treeData" show-checkbox :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          </div>
+          <span slot="footer" class="dialog-footer">
+                <el-button @click="powerTreeVisible = false">取 消</el-button>
+                <el-button type="primary" @click="powerTreeVisible = false">确 定</el-button>
+            </span>
+         </el-dialog>
         <!-- 角色用户列表 -->
         <!-- <div class="roles_user_list">
             <h4>角色用户列表</h4>
@@ -200,71 +216,59 @@ export default {
                     remark: '邹梦娜'
                 },
             ],
-            userDialogVisible: false,
-            userSearchInput: '',
-            userCurrentPage: 1,
-            userTotalPage: 400,
-            userListData: [
-                {
-                    userName: '李长生',
-                    passName: 'lcs',
-                    isOnUsing: true,
-                    remark: ''
-                },
-                {
-                    userName: '严雪梅',
-                    passName: 'yanxm',
-                    isOnUsing: true,
-                    remark: ''
-                },
-                {
-                    userName: '宁丹',
-                    passName: 'nd',
-                    isOnUsing: true,
-                    remark: ''
-                },
-                {
-                    userName: '黄亮',
-                    passName: 'huangliang',
-                    isOnUsing: true,
-                    remark: ''
-                },
-            ],
+            powerTreeVisible:false,
             treeData: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }]
-            }],
+                label: '个人中心（首页）',
+                       }, 
+                       {
+                label:'规划教材申报'  
+                       },
+                       {
+                label:'学校/教师审核'  
+                       },
+                       {
+                label:'我的小组'  
+                       },
+                       {
+                label:'系统消息'  
+                       },
+                       {
+                label:'系统日志'  
+                       },
+                       {
+                label:'用户管理',
+                children:[
+                    {
+                      label:'社内用户'  
+                    },
+                    {
+                      label:'作家用户'  
+                    },
+                    {
+                      label:'机构用户'  
+                    },
+                ]},
+                       {
+                       label:'系统设置',
+                       children:[
+                           {
+                               label:'角色权限'
+                           },
+                           {
+                               label:'菜单'
+                           },
+                           {
+                               label:'地区'
+                           },
+                           {
+                               label:'院校机构'
+                           },
+                           {
+                               label:'社内部门'
+                           },
+                       ]
+                       },
+                       ],
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -275,13 +279,7 @@ export default {
         handleNodeClick(data) {
             console.log(data);
         },
-        //分页
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-        }
+        
     }
 }
 </script>
@@ -316,8 +314,11 @@ export default {
 .system_roles .roles_dialog .el-dialog {
     min-width: 550px;
 }
-
-.system_roles .user_dialog .el-dialog {
+ .system_roles .tree_box{
+    height: 400px;
+    overflow-y: scroll;
+ }
+/* .system_roles .user_dialog .el-dialog {
     min-width: 900px;
 }
 
@@ -333,5 +334,5 @@ export default {
 .system_roles .user_dialog .right_table_box {
     width: 70%;
     float: right;
-}
+} */
 </style>
