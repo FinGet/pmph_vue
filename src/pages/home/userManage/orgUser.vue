@@ -47,6 +47,11 @@
             label="管理员姓名"
             width="110">
           </el-table-column>
+          <el-table-column
+            prop="role"
+            label="用户角色"
+            width="100">
+          </el-table-column>
 
           <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
           <el-table-column
@@ -160,25 +165,44 @@
         :before-close="dialogClose"
         size="tiny">
         <el-form :model="form"  label-width="100px" class="padding20">
-          <el-form-item label="用户代码：">
+          <el-form-item label="用户代码：" required>
             <el-input v-model="form.usercode" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户名称：">
+          <el-form-item label="用户名称：" required>
             <el-input v-model="form.username" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱：">
+          <el-form-item label="用户邮箱：" required>
             <el-input v-model="form.email" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户手机：">
+          <el-form-item label="用户手机：" required>
             <el-input v-model="form.phone" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="所属组织：">
-            <el-select v-model="form.organisation" placeholder="全部">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="用户角色：" required>
+            <el-select v-model="form.role" placeholder="请选择">
+              <el-option label="项目编辑" value="项目编辑"></el-option>
+              <el-option label="策划编辑" value="策划编辑"></el-option>
+              <el-option label="主任" value="主任"></el-option>
+              <el-option label="其他用户" value="其他用户"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="启用：">
+          <el-form-item label="所属院校：" required>
+            <el-select
+              v-model="form.organisation"
+              filterable
+              remote
+              placeholder="请输入关键词"
+              loading-text="正在搜索..."
+              :remote-method="remoteMethod"
+              :loading="loading">
+              <el-option
+                v-for="item in options4"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="启用：" required>
             <el-radio-group v-model="form.enabled">
               <el-radio label="启用"></el-radio>
               <el-radio label="不启用"></el-radio>
@@ -227,234 +251,14 @@
                 phone:'18600000011',
                 email:'eassss@sina.com',
                 position:'副科长',
+                role:'项目编辑',
                 zhicheng:'教员',
                 address: '上海市普陀区金沙江路 1518 弄',
                 postcode:'000000',
                 enabled:'启用',
                 organisation:'赣南医科学院',
                 remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },],
+              }],
               dialogVisible:false,
               form:{
                 schoolname:'',
@@ -462,6 +266,7 @@
                 username:'',
                 phone:'',
                 email:'',
+                role:null,
                 position:'',
                 zhicheng:'',
                 address: '',
@@ -469,7 +274,11 @@
                 enabled:'启用',
                 organisation:'',
                 remark:'',
-              }
+              },
+              options4: [],
+              value9: [],
+              list: [],
+              loading: false,
             }
         },
         methods:{
@@ -493,6 +302,7 @@
               phone:'',
               email:'',
               position:'',
+              role:null,
               zhicheng:'',
               address: '',
               postcode:'',
@@ -505,6 +315,19 @@
             }
             done();
           },
+          remoteMethod(query) {
+            if (query !== '') {
+              this.loading = true;
+              setTimeout(() => {
+                this.loading = false;
+                this.options4.splice(0);
+                this.options4.push({value: '人卫社', label: '人卫社'});
+                this.options4.push({value: '北京第四人民医院', label: '北京第四人民医院'});
+              }, 1000);
+            } else {
+              this.options4 = [];
+            }
+          }
         },
     }
 </script>

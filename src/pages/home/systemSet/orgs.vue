@@ -27,10 +27,10 @@
         <div class="searchInput">
           <el-select v-model="value2" placeholder="全部">
             <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in area"
+              :key="item"
+              :label="item"
+              :value="item">
             </el-option>
           </el-select>
         </div>
