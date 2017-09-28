@@ -7,12 +7,13 @@
           <el-input placeholder="请输入关键字" class="searchInputEle"></el-input>
         </div>
       </div>
+      <!--申报职务搜索-->
       <div class="searchBox-wrapper">
-        <div class="searchName">是否有效：<span></span></div>
+        <div class="searchName">机构类型：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="value1" placeholder="全部">
+          <el-select v-model="value3" placeholder="全部">
             <el-option
-              v-for="item in options1"
+              v-for="item in options3"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -34,27 +35,14 @@
           </el-select>
         </div>
       </div>
-      <!--申报职务搜索-->
-      <div class="searchBox-wrapper">
-        <div class="searchName">院校类型：<span></span></div>
-        <div class="searchInput">
-          <el-select v-model="value3" placeholder="全部">
-            <el-option
-              v-for="item in options3"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
+
       <div class="searchBox-wrapper searchBtn">
         <el-button  type="primary" icon="search">搜索</el-button>
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" @click="add">增加</el-button>
-        <el-button type="primary" @click="createData">生成数据</el-button>
+        <el-button type="primary" @click="setOrgsType">机构类型设置</el-button>
+        <el-button type="primary" @click="add">新增机构</el-button>
       </div>
     </div>
     <div class="table-wrapper">
@@ -67,10 +55,6 @@
           label="院校名称">
         </el-table-column>
         <el-table-column
-          prop="code"
-          label="机构代码">
-        </el-table-column>
-        <el-table-column
           prop="type"
           label="院校类型">
         </el-table-column>
@@ -79,8 +63,15 @@
           label="所属地区">
         </el-table-column>
         <el-table-column
-          prop="phone"
-          label="联系电话">
+          label="备注">
+          <template scope="scope">
+            {{scope.row.remark?scope.row.remark:'-'}}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="createTime"
+          label="创建时间">
         </el-table-column>
         <el-table-column
           label="操作"
@@ -108,13 +99,10 @@
       :visible.sync="dialogVisible"
       size="tiny">
       <el-form :model="form"  label-width="100px" class="padding20">
-        <el-form-item label="院校名称：">
+        <el-form-item label="院校名称：" required>
           <el-input v-model="form.schoolname" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="所属地区：">
-          <el-input v-model="form.address" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="院校类型：">
+        <el-form-item label="院校类型：" required>
           <el-radio-group v-model="form.type">
             <el-radio label="本科"></el-radio>
             <el-radio label="医院"></el-radio>
@@ -122,14 +110,21 @@
             <el-radio label="本科职教"></el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="所属地区：" required>
+          <el-select v-model="form.address" placeholder="请选择">
+            <el-option
+              v-for="item in area"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系人：">
+          <el-input v-model="form.person" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="联系电话：">
           <el-input v-model="form.phone" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="是否有效：">
-          <el-select v-model="form.enabled" placeholder="全部">
-            <el-option label="有效" value="有效"></el-option>
-            <el-option label="无效" value="无效"></el-option>
-          </el-select>
         </el-form-item>
         <el-form-item label="备注：">
           <el-input v-model="form.remark" auto-complete="off"></el-input>
@@ -142,6 +137,43 @@
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!--机构类型设置-->
+    <el-dialog
+      title="机构类型设置"
+      :visible.sync="dialogVisible2"
+      size="tiny">
+
+      <!--操作按钮-->
+      <div class="text-right">
+        <el-button  type="primary">新增</el-button>
+      </div>
+      <!--表格-->
+      <div class="table-wrapper clearfix">
+        <el-table
+          :data="tableData_orgType"
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="机构类型">
+          </el-table-column>
+          <el-table-column
+            prop="sortNum"
+            label="显示顺序">
+          </el-table-column>
+          <el-table-column
+            label="操作">
+            <template scope="scope">
+              <el-button type="text">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible2 = false">保 存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -150,10 +182,12 @@
       return{
         isNew:true,
         dialogVisible:false,
+        dialogVisible2:false,
         form:{
           schoolname:'',
           code:'',
           type:'医院',
+          person:'',
           phone:'',
           address: '',
           enabled:'有效',
@@ -194,187 +228,273 @@
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
         },{
           schoolname:'四川大学',
           code:'gongxihp',
           type:'医院',
+          person:'胡荣华',
           phone:'18600000011',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省',
           usertype:1,
+          createTime:'2017-03-31 10:27',
+          remark:'',
           enabled:'启用',
-        }]
+        }],
+        area:['北京市','天津市','河北省','山西','内蒙古自治区',
+          '辽宁省','吉林省','黑龙江省','上海市','江苏省','浙江省',
+          '安徽省','福建省','江西省','山东省','河南省','湖北省','湖南省',
+          '广东省','广西壮族自治区','海南省','重庆市','四川省','贵州省','云南省',
+          '西藏自治区','陕西省','甘肃省','青海省','宁夏回族自治区','新疆维吾尔自治区',
+          '台湾省','香港特别行政区','澳门特别行政区'
+        ],
+        tableData_orgType:[{
+          name:'本科',
+          sortNum:1,
+        },
+          {
+            name:'医院',
+            sortNum:2,
+          },
+          {
+            name:'职教',
+            sortNum:3,
+          },
+          {
+            name:'本科职教',
+            sortNum:4,
+          }],
       }
     },
     methods:{
       add(){
+        var formreset = {
+          schoolname:'',
+          code:'',
+          type:'医院',
+          person:'',
+          phone:'',
+          address: '',
+          enabled:'有效',
+          index:null,
+        };
+        for(let key in formreset){
+          this.form[key]=formreset[key];
+        }
         this.isNew=true;
         this.dialogVisible=true;
       },
-      createData(){},
+      setOrgsType(){
+        this.dialogVisible2 = true;
+      },
       eidtInfo(index){
         this.isNew=false;
 
