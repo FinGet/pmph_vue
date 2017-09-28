@@ -7,24 +7,32 @@
     </div>
     <ul class="backlogList paddingT20 paddingB20 clearfix">
       <li>
-        <span><i class="fa fa-home fa-fw"></i></span>
-        教材申报
-        <span class="orange">(16)</span>
+        <router-link :to="{name:'申报表审核'}">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          教材申报
+          <span class="orange">(16)</span>
+        </router-link>
       </li>
       <li>
-        <span><i class="fa fa-home fa-fw"></i></span>
-        教材申报
-        <span class="orange">(16)</span>
+        <router-link to="/404">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          选题申报
+          <span class="orange">(16)</span>
+        </router-link>
       </li>
       <li>
-        <span><i class="fa fa-home fa-fw"></i></span>
-        教材申报
-        <span class="orange">(16)</span>
+        <router-link to="/404">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          教师认证
+          <span class="orange">(16)</span>
+        </router-link>
       </li>
       <li>
-        <span><i class="fa fa-home fa-fw"></i></span>
-        教材申报
-        <span class="orange">(16)</span>
+        <router-link to="/404">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          机构认证
+          <span class="orange">(16)</span>
+        </router-link>
       </li>
     </ul>
 
@@ -35,12 +43,12 @@
           <el-tabs v-model="activeName1">
             <el-tab-pane label="全部" name="first">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1" :key="index">
+                <li v-for="(iterm,index) in data1" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
                   <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1.length>8">
+                <li class="panel-more-btn" v-if="data1.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -50,12 +58,12 @@
             </el-tab-pane>
             <el-tab-pane label="进行中" name="second">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1" :key="index" v-if="iterm.state==0">
+                <li v-for="(iterm,index) in data1_option.state0" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
                   <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1.length>8">
+                <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -65,12 +73,12 @@
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1" :key="index" v-if="iterm.state==1">
+                <li v-for="(iterm,index) in data1_option.state1" :key="index">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
                   <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1.length>6">
+                <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -86,7 +94,8 @@
           <p class="fontsize-lg fontBold panel-title paddingR30">小组</p>
           <div class="panel-iterm">
             <!--小组头像-->
-            <div class="groupHead"
+            <router-link class="groupHead"
+                         :to="{name:'小组管理'}"
                  v-for="(item,index) in groupListData"
                  :key="index"
                  @click="clickGroup(item.id,item)"
@@ -101,31 +110,125 @@
                 </div>
                 <span class="lastMessageTime">{{item.lastMesTime}}</span>
               </div>
+            </router-link>
+            <div class="panel-more-btn" v-if="groupListData.length>4">
+              <router-link :to="{name:'小组管理'}">
+                查看更多
+                <i class="el-icon-d-arrow-right"></i>
+              </router-link>
             </div>
           </div>
         </div>
       </li>
+    </ul>
+    <ul class="clearfix panel-box">
       <li>
         <div>
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">选题申报</p>
           <el-tabs v-model="activeName2">
             <el-tab-pane label="全部" name="first">
-              全部
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data2" :key="index" v-if="index<limit_size">
+                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
+                  <el-tag type="warning" v-else>已结束</el-tag>
+                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data1.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
             </el-tab-pane>
-            <el-tab-pane label="待审核" name="second">待审核</el-tab-pane>
-            <el-tab-pane label="直接投稿" name="fourth">直接投稿</el-tab-pane>
+            <el-tab-pane label="进行中" name="second">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data2_option.state0" :key="index" v-if="index<limit_size">
+                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
+                  <el-tag type="warning" v-else>已结束</el-tag>
+                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
+            <el-tab-pane label="已结束" name="fourth">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data2_option.state1" :key="index">
+                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
+                  <el-tag type="warning" v-else>已结束</el-tag>
+                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </li>
       <li>
         <div>
-          <p class="fontsize-lg fontBold panel-title pull-left paddingR30">图书审核</p>
           <el-tabs v-model="activeName3">
-            <el-tab-pane label="全部" name="first">
-
+            <el-tab-pane label="文章审核" name="first">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data3" :key="index" v-if="index<limit_size">
+                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data3.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
             </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">进行中</el-tab-pane>
-            <el-tab-pane label="已结束" name="fourth">已结束</el-tab-pane>
+            <el-tab-pane label="图书纠错审核" name="second">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.errorMes}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data4.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
+            <el-tab-pane label="图书评论审核" name="three">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.comment}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data4.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
+            <el-tab-pane label="图书附件审核" name="four">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="data4.length>limit_size">
+                  <router-link to="/404">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </li>
@@ -137,6 +240,7 @@
     export default{
       data() {
         return {
+          limit_size:6,
           DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
           activeName1:'first',
           activeName2: 'first',
@@ -163,13 +267,132 @@
               title:'全国高等学校五年制临床医学专业第九轮规划教材',
               state:0
             }],
-          data2:[],
-          data2:[],
+          data2:[
+            {
+              title:'疼痛的眼动脱敏治疗：实用指南',
+              state:0
+            },{
+              title:'大学生（青年）身心健康自我关注与管理',
+              state:0
+            },{
+              title:'生命孕育感知及漫谈',
+              state:1
+            },{
+              title:'免疫与病原生物学',
+              state:1
+            },{
+              title:'老年健康服务与管理',
+              state:1
+            },{
+              title:'美国职业医师考试临床知识指导',
+              state:0
+            },{
+              title:'健康经济与政策',
+              state:0
+            }
+          ],
+          data3:[{
+            title:'疼痛的眼动脱敏治疗：实用指南',
+            state:0
+          },{
+            title:'大学生（青年）身心健康自我关注与管理',
+            state:0
+          },{
+            title:'生命孕育感知及漫谈',
+            state:1
+          },{
+            title:'免疫与病原生物学',
+            state:1
+          },{
+            title:'老年健康服务与管理',
+            state:1
+          },{
+            title:'美国职业医师考试临床知识指导',
+            state:0
+          },{
+            title:'健康经济与政策',
+            state:0
+          }],
+          data4:[{
+            title:'口腔组织病理学（第7版本科口腔含实验教程附光盘）',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:0
+          },{
+            title:'美容心理学',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:0
+          },{
+            title:'美容临床心理学',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:1
+          },{
+            title:'介入放射学（第4版）',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:1
+          },{
+            title:'2017全国护士执业资格考试 习题精选与答案解析',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:1
+          },{
+            title:'2017全国护士执业资格考试 习题精选与答案解析',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:0
+          },{
+            title:'介入放射学（第4版）',
+            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
+            comment:'这本书不错，虽然我一页都没看过',
+            file:'教学大纲.pdf',
+            state:0
+          }],
           groupListData:[
+            {name:'成都医科大学内部',lastMesTime:"7-28",num:9},
             {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10},
             {name:'成都医科大学内部',lastMesTime:"7-28",num:9},
             {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8}],
         };
+      },
+      computed:{
+        data1_option(){
+          var data = {
+            state0:[],
+            state1:[]
+          };
+
+          this.data1.forEach(function (iterm,index) {
+            iterm.state==0 && data.state0.push(iterm);
+            iterm.state==1 && data.state1.push(iterm);
+          });
+
+          return data;
+        },
+        data2_option(){
+          var data = {
+            state0:[],
+            state1:[]
+          };
+
+          this.data2.forEach(function (iterm,index) {
+            iterm.state==0 && data.state0.push(iterm);
+            iterm.state==1 && data.state1.push(iterm);
+          });
+
+          return data;
+        }
+      },
+      mounted(){
+        //将四个面板设为等高
       },
     }
 </script>
@@ -196,12 +419,16 @@
 
 /*面板*/
 .panel-box{
-  max-width: 1200px;
-  margin: 0 auto;
+  /*max-width: 1200px;*/
+  /*margin: 0 auto;*/
+  overflow: hidden;
 }
 .panel-box>li{
   float: left;
   width: 50%;
+  padding-bottom:2000px;
+  margin-bottom:-2000px;
+  line-height: 24px;
 }
 .panel-box>li:nth-of-type(2n+1)>div{
   margin: 10px 30px 10px 0;
@@ -290,5 +517,9 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow:ellipsis;
+  }
+
+  .ellipsis{
+    height: 25px;
   }
 </style>
