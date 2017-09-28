@@ -34,7 +34,7 @@ import MessageEdit from 'pages/home/systemMessage/MessageEdit'
 /* 系统设置 */
 import systemRouter from '../pages/home/systemSet/systemRouter'
 import Roles from '../pages/home/systemSet/roles'
-import Authority from '../pages/home/systemSet/authority'
+/* import Authority from '../pages/home/systemSet/authority' */
 import Departments from 'pages/home/systemSet/departments'
 import Orgs from 'pages/home/systemSet/orgs'
 import Area from 'pages/home/systemSet/area'
@@ -83,7 +83,7 @@ export default new Router({
       /* 系统设置 */
       {path:'set',name:'系统设置',component:systemRouter ,meta: { replaceName:false},children:[
         {path:'roles',name:'角色管理',component:Roles},
-        {path:'authority',name:'权限管理',component:Authority},
+       /*  {path:'authority',name:'权限管理',component:Authority}, */
         {path:'departments',name:'社内部门设置',component:Departments},
         {path:'orgs',name:'院校机构设置',component:Orgs},
         {path:'area', name:'区域管理',component:Area}
