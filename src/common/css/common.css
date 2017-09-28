@@ -27,6 +27,12 @@ p{word-wrap:break-word}
 .text-center{text-align: center;}
 .text-left{text-align: left}
 .text-right{text-align: right}
+/*文字超出显示省略号*/
+.ellipsis{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
 
 /*color相关*/
 .color-error{color: #ff4949;}
