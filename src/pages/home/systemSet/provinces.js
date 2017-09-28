@@ -1,6 +1,6 @@
 module.exports = [
   {"code": "110000",
-    "sheng": "11", "di": "00", "xian": "00", "name": "北京市",
+    "sheng": "11", "di": "00", "xian": "00", "name": "北京",
     "level": 1},
   {
     "code": "110100",
@@ -70,7 +70,7 @@ module.exports = [
     "sheng": "12",
     "di": "00",
     "xian": "00",
-    "name": "天津市",
+    "name": "天津",
     "level": 1
   }, {"code": "120100", "sheng": "12", "di": "01", "xian": "00", "name": "市辖区", "level": 2}, {
     "code": "120101",
@@ -3018,7 +3018,7 @@ module.exports = [
     "sheng": "31",
     "di": "00",
     "xian": "00",
-    "name": "上海市",
+    "name": "上海",
     "level": 1
   }, {"code": "310100", "sheng": "31", "di": "01", "xian": "00", "name": "市辖区", "level": 2}, {
     "code": "310101",
@@ -8625,7 +8625,7 @@ module.exports = [
     "sheng": "50",
     "di": "00",
     "xian": "00",
-    "name": "重庆市",
+    "name": "重庆",
     "level": 1
   }, {"code": "500100", "sheng": "50", "di": "01", "xian": "00", "name": "市辖区", "level": 2}, {
     "code": "500101",
