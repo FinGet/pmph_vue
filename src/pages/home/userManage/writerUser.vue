@@ -56,7 +56,11 @@
           prop="schoolname"
           label="所属院校">
         </el-table-column>
-
+        <el-table-column
+          prop="role"
+          label="用户角色"
+          width="100">
+        </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
         <el-table-column
           v-if="screenWidth_lg"
@@ -98,7 +102,7 @@
           v-if="screenWidth_lg"
           prop="position"
           label="职务"
-          width="100">
+          width="120">
         </el-table-column>
         <el-table-column
           v-if="screenWidth_lg"
@@ -182,10 +186,29 @@
         <el-form-item label="用户手机：">
           <el-input v-model="form.phone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="所属组织：">
-          <el-select v-model="form.usercode" placeholder="全部">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="用户角色：" required>
+          <el-select v-model="form.role" placeholder="请选择">
+            <el-option label="项目编辑" value="项目编辑"></el-option>
+            <el-option label="策划编辑" value="策划编辑"></el-option>
+            <el-option label="主任" value="主任"></el-option>
+            <el-option label="其他用户" value="其他用户"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属院校：">
+          <el-select
+            v-model="form.schoolname"
+            filterable
+            remote
+            placeholder="请输入关键词"
+            loading-text="正在搜索..."
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options4"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="启用：">
@@ -234,6 +257,7 @@
           usercode:'gongxihp',
           username:'龚茜',
           phone:'18600000011',
+          role:'项目编辑',
           email:'eassss@sina.com',
           position:'教研室副主任',
           zhicheng:'副教授',
@@ -246,6 +270,151 @@
           username:'龚海蓉',
           phone:'13950299048',
           email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
+          position:'副科长',
+          zhicheng:'教员',
+          address: '上海市普陀区金沙江路 1518 弄',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'四川大学',
+          usercode:'gongxihp',
+          username:'龚茜',
+          phone:'18600000011',
+          role:'项目编辑',
+          email:'eassss@sina.com',
+          position:'教研室副主任',
+          zhicheng:'副教授',
+          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
+          usertype:1,
+          enabled:'启用',
+        },{
+          schoolname:'福建卫生职业技术学院',
+          usercode:'gonghairong',
+          username:'龚海蓉',
+          phone:'13950299048',
+          email:'eassss@sina.com',
+          role:'项目编辑',
           position:'副科长',
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
@@ -257,177 +426,13 @@
           username:'人卫社01',
           phone:'18600000011',
           email:'eassss@sina.com',
+          role:'项目编辑',
           position:'副科长',
           zhicheng:'教员',
           address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
           enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:2,
-          enabled:'启用',
-        },],
+        }],
         dialogVisible:false,
         form:{
           schoolname:'',
@@ -435,6 +440,7 @@
           username:'',
           phone:'',
           email:'',
+          role:null,
           position:'',
           zhicheng:'',
           address: '',
@@ -442,7 +448,11 @@
           enabled:'启用',
           organisation:'',
           remark:'',
-        }
+        },
+        options4: [],
+        value9: [],
+        list: [],
+        loading: false,
       }
     },
     methods:{
@@ -468,6 +478,19 @@
           return true;
         }
         return row.usertype === value;
+      },
+      remoteMethod(query) {
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options4.splice(0);
+            this.options4.push({value: '人卫社', label: '人卫社'});
+            this.options4.push({value: '北京第四人民医院', label: '北京第四人民医院'});
+          }, 1000);
+        } else {
+          this.options4 = [];
+        }
       }
     }
   }
