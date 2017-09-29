@@ -8,7 +8,7 @@
           </el-col>
           <el-button class="btn" type="primary"  icon="search">搜索</el-button>
         </el-col>
-        <el-col :span="4" class="radio">
+        <el-col :span="4" class="msgradio">
           <el-radio-group v-model="radio">
             <el-radio :label="1">全部</el-radio>
             <el-radio :label="2">已读</el-radio>
@@ -241,8 +241,8 @@
   }
 </script>
 
-<style>
-.radio{
+<style scoped="scoped">
+.msgradio{
   height:36px;
   line-height:36px;
   margin:10px 0 0 10px;
