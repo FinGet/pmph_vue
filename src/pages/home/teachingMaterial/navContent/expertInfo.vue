@@ -2,6 +2,14 @@
   <div class="teachingMaterial expert_info">
     <div class="info-wrapper">
 
+      <!--操作按钮-->
+      <div class="paddingB10 text-right">
+        <el-button type="primary">确认收到纸质表</el-button>
+        <el-button type="warning">退回</el-button>
+        <el-button type="primary">通过</el-button>
+        <el-button type="primary">打印</el-button>
+      </div>
+
       <!--图书选择-->
       <div class="expert-info-box expert-operation-wrapper">
         <p class="info-box-title operation">图书选择（书籍可以多选，一本书职位可以多选）</p>
@@ -40,7 +48,7 @@
                     </el-upload>
                   </div>
                 </div>
-                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -58,7 +66,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
 
             </div>
@@ -84,15 +92,9 @@
               </div>
             </div>
           </div>
-          <div v-if="hasNewAddbook">
-            <el-button type="primary" @click="saveBook">保存图书</el-button>
-          </div>
           <div class="expert_info-buttonWrapper">
+            <el-button type="primary" @click="saveBook" v-if="hasNewAddbook">保存图书</el-button>
             <el-button type="primary" @click="addNewBook">添加图书</el-button>
-            <el-button type="primary">确认收到纸质表</el-button>
-            <el-button type="warning">退回</el-button>
-            <el-button type="primary">通过</el-button>
-            <el-button type="primary">打印</el-button>
           </div>
         </div>
       </div>
@@ -505,6 +507,7 @@
 
   .expert-operation-wrapper .info-iterm-text{
     width: 24%;
+    max-width: 270px;
   }
 
   .info-iterm-text a{
