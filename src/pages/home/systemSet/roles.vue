@@ -68,11 +68,17 @@
           size="tiny"
          >
          <div>
-          <el-tree class="tree_box" :data="treeData" show-checkbox :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          <el-tree class="tree_box" ref="powerTree" 
+          :data="treeData"  
+          show-checkbox 
+          node-key="id"
+          :props="defaultProps" 
+          :default-checked-keys="defaultCheckedData"
+          @node-click="handleNodeClick"></el-tree>
           </div>
           <span slot="footer" class="dialog-footer">
                 <el-button @click="powerTreeVisible = false">取 消</el-button>
-                <el-button type="primary" @click="powerTreeVisible = false">确 定</el-button>
+                <el-button type="primary" @click="getCheckedNodes()">确 定</el-button>
             </span>
          </el-dialog>
         <!-- 角色用户列表 -->
@@ -217,54 +223,71 @@ export default {
                 },
             ],
             powerTreeVisible:false,
+            defaultCheckedData:[1,2],
             treeData: [{
                 label: '个人中心（首页）',
+                id:1
                        }, 
                        {
-                label:'规划教材申报'  
+                label:'规划教材申报',
+                id:2  
                        },
                        {
-                label:'学校/教师审核'  
+                label:'学校/教师审核'  ,
+                id:3
                        },
                        {
-                label:'我的小组'  
+                label:'我的小组' ,
+                id:4 
                        },
                        {
-                label:'系统消息'  
+                label:'系统消息',
+                id:5  
                        },
                        {
-                label:'系统日志'  
+                label:'系统日志',
+                id:6  
                        },
                        {
                 label:'用户管理',
+                id:7,
                 children:[
                     {
-                      label:'社内用户'  
+                      label:'社内用户',
+                      id:9
                     },
                     {
-                      label:'作家用户'  
+                      label:'作家用户',
+                      id:10  
                     },
                     {
-                      label:'机构用户'  
+                      label:'机构用户',
+                      id:11  
                     },
                 ]},
                        {
                        label:'系统设置',
+                       id:8,
                        children:[
                            {
-                               label:'角色权限'
+                               label:'角色权限',
+                               id:12
                            },
                            {
-                               label:'菜单'
+                               label:'菜单',
+                               id:13
                            },
                            {
-                               label:'地区'
+                               label:'地区',
+                               id:14
                            },
                            {
-                               label:'院校机构'
+                               label:'院校机构',
+                               id:15
                            },
                            {
-                               label:'社内部门'
+                               label:'社内部门',
+                               id:16
                            },
                        ]
                        },
@@ -279,6 +302,11 @@ export default {
         handleNodeClick(data) {
             console.log(data);
         },
+        //获取选中树节点
+         getCheckedNodes() {
+        console.log(this.$refs.powerTree.getCheckedNodes());
+
+      },
         
     }
 }

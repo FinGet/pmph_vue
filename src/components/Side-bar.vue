@@ -40,59 +40,6 @@
         <el-menu-item index="/user/writer">作家用户</el-menu-item>
         <el-menu-item index="/user/org">机构用户</el-menu-item>
       </el-submenu>
-     <!--  <el-submenu index="4">
-        <template slot="title">
-          <i class="fa fa-user-times fa-fw"></i>
-          <span slot="title">教材纠错</span>
-        </template>
-        <el-menu-item index="4-1">纠错审核</el-menu-item>
-        <el-menu-item index="4-2">纠错记录</el-menu-item>
-      </el-submenu>
-      <el-submenu index="5">
-        <template slot="title">
-          <i class="fa fa-pencil fa-fw"></i>
-          <span slot="title">选题申报</span>
-        </template>
-        <el-menu-item index="5-1">申报审核</el-menu-item>
-        <el-menu-item index="5-2">进度查询</el-menu-item>
-      </el-submenu>
-      <el-submenu index="6">
-        <template slot="title">
-          <i class="fa fa-shopping-cart fa-fw"></i>
-          <span slot="title">商品管理</span>
-        </template>
-        <el-menu-item index="6-1">商品同步</el-menu-item>
-        <el-menu-item index="6-2">评论管理</el-menu-item>
-        <el-menu-item index="6-3">微视频管理</el-menu-item>
-        <el-menu-item index="6-4">图书附件审核</el-menu-item>
-        <el-menu-item index="6-5">图书信息维护</el-menu-item>
-        <el-menu-item index="6-6">教材目录管理</el-menu-item>
-      </el-submenu>
-      <el-submenu index="7">
-        <template slot="title">
-          <i class="fa fa-pencil-square-o fa-fw"></i>
-          <span slot="title">内容管理</span>
-        </template>
-        <el-menu-item index="7-1">文章栏目</el-menu-item>
-        <el-menu-item index="7-2">文章管理</el-menu-item>
-        <el-menu-item index="7-3">广告管理</el-menu-item>
-      </el-submenu> -->
-      <!-- <el-submenu index="8">
-        <template slot="title">
-          <i class="fa fa-sticky-note-o fa-fw"></i>
-          <span slot="title">问卷调查</span>
-        </template>
-        <el-menu-item index="8-1">问卷设置</el-menu-item>
-        <el-menu-item index="8-2">问卷列表</el-menu-item>
-      </el-submenu> -->
-      <!-- <el-submenu index="9">
-        <template slot="title">
-          <i class="fa fa-bar-chart fa-fw"></i>
-          <span slot="title">查询统计</span>
-        </template>
-        <el-menu-item index="9-1">用户统计</el-menu-item>
-        <el-menu-item index="9-2">流量统计</el-menu-item>
-      </el-submenu> -->
       <el-submenu index="10" v-if="userLevel==0">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
@@ -105,20 +52,6 @@
         <el-menu-item index="/set/orgs">院校机构</el-menu-item>
         <el-menu-item index="/set/departments">社内部门</el-menu-item>
       </el-submenu>
-
-
-<!--       <el-submenu index="12">
-        <template slot="title">
-          <i class="fa fa-pie-chart fa-fw"></i>
-          <span slot="title">基础数据维护</span>
-        </template>
-        <el-menu-item index="12-1">区域信息维护</el-menu-item>
-        <el-menu-item index="12-2">院校信息维护</el-menu-item>
-        <el-menu-item index="12-3">社内部门维护</el-menu-item>
-        <el-menu-item index="12-4">敏感词维护</el-menu-item>
-        <el-menu-item index="12-5">标签管理</el-menu-item>
-      </el-submenu> -->
-
     </el-menu>
 
 	</div>
@@ -152,6 +85,7 @@
        },
        //初始化列表active状态
        initActiveIndex(){
+         console.log(this.$router.currentRoute);
          var str =this.$router.currentRoute.path.split('/')[1];
          this.activeIndex=this.$router.currentRoute.path;
         /*  if(str=='userrouter'){
@@ -161,6 +95,10 @@
            this.activeIndex='/materialrouter/materials';
          }
 
+       },
+       //列表显示权限初始化
+       initSideiShow(num){
+         
        }
     },
     watch:{
