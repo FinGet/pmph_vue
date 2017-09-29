@@ -47,10 +47,7 @@
       <el-col :span="20">
         <div class="col-content">
            <Editor :config="{}" :defaultMsg="'123'"></Editor>
-           <!-- <editor id="editor_id" height="500px" :content="editorText"
-        pluginsPath="/static/kindeditor/plugins/"
-        :loadStyleMode="false"
-        @on-content-change="onContentChange"></editor> -->
+           <div id="editor_id"></div> 
         </div>
       </el-col>
     </el-row>
@@ -61,7 +58,6 @@
         <div class="cutLine-dashed"></div>
       </el-col>
     </el-row>
-
     <!--添加附件-->
     <el-row class="">
       <el-col :span="3" class="text-right">
@@ -88,7 +84,6 @@
 
 <script>
   import Editor from 'components/Editor'
- 
   import PreviewPopup from 'components/PreviewPopup'
 
   export default {
@@ -113,6 +108,9 @@
     components: {
       Editor,
       PreviewPopup
+    },
+    mounted(){
+       
     }
 	}
 </script>
