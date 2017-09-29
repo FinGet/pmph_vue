@@ -48,7 +48,7 @@
                     </el-upload>
                   </div>
                 </div>
-                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -66,7 +66,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="marginL20" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
 
             </div>
