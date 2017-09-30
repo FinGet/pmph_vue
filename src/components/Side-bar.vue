@@ -85,7 +85,7 @@
        },
        //初始化列表active状态
        initActiveIndex(){
-         console.log(this.$router.currentRoute);
+        // console.log(this.$router.currentRoute);
          var str =this.$router.currentRoute.path.split('/')[1];
          this.activeIndex=this.$router.currentRoute.path;
         /*  if(str=='userrouter'){

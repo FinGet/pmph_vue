@@ -73,7 +73,7 @@
         }
       },
       initIsShowBorder(){
-        console.log(this.$router.currentRoute);
+       // console.log(this.$router.currentRoute);
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
         if(str=='materialrouter'||str=='groupmanage'){

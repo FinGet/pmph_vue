@@ -1,5 +1,6 @@
 <template>
-	<div class="message-edit">
+  <div class="message-edit">
+    
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
       <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
@@ -46,8 +47,11 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content">
-           <Editor :config="{}" :defaultMsg="'123'"></Editor>
-           <div id="editor_id"></div> 
+          <!-- <Editor :config="{}" :defaultMsg="'123'"></Editor> -->
+          <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
+            把编辑器的初始内容放在这textarea即可
+          </textarea>
+          <div id="editor_id"></div>
         </div>
       </el-col>
     </el-row>
@@ -67,11 +71,9 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content file-upload-wrapper">
-          <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :file-list="fileList">
-            <span> <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
+          <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :file-list="fileList">
+            <span>
+              <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip">文件大小不超过100M</div>
           </el-upload>
         </div>
@@ -79,72 +81,99 @@
     </el-row>
 
     <Preview-popup :close.sync="previewShow"></Preview-popup>
-	</div>
+  </div>
 </template>
-
 <script>
-  import Editor from 'components/Editor'
-  import PreviewPopup from 'components/PreviewPopup'
-
-  export default {
-    data: function() {
-      return {
-        title:'',
-        radio2:3,
-        previewShow:false,
-        fileList: [],
-        editorText:''
-      }
+/* import Editor from 'components/Editor' */
+import PreviewPopup from 'components/PreviewPopup'
+import '../../../../static/layui/src/css/layui.css'
+export default {
+  data: function() {
+    return {
+      title: '',
+      radio2: 3,
+      previewShow: false,
+      fileList: [],
+      editorText: ''
+    }
+  },
+  methods: {
+    preview() {
+      this.previewShow = true;
+      console.log(this.previewShow)
     },
-    methods:{
-      preview(){
-        this.previewShow=true;
-        console.log(this.previewShow)
-      },
     /*   onContentChange (val) {
       this.editorText = val
     } */
-    },
-    components: {
-      Editor,
-      PreviewPopup
-    },
-    mounted(){
-       
+  },
+  components: {
+   /*  Editor, */
+    PreviewPopup
+  },
+  mounted() {
+    layui.use('layedit', function(){
+  var layedit = layui.layedit
+  ,$ = layui.jquery;
+  
+  //构建一个默认的编辑器
+  var index = layedit.build('LAY_demo1');
+  
+  //编辑器外部操作
+  var active = {
+    content: function(){
+      alert(layedit.getContent(index)); //获取编辑器内容
     }
-	}
+    ,text: function(){
+      alert(layedit.getText(index)); //获取编辑器纯文本内容
+    }
+    ,selection: function(){
+      alert(layedit.getSelection(index));
+    }
+  };
+});
+
+  }
+}
 </script>
 
 <style scoped>
-  .message-edit{
-    max-width: 1580px;
-  }
-  .message-edit .el-row {
-    margin-bottom: 24px;
-  }
-  .message-edit .col-content{
-    padding: 0 0 0 16px;
-  }
-  .message-edit .text-right .col-content{
-    padding: 0 16px 0 0;
-  }
-  .lineHeight-36{
-    line-height:36px;
-  }
-  .message-title-input{
-    width: 60%;
-    max-width: 600px;
-  }
-  .cutLine-dashed{
-    width: auto;
-    margin-top: 28px;
-    margin-left: 16px;
-  }
-  .file-upload-wrapper{
-    width: 60%;
-    max-width: 240px;
-  }
-  .nextStep-wrapper{
-    padding-right: 48px;
-  }
+.message-edit {
+  max-width: 1580px;
+}
+
+.message-edit .el-row {
+  margin-bottom: 24px;
+}
+
+.message-edit .col-content {
+  padding: 0 0 0 16px;
+}
+
+.message-edit .text-right .col-content {
+  padding: 0 16px 0 0;
+}
+
+.lineHeight-36 {
+  line-height: 36px;
+}
+
+.message-title-input {
+  width: 60%;
+  max-width: 600px;
+}
+
+.cutLine-dashed {
+  width: auto;
+  margin-top: 28px;
+  margin-left: 16px;
+}
+
+.file-upload-wrapper {
+  width: 60%;
+  max-width: 240px;
+}
+
+.nextStep-wrapper {
+  padding-right: 48px;
+}
 </style>
