@@ -50,6 +50,7 @@ export default new Router({
       name: '首页',
       component: Home,
       meta:{ replaceName:'个人中心'},
+      redirect: { name: '个人中心' },
       children: [
         {path:'index',name:'个人中心',component:Index,meta: { replaceName:false,authorityId:1}},
         {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: {replaceName:'通知列表',authorityId:2},
