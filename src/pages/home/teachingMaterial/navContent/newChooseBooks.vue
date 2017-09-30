@@ -44,7 +44,7 @@
               <el-col>
                 <el-form-item>
                   <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
-                  <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
+                  <el-button type="text" class="classify_button" @click="dialogVisiable=true">选择</el-button>
                   <el-button type="text" class="classify_button">删除</el-button>
                 </el-form-item>
                 <!--<el-form-item>-->
@@ -71,7 +71,7 @@
                   <th>电话</th>
                   <th>邮箱</th>
                   <th>
-                    <el-button type="text"  class="add_button">选择联系人</el-button>
+                    <el-button type="text"  class="add_button" @click="chooseContact">选择联系人</el-button>
                   </th>
                 </tr>
                 <tr v-for="(item,index) in extendListData" :key="index">
@@ -97,6 +97,71 @@
                 </tr>
               </table>
             </el-form-item>
+
+            <el-form-item label="项目主任设置:">
+              <el-col :span="24">
+                <el-button type="primary" class="pull-right" size="small" @click="chooseProjectDirector">项目主任设置</el-button>
+                <br>
+                <el-table
+                  :data="projectDirectorData"
+                  border
+                  style="width: 100%">
+                  <el-table-column
+                    label="名称"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="账号"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="角色名称"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="手机号"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="邮箱"
+                  >
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-form-item>
+
+            <el-form-item label="项目编辑设置:">
+              <el-col :span="24">
+                <el-button type="primary" class="pull-right" size="small" @click="chooseProjectEditor">项目编辑设置</el-button>
+                <br>
+                <el-table
+                  :data="projectEditorData"
+                  border
+                  style="width: 100%">
+                  <el-table-column
+                    label="名称"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="账号"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="角色名称"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="手机号"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="邮箱"
+                  >
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-form-item>
+
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
                 <el-input v-model="ruleForm.address" class="input-500"></el-input>
@@ -188,7 +253,7 @@
               <el-col :span="12">
                 <el-input
                   type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4}"
+                  :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
                   v-model="mainContent">
                 </el-input>
@@ -207,7 +272,7 @@
               <el-col :span="12">
                 <el-input
                   type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4}"
+                  :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
                   v-model="remark">
                 </el-input>
@@ -238,16 +303,21 @@
       </el-row>
       <!-- 教材分类选择弹框 -->
 
-      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisible" size="tiny">
+      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" size="tiny">
         <div style="overflow:hidden;">
           <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
           <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large">
+        <Departments :tableData="proptableData,Multichoice"></Departments>
+      </el-dialog>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import Departments from 'components/departments'
   export default {
     data() {
       return {
@@ -256,9 +326,14 @@
         jobradio:'1',
         mainContent:'',
         remark:'',
-        dialogVisible: false,
+        dialogVisiable: false,
+        chooseVisiable: false, // 选择弹窗
+        chooseTitle: '', // 选择弹出窗的title
+        Multichoice:'', // 是否可以多选，传递给Departments子组件
+        projectDirectorData:[], // 项目主任
+        projectEditorData:[], // 项目编辑
         checkedTreeData:[],
-        defaultProps: {
+        defaultProps: { // 树结构
           children: 'children',
           label: 'label'
         },
@@ -280,13 +355,120 @@
             email:'1233214@qq.com'
           }
         ],
+        proptableData:[
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'李四',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'王二',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'赵武',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'王二',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'赵武',
+            username:'zs',
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          }
+        ], // 传递给Departments子组件
         extensionData:[
           {
             name:'请输入名字',
             isNameInput:false,
             needradio:'1'
           }
-        ],
+        ], // 扩展项
         listTableData:[
           {
             name:'主要学习经历',
@@ -511,7 +693,28 @@
       },
       deleteExtend(index){
         this.extensionData.splice(index,1);
+      },
+      // 选择联系人
+      chooseContact() {
+        this.chooseVisiable = true
+        this.chooseTitle = '选择联系人'
+        this.Multichoice = true
+      },
+      // 项目主任设置
+      chooseProjectDirector() {
+        this.chooseVisiable = true
+        this.chooseTitle = '项目主任设置'
+        this.Multichoice = false
+      },
+      // 项目编辑设置
+      chooseProjectEditor() {
+        this.chooseVisiable = true
+        this.chooseTitle = '项目编辑设置'
+        this.Multichoice = true
       }
+    },
+    components:{
+      Departments
     }
   }
 </script>
