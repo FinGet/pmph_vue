@@ -4,9 +4,9 @@
           <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
           <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
             <el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
-            <el-tab-pane label="主任视图" name="1booksselect"></el-tab-pane>
-            <el-tab-pane label="项目编辑视图" name="2booksselect"></el-tab-pane>
-            <el-tab-pane label="策划编辑视图" name="3booksselect"></el-tab-pane>
+            <el-tab-pane label="主任视图" name="1v3"></el-tab-pane>
+            <el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>
+            <el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="header_title_tips">
@@ -34,19 +34,6 @@ export default {
 	},
 	methods: {
     routerChange(tag) {
-      /**
-      *  因为要在遴选页面把主任视图，项目编辑视图，和策划编辑视图都显示出来，所以暂时先将跳转到booksselect的特殊处理下
-      * */
-      var path = this.activeTagName;
-      var level = undefined;
-      if(path.includes('booksselect')){
-        level=parseInt(path);
-        this.$router.replace({path:'presscheck'});
-        let timer = setTimeout(()=>{
-          this.$router.push({path:'booksselect',query:{level:level}});
-        },20)
-        return;
-      }
       this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },

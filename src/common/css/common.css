@@ -42,6 +42,11 @@ p{word-wrap:break-word}
 /*字体相关*/
 .lineheight-36{line-height: 36px;}
 
+.page-title{
+  font-size: 16px;
+  font-weight: bold;
+}
+
 /*=================================================================
   padding
   =================================================================*/
@@ -129,6 +134,11 @@ p{word-wrap:break-word}
 .border-dashed-B{
   border-bottom: 1px dashed #ccc;
 }
+
+.no-border{
+  border: none !important;
+}
+
 
 /*清除浮动*/
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
@@ -335,7 +345,19 @@ a.table-link:hover{
 .memberlist-wrpper .el-tabs__item.is-active{
   background: rgba(0,0,0,.1);
 }
-
+/*重置tree组件的小图标可点击区域 在父级上加上expand-icon-lg类名即可*/
+.expand-icon-lg .el-tree-node__expand-icon:after {
+  content: '';
+  top:-8px;
+  left: -10px;
+  display: inline-block;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: red;
+  z-index: 10;
+  opacity: 0;
+}
 
 
 

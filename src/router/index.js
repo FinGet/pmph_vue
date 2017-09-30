@@ -9,7 +9,9 @@ import NoFind from 'pages/404.vue';
 /* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
 const ApplicationList=() => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
-import BooksSelect from '../pages/home/teachingMaterial/navContent/booksSelect'
+import BooksSelect_1v1 from '../pages/home/teachingMaterial/navContent/1v1'
+import BooksSelect_1v2 from '../pages/home/teachingMaterial/navContent/1v2'
+import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
 import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
@@ -48,6 +50,7 @@ export default new Router({
       name: '首页',
       component: Home,
       meta:{ replaceName:'个人中心'},
+      redirect: { name: '个人中心' },
       children: [
         {path:'index',name:'个人中心',component:Index,meta: { replaceName:false,authorityId:1}},
         {path:'materialrouter',name:'教材申报',component:ApplicationRouter, meta: {replaceName:'通知列表',authorityId:2},
@@ -57,7 +60,9 @@ export default new Router({
             {path:'notice',name:'通知详情',component:Notice},
             {
               path: 'materialnav', name: '书目列表', component: ApplicationNav ,meta:{replaceName:'申报表审核'},children: [
-                { path: 'booksselect', name: '教材遴选', component: BooksSelect, meta: {applicationName:'booksselect' } },
+                { path: '1v1', name: '策划编辑视图', component: BooksSelect_1v1, meta: {applicationName:'1v1' } },
+                { path: '1v2', name: '项目编辑视图', component: BooksSelect_1v2, meta: {applicationName:'1v2' } },
+                { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: {applicationName:'1v3' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: {applicationName:'presscheck',replaceName:false} },
                 { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{isShowTags:true}},
                 {path:'book-list',name:'设置书目录',component:BookList, meta: { isShowTags:true}},
@@ -90,7 +95,7 @@ export default new Router({
         {path:'area', name:'区域管理',component:Area,meta:{authorityId:14}}
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage,meta:{authorityId:4} },
-        
+
       ]
     },
     { path: '/*', name: '404', component: NoFind }

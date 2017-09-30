@@ -14,8 +14,8 @@
             @click="selectProvince(item.name,item.sheng)"
             :class="{'active':item.name==active.province}">{{item.name}}
             <div class="pull-right">
-              <el-button type="primary" size="mini" icon="edit" @click.stop=""></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop=""></el-button>
+              <el-button type="primary" size="mini" icon="edit" @click.stop="editProvince(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deletedProvince(item)"></el-button>
             </div>
           </li>
         </ul>
@@ -32,8 +32,8 @@
             @click="selectCity(item.name,item.sheng,item.di)"
             :class="{'active':item.name==active.city}">{{item.name}}
             <div class="pull-right">
-              <el-button type="primary" size="mini" icon="edit" @click.stop=""></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop=""></el-button>
+              <el-button type="primary" size="mini" icon="edit" @click.stop="editCity(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deleteCity(item)"></el-button>
             </div>
           </li>
           <p v-if="this.cities==''" class="null">暂无数据</p>
@@ -51,8 +51,8 @@
             @click="selectBlock(item.name)"
             :class="{'active':item.name==active.block}">{{item.name}}
             <div class="pull-right">
-              <el-button type="primary" size="mini" icon="edit" @click.stop=""></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop=""></el-button>
+              <el-button type="primary" size="mini" icon="edit" @click.stop="editBlock(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deleteBlock(item)"></el-button>
             </div>
           </li>
           <p v-if="this.blocks==''" class="null">暂无数据</p>
@@ -98,6 +98,46 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog title="省/直辖市/特别行政区" :visible.sync="editProvinceVisable" size="tiny">
+      <el-form :label-position="labelPosition" label-width="80px" :model="provinceForm">
+        <el-form-item label="名称">
+          <el-input v-model="provinceForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="显示顺序">
+          <el-input v-model="provinceForm.sort"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="市/市辖区/市辖县/自治州" :visible.sync="editCityVisable" size="tiny">
+      <el-form :label-position="labelPosition" label-width="80px" :model="cityForm">
+        <el-form-item label="名称">
+          <el-input v-model="cityForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="显示顺序">
+          <el-input v-model="cityForm.sort"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="县/区/自治县/自治旗" :visible.sync="editBlockVisable" size="tiny">
+      <el-form :label-position="labelPosition" label-width="80px" :model="blockForm">
+        <el-form-item label="名称">
+          <el-input v-model="blockForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="显示顺序">
+          <el-input v-model="blockForm.sort"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -110,6 +150,9 @@
         provinceVisable:false,
         cityVisable:false,
         blockVisable:false,
+        editProvinceVisable:false,
+        editCityVisable:false,
+        editBlockVisable:false,
         provinceForm:{
           name:'',
           sort:''
@@ -373,6 +416,112 @@
         // console.log(this.provinces)
         this.blockForm.sort = ''
         this.blockForm.name = ''
+        this.selectCity(parentName,sheng,di)
+      },
+      // 编辑省份
+      editProvince(item){
+        this.editProvinceVisable = true
+        this.provinceForm.name = item.name
+        this.provinceForm.sort = item.sort
+//        this.provinceForm.name = ''
+//        this.provinceForm.sort = ''
+      },
+      // 编辑市
+      editCity(item){
+        this.editCityVisable = true
+        this.cityForm.name = item.name
+        this.cityForm.sort = item.sort
+//        this.provinceForm.name = ''
+//        this.provinceForm.sort = ''
+      },
+      // 编辑县
+      editBlock(item){
+        this.editBlockVisable = true
+        this.blockForm.name = item.name
+        this.blockForm.sort = item.sort
+//        this.provinceForm.name = ''
+//        this.provinceForm.sort = ''
+      },
+      // 删除省份
+      deletedProvince(item) {
+        var index = ''
+        var name = []
+        var sheng = []
+        // console.log(item)
+        for (var i in provinces) {
+          if (this.provinces[i].level==1) {
+            //console.log('arr'+arr)
+            if (this.provinces[i].sheng === item.sheng) {
+              index = i
+            }
+          }
+        }
+        this.provinces.splice(index,1)
+        for (var i in provinces) {
+          if (this.provinces[i].level==1) {
+            name.push(this.provinces[i].name)
+            sheng.push(this.provinces[i].sheng)
+          }
+        }
+        // console.log(name,sheng)
+        //console.log(name,sheng)
+        this.selectProvince(name[0],sheng[0])
+      },
+      // 删除市
+      deleteCity(item) {
+        var index = ''
+        var name = ''
+        for (var i in provinces) {
+          if (this.provinces[i].level==1) {
+            // console.log(this.provinces[i].name)
+            if (this.provinces[i].name == this.active.province ) {
+              //console.log(this.provinces[i].sheng)
+              name = this.provinces[i].name
+            }
+          }
+          if (this.provinces[i].sheng==item.sheng&&this.provinces[i].level==2) {
+            // console.log(1)
+            if (this.provinces[i].di === item.di) {
+              index = i
+            }
+          }
+        }
+        this.provinces.splice(index,1)
+        this.selectProvince(name,item.sheng)
+      },
+      // 删除县
+      deleteBlock(item) {
+        var sheng =''
+        var parentName = ''
+        var di = ''
+        var index = ''
+        // 先要找到当前市需要添加在哪个省份
+        for(var i in this.provinces) {
+          // console.log(this.provinces[i].level)
+          if (this.provinces[i].level == 1) {
+            // console.log(this.provinces[i].name)
+            if (this.provinces[i].name == this.active.province) {
+              //console.log(this.provinces[i].sheng)
+              sheng = this.provinces[i].sheng
+            }
+          }
+          // 找到所属的市
+          if (this.provinces[i].level == 2) {
+            // console.log(this.provinces[i].name)
+            if (this.provinces[i].name == this.active.city && this.provinces[i].sheng == sheng) {
+              parentName = this.provinces[i].name
+              di = this.provinces[i].di
+            }
+          }
+          if (this.provinces[i].level==3) {
+            // console.log(this.provinces[i].name)
+            if (this.provinces[i].sheng==sheng&&this.provinces[i].di==di&&this.provinces[i].xian==item.xian) {
+              // console.log(this.provinces[i].xian)
+              index = i
+            }
+          }
+        }
+        this.provinces.splice(index,1)
         this.selectCity(parentName,sheng,di)
       }
     }
