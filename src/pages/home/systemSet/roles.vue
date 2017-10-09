@@ -81,69 +81,7 @@
                 <el-button type="primary" @click="getCheckedNodes()">确 定</el-button>
             </span>
          </el-dialog>
-        <!-- 角色用户列表 -->
-        <!-- <div class="roles_user_list">
-            <h4>角色用户列表</h4>
-            <p>
-                <el-input class="input" placeholder="请输入用户名或姓名"></el-input>
-                <el-button type="primary" icon="search">搜索</el-button>
-                <el-button type="primary" @click="userDialogVisible=true">角色用户管理</el-button>
-            </p>
-            <el-table :data="rolesUserData" border class="table-wrapper">
-                <el-table-column type="selection" width="45">
-                </el-table-column>
-                <el-table-column prop="passName" label="用户名">
-                </el-table-column>
-                <el-table-column prop="userName" label="姓名">
-                </el-table-column>
-                <el-table-column prop="isOnUsing" label="是否启用" width="95">
-                    <template scope="scope">
-                        <p v-if="scope.row.isOnUsing">启用</p>
-                        <p v-if="!scope.row.isOnUsing">禁用</p>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="remark" label="备注">
-                </el-table-column>
-                <el-table-column label="操作" width="90">
-                    <template scope="scope">
-                        <el-button type="text">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-            <el-dialog title="角色用户管理" :visible.sync="userDialogVisible" class="user_dialog" size="small">
-                <div class="left_tree_box">
-                    <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-                </div>
-                <div class="right_table_box">
-                    <p style="overflow:hidden;">用户名或代码：
-                        <el-input v-model="userSearchInput" style="width:40%" placeholder="请输入角色代码或者角色名称"></el-input>
-                        <el-button type="primary" icon="search" style="float:right;">搜索</el-button>
-                    </p>
-                    <el-table :data="userListData" border class="table-wrapper" style="margin-top:15px;">
-                        <el-table-column label="用户名称" prop="userName">
-                        </el-table-column>
-                        <el-table-column label="用户代码" prop="passName">
-                        </el-table-column>
-                        <el-table-column prop="isOnUsing" label="是否启用" width="95">
-                            <template scope="scope">
-                                <p v-if="scope.row.isOnUsing">启用</p>
-                                <p v-if="!scope.row.isOnUsing">禁用</p>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="备注" prop="remark">
-
-                        </el-table-column>
-                    </el-table>
-                    <el-pagination style="float:right;" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="userCurrentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="userTotalPage">
-                    </el-pagination>
-                </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="userDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="userDialogVisible = false">确 定</el-button>
-                </span>
-            </el-dialog>
-        </div> -->
+ 
     </div>
 </template>
 <script type="text/javascript">
@@ -305,7 +243,12 @@ export default {
         //获取选中树节点
          getCheckedNodes() {
         console.log(this.$refs.powerTree.getCheckedNodes());
-
+        var arr=[];
+        this.$refs.powerTree.getCheckedNodes().forEach(function(item){
+            arr.push(item.id);
+        })
+        console.log(arr);
+        //点击确定直接提交arr权限id数组
       },
         
     }
