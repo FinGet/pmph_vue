@@ -1,9 +1,11 @@
 /**
-封装一个滚动插件，主要解决当前项目中美化滚动条的需求
+封装一个滚动插件，主要解决当前项目中美化滚动条的需求.
 @param autoresize 是否自动监听滚动区域宽高变化，默认是false,基于定时器每20ms刷新一次
 @param scrollbar  是否显示滚动条，默认是false
 @param scrollbarwidth 滚动条样式宽度
 @param scrollbarcolor 滚动条颜色
+
+使用实例：<beauty-scroll scrollbar >  </beauty-scroll>
 */
 <template>
   <div class="beautyScroll" ref="beautyScroll">
