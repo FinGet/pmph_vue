@@ -48,9 +48,10 @@
       <el-col :span="20">
         <div class="col-content">
           <!-- <Editor :config="{}" :defaultMsg="'123'"></Editor> -->
-          <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
+         <!--  <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
             把编辑器的初始内容放在这textarea即可
-          </textarea>
+          </textarea> -->
+          <script id="editor" type="text/plain" style="height:500px;"></script>
           <div id="editor_id"></div>
         </div>
       </el-col>
@@ -86,7 +87,6 @@
 <script>
 /* import Editor from 'components/Editor' */
 import PreviewPopup from 'components/PreviewPopup'
-import '../../../../static/layui/src/css/layui.css'
 export default {
   data: function() {
     return {
@@ -102,36 +102,14 @@ export default {
       this.previewShow = true;
       console.log(this.previewShow)
     },
-    /*   onContentChange (val) {
-      this.editorText = val
-    } */
+
   },
   components: {
    /*  Editor, */
     PreviewPopup
   },
   mounted() {
-    layui.use('layedit', function(){
-  var layedit = layui.layedit
-  ,$ = layui.jquery;
-  
-  //构建一个默认的编辑器
-  var index = layedit.build('LAY_demo1');
-  
-  //编辑器外部操作
-  var active = {
-    content: function(){
-      alert(layedit.getContent(index)); //获取编辑器内容
-    }
-    ,text: function(){
-      alert(layedit.getText(index)); //获取编辑器纯文本内容
-    }
-    ,selection: function(){
-      alert(layedit.getSelection(index));
-    }
-  };
-});
-
+    var ue = UE.getEditor('editor');
   }
 }
 </script>
