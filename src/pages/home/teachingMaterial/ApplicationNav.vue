@@ -2,8 +2,8 @@
 	<div class="application_nav">
         <div class="tab_nav_outbox">
           <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
-          <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
-            <el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
+          <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
+            <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
             <el-tab-pane label="主任视图" name="1v3"></el-tab-pane>
             <el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>
             <el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>
@@ -26,7 +26,9 @@
 export default {
 	data() {
 		return {
-			activeTagName:'presscheck',
+      activeTagName:'presscheck',
+      activeFirst:false,
+      activeLast:false,
            contentH:'auto',
            isShowTabs:true,
       title:'全国高等职业教育临床医学院',
@@ -37,12 +39,25 @@ export default {
       this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
+    initActiveTag(val){
+     this.activeFirst=false;
+         this.activeLast=false;
+         if(val=='presscheck'){
+           this.activeFirst=true;
+         }
+         if(val=='1v1'){
+          this.activeLast=true;
+         }
+    }
   },
   watch:{
-
+    activeTagName(newval,old){
+         this.initActiveTag(newval);
+    }
   },
   created() {
       // console.log(this.$router);
+      this.initActiveTag(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
       if(this.$router.currentRoute.name=='新建遴选教材'){
         this.title='新建教材申报'
@@ -87,6 +102,16 @@ export default {
     border:0;
     box-sizing: border-box;
 
+}
+.application_nav .tab_nav .el-tabs__nav{
+  border-right:1px solid rgb(238, 241, 246);
+   border-left:1px solid rgb(238, 241, 246);
+}
+.application_nav .tab_active_first .el-tabs__nav{
+ border-left: 1px solid rgb(209, 217, 229);
+}
+.application_nav .tab_active_last .el-tabs__nav{
+ border-right: 1px solid rgb(209, 217, 229);
 }
 .application_nav .tab_nav  .el-tabs__header{
     border-bottom:0 ;
