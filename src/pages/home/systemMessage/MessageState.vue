@@ -222,7 +222,9 @@
       }
     },
     methods:{
-      // 返回上一级
+      /**
+       * 返回上一级
+       */
       back() {
         this.$router.push('messagelist')
       },
