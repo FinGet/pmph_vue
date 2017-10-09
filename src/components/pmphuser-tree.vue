@@ -16,20 +16,12 @@
 	export default {
 		data() {
 			return {
-        data:[],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-      }
-		},
-    methods:{
-      loadNode(node,resolve){
-        console.log(node)
-        if(node.level===0){
-          resolve( [{
+        data: [{
+          id: 1,
+          label: '人民卫生出版社',
+          children:[{
             id:11,
-            code:11,
+            code:Math.round(Math.random()*100000),
             rank:2,
             remark:'',
             label: '医学学术编辑中心（期刊编辑出版社）',
@@ -133,31 +125,17 @@
             rank:2,
             remark:'',
             label: '出版社科室1'
-          }]);
-          console.log(111)
-          console.log(this.$refs.tree.getCheckedNodes())
-          return;
-        }
-        setTimeout(()=>{
-          resolve([{
-            id: Math.round(Math.random()*100000),
-            code:'1111',
-            rank:2,
-            remark:'',
-            label: '人民卫生出版社12',
-          }]);
-          console.log(this.data);
-        },1000)
-      },
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+      }
+		},
+    methods:{
       checkNode(data){
-        this.hasSelected=true;
-        for(let key in this.form){
-          this.form[key] = data[key];
-        }
-        console.log(this.form)
-      },
-      submit(){
-
+        this.$emit('node-click',data);
       },
       add(){
 
