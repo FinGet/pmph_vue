@@ -19,7 +19,7 @@
             <el-input placeholder="请输入用户名"></el-input>
           </el-col>
           <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
-          <el-button type="primary">增加</el-button>
+          <el-button type="primary" @click="add">增加</el-button>
         </el-col>
         <el-col class="table-wrapper">
           <el-table
@@ -31,7 +31,6 @@
             style="width: 100%"
             @selection-change="handleSelectionChange">
             <el-table-column
-              v-if="Multichoice"
               type="selection"
               width="55">
             </el-table-column>
@@ -166,6 +165,9 @@
       // 选中数据将选中的数据赋值给multipleSelection
       handleSelectionChange(val){
         this.multipleSelection = val
+      },
+      add() {
+        this.$emit('add',this.multipleSelection)
       }
     }
   }

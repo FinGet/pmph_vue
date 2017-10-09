@@ -311,7 +311,7 @@
       </el-dialog>
 
       <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large">
-        <Departments :tableData="proptableData,Multichoice"></Departments>
+        <Departments :tableData="proptableData,Multichoice" :add="add"></Departments>
       </el-dialog>
     </div>
 </template>
