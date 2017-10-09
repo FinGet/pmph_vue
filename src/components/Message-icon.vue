@@ -36,12 +36,7 @@
 			return {
 			  messageList:[,,,,],
       }
-		},
-    methods: {
-      handleCommand(command) {
-        this.$message('click on item ' + command);
-      }
-    },
+		}
 	}
 </script>
 
