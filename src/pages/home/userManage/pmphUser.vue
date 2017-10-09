@@ -151,7 +151,9 @@
       return {
         multipleSelection: [],
         dialogVisible:false,
+        // 分页 当前页
         currentPage: 1,
+        // 左侧树结构
         data: [{
           id: 1,
           label: '人民卫生出版社',
@@ -210,6 +212,7 @@
           role:'',
           use:''
         },
+        // element 自带
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -348,11 +351,18 @@
       handleNodeClick(data) {
         console.log(data);
       },
-      // 选中数据将选中的数据赋值给multipleSelection
+      /**
+       * 选中数据将选中的数据赋值给multipleSelection
+       * @param val
+       */
       handleSelectionChange(val){
         this.multipleSelection = val
       },
-      // 点击修改
+      /**
+       * 点击修改
+       * @param index
+       * @param data
+       */
       modify(index, data) {
         //this.form = data[index]
         for (var key in data[index]){
@@ -364,7 +374,9 @@
           }
         }
       },
-      // 保存修改
+      /**
+       * 保存修改
+       */
       save() {
         console.log(this.form)
         this.dialogVisible = false
@@ -373,7 +385,10 @@
           type: 'success'
         });
       },
-      // 重置表单
+      /**
+       * 重置表单
+       * @param formName
+       */
       resetForm(formName) {
         this.$refs[formName].resetFields()
       }

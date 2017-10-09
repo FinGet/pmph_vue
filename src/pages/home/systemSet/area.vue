@@ -150,17 +150,23 @@
         provinceVisable:false,
         cityVisable:false,
         blockVisable:false,
+        // 编辑省份
         editProvinceVisable:false,
+        // 编辑市
         editCityVisable:false,
+        // 编辑县
         editBlockVisable:false,
+        // 省份表单
         provinceForm:{
           name:'',
           sort:''
         },
+        // 市级表单
         cityForm:{
           name:'',
           sort:''
         },
+        // 县级表单
         blockForm:{
           name:'',
           sort:''
@@ -169,6 +175,7 @@
         selectedCity: 0,
         selectedBlock: 0,
         cities: 0,
+        // active用于当前选中高亮，以及暂存当前选中项供后面方法中调用
         active:{
           province:'北京',
           city:'市辖区',
@@ -251,7 +258,11 @@
       this.selectedBlock = this.blocks[0]
     },
     methods:{
-      // 点击省份
+      /**
+       * 点击省份
+       * @param name
+       * @param sheng
+       */
       selectProvince(name,sheng) {
         this.active.province = name
         this.cities = provinces.filter(item => {
@@ -267,7 +278,12 @@
           this.selectCity(this.cities[0].name,sheng,this.cities[0].di)
         }
       },
-      // 点击市
+      /**
+       * 点击市
+       * @param name
+       * @param sheng
+       * @param di
+       */
       selectCity(name,sheng,di) {
         this.active.city = name
         this.blocks = provinces.filter(item => {
@@ -281,23 +297,34 @@
           this.active.block = this.blocks[0].name
         }
       },
-      // 点击县
+      /**
+       * 点击县
+       * @param name
+       */
       selectBlock(name) {
         this.active.block = name
       },
-      // 增加省份
+      /**
+       * 增加省份
+       */
       addProvince() {
         this.provinceVisable = true
       },
-      // 增加市
+      /**
+       * 增加市
+       */
       addCity() {
         this.cityVisable = true
       },
-      // 增加县
+      /**
+       * 增加县
+       */
       addBlock() {
         this.blockVisable = true
       },
-      // 保存省份
+      /**
+       * 保存省份
+       */
       saveProvince() {
         // console.log(this.provinceForm.name)
         let sheng = 0
@@ -321,7 +348,9 @@
         this.provinceForm.sort = ''
         this.provinceForm.name = ''
       },
-      // 保存市区
+      /**
+       * 保存市区
+       */
       saveCity() {
 
         var sheng = ''
@@ -366,7 +395,9 @@
         // 触发selectProvince方法，不然新增加的市不能马上加载出来
         this.selectProvince(name,sheng)
       },
-      // 保存县
+      /**
+       * 保存县
+       */
       saveBlock() {
         var sheng =''
         var parentName = ''
@@ -418,7 +449,10 @@
         this.blockForm.name = ''
         this.selectCity(parentName,sheng,di)
       },
-      // 编辑省份
+      /**
+       * 编辑省份
+       * @param item
+       */
       editProvince(item){
         this.editProvinceVisable = true
         this.provinceForm.name = item.name
@@ -426,7 +460,10 @@
 //        this.provinceForm.name = ''
 //        this.provinceForm.sort = ''
       },
-      // 编辑市
+      /**
+       * 编辑市
+       * @param item
+       */
       editCity(item){
         this.editCityVisable = true
         this.cityForm.name = item.name
@@ -434,7 +471,10 @@
 //        this.provinceForm.name = ''
 //        this.provinceForm.sort = ''
       },
-      // 编辑县
+      /**
+       * 编辑县
+       * @param item
+       */
       editBlock(item){
         this.editBlockVisable = true
         this.blockForm.name = item.name
@@ -442,7 +482,10 @@
 //        this.provinceForm.name = ''
 //        this.provinceForm.sort = ''
       },
-      // 删除省份
+      /**
+       * 删除省份
+       * @param item
+       */
       deletedProvince(item) {
         var index = ''
         var name = []
@@ -467,7 +510,10 @@
         //console.log(name,sheng)
         this.selectProvince(name[0],sheng[0])
       },
-      // 删除市
+      /**
+       * 删除市
+       * @param item
+       */
       deleteCity(item) {
         var index = ''
         var name = ''
@@ -489,7 +535,10 @@
         this.provinces.splice(index,1)
         this.selectProvince(name,item.sheng)
       },
-      // 删除县
+      /**
+       * 删除县
+       * @param item
+       */
       deleteBlock(item) {
         var sheng =''
         var parentName = ''

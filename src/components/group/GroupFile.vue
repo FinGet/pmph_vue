@@ -14,6 +14,9 @@
                       :on-icon-click="Search"
             ></el-input>
           </div>
+          <div class="dropDelete">
+            <el-button class="pull-right p-btn marginL10" type="primary" @click="isManage = false"  v-if="isManage">放弃删除</el-button>
+          </div>
           <div class="manmageFile">
             <i class="icon-manage" @click="isManage = true" v-if="!isManage"></i>
             <el-popover
@@ -27,7 +30,8 @@
                 <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
               </div>
             </el-popover>
-            <el-button class="pull-right p-btn" type="danger" @click="visible = true"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
+            <el-button class="pull-right p-btn" type="danger" @click="click"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
+
           </div>
           <div class="fileupload">
             <el-badge :value="12" class="myupload">
@@ -137,10 +141,11 @@
         dialogChooseGroup: false,
         fileCount:0,
         visible: false,
+        // isManage管理文件
         isManage: false,
         fileSelection: [],
         groupSelection: [],
-        //currentPage: 1, //当前分页
+        // tableData文件列表
         tableData: [
           {
           filename:'颜值并没有那么重要.docx',
@@ -257,6 +262,7 @@
           groupcount:'4',
           downcount: '10'
         }],
+        // groupData上传小组列表
         groupData:[
           {
             name:'人卫小组1'
@@ -306,7 +312,9 @@
       Search() {
         console.log('search')
       },
-      // 文件上传成功
+      /**
+       *  文件上传成功触发
+       */
       uploadSuccess() {
         console.log('1')
       },
@@ -319,16 +327,26 @@
         this.fileSelection = val
         this.fileCount = this.fileSelection.length
       },
+      /**
+       * 选择上传小组
+       */
       groupSelectionChange(val) {
         this.groupSelection = val
       },
-      // 上传文件事件
+
+      /**
+       *  上传文件事件
+       */
       uploadFile(){
         // console.log(this.groupSelection)
         this.dialogChooseGroup = false
         this.groupSelection = []
         this.$refs.fileTable.clearSelection()
         // console.log(this.groupSelection)
+      },
+      click() {
+        this.visible = true
+        console.log(this.visible)
       },
       /**
        * 删除选中数据
@@ -369,7 +387,7 @@
     padding-top: 6px;
     display: inline-block;
     cursor: pointer;
-    margin-left: 40px;
+    margin-left: 20px;
   }
   .p-btn {
     position: relative;
@@ -389,7 +407,7 @@
     height:25px;
     background: url("../../common/images/upload.png");
   }
-  .search{
+  .search,.dropDelete{
     display: inline-block;
   }
   .myupload{
