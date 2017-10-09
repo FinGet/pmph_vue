@@ -64,38 +64,83 @@
 
             <div class="clearfix"></div>
 
+            <!--<el-form-item label="联系人:">-->
+              <!--<table class="extend_list">-->
+                <!--<tr class="table-header">-->
+                  <!--<th>姓名</th>-->
+                  <!--<th>电话</th>-->
+                  <!--<th>邮箱</th>-->
+                  <!--<th>-->
+                    <!--<el-button type="text"  class="add_button" @click="chooseContact">选择联系人</el-button>-->
+                  <!--</th>-->
+                <!--</tr>-->
+                <!--<tr v-for="(item,index) in extendListData" :key="index">-->
+                  <!--<td>-->
+                    <!--{{item.name}}-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<span v-if="!item.phoneVisible">{{item.phone}}-->
+                        <!--<i class="el-icon-edit" @click="item.phoneVisible=true"></i>-->
+                    <!--</span>-->
+                    <!--<el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<span v-if="!item.editionVisible">{{item.email}}-->
+                        <!--<i class="el-icon-edit" @click="item.editionVisible=true"></i>-->
+                    <!--</span>-->
+                    <!--<el-input v-model="item.email" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>-->
+                  <!--</td>-->
+                  <!--<td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>-->
+                <!--</tr>-->
+                <!--<tr v-show="extendListData.length===0">-->
+                  <!--<td colspan="4">暂无数据</td>-->
+                <!--</tr>-->
+              <!--</table>-->
+            <!--</el-form-item>-->
+
             <el-form-item label="联系人:">
-              <table class="extend_list">
-                <tr class="table-header">
-                  <th>姓名</th>
-                  <th>电话</th>
-                  <th>邮箱</th>
-                  <th>
-                    <el-button type="text"  class="add_button" @click="chooseContact">选择联系人</el-button>
-                  </th>
-                </tr>
-                <tr v-for="(item,index) in extendListData" :key="index">
-                  <td>
-                    {{item.orderNum}}
-                  </td>
-                  <td>
-                    <span v-if="!item.phoneVisible">{{item.phone}}
-                        <i class="el-icon-edit" @click="item.phoneVisible=true"></i>
-                    </span>
-                    <el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>
-                  </td>
-                  <td>
-                    <span v-if="!item.editionVisible">{{item.edition}}
-                        <i class="el-icon-edit" @click="item.editionVisible=true"></i>
-                    </span>
-                    <el-input v-model="item.edition" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>
-                  </td>
-                  <td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>
-                </tr>
-                <tr v-show="extendListData.length===0">
-                  <td colspan="4">暂无数据</td>
-                </tr>
-              </table>
+              <el-col :span="24">
+                <el-button type="primary" class="pull-right" size="small" @click="chooseContact">选择联系人</el-button>
+                <br>
+                <el-table
+                  :data="contactData"
+                  border
+                  style="width: 100%">
+                  <el-table-column
+                    label="名称"
+                    prop="name"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="账号"
+                    prop="username"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="角色名称"
+                    prop="role"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="手机号"
+                    prop="phone"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    label="邮箱"
+                    prop="email"
+                  >
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template scope="scope">
+                      <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row, contactData)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-col>
             </el-form-item>
 
             <el-form-item label="项目主任设置:">
@@ -108,23 +153,36 @@
                   style="width: 100%">
                   <el-table-column
                     label="名称"
+                    prop="name"
                   >
                   </el-table-column>
                   <el-table-column
                     label="账号"
+                    prop="username"
                   >
                   </el-table-column>
                   <el-table-column
                     label="角色名称"
+                    prop="role"
                   >
                   </el-table-column>
                   <el-table-column
                     label="手机号"
+                    prop="phone"
                   >
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
+                    prop="email"
                   >
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template scope="scope">
+                      <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row, projectDirectorData)">删除</el-button>
+                    </template>
                   </el-table-column>
                 </el-table>
               </el-col>
@@ -140,23 +198,36 @@
                   style="width: 100%">
                   <el-table-column
                     label="名称"
+                    prop="name"
                   >
                   </el-table-column>
                   <el-table-column
                     label="账号"
+                    prop="username"
                   >
                   </el-table-column>
                   <el-table-column
                     label="角色名称"
+                    prop="role"
                   >
                   </el-table-column>
                   <el-table-column
                     label="手机号"
+                    prop="phone"
                   >
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
+                    prop="email"
                   >
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template scope="scope">
+                      <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row, projectEditorData)">删除</el-button>
+                    </template>
                   </el-table-column>
                 </el-table>
               </el-col>
@@ -303,15 +374,15 @@
       </el-row>
       <!-- 教材分类选择弹框 -->
 
-      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" size="tiny">
+      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" top="5%" size="tiny">
         <div style="overflow:hidden;">
           <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
           <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
         </div>
       </el-dialog>
 
-      <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large">
-        <Departments :tableData="proptableData,Multichoice" :add="add"></Departments>
+      <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
+        <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
       </el-dialog>
     </div>
 </template>
@@ -330,6 +401,8 @@
         chooseVisiable: false, // 选择弹窗
         chooseTitle: '', // 选择弹出窗的title
         Multichoice:'', // 是否可以多选，传递给Departments子组件
+        classify:'', // 分类
+        contactData:[],// 联系人
         projectDirectorData:[], // 项目主任
         projectEditorData:[], // 项目编辑
         checkedTreeData:[],
@@ -600,33 +673,7 @@
           uploadFile: [
             { required: true, message: '请上传文件', trigger: 'blur' }
           ]
-        },
-        extendListData: [
-          {
-            orderNum: '张三',
-            orderNumVisible: false,
-            phone:'请填写电话',
-            phoneVisible:false,
-            edition:'请填写邮箱',
-            editionVisible:false
-          },
-          {
-            orderNum: '李四',
-            orderNumVisible: false,
-            phone:'请填写电话',
-            phoneVisible:false,
-            edition:'请填写邮箱',
-            editionVisible:false
-          },
-          {
-            orderNum: '王二',
-            orderNumVisible: false,
-            phone:'请填写电话',
-            phoneVisible:false,
-            edition:'请填写邮箱',
-            editionVisible:false
-          },
-        ]
+        }
       };
     },
     methods: {
@@ -646,7 +693,9 @@
 //          }
 //        });
       },
-      // 返回上一级
+      /**
+       * 返回上一级
+       */
       back() {
         this.$router.push('applicationlist')
       },
@@ -662,11 +711,10 @@
        * @param index
        * @param row
        */
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
-      handleDelete1(index, row) {
-        console.log(index, row);
+      // 删除
+      handleDelete(index, row, data) {
+        // console.log(index, row);
+        data.splice(index, 1)
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -674,13 +722,13 @@
       handlePreview(file) {
         console.log(file);
       },
-      showInput(index, str) {
-        this.extendListData[index].orderNumVisible = true;
-        console.log(index,str);
-        console.log(this.$refs);
-        console.log(this.$refs.input0_1) ;
-        //this.$refs[str].$refs.input.focus();
-      },
+//      showInput(index, str) {
+//        this.extendListData[index].orderNumVisible = true;
+//        console.log(index,str);
+//        console.log(this.$refs);
+//        console.log(this.$refs.input0_1) ;
+//        //this.$refs[str].$refs.input.focus();
+//      },
       deleteExtendItem(index){
         this.extendListData.splice(index,1);
       },
@@ -694,23 +742,66 @@
       deleteExtend(index){
         this.extensionData.splice(index,1);
       },
-      // 选择联系人
+      /**
+       * 选择联系人
+       */
       chooseContact() {
         this.chooseVisiable = true
         this.chooseTitle = '选择联系人'
         this.Multichoice = true
+        this.classify = 'contact'
       },
-      // 项目主任设置
+      /**
+       * 项目主任设置
+       */
       chooseProjectDirector() {
         this.chooseVisiable = true
         this.chooseTitle = '项目主任设置'
         this.Multichoice = false
+        this.classify = 'director'
       },
-      // 项目编辑设置
+      /**
+       * 项目编辑设置
+       */
       chooseProjectEditor() {
         this.chooseVisiable = true
         this.chooseTitle = '项目编辑设置'
         this.Multichoice = true
+        this.classify = 'editor'
+      },
+      /**
+       * add增加 监听子组件的add方法
+       */
+      add(val) {
+        if (this.classify === 'editor') {
+          // console.log(val)
+          for (var i in val) {
+            //console.log(val[i])
+            this.projectEditorData[i] = val[i]
+          }
+        } else if (this.classify === 'director') {
+          for (var i in val) {
+            //console.log(val[i])
+            this.projectDirectorData[i] = val[i]
+          }
+        } else {
+          for (var i in val) {
+            //console.log(val[i])
+            this.contactData[i] = val[i]
+          }
+          console.log(this.extendListData)
+        }
+        this.$message({
+          message: `添加成功！`,
+          type: 'success'
+        });
+      },
+      /**
+       * 关闭弹出层
+       */
+      closeDialog() {
+        //console.log(1)
+        this.$refs.department.clear()
       }
     },
     components:{

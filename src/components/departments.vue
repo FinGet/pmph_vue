@@ -165,9 +165,25 @@
       // 选中数据将选中的数据赋值给multipleSelection
       handleSelectionChange(val){
         this.multipleSelection = val
+        if (!this.Multichoice) {
+          if (this.multipleSelection.length>1) {
+            this.$message({
+              message: `只能选择一个人`,
+              type: 'warning'
+            });
+            this.multipleSelection = []
+            this.$refs.multipleTable.clearSelection()
+          }
+        }
       },
       add() {
         this.$emit('add',this.multipleSelection)
+      },
+      // clear
+      clear() {
+        // console.log(2)
+        this.multipleSelection = []
+        this.$refs.multipleTable.clearSelection()
       }
     }
   }
