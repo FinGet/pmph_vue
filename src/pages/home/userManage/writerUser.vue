@@ -56,11 +56,6 @@
           prop="schoolname"
           label="所属院校">
         </el-table-column>
-        <el-table-column
-          prop="role"
-          label="用户角色"
-          width="100">
-        </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
         <el-table-column
           v-if="screenWidth_lg"
@@ -174,27 +169,19 @@
       :visible.sync="dialogVisible"
       size="tiny">
       <el-form :model="form"  label-width="100px" class="padding20">
-        <el-form-item label="用户代码：">
+        <el-form-item label="用户代码：" required>
           <el-input v-model="form.usercode" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称：">
+        <el-form-item label="用户名称：" required>
           <el-input v-model="form.username" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱：">
+        <el-form-item label="用户邮箱：" required>
           <el-input v-model="form.email" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机：">
+        <el-form-item label="用户手机：" required>
           <el-input v-model="form.phone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户角色：" required>
-          <el-select v-model="form.role" placeholder="请选择">
-            <el-option label="项目编辑" value="项目编辑"></el-option>
-            <el-option label="策划编辑" value="策划编辑"></el-option>
-            <el-option label="主任" value="主任"></el-option>
-            <el-option label="其他用户" value="其他用户"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所属院校：">
+        <el-form-item label="所属院校：" required>
           <el-select
             v-model="form.schoolname"
             filterable
@@ -211,7 +198,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：">
+        <el-form-item label="启用：" required>
           <el-radio-group v-model="form.enabled">
             <el-radio label="启用"></el-radio>
             <el-radio label="不启用"></el-radio>
