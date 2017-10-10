@@ -283,6 +283,11 @@ button a,button a:hover,button a:active{
   max-width: 800px;
 
 }
+.searchBox-wrapper.max{
+  width: 80%;
+  max-width: 800px;
+
+}
 .searchBox-wrapper.searchBtn{
   width: 100px;
   line-height: 36px;
