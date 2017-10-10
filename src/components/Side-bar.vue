@@ -15,7 +15,7 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">规划教材申报</span>
       </el-menu-item>
-      <el-menu-item index="/auth/teachexam">
+      <el-menu-item index="/auth/writers">
         <i class="fa fa-university fa-fw"></i>
         <span slot="title">学校/教师审核</span>
       </el-menu-item>

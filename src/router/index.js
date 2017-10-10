@@ -100,8 +100,8 @@ export default new Router({
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage,meta:{authorityId:4} },
         /*学校/ 教师审核 */
-        {path:'auth',name:'作者审核',component:SchoolRouter,meta:{replaceName:false,},children:[
-          {path:'teachexam',name:'学校/教师审核',component:TeacherExam}
+        {path:'auth',name:'学校/教师审核',component:SchoolRouter,meta:{replaceName:false,authorityId:3},children:[
+          {path:'writers',name:'教师审核',component:TeacherExam}
         ]}
 
       ]

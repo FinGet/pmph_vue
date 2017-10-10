@@ -212,20 +212,16 @@ export default {
                                id:12
                            },
                            {
-                               label:'菜单',
+                               label:'地区',
                                id:13
                            },
                            {
-                               label:'地区',
+                               label:'院校机构',
                                id:14
                            },
                            {
-                               label:'院校机构',
-                               id:15
-                           },
-                           {
                                label:'社内部门',
-                               id:16
+                               id:15
                            },
                        ]
                        },
