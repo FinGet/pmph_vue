@@ -76,12 +76,13 @@
        // console.log(this.$router.currentRoute);
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
-        if(str=='materialrouter'||str=='groupmanage'){
+        if(str=='materialrouter'||str=='groupmanage'||str=='auth'){
           this.isShowBorder=false;
         }
         if(this.$router.currentRoute.name=="通知列表"){
           this.isShowBorder=true;
         }
+
       }
     },
     components:{

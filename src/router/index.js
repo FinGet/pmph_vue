@@ -103,7 +103,7 @@ export default new Router({
         /*学校/ 教师审核 */
         {path:'auth',name:'学校/教师审核',component:SchoolRouter,meta:{replaceName:false,authorityId:3},children:[
           {path:'writers',name:'教师审核',component:TeacherCheck},
-          {path:'orgs',name:'学校管理员审核',component:SchoolAdminCheck},
+          {path:'orgs',name:'学校管理员审核',component:SchoolAdminCheck}
         ]}
 
       ]
