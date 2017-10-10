@@ -10,7 +10,7 @@
             <p>{{currentGroup.name?currentGroup.name:'人卫社小组'}}</p>
           </div>
           <ul class="tab clearfix">
-            <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :class="{active:currentActive===index}">
+            <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :key="tab.id" :class="{active:currentActive===index}">
               {{tab.type}}
             </li>
           </ul>

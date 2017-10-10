@@ -43,8 +43,9 @@ import Departments from 'pages/home/systemSet/departments'
 import Orgs from 'pages/home/systemSet/orgs'
 import Area from 'pages/home/systemSet/area'
 /*学校/ 教师审核 */
-import SchoolRouter from '../pages/home/school/schoolRouter'
-import TeacherExam from '../pages/home/school/teacherExam'
+import SchoolRouter from 'pages/home/school/schoolRouter'
+import TeacherCheck from 'pages/home/school/teacherCheck'
+import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
 
 Vue.use(Router)
 
@@ -106,7 +107,8 @@ export default new Router({
         { path: 'groupmanage', name: '小组管理', component: GroupManage,meta:{authorityId:4} },
         /*学校/ 教师审核 */
         {path:'auth',name:'学校/教师审核',component:SchoolRouter,meta:{replaceName:false,authorityId:3},children:[
-          {path:'writers',name:'教师审核',component:TeacherExam}
+          {path:'writers',name:'教师审核',component:TeacherCheck},
+          {path:'orgs',name:'学校管理员审核',component:SchoolAdminCheck}
         ]}
 
       ]
