@@ -3,7 +3,7 @@
 
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
+      <el-button type="primary" @click="next">
         下一步
       </el-button>
     </div>
@@ -29,11 +29,11 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content">
-          <el-radio-group v-model="radio2">
-            <el-radio :label="3">学校管理员</el-radio>
-            <el-radio :label="6">所有人</el-radio>
-            <el-radio :label="9">特定对象</el-radio>
-            <el-radio :label="10">教材报名者</el-radio>
+          <el-radio-group v-model="sendType">
+            <el-radio :label="0">学校管理员</el-radio>
+            <el-radio :label="1">所有人</el-radio>
+            <el-radio :label="2">特定对象</el-radio>
+            <el-radio :label="3">教材报名者</el-radio>
           </el-radio-group>
         </div>
       </el-col>
@@ -94,7 +94,7 @@ export default {
   data: function() {
     return {
       title: '',
-      radio2: 3,
+      sendType: 0,
       previewShow: false,
       fileList: [],
       editorText: '',
@@ -106,7 +106,29 @@ export default {
       this.previewShow = true;
       console.log(this.previewShow)
     },
+    //点击下一步执行的方法
+    next(){
+      switch(this.sendType){
+        case 0:
+          this.$router.push({name:'选择学校',query:{history:'1'}});
+          break;
+        case 1:
+          this.$router.push({name:'选择学校',query:{history:'1'}});
+          break;
+        case 2:
+          this.$router.push({name:'特定对象',query:{history:'1'}});
+          break;
+        case 3:
+          this.$router.push({name:'教材报名者',query:{history:'1'}});
+          break;
+        dafault:
+          this.$message({
+            type: 'error',
+            message: '请选择发送对象'
+          });
+      }
 
+    }
   },
   components: {
     /*  Editor, */

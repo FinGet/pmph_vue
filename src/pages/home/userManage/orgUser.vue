@@ -86,20 +86,20 @@
 
           <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
           <el-table-column
-            v-if="screenWidth_lg"
+            v-if="screenWidth_lg_computed"
             prop="position"
             label="职务"
             width="100">
           </el-table-column>
           <el-table-column
-            v-if="screenWidth_lg"
+            v-if="screenWidth_lg_computed"
             prop="zhicheng"
             label="职称"
             width="100">
           </el-table-column>
 
           <el-table-column
-            v-if="!screenWidth_lg"
+            v-if="!screenWidth_lg_computed"
             label="职务/职称"
             width="100">
             <template scope="scope">
@@ -212,6 +212,7 @@
       mixins:[ScreenSize],
         data(){
             return {
+              screenWidth_lg_computed:true,
               isNew:true,
               options: [{
                 value: '选项1',
@@ -498,6 +499,9 @@
             }
           }
         },
+      created(){
+          this.screenWidth_lg_computed = this.screenWidth_lg;
+      }
     }
 </script>
 <style>
