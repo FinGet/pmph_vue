@@ -94,6 +94,12 @@
          if(str=='materialrouter'){
            this.activeIndex='/materialrouter/materials';
          }
+         if(str=='auth'){
+           this.activeIndex='/auth/writers';
+         }
+         if(str=='message'){
+           this.activeIndex='/message/messagelist';
+         }
 
        },
        //列表显示权限初始化

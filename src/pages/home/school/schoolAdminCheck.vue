@@ -93,7 +93,7 @@
 						<template scope="scope">
 							<el-tag type="success" v-if="scope.row.check=='0'">已通过</el-tag>
 							<el-tag type="warning" v-if="scope.row.check=='1'">待审核</el-tag>
-							<el-tag type="danger" v-if="scope.row.check=='2'">未通过</el-tag>
+							<el-tag type="danger" v-if="scope.row.check=='2'">已退回</el-tag>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -134,7 +134,7 @@ export default {
 				},
 				{
 					value: '选项3',
-					label: '未通过'
+					label: '已退回'
 				},
 				{
 					value: '选项4',
