@@ -1,6 +1,6 @@
 <template>
   <div class="message-edit">
-    
+
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
       <el-button type="primary" @click="$router.push({name:'选择学校',query:{history:'1'}})">
@@ -48,10 +48,13 @@
       <el-col :span="20">
         <div class="col-content">
           <!-- <Editor :config="{}" :defaultMsg="'123'"></Editor> -->
-         <!--  <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
-            把编辑器的初始内容放在这textarea即可
-          </textarea> -->
-          <script id="editor" type="text/plain" style="height:500px;"></script>
+          <!--  <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
+              把编辑器的初始内容放在这textarea即可
+            </textarea> -->
+          <!-- <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/neditor.config.js"></script>
+          <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/neditor.all.min.js"></script>
+          <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/lang/zh-cn/zh-cn.js"></script> -->
+          <script id="editor" type="text/plain" style="height:500px;position:relative;z-index:99;"></script>
           <div id="editor_id"></div>
         </div>
       </el-col>
@@ -94,7 +97,8 @@ export default {
       radio2: 3,
       previewShow: false,
       fileList: [],
-      editorText: ''
+      editorText: '',
+      uEditor:null
     }
   },
   methods: {
@@ -105,16 +109,19 @@ export default {
 
   },
   components: {
-   /*  Editor, */
+    /*  Editor, */
     PreviewPopup
   },
   mounted() {
-    var ue = UE.getEditor('editor');
+      this.uEditor = UE.getEditor('editor');
+  },
+  destroyed(){
+    this.uEditor.destroy();
   }
 }
 </script>
 
-<style scoped>
+<style >
 .message-edit {
   max-width: 1580px;
 }
