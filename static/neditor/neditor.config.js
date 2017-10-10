@@ -91,7 +91,7 @@
         "|",
         "simpleupload",
         "insertimage",
-        "emotion",
+        /* "emotion",
         "scrawl",
         "insertvideo",
         "music",
@@ -102,15 +102,15 @@
         // "webapp",
         "pagebreak",
         "template",
-        "background",
+        "background", */
         "|",
-        "insertcode",
+       /*  "insertcode",
         "horizontal",
         "date",
         "time",
         "spechars",
         "snapscreen",
-        "wordimage",
+        "wordimage", */
         "|",
         "inserttable",
         "deletetable",
@@ -125,12 +125,12 @@
         "splittocells",
         "splittorows",
         "splittocols",
-        "charts",
+       // "charts",
         "|",
-        "print",
+        /* "print",
         "preview",
         "searchreplace",
-        "drafts",
+        "drafts", */
         "help"
       ]
     ]

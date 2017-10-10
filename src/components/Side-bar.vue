@@ -15,7 +15,7 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">规划教材申报</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="/auth/teachexam">
         <i class="fa fa-university fa-fw"></i>
         <span slot="title">学校/教师审核</span>
       </el-menu-item>
@@ -47,7 +47,7 @@
         </template>
         <el-menu-item index="/set/roles">角色</el-menu-item>
         <!-- <el-menu-item index="/set/authority">权限</el-menu-item> -->
-        <el-menu-item index="10-3">菜单</el-menu-item>
+        <!-- <el-menu-item index="10-3">菜单</el-menu-item> -->
         <el-menu-item index="/set/area">地区</el-menu-item>
         <el-menu-item index="/set/orgs">院校机构</el-menu-item>
         <el-menu-item index="/set/departments">社内部门</el-menu-item>

@@ -40,6 +40,10 @@ import Roles from '../pages/home/systemSet/roles'
 import Departments from 'pages/home/systemSet/departments'
 import Orgs from 'pages/home/systemSet/orgs'
 import Area from 'pages/home/systemSet/area'
+/*学校/ 教师审核 */
+import SchoolRouter from '../pages/home/school/schoolRouter'
+import TeacherExam from '../pages/home/school/teacherExam'
+
 Vue.use(Router)
 
 export default new Router({
@@ -95,6 +99,10 @@ export default new Router({
         {path:'area', name:'区域管理',component:Area,meta:{authorityId:14}}
       ]},
         { path: 'groupmanage', name: '小组管理', component: GroupManage,meta:{authorityId:4} },
+        /*学校/ 教师审核 */
+        {path:'auth',name:'作者审核',component:SchoolRouter,meta:{replaceName:false,},children:[
+          {path:'teachexam',name:'学校/教师审核',component:TeacherExam}
+        ]}
 
       ]
     },
