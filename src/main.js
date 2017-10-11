@@ -18,9 +18,10 @@ Vue.use(ElementUI);
 
 
 //请求根地址配置
-axios.defaults.baseURL = 'http://api.exmple.com';
+axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
+//axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
 //默认添加token
-axios.defaults.headers.common['Authorization'] ='token字符串_test';
+//axios.defaults.headers.common['Token'] ='tokenasdasd';
 // 初始化默认post header
 axios.defaults.headers.post['content-Type'] = 'appliction/x-www-form-urlencoded';
 
