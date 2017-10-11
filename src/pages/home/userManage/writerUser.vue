@@ -4,20 +4,20 @@
       <div class="searchBox-wrapper">
         <div class="searchName">账号/姓名：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="getTableData"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
         <div class="searchName">所属院校：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="getTableData"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
       <div class="searchBox-wrapper">
         <div class="searchName">用户类型：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="value" placeholder="全部">
+          <el-select v-model="params.rank" placeholder="全部" @change="getTableData">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary" icon="search">搜索</el-button>
+        <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
       </div>
       <!--操作按钮-->
       <div class="pull-right">
@@ -155,11 +155,14 @@
     </div>
     <!--分页-->
     <div class="pagination-wrapper">
-      <el-pagination
-        :page-sizes="[30,50,100, 200, 300, 400]"
-        :page-size="30"
+      <el-pagination v-if="totalPages>1"
+        :page-sizes="[1,30,50,100, 200, 300, 400]"
+        :page-size="params.pageSize"
+        :current-page.sync="params.pageNumber"
+        @current-change="getTableData"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="totalPages"
+      >
       </el-pagination>
     </div>
     <!--增加新用户弹窗-->
@@ -185,12 +188,12 @@
             v-model="form.schoolname"
             filterable
             remote
-            placeholder="请输入关键词"
+            placeholder="请输入关键词搜索"
             loading-text="正在搜索..."
-            :remote-method="remoteMethod"
+            :remote-method="searchOrgName"
             :loading="loading">
             <el-option
-              v-for="item in options4"
+              v-for="item in OrgNameList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -221,26 +224,28 @@
       return {
         screenWidth_lg_computed:true,
         isNew:true,
+        //用户类型数据
         options: [{
-          value: '选项1',
+          value: '',
           label: '全部'
         }, {
-          value: '选项2',
+          value: '0',
           label: '普通用户'
         }, {
-          value: '选项3',
+          value: '1',
           label: '教师用户'
         }, {
-          value: '选项4',
+          value: '2',
           label: '作家用户'
         }, {
-          value: '选项5',
+          value: '3',
           label: '专家用户'
         }],
-        value: '选项1',
-
+        //表格数据
         tableData: [],
+        //是否展开弹出层
         dialogVisible:false,
+        //表单提交数据
         form:{
           schoolname:'',
           usercode:'',
@@ -256,17 +261,19 @@
           organisation:'',
           remark:'',
         },
-        options4: [],
+        //搜索所属机构用户
+        OrgNameList: [],
         value9: [],
         list: [],
         loading: false,
         params:{
-          pageSize:30,
+          pageSize:1,
           pageNumber:1,
           name:'',
           rank:'',
           orgName:''
-        }
+        },
+        totalPages:0,
       }
     },
     methods:{
@@ -282,15 +289,25 @@
         }
         this.dialogVisible=true;
       },
-      remoteMethod(query) {
+      searchOrgName(query) {
+        var self = this;
         if (query !== '') {
           this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options4.splice(0);
-            this.options4.push({value: '人卫社', label: '人卫社'});
-            this.options4.push({value: '北京第四人民医院', label: '北京第四人民医院'});
-          }, 1000);
+          this.$axios.get('/org/list/org',{
+            params:{orgName:query}
+          })
+            .then(function (response) {
+              self.loading = false;
+              let res = response.data;
+              let data = res.data;
+              self.OrgNameList.splice(0);
+              self.OrgNameList.push(data);
+            })
+            .catch(function (error) {
+              self.loading = false;
+              this.options4 = [];
+              console.error(error);
+            });
         } else {
           this.options4 = [];
         }
@@ -303,6 +320,7 @@
             let res = response.data;
             let data = res.data.rows;
             self.tableData=data;
+            self.totalPages = res.data.total;
           })
           .catch(function (error) {
             console.error(error);

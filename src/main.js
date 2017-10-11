@@ -18,8 +18,8 @@ Vue.use(ElementUI);
 
 
 //请求根地址配置
-axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
-// axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
+// axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
+axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
 //默认添加token
 //axios.defaults.headers.common['Token'] ='tokenasdasd';
 // 初始化默认post header
