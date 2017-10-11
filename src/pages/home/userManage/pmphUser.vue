@@ -341,6 +341,12 @@
         ]
       }
     },
+    mounted() {
+      this.$axios.get('http://120.76.221.250:11000/pmpheep/pmph/user/list/pmphdepartment').then((response) => {
+        let res = response.data
+        console.log(res)
+      })
+    },
     methods:{
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
