@@ -481,8 +481,17 @@
         }
       }
     },
-    created(){
+    mounted(){
       this.screenWidth_lg_computed = this.screenWidth_lg;
+      // 为给定 ID 的 user 创建请求
+      console.log(123)
+      this.$axios.get('http://120.76.221.250:11000/pmpheep/writer/user/list/writeruser?pageSize=10&pageNumber=1&name=&rank=&orgName=')
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
     }
   }
 </script>
