@@ -5,7 +5,7 @@
         <div class="tree-title">
           <p>所属组织：</p>
         </div>
-        <el-tree :data="data"
+        <el-tree :data="treeData"
                  :props="defaultProps"
                  @node-click="handleNodeClick"
                  node-key="id"
@@ -154,56 +154,7 @@
         // 分页 当前页
         currentPage: 1,
         // 左侧树结构
-        data: [{
-          id: 1,
-          label: '人民卫生出版社',
-          children: [{
-            label: '医学学术编辑中心（期刊编辑出版社）',
-            children: [{
-              label: '期刊编辑部'
-            },{
-              label: '期刊编辑一部'
-            },{
-              label: '期刊编辑二部'
-            },{
-              label: '期刊编辑三部'
-            }]
-          },{
-            label: '人卫电子音像公司'
-          },{
-            label: '药学中心'
-          },{
-            label: '智慧数字中心'
-          },{
-            label: '研发中心'
-          },{
-            label: '医学教育中心(医学教育研究中心)',
-            children: [{
-              label: '职业教育部（护理教育部）'
-            },{
-              label: '高等医学教育部'
-            },{
-              label: '继续教育部'
-            }]
-          },{
-            label: '国际中心'
-          },{
-            label: '总编辑总经理办公室'
-          },{
-            label: '人卫健康传播中心',
-            children: [{
-              label: '健康传播综合部'
-            },{
-              label: '预防医学编辑部'
-            },{
-              label: '《生活与健康》编辑部'
-            }]
-          },{
-            label: '中医院中心'
-          },{
-            label: '出版社科室1'
-          }]
-        }],
+        treeData: [],
         form: {
           username:'',
           name: '',
@@ -212,10 +163,10 @@
           role:'',
           use:''
         },
-        // element 自带
+        // element 
         defaultProps: {
-          children: 'children',
-          label: 'label'
+          children: 'sonDepartment',
+          label: 'dpName'
         },
         tableData:[
           {
@@ -342,12 +293,42 @@
       }
     },
     mounted() {
-      this.$axios.get('http://120.76.221.250:11000/pmpheep/pmph/user/list/pmphdepartment').then((response) => {
-        let res = response.data
-        console.log(res)
-      })
+      this.getTree()
+      this.getUsers()
     },
     methods:{
+      /**
+       * 请求组织树
+       */
+      getTree() {
+        this.$axios.get('http://120.76.221.250:11000/pmpheep/pmph/user/list/pmphdepartment').then((response) => {
+          let res = response.data
+          // console.log(res)
+          if (res.code == '1') {
+            this.treeData.push(res.data)
+          }
+        })
+      },
+      /**
+       * 初始化用户
+       */
+      getUsers() {
+        var name = '', path = '',pageNumber = 1, pageSize = 20
+        this.$axios.get('http://120.76.221.250:11000/pmpheep/pmph/user/list/pmphuser', {
+          params: {
+            name: name,
+            path: path,
+            pageNumber: pageNumber,
+            pageSize: pageSize
+          }
+        }).then((response) => {
+          let res = response.data
+          console.log(res)
+          if (res.code == '1') {
+            //this.treeData.push(res.data)
+          }
+        })
+      },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
