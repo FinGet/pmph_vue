@@ -32,7 +32,7 @@
       </div>
       <!--操作按钮-->
       <div class="pull-right">
-        <el-button type="primary" @click="addUser">增加</el-button>
+        <el-button type="primary" @click="addBtn">增加</el-button>
       </div>
     </div>
 
@@ -147,7 +147,7 @@
           label="操作"
           width="120">
           <template scope="scope">
-            <el-button type="text" @click="eidtInfo(scope.$index)">修改</el-button>
+            <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
           </template>
         </el-table-column>
@@ -171,21 +171,21 @@
       :visible.sync="dialogVisible"
       size="tiny">
       <el-form :model="form"  label-width="100px" class="padding20">
-        <el-form-item label="用户代码：" required>
-          <el-input v-model="form.usercode" auto-complete="off"></el-input>
+        <el-form-item label="用户代码：" prop="username">
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称：" required>
-          <el-input v-model="form.username" auto-complete="off"></el-input>
+        <el-form-item label="用户名称：" prop="realname">
+          <el-input v-model="form.realname"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱：" required>
-          <el-input v-model="form.email" auto-complete="off"></el-input>
+        <el-form-item label="用户邮箱：" prop="email">
+          <el-input v-model="form.email"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机：" required>
-          <el-input v-model="form.phone" auto-complete="off"></el-input>
+        <el-form-item label="用户手机：" prop="handphone">
+          <el-input v-model="form.handphone"></el-input>
         </el-form-item>
-        <el-form-item label="所属院校：" required>
+        <el-form-item label="所属院校：" prop="orgName">
           <el-select
-            v-model="form.schoolname"
+            v-model="form.orgName"
             filterable
             remote
             placeholder="请输入关键词搜索"
@@ -200,18 +200,18 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：" required>
-          <el-radio-group v-model="form.enabled">
-            <el-radio label="启用"></el-radio>
-            <el-radio label="不启用"></el-radio>
+        <el-form-item label="启用：" prop="isDsabled">
+          <el-radio-group v-model="form.isDsabled">
+            <el-radio :label="true">启用</el-radio>
+            <el-radio :label="false">不启用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注：">
-          <el-input v-model="form.remark" auto-complete="off"></el-input>
+        <el-form-item label="备注：" prop="note">
+          <el-input v-model="form.note"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -247,19 +247,25 @@
         dialogVisible:false,
         //表单提交数据
         form:{
-          schoolname:'',
-          usercode:'',
+          realname:'',
           username:'',
-          phone:'',
+          orgName:'',
+          handphone:'',
           email:'',
           role:null,
           position:'',
-          zhicheng:'',
+          title:'',
           address: '',
-          postcode:'',
-          enabled:'启用',
-          organisation:'',
-          remark:'',
+          rank:'',
+          rankName:'',
+          isDsabled:true,
+          note:'',
+        },
+        rules:{
+          username:[
+            { required: true, message: '请输入用户代码', trigger: 'blur' },
+            { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+          ]
         },
         //搜索所属机构用户
         OrgNameList: [],
@@ -274,14 +280,15 @@
           orgName:''
         },
         totalPages:0,
+
       }
     },
     methods:{
-      addUser(){
+      addBtn(){
         this.isNew=true;
         this.dialogVisible=true;
       },
-      eidtInfo(index){
+      eidtInfoBtn(index){
         this.isNew=false;
 
         for(let key in this.form){
@@ -289,11 +296,15 @@
         }
         this.dialogVisible=true;
       },
+      /**
+       * 搜索所属院校时触发的方法
+       * @param query
+       */
       searchOrgName(query) {
         var self = this;
         if (query !== '') {
           this.loading = true;
-          this.$axios.get('/org/list/org',{
+          this.$axios.get('/orgs/list/orgByOrgName',{
             params:{orgName:query}
           })
             .then(function (response) {
@@ -305,17 +316,21 @@
             })
             .catch(function (error) {
               self.loading = false;
-              this.options4 = [];
+              self.OrgNameList = [];
               console.error(error);
             });
         } else {
-          this.options4 = [];
+          this.OrgNameList = [];
         }
       },
+      /**
+       * 获取表格数据，
+       * 提交的参数写在params里
+       */
       getTableData(){
         var self= this;
         // 为给定 ID 的 user 创建请求
-        this.$axios.get('writer/user/list/writeruser',{params:this.params})
+        this.$axios.get('/users/writer/list/writeruser',{params:this.params})
           .then(function (response) {
             let res = response.data;
             let data = res.data.rows;
@@ -325,7 +340,58 @@
           .catch(function (error) {
             console.error(error);
           });
-      }
+      },
+      /**
+       * 修改新增弹出点击确认按钮时触发提交表单操作
+       */
+      submit(){
+        if(this.isNew){
+          this.addUser();
+          return;
+        }
+
+        this.updateUser();
+
+      },
+      addUser(){
+        this.$axios({
+          method: 'POST',
+          url: '/users/writer/add/writeruserofback',
+          data: {
+            username: '123456',
+            realname: '黄维',
+            email: '123456@qq.com',
+            handphone: '12345678901',
+            orgId: '123',
+            isDisabled: 0,
+            note:'这是备注'
+          }
+        })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+      updateUser(){
+        $.ajax({
+          url:'/users/writer/add/writeruserofback',
+          type : "POST",
+          data:{
+            username: '123456',
+            realname: '黄维',
+            email: '123456@qq.com',
+            handphone: '12345678901',
+            orgId: '123',
+            isDisabled: 0,
+            note:'这是备注'
+          },
+          success:function (data) {
+            console.log(data)
+          }
+        })
+      },
     },
     created(){
       this.getTableData();
