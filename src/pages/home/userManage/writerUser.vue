@@ -4,13 +4,13 @@
       <div class="searchBox-wrapper">
         <div class="searchName">账号/姓名：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
         <div class="searchName">所属院校：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
@@ -53,7 +53,7 @@
           width="100">
         </el-table-column>
         <el-table-column
-          prop="schoolname"
+          prop="orgName"
           label="所属院校">
         </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
@@ -62,8 +62,8 @@
           label="手机号"
           width="160">
           <template scope="scope">
-            <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
-            {{scope.row.phone}}
+            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+            {{scope.row.handphone}}
           </template>
         </el-table-column>
         <el-table-column
@@ -71,7 +71,7 @@
           label="邮箱"
           width="180">
           <template scope="scope">
-            <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
             {{scope.row.email}}
           </template>
         </el-table-column>
@@ -82,11 +82,11 @@
           width="180">
           <template scope="scope">
             <p>
-              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
-              {{scope.row.phone}}
+              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+              {{scope.row.handphone}}
             </p>
             <p>
-              <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </p>
           </template>
@@ -101,7 +101,7 @@
         </el-table-column>
         <el-table-column
           v-if="screenWidth_lg_computed"
-          prop="zhicheng"
+          prop="title"
           label="职称"
           width="100">
         </el-table-column>
@@ -117,10 +117,10 @@
                 {{scope.row.position}}
               </p>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.zhicheng" placement="top">
+            <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.title" placement="top">
               <p>
                 <i class="fa fa-graduation-cap"></i>
-                {{scope.row.zhicheng}}
+                {{scope.row.title}}
               </p>
             </el-tooltip>
           </template>
@@ -132,16 +132,15 @@
           show-overflow-tooltip>
         </el-table-column>
         <el-table-column
-          prop="usertype"
+          prop="rankName"
           label="用户类型"
-          :formatter="formatter"
           width="120">
         </el-table-column>
         <el-table-column
           label="启用"
           width="80">
           <template scope="scope">
-            {{scope.row.enabled?'启用':'未启用'}}
+            {{!!scope.row.isDsabled?'启用':'未启用'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -215,7 +214,7 @@
   </div>
 </template>
 <script>
-  import ScreenSize from 'common/mixins/ScreenSize.js'
+  import ScreenSize from 'common/mixins/ScreenSize.js';
   export default{
     mixins:[ScreenSize],
     data(){
@@ -240,23 +239,7 @@
         }],
         value: '选项1',
 
-        tableData: [{
-          id:1,
-          username:'123',
-          nickname:'',
-          realname:'',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-
-          rankName:'项目编辑',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        }],
+        tableData: [],
         dialogVisible:false,
         form:{
           schoolname:'',
@@ -277,6 +260,13 @@
         value9: [],
         list: [],
         loading: false,
+        params:{
+          pageSize:30,
+          pageNumber:1,
+          name:'',
+          rank:'',
+          orgName:''
+        }
       }
     },
     methods:{
@@ -292,17 +282,6 @@
         }
         this.dialogVisible=true;
       },
-      formatter(row, column) {
-        var type = row.usertype;
-        var typeText = ['普通用户', '教师用户', '作家用户', '专家用户'];
-        return typeText[type];
-      },
-      filterTag(value, row) {
-        if(value==0){
-          return true;
-        }
-        return row.usertype === value;
-      },
       remoteMethod(query) {
         if (query !== '') {
           this.loading = true;
@@ -315,19 +294,27 @@
         } else {
           this.options4 = [];
         }
+      },
+      getTableData(){
+        var self= this;
+        // 为给定 ID 的 user 创建请求
+        this.$axios.get('writer/user/list/writeruser',{params:this.params})
+          .then(function (response) {
+            let res = response.data;
+            let data = res.data.rows;
+            self.tableData=data;
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
       }
+    },
+    created(){
+      this.getTableData();
     },
     mounted(){
       this.screenWidth_lg_computed = this.screenWidth_lg;
-      // 为给定 ID 的 user 创建请求
-      this.$axios.get('writer/user/list/writeruser?pageSize=10&pageNumber=1&name=&rank=&orgName=')
-        .then(function (response) {
-          let res = response.data;
-          console.log(res);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+
     }
   }
 </script>
