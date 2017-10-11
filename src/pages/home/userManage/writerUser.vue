@@ -43,12 +43,12 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="username"
+          prop="realname"
           label="姓名"
           width="110">
         </el-table-column>
         <el-table-column
-          prop="usercode"
+          prop="username"
           label="账号"
           width="100">
         </el-table-column>
@@ -241,183 +241,19 @@
         value: '选项1',
 
         tableData: [{
+          id:1,
+          username:'123',
+          nickname:'',
+          realname:'',
+          phone:'18600000011',
+          email:'eassss@sina.com',
           schoolname:'四川大学',
           usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
+
+          rankName:'项目编辑',
           position:'教研室副主任',
           zhicheng:'副教授',
           address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'四川大学',
-          usercode:'gongxihp',
-          username:'龚茜',
-          phone:'18600000011',
-          role:'项目编辑',
-          email:'eassss@sina.com',
-          position:'教研室副主任',
-          zhicheng:'副教授',
-          address: '江西省赣州市赣南医学院黄金校区人文社科学院心理学系',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'福建卫生职业技术学院',
-          usercode:'gonghairong',
-          username:'龚海蓉',
-          phone:'13950299048',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
-          usertype:1,
-          enabled:'启用',
-        },{
-          schoolname:'安徽医学高等专科学校',
-          usercode:'xxxx001',
-          username:'人卫社01',
-          phone:'18600000011',
-          email:'eassss@sina.com',
-          role:'项目编辑',
-          position:'副科长',
-          zhicheng:'教员',
-          address: '上海市普陀区金沙江路 1518 弄',
           usertype:1,
           enabled:'启用',
         }],
@@ -484,10 +320,10 @@
     mounted(){
       this.screenWidth_lg_computed = this.screenWidth_lg;
       // 为给定 ID 的 user 创建请求
-      console.log(123)
-      this.$axios.get('http://120.76.221.250:11000/pmpheep/writer/user/list/writeruser?pageSize=10&pageNumber=1&name=&rank=&orgName=')
+      this.$axios.get('writer/user/list/writeruser?pageSize=10&pageNumber=1&name=&rank=&orgName=')
         .then(function (response) {
-          console.log(response);
+          let res = response.data;
+          console.log(res);
         })
         .catch(function (error) {
           console.error(error);

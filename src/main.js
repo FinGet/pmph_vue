@@ -18,8 +18,8 @@ Vue.use(ElementUI);
 
 
 //请求根地址配置
-axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
-//axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
+axios.defaults.baseURL = 'http://medu.pmph.com/pmpheep/';
+// axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
 //默认添加token
 //axios.defaults.headers.common['Token'] ='tokenasdasd';
 // 初始化默认post header
@@ -49,7 +49,7 @@ Vue.prototype.$mySessionStorage = mySessionStorage;
 
  //添加一个请求拦截器
 axios.interceptors.request.use(function(config){
-  //请求发送之前的钩子  
+  //请求发送之前的钩子
   console.log(config);
   return config;
 },function(error){
