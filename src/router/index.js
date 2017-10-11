@@ -71,7 +71,7 @@ export default new Router({
                 { path: '1v2', name: '项目编辑视图', component: BooksSelect_1v2, meta: {applicationName:'1v2' } },
                 { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: {applicationName:'1v3' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: {applicationName:'presscheck',replaceName:false} },
-                { path: 'newchoosebooks', name:'新建遴选教材', component:NewChooseBooks,meta:{isShowTags:true}},
+                { path: 'newchoosebooks', name:'新建通知', component:NewChooseBooks,meta:{isShowTags:true}},
                 {path:'book-list',name:'设置书目录',component:BookList, meta: { isShowTags:true}},
                 { path: 'expertinfo', name: '专家信息', component: ExpertInfo },
                 { path: 'chief', name:'遴选主编/副主编', component:Chief},
