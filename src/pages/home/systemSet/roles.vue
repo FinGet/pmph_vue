@@ -9,19 +9,19 @@
             </p>
 
             <el-table :data="rolesListData" class="table-wrapper" border>
-                <el-table-column prop="roleNum" label="角色代码" >
+                <el-table-column prop="id" label="角色代码" >
                 </el-table-column>
                 <el-table-column prop="roleName" label="角色名称">
                 </el-table-column>
-                <el-table-column prop="sortNum" label="排序码" >
+                <el-table-column prop="sort" label="排序码" >
                 </el-table-column>
-                <el-table-column prop="isOnUsing" label="是否启用" >
+                <el-table-column prop="isDisabled" label="是否启用" >
                     <template scope="scope">
-                        <p v-if="scope.row.isOnUsing">启用</p>
-                        <p v-if="!scope.row.isOnUsing">禁用</p>
+                        <p v-if="!scope.row.isOnUsing">启用</p>
+                        <p v-if="scope.row.isOnUsing">禁用</p>
                     </template>
                 </el-table-column>
-                <el-table-column prop="remark" label="备注" >
+                <el-table-column prop="note" label="备注" >
                 </el-table-column>
                 <el-table-column label="操作" width="140">
                     <template scope="scope">
@@ -88,37 +88,15 @@
 export default {
     data() {
         return {
+            listUrl:'/role/pmph/list',
             rolesListData: [
-                {
+                /* {
                     roleNum: 1000,
                     roleName: '角色名称',
                     sortNum: 1,
                     isOnUsing: true,
                 },
-                {
-                    roleNum: 1001,
-                    roleName: '其他用户',
-                    sortNum: 2,
-                    isOnUsing: true,
-                },
-                {
-                    roleNum: 1008,
-                    roleName: '主任',
-                    sortNum: 9,
-                    isOnUsing: true,
-                },
-                {
-                    roleNum: 1009,
-                    roleName: '项目编辑',
-                    sortNum: 10,
-                    isOnUsing: false,
-                },
-                {
-                    roleNum: 1010,
-                    roleName: '数字编辑',
-                    sortNum: 12,
-                    isOnUsing: true,
-                },
+               */
             ],
             rolesDialogVisible: false,
             rolesForm: {
@@ -246,7 +224,28 @@ export default {
         console.log(arr);
         //点击确定直接提交arr权限id数组
       },
+      getListData(){
+          var _this=this;
+          this.$axios({
+              method:'GET',
+              url:this.listUrl,
+          }).then(function(res){
+              console.log(res);
+              _this.rolesListData=res.data.data;
+          }).catch(function(err){
+              console.log('错误');
+             console.log(err);
+          })
+         /*  this.$axios.get('/role/pmph/list').then(function(response){
+                     console.log(response);
+          }).catch(function(err){
+
+          }) */
+      }
         
+    },
+    created(){
+        this.getListData();
     }
 }
 </script>
