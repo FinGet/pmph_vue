@@ -25,14 +25,12 @@
         <p>密码任意</p>
       </div>
     </div>
-    <div id="canvas"></div>
   </div>
 </template>
 
 <script>
 //  初始化一些数据
 import { mapActions } from 'vuex'
-import { CanvasBackground } from 'common/js/canvas_bg.js'
 export default {
   data() {
     return {
@@ -80,12 +78,6 @@ export default {
     }
   },
   mounted() {
-    var bg = new CanvasBackground({
-      canvasContainerID: "canvas",
-      circleColor: "rgba(49,210,142,0.8)",
-      lineColor: "rgba(49,210,142,1)",
-      canvasOpacity: 0.2
-    });
   }
 }
 </script>
