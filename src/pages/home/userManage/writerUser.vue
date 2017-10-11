@@ -4,13 +4,13 @@
       <div class="searchBox-wrapper">
         <div class="searchName">账号/姓名：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
         <div class="searchName">所属院校：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
@@ -214,7 +214,7 @@
   </div>
 </template>
 <script>
-  import ScreenSize from 'common/mixins/ScreenSize.js'
+  import ScreenSize from 'common/mixins/ScreenSize.js';
   export default{
     mixins:[ScreenSize],
     data(){
@@ -260,6 +260,13 @@
         value9: [],
         list: [],
         loading: false,
+        params:{
+          pageSize:30,
+          pageNumber:1,
+          name:'',
+          rank:'',
+          orgName:''
+        }
       }
     },
     methods:{
@@ -291,7 +298,7 @@
       getTableData(){
         var self= this;
         // 为给定 ID 的 user 创建请求
-        this.$axios.get('writer/user/list/writeruser?pageSize=10&pageNumber=1&name=&rank=&orgName=')
+        this.$axios.get('writer/user/list/writeruser',{params:this.params})
           .then(function (response) {
             let res = response.data;
             let data = res.data.rows;
