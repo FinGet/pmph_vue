@@ -6,6 +6,7 @@
           <p>所属组织：</p>
         </div>
         <el-tree :data="treeData"
+                 expand-on-click-node="false"
                  :props="defaultProps"
                  @node-click="handleNodeClick"
                  node-key="id"
@@ -75,7 +76,7 @@
             </el-table-column>
           </el-table>
         </el-col>
-        <el-col v-if="dataTotal.length>20">
+        <el-col v-if="dataTotal>20">
           <div class="pagination-wrapper">
             <el-pagination
               class="pull-right"
@@ -83,7 +84,7 @@
               @current-change="handleCurrentChange"
               :current-page="currentPage"
               :page-sizes="[10, 20, 30, 40]"
-              :page-size="100"
+              :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="dataTotal">
             </el-pagination>
@@ -177,7 +178,7 @@
           sort: '',
           username: ''
         },
-        // element 
+        // element
         defaultProps: {
           children: 'sonDepartment',
           label: 'dpName'
@@ -186,9 +187,9 @@
         dataTotal:0,
         // 用户列表
         usersData:[],
-        name: '', 
+        name: '',
         path: '',
-        pageNumber: 1, 
+        pageNumber: 1,
         pageSize: 20,
         rolenames: [
           {
@@ -223,7 +224,7 @@
        * 请求组织树
        */
       getTree() {
-        this.$axios.get('pmph/user/list/pmphdepartment').then((response) => {
+        this.$axios.get('users/pmph/list/pmphdepartment').then((response) => {
           let res = response.data
           // console.log(res)
           if (res.code == '1') {
@@ -238,7 +239,7 @@
        */
       getUsers() {
         // var name = '', path = '',pageNumber = 1, pageSize = 20
-        this.$axios.get('pmph/user/list/pmphuser', {
+        this.$axios.get('users/pmph/list/pmphuser', {
           params: {
             name: this.name,
             path: this.path,
@@ -270,14 +271,29 @@
       search() {
         this.getUsers()
       },
+      /**
+       * 选择每页有多少条数据
+       */
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.getUsers()
       },
+      /**
+       * 选择当前第几页
+       */
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+        this.pageNumber = val
+        this.getUsers()
       },
+      /**
+       * 选择部门
+       */
       handleNodeClick(data) {
-        console.log(data);
+        console.log(data.path);
+        this.path = data.path
+        this.getUsers()
       },
       /**
        * 选中数据将选中的数据赋值给multipleSelection
@@ -296,6 +312,9 @@
         for (var key in data[index]){
           this.form[key] = data[index][key]
         }
+        if (this.form.roleName == null) {
+          this.form.roleName = []
+        }
         if (this.form.isDisabled == 1){
           this.form.isDisabled = "启用"
         } else {
@@ -307,14 +326,14 @@
        * 保存修改
        */
       save() {
-        // console.log(this.form)
+        console.log(this.form)
         var isDisabled = ''
         if (this.form.isDisabled == "启用"){
-          this.form.isDisabled = 1
+          isDisabled = 1
         } else {
-          this.form.isDisabled = 0
+          isDisabled = 0
         }
-        this.$axios.put("/writer/user/update/pmphuserofback", {
+        this.$axios.put("/users/writer/update/pmphuserofback", {
           data: {
             username: this.form.username,
             id: this.form.id,
