@@ -4,27 +4,27 @@
         <div class="searchBox-wrapper">
           <div class="searchName">学校名称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper">
           <div class="searchName">机构代码：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.username" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper">
           <div class="searchName">管理员姓名：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.realname" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="refreshTableData">搜索</el-button>
         </div>
         <!--操作按钮-->
         <div class="pull-right">
-          <el-button type="primary" @click="addUser">增加</el-button>
+          <el-button type="primary" @click="addBtn">增加</el-button>
         </div>
       </div>
       <!--表格-->
@@ -34,16 +34,16 @@
           :data="tableData"
           style="width: 100%">
           <el-table-column
-            prop="schoolname"
+            prop="orgName"
             label="学校名称">
           </el-table-column>
           <el-table-column
-            prop="usercode"
+            prop="username"
             label="机构代码"
             width="100">
           </el-table-column>
           <el-table-column
-            prop="username"
+            prop="realname"
             label="管理员姓名"
             width="110">
           </el-table-column>
@@ -54,8 +54,8 @@
             label="手机号"
             width="160">
             <template scope="scope">
-              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
-              {{scope.row.phone}}
+              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+              {{scope.row.handphone}}
             </template>
           </el-table-column>
           <el-table-column
@@ -63,7 +63,7 @@
             label="邮箱"
             width="180">
             <template scope="scope">
-              <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </template>
           </el-table-column>
@@ -74,11 +74,11 @@
             width="180">
             <template scope="scope">
               <p>
-                <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
-                {{scope.row.phone}}
+                <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+                {{scope.row.handphone}}
               </p>
               <p>
-                <i class="fa fa-envelope fa-fw" v-if="scope.row.phone"></i>
+                <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
                 {{scope.row.email}}
               </p>
             </template>
@@ -93,7 +93,7 @@
           </el-table-column>
           <el-table-column
             v-if="screenWidth_lg_computed"
-            prop="zhicheng"
+            prop="title"
             label="职称"
             width="100">
           </el-table-column>
@@ -109,10 +109,10 @@
                   {{scope.row.position}}
                 </p>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.zhicheng" placement="top">
+              <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.title" placement="top">
                 <p>
                   <i class="fa fa-graduation-cap"></i>
-                  {{scope.row.zhicheng}}
+                  {{scope.row.title}}
                 </p>
               </el-tooltip>
             </template>
@@ -131,14 +131,14 @@
             label="启用"
             width="80">
             <template scope="scope">
-              {{scope.row.enabled?'启用':'未启用'}}
+              {{scope.row.isDisabled?'未启用':'启用'}}
             </template>
           </el-table-column>
           <el-table-column
             label="操作"
             width="120">
             <template scope="scope">
-              <el-button type="text" @click="eidtInfo(scope.$index)">修改</el-button>
+              <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
               <el-button type="text">登录</el-button>
             </template>
           </el-table-column>
@@ -146,62 +146,63 @@
       </div>
       <!--分页-->
       <div class="pagination-wrapper">
-        <el-pagination
+        <el-pagination v-if="totalPages>params.pageSize"
           :page-sizes="[30,50,100, 200, 300, 400]"
-          :page-size="30"
+          :page-size="params.pageSize"
+           :current-page.sync="params.pageNumber"
+           @current-change="refreshTableData"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="totalPages">
         </el-pagination>
       </div>
       <!--增加新用户弹窗-->
       <el-dialog
         :title="isNew?'新增机构用户':'修改用户信息'"
         :visible.sync="dialogVisible"
-        :before-close="dialogClose"
+        @close="closeDialog"
         size="tiny">
-        <el-form :model="form"  label-width="100px" class="padding20">
-          <el-form-item label="用户代码：" required>
-            <el-input v-model="form.usercode" auto-complete="off"></el-input>
+        <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
+          <el-form-item label="机构代码：" prop="username">
+            <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="用户名称：" required>
-            <el-input v-model="form.username" auto-complete="off"></el-input>
+          <el-form-item label="管理员姓名：" prop="realname">
+            <el-input v-model="form.realname"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱：" required>
-            <el-input v-model="form.email" auto-complete="off"></el-input>
+          <el-form-item label="用户手机："  prop="handphone">
+            <el-input v-model="form.handphone"></el-input>
           </el-form-item>
-          <el-form-item label="用户手机：" required>
-            <el-input v-model="form.phone" auto-complete="off"></el-input>
+          <el-form-item label="用户邮箱：" prop="email">
+            <el-input v-model="form.email"></el-input>
           </el-form-item>
-          <el-form-item label="所属院校：" required>
+          <el-form-item label="所属院校："  prop="orgId">
             <el-select
-              v-model="form.organisation"
+              v-model="form.orgId"
               filterable
               remote
               placeholder="请输入关键词"
               loading-text="正在搜索..."
-              :remote-method="remoteMethod"
+              :remote-method="searchOrgName"
               :loading="loading">
               <el-option
-                v-for="item in options4"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in OrgNameList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="启用：" required>
-            <el-radio-group v-model="form.enabled">
-              <el-radio label="启用"></el-radio>
-              <el-radio label="不启用"></el-radio>
+          <el-form-item label="启用：" prop="isDsabled">
+            <el-radio-group v-model="form.isDsabled">
+              <el-radio :label="false">启用</el-radio>
+              <el-radio :label="true">不启用</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="备注：">
-            <el-input v-model="form.remark" auto-complete="off"></el-input>
+            <el-input v-model="form.note"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
   </div>
@@ -215,292 +216,232 @@
               screenWidth_lg_computed:true,
               isNew:true,
               options: [{
-                value: '选项1',
+                value: '',
                 label: '全部'
               }, {
-                value: '选项2',
+                value: '0',
                 label: '普通用户'
               }, {
-                value: '选项3',
+                value: '1',
                 label: '教师用户'
               }, {
-                value: '选项4',
+                value: '2',
                 label: '作家用户'
               }, {
-                value: '选项5',
+                value: '3',
                 label: '专家用户'
               }],
-              value: '选项1',
 
-              tableData: [{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              },{
-                schoolname:'安徽医学高等专科学校',
-                usercode:'xxxx001',
-                username:'人卫社01',
-                phone:'18600000011',
-                email:'eassss@sina.com',
-                position:'副科长',
-                role:'项目编辑',
-                zhicheng:'教员',
-                address: '上海市普陀区金沙江路 1518 弄',
-                postcode:'000000',
-                enabled:'启用',
-                organisation:'赣南医科学院',
-                remark:'',
-              }],
+              tableData: [],
               dialogVisible:false,
               form:{
-                schoolname:'',
-                usercode:'',
+                id:'',
+                realname:'',
                 username:'',
-                phone:'',
+                orgId:'',
+                handphone:'',
                 email:'',
-                role:null,
-                position:'',
-                zhicheng:'',
-                address: '',
-                postcode:'',
-                enabled:'启用',
-                organisation:'',
-                remark:'',
+                isDsabled:true,
+                note:'',
               },
-              options4: [],
-              value9: [],
-              list: [],
+              rules:{
+                username:[
+                  { required: true, message: '请输入用户代码', trigger: 'blur' },
+                  { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+                ],
+                realname:[
+                  { required: true, message: '请输入用户名称', trigger: 'blur' },
+                ],
+                email:[
+                  { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+                ],
+                handphone:[
+                  { required: true, message: '请输入用户手机号码', trigger: 'blur' },
+                ],
+                orgId:[
+                  { type:'number', required: true, message: '请输入所属院校', trigger: 'blur' },
+                ],
+                isDsabled:[
+                  { type:'boolean',required: true, message: '请选择是否启用', trigger: 'change' }
+                ]
+              },
+              //搜索所属机构用户
+              OrgNameList: [],
               loading: false,
+              params:{
+                pageSize:30,
+                pageNumber:1,
+                username:'',
+                realname:'',
+                orgName:''
+              },
+              totalPages:0,
             }
         },
         methods:{
-          addUser(){
+          //点击新增按钮
+          addBtn(){
             this.isNew=true;
             this.dialogVisible=true;
           },
-          eidtInfo(index){
+          //点击修改按钮执行方法
+          eidtInfoBtn(index){
             this.isNew=false;
+            this.OrgNameList=[{id:this.tableData[index].orgId,name:this.tableData[index].orgName}];
             for(let key in this.form){
               this.form[key] = this.tableData[index][key];
             }
+            this.form.isDsabled=!!this.form.isDsabled;
             this.dialogVisible=true;
           },
-          dialogClose(done){
-            console.log(123456);
-            var initForm = {
-              schoolname:'',
-              usercode:'',
-              username:'',
-              phone:'',
-              email:'',
-              position:'',
-              role:null,
-              zhicheng:'',
-              address: '',
-              postcode:'',
-              enabled:true,
-              organisation:'',
-              remark:'',
+          /**
+           * 提交表单中搜索所属院校
+           * @param query
+           */
+          searchOrgName(query) {
+            var self = this;
+            if(query==''){
+              self.OrgNameList=[];
+              return;
             }
-            for(let key in initForm){
-              this.form[key] = initForm[key];
-            }
-            done();
+
+            this.loading = true;
+            this.$axios.get('/orgs/list/orgByOrgName',{
+              params:{orgName:query||''}
+            })
+              .then(function (response) {
+                self.loading = false;
+                let res = response.data;
+                let data = res.data;
+                console.log(data);
+                if(data.length>0){
+                  self.OrgNameList=[{id:data[0].id,name:data[0].orgName}];
+                }else{
+                  self.OrgNameList=[]
+                }
+              })
+              .catch(function (error) {
+                self.loading = false;
+                console.error(error);
+              });
           },
-          remoteMethod(query) {
-            if (query !== '') {
-              this.loading = true;
-              setTimeout(() => {
-                this.loading = false;
-                this.options4.splice(0);
-                this.options4.push({value: '人卫社', label: '人卫社'});
-                this.options4.push({value: '北京第四人民医院', label: '北京第四人民医院'});
-              }, 1000);
-            } else {
-              this.options4 = [];
-            }
+          /**
+           * 获取表格数据，
+           * 提交的参数写在params里
+           */
+          refreshTableData(){
+            var self= this;
+            // 为给定 ID 的 user 创建请求
+            this.$axios.get('/users/org/list/orguser',{params:this.params})
+              .then(function (response) {
+                let res = response.data;
+                let data = res.data.rows;
+                self.tableData=data;
+                self.totalPages = res.data.total;
+              })
+              .catch(function (error) {
+                console.error(error);
+              });
+          },
+          /**
+           * 修改新增弹出点击确认按钮时触发提交表单操作
+           */
+          submit(){
+            this.$refs.ruleForm.validate((valid) => {
+              if (valid) {
+                if(this.isNew){
+                  this.addUser();
+                  return;
+                }
+
+                this.updateUser();
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+            });
+
+
+          },
+          /**
+           * 新增用户
+           */
+          addUser(){
+            var self = this;
+            this.$axios({
+              method: 'POST',
+              url: '/users/org/add/orguserofback',
+              data:this.$initPostData(this.form),
+            })
+              .then(function (response) {
+                let res = response.data;
+                let data = res.data.rows;
+                //修改成功
+                if(res.code===1){
+                  self.refreshTableData();
+                  self.dialogVisible=false;
+                  self.$message({
+                    type:'success',
+                    message:'添加成功'
+                  });
+                }
+              })
+              .catch(function (error) {
+                self.$message({
+                  type:'error',
+                  message:'添加失败，请重试'
+                });
+              });
+          },
+          /**
+           * 更新用户
+           */
+          updateUser(){
+            var self = this;
+            this.$axios({
+              method: 'PUT',
+              url: '/users/org/update/orguserofback',
+              data:this.$initPostData(this.form),
+            })
+              .then(function (response) {
+                let res = response.data;
+                //修改成功
+                if(res.code===1){
+                  self.refreshTableData();
+                  self.dialogVisible=false;
+                  self.$message({
+                    type:'success',
+                    message:'修改成功'
+                  });
+                }
+              })
+              .catch(function (error) {
+                self.$message({
+                  type:'error',
+                  message:'修改失败，请重试'
+                });
+              });
+          },
+          /**
+           * 重置form表单数据
+           */
+          resetForm(){
+            this.$refs['ruleForm'].resetFields();
+            console.log(this.form);
+          },
+          /**
+           * 监听弹出层关闭事件
+           */
+          closeDialog(){
+            this.resetForm();
           }
         },
       created(){
-          this.screenWidth_lg_computed = this.screenWidth_lg;
+        this.refreshTableData();
+      },
+      mounted(){
+        this.screenWidth_lg_computed = this.screenWidth_lg;
+
       }
     }
 </script>
