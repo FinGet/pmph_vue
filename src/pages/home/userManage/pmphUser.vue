@@ -5,7 +5,7 @@
         <div class="tree-title">
           <p>所属组织：</p>
         </div>
-        <el-tree :data="data"
+        <el-tree :data="treeData"
                  :props="defaultProps"
                  @node-click="handleNodeClick"
                  node-key="id"
@@ -16,15 +16,15 @@
         <el-col>
           <span class="pull-left s-title">账号/姓名:</span>
           <el-col :span="4">
-            <el-input placeholder="请输入用户名"></el-input>
+            <el-input placeholder="请输入用户名" v-model="name" @keyup.enter.native="search"></el-input>
           </el-col>
-          <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
+          <el-button type="primary" icon="search" class="marginL10" @click="search">搜索</el-button>
         </el-col>
         <el-col class="table-wrapper">
           <el-table
             class="marginT10"
             ref="multipleTable"
-            :data="tableData"
+            :data="usersData"
             border
             tooltip-effect="dark"
             style="width: 100%"
@@ -32,7 +32,7 @@
             <el-table-column
               label="姓名"
               width="80"
-              prop="name">
+              prop="realname">
             </el-table-column>
             <el-table-column
               prop="username"
@@ -45,12 +45,12 @@
             >
             </el-table-column>
             <el-table-column
-              prop="role"
+              prop="roleName"
               label="角色名称"
             >
             </el-table-column>
             <el-table-column
-              prop="phone"
+              prop="handphone"
               label="手机号"
             >
             </el-table-column>
@@ -61,7 +61,7 @@
               width="80"
             >
               <template scope="scope">
-                {{scope.row.use? '启用' : '停用'}}
+                {{scope.row.isDisabled? '启用' : '停用'}}
               </template>
             </el-table-column>
             <el-table-column
@@ -69,23 +69,23 @@
               align="center"
             >
               <template scope="scope">
-                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, tableData)">修改</el-button>
+                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, usersData)">修改</el-button>
                 <el-button type="text">登录</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-col>
-        <el-col>
+        <el-col v-if="dataTotal.length>20">
           <div class="pagination-wrapper">
             <el-pagination
               class="pull-right"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="currentPage"
-              :page-sizes="[100, 200, 300, 400]"
+              :page-sizes="[10, 20, 30, 40]"
               :page-size="100"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="dataTotal">
             </el-pagination>
           </div>
         </el-col>
@@ -93,7 +93,7 @@
     </el-row>
     <el-dialog title="修改" :visible.sync="dialogVisible" @close="resetForm('form')" size="tiny">
       <el-form ref="form" :model="form" label-width="100px" class="padding20">
-        <el-form-item label="用户代码:"
+        <el-form-item label="用户账号:"
                       prop="username"
                       :rules="[
                         { required: true, message: '用户代码不能为空'}
@@ -102,20 +102,20 @@
           <el-input v-model="form.username" placeholder="请输入您的用户代码"></el-input>
         </el-form-item>
         <el-form-item label="用户名称:"
-                      prop="name"
+                      prop="realname"
                       :rules="[
                         { required: true, message: '用户名不能为空'}
                       ]">
-          <el-input v-model="form.name" placeholder="请输入您的用户名称"></el-input>
+          <el-input v-model="form.realname" placeholder="请输入您的用户名称"></el-input>
         </el-form-item>
         <el-form-item label="用户手机:"
-                      prop="phone"
+                      prop="handphone"
                       :rules="[
                         { required: true, message: '手机不能为空'},
                         { type: 'number', message: '手机号码必须为数字值'}
                       ]"
         >
-          <el-input v-model.number="form.phone" type="phone" placeholder="请输入您的手机"></el-input>
+          <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
         </el-form-item>
         <el-form-item label="用户邮箱:"
                       prop="email"
@@ -126,14 +126,21 @@
           <el-input v-model="form.email" placeholder="请输入您的邮箱"></el-input>
         </el-form-item>
         <el-form-item label="用户角色:"
-                      prop="role"
+                      prop="roleName"
                       :rules="[
                         { required: true, message: '用户角色不能为空'}
                       ]">
-          <el-input v-model="form.role" placeholder="请输入您的手机"></el-input>
+          <el-select v-model="form.roleName" multiple placeholder="请选择">
+            <el-option
+              v-for="item in rolenames"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="启用:">
-          <el-select v-model="form.use" placeholder="是否启用">
+          <el-select v-model="form.isDisabled" placeholder="是否启用">
             <el-option label="启用" value="true"></el-option>
             <el-option label="停用" value="false"></el-option>
           </el-select>
@@ -154,194 +161,115 @@
         // 分页 当前页
         currentPage: 1,
         // 左侧树结构
-        data: [{
-          id: 1,
-          label: '人民卫生出版社',
-          children: [{
-            label: '医学学术编辑中心（期刊编辑出版社）',
-            children: [{
-              label: '期刊编辑部'
-            },{
-              label: '期刊编辑一部'
-            },{
-              label: '期刊编辑二部'
-            },{
-              label: '期刊编辑三部'
-            }]
-          },{
-            label: '人卫电子音像公司'
-          },{
-            label: '药学中心'
-          },{
-            label: '智慧数字中心'
-          },{
-            label: '研发中心'
-          },{
-            label: '医学教育中心(医学教育研究中心)',
-            children: [{
-              label: '职业教育部（护理教育部）'
-            },{
-              label: '高等医学教育部'
-            },{
-              label: '继续教育部'
-            }]
-          },{
-            label: '国际中心'
-          },{
-            label: '总编辑总经理办公室'
-          },{
-            label: '人卫健康传播中心',
-            children: [{
-              label: '健康传播综合部'
-            },{
-              label: '预防医学编辑部'
-            },{
-              label: '《生活与健康》编辑部'
-            }]
-          },{
-            label: '中医院中心'
-          },{
-            label: '出版社科室1'
-          }]
-        }],
+        treeData: [],
+        // 修改弹窗 表单
         form: {
-          username:'',
+          id: '',
+          departmentName: '',
+          email: '',
+          handphone: '',
+          isDisabled: '',
           name: '',
-          phone:'',
-          email:'',
-          role:'',
-          use:''
+          note: '',
+          path: '',
+          realname: '',
+          roleName: '',
+          sort: '',
+          username: ''
         },
-        // element 自带
+        // element 
         defaultProps: {
-          children: 'children',
-          label: 'label'
+          children: 'sonDepartment',
+          label: 'dpName'
         },
-        tableData:[
+        // 数据总数
+        dataTotal:0,
+        // 用户列表
+        usersData:[],
+        name: '', 
+        path: '',
+        pageNumber: 1, 
+        pageSize: 20,
+        rolenames: [
           {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
+            value: '选项1',
+            label: '系统管理员'
           },
           {
-            name:'李四',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:true
+            value: '选项2',
+            label: '其他用户'
           },
           {
-            name:'王二',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
+            value: '选项3',
+            label: '主任'
           },
           {
-            name:'赵武',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:true
+            value: '选项4',
+            label: '项目编辑'
           },
           {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'张三',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'王二',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:false
-          },
-          {
-            name:'赵武',
-            username:'zs',
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438',
-            use:true
+            value: '选项5',
+            label: '数字编辑'
           }
         ]
       }
     },
+    mounted() {
+      this.getTree()
+      this.getUsers()
+    },
     methods:{
+      /**
+       * 请求组织树
+       */
+      getTree() {
+        this.$axios.get('pmph/user/list/pmphdepartment').then((response) => {
+          let res = response.data
+          // console.log(res)
+          if (res.code == '1') {
+            this.treeData.push(res.data)
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+      },
+      /**
+       * 初始化用户
+       */
+      getUsers() {
+        // var name = '', path = '',pageNumber = 1, pageSize = 20
+        this.$axios.get('pmph/user/list/pmphuser', {
+          params: {
+            name: this.name,
+            path: this.path,
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize
+          }
+        }).then((response) => {
+          let res = response.data
+          // console.log(res.data.rows)
+          this.dataTotal = res.data.total
+          // console.log(this.dataTotal)
+          if (res.code == '1') {
+            this.usersData=res.data.rows
+            if (this.dataTotal == 0) {
+              this.$message({
+                showClose: true,
+                message: '没有这条数据!',
+                type: 'warning'
+              });
+            }
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+      },
+      /**
+       * 搜索
+       */
+      search() {
+        this.getUsers()
+      },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
@@ -367,23 +295,46 @@
         //this.form = data[index]
         for (var key in data[index]){
           this.form[key] = data[index][key]
-          if (this.form.use){
-            this.form.use = "启用"
-          } else {
-            this.form.use = "停用"
-          }
         }
+        if (this.form.isDisabled == 1){
+          this.form.isDisabled = "启用"
+        } else {
+          this.form.isDisabled = "停用"
+        }
+        console.log(this.form)
       },
       /**
        * 保存修改
        */
       save() {
-        console.log(this.form)
-        this.dialogVisible = false
-        this.$message({
-          message: '恭喜你，修改成功！',
-          type: 'success'
-        });
+        // console.log(this.form)
+        var isDisabled = ''
+        if (this.form.isDisabled == "启用"){
+          this.form.isDisabled = 1
+        } else {
+          this.form.isDisabled = 0
+        }
+        this.$axios.put("/writer/user/update/pmphuserofback", {
+          data: {
+            username: this.form.username,
+            id: this.form.id,
+            roleName: this.form.roleName,
+            realname: this.form.realname,
+            email: this.form.email,
+            handphone: this.form.handphone,
+            isDisabled: isDisabled
+          }
+        }).then((response) => {
+          let res = response.data
+          if (res.code == 1) {
+            console.log(res)
+            this.dialogVisible = false
+            this.$message({
+              message: '恭喜你，修改成功！',
+              type: 'success'
+            });
+          }
+        })
       },
       /**
        * 重置表单

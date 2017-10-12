@@ -14,8 +14,8 @@
             </el-select>
             <el-button type="primary" class="button" icon="search">搜索</el-button>
             <el-checkbox v-model="searchChecked" class="check">仅查看我的</el-checkbox>
-            <router-link :to="{name:'新建遴选教材'}">
-                <el-button class="right_button" type="primary">新建遴选教材</el-button>
+            <router-link :to="{name:'新建通知'}">
+                <el-button class="right_button" type="primary">新建通知</el-button>
             </router-link>
         </p>
 

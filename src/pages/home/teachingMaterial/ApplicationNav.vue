@@ -31,7 +31,7 @@ export default {
       activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'全国高等职业教育临床医学院',
+      title:'全国高等学校五年制临床医学专业第九轮规划教材',
 		}
 	},
 	methods: {
@@ -59,10 +59,10 @@ export default {
       // console.log(this.$router);
       this.initActiveTag(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
-      if(this.$router.currentRoute.name=='新建遴选教材'){
-        this.title='新建教材申报'
+      if(this.$router.currentRoute.name=='新建通知'){
+        this.title='新建通知'
       }else{
-        this.title='全国高等职业教育临床医学院'
+        this.title='全国高等学校五年制临床医学专业第九轮规划教材'
       }
     },
   mounted(){
