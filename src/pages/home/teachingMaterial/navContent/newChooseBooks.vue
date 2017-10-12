@@ -282,7 +282,7 @@
 
             <el-form-item label="扩展项:">
               <el-col :span="12">
-                <el-button type="primary" class="pull-right" size="small" @click="addExtend">新增扩展项</el-button>
+                <el-button type="primary"  size="small" @click="addExtend">新增扩展项</el-button>
                 <br>
                 <el-table
                   :data="extensionData"
@@ -300,10 +300,10 @@
                   </el-table-column>
                   <el-table-column
                     label="是否必填"
+                    align="center"
                     width="150">
                     <template scope="scope">
-                      <el-radio class="radio" v-model="scope.row.needradio" label="1">是</el-radio>
-                      <el-radio class="radio" v-model="scope.row.needradio" label="2">否</el-radio>
+                      <el-checkbox v-model="scope.row.usecheck"></el-checkbox>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -540,7 +540,7 @@
           {
             name:'请输入名字',
             isNameInput:false,
-            needradio:'1'
+            usecheck:false
           }
         ], // 扩展项
         listTableData:[
