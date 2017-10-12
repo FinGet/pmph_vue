@@ -23,7 +23,7 @@ axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
 //默认添加token
 //axios.defaults.headers.common['Token'] ='tokenasdasd';
 // 初始化默认post header
-axios.defaults.headers.post['content-Type'] = 'appliction/x-www-form-urlencoded';
+axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
 
 /* mySessionStorage.set('curr','asdasdasdasdasd','str');
@@ -50,7 +50,7 @@ Vue.prototype.$mySessionStorage = mySessionStorage;
  //添加一个请求拦截器
 axios.interceptors.request.use(function(config){
   //请求发送之前的钩子  
-  console.log(config);
+  //console.log(config);
   return config;
 },function(error){
   //当出现请求错误时的操作
