@@ -170,7 +170,7 @@
       :title="isNew?'新增作家用户':'修改用户信息'"
       :visible.sync="dialogVisible"
       size="tiny">
-      <el-form :model="form"  label-width="100px" class="padding20">
+      <el-form :model="form"  :rules="rules" label-width="100px" class="padding20">
         <el-form-item label="用户代码：" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
@@ -265,6 +265,21 @@
           username:[
             { required: true, message: '请输入用户代码', trigger: 'blur' },
             { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+          ],
+          realname:[
+            { required: true, message: '请输入用户名称', trigger: 'blur' },
+          ],
+          email:[
+            { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+          ],
+          handphone:[
+            { required: true, message: '请输入用户手机号码', trigger: 'blur' },
+          ],
+          orgName:[
+            { type: 'array', required: true, message: '请输入所属院校', trigger: 'blur' },
+          ],
+          isDsabled:[
+            { required: true, message: '请选择是否启用', trigger: 'change' }
           ]
         },
         //搜索所属机构用户
@@ -284,10 +299,12 @@
       }
     },
     methods:{
+      //点击新增按钮
       addBtn(){
         this.isNew=true;
         this.dialogVisible=true;
       },
+      //点击修改按钮执行方法
       eidtInfoBtn(index){
         this.isNew=false;
 
@@ -297,31 +314,30 @@
         this.dialogVisible=true;
       },
       /**
-       * 搜索所属院校时触发的方法
+       * 提交表单中搜索所属院校
        * @param query
        */
       searchOrgName(query) {
         var self = this;
-        if (query !== '') {
-          this.loading = true;
-          this.$axios.get('/orgs/list/orgByOrgName',{
-            params:{orgName:query}
-          })
-            .then(function (response) {
-              self.loading = false;
-              let res = response.data;
-              let data = res.data;
-              self.OrgNameList.splice(0);
-              self.OrgNameList.push(data);
-            })
-            .catch(function (error) {
-              self.loading = false;
-              self.OrgNameList = [];
-              console.error(error);
-            });
-        } else {
-          this.OrgNameList = [];
+        if(query==''){
+          self.OrgNameList=[];
+          return;
         }
+
+        this.loading = true;
+        this.$axios.get('/orgs/list/orgByOrgName',{
+          params:{orgName:query||''}
+        })
+          .then(function (response) {
+            self.loading = false;
+            let res = response.data;
+            let data = res.data;
+            self.OrgNameList=data;
+          })
+          .catch(function (error) {
+            self.loading = false;
+            console.error(error);
+          });
       },
       /**
        * 获取表格数据，
@@ -330,7 +346,7 @@
       getTableData(){
         var self= this;
         // 为给定 ID 的 user 创建请求
-        this.$axios.get('/users/writer/list/writeruser',{params:this.params})
+        this.$axios.get('http://192.168.200.125:8090/pmpheep/users/writer/list/writeruser',{params:this.params})
           .then(function (response) {
             let res = response.data;
             let data = res.data.rows;
@@ -353,20 +369,32 @@
         this.updateUser();
 
       },
+      /**
+       * 新增用户
+       */
       addUser(){
-        this.$axios({
-          method: 'POST',
-          url: '/users/writer/add/writeruserofback',
-          data: {
-            username: '123456',
-            realname: '黄维',
-            email: '123456@qq.com',
-            handphone: '12345678901',
-            orgId: '123',
-            isDisabled: 0,
-            note:'这是备注'
-          }
-        })
+        var params = new URLSearchParams();
+        params.append('username', '2123');
+        params.append('realname', '黄维');
+        params.append('email', '123456@qq.com');
+        params.append('handphone', '12345678901');
+        params.append('orgId', '2123');
+        params.append('isDisabled', 0);
+        params.append('note', '');
+//        this.$axios({
+//          method: 'POST',
+//          url: '/departments/delete/pmphdepartmentbatch/123',
+//          data: {
+//            username: '123456',
+//            realname: '黄维',
+//            email: '123456@qq.com',
+//            handphone: '12345678901',
+//            orgId: '123',
+//            isDisabled: 0,
+//            note:'这是备注'
+//          }
+//        })
+        this.$axios.post('/users/writer/add/writeruserofback',params)
           .then(function (response) {
             console.log(response);
           })
@@ -374,9 +402,12 @@
             console.log(error);
           });
       },
+      /**
+       * 更新用户
+       */
       updateUser(){
         $.ajax({
-          url:'/users/writer/add/writeruserofback',
+          url:'http://192.168.200.125:8090/pmpheep/users/writer/add/writeruserofback',
           type : "POST",
           data:{
             username: '123456',
