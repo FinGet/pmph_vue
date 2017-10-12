@@ -4,20 +4,20 @@
       <div class="searchBox-wrapper">
         <div class="searchName">账号/姓名：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="getTableData"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
         <div class="searchName">所属院校：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="getTableData"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
       <div class="searchBox-wrapper">
         <div class="searchName">用户类型：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="params.rank" placeholder="全部" @change="getTableData">
+          <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+        <el-button  type="primary" icon="search" @click="refreshTableData">搜索</el-button>
       </div>
       <!--操作按钮-->
       <div class="pull-right">
@@ -50,7 +50,7 @@
         <el-table-column
           prop="username"
           label="账号"
-          width="100">
+          width="120">
         </el-table-column>
         <el-table-column
           prop="orgName"
@@ -140,7 +140,7 @@
           label="启用"
           width="80">
           <template scope="scope">
-            {{!!scope.row.isDsabled?'启用':'未启用'}}
+            {{scope.row.isDisabled?'未启用':'启用'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -155,11 +155,11 @@
     </div>
     <!--分页-->
     <div class="pagination-wrapper">
-      <el-pagination v-if="totalPages>1"
-        :page-sizes="[1,30,50,100, 200, 300, 400]"
+      <el-pagination v-if="totalPages>params.pageSize"
+        :page-sizes="[30,50,100, 200, 300, 400]"
         :page-size="params.pageSize"
         :current-page.sync="params.pageNumber"
-        @current-change="getTableData"
+        @current-change="refreshTableData"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalPages"
       >
@@ -169,23 +169,24 @@
     <el-dialog
       :title="isNew?'新增作家用户':'修改用户信息'"
       :visible.sync="dialogVisible"
+      @close="closeDialog"
       size="tiny">
-      <el-form :model="form"  label-width="100px" class="padding20">
+      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="padding20">
         <el-form-item label="用户代码：" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="用户名称：" prop="realname">
           <el-input v-model="form.realname"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱：" prop="email">
-          <el-input v-model="form.email"></el-input>
-        </el-form-item>
         <el-form-item label="用户手机：" prop="handphone">
           <el-input v-model="form.handphone"></el-input>
         </el-form-item>
-        <el-form-item label="所属院校：" prop="orgName">
+        <el-form-item label="用户邮箱：" prop="email">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="所属院校：" prop="orgId">
           <el-select
-            v-model="form.orgName"
+            v-model="form.orgId"
             filterable
             remote
             placeholder="请输入关键词搜索"
@@ -194,16 +195,16 @@
             :loading="loading">
             <el-option
               v-for="item in OrgNameList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="启用：" prop="isDsabled">
           <el-radio-group v-model="form.isDsabled">
-            <el-radio :label="true">启用</el-radio>
-            <el-radio :label="false">不启用</el-radio>
+            <el-radio :label="false">启用</el-radio>
+            <el-radio :label="true">不启用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注：" prop="note">
@@ -247,17 +248,13 @@
         dialogVisible:false,
         //表单提交数据
         form:{
+          _method:'PUT',
+          id:'',
           realname:'',
           username:'',
-          orgName:'',
+          orgId:'',
           handphone:'',
           email:'',
-          role:null,
-          position:'',
-          title:'',
-          address: '',
-          rank:'',
-          rankName:'',
           isDsabled:true,
           note:'',
         },
@@ -265,15 +262,28 @@
           username:[
             { required: true, message: '请输入用户代码', trigger: 'blur' },
             { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+          ],
+          realname:[
+            { required: true, message: '请输入用户名称', trigger: 'blur' },
+          ],
+          email:[
+            { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+          ],
+          handphone:[
+            { required: true, message: '请输入用户手机号码', trigger: 'blur' },
+          ],
+          orgId:[
+            { type:'number', required: true, message: '请输入所属院校', trigger: 'blur' },
+          ],
+          isDsabled:[
+            { type:'boolean',required: true, message: '请选择是否启用', trigger: 'change' }
           ]
         },
         //搜索所属机构用户
         OrgNameList: [],
-        value9: [],
-        list: [],
         loading: false,
         params:{
-          pageSize:1,
+          pageSize:30,
           pageNumber:1,
           name:'',
           rank:'',
@@ -284,50 +294,57 @@
       }
     },
     methods:{
+      //点击新增按钮
       addBtn(){
         this.isNew=true;
         this.dialogVisible=true;
       },
+      //点击修改按钮执行方法
       eidtInfoBtn(index){
         this.isNew=false;
-
+        this.OrgNameList=[{id:this.tableData[index].orgId,name:this.tableData[index].orgName}];
         for(let key in this.form){
           this.form[key] = this.tableData[index][key];
         }
+        this.form.isDsabled=!!this.form.isDsabled;
         this.dialogVisible=true;
       },
       /**
-       * 搜索所属院校时触发的方法
+       * 提交表单中搜索所属院校
        * @param query
        */
       searchOrgName(query) {
         var self = this;
-        if (query !== '') {
-          this.loading = true;
-          this.$axios.get('/orgs/list/orgByOrgName',{
-            params:{orgName:query}
-          })
-            .then(function (response) {
-              self.loading = false;
-              let res = response.data;
-              let data = res.data;
-              self.OrgNameList.splice(0);
-              self.OrgNameList.push(data);
-            })
-            .catch(function (error) {
-              self.loading = false;
-              self.OrgNameList = [];
-              console.error(error);
-            });
-        } else {
-          this.OrgNameList = [];
+        if(query==''){
+          self.OrgNameList=[];
+          return;
         }
+
+        this.loading = true;
+        this.$axios.get('/orgs/list/orgByOrgName',{
+          params:{orgName:query||''}
+        })
+          .then(function (response) {
+            self.loading = false;
+            let res = response.data;
+            let data = res.data;
+            console.log(data);
+            if(data.length>0){
+              self.OrgNameList=[{id:data[0].id,name:data[0].orgName}];
+            }else{
+              self.OrgNameList=[]
+            }
+          })
+          .catch(function (error) {
+            self.loading = false;
+            console.error(error);
+          });
       },
       /**
        * 获取表格数据，
        * 提交的参数写在params里
        */
-      getTableData(){
+      refreshTableData(){
         var self= this;
         // 为给定 ID 的 user 创建请求
         this.$axios.get('/users/writer/list/writeruser',{params:this.params})
@@ -345,56 +362,97 @@
        * 修改新增弹出点击确认按钮时触发提交表单操作
        */
       submit(){
-        if(this.isNew){
-          this.addUser();
-          return;
-        }
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            if(this.isNew){
+              this.addUser();
+              return;
+            }
 
-        this.updateUser();
+            this.updateUser();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
 
       },
+      /**
+       * 新增用户
+       */
       addUser(){
+        var self = this;
         this.$axios({
           method: 'POST',
           url: '/users/writer/add/writeruserofback',
-          data: {
-            username: '123456',
-            realname: '黄维',
-            email: '123456@qq.com',
-            handphone: '12345678901',
-            orgId: '123',
-            isDisabled: 0,
-            note:'这是备注'
-          }
+          data:this.$initPostData(this.form),
         })
           .then(function (response) {
-            console.log(response);
+            let res = response.data;
+            let data = res.data.rows;
+            //修改成功
+            if(res.code===1){
+              self.refreshTableData();
+              self.dialogVisible=false;
+              self.$message({
+                type:'success',
+                message:'添加成功'
+              });
+            }
           })
           .catch(function (error) {
-            console.log(error);
+            self.$message({
+              type:'error',
+              message:'添加失败，请重试'
+            });
           });
       },
+      /**
+       * 更新用户
+       */
       updateUser(){
-        $.ajax({
-          url:'/users/writer/add/writeruserofback',
-          type : "POST",
-          data:{
-            username: '123456',
-            realname: '黄维',
-            email: '123456@qq.com',
-            handphone: '12345678901',
-            orgId: '123',
-            isDisabled: 0,
-            note:'这是备注'
-          },
-          success:function (data) {
-            console.log(data)
-          }
+        var self = this;
+        this.$axios({
+          method: 'PUT',
+          url: '/users/writer/update/writeruserofback',
+          data:this.$initPostData(this.form),
         })
+          .then(function (response) {
+            let res = response.data;
+            //修改成功
+            if(res.code===1){
+              self.refreshTableData();
+              self.dialogVisible=false;
+              self.$message({
+                type:'success',
+                message:'修改成功'
+              });
+            }
+          })
+          .catch(function (error) {
+            self.$message({
+              type:'error',
+              message:'修改失败，请重试'
+            });
+          });
       },
+      /**
+       * 重置form表单数据
+       */
+      resetForm(){
+        this.$refs['ruleForm'].resetFields();
+        console.log(this.form);
+      },
+      /**
+       * 监听弹出层关闭事件
+       */
+      closeDialog(){
+        this.resetForm();
+      }
     },
     created(){
-      this.getTableData();
+      this.refreshTableData();
     },
     mounted(){
       this.screenWidth_lg_computed = this.screenWidth_lg;

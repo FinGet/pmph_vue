@@ -9,7 +9,7 @@ import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
-import {mySessionStorage,initPostData} from '../static/commonFun.js'
+import { mySessionStorage, initPostData, authorityComparison } from '../static/commonFun.js'
 import axios from 'axios'
 
 
@@ -33,32 +33,43 @@ Vue.prototype.$initPostData = initPostData;
 
 
 
- router.beforeEach((to, from, next) => {
-   // console.log(to);
-   if (to.path!='/login'&&!mySessionStorage.get('currentUser')) {  // 判断该路由是否需要登录权限
-          next('/login')
-   }
-   else {
-     next();
-   }
- })
+router.beforeEach((to, from, next) => {
+  if (to.path != '/login'&&to.name!='404') {  // 判断是否登录
+    if (!mySessionStorage.get('currentUser')) {
+      next('/login')
+    }
+    else if (authorityComparison(to.matched, mySessionStorage.get('currentUser', 'json').pmphUserPermissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
+      next();
+    } else {
+      ElementUI.Message.error('抱歉，您没有进入该模块的权限');
+      next(from.path);
+      
+    }
+  }
+  else {
+    next();
+  }
+})
 
 
- //添加一个请求拦截器
-axios.interceptors.request.use(function(config){
+//添加一个请求拦截器
+axios.interceptors.request.use(function (config) {
   //请求发送之前的钩子
   console.log(config);
+  if(mySessionStorage.get('currentUser', 'json').sessionPmphUserToken){
+     config.headers.Authorization=mySessionStorage.get('currentUser', 'json').sessionPmphUserToken;
+  }
   return config;
-},function(error){
+}, function (error) {
   //当出现请求错误时的操作
   return Promise.reject(error);
 });
 
 //添加一个返回拦截器
-axios.interceptors.response.use(function(response){
+axios.interceptors.response.use(function (response) {
   //对返回的数据进行一些处理
   return response;
-},function(error){
+}, function (error) {
   //对返回的错误进行一些处理
   return Promise.reject(error);
 });
