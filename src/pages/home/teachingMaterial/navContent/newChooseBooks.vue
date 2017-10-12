@@ -100,7 +100,7 @@
 
             <el-form-item label="联系人:">
               <el-col :span="24">
-                <el-button type="primary" class="pull-right" size="small" @click="chooseContact">选择联系人</el-button>
+                <el-button type="primary"  size="small" @click="chooseContact">选择联系人</el-button>
                 <br>
                 <el-table
                   :data="contactData"
@@ -145,7 +145,7 @@
 
             <el-form-item label="项目主任设置:">
               <el-col :span="24">
-                <el-button type="primary" class="pull-right" size="small" @click="chooseProjectDirector">项目主任设置</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectDirector">项目主任设置</el-button>
                 <br>
                 <el-table
                   :data="projectDirectorData"
@@ -190,7 +190,7 @@
 
             <el-form-item label="项目编辑设置:">
               <el-col :span="24">
-                <el-button type="primary" class="pull-right" size="small" @click="chooseProjectEditor">项目编辑设置</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectEditor">项目编辑设置</el-button>
                 <br>
                 <el-table
                   :data="projectEditorData"
@@ -239,14 +239,14 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="书籍多选:" class="pull-left">
+            <!-- <el-form-item label="书籍多选:" class="pull-left">
               <el-radio class="radio" v-model="bookradio" label="1">是</el-radio>
               <el-radio class="radio" v-model="bookradio" label="2">否</el-radio>
             </el-form-item>
             <el-form-item label="职位多选:" class="pull-left">
               <el-radio class="radio" v-model="jobradio" label="1">是</el-radio>
               <el-radio class="radio" v-model="jobradio" label="2">否</el-radio>
-            </el-form-item>
+            </el-form-item> -->
             <div class="clearfix"></div>
             <el-form-item label="列表项:">
               <el-col>
@@ -261,18 +261,19 @@
                   </el-table-column>
                   <el-table-column
                     label="是否使用"
-                    width="150">
+                    width="150"
+                    align="center"
+                    >
                     <template scope="scope">
-                      <el-radio class="radio" v-model="scope.row.useradio" label="1">是</el-radio>
-                      <el-radio class="radio" v-model="scope.row.useradio" label="2">否</el-radio>
+                      <el-checkbox v-model="scope.row.usecheck"></el-checkbox>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="是否必填"
-                    width="150">
+                    width="150"
+                    align="center">
                     <template scope="scope">
-                      <el-radio class="radio" v-model="scope.row.needradio" label="1">是</el-radio>
-                      <el-radio class="radio" v-model="scope.row.needradio" label="2">否</el-radio>
+                      <el-checkbox v-if="!scope.row.show" v-model="scope.row.needcheck" :disabled="scope.row.usecheck?false:true"></el-checkbox>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -393,8 +394,8 @@
     data() {
       return {
         labelPosition: 'right',
-        bookradio:'1',
-        jobradio:'1',
+        // bookradio:'1',
+        // jobradio:'1',
         mainContent:'',
         remark:'',
         dialogVisiable: false,
@@ -545,64 +546,74 @@
         listTableData:[
           {
             name:'主要学习经历',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'主要工作经历',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'主要教学经历',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'主要学术兼职',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'上版教材参编情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'国家级精品课程建设情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'省部级精品课程建设情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'学校精品课程建设情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'主编国家规划教材情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'教材编写情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'其他教材编写情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
           {
             name:'科研情况',
-            useradio:'1',
-            needradio:'1'
+            usecheck:false,
+            needcheck:false
           },
+          {
+            name:'书籍多选',
+            usecheck: false,
+            show: true
+          },
+          {
+            name: '职位多选',
+            usecheck: false,
+            show: true
+          }
         ],
         ruleForm: {
           name: '',
@@ -811,10 +822,6 @@
 </script>
 
 <style>
-  .newChoose{
-    border: 1px solid rgb(209, 217, 229);
-    padding:15px 20px;
-  }
   .upload {
     float: left;
   }
