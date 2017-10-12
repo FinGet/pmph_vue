@@ -9,7 +9,7 @@ import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
-import {mySessionStorage} from '../static/storage.js'
+import {mySessionStorage,initPostData} from '../static/commonFun.js'
 import axios from 'axios'
 
 
@@ -19,20 +19,17 @@ Vue.use(ElementUI);
 
 //请求根地址配置
 // axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
-axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
+//axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
+axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
 //默认添加token
 //axios.defaults.headers.common['Token'] ='tokenasdasd';
 // 初始化默认post header
 axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
-
-/* mySessionStorage.set('curr','asdasdasdasdasd','str');
-console.log(mySessionStorage.get('curr','str'));
- */
+//全局挂载
 Vue.prototype.$axios = axios;
 Vue.prototype.$mySessionStorage = mySessionStorage;
-
-//Vue.use(VueQuillEditor);
+Vue.prototype.$initPostData = initPostData;
 
 
 

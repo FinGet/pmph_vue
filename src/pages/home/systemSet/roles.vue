@@ -209,40 +209,23 @@ export default {
             console.log(this.revisePowerId);
             console.log(arr.join(','));
              var _this=this;
-            this.$axios.post(this.revisePowerUrl, {
-                roleId: _this.revisePowerId,
-                permissionIds: arr.join(',')
-            }).then(function(res) {
-                if (res) {
-                    console.log(res);
-                }
-
-            }).catch(function(err) {
-                console.log(err);
-            })
-            /* $.ajax({
-                type:'POST',
-                url:'http://192.168.200.125:8090/pmpheep/role/pmph/resources',
-                data:{roleId: 1,
-                permissionIds: '1,2,3'},
-                dataType:'JSON',
-                success:function(res){
-                     console.log(res);
-                }
-            }) */
-           
-            /* this.$axios({
+                /* let param = new URLSearchParams();
+                for(var item in this.postData){
+                    console.log(_this.postData[item]);
+                    param.append(item,_this.postData[item]);
+                } */
+            this.$axios({
                 method:'POST',
                 url:_this.revisePowerUrl,
-                data:{
-                    roleId: "1",
+                data:_this.$initPostData({
+                    roleId: _this.revisePowerId,
                     permissionIds: arr.join(',')
-                }
+                }),
             }).then(function(res){
                console.log(res);
             }).catch(function(err){
               console.log(err);
-            }) */
+            })
         },
         //获取角色列表数据
         getListData() {

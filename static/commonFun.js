@@ -22,11 +22,19 @@ function setSessionStorage(key,content,format){
     }
     sessionStorage.setItem(key,data);  
 }
-
 var mySessionStorage={
     get:getSessionStorage,
     set:setSessionStorage
 }
+
+ /* post数据格式封装 */
+ function initPostData(obj){
+     let param = new URLSearchParams();
+     for(var item in obj){
+        param.append(item,obj[item]);
+     }
+     return param;
+ }
 export {
-    mySessionStorage
+    mySessionStorage,initPostData
 }
