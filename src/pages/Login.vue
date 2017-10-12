@@ -4,8 +4,8 @@
       <div class="input-text-wrapper">
         <div class="login-logo paddingB40"><img src="../common/images/logo-text.png" alt=""></div>
         <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-width="0px">
-          <el-form-item label="" prop="userName" required>
-            <el-input v-model="loginForm.userName" placeholder="请输入用户名" @keyup.enter.native="submit"></el-input>
+          <el-form-item label="" prop="username" required>
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" @keyup.enter.native="submit"></el-input>
           </el-form-item>
           <el-form-item label="" prop="password">
             <el-input v-model="loginForm.password" placeholder="请输入密码" @keyup.enter.native="submit"></el-input>
@@ -34,13 +34,13 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      loginUrl:'',
+      loginUrl:'/pmph/login',
       loginForm: {
-        userName: '',
+        username: '',
         password: ''
       },
       loginRules: {
-        userName: [
+        username: [
           { required: true, message: '用户名不能为空', trigger: 'blur' },
         ],
         password: [
@@ -51,14 +51,21 @@ export default {
   },
   methods: {
     submit() {
+      var _this=this;
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           //验证成功
-          this.$store.dispatch('doLogin',{username:this.loginForm.userName});
-          this.$axios.get('../../static/', {
-
+          this.$axios.get(this.loginUrl, {
+              params:this.loginForm
           }).then(function(res) {
-
+                console.log(res);
+                if(res&&res.data.code==1){
+                  _this.$mySessionStorage.set('currentUser',res.data.data,'json');
+                  _this.$message.success('登录成功');
+                  _this.$router.push({name:'个人中心'});
+                }else{
+                  _this.$message.error('账号/密码错误');
+                }
           }).catch(function(err) {
 
           })

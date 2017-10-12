@@ -8,7 +8,7 @@ function getSessionStorage(key,format){
           data=sessionStorage.getItem(key);
         }
     }else{
-        data=""
+        data=false
     }
     return data;
 }
@@ -35,6 +35,18 @@ var mySessionStorage={
      }
      return param;
  }
+ /* 权限比对 */
+ function authorityComparison(matchArr,userArr){
+  var result=false;
+    userArr.forEach(function(num){
+        matchArr.forEach(function(elem){
+            if(num==elem.meta.authorityId){
+                result=true;
+            }
+        })
+    })
+    return result;
+ }
 export {
-    mySessionStorage,initPostData
+    mySessionStorage,initPostData,authorityComparison
 }

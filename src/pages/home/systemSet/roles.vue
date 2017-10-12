@@ -199,21 +199,11 @@ export default {
         },
         //更新权限弹框 确定提交按钮
         reviseSubmit() {
-            // console.log(this.$refs.powerTree.getCheckedNodes());
             var arr = [];
             this.$refs.powerTree.getCheckedNodes().forEach(function(item) {
                 arr.push(item.id);
             })
-             console.log(arr);
-            //点击确定直接提交arr权限id数组
-            console.log(this.revisePowerId);
-            console.log(arr.join(','));
              var _this=this;
-                /* let param = new URLSearchParams();
-                for(var item in this.postData){
-                    console.log(_this.postData[item]);
-                    param.append(item,_this.postData[item]);
-                } */
             this.$axios({
                 method:'POST',
                 url:_this.revisePowerUrl,
@@ -222,7 +212,14 @@ export default {
                     permissionIds: arr.join(',')
                 }),
             }).then(function(res){
-               console.log(res);
+                console.log(res);
+               if(res&&res.data.code==1){
+                   _this.getListData();
+                  _this.$message.success('更新成功');   
+               }else{
+                   _this.$message.error('更新失败');
+               }
+               _this.powerTreeVisible=false;
             }).catch(function(err){
               console.log(err);
             })
@@ -235,7 +232,10 @@ export default {
                 url: this.listUrl,
             }).then(function(res) {
                 console.log(res);
-                _this.rolesListData = res.data.data;
+                if(res.data.code==1){
+                   _this.rolesListData = res.data.data;
+                }
+                
             }).catch(function(err) {
                 console.log('错误');
                 console.log(err);
