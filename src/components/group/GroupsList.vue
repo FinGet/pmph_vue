@@ -26,6 +26,7 @@
             </span>
               <div class="groupHeadName">
                 <span>{{item.name}}</span>
+                <span class="textbook">{{item.textbook}}</span>
               </div>
               <span class="lastMessageTime">{{item.lastMesTime}}</span>
             </div>
@@ -91,11 +92,11 @@
          currentActiveGroupId:1237,
          inputSearchGroup:'',
          groupListData:[
-           {name:'人卫社小组',id:1231,lastMesTime:'昨天'},
+           {name:'人卫社小组',textbook:'健康学导论（或健康服务与管理导论）',id:1231,lastMesTime:'昨天'},
            {name:'成都医科大学内部',lastMesTime:"7-28"},
            {name:'个人小组',id:1232,lastMesTime:"8-28"},
            {name:'个人小组',id:1233,lastMesTime:"8-28"},
-           {name:'个人小组',id:1234,lastMesTime:"8-28"},
+           {name:'个人小组',id:1234,textbook:'健康经济与政策',lastMesTime:"8-28"},
            {name:'个人小组',id:1235,lastMesTime:"8-28"},
            {name:'个人小组',id:1236,lastMesTime:"8-28"},
            {name:'个人小组',id:1237,lastMesTime:"8-28"},
@@ -192,6 +193,16 @@
   }
   .addGroupWrapper .button{
     color:#fff;
+  }
+
+  .textbook{
+    display: block;
+    line-height: 14px;
+    color: #fff243;
+    width: 170px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .groupHead{
