@@ -115,8 +115,7 @@
         <el-form-item label="用户手机:"
                       prop="handphone"
                       :rules="[
-                        { required: true, message: '手机不能为空'},
-                        { type: 'number', message: '手机号码必须为数字值'}
+                        { required: true, message: '手机不能为空'}
                       ]"
         >
           <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
@@ -359,7 +358,7 @@
        * @param data
        */
       modify(index, data) {
-        this.DepartmentNameList=[{id:data[index].departmentId,name:data[index].departmentName}];
+        this.DepartmentNameList=[{id:data[index].departmentId,name:data[index].departmentName||'-'}];
         for (var key in data[index]){
           this.form[key] = data[index][key]
         }
@@ -370,7 +369,7 @@
           // console.log(this.form.roleIds)
         }
         console.log(this.form)
-        this.form.handphone -= 0
+        // this.form.handphone -= 0
 //        if (this.form.isDisabled == 1){
 //          this.form.isDisabled = "启用"
 //        } else {
@@ -400,7 +399,7 @@
           realname: this.form.realname,
           departmentId:this.form.departmentId,
           email: this.form.email,
-          handphone: this.form.handphone+'',
+          handphone: this.form.handphone,
           isDisabled: this.form.isDisabled
         })).then((response) => {
           let res = response.data
