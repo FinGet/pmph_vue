@@ -186,13 +186,13 @@
               <el-option
                 v-for="item in OrgNameList"
                 :key="item.id"
-                :label="item.name"
+                :label="item.orgName"
                 :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="启用：" prop="isDsabled">
-            <el-radio-group v-model="form.isDsabled">
+          <el-form-item label="启用：" prop="isDisabled">
+            <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
               <el-radio :label="true">不启用</el-radio>
             </el-radio-group>
@@ -241,7 +241,7 @@
                 orgId:'',
                 handphone:'',
                 email:'',
-                isDsabled:true,
+                isDisabled:true,
                 note:'',
               },
               rules:{
@@ -287,11 +287,11 @@
           //点击修改按钮执行方法
           eidtInfoBtn(index){
             this.isNew=false;
-            this.OrgNameList=[{id:this.tableData[index].orgId,name:this.tableData[index].orgName}];
+            this.OrgNameList=[{id:this.tableData[index].orgId,orgName:this.tableData[index].orgName}];
             for(let key in this.form){
               this.form[key] = this.tableData[index][key];
             }
-            this.form.isDsabled=!!this.form.isDsabled;
+            this.form.isDisabled=!!this.form.isDisabled;
             this.dialogVisible=true;
           },
           /**
@@ -315,7 +315,7 @@
                 let data = res.data;
                 console.log(data);
                 if(data.length>0){
-                  self.OrgNameList=[{id:data[0].id,name:data[0].orgName}];
+                  self.OrgNameList=data;
                 }else{
                   self.OrgNameList=[]
                 }
