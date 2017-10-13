@@ -200,11 +200,17 @@ export default {
             this.$refs['rolesForm'].validate((valid) => {
                 if (valid) {
                     //验证通过
+                    /* if(this.rolesForm.isDisabled==='false'){
+                        this.rolesForm.isDisabled=false
+                    }
+                    if(this.rolesForm.isDisabled==='true'){
+                        this.rolesForm.isDisabled=true
+                    } */
                     if (this.isAddNewRole) {   //添加
                         this.$axios({
                             method: 'POST',
                             url: this.addRoleUrl,
-                            data: this.$initPostData(this.rolesForm)
+                            data: _this.$initPostData(this.rolesForm)
                         }).then(function(res) {
                             console.log(res)
                             if (res.data.code == 1) {
@@ -221,10 +227,10 @@ export default {
                     else{   //修改
                        this.$axios({
                             method: 'PUT',
-                            url: this.editRoleUrl+'/'+this.rolesForm.id,
-                            data: this.rolesForm
+                            url: this.editRoleUrl,
+                            data:_this.$initPostData(this.rolesForm,['id','roleName','isDisabled','note','sort'])
                         }).then(function(res) {
-                            console.log(res)
+                            console.log(res);
                             if (res.data.code == 1) {
                                 _this.$message.success('修改成功');
                                 _this.getListData();
@@ -297,10 +303,11 @@ export default {
         //修改按钮
         reviseRoles(obj) {
             for(var item in obj){
-                obj[item]=obj[item]+'';
+               // obj[item]=obj[item]+'';
+                this.rolesForm[item]=obj[item]+'';
             }
             this.isAddNewRole = false;
-            this.rolesForm = obj;
+           // this.rolesForm = obj;
             this.rolesDialogVisible = true;
             // this.$refs['rolesForm'].resetFields();
         },
