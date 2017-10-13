@@ -186,7 +186,7 @@
               <el-option
                 v-for="item in OrgNameList"
                 :key="item.id"
-                :label="item.name"
+                :label="item.orgName"
                 :value="item.id">
               </el-option>
             </el-select>
@@ -287,7 +287,7 @@
           //点击修改按钮执行方法
           eidtInfoBtn(index){
             this.isNew=false;
-            this.OrgNameList=[{id:this.tableData[index].orgId,name:this.tableData[index].orgName}];
+            this.OrgNameList=[{id:this.tableData[index].orgId,orgName:this.tableData[index].orgName}];
             for(let key in this.form){
               this.form[key] = this.tableData[index][key];
             }
@@ -315,7 +315,7 @@
                 let data = res.data;
                 console.log(data);
                 if(data.length>0){
-                  self.OrgNameList=[{id:data[0].id,name:data[0].orgName}];
+                  self.OrgNameList=data;
                 }else{
                   self.OrgNameList=[]
                 }

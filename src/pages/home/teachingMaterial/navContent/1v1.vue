@@ -125,10 +125,13 @@
               <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
               <el-button type="text" :disabled="true" v-else>结果公布</el-button>
               <span class="vertical-line"></span>
-              <el-button type="text">导出Excel</el-button>
+              <el-button type="text">导出Excel</el-button><span class="vertical-line"></span>
+              <el-button type="text">创建小组</el-button>
             </div>
             <div v-else>
               <el-button type="text">导出Excel</el-button>
+              <span class="vertical-line"></span>
+              <el-button type="text">创建小组</el-button>
             </div>
           </template>
         </el-table-column>

@@ -146,6 +146,8 @@
             label="操作">
             <template scope="scope">
               <el-button type="text">导出Excel</el-button>
+              <span class="vertical-line"></span>
+              <el-button type="text">创建小组</el-button>
             </template>
           </el-table-column>
         </el-table>
