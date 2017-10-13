@@ -248,7 +248,6 @@
         dialogVisible:false,
         //表单提交数据
         form:{
-          _method:'PUT',
           id:'',
           realname:'',
           username:'',

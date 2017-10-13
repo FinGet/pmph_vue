@@ -191,8 +191,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="启用：" prop="isDsabled">
-            <el-radio-group v-model="form.isDsabled">
+          <el-form-item label="启用：" prop="isDisabled">
+            <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
               <el-radio :label="true">不启用</el-radio>
             </el-radio-group>
@@ -241,7 +241,7 @@
                 orgId:'',
                 handphone:'',
                 email:'',
-                isDsabled:true,
+                isDisabled:true,
                 note:'',
               },
               rules:{
@@ -291,7 +291,7 @@
             for(let key in this.form){
               this.form[key] = this.tableData[index][key];
             }
-            this.form.isDsabled=!!this.form.isDsabled;
+            this.form.isDisabled=!!this.form.isDisabled;
             this.dialogVisible=true;
           },
           /**
