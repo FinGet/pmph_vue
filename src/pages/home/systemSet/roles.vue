@@ -3,8 +3,8 @@
         <div class="roles_list">
             <h4>角色列表</h4>
             <p>
-                <el-input class="input" placeholder="请输入角色代码或角色名称"></el-input>
-                <el-button type="primary" icon="search">搜索</el-button>
+                <el-input class="input" v-model="searchValue"  placeholder="请输入角色名称"></el-input>
+                <el-button type="primary" icon="search" @click="getListData()">搜索</el-button>
                 <el-button type="primary" @click="addNewRoles()">增加</el-button>
             </p>
 
@@ -82,7 +82,8 @@ export default {
             listUrl: '/role/pmph/list',   //列表数据接口
             revisePowerUrl: '/role/pmph/resources',  //更新权限接口
             addRoleUrl: '/role/pmph/add',   //添加角色接口
-            editRoleUrl:'/role/pmph/update',
+            editRoleUrl:'/role/pmph/update', //修改角色接口
+            searchValue:'',
             rolesListData: [],
             rolesDialogVisible: false,
             rolesForm: {
@@ -283,6 +284,9 @@ export default {
             this.$axios({
                 method: 'GET',
                 url: this.listUrl,
+                params:{
+                    roleName:this.searchValue
+                }
             }).then(function(res) {
                 console.log(res);
                 if (res.data.code == 1) {
