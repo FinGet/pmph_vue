@@ -18,11 +18,8 @@
         <el-button type="primary" @click="submit" class="loginBtn">登录</el-button>
       </div>
       <div class="note marginT30">
-        <p>最高权限:root</p>
-        <p>主任:admin1</p>
-        <p>项目编辑:admin2</p>
-        <p>策划编辑:admin3</p>
-        <p>密码任意</p>
+        <p>最高权限:admin1 </p>
+        <p> 密码：123</p>
       </div>
     </div>
   </div>
