@@ -363,17 +363,15 @@
 //        for (var i in this.form.roleName) {
 //          console.log(this.rolenames[i].label)
 //        }
-        this.$axios.put("/users/writer/update/pmphuserofback", {
-          data: {
-            username: this.form.username,
-            id: this.form.id,
-            roleIds: this.form.roleIds.join(','),
-            realname: this.form.realname,
-            email: this.form.email,
-            handphone: this.form.handphone+'',
-            isDisabled: isDisabled
-          }
-        }).then((response) => {
+        this.$axios.put("/users/writer/update/pmphuserofback", this.$initPostData({
+          username: this.form.username,
+          id: this.form.id,
+          roleIds: this.form.roleIds.join(','),
+          realname: this.form.realname,
+          email: this.form.email,
+          handphone: this.form.handphone+'',
+          isDisabled: isDisabled
+        })).then((response) => {
           let res = response.data
           if (res.code == 1) {
             console.log(res)
