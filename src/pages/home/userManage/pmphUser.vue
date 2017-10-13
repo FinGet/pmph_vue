@@ -144,6 +144,26 @@
             </el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="所属部门：" prop="departmentName"
+                    :rules="[{ required: true, message: '请输入所属院校', trigger: 'blur' }]"
+        >
+          <el-select
+            v-model="form.path"
+            filterable
+            remote
+            placeholder="请输入关键词搜索"
+            loading-text="正在搜索..."
+            :remote-method="searchDepartmentName"
+            :loading="loading">
+            <el-option
+              v-for="item in DepartmentNameList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="启用:">
           <el-select v-model="form.isDisabled" placeholder="是否启用">
             <el-option label="启用" value="true"></el-option>
@@ -216,7 +236,9 @@
             value: '选项5',
             label: '数字编辑'
           }
-        ]
+        ],
+        DepartmentNameList:[],
+        loading: false,
       }
     },
     mounted() {
@@ -331,6 +353,7 @@
        * @param data
        */
       modify(index, data) {
+        this.DepartmentNameList=[{id:data[index].path,name:data[index].departmentName}];
         for (var key in data[index]){
           this.form[key] = data[index][key]
         }
@@ -348,7 +371,7 @@
           this.form.isDisabled = "停用"
         }
 
-
+        console.log(this.DepartmentNameList)
       },
       /**
        * 保存修改
@@ -368,6 +391,7 @@
           id: this.form.id,
           roleIds: this.form.roleIds.join(','),
           realname: this.form.realname,
+          path:this.form.path,
           email: this.form.email,
           handphone: this.form.handphone+'',
           isDisabled: isDisabled
@@ -389,6 +413,36 @@
        */
       resetForm(formName) {
         this.$refs[formName].resetFields()
+      },
+      /**
+       * 远程搜索
+       */
+      searchDepartmentName(query){
+        var self = this;
+        if(query==''){
+          self.DepartmentNameList=[];
+          return;
+        }
+
+        this.loading = true;
+        this.$axios.get('/orgs/list/orgByOrgName',{
+          params:{orgName:query||''}
+        })
+          .then(function (response) {
+            self.loading = false;
+            let res = response.data;
+            let data = res.data;
+            console.log(data);
+            if(data.length>0){
+              self.DepartmentNameList=[{id:data[0].id,name:data[0].orgName}];
+            }else{
+              self.DepartmentNameList=[]
+            }
+          })
+          .catch(function (error) {
+            self.loading = false;
+            console.error(error);
+          });
       }
     }
   }
