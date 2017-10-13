@@ -6,7 +6,8 @@
           <p>所属组织：</p>
         </div>
         <el-tree :data="treeData"
-                 expand-on-click-node="false"
+                 :highlight-current=true
+                 :expand-on-click-node=false
                  :props="defaultProps"
                  @node-click="handleNodeClick"
                  node-key="id"
@@ -46,9 +47,12 @@
             >
             </el-table-column>
             <el-table-column
-              prop="roleName"
               label="角色名称"
             >
+              <template scope="scope">
+                <!--{{scope.row.pmphRoles}}-->
+                <span v-for="item in scope.row.pmphRoles">{{item.roleName}}, </span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="handphone"
@@ -127,16 +131,36 @@
           <el-input v-model="form.email" placeholder="请输入您的邮箱"></el-input>
         </el-form-item>
         <el-form-item label="用户角色:"
-                      prop="roleName"
+                      prop="roleIds"
                       :rules="[
                         { required: true, message: '用户角色不能为空'}
                       ]">
-          <el-select v-model="form.roleName" multiple placeholder="请选择">
+          <el-select v-model="form.roleIds" multiple placeholder="请选择">
             <el-option
               v-for="item in rolenames"
               :key="item.value"
               :label="item.label"
               :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="所属部门：" prop="departmentName"
+                    :rules="[{ required: true, message: '请输入所属院校', trigger: 'blur' }]"
+        >
+          <el-select
+            v-model="form.path"
+            filterable
+            remote
+            placeholder="请输入关键词搜索"
+            loading-text="正在搜索..."
+            :remote-method="searchDepartmentName"
+            :loading="loading">
+            <el-option
+              v-for="item in DepartmentNameList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -174,7 +198,7 @@
           note: '',
           path: '',
           realname: '',
-          roleName: '',
+          roleIds: [],
           sort: '',
           username: ''
         },
@@ -212,14 +236,34 @@
             value: '选项5',
             label: '数字编辑'
           }
-        ]
+        ],
+        DepartmentNameList:[],
+        loading: false,
       }
     },
     mounted() {
+      this.getRoleName()
       this.getTree()
       this.getUsers()
     },
     methods:{
+      /**
+       * 获取用户角色
+       */
+      getRoleName() {
+        this.$axios.get("/role/pmph/list/role").then((response) => {
+          let res = response.data
+          if (res.code == '1') {
+            // console.log(res.data)
+            this.rolenames = res.data
+            for (var i in res.data) {
+              this.rolenames[i].label = res.data[i].roleName
+              this.rolenames[i].value = res.data[i].id
+              // console.log(this.rolenames)
+            }
+          }
+        })
+      },
       /**
        * 请求组织树
        */
@@ -253,6 +297,7 @@
           // console.log(this.dataTotal)
           if (res.code == '1') {
             this.usersData=res.data.rows
+            // console.log(this.usersData)
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
@@ -275,7 +320,7 @@
        * 选择每页有多少条数据
        */
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        // console.log(`每页 ${val} 条`);
         this.pageSize = val
         this.getUsers()
       },
@@ -283,7 +328,7 @@
        * 选择当前第几页
        */
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        // console.log(`当前页: ${val}`);
         this.pageNumber = val
         this.getUsers()
       },
@@ -308,42 +353,49 @@
        * @param data
        */
       modify(index, data) {
-        //this.form = data[index]
+        this.DepartmentNameList=[{id:data[index].path,name:data[index].departmentName}];
         for (var key in data[index]){
           this.form[key] = data[index][key]
         }
-        if (this.form.roleName == null) {
-          this.form.roleName = []
+        // 每次修改先将this.form.roleName置为空
+        this.form.roleIds=[]
+        for (var i in data[index].pmphRoles) {
+          this.form.roleIds.push(data[index].pmphRoles[i].id)
+          console.log(this.form.roleIds)
         }
+        console.log(this.form)
+        this.form.handphone -= 0
         if (this.form.isDisabled == 1){
           this.form.isDisabled = "启用"
         } else {
           this.form.isDisabled = "停用"
         }
-        console.log(this.form)
+
+        console.log(this.DepartmentNameList)
       },
       /**
        * 保存修改
        */
       save() {
-        console.log(this.form)
         var isDisabled = ''
         if (this.form.isDisabled == "启用"){
-          isDisabled = 1
+          isDisabled = false
         } else {
-          isDisabled = 0
+          isDisabled = true
         }
-        this.$axios.put("/users/writer/update/pmphuserofback", {
-          data: {
-            username: this.form.username,
-            id: this.form.id,
-            roleName: this.form.roleName,
-            realname: this.form.realname,
-            email: this.form.email,
-            handphone: this.form.handphone,
-            isDisabled: isDisabled
-          }
-        }).then((response) => {
+//        for (var i in this.form.roleName) {
+//          console.log(this.rolenames[i].label)
+//        }
+        this.$axios.put("/users/writer/update/pmphuserofback", this.$initPostData({
+          username: this.form.username,
+          id: this.form.id,
+          roleIds: this.form.roleIds.join(','),
+          realname: this.form.realname,
+          path:this.form.path,
+          email: this.form.email,
+          handphone: this.form.handphone+'',
+          isDisabled: isDisabled
+        })).then((response) => {
           let res = response.data
           if (res.code == 1) {
             console.log(res)
@@ -361,6 +413,36 @@
        */
       resetForm(formName) {
         this.$refs[formName].resetFields()
+      },
+      /**
+       * 远程搜索
+       */
+      searchDepartmentName(query){
+        var self = this;
+        if(query==''){
+          self.DepartmentNameList=[];
+          return;
+        }
+
+        this.loading = true;
+        this.$axios.get('/orgs/list/orgByOrgName',{
+          params:{orgName:query||''}
+        })
+          .then(function (response) {
+            self.loading = false;
+            let res = response.data;
+            let data = res.data;
+            console.log(data);
+            if(data.length>0){
+              self.DepartmentNameList=[{id:data[0].id,name:data[0].orgName}];
+            }else{
+              self.DepartmentNameList=[]
+            }
+          })
+          .catch(function (error) {
+            self.loading = false;
+            console.error(error);
+          });
       }
     }
   }
