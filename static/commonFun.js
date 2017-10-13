@@ -29,11 +29,13 @@ var mySessionStorage={
 
  /* post数据格式封装 */
  function initPostData(obj){
-     let param = new URLSearchParams();
+     var paramdata = new URLSearchParams();
      for(var item in obj){
-        param.append(item,obj[item]);
+        paramdata.append(item,obj[item]);
+        console.log(obj[item])
      }
-     return param;
+     console.log(paramdata);
+     return paramdata;
  }
  /* 权限比对 */
  function authorityComparison(matchArr,userArr){

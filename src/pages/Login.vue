@@ -8,7 +8,7 @@
             <el-input v-model="loginForm.username" placeholder="请输入用户名" @keyup.enter.native="submit"></el-input>
           </el-form-item>
           <el-form-item label="" prop="password">
-            <el-input v-model="loginForm.password" placeholder="请输入密码" @keyup.enter.native="submit"></el-input>
+            <el-input type="password" v-model="loginForm.password" placeholder="请输入密码" @keyup.enter.native="submit"></el-input>
           </el-form-item>
         </el-form>
         <!--  <el-input v-model="userName" placeholder="请输入用户名" @keyup.enter="submit"></el-input>

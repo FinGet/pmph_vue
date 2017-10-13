@@ -17,8 +17,8 @@
                 </el-table-column>
                 <el-table-column prop="isDisabled" label="是否启用">
                     <template scope="scope">
-                        <p v-if="!scope.row.isOnUsing">启用</p>
-                        <p v-if="scope.row.isOnUsing">禁用</p>
+                        <p v-if="!scope.row.isDisabled">启用</p>
+                        <p v-if="scope.row.isDisabled">禁用</p>
                     </template>
                 </el-table-column>
                 <el-table-column prop="note" label="备注">
@@ -33,10 +33,11 @@
             </el-table>
         </div>
         <!-- 新增对话框 -->
-        <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible" class="roles_dialog" size="tiny">
-            <div style="padding-right:30px;">
-                <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules" label-width="95px">
-                    <el-form-item label="角色代码：" prop="id">
+        <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible"   class="roles_dialog" size="tiny">
+            <div style="padding-right:30px;" >
+
+                <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="95px">
+                    <el-form-item label="角色代码：" prop="id" v-if="!isAddNewRole">
                         <el-input v-model="rolesForm.id" placeholder="请输入角色代码"></el-input>
                     </el-form-item>
                     <el-form-item label="角色名称：" prop="roleName">
@@ -44,8 +45,8 @@
                     </el-form-item>
                     <el-form-item label="启用：" prop="isDisabled">
                         <el-select v-model="rolesForm.isDisabled" placeholder="请选择">
-                            <el-option label="启用" :value="false"></el-option>
-                            <el-option label="禁用" :value="true"></el-option>
+                            <el-option label="启用" value="false"></el-option>
+                            <el-option label="禁用" value="true"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="排序码：" prop="sort">
@@ -58,20 +59,13 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="rolesDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="rolesDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 权限树弹框 -->
         <el-dialog title="角色权限设置" :visible.sync="powerTreeVisible" size="tiny">
             <div>
-                <el-tree class="tree_box" 
-                ref="powerTree" 
-                :data="treeData" 
-                show-checkbox node-key="id" 
-                :props="defaultProps" 
-                v-if="powerTreeVisible" 
-                :default-checked-keys="defaultCheckedData" 
-               ></el-tree>
+                <el-tree class="tree_box" ref="powerTree" :data="treeData" show-checkbox node-key="id" :props="defaultProps" v-if="powerTreeVisible" :default-checked-keys="defaultCheckedData"></el-tree>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="powerTreeVisible = false">取 消</el-button>
@@ -86,7 +80,9 @@ export default {
     data() {
         return {
             listUrl: '/role/pmph/list',   //列表数据接口
-            revisePowerUrl: '/role/pmph/resources',
+            revisePowerUrl: '/role/pmph/resources',  //更新权限接口
+            addRoleUrl: '/role/pmph/add',   //添加角色接口
+            editRoleUrl:'/role/pmph/update',
             rolesListData: [],
             rolesDialogVisible: false,
             rolesForm: {
@@ -96,18 +92,20 @@ export default {
                 sort: '',
                 note: ''
             },
-            rolesFormRules:{
-                id:[
+            isAddNewRole: true,
+            rolesFormRules: {
+                id: [
                     { required: true, message: '请输入角色代码', trigger: 'blur' },
                 ],
-                roleName:[
+                roleName: [
                     { required: true, message: '请输入角色名称', trigger: 'blur' },
                 ],
-                isDisabled:[
-                    { required: true, message: '请选择', trigger: 'blur' },
+                isDisabled: [
+                    { required: true, message: '请选择' , trigger: 'change'},
                 ],
-                sort:[
+                sort: [
                     { required: true, message: '请输入排序码', trigger: 'blur' },
+                    
                 ]
             },
             powerTreeVisible: false,
@@ -187,15 +185,64 @@ export default {
     methods: {
         //新增按钮
         addNewRoles() {
+            this.isAddNewRole = true;
             this.rolesForm = {
-                id: '',
                 roleName: '',
-                isDisabled: '',
+                isDisabled: 'false',
                 sort: '',
                 note: ''
             };
-            this.rolesDialogVisible=true;
+            this.rolesDialogVisible = true;
+            // this.$refs['rolesForm'].resetFields();
+        },
+        rolesSubmit() {
+            var _this = this;
+            this.$refs['rolesForm'].validate((valid) => {
+                if (valid) {
+                    //验证通过
+                    if (this.isAddNewRole) {   //添加
+                        this.$axios({
+                            method: 'POST',
+                            url: this.addRoleUrl,
+                            data: this.$initPostData(this.rolesForm)
+                        }).then(function(res) {
+                            console.log(res)
+                            if (res.data.code == 1) {
+                                _this.$message.success('添加成功');
+                                _this.getListData();
+                                _this.rolesDialogVisible = false;
+                            } else {
+                                _this.$message.error('添加失败,请确认是否信息有误');
+                            }
+                        }).catch(function(err) {
+                            console.log(err)
+                        })
+                    }
+                    else{   //修改
+                       this.$axios({
+                            method: 'PUT',
+                            url: this.editRoleUrl+'/'+this.rolesForm.id,
+                            data: this.rolesForm
+                        }).then(function(res) {
+                            console.log(res)
+                            if (res.data.code == 1) {
+                                _this.$message.success('修改成功');
+                                _this.getListData();
+                                _this.rolesDialogVisible = false;
+                            } else {
+                                _this.$message.error('修改失败,请确认是否信息有误');
+                            }
+                        }).catch(function(err) {
+                            console.log(err)
+                        })
+                    }
 
+
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
         //更新权限弹框 确定提交按钮
         reviseSubmit() {
@@ -203,25 +250,25 @@ export default {
             this.$refs.powerTree.getCheckedNodes().forEach(function(item) {
                 arr.push(item.id);
             })
-             var _this=this;
+            var _this = this;
             this.$axios({
-                method:'POST',
-                url:_this.revisePowerUrl,
-                data:_this.$initPostData({
+                method: 'POST',
+                url: _this.revisePowerUrl,
+                data: _this.$initPostData({
                     roleId: _this.revisePowerId,
                     permissionIds: arr.join(',')
                 }),
-            }).then(function(res){
+            }).then(function(res) {
                 console.log(res);
-               if(res&&res.data.code==1){
-                   _this.getListData();
-                  _this.$message.success('更新成功');   
-               }else{
-                   _this.$message.error('更新失败');
-               }
-               _this.powerTreeVisible=false;
-            }).catch(function(err){
-              console.log(err);
+                if (res && res.data.code == 1) {
+                    _this.getListData();
+                    _this.$message.success('更新成功');
+                } else {
+                    _this.$message.error('更新失败');
+                }
+                _this.powerTreeVisible = false;
+            }).catch(function(err) {
+                console.log(err);
             })
         },
         //获取角色列表数据
@@ -232,10 +279,10 @@ export default {
                 url: this.listUrl,
             }).then(function(res) {
                 console.log(res);
-                if(res.data.code==1){
-                   _this.rolesListData = res.data.data;
+                if (res.data.code == 1) {
+                    _this.rolesListData = res.data.data;
                 }
-                
+
             }).catch(function(err) {
                 console.log('错误');
                 console.log(err);
@@ -249,12 +296,25 @@ export default {
         },
         //修改按钮
         reviseRoles(obj) {
+            for(var item in obj){
+                obj[item]=obj[item]+'';
+            }
+            this.isAddNewRole = false;
             this.rolesForm = obj;
             this.rolesDialogVisible = true;
-        }
+            // this.$refs['rolesForm'].resetFields();
+        },
     },
     created() {
         this.getListData();
+    },
+    watch:{
+        isAddNewRole(){
+            var obj=this.rolesFormRules;
+            this.rolesFormRules=[];
+            
+            this.rolesFormRules=obj;
+        }
     }
 }
 </script>
@@ -294,6 +354,8 @@ export default {
     height: 400px;
     overflow-y: scroll;
 }
+
+
 
 
 /* .system_roles .user_dialog .el-dialog {
