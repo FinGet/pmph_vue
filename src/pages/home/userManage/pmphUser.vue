@@ -21,6 +21,10 @@
             <el-input placeholder="请输入用户名" v-model="name" @keyup.enter.native="search"></el-input>
           </el-col>
           <el-button type="primary" icon="search" class="marginL10" @click="search">搜索</el-button>
+          <!--操作按钮-->
+          <div class="pull-right">
+            <el-button type="primary" @click="addBtn">增加</el-button>
+          </div>
         </el-col>
         <el-col class="table-wrapper">
           <el-table
@@ -73,7 +77,7 @@
               align="center"
             >
               <template scope="scope">
-                <el-button type="text" @click="dialogVisible = true,modify(scope.$index, usersData)">修改</el-button>
+                <el-button type="text" @click="isNew = false,dialogVisible = true,modify(scope.$index, usersData)">修改</el-button>
                 <el-button type="text">登录</el-button>
               </template>
             </el-table-column>
@@ -183,6 +187,8 @@
   export default{
     data(){
       return {
+        api_addPmphUser:'/users/pmph/add',
+        isNew:true,
         multipleSelection: [],
         dialogVisible:false,
         // 分页 当前页
@@ -249,6 +255,13 @@
       this.getUsers()
     },
     methods:{
+      /**
+       * 点击新增按钮
+       */
+      addBtn(){
+        this.isNew = true;
+        this.dialogVisible = true;
+      },
       /**
        * 获取用户角色
        */
@@ -382,16 +395,16 @@
        * 保存修改
        */
       save() {
-        // console.log('修改之后的form'+this.form)
-//        var isDisabled = ''
-//        if (this.form.isDisabled == "启用"){
-//          isDisabled = false
-//        } else {
-//          isDisabled = true
-//        }
-//        for (var i in this.form.roleName) {
-//          console.log(this.rolenames[i].label)
-//        }
+        if(this.isNew){
+          this.addUser();
+          return;
+        }
+        this.updateUser();
+      },
+      /**
+       * 修改用户信息
+       */
+      updateUser(){
         this.$axios.put("/users/pmph/update/pmphuserofback", this.$initPostData({
           username: this.form.username,
           id: this.form.id,
@@ -401,6 +414,36 @@
           email: this.form.email,
           handphone: this.form.handphone,
           isDisabled: this.form.isDisabled
+        })).then((response) => {
+          let res = response.data
+          if (res.code == 1) {
+            console.log(res)
+            this.dialogVisible = false
+            this.$message({
+              message: '恭喜你，修改成功！',
+              type: 'success'
+            });
+            this.getUsers()
+          }
+        })
+      },
+      /**
+       * 新增用户信息
+       */
+      addUser(){
+        this.$axios.post(this.api_addPmphUser, this.$initPostData({
+          username: this.form.username,
+          roleIds: this.form.roleIds.join(','),
+          realname: this.form.realname,
+          departmentId:this.form.departmentId,
+          email: this.form.email,
+          handphone: this.form.handphone,
+          isDisabled: this.form.isDisabled,
+          password:'123456',//增加功能暂时先只给开发测试用，初始密码都设为123456
+          avatar:'-',//增加功能暂时先只给开发测试用，初始头像为空
+//          note:'',
+//          sort:'',
+//          isDeleted:'',
         })).then((response) => {
           let res = response.data
           if (res.code == 1) {
