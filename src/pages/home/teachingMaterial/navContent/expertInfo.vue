@@ -4,6 +4,7 @@
 
       <!--操作按钮-->
       <div class="paddingB10 text-right">
+        <el-button type="primary">发送私信</el-button>
         <el-button type="primary">确认收到纸质表</el-button>
         <el-button type="warning">退回</el-button>
         <el-button type="primary">通过</el-button>
