@@ -50,8 +50,7 @@
               label="角色名称"
             >
               <template scope="scope">
-                <!--{{scope.row.pmphRoles}}-->
-                <span v-for="item in scope.row.pmphRoles">{{item.roleName}}, </span>
+                <el-tag class="marginTag" v-for="item in scope.row.pmphRoles" type="primary">{{item.roleName}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column
@@ -66,7 +65,7 @@
               width="80"
             >
               <template scope="scope">
-                {{scope.row.isDisabled? '启用' : '停用'}}
+                {{scope.row.isDisabled? '停用' : '启用'}}
               </template>
             </el-table-column>
             <el-table-column
@@ -149,7 +148,7 @@
                     :rules="[{ required: true, message: '请输入所属院校', trigger: 'blur' }]"
         >
           <el-select
-            v-model="form.path"
+            v-model="form.departmentId"
             filterable
             remote
             placeholder="请输入关键词搜索"
@@ -164,11 +163,15 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用:">
-          <el-select v-model="form.isDisabled" placeholder="是否启用">
-            <el-option label="启用" value="true"></el-option>
-            <el-option label="停用" value="false"></el-option>
-          </el-select>
+        <el-form-item label="启用:" prop="isDisabled">
+          <!--<el-select v-model="form.isDisabled" placeholder="是否启用">-->
+            <!--<el-option label="启用" value="true"></el-option>-->
+            <!--<el-option label="停用" value="false"></el-option>-->
+          <!--</el-select>-->
+          <el-radio-group v-model="form.isDisabled">
+            <el-radio :label="false">启用</el-radio>
+            <el-radio :label="true">不启用</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -193,10 +196,10 @@
           departmentName: '',
           email: '',
           handphone: '',
-          isDisabled: '',
+          isDisabled: false,
           name: '',
           note: '',
-          path: '',
+          departmentId: '',
           realname: '',
           roleIds: [],
           sort: '',
@@ -272,7 +275,7 @@
           let res = response.data
           // console.log(res)
           if (res.code == '1') {
-            this.treeData.push(res.data)
+            this.treeData = res.data.sonDepartment;
           }
         }).catch((error) => {
           console.log(error.msg)
@@ -297,7 +300,7 @@
           // console.log(this.dataTotal)
           if (res.code == '1') {
             this.usersData=res.data.rows
-            // console.log(this.usersData)
+            console.log(this.usersData)
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
@@ -338,6 +341,9 @@
       handleNodeClick(data) {
         console.log(data.path);
         this.path = data.path
+        if (data.path == '0') {
+          this.path = ''
+        }
         this.getUsers()
       },
       /**
@@ -353,7 +359,7 @@
        * @param data
        */
       modify(index, data) {
-        this.DepartmentNameList=[{id:data[index].path,name:data[index].departmentName}];
+        this.DepartmentNameList=[{id:data[index].departmentId,name:data[index].departmentName}];
         for (var key in data[index]){
           this.form[key] = data[index][key]
         }
@@ -361,15 +367,15 @@
         this.form.roleIds=[]
         for (var i in data[index].pmphRoles) {
           this.form.roleIds.push(data[index].pmphRoles[i].id)
-          console.log(this.form.roleIds)
+          // console.log(this.form.roleIds)
         }
         console.log(this.form)
         this.form.handphone -= 0
-        if (this.form.isDisabled == 1){
-          this.form.isDisabled = "启用"
-        } else {
-          this.form.isDisabled = "停用"
-        }
+//        if (this.form.isDisabled == 1){
+//          this.form.isDisabled = "启用"
+//        } else {
+//          this.form.isDisabled = "停用"
+//        }
 
         console.log(this.DepartmentNameList)
       },
@@ -377,24 +383,25 @@
        * 保存修改
        */
       save() {
-        var isDisabled = ''
-        if (this.form.isDisabled == "启用"){
-          isDisabled = false
-        } else {
-          isDisabled = true
-        }
+        // console.log('修改之后的form'+this.form)
+//        var isDisabled = ''
+//        if (this.form.isDisabled == "启用"){
+//          isDisabled = false
+//        } else {
+//          isDisabled = true
+//        }
 //        for (var i in this.form.roleName) {
 //          console.log(this.rolenames[i].label)
 //        }
-        this.$axios.put("/users/writer/update/pmphuserofback", this.$initPostData({
+        this.$axios.put("/users/pmph/update/pmphuserofback", this.$initPostData({
           username: this.form.username,
           id: this.form.id,
           roleIds: this.form.roleIds.join(','),
           realname: this.form.realname,
-          path:this.form.path,
+          departmentId:this.form.departmentId,
           email: this.form.email,
           handphone: this.form.handphone+'',
-          isDisabled: isDisabled
+          isDisabled: this.form.isDisabled
         })).then((response) => {
           let res = response.data
           if (res.code == 1) {
@@ -404,6 +411,7 @@
               message: '恭喜你，修改成功！',
               type: 'success'
             });
+            this.getUsers()
           }
         })
       },
@@ -425,8 +433,8 @@
         }
 
         this.loading = true;
-        this.$axios.get('/orgs/list/orgByOrgName',{
-          params:{orgName:query||''}
+        this.$axios.get('/departments/list/pmphdepartment',{
+          params:{dpName:query||''}
         })
           .then(function (response) {
             self.loading = false;
@@ -434,7 +442,12 @@
             let data = res.data;
             console.log(data);
             if(data.length>0){
-              self.DepartmentNameList=[{id:data[0].id,name:data[0].orgName}];
+              self.DepartmentNameList = []
+              for (var i in data) {
+                self.DepartmentNameList.push(
+                  {id:data[i].id,name:data[i].dpName}
+                )
+              }
             }else{
               self.DepartmentNameList=[]
             }
@@ -459,5 +472,8 @@
   .tree-title{
     line-height: 36px;
     margin-bottom: 20px;
+  }
+  .marginTag{
+    margin-left: 3px;
   }
 </style>
