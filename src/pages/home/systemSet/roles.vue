@@ -3,7 +3,7 @@
         <div class="roles_list">
             <h4>角色列表</h4>
             <p>
-                <el-input class="input" v-model="searchValue"  placeholder="请输入角色名称"></el-input>
+                <el-input class="input" v-model="searchValue"  placeholder="请输入角色名称" @keyup.enter.native="getListData()"></el-input>
                 <el-button type="primary" icon="search" @click="getListData()">搜索</el-button>
                 <el-button type="primary" @click="addNewRoles()">增加</el-button>
             </p>
@@ -33,7 +33,7 @@
             </el-table>
         </div>
         <!-- 新增对话框 -->
-        <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible"   class="roles_dialog" size="tiny">
+        <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible" :before-close="resetDialogForm"   class="roles_dialog" size="tiny">
             <div style="padding-right:30px;" >
 
                 <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="95px">
@@ -58,14 +58,16 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="rolesDialogVisible = false">取 消</el-button>
+                <el-button @click="resetDialogForm()">取 消</el-button>
                 <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 权限树弹框 -->
         <el-dialog title="角色权限设置" :visible.sync="powerTreeVisible" size="tiny">
             <div>
+                <transition name="fade" mode="out-in">
                 <el-tree class="tree_box" ref="powerTree" :data="treeData" show-checkbox node-key="id" :props="defaultProps" v-if="powerTreeVisible" :default-checked-keys="defaultCheckedData"></el-tree>
+                </transition>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="powerTreeVisible = false">取 消</el-button>
@@ -201,12 +203,6 @@ export default {
             this.$refs['rolesForm'].validate((valid) => {
                 if (valid) {
                     //验证通过
-                    /* if(this.rolesForm.isDisabled==='false'){
-                        this.rolesForm.isDisabled=false
-                    }
-                    if(this.rolesForm.isDisabled==='true'){
-                        this.rolesForm.isDisabled=true
-                    } */
                     if (this.isAddNewRole) {   //添加
                         this.$axios({
                             method: 'POST',
@@ -315,6 +311,11 @@ export default {
             this.rolesDialogVisible = true;
             // this.$refs['rolesForm'].resetFields();
         },
+        resetDialogForm(){
+            this.$refs['rolesForm'].resetFields();
+            console.log('123123123213');
+            this.rolesDialogVisible = false;
+        }
     },
     created() {
         this.getListData();

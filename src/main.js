@@ -19,8 +19,8 @@ Vue.use(ElementUI);
 
 //请求根地址配置
 // axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
-//axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
- axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
+axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
+// axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
 // 初始化默认post header
 axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
