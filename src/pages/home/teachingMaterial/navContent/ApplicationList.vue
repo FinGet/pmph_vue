@@ -86,12 +86,12 @@
                     {{scope.row.status}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="260">
+            <el-table-column label="操作" width="300">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button">修改</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="$router.push({name:'教材申报选择学校',query:{history:'0'}})">发布</el-button>
+                        <el-button type="text" class="op_button" @click="$router.push({name:'教材申报选择学校',query:{history:'0'}})">通知发布</el-button>
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="$router.push({name:'通知详情'})">通知详情</el-button>
                         <el-dropdown trigger="click" @command="handleClickDrop">

@@ -67,9 +67,9 @@
   import vueEmoji from '@/base/emoji/emoji.vue'
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
-  import {getCursorPosition,setCursorPosition} from 'common/js/textarea.js'
+  import {getCursorPosition,setCursorPosition} from '../../../static/commonFun.js'
   import {DEFAULT_USER_IMAGE} from 'common/config.js'
-  import {getNowFormatDate} from 'common/js/time.js'
+  import {getNowFormatDate} from '../../../static/commonFun.js'
 	export default {
 		data() {
 			return {
