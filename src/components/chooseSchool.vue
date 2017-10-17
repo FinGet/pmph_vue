@@ -70,8 +70,8 @@
     <div class="border-T paddingT20">
       <div class="control-area clearfix paddingB20">
         <div class="pull-left">
-          <el-button  type="primary" size="small">全选</el-button>
-          <el-button  type="primary" size="small">清空</el-button>
+          <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
+          <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
         </div>
         <div class="pull-right">
           <el-button  type="primary" size="small">按区域拼音排序</el-button>
@@ -238,6 +238,29 @@
         this.area_school[index].checkAll = checkedCount === this.area_school[index].schoolList.length;
         this.area_school[index].isIndeterminate = checkedCount > 0 && checkedCount < this.area_school[index].schoolList.length;
       },
+      /**
+       * 点击全选按钮
+       */
+      checkedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=true;
+          iterm.checkedSchools=[];
+          iterm.schoolList.forEach((t,i)=>{
+            iterm.checkedSchools.push(t.id);
+          })
+          iterm.isIndeterminate=false;
+        })
+      },
+      /**
+       * 点击清空按钮
+       */
+      uncheckedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=false;
+          iterm.checkedSchools=[];
+          iterm.isIndeterminate=false;
+        })
+      }
     }
   }
 </script>

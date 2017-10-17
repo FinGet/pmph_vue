@@ -12,7 +12,10 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!showPublishBtn">发布</el-button>
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
+          发布
+          <span v-if="queryData.length>0">({{queryData.length}})</span>
+        </el-button>
       </div>
     </div>
     <!--快速选择区域-->
@@ -70,8 +73,8 @@
     <div class="border-T paddingT20">
       <div class="control-area clearfix paddingB20">
         <div class="pull-left">
-          <el-button  type="primary" size="small">全选</el-button>
-          <el-button  type="primary" size="small">清空</el-button>
+          <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
+          <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
         </div>
         <div class="pull-right">
           <el-button  type="primary" size="small">按区域拼音排序</el-button>
@@ -140,6 +143,28 @@
         </el-table>
       </div>
     </el-dialog>
+
+    <!--已选择院校预览-->
+    <el-dialog
+      title="已选中机构"
+      :visible.sync="dialogVisible2">
+      <div class="table-wrapper">
+        <el-table
+          :data="hasCheckedOrgList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="通知名称">
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -147,6 +172,13 @@
   export default {
     data() {
       return {
+        formdata:{
+          content:'1234',
+          sendType:'1',
+          orgIds:'',
+          userIds:'',
+          bookids:'',
+        },
         selectAll:true,
         sortByTime:true,
         showPublishBtn:false,
@@ -192,11 +224,28 @@
           total:34,
           date:'2017/10/1',
         }],
+        dialogVisible2:false,
       };
     },
     computed: {
-    },
-    created() {
+      queryData(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          [].push.apply(list,iterm.checkedSchools);
+        });
+        return list;
+      },
+      hasCheckedOrgList(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          iterm.schoolList.forEach((t,i)=>{
+            if(iterm.checkedSchools.includes(t.id)){
+              list.push(t);
+            }
+          })
+        });
+        return list;
+      },
     },
     methods: {
       /**
@@ -238,7 +287,59 @@
         this.area_school[index].checkAll = checkedCount === this.area_school[index].schoolList.length;
         this.area_school[index].isIndeterminate = checkedCount > 0 && checkedCount < this.area_school[index].schoolList.length;
       },
-    }
+      /**
+       * 点击全选按钮
+       */
+      checkedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=true;
+          iterm.checkedSchools=[];
+          iterm.schoolList.forEach((t,i)=>{
+            iterm.checkedSchools.push(t.id);
+          })
+          iterm.isIndeterminate=false;
+        })
+      },
+      /**
+       * 点击清空按钮
+       */
+      uncheckedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=false;
+          iterm.checkedSchools=[];
+          iterm.isIndeterminate=false;
+        })
+      },
+      /**
+       * 提交表单
+       */
+      publishBtn(){
+        this.dialogVisible2=true;
+      },
+      /**
+       * 提交表单
+       */
+      submit(){
+        var self = this;
+        this.formdata.orgIds=this.queryData.join(',');
+        this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+          .then(function (response) {
+            let res = response.data;
+            if(res.code===1){
+              self.$message.success('发布成功！');
+              self.$router.push({name: '消息列表'});
+            }
+          })
+          .catch(function (error) {
+            self.$message({
+              type:'error',
+              message:'发布失败，请重试'
+            });
+          });
+      }
+    },
+    mounted(){
+    },
   }
 </script>
 
