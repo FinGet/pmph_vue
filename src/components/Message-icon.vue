@@ -3,10 +3,10 @@
         <span class="el-dropdown-link" trigger="click">
 
           <i class="fa fa-envelope-o fa-lg"></i>
-          <span class="mes-num">5</span>
+          <span class="mes-num" v-if="computedMessageList.length>0">{{computedMessageList.length}}</span>
         </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="(iterm,index) in messageList" :key="index">
+      <el-dropdown-item v-for="(iterm,index) in computedMessageList" :key="index">
         <a class="message-iterm">
           <span class="image"><img src="http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png" alt="Profile Image"></span>
           <span>
@@ -18,7 +18,7 @@
           </span>
         </a>
       </el-dropdown-item>
-      <el-dropdown-item>
+      <el-dropdown-item v-if="computedMessageList.length>3">
         <a class="message-iterm">
           <span class="message message-all">
             查看全部
@@ -31,12 +31,29 @@
 </template>
 
 <script>
+  import bus from 'common/eventBus/bus.js'
 	export default {
+	  props:{
+	    messageList:{
+	      type:Array,
+        default:[,,]
+      }
+    },
 		data() {
 			return {
-			  messageList:[,,,,],
+			  receiveMessage:[,,],
       }
-		}
+		},
+    computed:{
+		  computedMessageList(){
+		    return this.messageList.concat(this.receiveMessage);
+      }
+    },
+    created(){
+      bus.$on('ws:message',function (data) {
+        console.log('message receive message event',data);
+      });
+    },
 	}
 </script>
 
