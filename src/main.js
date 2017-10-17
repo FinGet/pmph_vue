@@ -10,6 +10,7 @@ import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
 import { mySessionStorage, initPostData, authorityComparison } from '../static/commonFun.js'
+import {BASE_URL} from 'common/config';
 import axios from 'axios'
 
 
@@ -19,8 +20,8 @@ Vue.use(ElementUI);
 
 //请求根地址配置
 // axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
-axios.defaults.baseURL = 'http://120.76.221.250:11000/pmpheep/';
-// axios.defaults.baseURL = 'http://192.168.200.125:8090/pmpheep/';
+axios.defaults.baseURL = BASE_URL;
+// axios.defaults.baseURL = 'http://192.168.200.124:8090/pmpheep/';
 // 初始化默认post header
 axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -41,7 +42,7 @@ router.beforeEach((to, from, next) => {
     } else {
       ElementUI.Message.error('抱歉，您没有进入该模块的权限');
      next(from.path);
-   
+
     }
   }
   else {
@@ -53,7 +54,11 @@ router.beforeEach((to, from, next) => {
 //添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
   //请求发送之前的钩子
-  //console.log(config);
+  console.log(config);
+/*   if(config.url!='http://192.168.200.124:8090/pmpheep/pmph/login'){
+    config.withCredentials=true;
+  }
+ */
   if(mySessionStorage.get('currentUser', 'json').sessionPmphUserToken){
      config.headers.Authorization=mySessionStorage.get('currentUser', 'json').sessionPmphUserToken;
   }else{

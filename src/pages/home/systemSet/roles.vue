@@ -31,6 +31,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+
         </div>
         <!-- 新增对话框 -->
         <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible" :before-close="resetDialogForm"   class="roles_dialog" size="tiny">
@@ -74,7 +75,7 @@
                 <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
             </span>
         </el-dialog>
-
+        
     </div>
 </template>
 <script type="text/javascript">

@@ -3,12 +3,43 @@
 
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="next">
+      <el-button type="primary" @click="nextStep()">
         下一步
       </el-button>
     </div>
     <!--输入标题-->
-    <el-row class="">
+    <el-form :model="messageForm" ref="messageForm" :rules="messageRules" label-width="110px">
+      <el-form-item label="标题：" prop="title">
+           <el-input v-model="messageForm.title" placeholder="请输入文章标题" class="message-title-input"></el-input>
+      </el-form-item>
+      <el-form-item label="发送对象：" prop="sendType">
+           <el-radio-group v-model="messageForm.sendType">
+            <el-radio :label="0">学校管理员</el-radio>
+            <el-radio :label="1">所有人</el-radio>
+            <el-radio :label="2">特定对象</el-radio>
+            <el-radio :label="3">教材报名者</el-radio>
+          </el-radio-group>  
+      </el-form-item>
+      <el-form-item label="文章内容：" required>
+           <script id="editor" type="text/plain" style="height:500px;position:relative;z-index:99;"></script>
+      </el-form-item>
+      <!--分割线-->
+      <el-form-item>
+          <el-row>
+        <div class="cutLine-dashed" style="width:100%;margin-left:0;"></div>
+    </el-row>
+      </el-form-item>
+    <el-form-item label="附件：" prop="fileList">
+        <div class="col-content file-upload-wrapper" style="padding-left:0;" >
+          <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :file-list="messageForm.fileList">
+            <span>
+              <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
+            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
+          </el-upload>
+        </div>
+    </el-form-item>
+    </el-form>
+    <!-- <el-row class="">
       <el-col :span="3" class="text-right">
         <div class="col-content lineHeight-36">
           <span class="required-fields">标题</span> ：
@@ -19,9 +50,9 @@
           <el-input v-model="title" placeholder="请输入文章标题" class="message-title-input"></el-input>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <!--选择发送对象区-->
-    <el-row class="lineHeight-36">
+    <!-- <el-row class="lineHeight-36">
       <el-col :span="3" class="text-right">
         <div class="col-content">
           <span class="required-fields">发送对象</span> ：
@@ -37,9 +68,9 @@
           </el-radio-group>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <!--编辑内容区-->
-    <el-row>
+    <!-- <el-row>
       <el-col :span="3" class="text-right">
         <div class="col-content">
           <span class="required-fields">文章内容</span> ：
@@ -47,27 +78,20 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content">
-          <!-- <Editor :config="{}" :defaultMsg="'123'"></Editor> -->
-          <!--  <textarea class="layui-textarea" id="LAY_demo1" style="display: none">
-              把编辑器的初始内容放在这textarea即可
-            </textarea> -->
-          <!-- <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/neditor.config.js"></script>
-          <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/neditor.all.min.js"></script>
-          <script type="text/javascript" charset="utf-8" src="../../../../static/neditor/lang/zh-cn/zh-cn.js"></script> -->
-          <script id="editor" type="text/plain" style="height:500px;position:relative;z-index:99;"></script>
+         
           <div id="editor_id"></div>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <!--分割线-->
-    <el-row>
+    <!-- <el-row>
       <el-col :span="20" :offset="3">
         <div class="cutLine-dashed"></div>
-      </el-col>
-    </el-row>
+      </el-col> 
+    </el-row>-->
     <!--添加附件-->
-    <el-row class="">
+   <!--  <el-row class="">
       <el-col :span="3" class="text-right">
         <div class="col-content">
           <span class="required-fields">附件</span> ：
@@ -82,7 +106,7 @@
           </el-upload>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <Preview-popup :close.sync="previewShow"></Preview-popup>
   </div>
@@ -93,11 +117,25 @@ import PreviewPopup from 'components/PreviewPopup'
 export default {
   data: function() {
     return {
-      title: '',
-      sendType: 0,
+      messageForm:{
+        title:'',
+        sendType:'',
+        fileList:[],
+  
+      },
+      messageRules:{
+       title:[
+          { required: true, message: '请输入文章标题', trigger: 'blur' },
+       ],
+       sendType:[
+          {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
+       ],
+       fileList:[
+        /*  { type: 'array', required: true, message: '请至少上传一个附件', trigger: 'change' } */
+       ]
+
+      },
       previewShow: false,
-      fileList: [],
-      editorText: '',
       uEditor:null
     }
   },
@@ -107,19 +145,26 @@ export default {
       console.log(this.previewShow)
     },
     //点击下一步执行的方法
-    next(){
-      switch(this.sendType){
+    nextStep(){
+      
+      this.$refs['messageForm'].validate((valid) => {
+          if (valid) {
+            var paramData={
+              title:this.messageForm.title,
+              content:this.uEditor.getContent()
+            }
+             switch(this.messageForm.sendType){
         case 0:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 1:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 2:
-          this.$router.push({name:'特定对象',query:{history:'1'}});
+          this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
           break;
         case 3:
-          this.$router.push({name:'教材报名者',query:{history:'1'}});
+          this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
           break;
         dafault:
           this.$message({
@@ -127,11 +172,14 @@ export default {
             message: '请选择发送对象'
           });
       }
-
+          } else {
+            
+            return false;
+          }
+        });
     }
   },
   components: {
-    /*  Editor, */
     PreviewPopup
   },
   mounted() {
