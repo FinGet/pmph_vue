@@ -147,7 +147,7 @@
         this.$axios.get(this.groupListUrl,{
           params:{
             groupName:this.inputSearchGroup,
-            sessionId:this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId
+            sessionId:this.$mySessionStorage.get('currentUser', 'json').userSessionId
 
           },
         }).then(function(res){
