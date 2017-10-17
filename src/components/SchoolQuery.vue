@@ -1,15 +1,7 @@
 <template>
   <div class="query">
     <!--操作按钮区-->
-    <div class="query-operation clearfix">
-      <!--搜索-->
-      <div class="searchBox-wrapper">
-        <el-input placeholder="请输入" class="searchInputEle"></el-input>
-      </div>
-      <!--搜索按钮-->
-      <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary" icon="search">搜索</el-button>
-      </div>
+    <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
@@ -177,7 +169,7 @@
           sendType:'1',
           orgIds:'',
           userIds:'',
-          bookids:'',
+          bookIds:'',
         },
         selectAll:true,
         sortByTime:true,
@@ -322,6 +314,7 @@
       submit(){
         var self = this;
         this.formdata.orgIds=this.queryData.join(',');
+        this.formdata['sessionId']=this.getUserData().sessionId;
         this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
           .then(function (response) {
             let res = response.data;
@@ -338,7 +331,15 @@
           });
       }
     },
-    mounted(){
+    created(){
+      var routerParams = this.$route.params;
+      console.log(routerParams);
+      if(!routerParams.content){
+        this.$message.error('页面未收到发送消息内容');
+        this.router.push({name: '编辑消息'});
+      }
+      this.formdata.content=JSON.stringify(routerParams.content);
+      this.formdata.sendType=routerParams.sendType;
     },
   }
 </script>

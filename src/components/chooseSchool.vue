@@ -1,18 +1,13 @@
 <template>
   <div class="query">
     <!--操作按钮区-->
-    <div class="query-operation clearfix">
-      <!--搜索-->
-      <div class="searchBox-wrapper">
-        <el-input placeholder="请输入" class="searchInputEle"></el-input>
-      </div>
-      <!--搜索按钮-->
-      <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary" icon="search">搜索</el-button>
-      </div>
+    <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!showPublishBtn">发布</el-button>
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
+          发布
+          <span v-if="queryData.length>0">({{queryData.length}})</span>
+        </el-button>
       </div>
     </div>
     <!--快速选择区域-->
@@ -24,11 +19,11 @@
         <div>
           <el-button type="default" size="small" @click="dialogVisible=true" icon="plus" v-if="historyData.length==0">历史教材通知</el-button>
           <el-tag v-else
-            v-for="(tag,index) in historyData"
-            :key="index"
-            :closable="true"
-            @close="handleHistoryTagClose(tag)"
-            :type="tag.type"
+                  v-for="(tag,index) in historyData"
+                  :key="index"
+                  :closable="true"
+                  @close="handleHistoryTagClose(tag)"
+                  :type="tag.type"
           >
             {{tag.name}}
           </el-tag>
@@ -140,6 +135,28 @@
         </el-table>
       </div>
     </el-dialog>
+
+    <!--已选择院校预览-->
+    <el-dialog
+      title="已选中机构"
+      :visible.sync="dialogVisible2">
+      <div class="table-wrapper">
+        <el-table
+          :data="hasCheckedOrgList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="通知名称">
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -147,6 +164,13 @@
   export default {
     data() {
       return {
+        formdata:{
+          content:'1234',
+          sendType:'1',
+          orgIds:'',
+          userIds:'',
+          bookIds:'',
+        },
         selectAll:true,
         sortByTime:true,
         showPublishBtn:false,
@@ -192,11 +216,28 @@
           total:34,
           date:'2017/10/1',
         }],
+        dialogVisible2:false,
       };
     },
     computed: {
-    },
-    created() {
+      queryData(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          [].push.apply(list,iterm.checkedSchools);
+        });
+        return list;
+      },
+      hasCheckedOrgList(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          iterm.schoolList.forEach((t,i)=>{
+            if(iterm.checkedSchools.includes(t.id)){
+              list.push(t);
+            }
+          })
+        });
+        return list;
+      },
     },
     methods: {
       /**
@@ -260,47 +301,85 @@
           iterm.checkedSchools=[];
           iterm.isIndeterminate=false;
         })
+      },
+      /**
+       * 提交表单
+       */
+      publishBtn(){
+        this.dialogVisible2=true;
+      },
+      /**
+       * 提交表单
+       */
+      submit(){
+        var self = this;
+        this.formdata.orgIds=this.queryData.join(',');
+        this.formdata['sessionId']=this.getUserData().sessionId;
+        this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+          .then(function (response) {
+            let res = response.data;
+            if(res.code===1){
+              self.$message.success('发布成功！');
+              self.$router.push({name: '消息列表'});
+            }
+          })
+          .catch(function (error) {
+            self.$message({
+              type:'error',
+              message:'发布失败，请重试'
+            });
+          });
       }
-    }
+    },
+    created(){
+      var routerParams = this.$route.params;
+      console.log(routerParams);
+      if(!routerParams.content){
+        this.$message.error('页面未收到发送消息内容');
+        this.router.push({name: '编辑消息'});
+      }
+      this.formdata.content=JSON.stringify(routerParams.content);
+      this.formdata.sendType=routerParams.sendType;
+    },
   }
 </script>
 
 <style scoped>
-.fastQuery>div{
-  line-height: 36px;
-  padding: 10px 0;
-}
-.fastQuery>div>div:first-child{
-  color:#999;
-  width: 80px;
-  float: left;
-}
-.fastQuery>div>div:last-child{
-}
+  .fastQuery>div{
+    line-height: 36px;
+    padding: 10px 0;
+  }
+  .fastQuery>div>div:first-child{
+    color:#999;
+    width: 80px;
+    float: left;
+  }
+  .fastQuery>div>div:last-child{
+  }
 
-.select_provinces{
-  width: 70%;
-}
-.queryTips{
-  background-color: #ced3d7;
-  color: #2a3f54;
-  line-height: 1 !important;
-  padding: 4px 0 !important;
-}
-.area-list{
-  padding: 20px 0 30px;
-  border-bottom: 1px dashed #c8c8c8;
-}
-.area-list>div:first-child{
-  display: inline-block;
-  width: 80px;
-  text-align: center;
-  float: left;
-}
-.area-list>div:last-child{
-  margin-left: 90px;
-  padding-left: 20px;
-  text-align: left;
-  border-left: 1px solid #e5e5e5;
-}
+  .select_provinces{
+    width: 70%;
+  }
+  .queryTips{
+    background-color: #ced3d7;
+    color: #2a3f54;
+    line-height: 1 !important;
+    padding: 4px 0 !important;
+  }
+  .area-list{
+    padding: 20px 0 30px;
+    border-bottom: 1px dashed #c8c8c8;
+  }
+  .area-list>div:first-child{
+    display: inline-block;
+    width: 80px;
+    text-align: center;
+    float: left;
+  }
+  .area-list>div:last-child{
+    margin-left: 90px;
+    padding-left: 20px;
+    text-align: left;
+    border-left: 1px solid #e5e5e5;
+  }
 </style>
