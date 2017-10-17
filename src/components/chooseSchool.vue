@@ -12,7 +12,7 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!hasSelected">发布</el-button>
+        <el-button type="primary" :disabled="!showPublishBtn">发布</el-button>
       </div>
     </div>
     <!--快速选择区域-->
@@ -22,7 +22,16 @@
           快速选择：&nbsp;&nbsp;<span></span>
         </div>
         <div>
-          <el-button type="default" size="small" @click="dialogVisible=true" icon="plus">历史教材通知</el-button>
+          <el-button type="default" size="small" @click="dialogVisible=true" icon="plus" v-if="historyData.length==0">历史教材通知</el-button>
+          <el-tag v-else
+            v-for="(tag,index) in historyData"
+            :key="index"
+            :closable="true"
+            @close="handleHistoryTagClose(tag)"
+            :type="tag.type"
+          >
+            {{tag.name}}
+          </el-tag>
         </div>
       </div>
       <div class="clearfix">
@@ -32,10 +41,10 @@
         <div>
           <el-select v-model="select_provinces" multiple  placeholder="全部" class="select_provinces">
             <el-option
-              v-for="item in provinces"
-              :key="item"
-              :label="item"
-              :value="item">
+              v-for="(item,index) in area_school"
+              :key="index"
+              :label="item.province"
+              :value="item.id">
             </el-option>
           </el-select>
         </div>
@@ -69,13 +78,25 @@
           <el-button  type="primary" size="small">按机构拼音排序</el-button>
         </div>
       </div>
-      <div class="area-list" v-for="(iterm,index) in area_school">
+      <div class="area-list"
+           v-for="(iterm,index) in area_school"
+           :key="index"
+           v-if="(select_provinces.includes(iterm.id))||select_provinces.length==0">
         <div>
-          <el-checkbox :indeterminate="iterm.isIndeterminate" v-model="iterm.checkAll">{{iterm.province}}</el-checkbox>
+          <el-checkbox
+            :indeterminate="iterm.isIndeterminate"
+            v-model="iterm.checkAll"
+            @change="checkAllChange(iterm)">
+            {{iterm.province}}
+          </el-checkbox>
         </div>
         <div>
-          <el-checkbox-group v-model="iterm.checkedCities">
-            <el-checkbox v-for="city in iterm.schoolList" :label="city" :key="city">{{city}}</el-checkbox>
+          <el-checkbox-group v-model="iterm.checkedSchools"  @change="handleCheckedSchoolChange(iterm)">
+            <el-checkbox
+              v-for="(city,index) in iterm.schoolList"
+              :label="city.id"
+              :key="index"
+              v-if="select_orgType==0||city.type==select_orgType">{{city.name}}</el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -113,7 +134,7 @@
             label="操作"
             width="80">
             <template scope="scope">
-              <el-button type="text">选择</el-button>
+              <el-button type="text" @click="chooseHistory(scope.$index)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -128,50 +149,30 @@
       return {
         selectAll:true,
         sortByTime:true,
-        hasSelected:false,
-        provinces:['北京市','天津市','河北省','山西','内蒙古自治区',
-          '辽宁省','吉林省','黑龙江省','上海市','江苏省','浙江省',
-          '安徽省','福建省','江西省','山东省','河南省','湖北省','湖南省',
-          '广东省','广西壮族自治区','海南省','重庆市','四川省','贵州省','云南省',
-          '西藏自治区','陕西省','甘肃省','青海省','宁夏回族自治区','新疆维吾尔自治区',
-          '台湾省','香港特别行政区','澳门特别行政区'
-        ],
+        showPublishBtn:false,
         select_provinces:[],
         select_orgType:0,
         area_school:[{
+          id:0,
           province:'北京',
-          isIndeterminate:true,
-          checkAll:true,
-          checkedCities:[],
-          schoolList:['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-            '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
+          isIndeterminate:false,
+          checkAll:false,
+          checkedSchools:[],
+          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
           ]
         },{
-          province:'北京',
-          isIndeterminate:true,
-          checkAll:true,
-          checkedCities:[],
-          schoolList:['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-            '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
-          ]
-        },{
-          province:'北京',
-          isIndeterminate:true,
-          checkAll:true,
-          checkedCities:[],
-          schoolList:['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-            '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
-          ]
-        },{
-          province:'北京',
-          isIndeterminate:true,
-          checkAll:true,
-          checkedCities:[],
-          schoolList:['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-            '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
+          id:4,
+          province:'天京',
+          isIndeterminate:false,
+          checkAll:false,
+          checkedSchools:[],
+          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
           ]
         }],
         dialogVisible:false,
+        historyData:[],
         tableData:[{
           id:'123',
           sort:0,
@@ -194,11 +195,49 @@
       };
     },
     computed: {
-
     },
     created() {
     },
     methods: {
+      /**
+       * 点击快速选择历史弹窗中的选择按钮
+       * @param tableIndex 选中表格数据的index值
+       */
+      chooseHistory(tableIndex){
+        this.historyData = [this.tableData[tableIndex]]
+        this.dialogVisible=false;
+      },
+      /**
+       * 关闭已选择历史记录时触发此方法
+       * @param tag 该标签数据
+       */
+      handleHistoryTagClose(tag){
+        this.historyData=[];
+      },
+      /**
+       * 当省份复选框发生变化
+       * @param iterm
+       */
+      checkAllChange(iterm){
+        var index = this.area_school.indexOf(iterm);
+        this.area_school[index].checkedSchools=[];
+        if(this.area_school[index].checkAll){
+          this.area_school[index].schoolList.forEach(t => {
+            this.area_school[index].checkedSchools.push(t.id);
+          })
+        }
+        this.area_school[index].isIndeterminate=false;
+      },
+      /**
+       * 学校复选框发生变化时
+       * @param iterm
+       */
+      handleCheckedSchoolChange(iterm){
+        var index = this.area_school.indexOf(iterm);
+        let checkedCount = this.area_school[index].checkedSchools.length;
+        this.area_school[index].checkAll = checkedCount === this.area_school[index].schoolList.length;
+        this.area_school[index].isIndeterminate = checkedCount > 0 && checkedCount < this.area_school[index].schoolList.length;
+      },
     }
   }
 </script>
