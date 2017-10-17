@@ -8,7 +8,9 @@
           placeholder="小组搜索"
           icon="search"
           v-model="inputSearchGroup"
-          :on-icon-click="handleIconClick">
+          :on-icon-click="getGroupData"
+          @keyup.enter.native="getGroupData"
+          >
         </el-input>
       </div>
       <div class="memberShape">
@@ -18,7 +20,7 @@
                v-for="(item,index) in groupListData"
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
-               @click="clickGroup(item.id,item)"
+               @click="clickGroup(item)"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
@@ -87,6 +89,7 @@
   export default{
     data(){
        return {
+         groupListUrl:'/group/list/pmphgroup',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
          currentActiveGroupId:1237,
@@ -126,11 +129,8 @@
       beautyScroll
     },
     methods:{
-      handleIconClick(ev) {
-        console.log(ev);
-      },
-      clickGroup(groupid,group){
-        this.currentActiveGroupId = groupid;
+      clickGroup(group){
+        this.currentActiveGroupId = group.id;
         this.$emit('clickItem',group)
       },
       /*点击新建小组按钮*/
@@ -141,6 +141,24 @@
       handleAvatarSuccess(response, file, fileList){
         this.newGroupData.headImage = URL.createObjectURL(file.raw);
       },
+      /* 初始化小组列表 */
+      getGroupData(){
+        console.log(this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId);
+        this.$axios.get(this.groupListUrl,{
+          params:{
+            groupName:this.inputSearchGroup,
+            sessionId:this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId
+
+          },
+        }).then(function(res){
+          console.log(res);
+          if(res.data.code==1){
+
+          }
+        }).catch(function(err){
+          console.log(err);
+        })
+      }
     },
     watch:{
       /**
@@ -150,6 +168,9 @@
         this.$refs.beautyScroll.refresh(280);
 
       },
+    },
+    created(){
+       this.getGroupData();
     }
   }
 </script>

@@ -25,7 +25,7 @@
         <!--<button @click="fold"></button>-->
       </el-col>
       <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap">
-        <MembersList @addNewMember="addNewMember"></MembersList>
+        <MembersList @addNewMember="addNewMember" :groupId.sync="currentGroupId"></MembersList>
       </el-col>
     </el-row>
   </div>
@@ -41,6 +41,7 @@
   export default {
     data() {
       return {
+        currentGroupId:'',
         wrapperHeight:600,
         foldRightCol:false,
         grouplistColDefaultWidth:5,

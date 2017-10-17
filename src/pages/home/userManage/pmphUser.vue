@@ -54,7 +54,7 @@
               label="角色名称"
             >
               <template scope="scope">
-                <el-tag class="marginTag" v-for="item in scope.row.pmphRoles" type="primary">{{item.roleName}}</el-tag>
+                <el-tag class="marginTag" v-for="item in scope.row.pmphRoles" :key="item" type="primary">{{item.roleName}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column
