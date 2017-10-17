@@ -143,11 +143,11 @@
       },
       /* 初始化小组列表 */
       getGroupData(){
-        console.log(this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId);
+        //console.log(this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId);
         this.$axios.get(this.groupListUrl,{
           params:{
             groupName:this.inputSearchGroup,
-            sessionId:this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId
+            sessionId:this.$mySessionStorage.get('currentUser', 'json').userSessionId
 
           },
         }).then(function(res){

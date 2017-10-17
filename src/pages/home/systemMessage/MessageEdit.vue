@@ -3,7 +3,7 @@
 
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="next">
+      <el-button type="primary" @click="nextStep()">
         下一步
       </el-button>
     </div>
@@ -29,8 +29,8 @@
         <div class="cutLine-dashed" style="width:100%;margin-left:0;"></div>
     </el-row>
       </el-form-item>
-    <el-form-item label="附件：">
-        <div class="col-content file-upload-wrapper" >
+    <el-form-item label="附件：" prop="fileList">
+        <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :file-list="messageForm.fileList">
             <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
@@ -121,21 +121,21 @@ export default {
         title:'',
         sendType:'',
         fileList:[],
-        uEditorText:''
+  
       },
       messageRules:{
        title:[
           { required: true, message: '请输入文章标题', trigger: 'blur' },
        ],
        sendType:[
-          { required: true, message: '请选择发送对象', trigger: 'blur' },
+          {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
        ],
+       fileList:[
+        /*  { type: 'array', required: true, message: '请至少上传一个附件', trigger: 'change' } */
+       ]
 
       },
-     /*  title: '',
-      sendType: 0, */
       previewShow: false,
-      //fileList: [],
       uEditor:null
     }
   },
@@ -145,19 +145,26 @@ export default {
       console.log(this.previewShow)
     },
     //点击下一步执行的方法
-    next(){
-      switch(this.sendType){
+    nextStep(){
+      
+      this.$refs['messageForm'].validate((valid) => {
+          if (valid) {
+            var paramData={
+              title:this.messageForm.title,
+              content:this.uEditor.getContent()
+            }
+             switch(this.messageForm.sendType){
         case 0:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 1:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 2:
-          this.$router.push({name:'特定对象',query:{history:'1'}});
+          this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
           break;
         case 3:
-          this.$router.push({name:'教材报名者',query:{history:'1'}});
+          this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
           break;
         dafault:
           this.$message({
@@ -165,11 +172,14 @@ export default {
             message: '请选择发送对象'
           });
       }
-
+          } else {
+            
+            return false;
+          }
+        });
     }
   },
   components: {
-    /*  Editor, */
     PreviewPopup
   },
   mounted() {

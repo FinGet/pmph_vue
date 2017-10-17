@@ -394,6 +394,9 @@
       mounted(){
         //将四个面板设为等高
       },
+      created(){
+        console.log(this.$router);
+      }
     }
 </script>
 <style scoped>
