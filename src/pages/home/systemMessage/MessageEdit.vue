@@ -3,7 +3,7 @@
 
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="next">
+      <el-button type="primary" @click="nextStep()">
         下一步
       </el-button>
     </div>
@@ -121,7 +121,7 @@ export default {
         title:'',
         sendType:'',
         fileList:[],
-        uEditorText:''
+  
       },
       messageRules:{
        title:[
@@ -145,21 +145,26 @@ export default {
       console.log(this.previewShow)
     },
     //点击下一步执行的方法
-    next(){
+    nextStep(){
+      
       this.$refs['messageForm'].validate((valid) => {
           if (valid) {
+            var paramData={
+              title:this.messageForm.title,
+              content:this.uEditor.getContent()
+            }
              switch(this.messageForm.sendType){
         case 0:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 1:
-          this.$router.push({name:'选择学校',query:{history:'1'}});
+          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
           break;
         case 2:
-          this.$router.push({name:'特定对象',query:{history:'1'}});
+          this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
           break;
         case 3:
-          this.$router.push({name:'教材报名者',query:{history:'1'}});
+          this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
           break;
         dafault:
           this.$message({
