@@ -1,8 +1,8 @@
 <template>
   <el-dropdown>
       <span class="el-dropdown-link">
-          <span class="user-image"><img :src="userData.headImage" alt=""></span>
-          <span>admin</span>
+          <span class="user-image"><img :src="headImage" alt=""></span>
+          <span>{{userData.username}}</span>
       </span>
     <el-dropdown-menu slot="dropdown" class="user-dropdown">
       <el-dropdown-item>
@@ -33,13 +33,18 @@
 	    userData: {
         type: Object,
         default: function () {
-          return {headImage: 'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png'}
+          return {}
         }
       }
     },
 		data() {
 			return {}
-		}
+		},
+    computed:{
+      headImage(){
+        return this.userData.avatar||'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png';
+      },
+    },
 	}
 </script>
 

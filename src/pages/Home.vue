@@ -8,8 +8,8 @@
     </div>
     <div class="nav-top">
       <div class="nav-top-user">
-        <Message-icon></Message-icon>
-        <User></User>
+        <Message-icon :messageList="[]"></Message-icon>
+        <User :userData="userData"></User>
       </div>
       <div class="breadcrumb-wrapper">
         <Breadcrumb></Breadcrumb>
@@ -33,8 +33,10 @@
   import User from 'components/User';
   import {mapGetters} from 'vuex'
   import Breadcrumb from 'components/Breadcrumb'
-
+  import createWebsocket from 'common/mixins/createWebsocket'
+  import { mySessionStorage} from '../../static/commonFun.js'
   export default {
+    mixins:[createWebsocket],
     data() {
       return {
         isShowBackTop:false,
@@ -44,7 +46,10 @@
     computed:{
       ...mapGetters([
         'sidebarFlod'
-      ])
+      ]),
+      userData(){
+        return mySessionStorage.get('currentUser', 'json').sessionPmphUser||{};
+      },
     },
     methods: {
       toggleSideBarBtnFold(){
@@ -175,7 +180,7 @@
   }
   .nav-top-user{
     float: right;
-    margin-right: 18px;
+    margin-right: 38px;
   }
   .breadcrumb-wrapper{
     display: inline-block;
