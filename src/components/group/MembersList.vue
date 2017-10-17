@@ -198,6 +198,7 @@
   import {mapGetters} from 'vuex'
   import {DEFAULT_USER_IMAGE} from 'common/config.js';
     export default{
+      props:['groupId'],
         data(){
             return {
               dialogVisible: false,
@@ -504,6 +505,10 @@
           this.$refs.beautyScroll.refresh(280);
 
         },
+        /* 监测小组id的变化 */
+        groupId(){
+
+        }
       }
     }
 </script>
