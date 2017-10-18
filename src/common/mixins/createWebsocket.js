@@ -1,14 +1,15 @@
 import bus from '../eventBus/bus'
 import {BASE_WS_URL} from '../config';
-import { mySessionStorage} from '../../../static/commonFun.js';
 export default {
   created() {
     if(!WebSocket){
       console.error('浏览器不支持websocket')
     };
-    var userType = mySessionStorage.get('currentUser', 'json').loginType || '';
+    var userdata = this.getUserData()
+    var userType = userdata.userInfo.loginType || '';
+    var sessionid = userdata.sessionId || '';
     console.log(BASE_WS_URL + 'websocket?userType=' + userType);
-    var socket = new WebSocket(BASE_WS_URL + 'websocket?userType=' + userType);
+    var socket = new WebSocket(BASE_WS_URL + 'websocket?userType=' + userType+'&sessionId='+sessionid);
     /**
      * websocket创建成功事件
      */

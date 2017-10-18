@@ -170,7 +170,12 @@ p{word-wrap:break-word}
   border: none !important;
 }
 
-
+/*=================================================================
+  鼠标样式
+  =================================================================*/
+.cursor-pointer{
+  cursor: pointer;
+}
 
 /*重置默认样式*/
 button a,button a:hover,button a:active{
