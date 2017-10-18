@@ -66,7 +66,6 @@ export function authorityComparison(matchArr, userArr) {
  * @returns {*|string}
  */
 export function getDateDiff(dateTimeStamp){
-  var result;
   var minute = 1000 * 60;
   var hour = minute * 60;
   var day = hour * 24;
