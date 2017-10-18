@@ -24,13 +24,13 @@
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
-              <img :src="item.image?item.image:DEFAULT_USER_IMAGE" alt="小组头像">
+              <img :src="item.groupImage?item.groupImage:DEFAULT_USER_IMAGE" alt="小组头像">
             </span>
               <div class="groupHeadName">
-                <span>{{item.name}}</span>
+                <span>{{item.groupName}}</span>
                 <span class="textbook">{{item.textbook}}</span>
               </div>
-              <span class="lastMessageTime">{{item.lastMesTime}}</span>
+              <span class="lastMessageTime">{{changeDateType(item.lastMessageTime)}}</span>
             </div>
           </div>
         </beauty-scroll>
@@ -86,6 +86,7 @@
 <script>
   import {DEFAULT_USER_IMAGE} from 'common/config.js';
   import beautyScroll from '@/base/beautyScroll.vue';
+  import {getDateDiff} from '../../../static/commonFun.js'
   import {mapGetters} from 'vuex'
   export default{
     data(){
@@ -95,31 +96,11 @@
          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
          currentActiveGroupId:1237,
          inputSearchGroup:'',
-         groupListData:[
-           {name:'人卫社小组',textbook:'健康学导论（或健康服务与管理导论）',id:1231,lastMesTime:'昨天'},
-           {name:'成都医科大学内部',lastMesTime:"7-28"},
-           {name:'个人小组',id:1232,lastMesTime:"8-28"},
-           {name:'个人小组',id:1233,lastMesTime:"8-28"},
-           {name:'个人小组',id:1234,textbook:'健康经济与政策',lastMesTime:"8-28"},
-           {name:'个人小组',id:1235,lastMesTime:"8-28"},
-           {name:'个人小组',id:1236,lastMesTime:"8-28"},
-           {name:'个人小组',id:1237,lastMesTime:"8-28"},
-           {name:'个人小组',id:1238,lastMesTime:"8-28"},
-           {name:'个人小组',id:1239,lastMesTime:"8-28"},
-           {name:'个人小组',id:1230,lastMesTime:"8-28"},
-           {name:'个人小组',id:12311,lastMesTime:"8-28"},
-           {name:'个人小组',id:12322,lastMesTime:"8-28"},
-           {name:'个人小组',id:12333,lastMesTime:"8-28"},
-           {name:'个人小组',id:12344,lastMesTime:"8-28"},
-           {name:'个人小组',id:12355,lastMesTime:"8-28"},
-           {name:'个人小组',id:12366,lastMesTime:"8-28"},
-           {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年"}
-           ],
-        filelist:[],
-        newGroupData:{
-          filename:undefined,
-          name:null
-        },
+         groupListData:[],
+         newGroupData:{
+           filename:undefined,
+           name:null
+         },
        }
     },
     computed:{
@@ -135,17 +116,20 @@
         this.currentActiveGroupId = group.id;
         this.$emit('clickItem',group)
       },
+      changeDateType(num){
+        console.log(typeof parseInt(num));
+         return  getDateDiff(parseInt(num));
+      },
       /*点击新建小组按钮*/
       addNew(){
         this.dialogVisible = !this.dialogVisible
       },
       /* 初始化小组列表 */
       getGroupData(){
-        //console.log(this.$mySessionStorage.get('currentUser', 'json').pmphUserSessionId);
         this.$axios.get(this.groupListUrl,{
           params:{
             groupName:this.inputSearchGroup,
-            sessionId:this.$mySessionStorage.get('currentUser', 'json').userSessionId
+            sessionId:this.getUserData().sessionId
 
           },
         }).then(function(res){
