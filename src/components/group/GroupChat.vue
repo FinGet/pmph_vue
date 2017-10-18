@@ -9,6 +9,8 @@
         :message="iterm"
         :key="index"
         :isNew="!!iterm.isNew"
+        :groupId="currentGroup.id"
+        :currentUserId="currentUserdata.userInfo.id"
       >
 
       </ChatMessageIterm>
@@ -78,6 +80,11 @@
         messagesList:[],
       }
 		},
+    computed:{
+      currentUserdata(){
+        return this.getUserData()
+      }
+    },
     methods:{
       sendMessage(){
         var message = {
