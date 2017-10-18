@@ -1,129 +1,230 @@
 <template>
 	<div class="groupsetting">
-    <el-row>
-      <el-col>
-        <div class="pull-left marginR30">
-          <img class="avatar" :src="group.image?data.image:defaultImage" alt="小组头像">
-        </div>
-        <el-col :span="8">
-          <span class="name">小组名称:</span><el-input v-model="name"></el-input>
-          <br>
+    <div class="addNewPopup paddingB30">
+      <el-row class="marginB30">
+        <el-col :span="6">
+          <p class="lineHeight-100">小组头像：</p>
         </el-col>
-      </el-col>
-      <el-col>
-        <el-upload
-          class="marginT10 marginL10"
-          action="#"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <el-button size="small" type="primary">上传头像</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-      </el-col>
-      <el-col>
-        <div class="cutLine-dashed clearfix"></div>
-        <div class="pull-right">
-          <el-popover
-            ref="popover"
-            placement="top"
-            width="160"
-            v-model="visible">
-            <p>确认解散小组吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="dismiss">确定</el-button>
+        <el-col :span="18">
+          <div class="headImageWrapper">
+            <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+              <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
+            </el-tooltip>
+            <!--上传文件按钮-->
+            <input type="file" @change="filechange" ref="fileInput" class="fileInput" />
+            <div ref="headImageWrapper" v-show="groupData.filename">
+              <img :src="DEFAULT_USER_IMAGE" class="avatar">
             </div>
-          </el-popover>
-          <el-button class="pull-left" type="danger" v-popover:popover>解散小组</el-button>
-          <el-popover
-            ref="popover1"
-            placement="top"
-            width="160"
-            v-model="visible1">
-            <p>确认修改小组吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="change">确定</el-button>
+            <div v-show="!groupData.filename">
+              <img :src="groupData.groupImage" class="avatar">
             </div>
-          </el-popover>
-          <el-button class="pull-left marginL10" type="primary" v-popover:popover1>确认修改</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+          <p>小组名称：</p>
+        </el-col>
+        <el-col :span="18">
+          <el-input v-model="groupData.groupName" placeholder="请输入小组名称"></el-input>
+        </el-col>
+      </el-row>
+    </div>
+
+    <div class="cutLine-dashed clearfix"></div>
+    <div class="paddingT10 text-right">
+      <el-popover
+        ref="popover"
+        placement="top"
+        width="160"
+        v-model="visible">
+        <p>确认解散小组吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="deleteGroup">确定</el-button>
         </div>
-      </el-col>
-    </el-row>
+      </el-popover>
+      <el-button  type="danger" v-popover:popover>解散小组</el-button>
+      <el-popover
+        ref="popover1"
+        placement="top"
+        width="160"
+        v-model="visible1">
+        <p>确认修改小组吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="updateGroup">确定</el-button>
+        </div>
+      </el-popover>
+      <el-button class="marginL10" type="primary" v-popover:popover1>确认修改</el-button>
+    </div>
 	</div>
 </template>
 
 <script>
+  import {DEFAULT_USER_IMAGE} from 'common/config.js';
 	export default {
-    props:{
-      group:{
-        type:Object,
-        default: () => {
-          return {}
-        }
-      },
-      name:{
-        type:String,
-        default:'人卫社小组'
-      }
-    },
+    props:['currentGroup'],
     data() {
       return {
         visible:false,
         visible1:false,
-        defaultImage:'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png'
+        DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
+        groupData:{
+          filename:undefined,
+          groupName:null,
+          groupImage:null,
+        },
       };
     },
     methods: {
-      // 头像上传成功
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      /**
+       * 上传头像input发生改变时触发
+       * @param e input内置事件对象
+       */
+      filechange(e){
+        var self=this;
+        var prevDiv = this.$refs.headImageWrapper;
+        var file = this.$refs.fileInput;
+        if (file.files && file.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(evt) {
+            self.groupData.filename=evt.target.result;
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+          }
+          reader.readAsDataURL(file.files[0]);
+        } else {
+          if(!file.value){
+            self.groupData.filename=undefined;
+          }
+          prevDiv.innerHTML = '<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+        }
       },
-      // 限制用户上传头像类型与大小
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      /**
+       * 修改小组
+       */
+      updateGroup(){
+        //小组名称不能为空
+        if(!this.groupData.groupName){
+          this.$message.error('请输入小组名称');
+          return false;
+        }
+        let self= this;
+        var filedata = this.groupData.filename?this.$refs.fileInput.files[0]:'';
+        var formdata = new FormData();
+        formdata.append('file',filedata);
+        formdata.append('id',this.currentGroup.id);
+        formdata.append('groupName',this.groupData.groupName);
+        formdata.append('sessionId',this.getUserData().sessionId);
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG/png 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };  //添加请求头
+        this.$axios.put('/group/update/pmphgroup',formdata,config)
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
+              self.$message.success('修改小组成功');
+            }else{
+              self.$message.error('修改小组失败，请重试');
+            }
+          })
+          .catch((error) => {
+            self.$message.error('修改小组失败，请重试');
+          });
       },
-      // 确认修改
-      change() {
-        this.visible1 = false
-        this.$message({
-          message: '恭喜你，修改成功！',
-          type: 'success'
-        });
-      },
-      // 解散小组
-      dismiss() {
-        this.visible = false
-        this.$message({
-          message: '恭喜你，解散成功！',
-          type: 'success'
-        });
+      /**
+       * 修改小组
+       */
+      deleteGroup(){
+        this.$axios.delete('/group/update/pmphgroup',this.$initPostData({
+          id:this.currentGroup.id,
+          sessionId:this.getUserData().sessionId
+        }))
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
+              self.$message.success('删除小组成功');
+              self.getGroupData();
+            }
+          })
+          .catch((error) => {
+            self.$message.error('删除小组失败，请重试');
+          });
       }
+    },
+    mounted(){
+      this.groupData.groupName=this.currentGroup.groupName;
+      this.groupData.groupImage=this.currentGroup.groupImage;
     }
 	}
 </script>
 
 <style scoped>
   .groupsetting{
-    padding: 10px 30px;
+    padding: 60px 30px 0;
   }
-  .name{
-    color:rgb(131, 143, 165);
-    padding-bottom: 5px;
-    display: inline-block;
+
+  .addNewPopup{
+    max-width: 470px;
+    line-height: 36px;
   }
-  .avatar{
+  .addNewPopup .headImageWrapper{
     width: 100px;
-    height:100px;
+    height: 100px;
+    position: relative;
+  }
+  .headImageWrapper-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.7);
+    opacity: 0;
+  }
+  .headImageWrapper-bg>i{opacity: 1;}
+  .headImageWrapper:hover .headImageWrapper-bg{
+    opacity: 0.75;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  .fileInput{
+    display: block;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:10;
+  }
+  .headImageWrapper>div>img{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .headImageWrapper>div{
+    width: 100%;
+    height:100%;
   }
 </style>

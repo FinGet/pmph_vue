@@ -20,7 +20,7 @@
           <span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>
           <!--上传文件按钮-->
           <div class="ChatInputFileBtn">
-            <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
+            <i class="fa fa-paperclip fa-lg"></i>
             <input type="file" class="ChatInputFileBtn" @change="uploadFile" ref="fileInput">
           </div>
         </div>
@@ -64,37 +64,22 @@
   import ChatMessageIterm from './ChatMessageIterm.vue'
   import {getCursorPosition,setCursorPosition,getNowFormatDate} from '../../../static/commonFun.js'
   import {DEFAULT_USER_IMAGE} from 'common/config.js'
+  import bus from 'common/eventBus/bus.js'
 	export default {
+    props:['currentGroup'],
 		data() {
 			return {
+			  createTime:+(new Date()),
         filelist:[],
         editingTextarea:"",
         currientCursorposition:{text: "", start: 2, end: 2},//text是选中文案，start起始位置，end终点位置
         textAreaIsFocus:false,
         showEmoji:false,
-        messagesList:[//消息列表
-          {
-            type:'message',
-            userId:'123476',
-            header:DEFAULT_USER_IMAGE,
-            username:'人卫社001号',
-            messageData:'这是个测试数据，01234，测试测试',
-            time:'2012-12-12 12:12:00'
-          },
-          {
-            userId:'123756',
-            type:'message',
-            header:DEFAULT_USER_IMAGE,
-            username:'人卫社001号',
-            messageData:'这是个测试数据，01234，测试测试',
-            time:'2012-12-12 12:12:00'
-          },
-        ],
+        messagesList:[],
       }
 		},
     methods:{
       sendMessage(){
-        var self = this;
         var message = {
           type:'message',
           isNew:true,
@@ -145,9 +130,6 @@
         newText += this.editingTextarea.substr(this.currientCursorposition.end,this.editingTextarea.length);
         this.editingTextarea=newText;
       },
-      scollBottom(dom){//滚动到底部
-        dom.scrollTop=dom.scrollHeight;
-      },
       sendMessageIsEmpty(){
         console.log('消息不能为空');
       },
@@ -180,16 +162,58 @@
             self.$message.error('上传文件失败，请重试');
           });
       },
+      /**
+       * 获取小组聊天历史消息
+       * @param pageSize
+       * @param pageNumber
+       * @param callback
+       */
+      getHistoryMessage(pageSize=1,pageNumber=30,callback){
+        this.$axios.get('/group/list/message',{params:{
+          groupId:this.currentGroup.id,
+          pageSize:pageSize,
+          pageNumber:pageNumber,
+          baseTime:parseInt(this.createTime)
+        }})
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.messagesList.unshift(res.data);
+            }
+          })
+          .catch(e=>{
+
+          })
+      },
+      /**
+       *
+       */
+      handlerReceiveMessage(data){
+        this.$message.success('成功收到消息');
+        console.log(data);
+      },
+      /**
+       * 开始监听webSocket推送的消息事件
+       */
+      startListenMessage(){
+        bus.$on('ws:message',this.handlerReceiveMessage)
+      }
     },
     components:{
       vueEmoji,
       ChatMessageIterm
     },
+    created(){
+      this.getHistoryMessage();
+    },
+    mounted(){
+      this.startListenMessage();
+    },
     watch:{
       messagesList(){
         setTimeout(()=> {
           //将聊天消息窗口滚动条滚动到底部
-          self.$refs.chatContainer.scrollTop=self.$refs.chatContainer.scrollHeight;
+          this.$refs.chatContainer.scrollTop=this.$refs.chatContainer.scrollHeight;
         },20)
       }
     }

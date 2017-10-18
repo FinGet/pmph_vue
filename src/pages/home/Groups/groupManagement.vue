@@ -20,7 +20,7 @@
           ref="groupmanageMainContainer"
           :style="{height:wrapperHeight-80+'px'}"
         >
-          <component :is="currentView"></component>
+          <component :is="currentView" :currentGroup="currentGroup"></component>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
