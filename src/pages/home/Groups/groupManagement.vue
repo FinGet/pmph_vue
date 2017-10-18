@@ -18,7 +18,7 @@
         <div
           class="groupmanageMainContainer"
           ref="groupmanageMainContainer"
-          :style="{height:wrapperHeight-93+'px'}"
+          :style="{height:wrapperHeight-80+'px'}"
         >
           <component :is="currentView"></component>
         </div>

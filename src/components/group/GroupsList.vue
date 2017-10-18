@@ -167,28 +167,32 @@
        * 创建小组
        */
       createNewGroup(){
-        /**
-         * 小组名称不能为空
-         */
+        //小组名称不能为空
         if(!this.newGroupData.name){
           this.$message.error('请输入小组名称');
           return false;
         }
-        var filedata = this.newGroupData.filename?this.$refs.fileInput:'';
-        this.$axios.post('/group/add/pmphgroup',this.$initPostData({
-          file:filedata,
-          groupName:this.newGroupData.name,
-          sessionId:this.getUserData().sessionId
-        }))
+        let self= this;
+        var filedata = this.newGroupData.filename?this.$refs.fileInput.files[0]:'';
+        var formdata = new FormData();
+        formdata.append('file',filedata);
+        formdata.append('groupName',this.newGroupData.name);
+        formdata.append('sessionId',this.getUserData().sessionId);
+
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };  //添加请求头
+        this.$axios.post('/group/add/pmphgroup',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
-
+              self.$message.success('创建小组成功');
+              self.getGroupData();
             }
           })
           .catch((error) => {
-            console.log(error.msg)
-          })
+            self.$message.error('创建小组失败');
+          });
       },
     },
     watch:{
@@ -202,7 +206,10 @@
     },
     created(){
        this.getGroupData();
-    }
+    },
+    mounted(){
+      this.$refs.beautyScroll.refresh(300);
+    },
   }
 </script>
 
