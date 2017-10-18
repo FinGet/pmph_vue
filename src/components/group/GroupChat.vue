@@ -4,6 +4,16 @@
 <template>
 	<div class="groupChat-wrapper">
     <div class="chatContainer" ref="chatContainer">
+      <div class="messageLoadingBox text-center paddingT10 paddingB10">
+        <span v-if="messageLoading">
+            <i class="fa fa-spinner fa-spin"></i>
+            加载中...
+        </span>
+        <el-button type="text"
+                   v-if="!messageLoading&&showLoadingmoreBtn"
+                   @click="getMoreHistoryMessage"
+        >点击查看更多消息</el-button>
+      </div>
       <ChatMessageIterm
         v-for="(iterm,index) in messagesList"
         :message="iterm"
@@ -71,18 +81,27 @@
     props:['currentGroup'],
 		data() {
 			return {
-			  createTime:+(new Date()),
+        messageLoading:true,
+        showLoadingmoreBtn:true,
         filelist:[],
         editingTextarea:"",
         currientCursorposition:{text: "", start: 2, end: 2},//text是选中文案，start起始位置，end终点位置
         textAreaIsFocus:false,
         showEmoji:false,
         messagesList:[],
+        getHistoryMesListForm:{
+          pageSize:30,
+          pageNumber:1,
+          createTime:+(new Date()),
+        },
       }
 		},
     computed:{
       currentUserdata(){
         return this.getUserData()
+      },
+      groupId(){
+          return this.currentGroup.id;
       }
     },
     methods:{
@@ -175,11 +194,12 @@
        * @param pageNumber
        * @param callback
        */
-      getHistoryMessage(pageSize=1,pageNumber=30,callback){
+      getHistoryMessage(){
+        this.messageLoading=true;
         this.$axios.get('/group/list/message',{params:{
           groupId:this.currentGroup.id,
-          pageSize:pageSize,
-          pageNumber:pageNumber,
+          pageSize:this.getHistoryMesListForm.pageSize,
+          pageNumber:this.getHistoryMesListForm.pageNumber,
           baseTime:parseInt(this.createTime)
         }})
           .then(response=>{
@@ -187,10 +207,18 @@
             if (res.code == '1') {
               this.messagesList.unshift(res.data);
             }
+            this.messageLoading=false;
           })
           .catch(e=>{
-
+            this.messageLoading=false;
           })
+      },
+      /**
+       *
+       */
+      getMoreHistoryMessage(){
+          this.getHistoryMesListForm.pageSize++;
+          this.getHistoryMessage();
       },
       /**
        *
@@ -222,6 +250,12 @@
           //将聊天消息窗口滚动条滚动到底部
           this.$refs.chatContainer.scrollTop=this.$refs.chatContainer.scrollHeight;
         },20)
+      },
+      groupId(){
+        this.messagesList=[];
+        this.getHistoryMesListForm.pageNumber=1;
+        this.getHistoryMesListForm.createTime=+(new Date());
+        this.getHistoryMessage();
       }
     }
 	}
