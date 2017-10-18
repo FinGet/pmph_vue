@@ -24,7 +24,8 @@
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
-              <img :src="item.groupImage?item.groupImage:DEFAULT_USER_IMAGE" alt="小组头像">
+              <!-- <img :src="item.groupImage?item.groupImage:DEFAULT_USER_IMAGE" alt="小组头像"> -->
+              <img :src="DEFAULT_USER_IMAGE" alt="小组头像">
             </span>
               <div class="groupHeadName">
                 <span>{{item.groupName}}</span>
@@ -58,7 +59,10 @@
                   class="avatar-uploader"
                   action="https://jsonplaceholder.typicode.com/posts/"
                   :show-file-list="false"
-                  :on-success="handleAvatarSuccess">
+                  :on-success="handleAvatarSuccess"
+                  :on-change="handAddImage"
+                  :auto-upload="false"
+                  >
                   <img v-if="newGroupData.headImage" :src="newGroupData.headImage" class="avatar">
                   <img v-else :src="DEFAULT_USER_IMAGE" class="avatar">
                   <i class="el-icon-plus avatar-uploader-icon headImageUploadBtn"></i>
@@ -146,8 +150,13 @@
       handleAvatarSuccess(response, file, fileList){
         this.newGroupData.headImage = URL.createObjectURL(file.raw);
       },
+      handAddImage(file){
+        console.log(typeof file.raw);
+        console.log(file);
+      },
       /* 初始化小组列表 */
       getGroupData(){
+        var _this=this;
         this.$axios.get(this.groupListUrl,{
           params:{
             groupName:this.inputSearchGroup,
@@ -157,7 +166,7 @@
         }).then(function(res){
           console.log(res);
           if(res.data.code==1){
-
+            _this.groupListData=res.data.data;
           }
         }).catch(function(err){
           console.log(err);
@@ -246,7 +255,7 @@
   }
   .groupHead-inner{
     position: relative;
-    padding: 10px 32px 10px 68px;
+    padding: 10px 50px 10px 68px;
   }
   .groupHeadImg{
     position: absolute;
@@ -265,10 +274,11 @@
     position: absolute;
     right: 4px;
     top:20px;
-    width: 30px;
+    width: 50px;
     height: 14px;
     font-size: 12px;
     color: rgba(255,255,255,.5);
+    
   }
   .groupHeadName{
     font-size: 14px;
