@@ -16,18 +16,13 @@
     <div class="ChatInput" :class="{active:textAreaIsFocus}">
       <div class="ChatInputTool">
         <div>
+          <!--发送表情按钮-->
           <span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>
           <!--上传文件按钮-->
-          <el-upload
-            class="ChatInputFileBtn"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :file-list="filelist"
-            :on-success="uploadFileSuccess">
-            <span class="">
-              <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
-            </span>
-          </el-upload>
+          <div class="ChatInputFileBtn">
+            <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
+            <input type="file" class="ChatInputFileBtn" @change="uploadFile" ref="fileInput">
+          </div>
         </div>
         <div class="pull-right"></div>
 
@@ -67,9 +62,8 @@
   import vueEmoji from '@/base/emoji/emoji.vue'
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
-  import {getCursorPosition,setCursorPosition} from '../../../static/commonFun.js'
+  import {getCursorPosition,setCursorPosition,getNowFormatDate} from '../../../static/commonFun.js'
   import {DEFAULT_USER_IMAGE} from 'common/config.js'
-  import {getNowFormatDate} from '../../../static/commonFun.js'
 	export default {
 		data() {
 			return {
@@ -122,11 +116,6 @@
         //发送完消息清空textarea
         this.editingTextarea = '';
 
-        //to-do list 这部分后面需要重写，消息组件加载完成后再重置滚动条位置
-        setTimeout(function () {
-          //将聊天消息窗口滚动条滚动到底部
-          self.scollBottom(self.$refs.chatContainer);
-        },20)
       },
       textAreaFocus(){
           this.textAreaIsFocus=true;
@@ -165,34 +154,44 @@
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
        */
-      uploadFileSuccess(response, file, fileList){
-        var message = {
-          type:'text',
-          isNew:true,
-          userId:'123456',
-          header:DEFAULT_USER_IMAGE,
-          username:'我的测试账号',
-          messageData:'这是个测试数据，01234，测试测试',
-          time:'2012-12-12 12:12:00'
-        };
-        message.time = getNowFormatDate();
-        message.messageData = file.name.trim();
-        if(!message.messageData){
-          this.sendMessageIsEmpty();
+      uploadFile(){
+        let self= this;
+        var filedata = this.$refs.fileInput.files[0];
+        if(!filedata){
           return;
         }
-        this.messagesList.push(message);
+        var formdata = new FormData();
+        formdata.append('files',filedata);
+        formdata.append('ids',[1234]);
+        formdata.append('sessionId',this.getUserData().sessionId);
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };  //添加请求头
+        this.$axios.post('/group/add/pmphgroupfile',formdata,config)
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
 
-        //to-do list 这部分后面需要重写，消息组件加载完成后再重置滚动条位置
-        setTimeout(()=> {
-          //将聊天消息窗口滚动条滚动到底部
-          this.scollBottom(this.$refs.chatContainer);
-        },20)
+            }else{
+              self.$message.error('上传文件失败，请重试');
+            }
+          })
+          .catch((error) => {
+            self.$message.error('上传文件失败，请重试');
+          });
       },
     },
     components:{
       vueEmoji,
       ChatMessageIterm
+    },
+    watch:{
+      messagesList(){
+        setTimeout(()=> {
+          //将聊天消息窗口滚动条滚动到底部
+          self.$refs.chatContainer.scrollTop=self.$refs.chatContainer.scrollHeight;
+        },20)
+      }
     }
 	}
 </script>

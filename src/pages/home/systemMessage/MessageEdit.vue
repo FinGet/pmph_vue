@@ -18,7 +18,7 @@
             <el-radio :label="1">所有人</el-radio>
             <el-radio :label="2">特定对象</el-radio>
             <el-radio :label="3">教材报名者</el-radio>
-          </el-radio-group>  
+          </el-radio-group>
       </el-form-item>
       <el-form-item label="文章内容：" required>
            <script id="editor" type="text/plain" style="height:500px;position:relative;z-index:99;"></script>
@@ -78,7 +78,7 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content">
-         
+
           <div id="editor_id"></div>
         </div>
       </el-col>
@@ -88,7 +88,7 @@
     <!-- <el-row>
       <el-col :span="20" :offset="3">
         <div class="cutLine-dashed"></div>
-      </el-col> 
+      </el-col>
     </el-row>-->
     <!--添加附件-->
    <!--  <el-row class="">
@@ -119,9 +119,9 @@ export default {
     return {
       messageForm:{
         title:'',
-        sendType:'',
+        sendType:0,
         fileList:[],
-  
+
       },
       messageRules:{
        title:[
@@ -146,12 +146,15 @@ export default {
     },
     //点击下一步执行的方法
     nextStep(){
-      
+
       this.$refs['messageForm'].validate((valid) => {
           if (valid) {
             var paramData={
-              title:this.messageForm.title,
-              content:this.uEditor.getContent()
+              sendType:this.messageForm.sendType,
+              content:{
+                title:this.messageForm.title,
+                content:this.uEditor.getContent()
+              }
             }
              switch(this.messageForm.sendType){
         case 0:
@@ -173,7 +176,7 @@ export default {
           });
       }
           } else {
-            
+
             return false;
           }
         });

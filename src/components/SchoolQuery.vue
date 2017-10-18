@@ -1,382 +1,385 @@
 <template>
-    <div class="query">
-        <el-row class="top-search paddingB5">
-          <el-col class="marginT10 marginL10 paddingR20">
-            <el-col :span="3">
-              <el-input  placeholder="请输入内容"></el-input>
-            </el-col>
-            <el-col :span="3" class="marginL10">
-              <el-button type="primary" icon="search">搜索</el-button>
-            </el-col>
-            <div class="nextStep-wrapper text-right" style="width: 85%">
-              <!--<el-button type="primary">-->
-                <!--<router-link :to="{ name: '编辑消息'}">上一步</router-link>-->
-              <!--</el-button>-->
-              <span class="schoolCount">已选中{{count}}个学校</span>
-              <el-button type="primary" @click="publish">发布</el-button>
-            </div>
-          </el-col>
-        </el-row>
-        <br>
-        <el-row>
-          <el-col :span="24">
-            <div>
-              <ul class="tags">
-                <li v-if="">
-                  <div class="cate"><span class="category">历史:</span></div>
-                  <div class="alltags history-schoolQuery" ref="history">
-                    <span class="tag"
-                          v-for="(item,index) in historyDatas"
-                          :key="item.id"
-                          :class="{'active':HistoryCurrentItem==index}"
-                          @click="chooseHistoryCurrent(index)"
-                    >{{item}}</span>
-                  </div>
-                  <span class="more" :class="open?'moreup':'moredown'" @click="toogleopen"></span>
-                </li>
-                <li>
-                  <div class="cate"><span class="category">类型:</span></div>
-                  <div class="alltags">
-                    <span class="tag"
-                          v-for="(category,index) in categoryDatas"
-                          :key="category.id"
-                          :class="{'active':CategoryCurrentItem==index}"
-                          @click="chooseCategoryCurrent(index)"
-                    >{{category}}</span>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="cate"><span class="category">区域:</span></div>
-                  <div class="alltags">
-                    <span class="tag"
-                          v-for="(province,index) in provinces"
-                          :key="province.id"
-                          :class="{'active':ProvinceCurrentItem==index}"
-                          @click="chooseProvinceCurrent(index)"
-                    >{{province}}</span>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <div class="tip text-center">* 如无工作单位请联系教务处进行认证</div>
-              </ul>
-            </div>
-            <div class="schools">
-              <ul>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-                <li>
-                  <div class="province">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">北京市</el-checkbox>
-                  </div>
-                  <div class="school">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                      <el-checkbox v-for="item in schools" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                </li>
-                <div class="cutLine-dashed"></div>
-              </ul>
-            </div>
-          </el-col>
-        </el-row>
+  <div class="query">
+    <!--操作按钮区-->
+    <div class="query-operation paddingR20">
+      <!--操作按钮-->
+      <div class="operation-wrapper">
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
+          发布
+          <span v-if="queryData.length>0">({{queryData.length}})</span>
+        </el-button>
+      </div>
     </div>
+    <!--快速选择区域-->
+    <div class="fastQuery">
+      <div class="clearfix">
+        <div class="justify-align">
+          快速选择：&nbsp;&nbsp;<span></span>
+        </div>
+        <div>
+          <el-button type="default" size="small" @click="dialogVisible=true" icon="plus" v-if="historyData.length==0">历史教材通知</el-button>
+          <el-tag v-else
+                  v-for="(tag,index) in historyData"
+                  :key="index"
+                  :closable="true"
+                  @close="handleHistoryTagClose(tag)"
+                  :type="tag.type"
+          >
+            {{tag.name}}
+          </el-tag>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div class="justify-align">
+          区域：&nbsp;&nbsp;<span></span>
+        </div>
+        <div>
+          <el-select v-model="select_provinces" multiple  placeholder="全部" class="select_provinces">
+            <el-option
+              v-for="(item,index) in area_school"
+              :key="index"
+              :label="item.province"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div class="justify-align">
+          机构类型：&nbsp;&nbsp;<span></span>
+        </div>
+        <div>
+          <el-radio-group v-model="select_orgType">
+            <el-radio-button :label="0">全部</el-radio-button>
+            <el-radio-button :label="1">本科</el-radio-button>
+            <el-radio-button :label="2">医院</el-radio-button>
+            <el-radio-button :label="3">职教</el-radio-button>
+            <el-radio-button :label="4">本科&职教</el-radio-button>
+          </el-radio-group>
+        </div>
+      </div>
+
+      <div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>
+    </div>
+    <!--地区详情区域-->
+    <div class="border-T paddingT20">
+      <div class="control-area clearfix paddingB20">
+        <div class="pull-left">
+          <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
+          <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
+        </div>
+        <div class="pull-right">
+          <el-button  type="primary" size="small">按区域拼音排序</el-button>
+          <el-button  type="primary" size="small">按机构拼音排序</el-button>
+        </div>
+      </div>
+      <div class="area-list"
+           v-for="(iterm,index) in area_school"
+           :key="index"
+           v-if="(select_provinces.includes(iterm.id))||select_provinces.length==0">
+        <div>
+          <el-checkbox
+            :indeterminate="iterm.isIndeterminate"
+            v-model="iterm.checkAll"
+            @change="checkAllChange(iterm)">
+            {{iterm.province}}
+          </el-checkbox>
+        </div>
+        <div>
+          <el-checkbox-group v-model="iterm.checkedSchools"  @change="handleCheckedSchoolChange(iterm)">
+            <el-checkbox
+              v-for="(city,index) in iterm.schoolList"
+              :label="city.id"
+              :key="index"
+              v-if="select_orgType==0||city.type==select_orgType">{{city.name}}</el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </div>
+    </div>
+
+    <!--选择历史书籍弹窗-->
+    <el-dialog
+      title="选择历史书籍通知"
+      :visible.sync="dialogVisible">
+      <div class="table-wrapper">
+        <el-table
+          :data="tableData"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="sort"
+            label="序号"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="通知名称">
+          </el-table-column>
+          <el-table-column
+            prop="total"
+            label="发布机构数量"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="date"
+            label="通知创建日期"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="80">
+            <template scope="scope">
+              <el-button type="text" @click="chooseHistory(scope.$index)">选择</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
+
+    <!--已选择院校预览-->
+    <el-dialog
+      title="已选中机构"
+      :visible.sync="dialogVisible2">
+      <div class="table-wrapper">
+        <el-table
+          :data="hasCheckedOrgList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="通知名称">
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const provinces = ['全部','北京市','天津市','河北省','山西','内蒙古自治区','辽宁省','吉林省','黑龙江省','上海市','江苏省','浙江省',
-                    '安徽省','福建省','江西省','山东省','河南省','湖北省','湖南省','广东省','广西壮族自治区','海南省','重庆市','四川省','贵州省',
-                    '云南省','西藏自治区','陕西省','甘肃省','青海省','宁夏回族自治区','新疆维吾尔自治区','台湾省','香港特别行政区','澳门特别行政区'];
-  const schools = ['清华大学', '北京大学', '中国武警总医院', '协和医院', '中日友好医院', '北京医院', '中国人民解放军总医院' , '北京回龙观医院',
-    '北大方正软件技术学院卫生分院', '首都医科大学', '北京卫生职业学院','人民卫生出版社', '北京协和医院', '北京大学医学部'
-  ];
   export default {
     data() {
       return {
-        open: false,
-        hasHistory:false,
-        provinces:provinces,
-        checkAll: true,
-        checkedCities: ['清华大学', '北京大学'],
-        schools: schools,
-        HistoryCurrentItem:0,
-        CategoryCurrentItem:0,
-        ProvinceCurrentItem:0,
-        isIndeterminate: true,
-        categoryDatas:['全部','本科','医院','职教','本科&职教'],
-        historyDatas:['全部','教材申报测09.05','全国高等学校健康服务与管理专业第一轮规划教材','全国高等学校健康服务与管理专业第一轮规划教材','全国高等职业教育临床医学专业（3加2）教材第八轮修订','全国高等学校本科应用心理学专业第三轮规划教材']
+        formdata:{
+          content:'1234',
+          sendType:'1',
+          orgIds:'',
+          userIds:'',
+          bookIds:'',
+        },
+        selectAll:true,
+        sortByTime:true,
+        showPublishBtn:false,
+        select_provinces:[],
+        select_orgType:0,
+        area_school:[{
+          id:0,
+          province:'北京',
+          isIndeterminate:false,
+          checkAll:false,
+          checkedSchools:[],
+          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+          ]
+        },{
+          id:4,
+          province:'天京',
+          isIndeterminate:false,
+          checkAll:false,
+          checkedSchools:[],
+          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+          ]
+        }],
+        dialogVisible:false,
+        historyData:[],
+        tableData:[{
+          id:'123',
+          sort:0,
+          name:'全国高等学校健康服务与管理专业第一轮规划教材',
+          total:34,
+          date:'2017/10/1',
+        },{
+          id:'123',
+          sort:1,
+          name:'全国高等学校健康服务与管理专业第一轮规划教材',
+          total:34,
+          date:'2017/10/1',
+        },{
+          id:'123',
+          sort:2,
+          name:'全国高等学校健康服务与管理专业第一轮规划教材',
+          total:34,
+          date:'2017/10/1',
+        }],
+        dialogVisible2:false,
       };
     },
     computed: {
-      count() {
-        return this.checkedCities.length
-      }
-    },
-    created() {
-      this.$route.query.history=='1'?this.hasHistory=true:this.hasHistory=false
+      queryData(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          [].push.apply(list,iterm.checkedSchools);
+        });
+        return list;
+      },
+      hasCheckedOrgList(){
+        var list = [];
+        this.area_school.forEach((iterm,index)=>{
+          iterm.schoolList.forEach((t,i)=>{
+            if(iterm.checkedSchools.includes(t.id)){
+              list.push(t);
+            }
+          })
+        });
+        return list;
+      },
     },
     methods: {
-      handleCheckAllChange(event) {
-        this.checkedCities = event.target.checked ? schools : [];
-        this.isIndeterminate = false;
+      /**
+       * 点击快速选择历史弹窗中的选择按钮
+       * @param tableIndex 选中表格数据的index值
+       */
+      chooseHistory(tableIndex){
+        this.historyData = [this.tableData[tableIndex]]
+        this.dialogVisible=false;
       },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.schools.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.schools.length;
+      /**
+       * 关闭已选择历史记录时触发此方法
+       * @param tag 该标签数据
+       */
+      handleHistoryTagClose(tag){
+        this.historyData=[];
       },
-      // 展开关闭历史
-      toogleopen() {
-        // console.log(1)
-        this.open = !this.open
-        if (this.open) {
-          this.$refs.history.style.height = `auto`
-          // console.log(this.$refs.history.offsetHeight)
-          let height = this.$refs.history.offsetHeight
-          if(height === 27){
-            this.open = false
-            this.$message({
-              message: '警告哦，没有更多历史记录！',
-              type: 'warning'
-            });
-          }
-        } else {
-          this.$refs.history.style.height = ''
+      /**
+       * 当省份复选框发生变化
+       * @param iterm
+       */
+      checkAllChange(iterm){
+        var index = this.area_school.indexOf(iterm);
+        this.area_school[index].checkedSchools=[];
+        if(this.area_school[index].checkAll){
+          this.area_school[index].schoolList.forEach(t => {
+            this.area_school[index].checkedSchools.push(t.id);
+          })
         }
+        this.area_school[index].isIndeterminate=false;
       },
-      // 点击各个item
-      chooseHistoryCurrent(index) {
-        this.HistoryCurrentItem = index
+      /**
+       * 学校复选框发生变化时
+       * @param iterm
+       */
+      handleCheckedSchoolChange(iterm){
+        var index = this.area_school.indexOf(iterm);
+        let checkedCount = this.area_school[index].checkedSchools.length;
+        this.area_school[index].checkAll = checkedCount === this.area_school[index].schoolList.length;
+        this.area_school[index].isIndeterminate = checkedCount > 0 && checkedCount < this.area_school[index].schoolList.length;
       },
-      chooseCategoryCurrent(index) {
-        this.CategoryCurrentItem = index
+      /**
+       * 点击全选按钮
+       */
+      checkedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=true;
+          iterm.checkedSchools=[];
+          iterm.schoolList.forEach((t,i)=>{
+            iterm.checkedSchools.push(t.id);
+          })
+          iterm.isIndeterminate=false;
+        })
       },
-      chooseProvinceCurrent(index) {
-        this.ProvinceCurrentItem = index
+      /**
+       * 点击清空按钮
+       */
+      uncheckedAll(){
+        this.area_school.forEach((iterm,index)=>{
+          iterm.checkAll=false;
+          iterm.checkedSchools=[];
+          iterm.isIndeterminate=false;
+        })
       },
-      // 点击发布
-      publish(val) {
-        this.$emit('publish',val)
+      /**
+       * 提交表单
+       */
+      publishBtn(){
+        this.dialogVisible2=true;
+      },
+      /**
+       * 提交表单
+       */
+      submit(){
+        var self = this;
+        this.formdata.orgIds=this.queryData.join(',');
+        this.formdata['sessionId']=this.getUserData().sessionId;
+        this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+          .then(function (response) {
+            let res = response.data;
+            if(res.code===1){
+              self.$message.success('发布成功！');
+              self.$router.push({name: '消息列表'});
+            }
+          })
+          .catch(function (error) {
+            self.$message({
+              type:'error',
+              message:'发布失败，请重试'
+            });
+          });
       }
-    }
+    },
+    created(){
+      var routerParams = this.$route.params;
+      console.log(routerParams);
+      if(!routerParams.content){
+        this.$message.error('页面未收到发送消息内容');
+        this.router.push({name: '编辑消息'});
+      }
+      this.formdata.content=JSON.stringify(routerParams.content);
+      this.formdata.sendType=routerParams.sendType;
+    },
   }
 </script>
 
 <style scoped>
-  .query{
-    background: #fff;
-    min-height: 100%;
-    
+  .fastQuery>div{
+    line-height: 36px;
+    padding: 10px 0;
   }
-  .top-search{
-    position: fixed;
-    z-index: 10;
-    top: 54px;
-    width: calc(100% - 280px);
-    box-sizing: border-box;
-    padding-right: 50px;
-    background: #fff;
-    transition: all .3s;
-  }
-  .query .cate{
-    padding: 5px 0;
+  .fastQuery>div>div:first-child{
+    color:#999;
+    width: 80px;
     float: left;
   }
-  .query .alltags{
-    margin-left:50px;
+  .fastQuery>div>div:last-child{
   }
-  .query .tags{
-    background-color: #fff;
-    padding-bottom: 10px;
-    border:1px solid #eef0f3;
-    margin-top: 15px;
+
+  .select_provinces{
+    width: 70%;
   }
-  .query .tags li {
-    padding:10px;
-    transition: all 0.5s;
-    position: relative;
-  }
-  .query .tags li span {
-    display: inline-block;
-  }
-  .query .tags .category{
-    color: #999;
-    margin-right:25px;
-  }
-  .query .tags .tag{
-    color: #2a3f54;
-    cursor: pointer;
-    padding: 2px 13px;
-    margin-bottom: 3px;
-    border-radius: 12px;
-    margin-right: 15px;
-  }
-  .history-schoolQuery{
-    height:26px;
-    overflow: hidden;
-  }
-  .more{
-    cursor: pointer;
-    position: absolute;
-    display: block;
-    bottom:-13px;
-    color: #ced3d7;
-    left:0;
-    z-index: 10;
-    height:10px;
-    width: 100%;
-  }
-  .moredown{
-    background: url("../common/images/down.png") no-repeat center;
-  }
-  .moreup{
-    background: url("../common/images/up.png") no-repeat center;
-  }
-  .query .tags .tag:hover, .query .tags .tag.active {
-    color: #fff;
-    background: #2a3f54;
-  }
-  .tip{
+  .queryTips{
     background-color: #ced3d7;
     color: #2a3f54;
+    line-height: 1 !important;
+    padding: 4px 0 !important;
   }
-  .schools{
-    background: #fff;
-    padding-bottom:50px;
+  .area-list{
+    padding: 20px 0 30px;
+    border-bottom: 1px dashed #c8c8c8;
   }
-  .schools ul li{
-    padding:5px;
-  }
-  .province{
+  .area-list>div:first-child{
+    display: inline-block;
+    width: 80px;
+    text-align: center;
     float: left;
-    padding:20px;
-    margin-right: 25px;
   }
-  .school{
-    margin-left: 100px;
-    padding:20px;
+  .area-list>div:last-child{
+    margin-left: 90px;
+    padding-left: 20px;
+    text-align: left;
     border-left: 1px solid #e5e5e5;
-  }
-  .schoolCount{
-    color: #1ab194;
   }
 </style>

@@ -21,23 +21,34 @@ Vue.use(ElementUI);
 //请求根地址配置
 // axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
 axios.defaults.baseURL = BASE_URL;
-// axios.defaults.baseURL = 'http://192.168.200.124:8090/pmpheep/';
+// axios.defaults.baseURL = 'http://192.168.200.185:8080/pmpheep/';
 // 初始化默认post header
-axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
 //全局挂载
 Vue.prototype.$axios = axios;
 Vue.prototype.$mySessionStorage = mySessionStorage;
 Vue.prototype.$initPostData = initPostData;
 
-
+//全局封装一个获取用户信息方法
+var getUserData=function () {
+  var sessionData = mySessionStorage.get('currentUser', 'json')||{};
+  return {
+    token:sessionData.sessionPmphUserToken,
+    sessionId:sessionData.userSessionId,
+    userInfo:sessionData.sessionPmphUser,
+    permissionIds:sessionData.pmphUserPermissionIds
+  }
+};
+Vue.prototype.getUserData=getUserData;
 
 router.beforeEach((to, from, next) => {
+  var userdata = getUserData();
   if (to.path != '/login'&&to.name!='404') {  // 判断是否登录
-    if (!mySessionStorage.get('currentUser')) {
+    if (!userdata.userInfo) {
       next('/login')
     }
-    else if (authorityComparison(to.matched, mySessionStorage.get('currentUser', 'json').pmphUserPermissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
+    else if (authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
       next();
     } else {
       ElementUI.Message.error('抱歉，您没有进入该模块的权限');
@@ -53,14 +64,15 @@ router.beforeEach((to, from, next) => {
 
 //添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
+  var userdata = getUserData();
   //请求发送之前的钩子
   console.log(config);
 /*   if(config.url!='http://192.168.200.124:8090/pmpheep/pmph/login'){
     config.withCredentials=true;
   }
  */
-  if(mySessionStorage.get('currentUser', 'json').sessionPmphUserToken){
-     config.headers.Authorization=mySessionStorage.get('currentUser', 'json').sessionPmphUserToken;
+  if(userdata.token){
+     config.headers.Authorization=userdata.token;
   }else{
     router.push('/login');
   }
