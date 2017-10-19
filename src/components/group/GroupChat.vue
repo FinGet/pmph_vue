@@ -309,7 +309,9 @@
   padding-bottom: 145px;
 }
 .chatContainer{
+  box-sizing: border-box;
   height: 100%;
+  width: 100%;
   padding: 0 30px;
   overflow-y: scroll;
   overflow-x: hidden;

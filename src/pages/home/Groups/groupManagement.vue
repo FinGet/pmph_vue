@@ -9,7 +9,7 @@
           <div class="currentGroupName">
             <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
           </div>
-          <ul class="tab clearfix">
+          <ul class="grouptab clearfix">
             <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :key="tab.id" :class="{active:currentActive===index}">
               {{tab.type}}
             </li>
@@ -171,12 +171,12 @@
   .groupmanageMainContainer{
     border-right: 1px solid #e6e7e8;
   }
-  .groupmanage .tab{
+  .groupmanage .grouptab{
     width: 100%;
     background: none !important;
     border: none !important;
   }
-  .tab li {
+  .grouptab li {
     float: left;
     text-align: left;
     cursor: pointer;
@@ -184,7 +184,7 @@
     margin-right: 30px;
     padding-bottom: 8px;
   }
-  .tab .active{
+  .grouptab .active{
     border-bottom: 3px solid #1abb9c;
     margin-bottom: -2px;
     border-radius: 2px;
