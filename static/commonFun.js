@@ -116,7 +116,7 @@ export function getDateTimeStamp(dateStr){
  * @returns {string} formatTime 格式化后的时间 例如： 2017-05-05 12:09:22
  */
 export function formatDate(nS) {
-  var date=new Date(parseInt(nS)* 1000);
+  var date=new Date(parseInt(nS));
   var year=date.getFullYear();
   var mon = date.getMonth()+1;
   var day = date.getDate();
