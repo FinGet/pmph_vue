@@ -6,7 +6,7 @@
       </el-col>
       <div class="clearfix pull-right">
         <div class="search">
-          <el-input class="fileinput"
+          <el-input class=""
                     v-model="searchFormData.fileName"
                     placeholder="请输入内容"
                     icon="search"
@@ -14,7 +14,6 @@
           ></el-input>
         </div>
         <div class="manmageFile">
-          <i class="icon-manage marginR20" @click="isManage = !isManage"></i>
           <el-popover
             ref="popover"
             placement="top"
@@ -26,8 +25,8 @@
               <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
             </div>
           </el-popover>
-          <el-button class="pull-right marginR20" type="danger" @click="click"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
-
+          <el-button class="pull-left marginR20" type="danger" @click="click"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
+          <i class="icon-manage marginR20" @click="isManage = !isManage"></i>
         </div>
         <div class="fileupload">
           <i class="icon-upload cursor-pointer" @click="dialogChooseGroup = true"></i>
@@ -59,25 +58,21 @@
         <el-table-column
           prop="gmtCreate"
           align="center"
-          label="上传时间"
-          width="130">
+          label="上传时间">
         </el-table-column>
         <el-table-column
           prop="memberName"
-          width="120"
           align="center"
           label="分享者">
         </el-table-column>
         <el-table-column
           prop="groupCount"
           align="center"
-          width="120"
           label="上传小组数">
         </el-table-column>
         <el-table-column
           prop="download"
           align="center"
-          width="100"
           label="下载次数">
         </el-table-column>
         <el-table-column
@@ -135,6 +130,7 @@
 </template>
 
 <script>
+  import {formatDate} from '../../../static/commonFun'
 	export default {
     props:['currentGroup'],
 		data() {
@@ -256,7 +252,11 @@
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
+              res.data.rows.map(iterm=>{
+                iterm.gmtCreate=formatDate(iterm.gmtCreate);
+              });
               this.tableData=res.data.rows;
+
             }
           })
           .catch(e=>{
