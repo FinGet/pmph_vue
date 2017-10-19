@@ -72,9 +72,9 @@
               <el-button type="primary" icon="search" @click="getWriterUserList">搜索</el-button>
             </div>
             <div class="tableContainer groupmanageTable">
-              <el-table ref="writerUserTable" 
-              :data="writerTableData" 
-              border tooltip-effect="dark" 
+              <el-table ref="writerUserTable"
+              :data="writerTableData"
+              border tooltip-effect="dark"
               @selection-change="writerCheckChange"
               style="width: 100%;margin-bottom:20px;">
                 <el-table-column type="selection" width="55">
@@ -88,11 +88,11 @@
                 <el-table-column prop="orgName" label="工作单位" show-overflow-tooltip>
                 </el-table-column>
               </el-table>
-              <el-pagination class="pull-right" 
-              :page-sizes="[10,30,50,100, 200, 300, 400]" 
+              <el-pagination class="pull-right"
+              :page-sizes="[10,30,50,100, 200, 300, 400]"
               :current-page.sync="writerParams.pageNumber"
-              :page-size="writerParams.pageSize" 
-              layout="total, sizes, prev, pager, next, jumper" 
+              :page-size="writerParams.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
               :total="writerPageTotal">
               </el-pagination>
             </div>
@@ -148,6 +148,9 @@ export default {
       dialogVisible: false,
       groupMemberUrl: '/group/list/pmphgroupmember',  //获取小组成员url
       writerUserUrl: '/users/writer/list/writeruser',  //获取作家用户url
+      clubUserUrl:'users/pmph/list/pmphuser',  //获取社内用户url
+      clubTreeUrl:'users/pmph/list/pmphdepartment',//获取社内用户成员树url
+      addMemberUrl:'/group/add/pmphgroupmember',  //添加小组成员url
       writerParams: {
         orgName: '',
         name: '',
@@ -469,11 +472,50 @@ export default {
     addNewMember(){
 
     },
-    settingClick() {
-
+    /* 添加小组成员 */
+    addNewSubmit(){
+     var subArr=[];
+     this.addTableData.forEach(function(item){
+        var obj=new Object();
+           obj.userId=item.id;
+           obj.isWriter=item.isWriter?item.isWriter:false;
+           subArr.push(obj);
+     })
+     console.log(typeof JSON.stringify(subArr));
+     this.$axios({
+       method:'POST',
+       url:this.addMemberUrl,
+       data:this.$initPostData({
+       groupId:this.groupId,
+       pmphGroupMembers:JSON.stringify(subArr),
+       sessionId:this.getUserData().sessionId,
+     })
+     }
+       ).then((res)=>{
+          console.log(res);
+          if(res.data.code==1){
+               this.getGroupMember();
+               this.againDialogVisible=false;
+               this.dialogVisible=false;
+               this.$message.success('添加成功');
+          }else{
+            this.$message.error('添加失败');
+          }
+     })
     },
     addNew() {
       this.addMembershapePopupShow = true;
+    },
+    /* 获取社内用户树列表 */
+    getTreeData(){
+   this.$axios.get(this.clubTreeUrl).then((response) => {
+          let res = response.data
+          if (res.code == '1') {
+            this.treeData = res.data.sonDepartment;
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
     },
     handleNodeClick(data) {
       console.log(data);
@@ -506,6 +548,8 @@ export default {
       this.getGroupMember(this.groupId);
     }
     this.getWriterUserList();
+    this.getClubUserData();
+    this.getTreeData();
   }
 }
 </script>
@@ -513,7 +557,7 @@ export default {
 <style scoped>
 .memberlist-wrpper {
   height: 100%;
-  padding-top: 77px;
+  padding-top: 74px;
   overflow: hidden;
   box-sizing: border-box;
 }

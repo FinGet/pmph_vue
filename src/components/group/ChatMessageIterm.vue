@@ -2,7 +2,7 @@
 *  小组聊天单条消息组件
 */
 <template>
-    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId}" v-if="message.type=='message'">
+    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId&&currentUserType==message.userType}" v-if="message && message.userId && message.type=='message'">
       <div class="messageIterm-inner">
         <div class="messageUserHead text-center">
           <div>
@@ -32,8 +32,8 @@
         </div>
       </div>
     </div>
-    <div class="messageIterm clearfix messageIterm-text" v-else>
-      <p><span class="username">{{message.username}} </span> 上传了 {{message.messageData}} 文件 {{message.time}}</p>
+    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.userId && message.type=='file'">
+      <p>{{message.messageData}}</p>
     </div>
 </template>
 
@@ -45,24 +45,15 @@
             type:Number,
           },
           currentUserId:{
-            type:Number,
+          },
+          currentUserType:{
           },
           isNew:{
             type:Boolean,
             default:false
           },
           message:{
-            type:Object,
-            default:()=>{
-                return{
-                  type:'messgae',
-                  userId:'123456',
-                  header:DEFAULT_USER_IMAGE,
-                  username:'人卫社001号',
-                  messageData:'这是个测试数据，01234，测试测试',
-                  time:'2012-12-12 12:12:00'
-                }
-            }
+            type:Object
           }
         },
         data(){

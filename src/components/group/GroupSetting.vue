@@ -164,7 +164,7 @@
   .groupsetting{
     padding: 60px 30px 0;
   }
-
+  .lineHeight-100{line-height: 100px;}
   .addNewPopup{
     max-width: 470px;
     line-height: 36px;
