@@ -23,7 +23,7 @@ Vue.use(ElementUI);
 axios.defaults.baseURL = BASE_URL;
 // axios.defaults.baseURL = 'http://192.168.200.124:8090/pmpheep/';
 // 初始化默认post header
-axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
+//axios.defaults.headers.post['content-Type'] = 'application/x-www-form-urlencoded';
 
 //全局挂载
 Vue.prototype.$axios = axios;
@@ -85,6 +85,10 @@ axios.interceptors.request.use(function (config) {
 //添加一个返回拦截器
 axios.interceptors.response.use(function (response) {
   //对返回的数据进行一些处理
+  if(response.data.code==30){
+    ElementUI.Message.error('当前登录已过期，请重新登录');
+    router.push('/login');
+  }
   return response;
 }, function (error) {
   //对返回的错误进行一些处理

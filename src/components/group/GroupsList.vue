@@ -118,7 +118,6 @@
         this.$emit('clickItem',group)
       },
       changeDateType(num){
-        console.log(typeof parseInt(num));
          return  getDateDiff(parseInt(num));
       },
       /*点击新建小组按钮*/
@@ -138,6 +137,8 @@
           console.log(res);
           if(res.data.code==1){
             _this.groupListData=res.data.data;
+            _this.currentActiveGroupId=res.data.data[0].id;
+            _this.$emit('clickItem',res.data.data[0]);
           }
         }).catch(function(err){
           console.log(err);

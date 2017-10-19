@@ -104,7 +104,8 @@
 
       },
       setGroupName(group) {
-        this.currentGroup.name = group.name
+        this.currentGroup.name = group.groupName
+        this.currentGroupId=group.id;
         this.currentGroup.textbook = group.textbook
       },
       addNewMember(){
