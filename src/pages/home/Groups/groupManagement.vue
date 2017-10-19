@@ -171,8 +171,10 @@
   .groupmanageMainContainer{
     border-right: 1px solid #e6e7e8;
   }
-  .tab{
+  .groupmanage .tab{
     width: 100%;
+    background: none !important;
+    border: none !important;
   }
   .tab li {
     float: left;

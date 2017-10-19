@@ -72,9 +72,9 @@
               <el-button type="primary" icon="search" @click="getWriterUserList">搜索</el-button>
             </div>
             <div class="tableContainer groupmanageTable">
-              <el-table ref="writerUserTable" 
-              :data="writerTableData" 
-              border tooltip-effect="dark" 
+              <el-table ref="writerUserTable"
+              :data="writerTableData"
+              border tooltip-effect="dark"
               @selection-change="writerCheckChange"
               style="width: 100%;margin-bottom:20px;">
                 <el-table-column type="selection" width="55">
@@ -88,11 +88,11 @@
                 <el-table-column prop="orgName" label="工作单位" show-overflow-tooltip>
                 </el-table-column>
               </el-table>
-              <el-pagination class="pull-right" 
-              :page-sizes="[10,30,50,100, 200, 300, 400]" 
+              <el-pagination class="pull-right"
+              :page-sizes="[10,30,50,100, 200, 300, 400]"
               :current-page.sync="writerParams.pageNumber"
-              :page-size="writerParams.pageSize" 
-              layout="total, sizes, prev, pager, next, jumper" 
+              :page-size="writerParams.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
               :total="writerPageTotal">
               </el-pagination>
             </div>
@@ -513,7 +513,7 @@ export default {
 <style scoped>
 .memberlist-wrpper {
   height: 100%;
-  padding-top: 77px;
+  padding-top: 86px;
   overflow: hidden;
   box-sizing: border-box;
 }
