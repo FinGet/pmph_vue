@@ -4,9 +4,9 @@
       <el-col :span="12">
         <div class="search-title">消息标题:</div>
         <el-col :span="6" class="search-10">
-          <el-input v-model="input" placeholder="请输入搜索内容"></el-input>
+          <el-input v-model="title" placeholder="请输入搜索内容"></el-input>
         </el-col>
-        <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+        <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
      <div class="pull-right">
        <el-popover
@@ -55,12 +55,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="sendName"
         label="发送者"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="sendTime"
         label="发送时间"
         >
       </el-table-column>
@@ -75,20 +75,20 @@
           <el-button
             size="small"
             type="primary"
-            @click="handleState(scope.$index, scope.row)">消息状态</el-button>
+            @click="handleState(scope.row.msgId, scope.row)">消息状态</el-button>
         </template>
       </el-table-column>
     </el-table>
       </el-col>
     </el-row>
-    <el-pagination class="pull-right" v-show="tableData.length > 0"
+    <el-pagination class="pull-right"
      @size-change="handleSizeChange"
      @current-change="handleCurrentChange"
      :current-page="currentPage"
      :page-sizes="[10, 20, 30, 40]"
-     :page-size="100"
+     :page-size="pageSize"
      layout="total, sizes, prev, pager, next, jumper"
-     :total="400">
+     :total="dataTotal">
     </el-pagination>
     <!--预览弹窗-->
     <Preview-popup :close.sync="previewShow"></Preview-popup>
@@ -97,91 +97,20 @@
 
 <script>
   import PreviewPopup from 'components/PreviewPopup'
+  import {getLocalTime, formatDate} from '../../../../static/commonFun'
   export default {
     data() {
       return {
         previewShow:false,
-        input:'',
         visible: false,
         currentPage: 4, // 分页当前页
-        tableData: [{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }],
-        multipleSelection: []
+        tableData: [
+          ],
+        multipleSelection: [],
+        pageNumber: 1,
+        pageSize: 20,
+        title: '',
+        dataTotal: 0,
       }
     },
     computed:{
@@ -197,16 +126,65 @@
         }
       }
     },
+    mounted() {
+      this.getMessageList()
+    },
     methods: {
-//      toggleSelection(rows) {
-//        if (rows) {
-//          rows.forEach(row => {
-//            this.$refs.multipleTable.toggleRowSelection(row);
-//          });
-//        } else {
-//          this.$refs.multipleTable.clearSelection();
-//        }
-//      },
+      /**
+       * 加载消息列表
+       */
+      getMessageList() {
+        this.$axios.get("/messages/list/message", {
+          params: {
+            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
+            title: this.title,
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize
+          }
+        }).then((response) => {
+          let res = response.data
+          this.dataTotal = res.data.total
+          if (res.code == '1') {
+            this.tableData=res.data.rows
+            // 将时间戳转为标准格式
+            for (let i=0; i< this.tableData.length; i++) {
+              this.tableData[i].sendTime = formatDate(this.tableData[i].sendTime)
+            }
+            // console.log(this.tableData)
+            if (this.dataTotal == 0) {
+              this.$message({
+                showClose: true,
+                message: '没有这条数据!',
+                type: 'warning'
+              });
+            }
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+      },
+      /**
+       * 搜索
+       */
+      search() {
+        this.getMessageList()
+      },
+      /**
+       * 选择每页有多少条数据
+       */
+      handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.getMessageList()
+      },
+      /**
+       * 选择当前第几页
+       */
+      handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        this.pageNumber = val
+        this.getMessageList()
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -219,15 +197,14 @@
         console.log(index, row);
         this.$router.push({name:'选择学校',query:{history:'1'}})
       },
-      // 点击消息状态
-      handleState(index, row) {
-        this.$router.push('messagestate')  //将你的跳转写在这里。
-      },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+      /**
+       * 点击消息状态
+       * @param id
+       * @param row
+       */
+      handleState(id, row) {
+        console.log(id)
+        this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
       },
       preview(row, event, column){
         if(event.label==='信息标题'){

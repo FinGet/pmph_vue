@@ -4,12 +4,12 @@
       <el-col :span="24">
         <el-col :span="8">
           <el-col :span="14" class="search-10">
-            <el-input v-model="input" placeholder="请输入收件人或单位"></el-input>
+            <el-input v-model="name" placeholder="请输入收件人或单位"></el-input>
           </el-col>
           <el-button class="btn" type="primary"  icon="search">搜索</el-button>
         </el-col>
         <el-col :span="4" class="msgradio">
-          <el-radio-group v-model="radio">
+          <el-radio-group v-model="isRead">
             <el-radio :label="1">全部</el-radio>
             <el-radio :label="2">已读</el-radio>
             <el-radio :label="3">未读</el-radio>
@@ -78,9 +78,9 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[10, 20, 30, 40]"
-      :page-size="100"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
+      :total="dataTotal">
     </el-pagination>
   </div>
 </template>
@@ -90,9 +90,10 @@
     data() {
       return {
         input: '',
-        radio: 1,
+        isRead: 1,
         currentPage: 4, // 分页当前页
-        tableData: [{
+        tableData: [
+          {
           Teacher: '艳红',
           Company: '成都中医药大学',
           Fdate: '2017-09-06 00:43:30',
@@ -218,10 +219,58 @@
           Sdate: '2017-09-06 00:43:30',
           State: '未读',
           Mobile: '15882387792'
-        }]
+        }],
+        msgId: '',
+        pageNumber: 1,
+        pageSize: 20,
+        name: '',
+        dataTotal: 0
       }
     },
+    mounted() {
+      //console.log(this.$route.query.id)
+      // 获取当前消息id
+      this.msgId = this.$route.query.msgId
+      console.log(this.msgId)
+      this.getMessageState()
+    },
     methods:{
+      /**
+       * 初始化数据
+       */
+      getMessageState() {
+        this.$axios.get("/messages/message/"+this.msgId+"/state", {
+          params: {
+            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
+            name: this.name,
+            msgId: this.msgId,
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize,
+            isRead: this.isRead
+          }
+        }).then((response) => {
+          let res = response.data
+          this.dataTotal = res.data.total
+          // console.log(res)
+          if (res.code == '1') {
+            this.tableData=res.data.rows
+            // 将时间戳转为标准格式
+            for (let i=0; i< this.tableData.length; i++) {
+              this.tableData[i].sendTime = formatDate(this.tableData[i].sendTime)
+            }
+            // console.log(this.tableData)
+            if (this.dataTotal == 0) {
+              this.$message({
+                showClose: true,
+                message: '没有这条数据!',
+                type: 'warning'
+              });
+            }
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+      },
       /**
        * 返回上一级
        */
@@ -231,12 +280,28 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+      /**
+      * 搜索
+      */
+      search() {
+        this.getMessageState()
       },
+      /**
+       * 选择每页有多少条数据
+       */
+      handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.getMessageState()
+      },
+      /**
+       * 选择当前第几页
+       */
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      }
+        // console.log(`当前页: ${val}`);
+        this.pageNumber = val
+        this.getMessageState()
+      },
     },
     components: {
     }

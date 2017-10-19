@@ -4,11 +4,23 @@
 <template>
 	<div class="groupChat-wrapper">
     <div class="chatContainer" ref="chatContainer">
+      <div class="messageLoadingBox text-center paddingT10 paddingB10">
+        <span v-if="messageLoading">
+            <i class="fa fa-spinner fa-spin"></i>
+            加载中...
+        </span>
+        <el-button type="text"
+                   v-if="!messageLoading&&showLoadingmoreBtn"
+                   @click="getMoreHistoryMessage"
+        >点击查看更多消息</el-button>
+      </div>
       <ChatMessageIterm
         v-for="(iterm,index) in messagesList"
         :message="iterm"
         :key="index"
         :isNew="!!iterm.isNew"
+        :groupId="currentGroup.id"
+        :currentUserId="currentUserdata.userInfo.id"
       >
 
       </ChatMessageIterm>
@@ -16,18 +28,13 @@
     <div class="ChatInput" :class="{active:textAreaIsFocus}">
       <div class="ChatInputTool">
         <div>
+          <!--发送表情按钮-->
           <span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>
           <!--上传文件按钮-->
-          <el-upload
-            class="ChatInputFileBtn"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :file-list="filelist"
-            :on-success="uploadFileSuccess">
-            <span class="">
-              <i class="fa fa-paperclip fa-lg" @click="sendMessage"></i>
-            </span>
-          </el-upload>
+          <div class="ChatInputFileBtn">
+            <i class="fa fa-paperclip fa-lg"></i>
+            <input type="file" class="ChatInputFileBtn" @change="uploadFile" ref="fileInput">
+          </div>
         </div>
         <div class="pull-right"></div>
 
@@ -67,40 +74,38 @@
   import vueEmoji from '@/base/emoji/emoji.vue'
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
-  import {getCursorPosition,setCursorPosition} from '../../../static/commonFun.js'
+  import {getCursorPosition,setCursorPosition,getNowFormatDate} from '../../../static/commonFun.js'
   import {DEFAULT_USER_IMAGE} from 'common/config.js'
-  import {getNowFormatDate} from '../../../static/commonFun.js'
+  import bus from 'common/eventBus/bus.js'
 	export default {
+    props:['currentGroup'],
 		data() {
 			return {
+        messageLoading:true,
+        showLoadingmoreBtn:true,
         filelist:[],
         editingTextarea:"",
         currientCursorposition:{text: "", start: 2, end: 2},//text是选中文案，start起始位置，end终点位置
         textAreaIsFocus:false,
         showEmoji:false,
-        messagesList:[//消息列表
-          {
-            type:'message',
-            userId:'123476',
-            header:DEFAULT_USER_IMAGE,
-            username:'人卫社001号',
-            messageData:'这是个测试数据，01234，测试测试',
-            time:'2012-12-12 12:12:00'
-          },
-          {
-            userId:'123756',
-            type:'message',
-            header:DEFAULT_USER_IMAGE,
-            username:'人卫社001号',
-            messageData:'这是个测试数据，01234，测试测试',
-            time:'2012-12-12 12:12:00'
-          },
-        ],
+        messagesList:[],
+        getHistoryMesListForm:{
+          pageSize:30,
+          pageNumber:1,
+          createTime:+(new Date()),
+        },
       }
 		},
+    computed:{
+      currentUserdata(){
+        return this.getUserData()
+      },
+      groupId(){
+          return this.currentGroup.id;
+      }
+    },
     methods:{
       sendMessage(){
-        var self = this;
         var message = {
           type:'message',
           isNew:true,
@@ -122,11 +127,6 @@
         //发送完消息清空textarea
         this.editingTextarea = '';
 
-        //to-do list 这部分后面需要重写，消息组件加载完成后再重置滚动条位置
-        setTimeout(function () {
-          //将聊天消息窗口滚动条滚动到底部
-          self.scollBottom(self.$refs.chatContainer);
-        },20)
       },
       textAreaFocus(){
           this.textAreaIsFocus=true;
@@ -156,43 +156,107 @@
         newText += this.editingTextarea.substr(this.currientCursorposition.end,this.editingTextarea.length);
         this.editingTextarea=newText;
       },
-      scollBottom(dom){//滚动到底部
-        dom.scrollTop=dom.scrollHeight;
-      },
       sendMessageIsEmpty(){
         console.log('消息不能为空');
       },
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
        */
-      uploadFileSuccess(response, file, fileList){
-        var message = {
-          type:'text',
-          isNew:true,
-          userId:'123456',
-          header:DEFAULT_USER_IMAGE,
-          username:'我的测试账号',
-          messageData:'这是个测试数据，01234，测试测试',
-          time:'2012-12-12 12:12:00'
-        };
-        message.time = getNowFormatDate();
-        message.messageData = file.name.trim();
-        if(!message.messageData){
-          this.sendMessageIsEmpty();
+      uploadFile(){
+        let self= this;
+        var filedata = this.$refs.fileInput.files[0];
+        if(!filedata){
           return;
         }
-        this.messagesList.push(message);
+        var formdata = new FormData();
+        formdata.append('files',filedata);
+        formdata.append('ids',[1234]);
+        formdata.append('sessionId',this.getUserData().sessionId);
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };  //添加请求头
+        this.$axios.post('/group/add/pmphgroupfile',formdata,config)
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
 
-        //to-do list 这部分后面需要重写，消息组件加载完成后再重置滚动条位置
-        setTimeout(()=> {
-          //将聊天消息窗口滚动条滚动到底部
-          this.scollBottom(this.$refs.chatContainer);
-        },20)
+            }else{
+              self.$message.error('上传文件失败，请重试');
+            }
+          })
+          .catch((error) => {
+            self.$message.error('上传文件失败，请重试');
+          });
       },
+      /**
+       * 获取小组聊天历史消息
+       * @param pageSize
+       * @param pageNumber
+       * @param callback
+       */
+      getHistoryMessage(){
+        this.messageLoading=true;
+        this.$axios.get('/group/list/message',{params:{
+          groupId:this.currentGroup.id,
+          pageSize:this.getHistoryMesListForm.pageSize,
+          pageNumber:this.getHistoryMesListForm.pageNumber,
+          baseTime:parseInt(this.createTime)
+        }})
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.messagesList.unshift(res.data);
+            }
+            this.messageLoading=false;
+          })
+          .catch(e=>{
+            this.messageLoading=false;
+          })
+      },
+      /**
+       *
+       */
+      getMoreHistoryMessage(){
+          this.getHistoryMesListForm.pageSize++;
+          this.getHistoryMessage();
+      },
+      /**
+       *
+       */
+      handlerReceiveMessage(data){
+        this.$message.success('成功收到消息');
+        console.log(data);
+      },
+      /**
+       * 开始监听webSocket推送的消息事件
+       */
+      startListenMessage(){
+        bus.$on('ws:message',this.handlerReceiveMessage)
+      }
     },
     components:{
       vueEmoji,
       ChatMessageIterm
+    },
+    created(){
+      this.getHistoryMessage();
+    },
+    mounted(){
+      this.startListenMessage();
+    },
+    watch:{
+      messagesList(){
+        setTimeout(()=> {
+          //将聊天消息窗口滚动条滚动到底部
+          this.$refs.chatContainer.scrollTop=this.$refs.chatContainer.scrollHeight;
+        },20)
+      },
+      groupId(){
+        this.messagesList=[];
+        this.getHistoryMesListForm.pageNumber=1;
+        this.getHistoryMesListForm.createTime=+(new Date());
+        this.getHistoryMessage();
+      }
     }
 	}
 </script>

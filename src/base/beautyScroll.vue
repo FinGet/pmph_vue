@@ -99,11 +99,15 @@
       render(){
         var beautyScroll = this.$refs.beautyScroll;
         var beautyScrollInnerDiv = this.$refs.beautyScrollInnerDiv;
-        //初始化beautyScroll-inner宽度，超出外层20px
-        this.innerWidth = beautyScroll.clientWidth+20;
-        //初始化滚动条高度
-        this.scrollbarHeight = beautyScroll.clientHeight/beautyScrollInnerDiv.clientHeight*beautyScroll.clientHeight;
-        this.showScrollBar = this.scrollbarHeight<beautyScroll.clientHeight?true:false;
+        try{
+          //初始化beautyScroll-inner宽度，超出外层20px
+          this.innerWidth = beautyScroll.clientWidth+20;
+          //初始化滚动条高度
+          this.scrollbarHeight = beautyScroll.clientHeight/beautyScrollInnerDiv.clientHeight*beautyScroll.clientHeight;
+          this.showScrollBar = this.scrollbarHeight<beautyScroll.clientHeight?true:false;
+        }catch(e){
+          console.log(e)
+        }
       },
       /**
        * 自动初始化滚动条组件，每20ms刷新一次

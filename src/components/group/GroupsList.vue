@@ -191,6 +191,7 @@
             if (res.code == '1') {
               self.$message.success('创建小组成功');
               self.getGroupData();
+              self.dialogVisible=false;
             }
           })
           .catch((error) => {
@@ -306,7 +307,7 @@
     height: 14px;
     font-size: 12px;
     color: rgba(255,255,255,.5);
-    
+
   }
   .groupHeadName{
     font-size: 14px;
