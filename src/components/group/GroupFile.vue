@@ -256,6 +256,7 @@
                 iterm.gmtCreate=formatDate(iterm.gmtCreate);
               });
               this.tableData=res.data.rows;
+              
             }
           })
           .catch(e=>{
