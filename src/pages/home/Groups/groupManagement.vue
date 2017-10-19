@@ -4,7 +4,7 @@
       <el-col :span="grouplistColDefaultWidth" class="border-right-1 groupmanage-col">
         <Groups-list @clickItem="setGroupName"></Groups-list>
       </el-col>
-      <el-col :span="chartColDefaultWidth" class="groupmanage-col">
+      <el-col :span="chartColDefaultWidth" class="groupmanage-col" v-if="currentGroupId">
         <div class="groupmanageHead">
           <div class="currentGroupName">
             <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
@@ -24,7 +24,7 @@
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
-      <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap">
+      <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap" v-if="currentGroupId">
         <MembersList @addNewMember="addNewMember" :groupId.sync="currentGroupId"></MembersList>
       </el-col>
     </el-row>
@@ -53,7 +53,7 @@
           groupImage: "",
           groupName:"",
           textbook:'',
-          id:13
+          id:null
         },
         tabs:[
           {type:'互动交流',view:'GroupChat'},

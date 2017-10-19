@@ -25,7 +25,7 @@
             <div class="groupHead-inner">
             <span class="groupHeadImg">
               <!-- <img :src="item.groupImage?item.groupImage:DEFAULT_USER_IMAGE" alt="小组头像"> -->
-              <img :src="DEFAULT_USER_IMAGE" alt="小组头像">
+              <img :src="item.groupImage" alt="小组头像">
             </span>
               <div class="groupHeadName">
                 <span>{{item.groupName}}</span>
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js';
+  import {DEFAULT_USER_IMAGE,BASE_URL} from 'common/config.js';
   import beautyScroll from '@/base/beautyScroll.vue';
   import {getDateDiff} from '../../../static/commonFun.js'
   import {mapGetters} from 'vuex'
@@ -137,6 +137,9 @@
         }).then(function(res){
           console.log(res);
           if(res.data.code==1){
+            res.data.data.map(iterm=>{
+              iterm.groupImage=BASE_URL+'image/'+iterm.groupImage;
+            });
             _this.groupListData=res.data.data;
           }
         }).catch(function(err){
