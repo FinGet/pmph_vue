@@ -185,6 +185,7 @@
         let self= this;
         var filedata = this.newGroupData.filename?this.$refs.fileInput.files[0]:'';
         var formdata = new FormData();
+        console.log(filedata);
         formdata.append('file',filedata);
         formdata.append('groupName',this.newGroupData.name);
         formdata.append('sessionId',this.getUserData().sessionId);
