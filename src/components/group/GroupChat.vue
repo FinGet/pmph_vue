@@ -21,6 +21,7 @@
         :isNew="!!iterm.isNew"
         :groupId="currentGroup.id"
         :currentUserId="currentUserdata.userInfo.id"
+        :currentUserType="currentUserdata.userInfo.loginType"
       >
 
       </ChatMessageIterm>
@@ -74,8 +75,8 @@
   import vueEmoji from '@/base/emoji/emoji.vue'
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
-  import {getCursorPosition,setCursorPosition,getNowFormatDate} from '../../../static/commonFun.js'
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
+  import {getCursorPosition,setCursorPosition,getNowFormatDate,formatDate} from '../../../static/commonFun.js'
+  import {DEFAULT_USER_IMAGE,DEFAULT_USER_INAGE_ID,BASE_URL} from 'common/config.js'
   import bus from 'common/eventBus/bus.js'
 	export default {
     props:['currentGroup'],
@@ -105,18 +106,20 @@
       }
     },
     methods:{
+      /**
+       * 聊天窗口中发送一条普通消息，读取输入框中的内容发送出去
+       */
       sendMessage(){
-        var message = {
+        let message = {
           type:'message',
           isNew:true,
-          userId:'123456',
-          header:DEFAULT_USER_IMAGE,
-          username:'我的测试账号',
-          messageData:'这是个测试数据，01234，测试测试',
-          time:'2012-12-12 12:12:00'
+          userId:this.currentUserdata.userInfo.id,
+          userType:this.currentUserdata.userInfo.loginType,
+          header:BASE_URL+'image/'+this.currentUserdata.userInfo.avatar,
+          username:this.currentUserdata.userInfo.username,
+          messageData:undefined,
+          time:getNowFormatDate()
         };
-
-        message.time = getNowFormatDate();
 
         message.messageData = emoji(this.editingTextarea.trim());
         if(!message.messageData){
@@ -156,8 +159,11 @@
         newText += this.editingTextarea.substr(this.currientCursorposition.end,this.editingTextarea.length);
         this.editingTextarea=newText;
       },
+      /**
+       * 点击发送按钮，当消息为空时触发此方法
+       */
       sendMessageIsEmpty(){
-        console.log('消息不能为空');
+        this.$message.error('消息不能为空');
       },
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
@@ -170,7 +176,7 @@
         }
         var formdata = new FormData();
         formdata.append('files',filedata);
-        formdata.append('ids',[1234]);
+        formdata.append('ids',this.currentGroup.id);
         formdata.append('sessionId',this.getUserData().sessionId);
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -200,12 +206,26 @@
           groupId:this.currentGroup.id,
           pageSize:this.getHistoryMesListForm.pageSize,
           pageNumber:this.getHistoryMesListForm.pageNumber,
-          baseTime:parseInt(this.createTime)
+          baseTime:this.getHistoryMesListForm.createTime
         }})
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
-              this.messagesList.unshift(res.data);
+              res.data.rows.forEach(iterm=>{
+                let message = {
+                  id:iterm.id,
+                  type:iterm.userType==0?'file':'message',
+                  isNew:false,
+                  userId:iterm.userId,
+                  userType:iterm.userType,
+                  header:BASE_URL+'image/'+iterm.avatar,
+                  username:iterm.memberName,
+                  messageData:iterm.msgContent,
+                  time:formatDate(iterm.gmtCreate),
+                };
+                this.messagesList.unshift(message);
+              });
+              this.showLoadingmoreBtn=!res.data.last;
             }
             this.messageLoading=false;
           })
@@ -214,18 +234,36 @@
           })
       },
       /**
-       *
+       * 点击加载更多历史消息按钮，先将获取的页码参数加1，再执行getHistoryMessage方法
        */
       getMoreHistoryMessage(){
-          this.getHistoryMesListForm.pageSize++;
+          this.getHistoryMesListForm.pageNumber++;
           this.getHistoryMessage();
       },
       /**
-       *
+       * 处理接收到的消息事件
+       * 处理条件：1、消息是小组消息，2、消息的小组id等于当前小组id，3、消息的userid不在不等于当前用户id
        */
       handlerReceiveMessage(data){
-        this.$message.success('成功收到消息');
-        console.log(data);
+        console.log('小组聊天窗口成功收到消息',data);
+        let message={};
+        data=JSON.parse(data);
+//        if(data.msgType==3 && data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id){
+        if(true){
+          message = {
+            id:data.id,
+            type:data.senderType==0?'file':'message',
+            isNew:false,
+            userId:data.senderId,
+            userType:data.senderType,
+            header:BASE_URL+'image/'+data.senderIcon,
+            username:data.senderName,
+            messageData:data.content,
+            time:data.time,
+          };
+          console.log(message);
+          this.messagesList.push(message);
+        }
       },
       /**
        * 开始监听webSocket推送的消息事件
@@ -239,7 +277,9 @@
       ChatMessageIterm
     },
     created(){
-      this.getHistoryMessage();
+      if(this.groupId){
+        this.getHistoryMessage();
+      }
     },
     mounted(){
       this.startListenMessage();

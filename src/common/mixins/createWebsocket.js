@@ -34,6 +34,7 @@ export default {
      * 接收到消息用vue event bus抛出事件
      */
     socket.addEventListener('message', function (event) {
+      console.log('websocket 收到消息');
       bus.$emit('ws:message', event.data);
     });
     /**
