@@ -197,6 +197,7 @@ export default {
       groupMemberUrl: '/group/list/pmphgroupmember',  //获取小组成员url
       writerUserUrl: '/users/writer/list/writeruser',  //获取作家用户url
       clubUserUrl:'users/pmph/list/pmphuser',  //获取社内用户url
+      clubTreeUrl:'users/pmph/list/pmphdepartment',//获取社内用户成员树url
       addMemberUrl:'/group/add/pmphgroupmember',  //添加小组成员url
       writerParams: {
         orgName: '',
@@ -314,12 +315,17 @@ export default {
            obj.isWriter=item.isWriter?item.isWriter:false;
            subArr.push(obj);
      })
-     console.log(subArr);
-     this.$axios.post(this.addMemberUrl,{
+     console.log(typeof JSON.stringify(subArr));
+     this.$axios({
+       method:'POST',
+       url:this.addMemberUrl,
+       data:this.$initPostData({
        groupId:this.groupId,
-       pmphGroupMembers:subArr,
+       pmphGroupMembers:JSON.stringify(subArr),
        sessionId:this.getUserData().sessionId,
-     }).then((res)=>{
+     })
+     }
+       ).then((res)=>{
           console.log(res);
           if(res.data.code==1){
                this.getGroupMember();
@@ -352,6 +358,17 @@ export default {
                 type: 'warning'
               });
             }
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+    },
+    /* 获取社内用户树列表 */
+    getTreeData(){
+   this.$axios.get(this.clubTreeUrl).then((response) => {
+          let res = response.data
+          if (res.code == '1') {
+            this.treeData = res.data.sonDepartment;
           }
         }).catch((error) => {
           console.log(error.msg)
@@ -413,6 +430,7 @@ export default {
     }
     this.getWriterUserList();
     this.getClubUserData();
+    this.getTreeData();
   }
 }
 </script>
