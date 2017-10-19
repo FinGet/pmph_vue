@@ -85,6 +85,10 @@ axios.interceptors.request.use(function (config) {
 //添加一个返回拦截器
 axios.interceptors.response.use(function (response) {
   //对返回的数据进行一些处理
+  if(response.data.code==30){
+    ElementUI.Message.error('当前登录已过期，请重新登录');
+    router.push('/login');
+  }
   return response;
 }, function (error) {
   //对返回的错误进行一些处理

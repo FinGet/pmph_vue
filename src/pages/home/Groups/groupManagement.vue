@@ -7,7 +7,7 @@
       <el-col :span="chartColDefaultWidth" class="groupmanage-col">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>{{currentGroup.name?currentGroup.name:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
+            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
           </div>
           <ul class="tab clearfix">
             <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :key="tab.id" :class="{active:currentActive===index}">
@@ -20,7 +20,7 @@
           ref="groupmanageMainContainer"
           :style="{height:wrapperHeight-80+'px'}"
         >
-          <component :is="currentView"></component>
+          <component :is="currentView" :currentGroup="currentGroup"></component>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
@@ -49,7 +49,12 @@
         memberColDefaultWidth:4,
         currentActive: 0, // 当前tab
         currentView: 'GroupChat',
-        currentGroup:{name:'',textbook:''},
+        currentGroup:{
+          groupImage: "",
+          groupName:"",
+          textbook:'',
+          id:13
+        },
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
@@ -104,8 +109,10 @@
 
       },
       setGroupName(group) {
-        this.currentGroup.name = group.name
-        this.currentGroup.textbook = group.textbook
+        this.currentGroupId =group.id;
+        for(let key in this.currentGroup){
+          this.currentGroup[key] = group[key]
+        }
       },
       addNewMember(){
 

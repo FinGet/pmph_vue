@@ -42,12 +42,10 @@
     export default{
         props:{
           groupId:{
-            type:String,
-            default:'1234'
+            type:Number,
           },
           currentUserId:{
-            type:String,
-            default:'123456'
+            type:Number,
           },
           isNew:{
             type:Boolean,
