@@ -20,7 +20,7 @@
            <el-button type="primary" size="mini" @click="visible = false,delet()">确定</el-button>
          </div>
        </el-popover>
-       <el-button class="btn" type="danger" icon="delete"  :disabled="isSelected" v-popover:popover>批量删除</el-button>
+       <el-button class="btn" type="danger" icon="delete" :disabled="isSelected"  v-popover:popover>批量删除</el-button>
        <router-link :to="{ name: '编辑消息'}">
        <el-button class="btn" type="primary" icon="edit">
          发送新消息
@@ -211,15 +211,32 @@
           this.previewShow=true;
         }
       },
-      // 删除消息
+      /**
+       * 批量删除
+       */
       delet() {
         // console.log(1)
-        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
-        this.$refs.multipleTable.clearSelection()
-        this.$message({
-          message: '恭喜你，删除成功！',
-          type: 'success'
-        });
+        // console.log(this.multipleSelection)
+        var len = this.multipleSelection.length
+        var arr = []
+        for (var i = 0; i< len; i++) {
+          arr.push(this.multipleSelection[i].msgId)
+        }
+        var msgId = arr.join()
+        this.$axios.delete("/messages/delete/message/"+msgId).then((response) => {
+          let res = response.data
+          console.log(res)
+          if (res.code == '1') {
+            this.tableData.splice(this.multipleSelection,len)
+            this.$refs.multipleTable.clearSelection()
+            this.$message({
+              message: '恭喜你，删除成功！',
+              type: 'success'
+            });
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
       }
     },
     components: {
