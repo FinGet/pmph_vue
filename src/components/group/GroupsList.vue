@@ -140,8 +140,12 @@
               iterm.groupImage=BASE_URL+'image/'+iterm.groupImage;
             });
             _this.groupListData=res.data.data;
-            _this.currentActiveGroupId=res.data.data[0].id;
-            _this.$emit('clickItem',res.data.data[0]);
+            if(res.data.data.length){
+              _this.currentActiveGroupId=res.data.data[0].id;
+              _this.$emit('clickItem',res.data.data[0]);
+              //当前小组列表传递给父组件，以备其他组件用
+              _this.$emit('getGroupList',res.data.data);
+            }
           }
         }).catch(function(err){
           console.log(err);

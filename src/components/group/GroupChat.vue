@@ -21,6 +21,7 @@
         :isNew="!!iterm.isNew"
         :groupId="currentGroup.id"
         :currentUserId="currentUserdata.userInfo.id"
+        :currentUserType="currentUserdata.userInfo.loginType"
       >
 
       </ChatMessageIterm>
@@ -75,7 +76,7 @@
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
   import {getCursorPosition,setCursorPosition,getNowFormatDate,formatDate} from '../../../static/commonFun.js'
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
+  import {DEFAULT_USER_IMAGE,DEFAULT_USER_INAGE_ID,BASE_URL} from 'common/config.js'
   import bus from 'common/eventBus/bus.js'
 	export default {
     props:['currentGroup'],
@@ -113,7 +114,8 @@
           type:'message',
           isNew:true,
           userId:this.currentUserdata.userInfo.id,
-          header:DEFAULT_USER_IMAGE,
+          userType:this.currentUserdata.userInfo.loginType,
+          header:BASE_URL+'image/'+this.currentUserdata.userInfo.avatar,
           username:this.currentUserdata.userInfo.username,
           messageData:undefined,
           time:getNowFormatDate()
@@ -174,7 +176,7 @@
         }
         var formdata = new FormData();
         formdata.append('files',filedata);
-        formdata.append('ids',[1234]);
+        formdata.append('ids',this.currentGroup.id);
         formdata.append('sessionId',this.getUserData().sessionId);
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -212,10 +214,11 @@
               res.data.rows.forEach(iterm=>{
                 let message = {
                   id:iterm.id,
-                  type:iterm.userId==0?'file':'message',
+                  type:iterm.userType==0?'file':'message',
                   isNew:false,
                   userId:iterm.userId,
-                  header:iterm.avatar,
+                  userType:iterm.userType,
+                  header:BASE_URL+'image/'+iterm.avatar,
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
                   time:formatDate(iterm.gmtCreate),
@@ -242,17 +245,18 @@
        * 处理条件：1、消息是小组消息，2、消息的小组id等于当前小组id，3、消息的userid不在不等于当前用户id
        */
       handlerReceiveMessage(data){
-        this.$message.success('成功收到消息1233');
-        console.log('成功收到消息1233',data);
+        console.log('小组聊天窗口成功收到消息',data);
         let message={};
+        data=JSON.parse(data);
 //        if(data.msgType==3 && data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id){
         if(true){
           message = {
             id:data.id,
-            type:data.senderId==0?'file':'message',
+            type:data.senderType==0?'file':'message',
             isNew:false,
             userId:data.senderId,
-            header:data.senderIcon,
+            userType:data.senderType,
+            header:BASE_URL+'image/'+data.senderIcon,
             username:data.senderName,
             messageData:data.content,
             time:data.time,

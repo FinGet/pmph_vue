@@ -30,9 +30,7 @@
 
         </div>
         <div class="fileupload">
-          <el-badge :value="12" class="myupload">
-            <i class="icon-upload" @click="dialogChooseGroup = true"></i>
-          </el-badge>
+          <i class="icon-upload cursor-pointer" @click="dialogChooseGroup = true"></i>
         </div>
       </div>
     </el-row>
@@ -51,35 +49,33 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="filename"
-          header-align="center"
           label="文件"
         >
           <template scope="scope">
             <i class="fa fa-file-word-o"></i>
-            <span style="margin-left: 10px">{{ scope.row.filename }}</span>
+            <span style="margin-left: 10px">{{ scope.row.fileName }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="gmtCreate"
           align="center"
           label="上传时间"
           width="130">
         </el-table-column>
         <el-table-column
-          prop="uploader"
+          prop="memberName"
           width="120"
           align="center"
           label="分享者">
         </el-table-column>
         <el-table-column
-          prop="groupcount"
+          prop="groupCount"
           align="center"
           width="120"
           label="上传小组数">
         </el-table-column>
         <el-table-column
-          prop="downcount"
+          prop="download"
           align="center"
           width="100"
           label="下载次数">
@@ -91,9 +87,7 @@
           align="center"
         >
           <template scope="scope">
-            <el-button
-              type="text"
-              size="small">
+            <el-button type="text" size="small" @click="downloadFile(scope.$index)">
               <i class="fa fa-download"></i>
             </el-button>
           </template>
@@ -199,6 +193,9 @@
         } else {
           return true
         }
+      },
+      currentGroupId(){
+        return this.currentGroup.id;
       }
     },
     components:{
@@ -274,9 +271,31 @@
         this.searchFormData.pageNumber=1;
         this.getFilelistData();
       },
+      /**
+       * 下载文件
+       * @param index
+       */
+      downloadFile(index){
+        let fileId=this.tableData[index].fileId;
+        this.$axios.get('file/'+fileId)
+          .then(res=>{
+            this.tableData[index].download++;
+          })
+          .catch(e=>{
+            this.$message.error('下载失败，请重试');
+          })
+      },
     },
     created(){
       this.getFilelistData();
+    },
+    watch:{
+      currentGroupId(){
+        this.searchFormData.pageNumber=1;
+        this.searchFormData.pageSize=30;
+        this.searchFormData.fileName='';
+        this.getFilelistData();
+      }
     },
 	}
 </script>

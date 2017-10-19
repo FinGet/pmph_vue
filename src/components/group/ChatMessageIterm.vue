@@ -2,7 +2,7 @@
 *  小组聊天单条消息组件
 */
 <template>
-    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId}" v-if="message && message.userId && message.type=='message'">
+    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId&&currentUserType==message.userType}" v-if="message && message.userId && message.type=='message'">
       <div class="messageIterm-inner">
         <div class="messageUserHead text-center">
           <div>
@@ -45,7 +45,8 @@
             type:Number,
           },
           currentUserId:{
-            type:Number,
+          },
+          currentUserType:{
           },
           isNew:{
             type:Boolean,

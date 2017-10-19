@@ -2,7 +2,7 @@
   <div class="groupmanage" ref="groupmanage" :style="{height:wrapperHeight+'px'}">
     <el-row class="groupmanage-row">
       <el-col :span="grouplistColDefaultWidth" class="border-right-1 groupmanage-col">
-        <Groups-list @clickItem="setGroupName"></Groups-list>
+        <Groups-list @clickItem="setGroupName" @getGroupList="getGroupList"></Groups-list>
       </el-col>
       <el-col :span="chartColDefaultWidth" class="groupmanage-col" v-if="currentGroupId">
         <div class="groupmanageHead">
@@ -20,7 +20,7 @@
           ref="groupmanageMainContainer"
           :style="{height:wrapperHeight-80+'px'}"
         >
-          <component :is="currentView" :currentGroup="currentGroup"></component>
+          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList"></component>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
@@ -55,6 +55,7 @@
           textbook:'',
           id:null
         },
+        currentGroupList:[],
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
@@ -117,6 +118,13 @@
       addNewMember(){
 
       },
+      /**
+       * 获取小组列表
+       * @param groupList
+       */
+      getGroupList(groupList){
+        this.currentGroupList=groupList;
+      }
     },
     components:{
       GroupsList,
