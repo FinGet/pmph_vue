@@ -261,7 +261,7 @@
         console.log('小组聊天窗口成功收到消息',data);
         let message={};
         data=JSON.parse(data);
-        if(data.msgType==3 && ((data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id)||data.senderType==0)){
+        if(data.msgType==3 && ((data.groupId==this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id)||!!!data.senderType)){
           message = {
             id:data.id,
             type:data.senderType==0?'file':'message',
