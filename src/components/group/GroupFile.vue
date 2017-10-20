@@ -22,11 +22,11 @@
             <p>选中的文件确定删除吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
+              <el-button type="primary" size="mini" @click="deleteFile">确定</el-button>
             </div>
           </el-popover>
-          <el-button class="pull-left marginR20" type="danger" @click="click"  v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
-          <i class="icon-manage marginR20" @click="isManage = !isManage"></i>
+          <el-button class="pull-left marginR20" type="danger" @click="visible = true" v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
+          <i class="icon-manage marginR20" @click="manageBtn"></i>
         </div>
         <div class="fileupload">
           <i class="icon-upload cursor-pointer" @click="dialogChooseGroup = true"></i>
@@ -58,22 +58,27 @@
         <el-table-column
           prop="gmtCreate"
           align="center"
-          label="上传时间">
+          label="上传时间"
+          min-width="160">
         </el-table-column>
         <el-table-column
           prop="memberName"
           align="center"
-          label="分享者">
+          label="分享者"
+          width="100">
         </el-table-column>
         <el-table-column
+          v-if="screenWidth_lg_computed"
           prop="groupCount"
           align="center"
-          label="上传小组数">
+          label="上传小组数"
+          width="116">
         </el-table-column>
         <el-table-column
           prop="download"
           align="center"
-          label="下载次数">
+          label="下载次数"
+          width="108">
         </el-table-column>
         <el-table-column
           label="下载"
@@ -82,9 +87,9 @@
           align="center"
         >
           <template scope="scope">
-            <el-button type="text" size="small" @click="downloadFile(scope.$index)">
+            <a :href="scope.row.downloadUrl" @click="downloadFile(scope.$index)">
               <i class="fa fa-download"></i>
-            </el-button>
+            </a>
           </template>
         </el-table-column>
       </el-table>
@@ -105,7 +110,7 @@
     <el-dialog title="选择上传小组" :visible.sync="dialogChooseGroup">
       <el-table
         ref="fileTable"
-        :data="groupData"
+        :data="currentGroupList"
         border
         tooltip-effect="dark"
         style="width: 100%"
@@ -116,56 +121,40 @@
         </el-table-column>
         <el-table-column
           label="小组名称"
-          prop="name"
+          prop="groupName"
         >
         </el-table-column>
       </el-table>
-      <el-col>
-        <el-upload class="marginT10 marginB10 pull-right" action="#" :show-file-list="false" :multiple="true" :on-success="uploadSuccess">
-          <el-button type="primary" :disabled="groupSelection.length==0" @click="uploadFile">上传文件</el-button>
-        </el-upload>
-      </el-col>
+      <span slot="footer" class="dialog-footer">
+          <el-button type="primary" :disabled="groupSelection.length==0" class="relative">
+            上传文件
+             <input type="file" @change="filechange" ref="fileInput" class="fileInput" />
+          </el-button>
+      </span>
     </el-dialog>
 	</div>
 </template>
 
 <script>
   import {formatDate} from '../../../static/commonFun'
+  import {BASE_URL} from 'common/config.js'
+  import ScreenSize from 'common/mixins/ScreenSize.js';
 	export default {
-    props:['currentGroup'],
+    mixins: [ScreenSize],
+    props:['currentGroup','currentGroupList'],
 		data() {
 			return {
+        screenWidth_lg_computed: true,
         dialogChooseGroup: false,
-        fileCount:0,
         visible: false,
         // isManage管理文件
         isManage: false,
+        fileNum:0,
         fileSelection: [],
         groupSelection: [],
         // tableData文件列表
         tableData: [],
         totalPages:0,
-        // groupData上传小组列表
-        groupData:[
-          {
-            name:'人卫小组1'
-          },
-          {
-            name:'人卫小组2'
-          },
-          {
-            name:'人卫小组3'
-          }
-          ,{
-            name:'人卫小组4'
-          }
-          ,{
-            name:'人卫小组5'
-          }
-          ,{
-            name:'人卫小组6'
-          }
-        ],
         searchFormData:{
           groupId:this.currentGroup.id,
           pageNumber:1,
@@ -175,10 +164,6 @@
       }
 		},
     computed:{
-		  // 文件数量
-      fileNum() {
-        return this.tableData.length
-      },
       /**
        * 判断当前是否有选中项来设置删除按钮是否可以点击
        * @returns {boolean}
@@ -192,9 +177,24 @@
       },
       currentGroupId(){
         return this.currentGroup.id;
-      }
-    },
-    components:{
+      },
+      //上传文件时带的额外参数
+      uploadFileData(){
+        var ids = []
+        this.groupSelection.forEach(iterm=>{
+          ids.push(iterm.id);
+        });
+
+        let data={
+          ids:ids.join(','),
+          sessionId:this.getUserData().sessionId
+        };
+        console.log(data)
+        return data
+      },
+      uploadFileUrl(){
+        return BASE_URL+'group/add/pmphgroupfile'
+      },
     },
     methods: {
       /**
@@ -203,20 +203,13 @@
       uploadSuccess() {
         console.log('1')
       },
-      /**
-       * 当选中项变化是，把选中项赋值个multipSelection从而实现了isSelected
-       * @param val
-       */
-      fileSelectionChange(val) {
-        //console.log(val)
-        this.fileSelection = val
-        this.fileCount = this.fileSelection.length
-      },
+
       /**
        * 选择上传小组
        */
       groupSelectionChange(val) {
         this.groupSelection = val
+        console.log(this.groupSelection);
       },
 
       /**
@@ -229,34 +222,31 @@
         this.$refs.fileTable.clearSelection()
         // console.log(this.groupSelection)
       },
-      click() {
-        this.visible = true
-        console.log(this.visible)
-      },
       /**
-       * 删除选中数据
+       * 点击管理按钮
        */
-      deleted() {
-        this.tableData.splice(this.fileSelection,this.fileSelection.length)
-        this.$refs.multipleTable.clearSelection()
-        this.$message({
-          message: `恭喜你，成功删除数据`,
-          type: 'success'
-        });
+      manageBtn(){
+        this.isManage=!this.isManage;
+        if(!this.isManage){
+          this.$refs.multipleTable.clearSelection()
+        }
       },
       /**
        * 获取文件列表数据
        */
       getFilelistData(){
+        this.searchFormData.groupId = this.currentGroupId;
         this.$axios.get('/group/list/groupfile',{params: this.searchFormData})
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=formatDate(iterm.gmtCreate);
+                iterm.gmtCreate=iterm.gmtCreate;
+                iterm.downloadUrl = BASE_URL+'file/download/'+iterm.fileId;
               });
               this.tableData=res.data.rows;
-
+              this.fileNum = res.data.total;
             }
           })
           .catch(e=>{
@@ -276,18 +266,82 @@
        * @param index
        */
       downloadFile(index){
-        let fileId=this.tableData[index].fileId;
-        this.$axios.get('file/'+fileId)
-          .then(res=>{
-            this.tableData[index].download++;
+        this.tableData[index].download++;
+      },
+      /**
+       * 删除小组文件
+       */
+      deleteFile(){
+        this.visible=false;
+        var ids=[];
+        this.fileSelection.forEach(iterm=>{
+          ids.push(iterm.id);
+        });
+        if(!ids.length)
+          return;
+
+        this.$axios.delete('/group/delete/pmphgroupfile',{params:{
+          groupId:this.currentGroupId,
+          ids:ids.join(','),
+          sessionId:this.getUserData().sessionId
+        }})
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.$message.success('成功删除小组文件');
+              this.getFilelistData();
+            }
           })
           .catch(e=>{
-            this.$message.error('下载失败，请重试');
+            this.$message.error('删除小组文件失败，请重试');
           })
+
+      },
+      /**
+       * 获取当前选择表格row数据
+       * @param val
+       */
+      fileSelectionChange(val) {
+        this.fileSelection=val
+        console.log(this.fileSelection);
+      },
+      /**
+       * 上传头像input发生改变时触发
+       * @param e input内置事件对象
+       */
+      filechange(e){
+        var filedata = this.$refs.fileInput.files[0];
+        if(!filedata){
+          return;
+        }
+        var formdata = new FormData();
+        formdata.append('files',filedata);
+        formdata.append('ids',this.uploadFileData.ids);
+        formdata.append('sessionId',this.uploadFileData.sessionId);
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        };  //添加请求头
+        this.$axios.post('/group/add/pmphgroupfile',formdata,config)
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
+              this.getFilelistData();
+              this.dialogChooseGroup=false;
+            }else{
+              this.$message.error('上传文件失败，请重试');
+            }
+          })
+          .catch((error) => {
+            this.$message.error('上传文件失败，请重试');
+          });
       },
     },
     created(){
       this.getFilelistData();
+    },
+    mounted() {
+      this.screenWidth_lg_computed = this.screenWidth_lg;
+
     },
     watch:{
       currentGroupId(){
@@ -344,5 +398,16 @@
   }
   .myupload{
     cursor: pointer;
+  }
+
+  .fileInput{
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    left: 0;
   }
 </style>

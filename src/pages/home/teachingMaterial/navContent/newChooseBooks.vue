@@ -329,17 +329,18 @@
                   placeholder="请输入内容"
                   v-model="mainContent">
                 </el-input>
-                <el-upload
-                  class="upload"
-                  action="#"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file-list="fileList">
-                  <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
               </el-col>
             </el-form-item>
-
+            <el-form-item label="上传图片:" prop="uploadImg">
+              <el-upload
+                class="upload"
+                action="#"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </el-form-item>
             <el-form-item label="备注:">
               <el-col :span="24">
                 <el-input
@@ -677,12 +678,6 @@
           ],
           ageDate: [
             { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          uploadImg: [
-            { required: true, message: '请上传图片', trigger: 'change' }
-          ],
-          uploadFile: [
-            { required: true, message: '请上传文件', trigger: 'blur' }
           ]
         }
       };

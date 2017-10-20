@@ -89,6 +89,7 @@
   import beautyScroll from '@/base/beautyScroll.vue';
   import {getDateDiff} from '../../../static/commonFun.js'
   import {mapGetters} from 'vuex'
+  import bus from 'common/eventBus/bus.js'
   export default{
     data(){
        return {
@@ -141,8 +142,15 @@
             });
             _this.groupListData=res.data.data;
             if(res.data.data.length){
-              _this.currentActiveGroupId=res.data.data[0].id;
-              _this.$emit('clickItem',res.data.data[0]);
+              //保持当前小组选中
+              if(!_this.currentActiveGroupId){
+                _this.currentActiveGroupId=res.data.data[0].id;
+              }
+              res.data.data.forEach(iterm=>{
+                if(iterm.id==_this.currentActiveGroupId){
+                  _this.$emit('clickItem',iterm);
+                }
+              });
               //当前小组列表传递给父组件，以备其他组件用
               _this.$emit('getGroupList',res.data.data);
             }
@@ -221,6 +229,7 @@
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);
+      this.$on('group:info-change',()=>{})
     },
   }
 </script>

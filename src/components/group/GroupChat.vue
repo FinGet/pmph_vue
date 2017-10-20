@@ -13,6 +13,10 @@
                    v-if="!messageLoading&&showLoadingmoreBtn"
                    @click="getMoreHistoryMessage"
         >点击查看更多消息</el-button>
+
+        <span v-if="!messageLoading&&!showLoadingmoreBtn&&messagesList.length==0">
+            历史消息为空
+        </span>
       </div>
       <ChatMessageIterm
         v-for="(iterm,index) in messagesList"
@@ -84,6 +88,7 @@
 			return {
         messageLoading:true,
         showLoadingmoreBtn:true,
+        isClickLoadingMore:false,
         filelist:[],
         editingTextarea:"",
         currientCursorposition:{text: "", start: 2, end: 2},//text是选中文案，start起始位置，end终点位置
@@ -201,6 +206,7 @@
        * @param callback
        */
       getHistoryMessage(){
+        var self = this;
         this.messageLoading=true;
         this.$axios.get('/group/list/message',{params:{
           groupId:this.currentGroup.id,
@@ -211,10 +217,11 @@
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
+              var tempList = []
               res.data.rows.forEach(iterm=>{
                 let message = {
                   id:iterm.id,
-                  type:iterm.userType==0?'file':'message',
+                  type:iterm.userType?'message':'file',
                   isNew:false,
                   userId:iterm.userId,
                   userType:iterm.userType,
@@ -223,20 +230,26 @@
                   messageData:iterm.msgContent,
                   time:formatDate(iterm.gmtCreate),
                 };
-                this.messagesList.unshift(message);
+                tempList.unshift(message)
               });
+              tempList.forEach(iterm=>{
+                self.messagesList.unshift(iterm);
+                console.log(self.messagesList);
+              });
+              console.log(self.messagesList);
               this.showLoadingmoreBtn=!res.data.last;
             }
             this.messageLoading=false;
           })
           .catch(e=>{
-            this.messageLoading=false;
+            self.messageLoading=false;
           })
       },
       /**
        * 点击加载更多历史消息按钮，先将获取的页码参数加1，再执行getHistoryMessage方法
        */
       getMoreHistoryMessage(){
+          this.isClickLoadingMore=true;
           this.getHistoryMesListForm.pageNumber++;
           this.getHistoryMessage();
       },
@@ -248,8 +261,7 @@
         console.log('小组聊天窗口成功收到消息',data);
         let message={};
         data=JSON.parse(data);
-//        if(data.msgType==3 && data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id){
-        if(true){
+        if(data.msgType==3 && ((data.groupId==this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id)||!!!data.senderType)){
           message = {
             id:data.id,
             type:data.senderType==0?'file':'message',
@@ -259,9 +271,8 @@
             header:BASE_URL+'image/'+data.senderIcon,
             username:data.senderName,
             messageData:data.content,
-            time:data.time,
+            time:formatDate(data.time),
           };
-          console.log(message);
           this.messagesList.push(message);
         }
       },
@@ -270,6 +281,12 @@
        */
       startListenMessage(){
         bus.$on('ws:message',this.handlerReceiveMessage)
+      },
+      /**
+       *  取消监听
+       */
+      removeListenMessage(){
+        bus.$off('ws:message',this.handlerReceiveMessage)
       }
     },
     components:{
@@ -286,6 +303,11 @@
     },
     watch:{
       messagesList(){
+        if(this.isClickLoadingMore){
+          this.isClickLoadingMore=false;
+          return;
+        }
+        this.isClickLoadingMore=false;
         setTimeout(()=> {
           //将聊天消息窗口滚动条滚动到底部
           this.$refs.chatContainer.scrollTop=this.$refs.chatContainer.scrollHeight;
@@ -297,6 +319,9 @@
         this.getHistoryMesListForm.createTime=+(new Date());
         this.getHistoryMessage();
       }
+    },
+    beforeDestroy(){
+      this.removeListenMessage();
     }
 	}
 </script>
@@ -389,5 +414,7 @@
   z-index: 1;
   cursor: pointer;
 }
-
+.messageLoadingBox{
+  background: #f1f1f1;
+}
 </style>

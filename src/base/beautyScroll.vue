@@ -106,7 +106,6 @@
           this.scrollbarHeight = beautyScroll.clientHeight/beautyScrollInnerDiv.clientHeight*beautyScroll.clientHeight;
           this.showScrollBar = this.scrollbarHeight<beautyScroll.clientHeight?true:false;
         }catch(e){
-          console.log(e)
         }
       },
       /**
