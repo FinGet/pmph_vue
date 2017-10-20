@@ -119,6 +119,8 @@ import PreviewPopup from 'components/PreviewPopup'
 export default {
   data: function() {
     return {
+      currentMessageType:'add',
+      currentMessageId:undefined,
       messageForm:{
         title:'',
         sendType:1,
@@ -194,13 +196,42 @@ export default {
             return false;
           }
         });
-    }
+    },
+    /**
+     * 编辑消息时请求当前消息的数据
+     */
+    getCurrentMessageData(){
+      this.$axios.get('/messages/message/content',{params:{
+        userMsgId:this.$route.query.messageId
+      }})
+        .then(response=>{
+          let res = response.data;
+          console.log(res);
+        })
+        .catch(e=>{
+          this.$message.error('获取当前系统消息失败！');
+          this.$route.query.type='add';
+        })
+    },
+    /**
+     * 初始化message 数据，将内容填充到相应位置
+     */
+    setMessageInit(data){
+
+    },
   },
   components: {
     PreviewPopup
   },
+  created(){
+    this.currentMessageType = this.$route.query.type;
+    this.currentMessageId = this.$route.query.messageId;
+    if(this.type=='edit'&&this.currentMessageId){
+      this.getCurrentMessageData()
+    }
+  },
   mounted() {
-      this.uEditor = UE.getEditor('editor');
+    this.uEditor = UE.getEditor('editor');
   },
   destroyed(){
     this.uEditor.destroy();
