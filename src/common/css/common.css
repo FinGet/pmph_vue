@@ -77,6 +77,15 @@ p{word-wrap:break-word}
   float: right;
 }
 
+.absolute{
+  position: absolute;
+}
+.relative{
+  position: relative;
+}
+.fixed{
+  position: fixed;
+}
 
 /*=================================================================
   padding

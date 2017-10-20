@@ -211,6 +211,7 @@
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
+              var tempList = []
               res.data.rows.forEach(iterm=>{
                 let message = {
                   id:iterm.id,
@@ -223,7 +224,10 @@
                   messageData:iterm.msgContent,
                   time:formatDate(iterm.gmtCreate),
                 };
-                this.messagesList.unshift(message);
+                tempList.unshift(message)
+              });
+              tempList.forEach(iterm=>{
+                this.messagesList.unshift(iterm);
               });
               this.showLoadingmoreBtn=!res.data.last;
             }
@@ -248,8 +252,7 @@
         console.log('小组聊天窗口成功收到消息',data);
         let message={};
         data=JSON.parse(data);
-//        if(data.msgType==3 && data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id){
-        if(true){
+        if(true||data.msgType==3 && data.groupId!=this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id){
           message = {
             id:data.id,
             type:data.senderType==0?'file':'message',
@@ -270,6 +273,12 @@
        */
       startListenMessage(){
         bus.$on('ws:message',this.handlerReceiveMessage)
+      },
+      /**
+       *  取消监听
+       */
+      removeListenMessage(){
+        bus.$off('ws:message',this.handlerReceiveMessage)
       }
     },
     components:{
@@ -297,6 +306,9 @@
         this.getHistoryMesListForm.createTime=+(new Date());
         this.getHistoryMessage();
       }
+    },
+    beforeDestroy(){
+      this.removeListenMessage();
     }
 	}
 </script>

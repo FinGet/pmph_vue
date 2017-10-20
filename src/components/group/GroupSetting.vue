@@ -45,24 +45,14 @@
         </div>
       </el-popover>
       <el-button  type="danger" v-popover:popover>解散小组</el-button>
-      <el-popover
-        ref="popover1"
-        placement="top"
-        width="160"
-        v-model="visible1">
-        <p>确认修改小组吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="updateGroup">确定</el-button>
-        </div>
-      </el-popover>
-      <el-button class="marginL10" type="primary" v-popover:popover1>确认修改</el-button>
+      <el-button class="marginL10" type="primary"  @click="updateGroup">确认修改</el-button>
     </div>
 	</div>
 </template>
 
 <script>
   import {DEFAULT_USER_IMAGE} from 'common/config.js';
+  import bus from 'common/eventBus/bus.js'
 	export default {
     props:['currentGroup'],
     data() {
@@ -76,6 +66,11 @@
           groupImage:null,
         },
       };
+    },
+    computed:{
+      currentGroupId(){
+        return this.currentGroup.id;
+      },
     },
     methods: {
       /**
@@ -120,11 +115,13 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.put('/group/update/pmphgroup',formdata,config)
+        this.$axios.post('/group/update/pmphgroup',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
               self.$message.success('修改小组成功');
+              //修改成功通过vue bus派发一个事件
+              bus.$emit('group:info-change')
             }else{
               self.$message.error('修改小组失败，请重试');
             }
@@ -134,18 +131,19 @@
           });
       },
       /**
-       * 修改小组
+       * 解散小组
        */
       deleteGroup(){
-        this.$axios.delete('/group/update/pmphgroup',this.$initPostData({
+        this.$axios.delete('/group/delete/pmphgroup',{params:{
           id:this.currentGroup.id,
           sessionId:this.getUserData().sessionId
-        }))
+        }})
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
               self.$message.success('删除小组成功');
-              self.getGroupData();
+              //修改成功通过vue bus派发一个事件
+              bus.$emit('group:info-change')
             }
           })
           .catch((error) => {
@@ -156,7 +154,13 @@
     mounted(){
       this.groupData.groupName=this.currentGroup.groupName;
       this.groupData.groupImage=this.currentGroup.groupImage;
-    }
+    },
+    watch:{
+      currentGroupId(){
+        this.groupData.groupName=this.currentGroup.groupName;
+        this.groupData.groupImage=this.currentGroup.groupImage;
+      }
+    },
 	}
 </script>
 

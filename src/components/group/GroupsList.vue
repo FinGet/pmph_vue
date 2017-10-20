@@ -89,6 +89,7 @@
   import beautyScroll from '@/base/beautyScroll.vue';
   import {getDateDiff} from '../../../static/commonFun.js'
   import {mapGetters} from 'vuex'
+  import bus from 'common/eventBus/bus.js'
   export default{
     data(){
        return {
@@ -221,6 +222,9 @@
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);
+      bus.$on('group:info-change',()=>{
+        this.getGroupData();
+      })
     },
   }
 </script>
