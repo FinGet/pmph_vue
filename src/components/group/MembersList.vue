@@ -33,7 +33,7 @@
         </beauty-scroll>
       </div>
       <transition name="el-fade-in">
-        <div class="addMemberWrapper text-center">
+        <div class="addMemberWrapper text-center" v-if="isShowAddButton">
           <el-button type="text" icon="plus" @click="dialogVisible = true" class="button">
             新增成员
           </el-button>
@@ -152,7 +152,7 @@
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addNewMember">添加成员</el-button>
+        <el-button type="primary" @click="addNewMember" >添加成员</el-button>
       </span>
     </el-dialog>
 
@@ -190,7 +190,7 @@ import beautyScroll from '@/base/beautyScroll.vue';
 import { mapGetters } from 'vuex'
 import { DEFAULT_USER_IMAGE } from 'common/config.js';
 export default {
-  props: ['groupId'],
+  props: ['groupId','refreshMember'],
   data() {
     return {
       dialogVisible: false,
@@ -246,7 +246,8 @@ export default {
       againDialogVisible:false,     //再次确认弹窗
       addWriterData:[],
       addClubData:[],
-      addTableData:[]
+      addTableData:[],
+      isShowAddButton:false
     }
   },
   computed: {
@@ -267,7 +268,7 @@ export default {
       }).then(function(res) {
         if (res.data.code == 1) {
           _this.memberListData = res.data.data;
-          
+          _this.compareList();
         }
       })
     },
@@ -328,9 +329,10 @@ export default {
        ).then((res)=>{
           console.log(res);
           if(res.data.code==1){
-               this.getGroupMember();
+               this.getGroupMember(this.groupId);
                this.againDialogVisible=false;
                this.dialogVisible=false;
+               this.$emit('refreshMange');
                this.$message.success('添加成功');
           }else{
             this.$message.error('添加失败');
@@ -365,7 +367,7 @@ export default {
     },
     /* 获取社内用户树列表 */
     getTreeData(){
-   this.$axios.get(this.clubTreeUrl).then((response) => {
+     this.$axios.get(this.clubTreeUrl).then((response) => {
           let res = response.data
           if (res.code == '1') {
             this.treeData = res.data.sonDepartment;
@@ -374,6 +376,7 @@ export default {
           console.log(error.msg)
         })
     },
+    /* 社内用户树点击操作 */
     handleNodeClick(data) {
       console.log(data.path);
       this.path = data.path
@@ -381,6 +384,17 @@ export default {
           this.path = ''
         }
       this.getClubUserData();
+    },
+    compareList(){
+       this.isShowAddButton=false;
+        var id= this.getUserData().userInfo.id,
+            loginType= this.getUserData().userInfo.loginType,
+            _this=this;
+      this.memberListData.forEach((item)=>{
+        if(item.userId==id&&item.userType==loginType&&(item.isAdmin||item.isFounder)){
+          _this.isShowAddButton=true;
+        }
+      })
     },
     /* 社内用户切换分页条数 */
     handleSizeChange(val) {
@@ -422,6 +436,9 @@ export default {
     /* 监测小组id的变化 */
     groupId(newVal, old) {
       this.getGroupMember(newVal);
+    },
+    refreshMember(){
+      this.getGroupMember(this.groupId);
     }
   },
   created(){
