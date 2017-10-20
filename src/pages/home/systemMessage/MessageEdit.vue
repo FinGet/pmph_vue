@@ -14,10 +14,10 @@
       </el-form-item>
       <el-form-item label="发送对象：" prop="sendType">
            <el-radio-group v-model="messageForm.sendType">
-            <el-radio :label="0">学校管理员</el-radio>
-            <el-radio :label="1">所有人</el-radio>
-            <el-radio :label="2">特定对象</el-radio>
-            <el-radio :label="3">教材报名者</el-radio>
+            <el-radio :label="1">学校管理员</el-radio>
+            <el-radio :label="2">所有人</el-radio>
+            <el-radio :label="3">特定对象</el-radio>
+            <el-radio :label="4">教材报名者</el-radio>
           </el-radio-group>
       </el-form-item>
       <el-form-item label="文章内容：" required>
@@ -31,7 +31,7 @@
       </el-form-item>
     <el-form-item label="附件：" prop="fileList">
         <div class="col-content file-upload-wrapper" style="padding-left:0;" >
-          <el-upload class="upload-demo" action="http://192.168.200.196:8090/pmpheep/messages/message/file" :on-success="upLoadSuccess" :file-list="messageForm.fileList">
+          <el-upload class="upload-demo" action="http://192.168.200.106:8090/pmpheep/messages/message/file" :on-success="upLoadSuccess" :file-list="messageForm.fileList">
             <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
@@ -121,7 +121,7 @@ export default {
     return {
       messageForm:{
         title:'',
-        sendType:0,
+        sendType:1,
         fileList:[],
       },
       messageRules:{
@@ -160,7 +160,6 @@ export default {
      * 点击下一步
      */
     nextStep(){
-
       this.$refs['messageForm'].validate((valid) => {
           if (valid) {
             var paramData={
@@ -172,16 +171,16 @@ export default {
               fileList:this.messageForm.fileList
             }
              switch(this.messageForm.sendType){
-                case 0:
-                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
-                  break;
                 case 1:
                   this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
                   break;
                 case 2:
-                  this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
+                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
                   break;
                 case 3:
+                  this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
+                  break;
+                case 4:
                   this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
                   break;
                 dafault:

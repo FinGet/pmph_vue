@@ -74,21 +74,21 @@
         </div>
       </div>
       <div class="area-list"
-           v-for="(iterm,index) in area_school"
+           v-for="(item,index) in area_school"
            :key="index"
-           v-if="(select_provinces.includes(iterm.id))||select_provinces.length==0">
+           v-if="(select_provinces.includes(item.id))||select_provinces.length==0">
         <div>
           <el-checkbox
-            :indeterminate="iterm.isIndeterminate"
-            v-model="iterm.checkAll"
-            @change="checkAllChange(iterm)">
-            {{iterm.province}}
+            :indeterminate="item.isIndeterminate"
+            v-model="item.checkAll"
+            @change="checkAllChange(item)">
+            {{item.province}}
           </el-checkbox>
         </div>
         <div>
-          <el-checkbox-group v-model="iterm.checkedSchools"  @change="handleCheckedSchoolChange(iterm)">
+          <el-checkbox-group v-model="item.checkedSchools"  @change="handleCheckedSchoolChange(item)">
             <el-checkbox
-              v-for="(city,index) in iterm.schoolList"
+              v-for="(city,index) in item.schoolList"
               :label="city.id"
               :key="index"
               v-if="select_orgType==0||city.type==select_orgType">{{city.name}}</el-checkbox>
@@ -129,7 +129,7 @@
             label="操作"
             width="80">
             <template scope="scope">
-              <el-button type="text" @click="chooseHistory(scope.$index)">选择</el-button>
+              <el-button type="text" @click="chooseHistory(scope.$index,scope.row.orgIds)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -176,41 +176,59 @@
         showPublishBtn:false,
         select_provinces:[],
         select_orgType:0,
-        area_school:[{
+        area_school:[
+          {
           id:0,
           province:'北京',
           isIndeterminate:false,
           checkAll:false,
           checkedSchools:[],
-          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+          schoolList:[
+            {id:1,type:1,name:'清华大学'},
+            {id:2,type:1,name:'北京大学'},
+            {id:3,type:2,name:'中国武警总医院'},
+            {id:4,type:2,name:'协和医院'},
+            {id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},
+            {id:7,type:1,name:'中国人民解放军总医院'},
+            {id:8,type:2,name:'北京回龙观医院'},
+            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
           ]
         },{
           id:4,
-          province:'天京',
+          province:'天津',
           isIndeterminate:false,
           checkAll:false,
           checkedSchools:[],
-          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+          schoolList:[
+            {id:1,type:1,name:'清华大学'},
+            {id:2,type:1,name:'北京大学'},
+            {id:3,type:2,name:'中国武警总医院'},
+            {id:4,type:2,name:'协和医院'},
+            {id:5,type:3,name:'中日友好医院'},
+            {id:6,type:3,name:'北京医院'},
+            {id:7,type:1,name:'中国人民解放军总医院'},
+            {id:8,type:2,name:'北京回龙观医院'},
+            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
           ]
         }],
         dialogVisible:false,
         historyData:[],
-        tableData:[{
-          id:'123',
+        tableData:[
+          {
+          orgIds:'123',
           sort:0,
           name:'全国高等学校健康服务与管理专业第一轮规划教材',
           total:34,
           date:'2017/10/1',
         },{
-          id:'123',
+          orgIds:'123',
           sort:1,
           name:'全国高等学校健康服务与管理专业第一轮规划教材',
           total:34,
           date:'2017/10/1',
         },{
-          id:'123',
+          orgIds:'123',
           sort:2,
           name:'全国高等学校健康服务与管理专业第一轮规划教材',
           total:34,
@@ -241,10 +259,43 @@
     },
     methods: {
       /**
+       * 加载学校列表
+       */
+      getSchools() {
+        this.$axios.get("/messages/message/send_object",{
+          params:{
+            sendType: this.formdata.sendType,
+            pageSize: 20,
+            pageNumber: 1,
+            userNameOrUserCode: '',
+            orgName: '',
+            materialName: ''
+          }
+        }).then((response) => {
+          let res = response.data
+          // console.log(res)
+          if (res.code == '1') {
+            // console.log(res.data.orgVo)
+            for (var i= 0;i<res.data.orgVo.length;i++) {
+              this.area_school.id = res.data.orgVo[i].areaId;
+              this.area_school.province = res.data.orgVo[i].areaName;
+              this.area_school.isIndeterminate = false;
+              this.area_school.checkAll = false;
+              this.area_school.checkedSchools = [];
+              var schoolName = res.data.orgVo[i].orgName.split(',');
+//              var schoolType = res.data.orgVo[i].orgTypeId.split(',')
+            }
+            console.log(schoolName)
+          }
+        })
+      },
+      /**
        * 点击快速选择历史弹窗中的选择按钮
        * @param tableIndex 选中表格数据的index值
        */
-      chooseHistory(tableIndex){
+      chooseHistory(tableIndex,id){
+        // console.log(id)
+        this.formdata.bookIds = id
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
       },
@@ -315,6 +366,7 @@
         var self = this;
         this.formdata.orgIds=this.queryData.join(',');
         this.formdata['sessionId']=this.getUserData().sessionId;
+        // console.log(this.formdata)
         this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
           .then(function (response) {
             let res = response.data;
@@ -340,6 +392,8 @@
       }
       this.formdata.content=JSON.stringify(routerParams.content);
       this.formdata.sendType=routerParams.sendType;
+      this.formdata.file = routerParams.fileList;
+      this.getSchools()
     },
   }
 </script>

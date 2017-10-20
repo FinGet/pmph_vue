@@ -68,10 +68,16 @@
         <template scope="scope">
           <el-button
             size="small"
+            type="primary"
             @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           <el-button
             size="small"
+            type="warning"
             @click="handleReissue(scope.$index, scope.row)">补发</el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="handleRecall(scope.$index, scope.row)">撤回</el-button>
           <el-button
             size="small"
             type="primary"
@@ -105,7 +111,25 @@
         visible: false,
         currentPage: 4, // 分页当前页
         tableData: [
-          ],
+          {
+            msgId: '1',
+            title:'测试111111111111',
+            sendName: 'bios',
+            sendTime: '1111111111111111'
+          },
+          {
+            msgId: '2',
+            title:'测试111111111111',
+            sendName: 'bios',
+            sendTime: '1111111111111111'
+          },
+          {
+            msgId: '3',
+            title:'测试111111111111',
+            sendName: 'bios',
+            sendTime: '1111111111111111'
+          }
+        ],
         multipleSelection: [],
         pageNumber: 1,
         pageSize: 20,
@@ -127,7 +151,7 @@
       }
     },
     mounted() {
-      this.getMessageList()
+      // this.getMessageList()
     },
     methods: {
       /**
@@ -154,7 +178,7 @@
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
-                message: '没有这条数据!',
+                message: '没有数据!',
                 type: 'warning'
               });
             }
@@ -188,11 +212,21 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      // 点击修改
+       /**
+        * 点击修改
+        */
       handleEdit(index, row) {
         console.log(index, row);
       },
-      // 点击补发
+      /**
+       * 撤回
+       */
+      handleRecall(index, row) {
+        console.log(index, row);
+      },
+      /**
+       * 点击补发
+       */
       handleReissue(index, row) {
         console.log(index, row);
         this.$router.push({name:'选择学校',query:{history:'1'}})
