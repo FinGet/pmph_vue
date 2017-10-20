@@ -21,7 +21,7 @@
          </div>
        </el-popover>
        <el-button class="btn" type="danger" icon="delete" :disabled="isSelected"  v-popover:popover>批量删除</el-button>
-       <router-link :to="{ name: '编辑消息'}">
+       <router-link :to="{ name: '编辑消息',query:{type:'add'}}">
        <el-button class="btn" type="primary" icon="edit">
          发送新消息
        </el-button>
@@ -216,7 +216,7 @@
         * 点击修改
         */
       handleEdit(index, row) {
-        console.log(index, row);
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId}});
       },
       /**
        * 撤回
@@ -229,7 +229,7 @@
        */
       handleReissue(index, row) {
         console.log(index, row);
-        this.$router.push({name:'选择学校',query:{history:'1'}})
+        this.$router.push({name:'选择学校',query:{history:'1'}});
       },
       /**
        * 点击消息状态

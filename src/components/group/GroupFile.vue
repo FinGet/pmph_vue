@@ -243,7 +243,7 @@
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=formatDate(iterm.gmtCreate);
                 iterm.gmtCreate=iterm.gmtCreate;
-                iterm.downloadUrl = BASE_URL+'file/download/'+iterm.fileId;
+                iterm.downloadUrl = BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+currentGroupId;
               });
               this.tableData=res.data.rows;
               this.fileNum = res.data.total;
