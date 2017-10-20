@@ -59,7 +59,7 @@
           prop="gmtCreate"
           align="center"
           label="上传时间"
-          width="108">
+          min-width="160">
         </el-table-column>
         <el-table-column
           prop="memberName"
@@ -68,6 +68,7 @@
           width="100">
         </el-table-column>
         <el-table-column
+          v-if="screenWidth_lg_computed"
           prop="groupCount"
           align="center"
           label="上传小组数"
@@ -137,10 +138,13 @@
 <script>
   import {formatDate} from '../../../static/commonFun'
   import {BASE_URL} from 'common/config.js'
+  import ScreenSize from 'common/mixins/ScreenSize.js';
 	export default {
+    mixins: [ScreenSize],
     props:['currentGroup','currentGroupList'],
 		data() {
 			return {
+        screenWidth_lg_computed: true,
         dialogChooseGroup: false,
         visible: false,
         // isManage管理文件
@@ -238,7 +242,7 @@
             if (res.code == '1') {
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=formatDate(iterm.gmtCreate);
-                iterm.gmtCreate=iterm.gmtCreate.substring(0,10)
+                iterm.gmtCreate=iterm.gmtCreate;
                 iterm.downloadUrl = BASE_URL+'file/download/'+iterm.fileId;
               });
               this.tableData=res.data.rows;
@@ -334,6 +338,10 @@
     },
     created(){
       this.getFilelistData();
+    },
+    mounted() {
+      this.screenWidth_lg_computed = this.screenWidth_lg;
+
     },
     watch:{
       currentGroupId(){

@@ -271,9 +271,8 @@
             header:BASE_URL+'image/'+data.senderIcon,
             username:data.senderName,
             messageData:data.content,
-            time:data.time,
+            time:formatDate(data.time),
           };
-          console.log(message);
           this.messagesList.push(message);
         }
       },

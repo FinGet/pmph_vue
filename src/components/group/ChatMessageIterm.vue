@@ -191,8 +191,8 @@
 }
 .messageTime{
   position: absolute;
-  width: 130px;
-  right: -140px;
+  width: 140px;
+  right: -148px;
   bottom: 0;
   color:#c8c8c8;
 }
@@ -232,7 +232,7 @@
   left: -20px;
 }
 .messageIterm.my-message .messageTime{
-  left: -140px;
+  left: -148px;
 }
 .messageIterm-text{
   text-align: center;
