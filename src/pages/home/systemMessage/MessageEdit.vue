@@ -31,7 +31,7 @@
       </el-form-item>
     <el-form-item label="附件：" prop="fileList">
         <div class="col-content file-upload-wrapper" style="padding-left:0;" >
-          <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :file-list="messageForm.fileList">
+          <el-upload class="upload-demo" action="http://192.168.200.196:8090/pmpheep/messages/message/file" :on-success="upLoadSuccess" :file-list="messageForm.fileList">
             <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
@@ -99,7 +99,9 @@
       </el-col>
       <el-col :span="20">
         <div class="col-content file-upload-wrapper">
-          <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :file-list="fileList">
+          <el-upload class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+             :file-list="fileList">
             <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip">文件大小不超过100M</div>
@@ -121,7 +123,6 @@ export default {
         title:'',
         sendType:0,
         fileList:[],
-
       },
       messageRules:{
        title:[
@@ -140,11 +141,24 @@ export default {
     }
   },
   methods: {
+    /**
+     * 文件上传成功
+     */
+    upLoadSuccess(response){
+      if (response.code == '1') {
+        let res = response.data
+        this.messageForm.fileList.push(res)
+      }
+      //console.log(this.messageForm.fileList)
+    },
     preview() {
       this.previewShow = true;
-      console.log(this.previewShow)
+      //console.log(this.previewShow)
+      console.log(this.messageForm.fileList)
     },
-    //点击下一步执行的方法
+    /**
+     * 点击下一步
+     */
     nextStep(){
 
       this.$refs['messageForm'].validate((valid) => {
@@ -153,28 +167,29 @@ export default {
               sendType:this.messageForm.sendType,
               content:{
                 title:this.messageForm.title,
-                content:this.uEditor.getContent()
-              }
+                content:this.uEditor.getContent(),
+              },
+              fileList:this.messageForm.fileList
             }
              switch(this.messageForm.sendType){
-        case 0:
-          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
-          break;
-        case 1:
-          this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
-          break;
-        case 2:
-          this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
-          break;
-        case 3:
-          this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
-          break;
-        dafault:
-          this.$message({
-            type: 'error',
-            message: '请选择发送对象'
-          });
-      }
+                case 0:
+                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
+                  break;
+                case 1:
+                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
+                  break;
+                case 2:
+                  this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
+                  break;
+                case 3:
+                  this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
+                  break;
+                dafault:
+                  this.$message({
+                    type: 'error',
+                    message: '请选择发送对象'
+                  });
+              }
           } else {
 
             return false;
