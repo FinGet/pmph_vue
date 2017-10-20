@@ -177,41 +177,42 @@
         select_provinces:[],
         select_orgType:0,
         area_school:[
-          {
-          id:0,
-          province:'北京',
-          isIndeterminate:false,
-          checkAll:false,
-          checkedSchools:[],
-          schoolList:[
-            {id:1,type:1,name:'清华大学'},
-            {id:2,type:1,name:'北京大学'},
-            {id:3,type:2,name:'中国武警总医院'},
-            {id:4,type:2,name:'协和医院'},
-            {id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},
-            {id:7,type:1,name:'中国人民解放军总医院'},
-            {id:8,type:2,name:'北京回龙观医院'},
-            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-          ]
-        },{
-          id:4,
-          province:'天津',
-          isIndeterminate:false,
-          checkAll:false,
-          checkedSchools:[],
-          schoolList:[
-            {id:1,type:1,name:'清华大学'},
-            {id:2,type:1,name:'北京大学'},
-            {id:3,type:2,name:'中国武警总医院'},
-            {id:4,type:2,name:'协和医院'},
-            {id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},
-            {id:7,type:1,name:'中国人民解放军总医院'},
-            {id:8,type:2,name:'北京回龙观医院'},
-            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-          ]
-        }],
+//          {
+//          id:0,
+//          province:'北京',
+//          isIndeterminate:false,
+//          checkAll:false,
+//          checkedSchools:[],
+//          schoolList:[
+//            {id:1,type:1,name:'清华大学'},
+//            {id:2,type:1,name:'北京大学'},
+//            {id:3,type:2,name:'中国武警总医院'},
+//            {id:4,type:2,name:'协和医院'},
+//            {id:5,type:3,name:'中日友好医院'},
+//            {id:6,type:3,name:'北京医院'},
+//            {id:7,type:1,name:'中国人民解放军总医院'},
+//            {id:8,type:2,name:'北京回龙观医院'},
+//            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+//          ]
+//        },{
+//          id:4,
+//          province:'天津',
+//          isIndeterminate:false,
+//          checkAll:false,
+//          checkedSchools:[],
+//          schoolList:[
+//            {id:1,type:1,name:'清华大学'},
+//            {id:2,type:1,name:'北京大学'},
+//            {id:3,type:2,name:'中国武警总医院'},
+//            {id:4,type:2,name:'协和医院'},
+//            {id:5,type:3,name:'中日友好医院'},
+//            {id:6,type:3,name:'北京医院'},
+//            {id:7,type:1,name:'中国人民解放军总医院'},
+//            {id:8,type:2,name:'北京回龙观医院'},
+//            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
+//          ]
+//        }
+        ],
         dialogVisible:false,
         historyData:[],
         tableData:[
@@ -262,6 +263,9 @@
        * 加载学校列表
        */
       getSchools() {
+        var schoolName = []
+        var schoolType = []
+        var schoolId = []
         this.$axios.get("/messages/message/send_object",{
           params:{
             sendType: this.formdata.sendType,
@@ -273,19 +277,29 @@
           }
         }).then((response) => {
           let res = response.data
-          // console.log(res)
           if (res.code == '1') {
-            // console.log(res.data.orgVo)
-            for (var i= 0;i<res.data.orgVo.length;i++) {
-              this.area_school.id = res.data.orgVo[i].areaId;
-              this.area_school.province = res.data.orgVo[i].areaName;
-              this.area_school.isIndeterminate = false;
-              this.area_school.checkAll = false;
-              this.area_school.checkedSchools = [];
-              var schoolName = res.data.orgVo[i].orgName.split(',');
-//              var schoolType = res.data.orgVo[i].orgTypeId.split(',')
-            }
-            console.log(schoolName)
+            var tempList=[];
+            res.data.orgVo.forEach(iterm=>{
+              let tempObj = {};
+              tempObj.id=iterm.areaId;
+              tempObj.province = iterm.areaName;
+              tempObj.isIndeterminate = false;
+              tempObj.checkAll = false;
+              tempObj.checkedSchools = [];
+              tempObj.schoolList =[];
+              let tempType = iterm.orgTypeId.split(',');
+              let tempName = iterm.orgName.split(',');
+              iterm.id.split(',').forEach((t,i)=>{
+                tempObj.schoolList.push({
+                  id:t,
+                  type:tempType[i],
+                  name:tempName[i]
+                })
+              })
+
+              tempList.push(tempObj);
+            })
+            this.area_school= tempList;
           }
         })
       },

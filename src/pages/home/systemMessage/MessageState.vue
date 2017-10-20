@@ -10,9 +10,9 @@
         </el-col>
         <el-col :span="4" class="msgradio">
           <el-radio-group v-model="isRead">
-            <el-radio :label="1">全部</el-radio>
-            <el-radio :label="2">已读</el-radio>
-            <el-radio :label="3">未读</el-radio>
+            <el-radio :label="2">全部</el-radio>
+            <el-radio :label="1">已读</el-radio>
+            <el-radio :label="0">未读</el-radio>
           </el-radio-group>
         </el-col>
         <el-button class="btn pull-right" type="primary" icon="arrow-left" @click="back">返回</el-button>
@@ -90,7 +90,7 @@
     data() {
       return {
         input: '',
-        isRead: 1,
+        isRead: 0,
         currentPage: 4, // 分页当前页
         tableData: [
           {
