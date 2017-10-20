@@ -20,12 +20,14 @@
           ref="groupmanageMainContainer"
           :style="{height:wrapperHeight-80+'px'}"
         >
-          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList"></component>
+        <transition name="fade" mode="out-in">
+          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList" :groupId.sync="currentGroupId" @refeshMember="refreshMember" :isrefreshMange='isrefreshMange'></component>
+        </transition>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
       <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap" v-if="currentGroupId">
-        <MembersList @addNewMember="addNewMember" :groupId.sync="currentGroupId"></MembersList>
+        <MembersList @refreshMange="refreshMange" :refreshMember.sync="isrefreshMember"  :groupId.sync="currentGroupId"></MembersList>
       </el-col>
     </el-row>
   </div>
@@ -56,6 +58,8 @@
           id:null
         },
         currentGroupList:[],
+        isrefreshMember:false,
+        isrefreshMange:false,
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
@@ -106,6 +110,9 @@
         this.currentActive = index
         this.currentView = view
       },
+      refreshMember(){
+        this.isrefreshMember=!this.isrefreshMember;
+      },
       setting(){//点击成员列表下的setting图标按钮
 
       },
@@ -115,8 +122,8 @@
           this.currentGroup[key] = group[key]
         }
       },
-      addNewMember(){
-
+      refreshMange(){
+       this.isrefreshMange=!this.isrefreshMange;
       },
       /**
        * 获取小组列表

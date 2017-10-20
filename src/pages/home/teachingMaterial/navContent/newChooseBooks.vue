@@ -108,28 +108,33 @@
                   style="width: 100%">
                   <el-table-column
                     label="名称"
-                    prop="name"
                   >
-                  </el-table-column>
-                  <el-table-column
-                    label="账号"
-                    prop="username"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="角色名称"
-                    prop="role"
-                  >
+                    <template scope="scope">
+                      <span v-if="!scope.row.isNameInput">{{scope.row.name}}
+                        <i class="el-icon-edit" @click="scope.row.isNameInput=!scope.row.isNameInput"></i>
+                      </span>
+                      <el-input v-model="scope.row.name" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
-                    prop="phone"
                   >
+                    <template scope="scope">
+                      <span v-if="!scope.row.isPhoneInput">{{scope.row.phone}}
+                        <i class="el-icon-edit" @click="scope.row.isPhoneInput=!scope.row.isPhoneInput"></i>
+                      </span>
+                      <el-input v-model="scope.row.phone" @blur="scope.row.isPhoneInput=false" v-if="scope.row.isPhoneInput"></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
-                    prop="email"
                   >
+                    <template scope="scope">
+                      <span v-if="!scope.row.isEmailInput">{{scope.row.email}}
+                        <i class="el-icon-edit" @click="scope.row.isEmailInput=!scope.row.isEmailInput"></i>
+                      </span>
+                      <el-input v-model="scope.row.email" @blur="scope.row.isEmailInput=false" v-if="scope.row.isEmailInput"></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column label="操作">
                     <template scope="scope">
@@ -143,93 +148,112 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目主任设置:">
+            <el-form-item label="主任:">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectDirector">项目主任设置</el-button>
+                <!--<span>{{projectDirectorData[0].name}}</span>-->
+                <el-tag
+                  v-for="tag in projectDirectorData"
+                  :key="tag.name"
+                  :closable="true"
+                  type="info"
+                  @close="handleDirectorClose(tag)"
+                >
+                  {{tag.name}}
+                </el-tag>
                 <br>
-                <el-table
-                  :data="projectDirectorData"
-                  border
-                  style="width: 100%">
-                  <el-table-column
-                    label="名称"
-                    prop="name"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="账号"
-                    prop="username"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="角色名称"
-                    prop="role"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="手机号"
-                    prop="phone"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="邮箱"
-                    prop="email"
-                  >
-                  </el-table-column>
-                  <el-table-column label="操作">
-                    <template scope="scope">
-                      <el-button
-                        size="small"
-                        type="danger"
-                        @click="handleDelete(scope.$index, scope.row, projectDirectorData)">删除</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
+                <!--<el-table-->
+                  <!--:data="projectDirectorData"-->
+                  <!--border-->
+                  <!--style="width: 100%">-->
+                  <!--<el-table-column-->
+                    <!--label="名称"-->
+                    <!--prop="name"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="账号"-->
+                    <!--prop="username"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="角色名称"-->
+                    <!--prop="role"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="手机号"-->
+                    <!--prop="phone"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="邮箱"-->
+                    <!--prop="email"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="操作">-->
+                    <!--<template scope="scope">-->
+                      <!--<el-button-->
+                        <!--size="small"-->
+                        <!--type="danger"-->
+                        <!--@click="handleDelete(scope.$index, scope.row, projectDirectorData)">删除</el-button>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                <!--</el-table>-->
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目编辑设置:">
+            <el-form-item label="项目编辑:">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectEditor">项目编辑设置</el-button>
+                <el-tag
+                  v-for="tag in projectEditorData"
+                  :key="tag.name"
+                  :closable="true"
+                  type="info"
+                  @close="handleEditorClose(tag)"
+                >
+                  {{tag.name}}
+                </el-tag>
                 <br>
-                <el-table
-                  :data="projectEditorData"
-                  border
-                  style="width: 100%">
-                  <el-table-column
-                    label="名称"
-                    prop="name"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="账号"
-                    prop="username"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="角色名称"
-                    prop="role"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="手机号"
-                    prop="phone"
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    label="邮箱"
-                    prop="email"
-                  >
-                  </el-table-column>
-                  <el-table-column label="操作">
-                    <template scope="scope">
-                      <el-button
-                        size="small"
-                        type="danger"
-                        @click="handleDelete(scope.$index, scope.row, projectEditorData)">删除</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
+                <!--<el-table-->
+                  <!--:data="projectEditorData"-->
+                  <!--border-->
+                  <!--style="width: 100%">-->
+                  <!--<el-table-column-->
+                    <!--label="名称"-->
+                    <!--prop="name"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="账号"-->
+                    <!--prop="username"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="角色名称"-->
+                    <!--prop="role"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="手机号"-->
+                    <!--prop="phone"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column-->
+                    <!--label="邮箱"-->
+                    <!--prop="email"-->
+                  <!--&gt;-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="操作">-->
+                    <!--<template scope="scope">-->
+                      <!--<el-button-->
+                        <!--size="small"-->
+                        <!--type="danger"-->
+                        <!--@click="handleDelete(scope.$index, scope.row, projectEditorData)">删除</el-button>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                <!--</el-table>-->
               </el-col>
             </el-form-item>
 
@@ -248,7 +272,7 @@
               <el-radio class="radio" v-model="jobradio" label="2">否</el-radio>
             </el-form-item> -->
             <div class="clearfix"></div>
-            <el-form-item label="列表项:">
+            <el-form-item label="选项:">
               <el-col>
                 <el-table
                   :data="listTableData"
@@ -329,17 +353,18 @@
                   placeholder="请输入内容"
                   v-model="mainContent">
                 </el-input>
-                <el-upload
-                  class="upload"
-                  action="#"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file-list="fileList">
-                  <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
               </el-col>
             </el-form-item>
-
+            <el-form-item label="上传图片:" prop="uploadImg">
+              <el-upload
+                class="upload"
+                action="#"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </el-form-item>
             <el-form-item label="备注:">
               <el-col :span="24">
                 <el-input
@@ -433,6 +458,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -440,6 +468,9 @@
           {
             name:'李四',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -447,6 +478,9 @@
           {
             name:'王二',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -454,6 +488,9 @@
           {
             name:'赵武',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -461,6 +498,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -468,6 +508,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -475,6 +518,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -482,6 +528,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -489,6 +538,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -496,6 +548,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -503,6 +558,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -510,6 +568,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -517,6 +578,9 @@
           {
             name:'张三',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -524,6 +588,9 @@
           {
             name:'王二',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -531,6 +598,9 @@
           {
             name:'赵武',
             username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
             email:'123@qq.com',
             role:'主任项目编辑',
             phone:'1383838438'
@@ -544,6 +614,16 @@
           }
         ], // 扩展项
         listTableData:[
+          {
+            name:'书籍多选',
+            usecheck: false,
+            show: true
+          },
+          {
+            name: '职位多选',
+            usecheck: false,
+            show: true
+          },
           {
             name:'主要学习经历',
             usecheck:false,
@@ -603,16 +683,6 @@
             name:'科研情况',
             usecheck:false,
             needcheck:false
-          },
-          {
-            name:'书籍多选',
-            usecheck: false,
-            show: true
-          },
-          {
-            name: '职位多选',
-            usecheck: false,
-            show: true
           }
         ],
         ruleForm: {
@@ -677,12 +747,6 @@
           ],
           ageDate: [
             { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          uploadImg: [
-            { required: true, message: '请上传图片', trigger: 'change' }
-          ],
-          uploadFile: [
-            { required: true, message: '请上传文件', trigger: 'blur' }
           ]
         }
       };
@@ -703,6 +767,27 @@
 //            return false;
 //          }
 //        });
+      },
+      /**
+       * 删除选中的项目主任
+       */
+      handleDirectorClose(val) {
+        // console.log(val)
+        this.projectDirectorData.splice(val,1)
+        this.$message({
+          message: `删除成功！`,
+          type: 'success'
+        });
+      },
+      /**
+       * 删除选中的项目编辑
+       */
+      handleEditorClose(val) {
+        this.projectEditorData.splice(val,1)
+        this.$message({
+          message: `删除成功！`,
+          type: 'success'
+        });
       },
       /**
        * 返回上一级
@@ -806,6 +891,7 @@
           message: `添加成功！`,
           type: 'success'
         });
+        this.chooseVisiable = false
       },
       /**
        * 关闭弹出层

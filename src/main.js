@@ -21,7 +21,7 @@ Vue.use(ElementUI);
 //请求根地址配置
 // axios.defaults.baseURL = 'http://www.fakepmphx2.com/pmpheep/';
 axios.defaults.baseURL = BASE_URL;
- //axios.defaults.baseURL = 'http://192.168.200.198:8080/pmpheep/';
+//axios.defaults.baseURL = 'http://192.168.200.114:8080/pmpheep/';
 
 //全局挂载
 Vue.prototype.$axios = axios;
