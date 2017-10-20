@@ -32,13 +32,12 @@
         </div>
       </div>
     </div>
-    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.userId && message.type=='file'">
+    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.type=='file'">
       <p>{{message.messageData}}</p>
     </div>
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
     export default{
         props:{
           groupId:{
@@ -191,8 +190,8 @@
 }
 .messageTime{
   position: absolute;
-  width: 130px;
-  right: -140px;
+  width: 140px;
+  right: -148px;
   bottom: 0;
   color:#c8c8c8;
 }
@@ -232,7 +231,7 @@
   left: -20px;
 }
 .messageIterm.my-message .messageTime{
-  left: -140px;
+  left: -148px;
 }
 .messageIterm-text{
   text-align: center;

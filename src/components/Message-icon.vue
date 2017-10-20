@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown>
+  <el-dropdown v-if="computedMessageList.length">
         <span class="el-dropdown-link" trigger="click">
 
           <i class="fa fa-envelope-o fa-lg"></i>
@@ -28,6 +28,9 @@
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
+  <el-button type="text" class="marginR30" v-else>
+    <i class="fa fa-envelope-o fa-lg"></i>
+  </el-button>
 </template>
 
 <script>
@@ -36,12 +39,12 @@
 	  props:{
 	    messageList:{
 	      type:Array,
-        default:[,,]
+        default:()=>[]
       }
     },
 		data() {
 			return {
-			  receiveMessage:[,,],
+			  receiveMessage:[],
       }
 		},
     computed:{
@@ -49,11 +52,21 @@
 		    return this.messageList.concat(this.receiveMessage);
       }
     },
-    created(){
-      bus.$on('ws:message',function (data) {
-        console.log('message receive message event',data);
-      });
+    methods:{
+      /**
+       * websocket 接收到消息处理
+       * @param data
+       */
+	    handleReceiveMessage(data){
+        this.receiveMessage.push(data);
+      }
     },
+    created(){
+      bus.$on('ws:message',this.handleReceiveMessage);
+    },
+    beforeDestroy(){
+      bus.$off('ws:message',this.handleReceiveMessage);
+    }
 	}
 </script>
 

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+  import {BASE_URL} from 'common/config.js';
 	export default {
     props:{
 	    userData: {
@@ -42,7 +43,7 @@
 		},
     computed:{
       headImage(){
-        return this.userData.avatar||'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png';
+        return BASE_URL+'image/'+this.userData.avatar;
       },
     },
 	}
