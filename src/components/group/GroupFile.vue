@@ -86,9 +86,9 @@
           align="center"
         >
           <template scope="scope">
-            <el-button type="text" size="small" @click="downloadFile(scope.$index)">
+            <a :href="scope.row.downloadUrl" @click="downloadFile(scope.$index)">
               <i class="fa fa-download"></i>
-            </el-button>
+            </a>
           </template>
         </el-table-column>
       </el-table>
@@ -239,6 +239,7 @@
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=formatDate(iterm.gmtCreate);
                 iterm.gmtCreate=iterm.gmtCreate.substring(0,10)
+                iterm.downloadUrl = BASE_URL+'file/download/'+iterm.fileId;
               });
               this.tableData=res.data.rows;
               this.fileNum = res.data.total;
@@ -261,14 +262,7 @@
        * @param index
        */
       downloadFile(index){
-        let fileId=this.tableData[index].fileId;
-        this.$axios.get('file/'+fileId)
-          .then(res=>{
-            this.tableData[index].download++;
-          })
-          .catch(e=>{
-            this.$message.error('下载失败，请重试');
-          })
+        this.tableData[index].download++;
       },
       /**
        * 删除小组文件

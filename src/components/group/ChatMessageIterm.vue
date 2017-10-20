@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.userId && message.type=='file'">
+    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.type=='file'">
       <p>{{message.messageData}}</p>
     </div>
 </template>

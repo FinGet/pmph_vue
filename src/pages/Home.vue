@@ -8,7 +8,7 @@
     </div>
     <div class="nav-top">
       <div class="nav-top-user">
-        <Message-icon :messageList="[]"></Message-icon>
+        <Message-icon></Message-icon>
         <User :userData="userData"></User>
       </div>
       <div class="breadcrumb-wrapper">
