@@ -6,16 +6,17 @@
           <el-input class="fileinput"
                     placeholder="请输入"
                     icon="search"
-                    :on-icon-click="Search"
+                    v-model="searchValue"
+                    :on-icon-click="getMemberManageList"
           ></el-input>
         </div>
-        <div class="pull-left marginT10 marginL10 textcolor">共有{{memberCount}}个成员</div>
+        <div class="pull-left marginT10 marginL10 textcolor">共有{{total}}个成员</div>
         <div class="pull-right clearfix">
           <div class="disinline">
-            <el-button type="warning" @click="disManage">取消管理员</el-button>
+            <el-button type="warning" @click="reviseMagage(false)" v-if="currentMember=='创建者'">取消管理员</el-button>
           </div>
           <div class="disinline">
-            <el-button type="primary" @click="setManage">设为管理员</el-button>
+            <el-button type="primary" @click="reviseMagage(true)" v-if="currentMember=='创建者'">设为管理员</el-button>
           </div>
           <div class="disinline marginL10">
             <el-popover
@@ -29,7 +30,7 @@
                 <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
               </div>
             </el-popover>
-            <el-button type="danger"  v-popover:popover :disabled="idSelected">删除</el-button>
+            <el-button type="danger" @click="visible=true" v-popover:popover :disabled="idSelected" v-if="currentMember=='创建者'||currentMember=='管理员'">删除</el-button>
           </div>
         </div>
       </el-col>
@@ -46,29 +47,30 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="displayName"
             label="姓名"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="userName"
+            prop="username"
             label="账号"
             width="120">
           </el-table-column>
           <el-table-column
+            prop="identity"
             label="身份"
             width="120">
-            <template scope="scope">
+           <!--  <template scope="scope">
               {{scope.row.rank=='1'?'创建人':scope.row.rank=='2'?'管理员':'成员'}}
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column
-            prop="jobPos"
+            prop="position"
             label="职位"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="address"
+            prop="workName"
             label="工作单位"
             show-overflow-tooltip>
           </el-table-column>
@@ -79,74 +81,34 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
+      :page-sizes="[10,20,30,50,100, 200, 300, 400]"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
+      :total="total">
     </el-pagination>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
+  props:['groupId','isrefreshMange'],
   data() {
     return {
-      tableData:[
-        {
-          name: '吴可幽',
-          userName:'wukeyou',
-          rank: '1',
-          jobPos:'副主编',
-          address: '成都中医药大学'
-        },
-        {
-          name: '李中山',
-          userName:'lizhongshan',
-          rank: '2',
-          jobPos:'编委',
-          address: '成都中医药大学'
-        },
-        {
-          name: '李承叡',
-          userName:'lichengrui',
-          rank: '3',
-          jobPos:'主编',
-          address: '成都中医药大学'
-        },
-        {
-          name: '袁扬',
-          userName:'yuanyang',
-          rank: '3',
-          jobPos:'编委',
-          address: '成都中医药大学'
-        },{
-          name: '赵杰',
-          userName:'zhaojie',
-          rank: '2',
-          jobPos:'编委',
-          address: '成都中医药大学'
-        },
-        {
-          name: '赵羽泽',
-          userName:'zhaoyuze',
-          rank: '2',
-          jobPos:'副主编',
-          address: '成都中医药大学'
-        }
-      ],
-      selections: {},
+      memberManageUrl:'/group/list/manager',  //成员管理列表url
+      changeAuthUrl:'/group/update/identity', //修改管理员权限url
+      deleteMemberUrl:'/group/delete/pmphgroupmember', //批量删除url
+      tableData:[],
+      searchValue:'',
+      selections: [],
       visible: false,
-      currentPage: 5
+      currentPage: 1,
+      pageSize:10,
+      total:50,
+      currentMember:'',
+      isMember:false
     }
   },
   computed: {
-    memberCount() {
-      if (this.tableData.length == 0) {
-        return 0
-      } else {
-        return this.tableData.length
-      }
-    },
     idSelected() {
       if (this.selections.length > 0) {
         return false
@@ -156,35 +118,131 @@ export default {
     },
   },
   methods: {
+    /* 获取成员管理列表 */
+    getMemberManageList(){
+     this.$axios.get(this.memberManageUrl,{
+       params:{
+           groupId:this.groupId,
+           pageNumber:this.currentPage,
+           pageSize:this.pageSize,
+           name:this.searchValue,
+       }
+     }).then((res)=>{
+          if(res.data.code==1){
+            this.tableData=res.data.data.rows;
+            this.total=res.data.data.total;
+            this.initMemberAuth();
+          }
+     })
+    },
+    /* 当前小组成员权限比对 */
+    initMemberAuth(){
+      this.currentMember='';
+       var id= this.getUserData().userInfo.id,
+            loginType= this.getUserData().userInfo.loginType,
+            _this=this;
+            console.log(id,loginType);
+      this.tableData.forEach(function(item){
+        console.log(item);
+        if(item.userId==id&&item.userType==loginType){
+                _this.currentMember=item.identity
+        }
+      })
+    },
+    /* 切换分页条数 */
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.pageSize=val;
+      this.currentPage=1;
+      this.getMemberManageList();
     },
+    /* 点击分页 */
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.currentPage=val;
+      this.getMemberManageList();
     },
     handleSelectionChange (val) {
+      console.log(val);
       this.selections = val
+     
     },
-    // 设置管理员
-    setManage () {
-
+    // 批量修改管理员
+    reviseMagage(bool){
+     if(!this.idSelected){
+       var subArr=[];
+       this.selections.forEach((item)=>{
+         var obj ={};
+         obj.id=item.id;
+         obj.isAdmin=bool;
+         subArr.push(obj);
+       })
+         console.log(subArr);
+       this.$axios({
+         method:'PUT',
+         url:this.changeAuthUrl,
+         data:this.$initPostData({
+             pmphGroupMembers:JSON.stringify(subArr),
+             sessionId:this.getUserData().sessionId,
+             groupId:this.groupId
+         })
+       }).then((res)=>{
+               console.log(res);
+               if(res.data.code==1){
+                 this.$message.success('修改成功')
+                 this.$emit('refeshMember');
+                 this.getMemberManageList();
+               }else{
+                 this.$message.error('修改失败')
+               }
+         })
+     }else{
+       this.$message.error('请至少选择一个小组成员');
+     }
     },
-    // 取消管理员
-    disManage(){
-
-    },
-    Search(){
-
-    },
-    // deleted
+    // 批量删除
     deleted () {
-      this.tableData.splice(this.selections,this.selections.length)
-      this.$refs.multipleTable.clearSelection()
-      this.$message({
-        message: `恭喜你，成功删除数据`,
-        type: 'success'
-      });
+      if(!this.idSelected){
+        var ids='';
+        this.selections.forEach(function(item){
+            ids+=item.id+',';
+            console.log(item);
+        })
+        ids=ids.slice(0,-1);
+        
+       this.$axios({
+         method:'DELETE',
+         url:this.deleteMemberUrl,
+         params:{
+            ids:ids,
+            sessionId:this.getUserData().sessionId,
+            groupId:this.groupId
+         }
+       }).then((res)=>{
+         console.log(res);
+         if(res.data.code==1){
+           this.$message.success('删除成功')
+           this.$emit('refeshMember');
+           this.getMemberManageList();
+         }else{
+           this.$message.error('删除失败')
+         }
+       })   
+      }else{
+        this.$message.error('请至少选择一个小组成员');
+      }
     }
+  },
+  watch:{
+    groupId(newVal){
+        this.getMemberManageList();
+    },
+    isrefreshMange(){
+      this.getMemberManageList();
+    }
+  },
+  created(){
+    this.getMemberManageList();
   }
 }
 </script>
