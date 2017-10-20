@@ -38,7 +38,6 @@
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
     export default{
         props:{
           groupId:{
