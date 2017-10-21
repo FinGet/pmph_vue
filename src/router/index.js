@@ -33,6 +33,7 @@ import MessageRouter from '../pages/home/systemMessage/MessageRouter'
 import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
+import MessageDetails from 'pages/home/systemMessage/MessageDetails'
 import SpecialObj from '../pages/home/systemMessage/specialObj'
 import TeachApplicant from '../pages/home/systemMessage/TeachApplicant'
 /* 系统设置 */
@@ -95,6 +96,7 @@ export default new Router({
             { path: 'messagelist', name: '消息列表', component: MessageList, meta: { replaceName: false } }, // 消息列表页面
             { path: 'messagestate', name: '消息状态', component: MessageState },
             { path: 'messageEdit', name: '编辑消息', component: MessageEdit }, //消息编辑页面
+            { path: 'messageDetails', name: '系统消息详情', component: MessageDetails },
             { path: 'schoolquery', name: '选择学校', component: SchoolQuery },
             { path: 'specialobj', name: '特定对象', component: SpecialObj },
             { path: 'teachapplicant', name: '教材报名者', component: TeachApplicant },

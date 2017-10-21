@@ -29,65 +29,64 @@
      </div>
     </el-row>
     <div class="cutLine-dashed"></div>
-    <el-row>
-      <el-col :span="24">
-        <el-table
-      ref="multipleTable"
-      :data="tableData"
-      border
-      stripe
-      empty-text="暂无数据"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-      @cell-click="preview"
+    <div class="table-wrapper">
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        border
+        stripe
+        empty-text="暂无数据"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="信息标题"
+          width="400"
+          show-overflow-tooltip>
+          <template scope="scope">
+            <el-button type="text" @click="preview(scope.$index,scope.row)">{{scope.row.title}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="sendName"
+          label="发送者"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="sendTime"
+          label="发送时间"
         >
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        label="信息标题"
-        width="400"
-        show-overflow-tooltip>
-        <template scope="scope">
-          <a href="javascript:;">{{scope.row.title}}</a>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="sendName"
-        label="发送者"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="sendTime"
-        label="发送时间"
-        >
-      </el-table-column>
-      <el-table-column label="操作">
-        <template scope="scope">
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-          <el-button
-            size="small"
-            type="warning"
-            @click="handleReissue(scope.$index, scope.row)">补发</el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="handleRecall(scope.$index, scope.row)">撤回</el-button>
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleState(scope.row.msgId, scope.row)">消息状态</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-      </el-col>
-    </el-row>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template scope="scope">
+            <el-button
+              size="small"
+              type="text"
+              @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button
+              size="small"
+              type="text"
+              @click="handleReissue(scope.$index, scope.row)">补发</el-button>
+            <el-button
+              size="small"
+              type="text"
+              :disabled="scope.row.isWithdraw"
+              @click="handleRecall(scope.$index, scope.row)">撤回</el-button>
+            <el-button
+              size="small"
+              type="text"
+              @click="handleState(scope.row.msgId, scope.row)">消息状态</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-pagination class="pull-right"
+                   v-if="dataTotal>pageSize"
      @size-change="handleSizeChange"
      @current-change="handleCurrentChange"
      :current-page="currentPage"
@@ -96,18 +95,14 @@
      layout="total, sizes, prev, pager, next, jumper"
      :total="dataTotal">
     </el-pagination>
-    <!--预览弹窗-->
-    <Preview-popup :close.sync="previewShow"></Preview-popup>
   </div>
 </template>
 
 <script>
-  import PreviewPopup from 'components/PreviewPopup'
   import {getLocalTime, formatDate} from '../../../../static/commonFun'
   export default {
     data() {
       return {
-        previewShow:false,
         visible: false,
         currentPage: 4, // 分页当前页
         tableData: [
@@ -115,19 +110,31 @@
             msgId: '1',
             title:'测试111111111111',
             sendName: 'bios',
-            sendTime: '1111111111111111'
+            sendTime: '1111111111111111',
+            sendType:1
           },
           {
             msgId: '2',
             title:'测试111111111111',
             sendName: 'bios',
-            sendTime: '1111111111111111'
+            sendTime: '1111111111111111',
+            sendType:2
           },
           {
             msgId: '3',
             title:'测试111111111111',
             sendName: 'bios',
-            sendTime: '1111111111111111'
+            sendTime: '1111111111111111',
+            isWithdraw:true,
+            sendType:3
+          },
+          {
+            msgId: '4',
+            title:'测试111111111111',
+            sendName: 'bios',
+            sendTime: '1111111111111111',
+            isWithdraw:true,
+            sendType:4
           }
         ],
         multipleSelection: [],
@@ -222,14 +229,49 @@
        * 撤回
        */
       handleRecall(index, row) {
-        console.log(index, row);
+        this.$axios.put('/messages/withdraw/message',this.$initPostData({
+          msgId:row.msgId
+        }))
+          .then(response=>{
+            let res = response.data;
+            if(res.code==1){
+                this.$message.success('成功撤销此消息');
+                row.isWithdraw=true;
+            }else{
+                this.$message.error('撤销失败，请重试');
+            }
+          })
+          .catch(e=>{
+            this.$message.error('撤销失败，请重试');
+          })
       },
       /**
        * 点击补发
+       * 根据消息发送类型跳转到相应的页面
+       *  @to-do 这里先假设sendType
        */
       handleReissue(index, row) {
         console.log(index, row);
-        this.$router.push({name:'选择学校',query:{history:'1'}});
+        switch (row.sendType){
+          case 1 :
+            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            break;
+          case 2:
+            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            break;
+          case 3:
+            this.$router.push({name:'特定对象',query:{type:'resend'},parmas:{msgId:row.msgId}});
+            break;
+          case 4:
+            this.$router.push({name:'教材报名者',query:{type:'resend'},params:{msgId:row.msgId}});
+            break;
+            dafault:
+              this.$message({
+                type: 'error',
+                message: '补发出错'
+              });
+        }
+
       },
       /**
        * 点击消息状态
@@ -240,10 +282,8 @@
         console.log(id)
         this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
       },
-      preview(row, event, column){
-        if(event.label==='信息标题'){
-          this.previewShow=true;
-        }
+      preview(index, row){
+        this.$router.push({name:'系统消息详情', query: {msgId:row.msgId}})
       },
       /**
        * 批量删除
@@ -273,9 +313,6 @@
         })
       }
     },
-    components: {
-      PreviewPopup
-    }
   }
 </script>
 

@@ -110,12 +110,29 @@
       </el-col>
     </el-row> -->
 
-    <Preview-popup :close.sync="previewShow"></Preview-popup>
+    <!--预览弹窗-->
+    <el-dialog
+      :visible.sync="previewShow"
+      size="large">
+      <div class="message-preview paddingR20 paddingL20">
+        <h5 class="previewTitle text-center">{{previewData.title}}</h5>
+        <div class="previewContent" v-html="previewData.content"></div>
+        <!--附件-->
+        <el-row v-if="previewData.files.length">
+          <el-col :span="2" class="fontSize-16">
+            附件 ：
+          </el-col>
+          <el-col :span="22">
+            <div class="previewFile" title="预览界面不提供下载附件功能">
+              <span v-for="(iterm,index) in previewData.files" :key="index">{{iterm}}</span>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-/* import Editor from 'components/Editor' */
-import PreviewPopup from 'components/PreviewPopup'
 export default {
   data: function() {
     return {
@@ -139,6 +156,11 @@ export default {
 
       },
       previewShow: false,
+      previewData:{
+        title:'',
+        content:'',
+        files:[]
+      },
       uEditor:null
     }
   },
@@ -174,16 +196,16 @@ export default {
             }
              switch(this.messageForm.sendType){
                 case 1:
-                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
+                  this.$router.push({name:'选择学校',query:{type:'new'},params:paramData});
                   break;
                 case 2:
-                  this.$router.push({name:'选择学校',query:{history:'1'},params:paramData});
+                  this.$router.push({name:'选择学校',query:{type:'new'},params:paramData});
                   break;
                 case 3:
-                  this.$router.push({name:'特定对象',query:{history:'1'},params:paramData});
+                  this.$router.push({name:'特定对象',query:{type:'new'},params:paramData});
                   break;
                 case 4:
-                  this.$router.push({name:'教材报名者',query:{history:'1'},params:paramData});
+                  this.$router.push({name:'教材报名者',query:{type:'new'},params:paramData});
                   break;
                 dafault:
                   this.$message({
@@ -219,9 +241,6 @@ export default {
     setMessageInit(data){
 
     },
-  },
-  components: {
-    PreviewPopup
   },
   created(){
     this.currentMessageType = this.$route.query.type;
@@ -278,5 +297,26 @@ export default {
 
 .nextStep-wrapper {
   padding-right: 48px;
+}
+/*预览弹窗样式*/
+.message-preview{
+  max-width: 1060px;
+  margin: 0 auto;
+}
+.previewTitle{
+  color: #14232e;
+  font-size: 26px;
+  font-weight: 500;
+}
+.previewContent{
+  margin-top: 48px;
+}
+.previewFile>span{
+  display: block;
+  color: #337ab7;
+  margin: 0 0 10px;
+}
+.fontSize-16{
+  font-size: 16px;
 }
 </style>
