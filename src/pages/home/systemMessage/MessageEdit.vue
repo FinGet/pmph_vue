@@ -21,7 +21,9 @@
           </el-radio-group>
       </el-form-item>
       <el-form-item label="文章内容：" required>
-           <script id="editor" type="text/plain" style="height:500px;position:relative;z-index:99;"></script>
+        <div class="clearfix">
+          <Editor ref="editor" :config="editorConfig"></Editor>
+        </div>
       </el-form-item>
       <!--分割线-->
       <el-form-item>
@@ -34,9 +36,9 @@
           <el-upload
             class="upload-demo"
             :auto-upload="false"
-            action="http://192.168.200.106:8090/pmpheep/messages/message/file"
+            :action="fileUploadUrl"
             :on-change="upLoadInputChange"
-            :file-list="messageForm.fileList">
+            :file-list="uploadFileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
@@ -68,11 +70,12 @@
   </div>
 </template>
 <script>
+import Editor from 'components/Editor.vue'
 import {BASE_URL} from 'common/config.js'
 export default {
   data: function() {
     return {
-      fileUploadUrl:BASE_URL+'upload/file',
+      fileUploadUrl:BASE_URL+'messages/message/file',
       currentMessageType:'add',
       currentMessageId:undefined,
       messageForm:{
@@ -96,9 +99,14 @@ export default {
       previewData:{
         title:'',
         content:'',
-        files:[]
+        files:[],
+        fileIds:[],
       },
-      uEditor:null
+      editorConfig: {
+          initialFrameWidth: null,
+          initialFrameHeight: 500
+      },
+      uploadFileList:[],
     }
   },
   methods: {
@@ -110,9 +118,11 @@ export default {
       console.log(file)
     },
     preview() {
+      this.previewData.title = this.messageForm.title;
+      this.previewData.content = this.$refs.editor.getContent()
+      this.previewData.files = this.uploadFileList;
+
       this.previewShow = true;
-      console.log(this.previewShow)
-      console.log(this.messageForm.fileList)
     },
     /**
      * 点击下一步
@@ -124,7 +134,7 @@ export default {
               sendType:this.messageForm.sendType,
               content:{
                 title:this.messageForm.title,
-                content:this.uEditor.getContent(),
+                content:this.$refs.editor.getContent(),
               },
               fileList:this.messageForm.fileList
             }
@@ -163,18 +173,21 @@ export default {
         .then(response=>{
           let res = response.data;
           console.log(res);
+          //初始化title
+          this.messageForm.title=text;
+          //初始化message 数据，将内容填充到相应位置
+          this.$refs.editor.setContent(res.data.content);
+          //将已上传文件push到上传组件文件列表中
+          [].unshift.apply(this.uploadFileList,res.data.content.files)
         })
         .catch(e=>{
           this.$message.error('获取当前系统消息失败！');
           this.$route.query.type='add';
         })
     },
-    /**
-     * 初始化message 数据，将内容填充到相应位置
-     */
-    setMessageInit(data){
-
-    },
+  },
+  components:{
+    Editor
   },
   created(){
     this.currentMessageType = this.$route.query.type;
@@ -184,10 +197,10 @@ export default {
     }
   },
   mounted() {
-    this.uEditor = UE.getEditor('editor');
+
   },
   destroyed(){
-    this.uEditor.destroy();
+
   }
 }
 </script>
