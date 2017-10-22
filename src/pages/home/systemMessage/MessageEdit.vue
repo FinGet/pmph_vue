@@ -31,84 +31,19 @@
       </el-form-item>
     <el-form-item label="附件：" prop="fileList">
         <div class="col-content file-upload-wrapper" style="padding-left:0;" >
-          <el-upload class="upload-demo" action="http://192.168.200.106:8090/pmpheep/messages/message/file" :on-success="upLoadSuccess" :file-list="messageForm.fileList">
-            <span>
+          <el-upload
+            class="upload-demo"
+            :auto-upload="false"
+            action="http://192.168.200.106:8090/pmpheep/messages/message/file"
+            :on-change="upLoadInputChange"
+            :file-list="messageForm.fileList">
+                  <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
           </el-upload>
         </div>
     </el-form-item>
     </el-form>
-    <!-- <el-row class="">
-      <el-col :span="3" class="text-right">
-        <div class="col-content lineHeight-36">
-          <span class="required-fields">标题</span> ：
-        </div>
-      </el-col>
-      <el-col :span="20">
-        <div class="col-content">
-          <el-input v-model="title" placeholder="请输入文章标题" class="message-title-input"></el-input>
-        </div>
-      </el-col>
-    </el-row> -->
-    <!--选择发送对象区-->
-    <!-- <el-row class="lineHeight-36">
-      <el-col :span="3" class="text-right">
-        <div class="col-content">
-          <span class="required-fields">发送对象</span> ：
-        </div>
-      </el-col>
-      <el-col :span="20">
-        <div class="col-content">
-          <el-radio-group v-model="sendType">
-            <el-radio :label="0">学校管理员</el-radio>
-            <el-radio :label="1">所有人</el-radio>
-            <el-radio :label="2">特定对象</el-radio>
-            <el-radio :label="3">教材报名者</el-radio>
-          </el-radio-group>
-        </div>
-      </el-col>
-    </el-row> -->
-    <!--编辑内容区-->
-    <!-- <el-row>
-      <el-col :span="3" class="text-right">
-        <div class="col-content">
-          <span class="required-fields">文章内容</span> ：
-        </div>
-      </el-col>
-      <el-col :span="20">
-        <div class="col-content">
-
-          <div id="editor_id"></div>
-        </div>
-      </el-col>
-    </el-row> -->
-
-    <!--分割线-->
-    <!-- <el-row>
-      <el-col :span="20" :offset="3">
-        <div class="cutLine-dashed"></div>
-      </el-col>
-    </el-row>-->
-    <!--添加附件-->
-   <!--  <el-row class="">
-      <el-col :span="3" class="text-right">
-        <div class="col-content">
-          <span class="required-fields">附件</span> ：
-        </div>
-      </el-col>
-      <el-col :span="20">
-        <div class="col-content file-upload-wrapper">
-          <el-upload class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-             :file-list="fileList">
-            <span>
-              <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
-            <div slot="tip" class="el-upload__tip">文件大小不超过100M</div>
-          </el-upload>
-        </div>
-      </el-col>
-    </el-row> -->
 
     <!--预览弹窗-->
     <el-dialog
@@ -133,9 +68,11 @@
   </div>
 </template>
 <script>
+import {BASE_URL} from 'common/config.js'
 export default {
   data: function() {
     return {
+      fileUploadUrl:BASE_URL+'upload/file',
       currentMessageType:'add',
       currentMessageId:undefined,
       messageForm:{
@@ -166,18 +103,15 @@ export default {
   },
   methods: {
     /**
-     * 文件上传成功
+     * 添加文件
      */
-    upLoadSuccess(response){
-      if (response.code == '1') {
-        let res = response.data
-        this.messageForm.fileList.push(res)
-      }
-      //console.log(this.messageForm.fileList)
+    upLoadInputChange(file,filelist){
+      console.log(this.filelist)
+      console.log(file)
     },
     preview() {
       this.previewShow = true;
-      //console.log(this.previewShow)
+      console.log(this.previewShow)
       console.log(this.messageForm.fileList)
     },
     /**

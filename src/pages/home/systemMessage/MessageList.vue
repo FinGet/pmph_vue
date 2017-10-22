@@ -89,7 +89,7 @@
                    v-if="dataTotal>pageSize"
      @size-change="handleSizeChange"
      @current-change="handleCurrentChange"
-     :current-page="currentPage"
+     :current-page="pageNumber"
      :page-sizes="[10, 20, 30, 40]"
      :page-size="pageSize"
      layout="total, sizes, prev, pager, next, jumper"
@@ -104,13 +104,13 @@
     data() {
       return {
         visible: false,
-        currentPage: 4, // 分页当前页
         tableData: [
           {
             msgId: '1',
             title:'测试111111111111',
             sendName: 'bios',
             sendTime: '1111111111111111',
+            isWithdraw:false,
             sendType:1
           },
           {
@@ -118,6 +118,7 @@
             title:'测试111111111111',
             sendName: 'bios',
             sendTime: '1111111111111111',
+            isWithdraw:false,
             sendType:2
           },
           {
@@ -158,7 +159,7 @@
       }
     },
     mounted() {
-      // this.getMessageList()
+       this.getMessageList()
     },
     methods: {
       /**
@@ -176,12 +177,12 @@
           let res = response.data
           this.dataTotal = res.data.total
           if (res.code == '1') {
-            this.tableData=res.data.rows
             // 将时间戳转为标准格式
-            for (let i=0; i< this.tableData.length; i++) {
-              this.tableData[i].sendTime = formatDate(this.tableData[i].sendTime)
+            for (let i=0; i< res.data.rows.length; i++) {
+              res.data.rows[i].sendTime = formatDate(res.data.rows[i].sendTime)
             }
-            // console.log(this.tableData)
+
+            this.tableData=res.data.rows
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
