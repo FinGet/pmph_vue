@@ -37,7 +37,7 @@
             @selection-change="handleSelectionChange">
             <el-table-column
               label="姓名"
-              width="80"
+              width="120"
               prop="realname">
             </el-table-column>
             <el-table-column
