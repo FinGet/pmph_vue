@@ -315,7 +315,7 @@
           return;
         }
         var formdata = new FormData();
-        formdata.append('files',filedata);
+        formdata.append('file',filedata);
         formdata.append('ids',this.uploadFileData.ids);
         formdata.append('sessionId',this.uploadFileData.sessionId);
         let config = {

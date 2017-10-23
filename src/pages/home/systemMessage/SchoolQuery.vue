@@ -4,6 +4,9 @@
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
+        <el-button type="primary" @click="goBackEdit">
+          返回编辑
+        </el-button>
         <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
           发布
           <span v-if="queryData.length>0">({{queryData.length}})</span>
@@ -165,8 +168,11 @@
     data() {
       return {
         formdata:{
-          content:'1234',
-          sendType:'1',
+          title:'',
+          content:'',
+          fileIds:'',
+          filePath:'',
+          sendType:1,
           orgIds:'',
           userIds:'',
           bookIds:'',
@@ -176,43 +182,7 @@
         showPublishBtn:false,
         select_provinces:[],
         select_orgType:0,
-        area_school:[
-//          {
-//          id:0,
-//          province:'北京',
-//          isIndeterminate:false,
-//          checkAll:false,
-//          checkedSchools:[],
-//          schoolList:[
-//            {id:1,type:1,name:'清华大学'},
-//            {id:2,type:1,name:'北京大学'},
-//            {id:3,type:2,name:'中国武警总医院'},
-//            {id:4,type:2,name:'协和医院'},
-//            {id:5,type:3,name:'中日友好医院'},
-//            {id:6,type:3,name:'北京医院'},
-//            {id:7,type:1,name:'中国人民解放军总医院'},
-//            {id:8,type:2,name:'北京回龙观医院'},
-//            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-//          ]
-//        },{
-//          id:4,
-//          province:'天津',
-//          isIndeterminate:false,
-//          checkAll:false,
-//          checkedSchools:[],
-//          schoolList:[
-//            {id:1,type:1,name:'清华大学'},
-//            {id:2,type:1,name:'北京大学'},
-//            {id:3,type:2,name:'中国武警总医院'},
-//            {id:4,type:2,name:'协和医院'},
-//            {id:5,type:3,name:'中日友好医院'},
-//            {id:6,type:3,name:'北京医院'},
-//            {id:7,type:1,name:'中国人民解放军总医院'},
-//            {id:8,type:2,name:'北京回龙观医院'},
-//            {id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-//          ]
-//        }
-        ],
+        area_school:[],
         dialogVisible:false,
         historyData:[],
         tableData:[
@@ -395,18 +365,36 @@
               message:'发布失败，请重试'
             });
           });
-      }
+      },
+      /**
+       * 返回编辑, 将路由带过来的参数再传给编辑消息页面
+       */
+      goBackEdit(){
+        var routerParams = this.$route.params;
+        this.$router.push({name: '编辑消息',query:{type:'reEdit'}})
+      },
     },
     created(){
       var routerParams = this.$route.params;
       console.log(routerParams);
       if(!routerParams.content){
         this.$message.error('页面未收到发送消息内容');
-        this.router.push({name: '编辑消息'});
+        this.$router.push({name: '编辑消息'});
       }
-      this.formdata.content=JSON.stringify(routerParams.content);
-      this.formdata.sendType=routerParams.sendType;
-      this.formdata.file = routerParams.fileList;
+      this.formdata.title=routerParams.title;
+      this.formdata.content=routerParams.content;
+      let fileIds = [];
+      routerParams.originalFileList.forEach(iterm=>{
+        fileIds.push(iterm.id);
+      });
+      this.formdata.fileIds=fileIds.join(',');
+
+      let filePath = [];
+      routerParams.filePathList.forEach(iterm=>{
+        filePath.push(iterm.path);
+      });
+      this.formdata.filePath=filePath.join(',');
+
       this.getSchools()
     },
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="message-preview paddingR20 paddingL20">
     <h5 class="previewTitle text-center">{{previewData.title}}</h5>
-    <div class="previewContent" v-html="previewData.content"></div>
+    <div class="previewContent paddingB20" v-html="previewData.content"></div>
     <!--附件-->
     <el-row v-if="previewData.files.length">
       <el-col :span="2" class="fontSize-16">

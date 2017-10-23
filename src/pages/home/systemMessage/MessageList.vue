@@ -62,6 +62,14 @@
           label="发送时间"
         >
         </el-table-column>
+        <el-table-column
+          prop="isWithdraw"
+          label="状态"
+        >
+          <template scope="scope">
+            {{scope.row.isWithdraw?'已撤回':'已发送'}}
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template scope="scope">
             <el-button
@@ -104,40 +112,7 @@
     data() {
       return {
         visible: false,
-        tableData: [
-          {
-            msgId: '1',
-            title:'测试111111111111',
-            sendName: 'bios',
-            sendTime: '1111111111111111',
-            isWithdraw:false,
-            sendType:1
-          },
-          {
-            msgId: '2',
-            title:'测试111111111111',
-            sendName: 'bios',
-            sendTime: '1111111111111111',
-            isWithdraw:false,
-            sendType:2
-          },
-          {
-            msgId: '3',
-            title:'测试111111111111',
-            sendName: 'bios',
-            sendTime: '1111111111111111',
-            isWithdraw:true,
-            sendType:3
-          },
-          {
-            msgId: '4',
-            title:'测试111111111111',
-            sendName: 'bios',
-            sendTime: '1111111111111111',
-            isWithdraw:true,
-            sendType:4
-          }
-        ],
+        tableData: [],
         multipleSelection: [],
         pageNumber: 1,
         pageSize: 20,

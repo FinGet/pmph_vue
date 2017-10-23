@@ -180,7 +180,7 @@
           return;
         }
         var formdata = new FormData();
-        formdata.append('files',filedata);
+        formdata.append('file',filedata);
         formdata.append('ids',this.currentGroup.id);
         formdata.append('sessionId',this.getUserData().sessionId);
         let config = {
