@@ -211,7 +211,7 @@ export default {
           { required: true, message: '请输入用户手机号码', trigger: 'blur' },
         ],
         orgId: [
-          { type: 'number', required: true, message: '请输入所属院校', trigger: 'blur' },
+          { required: true, message: '请输入所属院校', trigger: 'blur' },
         ],
         isDsabled: [
           { type: 'boolean', required: true, message: '请选择是否启用', trigger: 'change' }

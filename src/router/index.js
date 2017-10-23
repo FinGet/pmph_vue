@@ -20,7 +20,6 @@ import Notice from '../pages/home/teachingMaterial/navContent/Notice'
 import Chief from '../pages/home/teachingMaterial/navContent/Chief'
 import preSelect from '../pages/home/teachingMaterial/navContent/preSelect'
 import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
-import SchoolQuery from 'components/SchoolQuery'
 import ApplicationSchoolQuery from 'components/chooseSchool'
 import GroupManage from 'pages/home/Groups/groupManagement'
 /* 用户信息管理 */
@@ -29,12 +28,14 @@ import pmphUser from '../pages/home/userManage/pmphUser'
 import writerUser from '../pages/home/userManage/writerUser'
 import orgUser from '../pages/home/userManage/orgUser'
 /* 系统消息 */
-import MessageRouter from '../pages/home/systemMessage/MessageRouter'
+import MessageRouter from 'pages/home/systemMessage/MessageRouter'
 import MessageList from 'pages/home/systemMessage/MessageList'
 import MessageState from 'pages/home/systemMessage/MessageState'
 import MessageEdit from 'pages/home/systemMessage/MessageEdit'
-import SpecialObj from '../pages/home/systemMessage/specialObj'
-import TeachApplicant from '../pages/home/systemMessage/TeachApplicant'
+import MessageDetails from 'pages/home/systemMessage/MessageDetails'
+import SchoolQuery from 'pages/home/systemMessage/SchoolQuery'
+import SpecialObj from 'pages/home/systemMessage/specialObj'
+import TeachApplicant from 'pages/home/systemMessage/TeachApplicant'
 /* 系统设置 */
 import systemRouter from '../pages/home/systemSet/systemRouter'
 import Roles from '../pages/home/systemSet/roles'
@@ -95,6 +96,7 @@ export default new Router({
             { path: 'messagelist', name: '消息列表', component: MessageList, meta: { replaceName: false } }, // 消息列表页面
             { path: 'messagestate', name: '消息状态', component: MessageState },
             { path: 'messageEdit', name: '编辑消息', component: MessageEdit }, //消息编辑页面
+            { path: 'messageDetails', name: '系统消息详情', component: MessageDetails },
             { path: 'schoolquery', name: '选择学校', component: SchoolQuery },
             { path: 'specialobj', name: '特定对象', component: SpecialObj },
             { path: 'teachapplicant', name: '教材报名者', component: TeachApplicant },

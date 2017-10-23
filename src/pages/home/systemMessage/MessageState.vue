@@ -8,7 +8,7 @@
           </el-col>
           <el-button class="btn" type="primary"  icon="search">搜索</el-button>
         </el-col>
-        <el-col :span="4" class="msgradio">
+        <el-col :span="5" class="msgradio">
           <el-radio-group v-model="isRead">
             <el-radio :label="2">全部</el-radio>
             <el-radio :label="1">已读</el-radio>
@@ -26,7 +26,7 @@
           :data="tableData"
           border
           stripe
-          empty-text="暂无数据……"
+          empty-text="暂无数据"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange">
@@ -90,136 +90,9 @@
     data() {
       return {
         input: '',
-        isRead: 0,
+        isRead: 2,
         currentPage: 4, // 分页当前页
-        tableData: [
-          {
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '已读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '已读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        },{
-          Teacher: '艳红',
-          Company: '成都中医药大学',
-          Fdate: '2017-09-06 00:43:30',
-          Sdate: '2017-09-06 00:43:30',
-          State: '未读',
-          Mobile: '15882387792'
-        }],
+        tableData: [],
         msgId: '',
         pageNumber: 1,
         pageSize: 20,
