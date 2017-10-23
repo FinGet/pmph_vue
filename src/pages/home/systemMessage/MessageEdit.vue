@@ -2,6 +2,7 @@
   <div class="message-edit">
 
     <div class="nextStep-wrapper text-right">
+      <el-button type="primary" @click="back">返回</el-button>
       <el-button type="primary" @click="preview">预览</el-button>
       <el-button type="primary" @click="nextStep()">
         下一步
@@ -110,7 +111,7 @@
       </el-col>
     </el-row> -->
 
-    <Preview-popup :close.sync="previewShow"></Preview-popup>
+//    <Preview-popup :close.sync="previewShow"></Preview-popup>
   </div>
 </template>
 <script>
@@ -219,6 +220,12 @@ export default {
     setMessageInit(data){
 
     },
+    /**
+     * 返回
+     */
+    back() {
+      this.$router.go(-1)
+    }
   },
   components: {
     PreviewPopup
