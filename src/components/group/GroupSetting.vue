@@ -141,13 +141,15 @@
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
-              self.$message.success('删除小组成功');
+              this.$message.success('删除小组成功');
               //修改成功通过vue bus派发一个事件
               bus.$emit('group:info-change')
+            }else{
+              this.$message.error(res.msg);
             }
           })
           .catch((error) => {
-            self.$message.error('删除小组失败，请重试');
+            this.$message.error('删除小组失败，请重试');
           });
       }
     },
