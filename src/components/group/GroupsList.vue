@@ -143,9 +143,9 @@
             _this.groupListData=res.data.data;
             if(res.data.data.length){
               //保持当前小组选中
-              if(!_this.currentActiveGroupId){
+
                 _this.currentActiveGroupId=res.data.data[0].id;
-              }
+            
               res.data.data.forEach(iterm=>{
                 if(iterm.id==_this.currentActiveGroupId){
                   _this.$emit('clickItem',iterm);

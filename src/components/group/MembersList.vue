@@ -34,7 +34,7 @@
       </div>
       <transition name="el-fade-in">
         <div class="addMemberWrapper text-center" v-if="isShowAddButton">
-          <el-button type="text" icon="plus" @click="dialogVisible = true" class="button">
+          <el-button type="text" icon="plus" @click="addNewMember" class="button">
             新增成员
           </el-button>
         </div>
@@ -89,10 +89,11 @@
                 </el-table-column>
               </el-table>
               <el-pagination class="pull-right" 
-              :page-sizes="[10,30,50,100, 200, 300, 400]" 
+              :page-sizes="[10, 20,30, 50, 100]" 
               :current-page.sync="writerParams.pageNumber"
               @size-change="writerSizeChange"
               @current-change="writerCurrentChange"
+              v-if="writerPageTotal>writerParams.pageSize"
               :page-size="writerParams.pageSize" 
               layout="total, sizes, prev, pager, next, jumper" 
               :total="writerPageTotal">
@@ -141,7 +142,8 @@
               @size-change="handleSizeChange" 
               @current-change="handleCurrentChange" 
               :current-page="pageNumber" 
-              :page-sizes="[10,30,50,100, 200, 300, 400]" 
+              :page-sizes="[10, 20,30, 50, 100]" 
+              v-if="dataTotal>pageSize"
               :page-size="pageSize"
                layout="total, sizes, prev, pager, next, jumper" 
                :total="dataTotal">
@@ -206,7 +208,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      writerPageTotal:1,
+      writerPageTotal:0,
       addMemberArr:[],
       defaultImage: DEFAULT_USER_IMAGE,
       memberListData: [],
@@ -233,8 +235,8 @@ export default {
         label: '专家用户'
       }],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'sonDepartment',
+        label: 'dpName'
       },
       treeData:[],
       searchVal:'',
@@ -288,7 +290,6 @@ export default {
     writerCheckChange(arr){
       var _this=this;
       this.addWriterData=[];
-      console.log(arr);
        arr.forEach(function(item){
          item.isWriter=true;
          _this.addWriterData.push(item);
@@ -298,7 +299,6 @@ export default {
     clubUserSelectChange(arr){
       var _this=this;
       this.addClubData=[];
-      console.log(arr);
       arr.forEach(function(item){
          _this.addClubData.push(item);
        })
@@ -316,7 +316,6 @@ export default {
            obj.isWriter=item.isWriter?item.isWriter:false;
            subArr.push(obj);
      })
-     console.log(typeof JSON.stringify(subArr));
      this.$axios({
        method:'POST',
        url:this.addMemberUrl,
@@ -327,7 +326,6 @@ export default {
      })
      }
        ).then((res)=>{
-          console.log(res);
           if(res.data.code==1){
                this.getGroupMember(this.groupId);
                this.againDialogVisible=false;
@@ -362,23 +360,22 @@ export default {
             }
           }
         }).catch((error) => {
-          console.log(error.msg)
         })
     },
     /* 获取社内用户树列表 */
     getTreeData(){
      this.$axios.get(this.clubTreeUrl).then((response) => {
           let res = response.data
+          console.log(res);
           if (res.code == '1') {
             this.treeData = res.data.sonDepartment;
+            console.log(this.treeData);
           }
         }).catch((error) => {
-          console.log(error.msg)
         })
     },
     /* 社内用户树点击操作 */
     handleNodeClick(data) {
-      console.log(data.path);
       this.path = data.path
         if (data.path == '0') {
           this.path = ''
@@ -398,7 +395,6 @@ export default {
     },
     /* 社内用户切换分页条数 */
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.pageSize=val;
       this.pageNumber=1;
       this.getClubUserData();
@@ -417,9 +413,15 @@ export default {
     },
     /* 社内用户切换当前页数 */
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.pageNumber=val;
       this.getClubUserData();
+    },
+    /* 点击新增成员按钮 */
+    addNewMember(){
+     this.dialogVisible=true;
+     this.getWriterUserList();
+    this.getClubUserData();
+    this.getTreeData();
     }
   },
   components: {
@@ -445,9 +447,7 @@ export default {
     if(this.groupId){
       this.getGroupMember(this.groupId);
     }
-    this.getWriterUserList();
-    this.getClubUserData();
-    this.getTreeData();
+    
   }
 }
 </script>

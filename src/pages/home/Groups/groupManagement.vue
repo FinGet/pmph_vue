@@ -131,6 +131,7 @@
        */
       getGroupList(groupList){
         this.currentGroupList=groupList;
+        this.currentGroupId=this.currentGroupList[0].id;
       }
     },
     components:{
