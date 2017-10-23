@@ -31,7 +31,7 @@
                 <span>{{item.groupName}}</span>
                 <span class="textbook">{{item.textbook}}</span>
               </div>
-              <span class="lastMessageTime">{{changeDateType(item.lastMessageTime)}}</span>
+              <span class="lastMessageTime" v-if="item.gmtLastMessage">{{changeDateType(item.gmtLastMessage)}}</span>
             </div>
           </div>
         </beauty-scroll>
@@ -96,7 +96,7 @@
          groupListUrl:'/group/list/pmphgroup',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
-         currentActiveGroupId:1237,
+         currentActiveGroupId:undefined,
          inputSearchGroup:'',
          groupListData:[],
          newGroupData:{
@@ -119,7 +119,7 @@
         this.$emit('clickItem',group)
       },
       changeDateType(num){
-         return  getDateDiff(parseInt(num));
+         return  getDateDiff(num);
       },
       /*点击新建小组按钮*/
       addNew(){
@@ -229,7 +229,7 @@
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);
-      this.$on('group:info-change',()=>{})
+      bus.$on('group:info-change',this.getGroupData)
     },
   }
 </script>

@@ -234,9 +234,7 @@
               });
               tempList.forEach(iterm=>{
                 self.messagesList.unshift(iterm);
-                console.log(self.messagesList);
               });
-              console.log(self.messagesList);
               this.showLoadingmoreBtn=!res.data.last;
             }
             this.messageLoading=false;
