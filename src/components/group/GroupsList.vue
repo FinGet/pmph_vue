@@ -221,6 +221,34 @@
             self.$message.error('创建小组失败');
           });
       },
+      /**
+       * 处理接收到的消息事件
+       * 将小组最后收到消息时间改为当前时间
+       */
+      handlerReceiveMessage(data){
+        console.log('小组聊天窗口成功收到消息',data);
+        let message={};
+        data=JSON.parse(data);
+        if(data.msgType==3){
+          this.groupListData.forEach(iterm=>{
+            if(iterm.id = data.groupId){
+              iterm.gmtLastMessage = +(new Date())
+            }
+          });
+        }
+      },
+      /**
+       * 开始监听webSocket推送的消息事件
+       */
+      startListenMessage(){
+        bus.$on('ws:message',this.handlerReceiveMessage)
+      },
+      /**
+       *  取消监听
+       */
+      removeListenMessage(){
+        bus.$off('ws:message',this.handlerReceiveMessage)
+      }
     },
     watch:{
       /**
@@ -236,8 +264,12 @@
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);
+      this.startListenMessage();
       bus.$on('group:info-change',this.getGroupData)
     },
+    beforeDestroy(){
+      this.removeListenMessage();
+    }
   }
 </script>
 
