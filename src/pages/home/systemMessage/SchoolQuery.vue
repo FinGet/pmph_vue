@@ -170,8 +170,7 @@
         formdata:{
           title:'',
           content:'',
-          fileIds:'',
-          filePath:'',
+          file:'',
           sendType:1,
           orgIds:'',
           userIds:'',
@@ -383,17 +382,11 @@
       }
       this.formdata.title=routerParams.title;
       this.formdata.content=routerParams.content;
-      let fileIds = [];
-      routerParams.originalFileList.forEach(iterm=>{
-        fileIds.push(iterm.id);
-      });
-      this.formdata.fileIds=fileIds.join(',');
-
       let filePath = [];
       routerParams.filePathList.forEach(iterm=>{
         filePath.push(iterm.path);
       });
-      this.formdata.filePath=filePath.join(',');
+      this.formdata.file=filePath.join(',');
 
       this.getSchools()
     },
