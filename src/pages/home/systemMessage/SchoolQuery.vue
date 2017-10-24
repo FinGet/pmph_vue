@@ -72,8 +72,8 @@
           <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
@@ -167,6 +167,8 @@
   export default {
     data() {
       return {
+        sortArea:false,
+        sortOrg:false,
         formdata:{
           title:'',
           content:'',
@@ -372,11 +374,31 @@
         var routerParams = this.$route.params;
         this.$router.push({name: '编辑消息',query:{type:'reEdit'}})
       },
+      /**
+       * 按区域拼音排序
+       */
+      sortByArea(){
+        this.sortArea = !this.sortArea;
+        this.area_school.sort((x,y)=>{
+          return x['province'].localeCompare(y['province'])>0?this.sortArea:!this.sortArea;
+        });
+      },
+      /**
+       * 按机构名称拼音排序
+       */
+      sortByOrg(){
+        this.sortOrg = !this.sortOrg;
+        this.area_school.forEach(iterm=>{
+          iterm.schoolList.sort((x,y)=>{
+            return x['name'].localeCompare(y['name'])>0?this.sortOrg:!this.sortOrg;
+          })
+        })
+      }
     },
     created(){
       var routerParams = this.$route.params;
       console.log(routerParams);
-      if(!routerParams.content){
+      if(!routerParams.content&&!routerParams.title){
         this.$message.error('页面未收到发送消息内容');
         this.$router.push({name: '编辑消息'});
       }
