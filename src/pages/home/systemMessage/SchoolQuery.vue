@@ -398,7 +398,7 @@
     created(){
       var routerParams = this.$route.params;
       console.log(routerParams);
-      if(!routerParams.content){
+      if(!routerParams.content&&!routerParams.title){
         this.$message.error('页面未收到发送消息内容');
         this.$router.push({name: '编辑消息'});
       }
