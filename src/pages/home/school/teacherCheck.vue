@@ -7,7 +7,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" v-model="realname" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="realname" @keyup.enter.native="search" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -15,7 +15,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" v-model="orgName" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="orgName" @keyup.enter.native="search" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -40,10 +40,10 @@
 					<p>确认审核不通过</p>
 					<div style="text-align: right; margin: 0">
 						<el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="visible1 = false">确定</el-button>
+						<el-button type="primary" size="mini" @click="check(0)">确定</el-button>
 					</div>
 				</el-popover>
-				<el-button class="pull-right marginL10" type="danger" v-popover:popover1 :disabled="isSelected">审核不通过</el-button>
+				<el-button class="pull-right marginL10" type="success" v-popover:popover1 :disabled="isSelected">审核</el-button>
 				<el-popover
 					ref="popover2"
 					placement="top"
@@ -52,10 +52,10 @@
 					<p>确认审核通过</p>
 					<div style="text-align: right; margin: 0">
 						<el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
+						<el-button type="primary" size="mini" @click="check(2)">确定</el-button>
 					</div>
 				</el-popover>
-				<el-button class="pull-right" type="success" v-popover:popover2 :disabled="isSelected">审核通过</el-button>
+				<el-button class="pull-right" type="danger" v-popover:popover2 :disabled="isSelected">退回</el-button>
 			</el-col>
 		</el-row>
 		<el-row>
@@ -81,7 +81,7 @@
 					</el-table-column>
 					<el-table-column label="教师资格证" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.cert" style="color:#0000ff;" @click="preview(scope.$index)">预览</a>
+							<a href="javascript:;" v-if="scope.row.cert" style="color:#0000ff;" @click="preview(scope.row.cert)">预览</a>
 							<el-tag type="danger" v-if="!scope.row.cert">未上传</el-tag>
 						</template>
 					</el-table-column>
@@ -369,7 +369,7 @@ export default {
         let res = response.data
         if (res.code == '1') {
           this.dataTotal = res.data.total
-          console.log(res)
+          // console.log(res)
           this.tableData = res.data.rows
           if (this.dataTotal == 0) {
             this.$message({
@@ -382,7 +382,38 @@ export default {
       }).catch((error) => {
         console.log(error.msg)
       })
-    },
+		},
+		/**
+		 *审核
+		 */
+		check(progress){
+			this.visible1 = false
+			this.visible2 = false
+			//console.log(this.selections)
+			var userIds = []
+			this.selections.forEach(item => {
+				// console.log(item)
+				userIds.push(item.id)
+				//console.log(orgUserIds)
+			})
+			this.$axios.put("/auth/writers/check",this.$initPostData({
+				progress: progress,
+				userIds: userIds
+			})).then((response) => {
+				let res = response.data
+				if (res.code == "1") {
+					//console.log(res)
+					this.getWritersList()
+					this.$message({
+              showClose: true,
+              message: '修改成功!',
+              type: 'success'
+            });
+				}
+			}).catch(error => {
+				console.log(error.msg)
+			})
+		},
     /**
      * 搜索
      */
@@ -402,8 +433,16 @@ export default {
 		/**
 		 * 预览教师资格证
 		 * @argument index */
-		preview(index) {
-			this.dialogVisible = true
+		preview(cert) {
+			this.$axios.get("/image/"+cert).then(response => {
+				let res = response.data
+				if (res.code == '1'){
+					this.dialogVisible = true
+					console.log(res)
+				}
+			}).catch((error) => {
+        console.log(error.msg)
+      })
 		}
 	}
 }

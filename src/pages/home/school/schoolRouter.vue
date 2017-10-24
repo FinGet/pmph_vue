@@ -6,7 +6,9 @@
 			</li>
 		</ul>
 		<div class="main clearfix">
-			<router-view></router-view>
+			<keep-alive>
+				<router-view></router-view>
+			</keep-alive>
 		</div>
 	</div>
 </template>
@@ -15,6 +17,7 @@ export default {
 	data() {
 		return {
 			currentIndex: 0,
+			breadData: '',
 			tabs: [
 				{
 					name: '教师审核',
@@ -27,9 +30,31 @@ export default {
 			]
 		}
 	},
+	watch: {
+		$route () {
+			this.initBreadData()
+		}
+	},
+	created() {
+		this.initBreadData()
+	},
 	methods: {
 		changeTab(index) {
 			this.currentIndex = index
+		},
+		/**
+		 * 初始化当前路由
+		 */
+		initBreadData(){
+			this.breadData=this.$router.currentRoute.matched;
+			// console.log(this.breadData)
+			this.breadData.forEach(item => {
+				if(item.name == '教师审核'){
+					this.currentIndex = 0
+				}else {
+					this.currentIndex = 1
+				}
+			})
 		}
 	}
 }

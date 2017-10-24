@@ -7,7 +7,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" v-model="realname" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="realname" @keyup.enter.native="search" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -15,7 +15,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" v-model="orgName" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="orgName" @keyup.enter.native="search" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -40,7 +40,7 @@
 					<p>确认审核</p>
 					<div style="text-align: right; margin: 0">
 						<el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="visible1 = false">确定</el-button>
+						<el-button type="primary" size="mini" @click="check(0)">确定</el-button>
 					</div>
 				</el-popover>
 				<el-button class="pull-right marginL10" type="success" v-popover:popover1 :disabled="isSelected">审核</el-button>
@@ -52,7 +52,7 @@
 					<p>确认是否退回</p>
 					<div style="text-align: right; margin: 0">
 						<el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
+						<el-button type="primary" size="mini" @click="check(2)">确定</el-button>
 					</div>
 				</el-popover>
 				<el-button class="pull-right" type="danger" v-popover:popover2 :disabled="isSelected">退回</el-button>
@@ -60,7 +60,11 @@
 		</el-row>
 		<el-row>
 			<el-col>
-				<el-table ref="multipleTable" :data="tableData" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+				<el-table ref="multipleTable" 
+				:data="tableData" 
+				border tooltip-effect="dark" 
+				style="width: 100%" 
+				@selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
 					<el-table-column label="管理员姓名" prop="realname" width="120">
@@ -83,7 +87,7 @@
 					</el-table-column>
 					<el-table-column label="委托书" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.proxy" style="color:#0000ff;" @click="preview(scope.$index)">预览</a>
+							<a href="javascript:;" v-if="scope.row.proxy" style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
 							<el-tag type="danger" v-if="!scope.row.proxy">未上传</el-tag>
 						</template>
 					</el-table-column>
@@ -421,21 +425,67 @@ export default {
     search() {
 	    this.getOrgsList()
     },
+		/**
+		 *审核
+		 */
+		check(progress){
+			this.visible1 = false
+			this.visible2 = false
+			//console.log(this.selections)
+			var orgUserIds = []
+			this.selections.forEach(item => {
+				// console.log(item)
+				orgUserIds.push(item.id)
+				//console.log(orgUserIds)
+			})
+			this.$axios.put("/auth/orgs/check",this.$initPostData({
+				progress: progress,
+				orgUserIds:orgUserIds
+			})).then((response) => {
+				let res = response.data
+				if (res.code == "1") {
+					//console.log(res)
+					this.getOrgsList()
+					this.$message({
+              showClose: true,
+              message: '修改成功!',
+              type: 'success'
+            });
+				}
+			}).catch(error => {
+				console.log(error.msg)
+			})
+		},
 		/**@argument val 当选中项 */
 		handleSelectionChange(val) {
 			this.selections = val
+			// console.log(val)
 		},
+		/**@argument val pageSize */
 		handleSizeChange(val) {
-			console.log(`每页 ${val} 条`);
+			// console.log(`每页 ${val} 条`);
+			this.pageSize = val
+			this.getOrgsList()
 		},
+		/**@argument val pageNumber */
 		handleCurrentChange(val) {
-			console.log(`当前页: ${val}`);
+			// console.log(`当前页: ${val}`);
+			this.pageNumber = val
+			this.getOrgsList()
 		},
 		/**
 		 * 预览教师资格证
 		 * @argument index */
-		preview(index) {
-			this.dialogVisible = true
+		preview(proxy) {
+			this.$axios.get("/image/"+proxy).then(response => {
+				let res = response.data
+				if (res.code == '1'){
+					this.dialogVisible = true
+					console.log(res)
+				}
+			}).catch((error) => {
+        console.log(error.msg)
+      })
 		}
 	}
 }
