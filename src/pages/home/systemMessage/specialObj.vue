@@ -21,9 +21,9 @@
             <el-col class="marginB10">
               <span class="pull-left s-title">账号/姓名:</span>
               <el-col :span="4">
-                <el-input placeholder="请输入" v-model="searchVal"></el-input>
+                <el-input placeholder="请输入" v-model="clubUserParams.searchVal"></el-input>
               </el-col>
-              <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
+              <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
             </el-col>
             <el-table
               ref="multipleTable"
@@ -53,7 +53,7 @@
               >
               </el-table-column>
               <el-table-column
-                prop="role"
+                prop="name"
                 label="角色名称"
               >
               </el-table-column>
@@ -65,10 +65,14 @@
             </el-table>
             <el-pagination
               class="pull-right"
-              :page-sizes="[100, 200, 300, 400]"
-              :page-size="100"
+              @size-change="clubSizeChange"
+              @current-change="clubCurrentChange"
+              :current-page="clubUserParams.pageNumber"
+              :page-sizes="[10, 20, 30, 50, 100]"
+              v-if="clubDataTotal>clubUserParams.pageSize"
+              :page-size="clubUserParams.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="clubDataTotal">
             </el-pagination>
           </el-col>
         </el-row>
@@ -79,15 +83,21 @@
       <el-tab-pane label="作家用户" name="two">
         <div class="tabsContainer">
           <div class="searchBox-wrapper">
-            <span>教材书籍：</span>
+            <span>账号/姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="writerUserParams.name" class="searchInputEle "></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
-            <span>遴选职位：</span>
+            <span>所属院校：</span>
             <div>
-              <el-select v-model="selectValue" placeholder="请选择">
+              <el-input placeholder="请输入内容" v-model="writerUserParams.orgName" class="searchInputEle"></el-input>
+            </div>
+          </div>
+          <div class="searchBox-wrapper">
+            <span>用户类型：</span>
+            <div>
+              <el-select v-model="writerUserParams.rank" placeholder="请选择">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -97,32 +107,28 @@
               </el-select>
             </div>
           </div>
-          <div class="searchBox-wrapper">
-            <span>账号/姓名：</span>
-            <div>
-              <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
-            </div>
-          </div>
+          
           <div class="searchBtn-wrapper">
-            <el-button  type="primary" icon="search">搜索</el-button>
+            <el-button  type="primary" icon="search" @click="getWriterUserData">搜索</el-button>
           </div>
           <div class="tableContainer groupmanageTable">
             <el-table
               ref="multipleTable"
-              :data="tableData3"
+              :data="writerTableData"
               border
+              @selection-change="writerSelectChange"
               tooltip-effect="dark"
-              style="width: 100%">
+              style="width: 100%;margin-bottom:20px;">
               <el-table-column
                 type="selection"
                 width="55">
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="realname"
                 label="姓名">
               </el-table-column>
               <el-table-column
-                prop="code"
+                prop="username"
                 label="账号">
               </el-table-column>
               <el-table-column
@@ -130,18 +136,23 @@
                 label="遴选职位">
               </el-table-column>
               <el-table-column
-                prop="work"
+                prop="orgName"
                 label="工作单位"
                 show-overflow-tooltip>
               </el-table-column>
             </el-table>
             <el-pagination
               class="pull-right"
-              :page-sizes="[30,50,100, 200, 300, 400]"
-              :page-size="30"
+              @size-change='writerSizeChange'
+              @current-change="writerCurrentChange"
+              :current-page="writerUserParams.pageNumber"
+              v-if="writerPageTotal>writerUserParams.pageSize"
+              :page-sizes="[10,20, 30, 50, 100]"
+              :page-size="writerUserParams.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="writerPageTotal">
             </el-pagination>
+            
           </div>
         </div>
       </el-tab-pane>
@@ -151,54 +162,58 @@
           <div class="searchBox-wrapper">
             <span>学校名称：</span>
             <div>
-              <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.orgName" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>机构代码：</span>
             <div>
-              <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.username" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>管理员姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.realname" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBtn-wrapper">
-            <el-button  type="primary" icon="search">搜索</el-button>
+            <el-button  type="primary" icon="search" @click="getOrgUserData">搜索</el-button>
           </div>
           <div class="tableContainer groupmanageTable">
             <el-table
               ref="multipleTable"
-              :data="tableData2"
+              :data="orgTableData"
               border
               tooltip-effect="dark"
-              style="width: 100%">
+              @selection-change="orgSelectChange"
+              style="width: 100%;margin-bottom:20px;">
               <el-table-column
                 type="selection"
                 width="55">
               </el-table-column>
               <el-table-column
-                prop="schoolname"
+                prop="orgName"
                 label="学校名称">
               </el-table-column>
               <el-table-column
-                prop="usercode"
+                prop="username"
                 label="机构代码">
               </el-table-column>
               <el-table-column
-                prop="username"
+                prop="realname"
                 label="管理员姓名">
               </el-table-column>
             </el-table>
-            <el-pagination
+             <el-pagination
               class="pull-right"
-              :page-sizes="[30,50,100, 200, 300, 400]"
-              :page-size="30"
+              @size-change="orgSizeChange"
+              @current-change="orgCurrentChange"
+              :current-page.sync="orgUserParams.pageNumber"
+              :page-sizes="[10,20, 30, 50, 100]"
+              :page-size="orgUserParams.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="orgPageTotal">
             </el-pagination>
           </div>
         </div>
@@ -213,259 +228,62 @@ export default {
   data() {
     return {
       clubTreeUrl: "users/pmph/list/pmphdepartment", //获取社内用户成员树url
-      clubUserUrl:'users/pmph/list/pmphuser',  //获取社内用户url
-      searchVal:'',
-      path:'',
-      pageNumber:1,
-      pageSize:10,
-      dataTotal:1,
-      clubUsersData:[],
+      clubUserUrl: "users/pmph/list/pmphuser", //获取社内用户url
+      writerUserUrl: '/users/writer/list/writeruser',  //获取作家用户url
+      orgUserUrl:'/users/org/list/orguser',  //获取机构用户url
+      clubUserParams: {
+        searchVal: "",
+        path: "",
+        pageNumber: 1,
+        pageSize: 10,
+      },
+      clubDataTotal: 1,
+      clubUsersData: [],
+      clubSelectData:[], //社内用户选中
+      writerSelectData:[],//作家用户选择
+      orgSelectData:[], //机构用户选中
       hasSelect: [], //已选中人员数据列表
+      writerUserParams:{
+        name:'',
+        orgName:'',
+        rank:'',
+        pageSize:10,
+        pageNumber:1
+        },
+      writerTableData:[],
+      writerPageTotal:0,
+      orgUserParams:{
+        username:'',
+        orgName:'',
+        realname:'',
+        pageSize:10,
+        pageNumber:1
+      },
+      orgTableData:[],
+      orgPageTotal:0,
       activeName: "first",
-      tableData3: [
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        },
-
-        {
-          code: "wangxiaohu",
-          name: "王小虎",
-          position: "副主编",
-          work: "福建卫生职业技术学院"
-        }
-      ],
       selectValue: "",
-      options: [],
+      options:[{
+        value: '',
+        label: '全部'
+      }, {
+        value: '0',
+        label: '普通用户'
+      }, {
+        value: '1',
+        label: '教师用户'
+      }, {
+        value: '2',
+        label: '作家用户'
+      }, {
+        value: '3',
+        label: '专家用户'
+      }],
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: 'sonDepartment',
+        label: 'dpName'
       },
       treeData: [],
-      /* data: [{
-          id: 1,
-          label: '人民卫生出版社',
-          children: [{
-            label: '医学学术编辑中心（期刊编辑出版社）',
-            children: [{
-              label: '期刊编辑部'
-            },{
-              label: '期刊编辑一部'
-            },{
-              label: '期刊编辑二部'
-            },{
-              label: '期刊编辑三部'
-            }]
-          },{
-            label: '人卫电子音像公司'
-          },{
-            label: '药学中心'
-          },{
-            label: '智慧数字中心'
-          },{
-            label: '研发中心'
-          },{
-            label: '医学教育中心(医学教育研究中心)',
-            children: [{
-              label: '职业教育部（护理教育部）'
-            },{
-              label: '高等医学教育部'
-            },{
-              label: '继续教育部'
-            }]
-          },{
-            label: '国际中心'
-          },{
-            label: '总编辑总经理办公室'
-          },{
-            label: '人卫健康传播中心',
-            children: [{
-              label: '健康传播综合部'
-            },{
-              label: '预防医学编辑部'
-            },{
-              label: '《生活与健康》编辑部'
-            }]
-          },{
-            label: '中医院中心'
-          },{
-            label: '出版社科室1'
-          }]
-        }], */
-      tableData: [
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "李四",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: true
-        },
-        {
-          name: "王二",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "赵武",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: true
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "张三",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "王二",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: false
-        },
-        {
-          name: "赵武",
-          username: "zs",
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438",
-          use: true
-        }
-      ],
       tableData2: [
         {
           schoolname: "安徽医学高等专科学校",
@@ -703,49 +521,130 @@ export default {
         });
     },
     /* 获取社内用户列表 */
-    getClubUserData(){
-     this.$axios.get(this.clubUserUrl, {
-          params: {
-            name: this.searchVal,
-            path: this.path,
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize
-          }
-        }).then((response) => {
-          console.log(response);
-          let res = response.data
-          this.dataTotal = res.data.total
-          if (res.code == '1') {
-            this.clubUsersData=res.data.rows
+    getClubUserData() {
+      this.$axios
+        .get(this.clubUserUrl, {
+          params: this.clubUserParams
+        })
+        .then(response => {
+          let res = response.data;
+          this.clubDataTotal = res.data.total;
+          if (res.code == "1") {
+            this.clubUsersData = res.data.rows;
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
-                message: '没有这条数据!',
-                type: 'warning'
+                message: "没有这条数据!",
+                type: "warning"
               });
             }
           }
-        }).catch((error) => {
-          console.log(error.msg)
         })
+        .catch(error => {
+          console.log(error.msg);
+        });
+    },
+    /* 获取作家用户列表 */
+    getWriterUserData(){
+      this.$axios.get(this.writerUserUrl, {
+        params: this.writerUserParams
+      }).then((res)=> {
+        if(res.data.code==1){
+          this.writerTableData=res.data.data.rows;
+          this.writerPageTotal= res.data.data.total;
+        }
+      })
+    },
+    /* 获取机构用户列表 */
+    getOrgUserData(){
+       var self= this;
+            // 为给定 ID 的 user 创建请求
+            this.$axios.get(this.orgUserUrl,{params:this.orgUserParams})
+              .then((response)=> {
+                console.log(response);
+                let res = response.data;
+                let data = res.data.rows;
+                this.orgTableData=data;
+                this.orgPageTotal = res.data.total;
+              })
+              .catch( (error)=> {
+                console.error(error);
+              });
     },
     /* 点击社内用户树 */
     handleNodeClick(data) {
       console.log(data.path);
-      this.path = data.path
-        if (data.path == '0') {
-          this.path = ''
-        }
+      this.clubUserParams.path = data.path;
+      if (data.path == "0") {
+        this.clubUserParams.path = "";
+      }
       this.getClubUserData();
     },
+    /* 社内用户分页size改变 */
+    clubSizeChange(el) {
+      this.clubUserParams.pageSize = el;
+      this.clubUserParams.pageNumber = 1;
+      this.getClubUserData();
+    },
+    /* 社内用户点击分页 */
+    clubCurrentChange(el) {
+      this.clubUserParams.pageNumber = el;
+      this.getClubUserData();
+    },
+    /* 作家用户分页size改变 */
+    writerSizeChange(el){
+       this.writerUserParams.pageSize=el;
+       this.writerUserParams.pageNumber=1;
+       this.getWriterUserData();
+    },
+    /* 作家用户点击分页 */
+    writerCurrentChange(el){
+       this.writerUserParams.pageNumber=el;
+       this.getWriterUserData();
+    },
+    /* 机构用户size改变 */
+    orgSizeChange(el){
+       this.orgUserParams.pageSize=el;
+       this.orgUserParams.pageNumber=1;
+       this.getOrgUserData();
+    },
+    /* 机构用户点击分页 */
+    orgCurrentChange(el){
+       this.orgUserParams.pageNumber=el;
+       this.getOrgUserData();
+    },
     /* 社内用户选择项改变 */
-    clubSelectChange(el){
-
+    clubSelectChange(el) {
+      console.log(el);
+      this.clubSelectData=[];
+      this.clubSelectData=el;
+      this.mergeSelectData();
+    },
+    /* 作家用户选择项改变 */
+    writerSelectChange(el){
+    console.log(el);  
+    this.writerSelectData=[];
+    this.writerSelectData=el;
+    this.mergeSelectData();
+    },
+    /* 机构用户选择改变 */
+    orgSelectChange(el){
+      console.log(el);
+       this.orgSelectData=[];
+       this.orgSelectData=el;
+       this.mergeSelectData();
+    },
+    /* 合并用户已选项 */
+    mergeSelectData(){
+      this.hasSelect=[];
+      this.hasSelect=this.clubSelectData.concat(this.writerSelectData.concat(this.orgSelectData));
     }
   },
   created() {
     this.getTreeData();
     this.getClubUserData();
+    this.getWriterUserData();
+    this.getOrgUserData();
   }
 };
 </script>

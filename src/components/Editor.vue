@@ -6,6 +6,7 @@
 <script>
   import '../../static/neditor/neditor.config.js'
   import '../../static/neditor/neditor.all.min.js'
+  import '../../static/neditor/lang/zh-cn/zh-cn.js'
   export default {
     name: 'Editor',
     props: {
@@ -35,9 +36,9 @@
       setContent(Msg){
         this.editor.setContent(Msg);
       },
-      destroyed() {
-        this.editor.destroy();
-      }
+    },
+    destroyed(){
+      this.editor.destroy();
     }
   }
 </script>

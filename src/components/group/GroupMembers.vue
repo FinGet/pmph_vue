@@ -81,7 +81,8 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10,20,30,50,100, 200, 300, 400]"
+      :page-sizes="[10, 20,30, 50, 100]"
+      v-if="total>pageSize"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
@@ -103,7 +104,7 @@ export default {
       visible: false,
       currentPage: 1,
       pageSize:10,
-      total:50,
+      total:0,
       currentMember:'',
       isMember:false
     }
@@ -141,9 +142,7 @@ export default {
        var id= this.getUserData().userInfo.id,
             loginType= this.getUserData().userInfo.loginType,
             _this=this;
-            console.log(id,loginType);
       this.tableData.forEach(function(item){
-        console.log(item);
         if(item.userId==id&&item.userType==loginType){
                 _this.currentMember=item.identity
         }
@@ -151,19 +150,16 @@ export default {
     },
     /* 切换分页条数 */
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.pageSize=val;
       this.currentPage=1;
       this.getMemberManageList();
     },
     /* 点击分页 */
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.currentPage=val;
       this.getMemberManageList();
     },
     handleSelectionChange (val) {
-      console.log(val);
       this.selections = val
      
     },
@@ -177,7 +173,6 @@ export default {
          obj.isAdmin=bool;
          subArr.push(obj);
        })
-         console.log(subArr);
        this.$axios({
          method:'PUT',
          url:this.changeAuthUrl,
@@ -187,7 +182,6 @@ export default {
              groupId:this.groupId
          })
        }).then((res)=>{
-               console.log(res);
                if(res.data.code==1){
                  this.$message.success('修改成功')
                  this.$emit('refeshMember');
@@ -206,7 +200,6 @@ export default {
         var ids='';
         this.selections.forEach(function(item){
             ids+=item.id+',';
-            console.log(item);
         })
         ids=ids.slice(0,-1);
         
@@ -219,7 +212,6 @@ export default {
             groupId:this.groupId
          }
        }).then((res)=>{
-         console.log(res);
          if(res.data.code==1){
            this.$message.success('删除成功')
            this.$emit('refeshMember');

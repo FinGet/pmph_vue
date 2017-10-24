@@ -149,10 +149,9 @@
                 }
               });
               //保持当前小组选中
-              if(!_this.currentActiveGroupId||!hasCurrentGroup){
-                _this.currentActiveGroupId=res.data.data[0].id;
-              }
 
+                _this.currentActiveGroupId=res.data.data[0].id;
+            
               res.data.data.forEach(iterm=>{
                 if(iterm.id==_this.currentActiveGroupId){
                   _this.$emit('clickItem',iterm);
