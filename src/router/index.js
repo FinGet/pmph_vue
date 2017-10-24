@@ -48,6 +48,11 @@ import SchoolRouter from 'pages/home/school/schoolRouter'
 import TeacherCheck from 'pages/home/school/teacherCheck'
 import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
 
+/* 我的消息 */
+import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
+import MyMessageList from 'pages/home/myMessage/MessageList';
+import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
+
 Vue.use(Router)
 
 export default new Router({
@@ -120,8 +125,14 @@ export default new Router({
             { path: 'writers', name: '教师审核', component: TeacherCheck },
             { path: 'orgs', name: '学校管理员审核', component: SchoolAdminCheck }
           ]
+        },
+        /* 我的消息 */
+        {
+          path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
+          { path: 'msglist', name: '我的消息列表', component: MyMessageList },
+          { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
+        ]
         }
-
       ]
     },
     { path: '/*', name: '404', component: NoFind }
