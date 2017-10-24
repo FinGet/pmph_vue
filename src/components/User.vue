@@ -2,7 +2,7 @@
   <el-dropdown>
       <span class="el-dropdown-link">
           <span class="user-image"><img :src="headImage" alt=""></span>
-          <span>{{userData.username}}</span>
+          <span>{{userData.realname}}</span>
       </span>
     <el-dropdown-menu slot="dropdown" class="user-dropdown">
       <el-dropdown-item>

@@ -48,7 +48,7 @@
         'sidebarFlod'
       ]),
       userData(){
-        return mySessionStorage.get('currentUser', 'json').sessionPmphUser||{};
+        return this.getUserData().userInfo;
       },
     },
     methods: {

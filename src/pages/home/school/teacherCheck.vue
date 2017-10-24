@@ -7,7 +7,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="realname" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -15,7 +15,7 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-input placeholder="请输入" class="searchInputEle"></el-input>
+						<el-input placeholder="请输入" v-model="orgName" class="searchInputEle"></el-input>
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
@@ -23,14 +23,14 @@
 						<span></span>
 					</div>
 					<div class="searchInput">
-						<el-select v-model="value" placeholder="请选择">
+						<el-select v-model="progress" placeholder="请选择">
 							<el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value">
 							</el-option>
 						</el-select>
 					</div>
 				</div>
 				<div class="searchBox-wrapper searchBtn">
-					<el-button type="primary" icon="search">搜索</el-button>
+					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
 				<el-popover
 					ref="popover1"
@@ -63,43 +63,51 @@
 				<el-table ref="multipleTable" :data="tableData" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
-					<el-table-column label="教师姓名" prop="teachername" width="120">
+					<el-table-column label="教师姓名" prop="realname" width="120">
 					</el-table-column>
 					<el-table-column prop="username" label="用户名" width="150">
 					</el-table-column>
 					<el-table-column prop="idcard" label="身份证" width="190">
 					</el-table-column>
-					<el-table-column prop="school" label="所属学校">
+					<el-table-column prop="orgName" label="所属学校">
 					</el-table-column>
-					<el-table-column prop="phone" label="手机">
+					<el-table-column prop="handphone" label="手机">
 					</el-table-column>
 					<el-table-column prop="email" label="邮箱" width="220" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="job" label="职务">
+					<el-table-column prop="position" label="职务">
 					</el-table-column>
-					<el-table-column prop="jobtitle" label="职称" width="80">
+					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
 					<el-table-column label="教师资格证" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.teachercertification" style="color:#0000ff;" @click="preview(scope.$index)">预览</a>
-							<el-tag type="danger" v-if="!scope.row.teachercertification">未上传</el-tag>
+							<a href="javascript:;" v-if="scope.row.cert" style="color:#0000ff;" @click="preview(scope.$index)">预览</a>
+							<el-tag type="danger" v-if="!scope.row.cert">未上传</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="idcard" label="审核标志" width="100" align="center">
+					<el-table-column prop="progress" label="审核标志" width="100" align="center">
 						<template scope="scope">
-							<el-tag type="success" v-if="scope.row.check=='0'">已通过</el-tag>
-							<el-tag type="warning" v-if="scope.row.check=='1'">待审核</el-tag>
-							<el-tag type="danger" v-if="scope.row.check=='2'">已退回</el-tag>
+							<el-tag type="success" v-if="scope.row.progress=='0'">已通过</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
+							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
 					</el-table-column>
 				</el-table>
 			</el-col>
 			<el-col>
-				<el-pagination class="pull-right marginT10" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+				<el-pagination class="pull-right marginT10"
+                       v-if="dataTotal>20"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="currentPage"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="dataTotal">
 				</el-pagination>
 			</el-col>
 		</el-row>
-		<el-dialog 
+		<el-dialog
 			title="教师资格证"
 			:visible.sync="dialogVisible"
 			size="small"
@@ -121,19 +129,19 @@ export default {
 			imgsrc:require('./jszgez.jpg'),
 			state: [
 				{
-					value: '选项1',
+					value: '0',
 					label: '全部'
 				},
 				{
-					value: '选项2',
+					value: '1',
 					label: '待审核'
 				},
 				{
-					value: '选项3',
+					value: '2',
 					label: '已退回'
 				},
 				{
-					value: '选项4',
+					value: '3',
 					label: '已通过'
 				}
 			],
@@ -319,7 +327,13 @@ export default {
 					teachercertification: true,
 					check: 1
 				}
-			]
+			],
+      orgName:  '',
+      realname: '',
+      progress: '',
+      pageSize: 20,
+      pageNumber: 1,
+      dataTotal: 0
 		}
 	},
 	computed: {
@@ -335,7 +349,46 @@ export default {
 			}
 		}
 	},
+  mounted() {
+	  this.getWritersList()
+  },
 	methods: {
+    /**
+     * 请求初始化列表
+     */
+    getWritersList() {
+      this.$axios.get("/auth/writers/list",{
+        params:{
+          orgName:  this.orgName,
+          realname: this.realname,
+          progress: this.progress,
+          pageSize: this.pageSize,
+          pageNumber: this.pageNumber
+        }
+      }).then((response) => {
+        let res = response.data
+        if (res.code == '1') {
+          this.dataTotal = res.data.total
+          console.log(res)
+          this.tableData = res.data.rows
+          if (this.dataTotal == 0) {
+            this.$message({
+              showClose: true,
+              message: '没有数据!',
+              type: 'warning'
+            });
+          }
+        }
+      }).catch((error) => {
+        console.log(error.msg)
+      })
+    },
+    /**
+     * 搜索
+     */
+    search() {
+      this.getWritersList()
+    },
 		/**@argument val 当选中项 */
 		handleSelectionChange(val) {
 			this.selections = val
