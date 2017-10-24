@@ -93,6 +93,7 @@
         </el-table-column>
       </el-table>
     </div>
+    
     <el-pagination class="pull-right"
                    v-if="dataTotal>pageSize"
      @size-change="handleSizeChange"
