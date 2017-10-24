@@ -128,7 +128,7 @@ export default new Router({
         },
         /* 我的消息 */
         {
-          path: 'mymessage', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
+          path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
           { path: 'msglist', name: '我的消息列表', component: MyMessageList },
           { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
         ]
