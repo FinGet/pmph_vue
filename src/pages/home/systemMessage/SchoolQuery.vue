@@ -1,3 +1,4 @@
+<script src="../../../router/index.js"></script>
 <template>
   <div class="query">
     <!--操作按钮区-->
