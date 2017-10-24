@@ -4,7 +4,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">学校名称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper">

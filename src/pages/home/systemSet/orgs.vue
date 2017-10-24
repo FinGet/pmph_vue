@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">院校名称：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入关键字" class="searchInputEle" :v-model="searchForm.orgName"></el-input>
+          <el-input placeholder="请输入关键字" class="searchInputEle" v-model="searchForm.orgName"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
