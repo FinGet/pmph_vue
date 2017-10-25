@@ -54,7 +54,7 @@
       <div v-else>
         <!--书名选择框-->
         <div class="searchBox-wrapper">
-          <div class="searchName">书籍名称：<span></span></div>
+          <div class="searchName">书籍名称/ISBN：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.bookName"></el-input>
           </div>
@@ -119,9 +119,68 @@
       </div>
     </div>
     <!--操作按钮-->
-    <div class="operation-wrapper">
-      <el-button type="primary">导出World</el-button>
-      <el-button type="primary">导出Excel</el-button>
+    <div class="clearfix">
+      <div class="operation-wrapper">
+        <el-tooltip class="item" effect="dark" content="请按照模板格式上传!" placement="top">
+          <el-button type="primary">配套图书导入</el-button>
+        </el-tooltip>
+        <el-button type="primary">模板下载.xlsx</el-button>
+        <el-button type="primary">图书全量同步</el-button>
+        <el-button type="primary">图书增量同步</el-button>
+        <el-button type="primary">批量修改</el-button>
+      </div>
+    </div>
+    <div class="table-wrapper clearfix">
+      <el-table
+        :data="tableData"
+        ref="myMsgTable"
+        border
+        stripe
+        tooltip-effect="dark"
+        @selection-change="handleSelectionChange"
+        style="width: 100%">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="bookName"
+          label="书籍名称">
+        </el-table-column>
+        <el-table-column
+          prop="isbn"
+          label="ISBN"
+          width="210">
+        </el-table-column>
+        <el-table-column
+          label="是否新书推荐"
+          width="120">
+          <template scope="scope">
+            {{scope.row.isNew?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="是否重磅推荐"
+          width="120">
+          <template scope="scope">
+            {{scope.row.isNew?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="是否上架"
+          width="100">
+          <template scope="scope">
+            {{scope.row.isNew?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="80">
+          <template scope="scope">
+            <el-button type="text">修改</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 	</div>
 </template>
@@ -142,7 +201,7 @@
         powerSearchList:[
           {
             value:1,
-            label:'书籍名称'
+            label:'书籍名称/ISBN'
           },
           {
             value:2,
@@ -166,7 +225,11 @@
         },{
           value:false,
           label:'否'
-        }]
+        }],
+        tableData:[{
+			    isbn:'978-7-117-23504-4/R·3505'
+        }],
+        selectData:[],
       }
 		},
     methods:{
@@ -176,13 +239,19 @@
       toggleSearchType(){
         this.powerSearch=!this.powerSearch;
       },
+      /**
+       * 表格复选框发生变化触发事件
+       */
+      handleSelectionChange(val) {
+        this.selectData = val;
+      },
     },
 	}
 </script>
 
 <style scoped>
   .searchBox-wrapper{
-    width: 350px;
+    width: 340px;
   }
   .searchBox-wrapper .searchName{
     width: 110px;
