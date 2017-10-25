@@ -57,10 +57,6 @@ import ContentRouter from '../pages/home/contentManage/contentRouter'
 import ContentPublish from '../pages/home/contentManage/contentPublish'
 import ContentExam from '../pages/home/contentManage/contentExam'
 import ColumnSet from '../pages/home/contentManage/columnSet'
-/* 出版图书 */
-import BookRouter from '../pages/home/bookPublish/bookRouter'
-import BookManage from '../pages/home/bookPublish/bookManage'
-import CommentExam from  '../pages/home/bookPublish/commentExam'
 
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
@@ -150,10 +146,10 @@ export default new Router({
         },
         /* 出版图书 */
         {
-          path:'book',name:'出版图书',component:BookRouter,meta: { replaceName: false,authorityId: 17 },children:[
-            { path: 'manage', name: '图书管理', meta: { authorityId: 21 }, component: BookManage },
-            { path: 'exam', name: '评论审核', meta: { authorityId: 22 }, component: CommentExam },
-          ]
+          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: '出版图书', authorityId: 17}, children: [
+          { path: 'manage', name: '图书管理', component: BookManage },
+          { path: 'comment', name: '评论审核', component: CommentManage }
+        ]
         },
         /* 我的消息 */
         {
@@ -162,13 +158,7 @@ export default new Router({
             { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
         ]
         },
-        /* 出版图书 */
-        {
-          path: 'pubBooks', name: '出版图书', component: BookRouter, meta: { replaceName: '出版图书', authorityId: 17}, children: [
-            { path: 'bookmanage', name: '图书管理', component: BookManage },
-            { path: 'commentmanage', name: '评论审核', component: CommentManage }
-          ]
-        }
+
       ]
     },
     { path: '/*', name: '404', component: NoFind }
