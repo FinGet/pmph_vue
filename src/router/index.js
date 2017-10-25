@@ -146,7 +146,7 @@ export default new Router({
         },
         /* 出版图书 */
         {
-          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: '出版图书', authorityId: 17}, children: [
+          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 17}, children: [
           { path: 'manage', name: '图书管理', component: BookManage },
           { path: 'comment', name: '评论审核', component: CommentManage }
         ]
@@ -158,7 +158,6 @@ export default new Router({
             { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
         ]
         },
-
       ]
     },
     { path: '/*', name: '404', component: NoFind }
