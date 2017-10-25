@@ -52,6 +52,15 @@ import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
 import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
 import MyMessageList from 'pages/home/myMessage/MessageList';
 import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
+/* 内容管理 */
+import ContentRouter from '../pages/home/contentManage/contentRouter'
+import ContentPublish from '../pages/home/contentManage/contentPublish'
+import ContentExam from '../pages/home/contentManage/contentExam'
+import ColumnSet from '../pages/home/contentManage/columnSet'
+/* 出版图书 */
+import BookRouter from '../pages/home/bookPublish/bookRouter'
+import BookManage from '../pages/home/bookPublish/bookManage'
+import CommentExam from  '../pages/home/bookPublish/commentExam'
 
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
@@ -129,6 +138,21 @@ export default new Router({
           path: 'auth', name: '学校/教师审核', component: SchoolRouter, meta: { replaceName: false, authorityId: 3 }, children: [
             { path: 'writers', name: '教师审核', component: TeacherCheck },
             { path: 'orgs', name: '学校管理员审核', component: SchoolAdminCheck }
+          ]
+        },
+        /* 内容管理 */
+        {
+          path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 16 },children:[
+            { path: 'publish', name: '内容发布', meta: { authorityId: 18 }, component: ContentPublish },
+            { path: 'exam', name: '内容审核', meta: { authorityId: 19 }, component: ContentExam },
+            { path: 'set', name: '栏目设置', meta: { authorityId: 20 }, component: ColumnSet },
+          ]
+        },
+        /* 出版图书 */
+        {
+          path:'book',name:'出版图书',component:BookRouter,meta: { replaceName: false,authorityId: 17 },children:[
+            { path: 'manage', name: '图书管理', meta: { authorityId: 21 }, component: BookManage },
+            { path: 'exam', name: '评论审核', meta: { authorityId: 22 }, component: CommentExam },
           ]
         },
         /* 我的消息 */

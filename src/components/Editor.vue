@@ -24,10 +24,11 @@
     },
     mounted(){
       const _this = this;
-      this.editor = UE.getEditor('editor', this.config); // 初始化UE
+         this.editor = UE.getEditor('editor', this.config); // 初始化UE
       this.editor.addListener("ready", function () {
         _this.$emit('editor_ready');
       });
+      
     },
     methods: {
       getContent() { // 获取内容方法
