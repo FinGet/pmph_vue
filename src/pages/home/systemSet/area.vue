@@ -9,13 +9,12 @@
         <ul>
           <li
             v-for="item in provinces"
-            v-if="item.level === 1"
             :key="item.id"
-            @click="selectProvince(item.name,item.sheng)"
-            :class="{'active':item.name==active.province}">{{item.name}}
+            @click="selectProvince(item)"
+            :class="{'active':item.areaName==active.province}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editProvince(item)"></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop="deletedProvince(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
             </div>
           </li>
         </ul>
@@ -29,14 +28,14 @@
           <li
             v-for="item in cities"
             :key="item.id"
-            @click="selectCity(item.name,item.sheng,item.di)"
-            :class="{'active':item.name==active.city}">{{item.name}}
+            @click="selectCity(item)"
+            :class="{'active':item.areaName==active.city}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editCity(item)"></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop="deleteCity(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
             </div>
           </li>
-          <p v-if="this.cities==''" class="null">暂无数据</p>
+          <p v-if="this.cities==null||''" class="null">暂无数据</p>
         </ul>
       </el-col>
       <el-col :span="8">
@@ -48,14 +47,14 @@
           <li
             v-for="item in blocks"
             :key="item.id"
-            @click="selectBlock(item.name)"
-            :class="{'active':item.name==active.block}">{{item.name}}
+            @click="selectBlock(item)"
+            :class="{'active':item.areaName==active.block}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editBlock(item)"></el-button>
-              <el-button type="danger" size="mini" icon="delete" @click.stop="deleteBlock(item)"></el-button>
+              <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
             </div>
           </li>
-          <p v-if="this.blocks==''" class="null">暂无数据</p>
+          <p v-if="this.blocks==null||''" class="null">暂无数据</p>
         </ul>
       </el-col>
     </el-row>
@@ -108,7 +107,7 @@
           <el-input v-model="provinceForm.sort"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+          <el-button class="pull-right" type="primary" @click="upDataProvince">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -121,7 +120,7 @@
           <el-input v-model="cityForm.sort"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+          <el-button class="pull-right" type="primary" @click="upDataCity">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -134,14 +133,14 @@
           <el-input v-model="blockForm.sort"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="pull-right" type="primary" @click="">保存</el-button>
+          <el-button class="pull-right" type="primary" @click="upDataBlock">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
   </div>
 </template>
 <script>
-  import provinces from './provinces'
+//  import provinces from './provinces'
   import Vue from 'vue'
   export default{
     data(){
@@ -159,123 +158,110 @@
         // 省份表单
         provinceForm:{
           name:'',
-          sort:''
+          sort:'',
+          id: ''
         },
         // 市级表单
         cityForm:{
           name:'',
-          sort:''
+          sort:'',
+          id: ''
         },
         // 县级表单
         blockForm:{
           name:'',
-          sort:''
+          sort:'',
+          id: ''
         },
-        selectedProvince: provinces[0],
-        selectedCity: 0,
-        selectedBlock: 0,
-        cities: 0,
+        parentId: 0,
         // active用于当前选中高亮，以及暂存当前选中项供后面方法中调用
         active:{
-          province:'北京',
-          city:'市辖区',
-          block:'东城区'
+          province:'',
+          city:'',
+          block:''
         },
-        provinces,
-        blocks: [],
-//        provinces:['北京市','天津市','河北省','山西','内蒙古自治区','辽宁省','吉林省','黑龙江省','上海市','江苏省','浙江省',
-//          '安徽省','福建省','江西省','山东省','河南省','湖北省','湖南省','广东省','广西壮族自治区','海南省','重庆市','四川省',
-//          '贵州省','云南省','西藏自治区','陕西省','甘肃省','宁夏回族自治区','新疆维吾尔自治区','台湾省','香港特别行政区','澳门特别行政区'
-//        ],
-        /*
-        * code: 当前省市区的编码
-          sheng: 当前所在的省
-          name: 省市区的名字
-          level: 级别,省 level = 1, 市 level=2, 区/县城 level = 3
-          di: 县,市级别的区分
-        *
-        * */
-        data:[
-          {"code": "110000", "sheng": "11", "di": "00", "xian": "00", "name": "北京市","level": 1},
-          {"code": "110100", "sheng": "11", "di": "01", "xian": "00", "name": "市辖区", "level": 2},
-          {"code": "110101", "sheng": "11", "di": "01", "xian": "01", "name": "东城区", "level": 3},
-          {"code": "110102", "sheng": "11", "di": "01", "xian": "02", "name": "西城区", "level": 3},
-          {"code": "110105", "sheng": "11", "di": "01", "xian": "05", "name": "朝阳区", "level": 3},
-          {"code": "110106", "sheng": "11", "di": "01", "xian": "06", "name": "丰台区", "level": 3},
-          {"code": "110107", "sheng": "11", "di": "01", "xian": "07", "name": "石景山区", "level": 3},
-          {"code": "110108", "sheng": "11", "di": "01", "xian": "08", "name": "海淀区", "level": 3},
-          {"code": "110109", "sheng": "11", "di": "01", "xian": "09", "name": "门头沟区", "level": 3},
-          {"code": "110111", "sheng": "11", "di": "01", "xian": "11", "name": "房山区", "level": 3},
-          {"code": "110112", "sheng": "11", "di": "01", "xian": "12", "name": "通州区", "level": 3},
-          {"code": "110113", "sheng": "11", "di": "01", "xian": "13", "name": "顺义区", "level": 3},
-          {"code": "110114", "sheng": "11", "di": "01", "xian": "14", "name": "昌平区", "level": 3},
-          {"code": "110115", "sheng": "11", "di": "01", "xian": "15", "name": "大兴区", "level": 3},
-          {"code": "110116", "sheng": "11", "di": "01", "xian": "16", "name": "怀柔区", "level": 3},
-          {"code": "110117", "sheng": "11", "di": "01", "xian": "17", "name": "平谷区", "level": 3},
-          {"code": "110200", "sheng": "11", "di": "02", "xian": "00", "name": "县", "level": 2},
-          {"code": "110228", "sheng": "11", "di": "02", "xian": "28", "name": "密云县", "level": 3},
-          {"code": "110229", "sheng": "11", "di": "02", "xian": "29", "name": "延庆县", "level": 3},
-          {"code": "120000", "sheng": "12", "di": "00", "xian": "00", "name": "天津市", "level": 1},
-          {"code": "120100", "sheng": "12", "di": "01", "xian": "00", "name": "市辖区", "level": 2},
-          {"code": "120101", "sheng": "12", "di": "01", "xian": "01", "name": "和平区", "level": 3},
-          {"code": "120102", "sheng": "12", "di": "01", "xian": "02", "name": "河东区", "level": 3},
-          {"code": "120103", "sheng": "12", "di": "01", "xian": "03", "name": "河西区", "level": 3},
-          {"code": "120104", "sheng": "12", "di": "01", "xian": "04", "name": "南开区", "level": 3},
-          {"code": "120105", "sheng": "12", "di": "01", "xian": "05", "name": "河北区", "level": 3},
-          {"code": "120106", "sheng": "12", "di": "01", "xian": "06", "name": "红桥区", "level": 3},
-          {"code": "120110", "sheng": "12", "di": "01", "xian": "10", "name": "东丽区", "level": 3},
-          {"code": "120111", "sheng": "12", "di": "01", "xian": "11", "name": "西青区", "level": 3},
-          {"code": "120112", "sheng": "12", "di": "01", "xian": "12", "name": "津南区", "level": 3},
-          {"code": "120113", "sheng": "12", "di": "01", "xian": "13", "name": "北辰区", "level": 3},
-          {"code": "120114", "sheng": "12", "di": "01", "xian": "14", "name": "武清区", "level": 3},
-          {"code": "120115", "sheng": "12", "di": "01", "xian": "15", "name": "宝坻区", "level": 3},
-          {"code": "120116", "sheng": "12", "di": "01", "xian": "16", "name": "滨海新区", "level": 3},
-          {"code": "120200", "sheng": "12", "di": "02", "xian": "00", "name": "县", "level": 2},
-          {"code": "120221", "sheng": "12", "di": "02", "xian": "21", "name": "宁河县", "level": 3},
-          {"code": "120223", "sheng": "12", "di": "02", "xian": "23", "name": "静海县", "level": 3},
-          {"code": "120225", "sheng": "12", "di": "02", "xian": "25", "name": "蓟县", "level": 3}
-          ]
+        cities: [], // 市级
+        provinces: [], // 省级
+        blocks: [], // 县级
+        data:'' // 总数据
       }
     },
     created() {
-      // console.log(this.selectedProvince)
-      // 数据初始化,默认选中北京市,默认选中第一个;北京市数据为总数据的前18个
-      let beijing = this.provinces.slice(0, 19)
-      this.cities = beijing.filter(item => {
-        if (item.level === 2) {
-          return true
-        }
-      })
-      // console.log(this.cities) // 市辖区 县
-      this.selectedCity = this.cities[0]
-      // console.log(this.selectedCity)
-      this.blocks = beijing.filter(item => {
-        if (item.level === 3 && item.di==='01') {
-          return true
-        }
-      })
-      // console.log(this.blocks)
-      this.selectedBlock = this.blocks[0]
+      this.getAreaTree()
+      // console.log(this.data)
+    },
+    mounted() {
     },
     methods:{
+      /**
+       * 初始化地区数据
+       */
+      getAreaTree(){
+        //console.log(1)
+        this.$axios.get("/area/areatree",{
+          params:{
+            parentId: this.parentId
+          }
+        }).then(response => {
+          let res = response.data
+          this.provinces = []
+          if (res.code == '1') {
+            this.data = res.data
+            // 初始化 北京数据
+            // this.selectProvince(this.data[0])
+            this.data.forEach(item => {
+              //this.provinces = []
+              this.provinces.push(item)
+              if (this.active.province=='') {
+                this.active.province = this.provinces[0].areaName
+                if (this.provinces[0].chirldren) {
+                  this.active.city = this.provinces[0].chirldren[0].areaName
+                }
+                if (this.provinces[0].chirldren[0].chirldren) {
+                  this.active.province = this.provinces[0].chirldren[0].chirldren[0].areaName
+                }
+                this.selectProvince(this.provinces[0])
+              } else {
+                this.data.forEach(item => {
+                  if (item.areaName == this.active.province) {
+                    this.selectProvince(item)
+                  }
+                })
+              }
+            })
+          }
+        }).catch(error => {
+          console.log(error.msg)
+        })
+      },
+
       /**
        * 点击省份
        * @param name
        * @param sheng
        */
-      selectProvince(name,sheng) {
-        this.active.province = name
-        this.cities = provinces.filter(item => {
-          if (item.level === 2&&item.sheng===sheng && item.xian=='00') {
-            return true
+      selectProvince(item) {
+        var oldProvince = this.active.province
+        if (item) {
+          this.active.province = item.areaName
+          this.cities = item.chirldren
+          if (this.cities == null) {
+            this.blocks = null
+          } else {
+            // 如果省份改变 则点击市级第一个
+            if (oldProvince != item.areaName ) {
+              this.selectCity(item.chirldren[0])
+            }
+            if (this.active.city!=item.chirldren[0].areaName) {
+              item.chirldren.forEach(item1 => {
+                if(item1.areaName == this.active.city) {
+                  this.selectCity(item1)
+                }
+              })
+            } else {
+              this.selectCity(item.chirldren[0])
+            }
           }
-        })
-        //console.log(this.blocks)
-        // console.log(this.cities[0])
-        if (this.cities == '') {
-          this.blocks = []
-        }else {
-          this.selectCity(this.cities[0].name,sheng,this.cities[0].di)
         }
       },
       /**
@@ -284,26 +270,26 @@
        * @param sheng
        * @param di
        */
-      selectCity(name,sheng,di) {
-        this.active.city = name
-        this.blocks = provinces.filter(item => {
-          if (item.level === 3&&item.di===di&&item.sheng==sheng) {
-            return true
-          }
-        })
-        if (this.blocks == '') {
+      selectCity(item) {
+        //console.log(item.areaName)
+        this.active.city = item.areaName
+        this.blocks = item.chirldren
+        // console.log(this.blocks[0].areaName)
+        if (this.blocks == null) {
           return
         } else {
-          this.active.block = this.blocks[0].name
+          this.active.block = this.blocks[0].areaName
         }
       },
       /**
        * 点击县
        * @param name
        */
-      selectBlock(name) {
-        this.active.block = name
+      selectBlock(item) {
+        this.active.block = item.areaName
       },
+
+
       /**
        * 增加省份
        */
@@ -322,143 +308,50 @@
       addBlock() {
         this.blockVisable = true
       },
+
+
       /**
        * 保存省份
        */
       saveProvince() {
-        // console.log(this.provinceForm.name)
-        let sheng = 0
-        sheng++
-        for(var i in this.provinces) {
-          // console.log(this.provinces[i].level)
-          if (this.provinces[i].level==1) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.provinceForm.name ) {
-              //console.log(this.provinces[i].sheng)
-              this.$message.error(`已经存在${this.provinceForm.name}`);
-              return
-            }else {
-              this.provinceVisable = false
-            }
-          }
-        }
-        this.provinces.push({
-          "code": "600000", "sheng": '53'+sheng,"sort":this.provinceForm.sort, "di": "00", "xian": "00", "name": this.provinceForm.name,"level": 1
-        })
-        this.provinceForm.sort = ''
-        this.provinceForm.name = ''
+        this.add(this.provinceForm,0,'province')
       },
       /**
        * 保存市区
        */
       saveCity() {
-
-        var sheng = ''
-        var name = ''
-        var di = ''
-        // 先要找到当前市需要添加在哪个省份
-        for(var i in this.provinces) {
-          // console.log(this.provinces[i].level)
-          if (this.provinces[i].level==1) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.province ) {
-              //console.log(this.provinces[i].sheng)
-              sheng = this.provinces[i].sheng
-              name = this.provinces[i].name
-            }
+        // console.log(this.active.province)
+        var parentId = ''
+        this.provinces.forEach(item => {
+          if (item.areaName == this.active.province) {
+            parentId = item.id
           }
-          // 判断是否已经存在
-          if (this.provinces[i].level==2) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.cityForm.name&&this.provinces[i].sheng==sheng) {
-              this.$message.error(`已经存在${this.cityForm.name}`);
-              this.cityForm.sort = ''
-              this.cityForm.name = ''
-              return
-            }else {
-              this.cityVisable = false
-            }
-            if (this.provinces[i].sheng==sheng) {
-              // console.log(this.provinces[i].di)
-              di = this.provinces[i].di
-              // console.log(di)
-            }
-          }
-        }
-        di = di[di.length-1]
-        //console.log(di+1)
-        this.provinces.push({
-          "code": "600000", "sheng": sheng,"sort":this.cityForm.sort, "di": `0${di+1}`, "xian": "00", "name": this.cityForm.name,"level": 2
         })
-        this.cityForm.sort = ''
-        this.cityForm.name = ''
-        // 触发selectProvince方法，不然新增加的市不能马上加载出来
-        this.selectProvince(name,sheng)
+        this.add(this.cityForm,parentId,'city')
       },
       /**
        * 保存县
        */
       saveBlock() {
-        var sheng =''
-        var parentName = ''
-        var di = ''
-        var xian = ''
-        // 先要找到当前市需要添加在哪个省份
-        for(var i in this.provinces) {
-          // console.log(this.provinces[i].level)
-          if (this.provinces[i].level==1) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.province ) {
-              //console.log(this.provinces[i].sheng)
-              sheng = this.provinces[i].sheng
-            }
+        var parentId = ''
+        this.cities.forEach(item => {
+          if (item.areaName == this.active.city) {
+            parentId = item.id
           }
-          // 找到所属的市
-          if (this.provinces[i].level==2) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.city&&this.provinces[i].sheng==sheng) {
-              parentName = this.provinces[i].name
-              di = this.provinces[i].di
-            }
-          }
-          // 找到县的最后一个xian
-          if (this.provinces[i].level==3) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].sheng==sheng&&this.provinces[i].di==di) {
-              // console.log(this.provinces[i].xian)
-              xian = this.provinces[i].xian
-            }
-            // 判断是否存在
-            if(this.provinces[i].sheng==sheng&&this.provinces[i].di==di&&this.provinces[i].name==this.blockForm.name) {
-              this.$message.error(`已经存在${this.blockForm.name}`);
-              this.blockForm.sort = ''
-              this.blockForm.name = ''
-              return
-            } else {
-              this.blockVisable = false
-            }
-          }
-        }
-        // console.log(xian)
-        xian>10?xian+1:'0'+(xian+1)
-        this.provinces.push({
-          "code": "600000", "sheng": sheng,"sort":this.blockForm.sort, "di": di, "xian": xian, "name": this.blockForm.name,"level": 3
         })
-        // console.log(this.provinces)
-        this.blockForm.sort = ''
-        this.blockForm.name = ''
-        this.selectCity(parentName,sheng,di)
+        this.add(this.blockForm,parentId,'block')
       },
+
+
       /**
        * 编辑省份
        * @param item
        */
       editProvince(item){
         this.editProvinceVisable = true
-        this.provinceForm.name = item.name
+        this.provinceForm.name = item.areaName
         this.provinceForm.sort = item.sort
-//        this.provinceForm.name = ''
-//        this.provinceForm.sort = ''
+        this.provinceForm.id = item.id
       },
       /**
        * 编辑市
@@ -466,10 +359,9 @@
        */
       editCity(item){
         this.editCityVisable = true
-        this.cityForm.name = item.name
+        this.cityForm.name = item.areaName
         this.cityForm.sort = item.sort
-//        this.provinceForm.name = ''
-//        this.provinceForm.sort = ''
+        this.cityForm.id = item.id
       },
       /**
        * 编辑县
@@ -477,101 +369,124 @@
        */
       editBlock(item){
         this.editBlockVisable = true
-        this.blockForm.name = item.name
+        this.blockForm.name = item.areaName
         this.blockForm.sort = item.sort
-//        this.provinceForm.name = ''
-//        this.provinceForm.sort = ''
+        this.blockForm.id = item.id
       },
       /**
-       * 删除省份
-       * @param item
+       * 修改省
        */
-      deletedProvince(item) {
-        var index = ''
-        var name = []
-        var sheng = []
-        // console.log(item)
-        for (var i in provinces) {
-          if (this.provinces[i].level==1) {
-            //console.log('arr'+arr)
-            if (this.provinces[i].sheng === item.sheng) {
-              index = i
-            }
-          }
-        }
-        this.provinces.splice(index,1)
-        for (var i in provinces) {
-          if (this.provinces[i].level==1) {
-            name.push(this.provinces[i].name)
-            sheng.push(this.provinces[i].sheng)
-          }
-        }
-        // console.log(name,sheng)
-        //console.log(name,sheng)
-        this.selectProvince(name[0],sheng[0])
+      upDataProvince() {
+        this.updata(0,this.provinceForm.id,'province',this.provinceForm)
       },
       /**
-       * 删除市
-       * @param item
+       * 修改市
        */
-      deleteCity(item) {
-        var index = ''
-        var name = ''
-        for (var i in provinces) {
-          if (this.provinces[i].level==1) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.province ) {
-              //console.log(this.provinces[i].sheng)
-              name = this.provinces[i].name
-            }
+      upDataCity() {
+        var parentId = ''
+        this.provinces.forEach(item => {
+          if (item.areaName == this.active.province) {
+            parentId = item.id
           }
-          if (this.provinces[i].sheng==item.sheng&&this.provinces[i].level==2) {
-            // console.log(1)
-            if (this.provinces[i].di === item.di) {
-              index = i
-            }
-          }
-        }
-        this.provinces.splice(index,1)
-        this.selectProvince(name,item.sheng)
+        })
+        this.updata(parentId,this.cityForm.id,'city',this.cityForm)
       },
       /**
-       * 删除县
+       * 修改县
+       */
+      upDataBlock() {
+        var parentId = ''
+        this.cities.forEach(item => {
+          if (item.areaName == this.active.city) {
+            parentId = item.id
+          }
+        })
+        this.updata(parentId,this.blockForm.id,'block',this.blockForm)
+      },
+
+      /*-------------------api请求-------------------*/
+      /**
+       * 删除省/市/县
        * @param item
        */
-      deleteBlock(item) {
-        var sheng =''
-        var parentName = ''
-        var di = ''
-        var index = ''
-        // 先要找到当前市需要添加在哪个省份
-        for(var i in this.provinces) {
-          // console.log(this.provinces[i].level)
-          if (this.provinces[i].level == 1) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.province) {
-              //console.log(this.provinces[i].sheng)
-              sheng = this.provinces[i].sheng
-            }
+      deleted(item) {
+        this.$axios.delete("/area/delete/areabatch",{
+          params:{
+            id: item.id
           }
-          // 找到所属的市
-          if (this.provinces[i].level == 2) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].name == this.active.city && this.provinces[i].sheng == sheng) {
-              parentName = this.provinces[i].name
-              di = this.provinces[i].di
-            }
+        }).then(response => {
+          let res = response.data
+          if (res.code == '1') {
+            //console.log(res)
+            this.getAreaTree()
+            this.$message({
+              showClose: true,
+              message: '删除成功!',
+              type: 'success'
+            });
           }
-          if (this.provinces[i].level==3) {
-            // console.log(this.provinces[i].name)
-            if (this.provinces[i].sheng==sheng&&this.provinces[i].di==di&&this.provinces[i].xian==item.xian) {
-              // console.log(this.provinces[i].xian)
-              index = i
+        })
+      },
+      /**
+       * 添加省/市/县
+       */
+      add(form,parentId,area){
+        this.$axios.post("/area/add/area",this.$initPostData({
+          parentId: parentId,
+          areaName:form.name,
+          sort: form.sort
+        })).then(response => {
+          let res = response.data
+          if (res.code == '1') {
+            // console.log(res)
+            this.getAreaTree()
+            if (area === 'province') {
+              this.provinceVisable = false
+            } else if (area === 'city') {
+              this.cityVisable = false
+            } else {
+              this.blockVisable = false
             }
+            this.$message({
+              showClose: true,
+              message: '添加成功!',
+              type: 'success'
+            });
+            form.name = ''
+            form.sort = ''
           }
-        }
-        this.provinces.splice(index,1)
-        this.selectCity(parentName,sheng,di)
+        })
+      },
+      /**
+       * 编辑省/市/县
+       */
+      updata(parentId,id,area,form){
+        this.$axios.put("area/update/area",this.$initPostData({
+          parentId: parentId,
+          id: id,
+          areaName:form.name,
+          sort: form.sort
+        })).then(response => {
+          let res = response.data
+          if (res.code == '1') {
+            // console.log(res)
+            this.getAreaTree()
+            if (area === 'province') {
+              this.editProvinceVisable = false
+            } else if (area === 'city') {
+              this.editCityVisable = false
+            } else {
+              this.editBlockVisable = false
+            }
+            this.$message({
+              showClose: true,
+              message: '修改成功!',
+              type: 'success'
+            });
+            form.name = ''
+            form.sort = ''
+          }
+        })
       }
     }
   }
