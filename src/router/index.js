@@ -58,14 +58,9 @@ import ContentPublish from '../pages/home/contentManage/contentPublish'
 import ContentExam from '../pages/home/contentManage/contentExam'
 import ColumnSet from '../pages/home/contentManage/columnSet'
 /* 出版图书 */
-import BookRouter from '../pages/home/bookPublish/bookRouter'
-import BookManage from '../pages/home/bookPublish/bookManage'
-import CommentExam from  '../pages/home/bookPublish/commentExam'
-
-/* 出版图书 */
-import BookRouter from 'pages/home/publishBooks/BookRouter'
-import BookManage from 'pages/home/publishBooks/BookManage'
-import CommentManage from 'pages/home/publishBooks/CommentManage'
+import BookRouter from '../pages/home/publishBooks/BookRouter'
+import BookManage from '../pages/home/publishBooks/BookManage'
+import CommentManage from '../pages/home/publishBooks/CommentManage'
 
 Vue.use(Router)
 
@@ -148,13 +143,6 @@ export default new Router({
             { path: 'set', name: '栏目设置', meta: { authorityId: 20 }, component: ColumnSet },
           ]
         },
-        /* 出版图书 */
-        {
-          path:'book',name:'出版图书',component:BookRouter,meta: { replaceName: false,authorityId: 17 },children:[
-            { path: 'manage', name: '图书管理', meta: { authorityId: 21 }, component: BookManage },
-            { path: 'exam', name: '评论审核', meta: { authorityId: 22 }, component: CommentExam },
-          ]
-        },
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
@@ -164,9 +152,9 @@ export default new Router({
         },
         /* 出版图书 */
         {
-          path: 'pubBooks', name: '出版图书', component: BookRouter, meta: { replaceName: '出版图书', authorityId: 17}, children: [
-            { path: 'bookmanage', name: '图书管理', component: BookManage },
-            { path: 'commentmanage', name: '评论审核', component: CommentManage }
+          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 17}, children: [
+            { path: 'manage', name: '图书管理',  meta: { authorityId: 21 }, component: BookManage },
+            { path: 'exam', name: '评论审核', meta: { authorityId: 22 }, component: CommentManage }
           ]
         }
       ]

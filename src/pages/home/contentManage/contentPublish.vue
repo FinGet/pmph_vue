@@ -1,5 +1,6 @@
 <template>
   <div classs="content_publish">
+      <p></p>
     内容发布
   </div>
 </template>
