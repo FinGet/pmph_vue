@@ -107,7 +107,7 @@
               </el-select>
             </div>
           </div>
-          
+
           <div class="searchBtn-wrapper">
             <el-button  type="primary" icon="search" @click="getWriterUserData">搜索</el-button>
           </div>
@@ -152,7 +152,7 @@
               layout="total, sizes, prev, pager, next, jumper"
               :total="writerPageTotal">
             </el-pagination>
-            
+
           </div>
         </div>
       </el-tab-pane>
@@ -284,227 +284,52 @@ export default {
         label: 'dpName'
       },
       treeData: [],
-      tableData2: [
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        },
-        {
-          schoolname: "安徽医学高等专科学校",
-          usercode: "xxxx001",
-          username: "人卫社01",
-          phone: "18600000011",
-          email: "eassss@sina.com",
-          position: "副科长",
-          role: "项目编辑",
-          zhicheng: "教员",
-          address: "上海市普陀区金沙江路 1518 弄",
-          postcode: "000000",
-          enabled: "启用",
-          organisation: "赣南医科学院",
-          remark: ""
-        }
-      ]
+      tableData2: [],
+      //点击发送时所带参数
+      formdata:{
+        title:'',
+        content:'',
+        file:'',
+        sendType:3,
+        orgIds:'',
+        userIds:'',
+        bookIds:'',
+      },
     };
   },
   methods: {
     send() {
-      this.$router.push({ name: "消息列表" });
-      this.$message({
-        type: "success",
-        message: "发送成功"
+      var self = this;
+      var userList = [];
+      /**
+       * 这里先写死，社内用户的userType=1,作家用户的userType=2,机构用户的userType=3
+       * */
+      this.clubSelectData.forEach(iterm=>{
+        userList.push('1_'+iterm.id)
       });
+      this.writerSelectData.forEach(iterm=>{
+        userList.push('2_'+iterm.id)
+      });
+      this.orgSelectData.forEach(iterm=>{
+        userList.push('3_'+iterm.id)
+      });
+      this.formdata.userIds=userList.join(',');
+      this.formdata['sessionId']=this.getUserData().sessionId;
+      // console.log(this.formdata)
+      this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+        .then(function (response) {
+          let res = response.data;
+          if(res.code===1){
+            self.$message.success('发布成功！');
+            self.$router.push({name: '消息列表'});
+          }
+        })
+        .catch(function (error) {
+          self.$message({
+            type:'error',
+            message:'发布失败，请重试'
+          });
+        });
     },
     /* 获取社内用户树列表 */
     getTreeData() {
@@ -622,7 +447,7 @@ export default {
     },
     /* 作家用户选择项改变 */
     writerSelectChange(el){
-    console.log(el);  
+    console.log(el);
     this.writerSelectData=[];
     this.writerSelectData=el;
     this.mergeSelectData();
@@ -645,6 +470,22 @@ export default {
     this.getClubUserData();
     this.getWriterUserData();
     this.getOrgUserData();
+
+    //初始化编辑消息页面带过来的参数
+    var routerParams = this.$route.params;
+    console.log(routerParams);
+    if(!routerParams.content&&!routerParams.title){
+      this.$message.error('页面未收到发送消息内容');
+      this.$router.push({name: '编辑消息'});
+    }
+    this.formdata.title=routerParams.title;
+    this.formdata.content=routerParams.content;
+    let filePath = [];
+    routerParams.filePathList.forEach(iterm=>{
+      filePath.push(iterm.path);
+    });
+    this.formdata.file=filePath.join(',');
+
   }
 };
 </script>

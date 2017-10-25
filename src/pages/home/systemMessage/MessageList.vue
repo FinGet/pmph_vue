@@ -60,11 +60,13 @@
         <el-table-column
           prop="sendTime"
           label="发送时间"
+          width="168"
         >
         </el-table-column>
         <el-table-column
           prop="isWithdraw"
           label="状态"
+          width="80"
         >
           <template scope="scope">
             {{scope.row.isWithdraw?'已撤回':'已发送'}}
@@ -207,7 +209,7 @@
        */
       handleRecall(index, row) {
         this.$axios.put('/messages/withdraw/message',this.$initPostData({
-          msgId:row.msgId
+          msgId:row.id
         }))
           .then(response=>{
             let res = response.data;
@@ -256,11 +258,13 @@
        * @param row
        */
       handleState(id, row) {
-        console.log(id)
         this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
       },
+      /**
+       * 点击消息标题进入消息详情页面
+       */
       preview(index, row){
-        this.$router.push({name:'系统消息详情', query: {msgId:row.msgId}})
+        this.$router.push({name:'系统消息详情', query: {msgId:row.id}})
       },
       /**
        * 批量删除
@@ -271,15 +275,15 @@
         var len = this.multipleSelection.length
         var arr = []
         for (var i = 0; i< len; i++) {
-          arr.push(this.multipleSelection[i].msgId)
+          arr.push(this.multipleSelection[i].id)
         }
-        var msgId = arr.join()
-        this.$axios.delete("/messages/delete/message/"+msgId).then((response) => {
+        this.$axios.put("/messages/delete/message",this.$initPostData({
+          ids:arr.join(',')
+        })).then((response) => {
           let res = response.data
           console.log(res)
           if (res.code == '1') {
-            this.tableData.splice(this.multipleSelection,len)
-            this.$refs.multipleTable.clearSelection()
+            this.getMessageList();
             this.$message({
               message: '恭喜你，删除成功！',
               type: 'success'

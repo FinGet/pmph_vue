@@ -6,22 +6,22 @@
       </span>
     <el-dropdown-menu slot="dropdown" class="user-dropdown">
       <el-dropdown-item>
-        <a>
+        <el-button type="text">
           个人资料
           <i class="fa fa-id-card-o fa-fw"></i>
-        </a>
+        </el-button>
       </el-dropdown-item>
       <el-dropdown-item>
-        <a>
+        <el-button type="text">
           修改密码
           <i class="fa fa-key fa-fw"></i>
-        </a>
+        </el-button>
       </el-dropdown-item>
       <el-dropdown-item>
-        <a>
+        <el-button type="text" @click="logout">
           退出
           <i class="fa fa-sign-out fa-lg"></i>
-        </a>
+        </el-button>
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
@@ -44,6 +44,27 @@
     computed:{
       headImage(){
         return BASE_URL+'image/'+this.userData.avatar;
+      },
+    },
+    methods:{
+      logout(){
+        this.$axios.get('/pmph/logout',{params:{
+          sessionId:this.getUserData().sessionId,
+          loginType:parseInt(this.getUserData().userInfo.loginType)
+        }})
+          .then(response=>{
+            let res = response.data
+            if(res.code==1){
+              this.$message.success('退出成功');
+              this.$router.push({name: '登录'});
+            }else{
+              this.$message.error('退出登录失败，请重试');
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('退出登录失败，请重试');
+          })
       },
     },
 	}
