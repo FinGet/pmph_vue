@@ -106,6 +106,29 @@
      layout="total, sizes, prev, pager, next, jumper"
      :total="dataTotal">
     </el-pagination>
+
+    <el-dialog
+      title="请选择发送对象"
+      :visible.sync="dialogVisible"
+      size="tiny">
+      <div>
+        <!--输入标题-->
+        <el-form :model="reissueForm" ref="messageForm" label-width="110px">
+          <el-form-item label="发送对象：">
+            <el-radio-group v-model="reissueForm.reissueSendType">
+              <el-radio :label="1">学校管理员</el-radio>
+              <el-radio :label="2">所有人</el-radio>
+              <el-radio :label="3">特定对象</el-radio>
+              <el-radio :label="4">教材报名者</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reissue">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -114,6 +137,11 @@
   export default {
     data() {
       return {
+        dialogVisible:false,
+        reissueForm:{
+          reissueMsgId:undefined,
+          reissueSendType:1,
+        },
         visible: false,
         tableData: [],
         multipleSelection: [],
@@ -146,7 +174,7 @@
       getMessageList() {
         this.$axios.get("/messages/list/message", {
           params: {
-            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
+            sessionId: this.getUserData().sessionId,
             title: this.title,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
@@ -202,14 +230,14 @@
         * 点击修改
         */
       handleEdit(index, row) {
-        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId}});
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.id}});
       },
       /**
        * 撤回
        */
       handleRecall(index, row) {
         this.$axios.put('/messages/withdraw/message',this.$initPostData({
-          msgId:row.id
+          msgId:row.msgId
         }))
           .then(response=>{
             let res = response.data;
@@ -230,19 +258,25 @@
        *  @to-do 这里先假设sendType
        */
       handleReissue(index, row) {
-        console.log(index, row);
-        switch (row.sendType){
+        this.reissueForm.reissueMsgId = row.msgId;
+        this.dialogVisible=true;
+      },
+      /**
+       * 跳转到补发选择人员页面
+       */
+      reissue(){
+        switch (this.reissueForm.reissueSendType){
           case 1 :
-            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType},query:{type:'reissue'}});
             break;
           case 2:
-            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType},query:{type:'reissue'}});
             break;
           case 3:
-            this.$router.push({name:'特定对象',query:{type:'resend'},parmas:{msgId:row.msgId}});
+            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType}});
             break;
           case 4:
-            this.$router.push({name:'教材报名者',query:{type:'resend'},params:{msgId:row.msgId}});
+            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType}});
             break;
             dafault:
               this.$message({
@@ -250,7 +284,6 @@
                 message: '补发出错'
               });
         }
-
       },
       /**
        * 点击消息状态
@@ -258,7 +291,7 @@
        * @param row
        */
       handleState(id, row) {
-        this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
+        this.$router.push({path:'messagestate', query: {msgId: row.msgId}})  //将你的跳转写在这里。
       },
       /**
        * 点击消息标题进入消息详情页面
@@ -275,10 +308,10 @@
         var len = this.multipleSelection.length
         var arr = []
         for (var i = 0; i< len; i++) {
-          arr.push(this.multipleSelection[i].id)
+          arr.push(this.multipleSelection[i].msgId)
         }
         this.$axios.put("/messages/delete/message",this.$initPostData({
-          ids:arr.join(',')
+          msgIds:arr.join(',')
         })).then((response) => {
           let res = response.data
           console.log(res)

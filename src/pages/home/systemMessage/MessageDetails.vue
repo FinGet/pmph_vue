@@ -1,5 +1,5 @@
 <template>
-  <div class="message-preview paddingR20 paddingL20">
+  <div class="message-preview paddingT20 paddingR20 paddingL20">
     <h5 class="previewTitle text-center">{{previewData.title}}</h5>
     <div class="previewContent paddingB20" v-html="previewData.content"></div>
     <!--附件-->

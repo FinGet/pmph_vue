@@ -3,9 +3,8 @@
 
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
-      <el-button type="primary" @click="nextStep()">
-        下一步
-      </el-button>
+      <el-button type="primary" @click="nextStep()" v-if="currentMessageType!='edit'">下一步</el-button>
+      <el-button type="primary" @click="editSave()" v-if="currentMessageType==='edit'">保存</el-button>
     </div>
     <!--输入标题-->
     <el-form :model="messageForm" ref="messageForm" :rules="messageRules" label-width="110px">
@@ -213,6 +212,12 @@ export default {
           this.$route.query.type='add';
           this.currentMessageType='add';
         })
+    },
+    /**
+     * 编辑消息后保存
+     */
+    editSave(){
+
     },
     /**
      * 由选择发送对象页面返回编辑页面，需要将原有内容插入编辑器中，供再次编辑

@@ -1,14 +1,130 @@
 <template>
 	<div>
-
+    <div class="clearfix">
+      <div class="searchBox-wrapper">
+        <div class="searchName">消息标题：<span></span></div>
+        <div class="searchInput">
+          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.title"></el-input>
+        </div>
+      </div>
+      <div class="searchBox-wrapper">
+        <div class="searchName">消息状态：<span></span></div>
+        <div class="searchInput">
+          <el-select  v-model="searchForm.state" placeholder="全部" @change="getTableData">
+            <el-option
+              v-for="(item,index) in stateOption"
+              :key="item.label"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="searchBox-wrapper searchBtn">
+        <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+      </div>
+      <!--操作按钮-->
+      <div class="pull-right">
+        <el-button type="danger" @click="deleteMsg" :disabled="!selectData.length">删除</el-button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <el-table
+        :data="tableData"
+        ref="myMsgTable"
+        border
+        stripe
+        tooltip-effect="dark"
+        @selection-change="handleSelectionChange"
+        style="width: 100%">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="信息标题"
+          show-overflow-tooltip>
+          <template scope="scope">
+            <el-button type="text" @click="gotoMsgDetaile(scope.row)">{{scope.row.title}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="sendName"
+          label="发送者"
+          width="160">
+        </el-table-column>
+        <el-table-column
+          prop="sendTime"
+          label="发送时间"
+          width="180"
+        >
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          width="120"
+        >
+          <template scope="scope">
+            <el-tag type="success" v-if="scope.row.read">已读</el-tag>
+            <el-tag type="danger" v-else>未读</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
 	</div>
 </template>
 
 <script>
 	export default {
 		data() {
-			return {}
-		}
+			return {
+        tableData:[],
+        selectData:[],
+        searchForm:{
+          title:'',
+          state:'',
+        },
+        stateOption:[{
+          value:'',
+          label:'全部'
+        },{
+          value:0,
+          label:'已读'
+        },{
+          value:1,
+          label:'未读'
+        }],
+      }
+		},
+    methods:{
+      /**
+       * 获取消息列表数据
+       */
+      getTableData(){
+
+      },
+      /**
+       * 表格复选框发生变化触发事件
+       */
+      handleSelectionChange(val) {
+        this.selectData = val;
+      },
+      /**
+       * 删除消息
+       */
+      deleteMsg(){
+
+      },
+      /**
+       * 跳转到消息详情页面
+       * @param row
+       */
+      gotoMsgDetaile(row){
+        this.$router.push({name:'我的消息详情',query:{msgId:row.id}})
+      }
+    },
+    created(){
+		  this.getTableData();
+    }
 	}
 </script>
 
