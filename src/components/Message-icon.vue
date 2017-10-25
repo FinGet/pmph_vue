@@ -1,12 +1,12 @@
 <template>
-  <el-dropdown v-if="computedMessageList.length">
-        <span class="el-dropdown-link" trigger="click">
+  <el-dropdown v-if="computedMessageList.length" @command="handleCommand">
+        <span class="el-dropdown-link" trigger="hover">
 
-          <i class="fa fa-envelope-o fa-lg"></i>
+          <i class="fa fa-envelope-o fa-lg" @click="gotoMyMsgList"></i>
           <span class="mes-num" v-if="computedMessageList.length>0">{{computedMessageList.length}}</span>
         </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="(iterm,index) in computedMessageList" :key="index">
+      <el-dropdown-item v-for="(iterm,index) in computedMessageList" :key="index" command="iterm">
         <a class="message-iterm">
           <span class="image"><img :src="iterm.senderIcon"></span>
           <span>
@@ -18,16 +18,16 @@
         </a>
       </el-dropdown-item>
       <el-dropdown-item v-if="computedMessageList.length>3">
-        <a class="message-iterm">
+        <el-button type="text" class="message-iterm" @click="gotoMyMsgList">
           <span class="message message-all">
             查看全部
             <i class="el-icon-d-arrow-right"></i>
           </span>
-        </a>
+        </el-button>
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
-  <el-button type="text" class="marginR30" v-else>
+  <el-button type="text" class="marginR30" @click="gotoMyMsgList" v-else>
     <i class="fa fa-envelope-o fa-lg"></i>
   </el-button>
 </template>
@@ -80,8 +80,26 @@
         this.receiveMessage.push(messageObj);
         console.log(this.computedMessageList);
       },
+      /**
+       * 将时间戳转换所需的样式-'几分钟前'
+       * @param time
+       * @returns {*|string}
+       */
       dateDiff(time){
 	      return getDateDiff(time)
+      },
+      /**
+       * 点击msg图标跳转到我的消息列表页面
+       */
+      gotoMyMsgList(){
+        this.$router.push({name:'我的消息列表'})
+      },
+      /**
+       * 点击消息事件
+       * @param command
+       */
+      handleCommand(command) {
+        console.log(command)
       }
     },
     created(){

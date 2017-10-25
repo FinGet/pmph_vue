@@ -295,12 +295,22 @@ export default {
         userIds:'',
         bookIds:'',
       },
+      type:'new',
+      reissueFormData:{
+        id:'',
+        sendType:3,
+        orgIds:'',
+        userIds:'',
+        bookIds:'',
+      },
     };
   },
   methods: {
     send() {
       var self = this;
       var userList = [];
+      var url = this.type=='reissue'?'/messages/message/again':'/messages/message/new';
+      var data = this.type=='reissue'?this.reissueFormData:this.formdata;
       /**
        * 这里先写死，社内用户的userType=1,作家用户的userType=2,机构用户的userType=3
        * */
@@ -313,10 +323,11 @@ export default {
       this.orgSelectData.forEach(iterm=>{
         userList.push('3_'+iterm.id)
       });
-      this.formdata.userIds=userList.join(',');
-      this.formdata['sessionId']=this.getUserData().sessionId;
+
+      data.userIds=userList.join(',');
+      data['sessionId']=this.getUserData().sessionId;
       // console.log(this.formdata)
-      this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+      this.$axios.post(url,this.$initPostData(data))
         .then(function (response) {
           let res = response.data;
           if(res.code===1){
@@ -331,6 +342,7 @@ export default {
           });
         });
     },
+
     /* 获取社内用户树列表 */
     getTreeData() {
       this.$axios
@@ -473,18 +485,26 @@ export default {
 
     //初始化编辑消息页面带过来的参数
     var routerParams = this.$route.params;
+    var routerQuery = this.$route.query;
     console.log(routerParams);
-    if(!routerParams.content&&!routerParams.title){
+    if((!routerParams.content&&!routerParams.title)&&!routerParams.msgId){
       this.$message.error('页面未收到发送消息内容');
       this.$router.push({name: '编辑消息'});
     }
-    this.formdata.title=routerParams.title;
-    this.formdata.content=routerParams.content;
-    let filePath = [];
-    routerParams.filePathList.forEach(iterm=>{
-      filePath.push(iterm.path);
-    });
-    this.formdata.file=filePath.join(',');
+    if(routerQuery.type=='reissue'){
+      this.type = routerQuery.type;
+      this.reissueFormData.id=routerParams.msgId;
+      this.reissueFormData.sendType = routerParams.sendType;
+    }else{
+      this.formdata.title=routerParams.title;
+      this.formdata.content=routerParams.content;
+      this.formdata.sendType = routerParams.sendType;
+      let filePath = [];
+      routerParams.filePathList.forEach(iterm=>{
+        filePath.push(iterm.path);
+      });
+      this.formdata.file=filePath.join(',');
+    }
 
   }
 };
