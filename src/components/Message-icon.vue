@@ -34,7 +34,7 @@
 
 <script>
   import bus from 'common/eventBus/bus.js'
-  import {getDateDiff} from '../../static/commonFun'
+  import {getDateDiff,getHTMLText} from '../../static/commonFun'
   import {BASE_URL} from 'common/config.js'
 	export default {
 	  props:{
@@ -74,7 +74,7 @@
           senderIcon:BASE_URL+'image/'+receiveData.senderIcon,
           time:receiveData.time,
           title:receiveData.title,
-          content:receiveData.content,
+          content:getHTMLText(receiveData.content).substring(0,42)+'...',
           msgId:receiveData.id,
         };
         this.receiveMessage.push(messageObj);

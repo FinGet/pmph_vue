@@ -146,7 +146,7 @@
       getMessageList() {
         this.$axios.get("/messages/list/message", {
           params: {
-            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
+            sessionId: this.getUserData().sessionId,
             title: this.title,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
@@ -202,14 +202,14 @@
         * 点击修改
         */
       handleEdit(index, row) {
-        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId}});
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.id}});
       },
       /**
        * 撤回
        */
       handleRecall(index, row) {
         this.$axios.put('/messages/withdraw/message',this.$initPostData({
-          msgId:row.id
+          msgId:row.msgId
         }))
           .then(response=>{
             let res = response.data;
@@ -258,13 +258,13 @@
        * @param row
        */
       handleState(id, row) {
-        this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
+        this.$router.push({path:'messagestate', query: {msgId: msgId}})  //将你的跳转写在这里。
       },
       /**
        * 点击消息标题进入消息详情页面
        */
       preview(index, row){
-        this.$router.push({name:'系统消息详情', query: {msgId:row.id}})
+        this.$router.push({name:'系统消息详情', query: {msgId:row.msgId}})
       },
       /**
        * 批量删除
@@ -275,7 +275,7 @@
         var len = this.multipleSelection.length
         var arr = []
         for (var i = 0; i< len; i++) {
-          arr.push(this.multipleSelection[i].id)
+          arr.push(this.multipleSelection[i].msgId)
         }
         this.$axios.put("/messages/delete/message",this.$initPostData({
           ids:arr.join(',')
