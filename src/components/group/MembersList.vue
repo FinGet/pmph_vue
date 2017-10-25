@@ -20,7 +20,7 @@
               <div class="MemberHeadName">
                 <span>{{item.displayName}}</span>
               </div>
-              <span class="memberPermission" v-if="item.isFounder" :style="{color:item.isFounder?'#FAB727':'#67BB4C'}">
+              <span class="memberPermission" :style="{color:item.isFounder?'#FAB727':'#67BB4C'}">
                 <el-tooltip class="item" effect="dark" content="创建者" placement="top" v-if="item.isFounder">
                   <i class="fa fa-user fa-lg"></i>
                 </el-tooltip>
@@ -154,7 +154,7 @@
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addNewMember" >添加成员</el-button>
+        <el-button type="primary" @click="showAddDialog" >添加成员</el-button>
       </span>
     </el-dialog>
 
@@ -270,6 +270,7 @@ export default {
       }).then(function(res) {
         if (res.data.code == 1) {
           _this.memberListData = res.data.data;
+          console.log(_this.memberListData);
           _this.compareList();
         }
       })
@@ -303,7 +304,7 @@ export default {
          _this.addClubData.push(item);
        })
     },
-    addNewMember(){
+    showAddDialog(){
      this.addTableData=this.addWriterData.concat(this.addClubData);
      this.againDialogVisible=true;
     },
