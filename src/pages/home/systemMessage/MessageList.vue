@@ -77,10 +77,12 @@
             <el-button
               size="small"
               type="text"
+              :disabled="scope.row.isWithdraw"
               @click="handleEdit(scope.$index, scope.row)">修改</el-button>
             <el-button
               size="small"
               type="text"
+              :disabled="scope.row.isWithdraw"
               @click="handleReissue(scope.$index, scope.row)">补发</el-button>
             <el-button
               size="small"
@@ -139,6 +141,7 @@
       return {
         dialogVisible:false,
         reissueForm:{
+          title:'',
           reissueMsgId:undefined,
           reissueSendType:1,
         },
@@ -258,6 +261,7 @@
        *  @to-do 这里先假设sendType
        */
       handleReissue(index, row) {
+        this.reissueForm.title = row.title;
         this.reissueForm.reissueMsgId = row.msgId;
         this.dialogVisible=true;
       },
@@ -267,16 +271,16 @@
       reissue(){
         switch (this.reissueForm.reissueSendType){
           case 1 :
-            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType},query:{type:'reissue'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
             break;
           case 2:
-            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType},query:{type:'reissue'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
             break;
           case 3:
-            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType}});
+            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
             break;
           case 4:
-            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType}});
+            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
             break;
             dafault:
               this.$message({

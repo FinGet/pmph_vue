@@ -1,6 +1,8 @@
 <template>
-	<div>
+	<div class="bookManage">
+    <div class="clearfix">
 
+    </div>
 	</div>
 </template>
 

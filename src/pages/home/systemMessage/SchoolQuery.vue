@@ -420,6 +420,7 @@
       if(routerQuery.type=='reissue'){
         this.type = routerQuery.type;
         this.reissueFormData.id=routerParams.msgId;
+        this.reissueFormData.title=routerParams.title;
         this.reissueFormData.sendType = routerParams.sendType;
       }else{
         this.formdata.title=routerParams.title;
