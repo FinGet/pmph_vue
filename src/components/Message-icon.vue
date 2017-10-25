@@ -1,23 +1,23 @@
 <template>
-  <el-dropdown v-if="computedMessageList.length" @command="handleCommand">
+  <el-dropdown v-if="receiveMessage.length" @command="handleCommand">
         <span class="el-dropdown-link" trigger="hover">
 
           <i class="fa fa-envelope-o fa-lg" @click="gotoMyMsgList"></i>
-          <span class="mes-num" v-if="computedMessageList.length>0">{{computedMessageList.length}}</span>
+          <span class="mes-num" v-if="totalNum>0">{{totalNum}}</span>
         </span>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="(iterm,index) in computedMessageList" :key="index" command="iterm">
+    <el-dropdown-menu slot="dropdown" class="msg-dropdown">
+      <el-dropdown-item v-for="(iterm,index) in receiveMessage" :key="index" :command="iterm" v-if="index<4">
         <a class="message-iterm">
-          <span class="image"><img :src="iterm.senderIcon"></span>
+          <span class="image"><img :src="iterm.senderAvatar"></span>
           <span>
             <span>{{iterm.senderName}}</span>
-            <span class="time">{{dateDiff(iterm.time)}}</span>
+            <span class="time">{{dateDiff(iterm.sendTime)}}</span>
           </span>
-          <span class="message" v-html="iterm.content">
-          </span>
+          <span class="message" v-html="iterm.title"></span>
+          <span class="message" v-html="iterm.content"> </span>
         </a>
       </el-dropdown-item>
-      <el-dropdown-item v-if="computedMessageList.length>3">
+      <el-dropdown-item v-if="receiveMessage.length>3" class=" text-center">
         <el-button type="text" class="message-iterm" @click="gotoMyMsgList">
           <span class="message message-all">
             查看全部
@@ -37,24 +37,43 @@
   import {getDateDiff,getHTMLText} from '../../static/commonFun'
   import {BASE_URL} from 'common/config.js'
 	export default {
-	  props:{
-	    messageList:{
-	      type:Array,
-        default:()=>[]
-      }
-    },
 		data() {
 			return {
 			  receiveMessage:[],
+        searchForm:{
+          userId:this.getUserData().userInfo.id,
+          userType:this.getUserData().userInfo.loginType,
+          pageNumber:1,
+          pageSize:5,
+        },
+        totalNum:0,
       }
 		},
-    computed:{
-		  computedMessageList(){
-		    var list = this.messageList.concat(this.receiveMessage);
-		    return list;
-      }
-    },
     methods:{
+      /**
+       * 获取未读消息
+       */
+      getMessageList(){
+        this.$axios.get('/messages/icon/mymessage',{params:this.searchForm})
+          .then(response=>{
+            let res = response.data;
+            if(res.code==1){
+              res.data.rows.map(iterm=>{
+                iterm.senderAvatar = BASE_URL+'image/'+iterm.senderAvatar;
+                iterm.title = iterm.title.length>18?iterm.title.substring(0,18)+'...':iterm.title;
+                iterm.content=getHTMLText(iterm.content).substring(0,42)+'...';
+              });
+              this.receiveMessage=res.data.rows;
+              this.totalNum = res.data.total;
+            }else{
+              this.$message.error('获取数据失败，请重试！');
+            }
+          })
+          .catch(e=>{
+            console.log(e)
+            this.$message.error('获取数据失败，请重试！');
+          })
+      },
       /**
        * websocket 接收到消息处理
        * @param data
@@ -67,18 +86,21 @@
         }catch(e){
 	        console.log(e)
         }
+        if(receiveData.msgType!=0){
+          return;
+        }
         receiveData = receiveData||{};
         var messageObj = {
           senderId:receiveData.senderId,
           senderName:receiveData.senderName,
-          senderIcon:BASE_URL+'image/'+receiveData.senderIcon,
-          time:receiveData.time,
-          title:receiveData.title,
+          senderAvatar:BASE_URL+'image/'+receiveData.senderIcon,
+          sendTime:receiveData.time,
+          title:receiveData.title.length>18?receiveData.title.substring(0,18)+'...':receiveData.title,
           content:getHTMLText(receiveData.content).substring(0,42)+'...',
-          msgId:receiveData.id,
+          id:receiveData.id,
         };
         this.receiveMessage.push(messageObj);
-        console.log(this.computedMessageList);
+        this.totalNum++;
       },
       /**
        * 将时间戳转换所需的样式-'几分钟前'
@@ -96,17 +118,24 @@
       },
       /**
        * 点击消息事件
+       * 点击后将该条消息移除
        * @param command
        */
       handleCommand(command) {
-        console.log(command)
+        var msgId = command.id;
+        this.receiveMessage.splice(this.receiveMessage.indexOf(command),1);
+        this.totalNum--;
+        this.$router.push({name:'我的消息详情',query:{msgId:msgId}})
       }
     },
     created(){
+		  this.getMessageList();
+      bus.$on('mymessage:stateChange',this.getMessageList);
       bus.$on('ws:message',this.handleReceiveMessage);
     },
     beforeDestroy(){
       bus.$off('ws:message',this.handleReceiveMessage);
+      bus.$off('mymessage:stateChange',this.getMessageList);
     }
 	}
 </script>
@@ -131,6 +160,9 @@
   }
 .el-dropdown-menu{
   max-width: 290px;
+}
+.msg-dropdown{
+  min-width: 280px;
 }
 .el-dropdown-menu__item:hover{
   background: none;
