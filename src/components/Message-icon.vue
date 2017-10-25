@@ -8,13 +8,12 @@
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item v-for="(iterm,index) in computedMessageList" :key="index">
         <a class="message-iterm">
-          <span class="image"><img src="http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png" alt="Profile Image"></span>
+          <span class="image"><img :src="iterm.senderIcon"></span>
           <span>
-            <span>成都大学</span>
-            <span class="time">3分钟前</span>
+            <span>{{iterm.senderName}}</span>
+            <span class="time">{{dateDiff(iterm.time)}}</span>
           </span>
-          <span class="message">
-            规划教材-'全国高等学校五年制临床医学专业第九轮规划教材'-'中医学'移除张杰编委职位...
+          <span class="message" v-html="iterm.content">
           </span>
         </a>
       </el-dropdown-item>
@@ -35,6 +34,8 @@
 
 <script>
   import bus from 'common/eventBus/bus.js'
+  import {getDateDiff} from '../../static/commonFun'
+  import {BASE_URL} from 'common/config.js'
 	export default {
 	  props:{
 	    messageList:{
@@ -49,7 +50,8 @@
 		},
     computed:{
 		  computedMessageList(){
-		    return this.messageList.concat(this.receiveMessage);
+		    var list = this.messageList.concat(this.receiveMessage);
+		    return list;
       }
     },
     methods:{
@@ -58,7 +60,28 @@
        * @param data
        */
 	    handleReceiveMessage(data){
-        this.receiveMessage.push(data);
+	      console.log('收到webSocket消息：',data);
+	      var receiveData;
+	      try{
+          receiveData = JSON.parse(data);
+        }catch(e){
+	        console.log(e)
+        }
+        receiveData = receiveData||{};
+        var messageObj = {
+          senderId:receiveData.senderId,
+          senderName:receiveData.senderName,
+          senderIcon:BASE_URL+'image/'+receiveData.senderIcon,
+          time:receiveData.time,
+          title:receiveData.title,
+          content:receiveData.content,
+          msgId:receiveData.id,
+        };
+        this.receiveMessage.push(messageObj);
+        console.log(this.computedMessageList);
+      },
+      dateDiff(time){
+	      return getDateDiff(time)
       }
     },
     created(){
@@ -113,7 +136,8 @@ a.message-iterm:hover {
   -webkit-border-radius: 2px;
   float: left;
   margin-right: 10px;
-  width: 11%;
+  width: 28px;
+  height:28px;
 }
 a .time {
   font-size: 11px;
