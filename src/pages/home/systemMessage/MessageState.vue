@@ -10,9 +10,9 @@
         </el-col>
         <el-col :span="5" class="msgradio">
           <el-radio-group v-model="isRead">
-            <el-radio :label="2">全部</el-radio>
+            <el-radio :label="0">全部</el-radio>
             <el-radio :label="1">已读</el-radio>
-            <el-radio :label="0">未读</el-radio>
+            <el-radio :label="2">未读</el-radio>
           </el-radio-group>
         </el-col>
         <el-button class="btn pull-right" type="primary" icon="arrow-left" @click="back">返回</el-button>
@@ -90,7 +90,7 @@
     data() {
       return {
         input: '',
-        isRead: 2,
+        isRead: 0,
         currentPage: 4, // 分页当前页
         tableData: [],
         msgId: '',
@@ -114,12 +114,11 @@
       getMessageState() {
         this.$axios.get("/messages/message/"+this.msgId+"/state", {
           params: {
-            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
-            name: this.name,
+            sessionId: this.getUserData().sessionId,
             msgId: this.msgId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
-            isRead: this.isRead
+            isRead: this.isRead==0?'':(this.isRead==1?true:false)
           }
         }).then((response) => {
           let res = response.data

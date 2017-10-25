@@ -53,6 +53,11 @@ import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
 import MyMessageList from 'pages/home/myMessage/MessageList';
 import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
 
+/* 出版图书 */
+import BookRouter from 'pages/home/publishBooks/BookRouter'
+import BookManage from 'pages/home/publishBooks/BookManage'
+import CommentManage from 'pages/home/publishBooks/CommentManage'
+
 Vue.use(Router)
 
 export default new Router({
@@ -129,9 +134,16 @@ export default new Router({
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
-          { path: 'msglist', name: '我的消息列表', component: MyMessageList },
-          { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
+            { path: 'msglist', name: '我的消息列表', component: MyMessageList },
+            { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
         ]
+        },
+        /* 出版图书 */
+        {
+          path: 'pubBooks', name: '出版图书', component: BookRouter, meta: { replaceName: '出版图书', authorityId: 17}, children: [
+            { path: 'bookmanage', name: '图书管理', component: BookManage },
+            { path: 'commentmanage', name: '评论审核', component: CommentManage }
+          ]
         }
       ]
     },

@@ -173,6 +173,9 @@
         type:'new',
         reissueFormData:{
           id:'',
+          title:'',
+          content:'',
+          file:'',
           sendType:1,
           orgIds:'',
           userIds:'',

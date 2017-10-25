@@ -298,6 +298,9 @@ export default {
       type:'new',
       reissueFormData:{
         id:'',
+        title:'',
+        content:'',
+        file:'',
         sendType:3,
         orgIds:'',
         userIds:'',
