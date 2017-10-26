@@ -1,5 +1,5 @@
 <template>
-  <div class="message-preview paddingR20 paddingL20">
+  <div class="message-preview paddingT20 paddingR20 paddingL20">
     <h5 class="previewTitle text-center">{{previewData.title}}</h5>
     <div class="previewContent paddingB20" v-html="previewData.content"></div>
     <!--附件-->
@@ -8,8 +8,8 @@
         附件 ：
       </el-col>
       <el-col :span="22">
-        <div class="previewFile" title="预览界面不提供下载附件功能">
-          <span v-for="(iterm,index) in previewData.files" :key="index">{{iterm}}</span>
+        <div class="previewFile">
+          <a v-for="(iterm,index) in previewData.files" :href="iterm.attachment" :key="iterm.id">{{iterm.attachmentName}}</a>
         </div>
       </el-col>
     </el-row>
@@ -17,10 +17,11 @@
 </template>
 
 <script>
+    import {BASE_URL} from 'common/config.js'
     export default{
       data(){
         return {
-          msgId:123,
+          msgId:undefined,
           previewData:{
             title:'',
             content:'',
@@ -30,21 +31,27 @@
       },
       methods:{
         getMsgContent(){
+            if(!this.msgId){
+              this.$message.error('未读取到消息id，请重试!');
+            }
             this.$axios.get('/messages/message/content',{params:{
                 userMsgId:this.msgId
               }})
               .then(response=>{
                 let res = response.data
                 if(res.code==1){
+                  res.data.MessageAttachment.map(iterm=>{
+                    iterm.attachment = BASE_URL + iterm.attachment.substring(1)
+                  })
                   this.previewData.title = res.data.title;
-                  this.previewData.content = res.data.title;
-                  this.previewData.files = res.data.files||[];
+                  this.previewData.content = res.data.content;
+                  this.previewData.files = res.data.MessageAttachment||[];
                 }else{
-                    this.$message.error('页面内容加载失败，请重试');
+                    this.$message.error('页面内容加载失败，请重试!');
                 }
               })
               .catch(e=>{
-                this.$message.error('页面内容加载失败，请重试');
+                this.$message.error('页面内容加载失败，请重试!');
               })
         }
       },
@@ -69,7 +76,7 @@
   .previewContent{
     margin-top: 48px;
   }
-  .previewFile>span{
+  .previewFile>a{
     display: block;
     color: #337ab7;
     margin: 0 0 10px;

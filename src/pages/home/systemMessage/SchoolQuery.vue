@@ -170,6 +170,17 @@
       return {
         sortArea:false,
         sortOrg:false,
+        type:'new',
+        reissueFormData:{
+          id:'',
+          title:'',
+          content:'',
+          file:'',
+          sendType:1,
+          orgIds:'',
+          userIds:'',
+          bookIds:'',
+        },
         formdata:{
           title:'',
           content:'',
@@ -346,14 +357,16 @@
         this.dialogVisible2=true;
       },
       /**
-       * 提交表单
+       * 点击发布按钮
        */
       submit(){
         var self = this;
-        this.formdata.orgIds=this.queryData.join(',');
-        this.formdata['sessionId']=this.getUserData().sessionId;
+        var data = this.type=='reissue'?this.reissueFormData:this.formdata;
+        var url = this.type=='reissue'?'/messages/message/again':'/messages/message/new'
+        data.orgIds=this.queryData.join(',');
+        data['sessionId']=this.getUserData().sessionId;
         // console.log(this.formdata)
-        this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
+        this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {
             let res = response.data;
             if(res.code===1){
@@ -398,18 +411,27 @@
     },
     created(){
       var routerParams = this.$route.params;
+      var routerQuery = this.$route.query;
       console.log(routerParams);
-      if(!routerParams.content&&!routerParams.title){
+      if((!routerParams.content&&!routerParams.title)&&!routerParams.msgId){
         this.$message.error('页面未收到发送消息内容');
         this.$router.push({name: '编辑消息'});
       }
-      this.formdata.title=routerParams.title;
-      this.formdata.content=routerParams.content;
-      let filePath = [];
-      routerParams.filePathList.forEach(iterm=>{
-        filePath.push(iterm.path);
-      });
-      this.formdata.file=filePath.join(',');
+      if(routerQuery.type=='reissue'){
+        this.type = routerQuery.type;
+        this.reissueFormData.id=routerParams.msgId;
+        this.reissueFormData.title=routerParams.title;
+        this.reissueFormData.sendType = routerParams.sendType;
+      }else{
+        this.formdata.title=routerParams.title;
+        this.formdata.content=routerParams.content;
+        this.formdata.sendType = routerParams.sendType;
+        let filePath = [];
+        routerParams.filePathList.forEach(iterm=>{
+          filePath.push(iterm.path);
+        });
+        this.formdata.file=filePath.join(',');
+      }
 
       this.getSchools()
     },

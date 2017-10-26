@@ -52,6 +52,16 @@ import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
 import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
 import MyMessageList from 'pages/home/myMessage/MessageList';
 import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
+/* 内容管理 */
+import ContentRouter from '../pages/home/contentManage/contentRouter'
+import ContentPublish from '../pages/home/contentManage/contentPublish'
+import ContentExam from '../pages/home/contentManage/contentExam'
+import ColumnSet from '../pages/home/contentManage/columnSet'
+
+/* 出版图书 */
+import BookRouter from 'pages/home/publishBooks/BookRouter'
+import BookManage from 'pages/home/publishBooks/BookManage'
+import CommentManage from 'pages/home/publishBooks/CommentManage'
 
 Vue.use(Router)
 
@@ -126,13 +136,28 @@ export default new Router({
             { path: 'orgs', name: '学校管理员审核', component: SchoolAdminCheck }
           ]
         },
+        /* 内容管理 */
+        {
+          path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 16 },children:[
+            { path: 'publish', name: '内容发布', meta: { authorityId: 18 }, component: ContentPublish },
+            { path: 'exam', name: '内容审核', meta: { authorityId: 19 }, component: ContentExam },
+            { path: 'set', name: '栏目设置', meta: { authorityId: 20 }, component: ColumnSet },
+          ]
+        },
+        /* 出版图书 */
+        {
+          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 17}, children: [
+          { path: 'manage', name: '图书管理', component: BookManage },
+          { path: 'comment', name: '评论审核', component: CommentManage }
+        ]
+        },
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
-          { path: 'msglist', name: '我的消息列表', component: MyMessageList },
-          { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
+            { path: 'msglist', name: '我的消息列表', component: MyMessageList },
+            { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
         ]
-        }
+        },
       ]
     },
     { path: '/*', name: '404', component: NoFind }

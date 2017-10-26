@@ -31,6 +31,25 @@
         <i class="fa fa-file-text-o fa-fw"></i>
         <span slot="title">系统日志</span>
       </el-menu-item>
+
+      <el-submenu index="/content" v-if="isShowSide(16)">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">内容管理</span>
+        </template>
+        <el-menu-item index="/content/publish" v-if="isShowSide(18)">内容发布</el-menu-item>
+        <el-menu-item index="/content/exam" v-if="isShowSide(19)">内容审核</el-menu-item>
+        <el-menu-item index="/content/set" v-if="isShowSide(20)">栏目设置</el-menu-item>
+      </el-submenu>
+      <el-submenu index="/book" v-if="isShowSide(17)">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">出版图书</span>
+        </template>
+        <el-menu-item index="/book/manage" v-if="isShowSide(21)">图书管理</el-menu-item>
+        <el-menu-item index="/book/comment" v-if="isShowSide(22)">评论审核</el-menu-item>
+      </el-submenu>
+
       <el-submenu index="/userrouter" v-if="isShowSide(7)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
@@ -77,8 +96,8 @@
       //用户信息级别初始化
        initUserInfo(){
          if(this.$mySessionStorage.get('currentUser')){
-          // console.log(this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds); 
-           this.PermissionIds = this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds;   
+          // console.log(this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds);
+           this.PermissionIds = this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds;
          }
        },
        //判断是否显示导航栏
@@ -112,7 +131,7 @@
        },
        //列表显示权限初始化
        initSideiShow(num){
-         
+
        }
     },
     watch:{

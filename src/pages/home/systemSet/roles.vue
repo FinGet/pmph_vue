@@ -140,6 +140,39 @@ export default {
                 id: 6
             },
             {
+                label: '内容管理',
+                id: 16,
+                children: [
+                    {
+                        label: '内容发布',
+                        id: 18
+                    },
+                    {
+                        label: '内容审核',
+                        id: 19
+                    },
+                    {
+                        label: '栏目设置',
+                        id: 20
+                    },
+                ]
+            },
+            {
+                label: '出版图书',
+                id: 17,
+                children: [
+                    {
+                        label: '图书管理',
+                        id: 21
+                    },
+                    {
+                        label: '评论审核',
+                        id: 22
+                    }
+                ]
+            },
+
+            {
                 label: '用户管理',
                 id: 7,
                 children: [

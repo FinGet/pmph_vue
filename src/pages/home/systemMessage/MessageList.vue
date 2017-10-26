@@ -60,11 +60,13 @@
         <el-table-column
           prop="sendTime"
           label="发送时间"
+          width="168"
         >
         </el-table-column>
         <el-table-column
           prop="isWithdraw"
           label="状态"
+          width="80"
         >
           <template scope="scope">
             {{scope.row.isWithdraw?'已撤回':'已发送'}}
@@ -75,10 +77,12 @@
             <el-button
               size="small"
               type="text"
+              :disabled="scope.row.isWithdraw"
               @click="handleEdit(scope.$index, scope.row)">修改</el-button>
             <el-button
               size="small"
               type="text"
+              :disabled="scope.row.isWithdraw"
               @click="handleReissue(scope.$index, scope.row)">补发</el-button>
             <el-button
               size="small"
@@ -104,6 +108,29 @@
      layout="total, sizes, prev, pager, next, jumper"
      :total="dataTotal">
     </el-pagination>
+
+    <el-dialog
+      title="请选择发送对象"
+      :visible.sync="dialogVisible"
+      size="tiny">
+      <div>
+        <!--输入标题-->
+        <el-form :model="reissueForm" ref="messageForm" label-width="110px">
+          <el-form-item label="发送对象：">
+            <el-radio-group v-model="reissueForm.reissueSendType">
+              <el-radio :label="1">学校管理员</el-radio>
+              <el-radio :label="2">所有人</el-radio>
+              <el-radio :label="3">特定对象</el-radio>
+              <el-radio :label="4">教材报名者</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reissue">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -112,6 +139,12 @@
   export default {
     data() {
       return {
+        dialogVisible:false,
+        reissueForm:{
+          title:'',
+          reissueMsgId:undefined,
+          reissueSendType:1,
+        },
         visible: false,
         tableData: [],
         multipleSelection: [],
@@ -144,7 +177,7 @@
       getMessageList() {
         this.$axios.get("/messages/list/message", {
           params: {
-            sessionId: this.$mySessionStorage.get('currentUser','json').userSessionId,
+            sessionId: this.getUserData().sessionId,
             title: this.title,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
@@ -200,7 +233,7 @@
         * 点击修改
         */
       handleEdit(index, row) {
-        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId}});
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.id}});
       },
       /**
        * 撤回
@@ -228,19 +261,26 @@
        *  @to-do 这里先假设sendType
        */
       handleReissue(index, row) {
-        console.log(index, row);
-        switch (row.sendType){
+        this.reissueForm.title = row.title;
+        this.reissueForm.reissueMsgId = row.msgId;
+        this.dialogVisible=true;
+      },
+      /**
+       * 跳转到补发选择人员页面
+       */
+      reissue(){
+        switch (this.reissueForm.reissueSendType){
           case 1 :
-            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
             break;
           case 2:
-            this.$router.push({name:'选择学校',parmas:{msgId:row.msgId},query:{type:'resend'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
             break;
           case 3:
-            this.$router.push({name:'特定对象',query:{type:'resend'},parmas:{msgId:row.msgId}});
+            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
             break;
           case 4:
-            this.$router.push({name:'教材报名者',query:{type:'resend'},params:{msgId:row.msgId}});
+            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
             break;
             dafault:
               this.$message({
@@ -248,7 +288,6 @@
                 message: '补发出错'
               });
         }
-
       },
       /**
        * 点击消息状态
@@ -256,11 +295,13 @@
        * @param row
        */
       handleState(id, row) {
-        console.log(id)
-        this.$router.push({path:'messagestate', query: {msgId: id}})  //将你的跳转写在这里。
+        this.$router.push({path:'messagestate', query: {msgId: row.msgId}})  //将你的跳转写在这里。
       },
+      /**
+       * 点击消息标题进入消息详情页面
+       */
       preview(index, row){
-        this.$router.push({name:'系统消息详情', query: {msgId:row.msgId}})
+        this.$router.push({name:'系统消息详情', query: {msgId:row.id}})
       },
       /**
        * 批量删除
@@ -273,13 +314,13 @@
         for (var i = 0; i< len; i++) {
           arr.push(this.multipleSelection[i].msgId)
         }
-        var msgId = arr.join()
-        this.$axios.delete("/messages/delete/message/"+msgId).then((response) => {
+        this.$axios.put("/messages/delete/message",this.$initPostData({
+          msgIds:arr.join(',')
+        })).then((response) => {
           let res = response.data
           console.log(res)
           if (res.code == '1') {
-            this.tableData.splice(this.multipleSelection,len)
-            this.$refs.multipleTable.clearSelection()
+            this.getMessageList();
             this.$message({
               message: '恭喜你，删除成功！',
               type: 'success'
