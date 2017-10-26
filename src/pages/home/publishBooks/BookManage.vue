@@ -212,7 +212,7 @@
 
     <!--弹窗-->
     <el-dialog
-      title="提示"
+      title="修改"
       :visible.sync="dialogVisible"
       size="tiny">
       <div>
