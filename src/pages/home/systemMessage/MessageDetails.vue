@@ -1,6 +1,10 @@
 <template>
   <div class="message-preview paddingT20 paddingR20 paddingL20">
     <h5 class="previewTitle text-center">{{previewData.title}}</h5>
+    <p class="senderInfo text-center paddingT10">
+      <span class="marginR10">{{previewData.senderName}}</span>
+      <span>{{previewData.sendTime}}</span>
+    </p>
     <div class="previewContent paddingB20" v-html="previewData.content"></div>
     <!--附件-->
     <el-row v-if="previewData.files.length">
@@ -25,6 +29,8 @@
           previewData:{
             title:'',
             content:'',
+            senderName:'',
+            sendTime:'',
             files:[]
           }
         }
@@ -45,6 +51,8 @@
                   })
                   this.previewData.title = res.data.title;
                   this.previewData.content = res.data.content;
+                  this.previewData.senderName = res.data.senderName;
+                  this.previewData.sendTime = formatDate(res.data.sendTime);
                   this.previewData.files = res.data.MessageAttachment||[];
                 }else{
                     this.$message.error('页面内容加载失败，请重试!');
@@ -74,7 +82,7 @@
     font-weight: 500;
   }
   .previewContent{
-    margin-top: 48px;
+    margin-top: 36px;
   }
   .previewFile>a{
     display: block;

@@ -7,8 +7,8 @@
 
 
 //默认api请求头地址
-export const BASE_WS_URL = 'ws://120.76.221.250:11000/pmpheep/';
-export const BASE_URL = 'http://120.76.221.250:11000/pmpheep/';
+export const BASE_WS_URL = 'ws://120.76.221.250/pmpheep/';
+export const BASE_URL = 'http://120.76.221.250/pmpheep/';
 //
 // export const BASE_WS_URL = 'ws://192.168.200.141:8080/pmpheep/';
 // export const BASE_URL = 'http://192.168.200.141:8080/pmpheep/';

@@ -6,13 +6,13 @@
       </span>
     <el-dropdown-menu slot="dropdown" class="user-dropdown">
       <el-dropdown-item>
-        <el-button type="text">
+        <el-button type="text" @click="$router.push({name:'个人信息',query:{type:'setting'}})">
           个人资料
           <i class="fa fa-id-card-o fa-fw"></i>
         </el-button>
       </el-dropdown-item>
       <el-dropdown-item>
-        <el-button type="text">
+        <el-button type="text" @click="$router.push({name:'个人信息',query:{type:'password'}})">
           修改密码
           <i class="fa fa-key fa-fw"></i>
         </el-button>

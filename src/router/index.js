@@ -63,6 +63,10 @@ import BookRouter from 'pages/home/publishBooks/BookRouter'
 import BookManage from 'pages/home/publishBooks/BookManage'
 import CommentManage from 'pages/home/publishBooks/CommentManage'
 
+/*用户主页(个人设置)*/
+import PersonalRouter from 'pages/home/personal/PersonalRouter'
+import PersonalSetting from 'pages/home/personal/Setting'
+
 Vue.use(Router)
 
 export default new Router({
@@ -147,15 +151,21 @@ export default new Router({
         /* 出版图书 */
         {
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 17}, children: [
-          { path: 'manage', name: '图书管理', component: BookManage },
-          { path: 'comment', name: '评论审核', component: CommentManage }
-        ]
+          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 21 }},
+          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 22 }}
+          ]
         },
         /* 我的消息 */
         {
-          path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: '我的消息列表', authorityId: 1}, children: [
+          path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: false, authorityId: 1}, children: [
             { path: 'msglist', name: '我的消息列表', component: MyMessageList },
             { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
+          ]
+        },
+        /*用户主页(个人设置)*/
+        {
+          path: 'personal', name: '个人资料', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
+          { path: 'setting', name: '个人信息', component: PersonalSetting },
         ]
         },
       ]

@@ -5,7 +5,7 @@
             <p>
                 <el-input class="input" v-model="searchValue"  placeholder="请输入角色名称" @keyup.enter.native="getListData()"></el-input>
                 <el-button type="primary" icon="search" @click="getListData()">搜索</el-button>
-                <el-button type="primary" @click="addNewRoles()">增加</el-button>
+                <el-button type="primary pull-right" @click="addNewRoles()">增加</el-button>
             </p>
 
             <el-table :data="rolesListData" class="table-wrapper" border>
@@ -75,7 +75,7 @@
                 <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
             </span>
         </el-dialog>
-        
+
     </div>
 </template>
 <script type="text/javascript">
@@ -109,7 +109,7 @@ export default {
                 ],
                 sort: [
                     { required: true, message: '请输入排序码', trigger: 'blur' },
-                    
+
                 ]
             },
             powerTreeVisible: false,
@@ -358,7 +358,7 @@ export default {
         isAddNewRole(){
             var obj=this.rolesFormRules;
             this.rolesFormRules=[];
-            
+
             this.rolesFormRules=obj;
         }
     }

@@ -13,7 +13,7 @@
       </el-menu-item>
       <el-menu-item index="/materialrouter/materials" v-if="isShowSide(2)">
         <i class="fa fa-book fa-fw"></i>
-        <span slot="title">规划教材申报</span>
+        <span slot="title">教材申报</span>
       </el-menu-item>
       <el-menu-item index="/auth/writers" v-if="isShowSide(3)">
         <i class="fa fa-university fa-fw"></i>
@@ -27,10 +27,10 @@
         <i class="fa fa-comments-o fa-fw"></i>
         <span slot="title">系统消息</span>
       </el-menu-item>
-      <el-menu-item index="1" v-if="isShowSide(6)">
-        <i class="fa fa-file-text-o fa-fw"></i>
-        <span slot="title">系统日志</span>
-      </el-menu-item>
+      <!--<el-menu-item index="1" v-if="isShowSide(6)">-->
+        <!--<i class="fa fa-file-text-o fa-fw"></i>-->
+        <!--<span slot="title">系统日志</span>-->
+      <!--</el-menu-item>-->
 
       <el-submenu index="/content" v-if="isShowSide(16)">
         <template slot="title">
