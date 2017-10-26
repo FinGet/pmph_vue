@@ -1,131 +1,151 @@
 <template>
   <div class="content_publish">
-      <p class="header_p">
+    <el-form :model="formData"  label-width="120px" style="margin:20px 30px 20px 0">
+      <el-form-item label="内容标题：">
+           <el-input placeholder="请输入内容标题" class="input"></el-input>
+      </el-form-item>
+      <el-form-item label="所属栏目：">
           <el-cascader
             :options="options"
-            v-model="selectedOptions"
+            v-model="formData.selectedOptions"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader>
-          <el-input placeholder="输入文章标题" class="input"></el-input>
-          <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
-           <el-option
-             v-for="item in selectOp"
-             :key="item.value"
-             :label="item.label"
-             :value="item.value"       
-             >
-         </el-option>
-         </el-select>
-         <el-button type="primary" icon="search">搜索</el-button>
-         <el-dropdown trigger="click" style="float:right;margin-left:10px;">
-            <el-button type="primary">
-             批量操作<i class="el-icon-caret-bottom el-icon--right"></i>
-             </el-button>
-           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>批量删除</el-dropdown-item>
-            <el-dropdown-item>批量审核</el-dropdown-item>
-            <el-dropdown-item>批量推荐</el-dropdown-item>
-            <el-dropdown-item>批量置顶</el-dropdown-item>
-            <el-dropdown-item>批量热门</el-dropdown-item>
-            <el-dropdown-item>批量隐藏</el-dropdown-item>
-            <el-dropdown-item>批量发布</el-dropdown-item>
-        </el-dropdown-menu>
-    </el-dropdown>
-         <el-button type="primary" style="float:right;">添加内容</el-button>
-      </p>
-      <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
-            <el-table-column
-                type="selection"
-                width="55">
-            </el-table-column>
-            <el-table-column
-                prop="id"
-                label="ID"
-                width="50"
-                >
-            </el-table-column>
-            <el-table-column
-                label="文章标题"
-                >
-                <template scope="scope">
-                   <a href="">{{scope.row.title}}</a>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="comment"
-                label="所属栏目"
-                width="100"
-                >
-            </el-table-column>
-            <el-table-column
-                prop="creatTime"
-                label="创建时间"
-                width="165"
-                >
-            </el-table-column>
-            <el-table-column
-                label="相关统计"
-                >
-                <template scope="scope">
-                    <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
-                        <i class="fa fa-thumbs-o-up table_i" >10</i>
-                    </el-tooltip> 
-                    <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
-                        <i class="fa fa-book table_i">10</i>
-                    </el-tooltip>  
-                    <el-tooltip class="item" effect="dark" content="评" placement="bottom">
-                        <i class="fa fa-commen-o table_i">10</i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
-                        <i class="fa fa-star-o table_i">10</i>
-                    </el-tooltip>     
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="state"
-                label="状态"
-                >
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                width="140"
-                >
-            </el-table-column>
-
-      </el-table>
-      <!--分页-->
-    <div class="pagination-wrapper">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
-      </el-pagination>
+      </el-form-item>
+      <el-form-item label="摘要：">
+          <el-input type="textarea" :rows="4" class="input" ></el-input>
+      </el-form-item>
+      <el-form-item label="关键字：">
+          <el-input class="input" placeholder="请输入关键字"></el-input>
+      </el-form-item>
+      <el-form-item label="作者：">
+          <el-input class="input"></el-input>
+      </el-form-item>
+      <el-form-item label="创建时间：">
+          <el-date-picker
+               v-model="formData.creatDate"
+                type="datetime"
+                placeholder="选择创建时间"
+                class="date_input"
+                :picker-options="pickerOptions">
+      </el-date-picker>
+      </el-form-item>
+      <el-form-item label="是否推荐：">
+          <el-radio-group v-model="formData.isRecommend">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+      </el-form-item>
+      <el-form-item label="推荐到期时间：" v-if="formData.isRecommend">
+           <el-date-picker
+               v-model="formData.recEndDate"
+                type="datetime"
+                placeholder="选择推荐到期时间"
+                class="date_input"
+                :picker-options="pickerOptions">
+         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="是否置顶：">
+          <el-radio-group v-model="formData.isStick">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+      </el-form-item>
+      <el-form-item label="置顶到期时间：" v-if="formData.isStick">
+           <el-date-picker
+               v-model="formData.stickEndTime"
+                type="datetime"
+                placeholder="选择置顶到期时间"
+                class="date_input"
+                :picker-options="pickerOptions">
+         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="是否热门：">
+          <el-radio-group v-model="formData.isHot">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+      </el-form-item>
+      <el-form-item label="热门到期时间：" v-if="formData.isHot">
+           <el-date-picker
+               v-model="formData.hotEndTime"
+                type="datetime"
+                placeholder="选择热门到期时间"
+                class="date_input"
+                :picker-options="pickerOptions">
+         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="文章内容：">
+              <Editor ref="editor" :config="editorConfig"></Editor>
+      </el-form-item>
+      <el-form-item label="附件：">
+          <div class="col-content file-upload-wrapper" style="padding-left:0;" >
+          <el-upload
+            class="upload-demo"
+            :action="fileUploadUrl"
+            :on-success="upLoadFileSuccess"
+            :on-remove="uploadFileRemove"
+            :file-list="uploadFileList">
+                  <span>
+              <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
+            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
+          </el-upload>
+        </div>
+      </el-form-item>
+      <el-form-item label="是否发布：">
+          <el-radio-group v-model="formData.isPublish">
+            <el-radio :label="false">立即发布</el-radio>
+            <el-radio :label="true">定时发布</el-radio>
+          </el-radio-group>
+          <el-form-item v-if="formData.isPublish" style="display:inline-block">
+              <el-date-picker 
+               v-model="formData.timePublish"
+                type="datetime"
+                placeholder="选择定时发布时间"
+                style="margin:0 15px 0 25px;"
+                :picker-options="pickerOptions">
+         </el-date-picker>
+         <el-checkbox v-model="formData.hide">隐藏</el-checkbox>
+          </el-form-item>
+      </el-form-item>
+    </el-form>
+    <div class="bottom_box">
+          <el-button >返回</el-button>
+          <el-button type="primary">确定</el-button>
     </div>
   </div>
 </template>
-<style scoped>
-.content_publish .header_p{
-    overflow: hidden;
-}
-.content_publish .header_p .input {
-  width: 217px;
-  margin-right: 10px;
-}
-.content_publish .table_i{
-    margin-right:10px;
-}
-</style>
 <script type="text/javascript">
+import Editor from '../../../components/Editor.vue'
 export default {
   data() {
     return {
+      formData: {
+        selectedOptions: [],
+        creatDate: "",
+        isRecommend:'',
+        recEndDate:'',
+        isStick:'',
+        stickEndTime:'' ,
+        isHot:'',
+        hotEndTime:'',
+        isPublish:'',
+        timePublish:'',
+        hide:''
+      },
+      uploadFileList:[],
+      fileUploadUrl:'',
+      editorConfig: {
+          initialFrameWidth: null,
+          initialFrameHeight: 500
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
       options: [
         {
           value: "zhinan",
@@ -187,58 +207,35 @@ export default {
             }
           ]
         }
-      ],
-      selectOp:[
-         {
-             value:0,
-             label:'是否发布',
-         },
-         {
-             value:1,
-             label:'是否审核',
-         },
-         {
-             value:2,
-             label:'是否置顶',
-         },
-         {
-             value:3,
-             label:'是否热门',
-         },
-         {
-             value:4,
-             label:'是否推荐',
-         },
-         {
-             value:5,
-             label:'是否隐藏',
-         },
-      ],
-      tableData:[
-          {
-              id:1,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00'
-          }
-      ],
-      selectedOptions: [],
-      selectValue:'',
-      currentPage:1,
-
+      ]
     };
   },
   methods: {
     handleChange(value) {
       console.log(value);
     },
-    handleSizeChange(val){
+    upLoadFileSuccess(){
 
     },
-    handleCurrentChange(val){
+    uploadFileRemove(){
 
     }
+  },
+  components:{
+          Editor
   }
 };
 </script>
-
+<style scoped>
+.content_publish .input {
+  width: 500px;
+}
+.content_publish .date_input{
+    width:300px;
+}
+.content_publish .bottom_box{
+    margin-left:45%;
+    transform: translateX(-50%);
+    display: inline-block;
+}
+</style>
