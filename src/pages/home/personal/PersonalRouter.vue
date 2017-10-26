@@ -1,5 +1,5 @@
 <template>
-  <div class="publishBooks_router">
+  <div class="personal_router">
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>

@@ -164,8 +164,8 @@ export default new Router({
         },
         /*用户主页(个人设置)*/
         {
-          path: 'personal', name: '用户信息', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
-          { path: 'setting', name: '设置中心', component: PersonalSetting },
+          path: 'personal', name: '个人资料', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
+          { path: 'setting', name: '个人信息', component: PersonalSetting },
         ]
         },
       ]
