@@ -3,7 +3,7 @@
     <div class="clearfix" :class="{powerSearch:powerSearch}">
       <!--高级搜索-->
       <div  v-if="powerSearch">
-        <div class="searchBox-wrapper powerSearch">
+        <div class="searchBox-wrapper powerSearch" :class="{lg:powerSearchValue==2}">
           <el-select v-model="powerSearchValue" class="searchName" placeholder="请选择">
             <el-option
               v-for="item in powerSearchList"
@@ -60,7 +60,7 @@
           </div>
         </div>
         <!--书名选择框-->
-        <div class="searchBox-wrapper">
+        <div class="searchBox-wrapper lg">
           <div class="searchName">书籍类别：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.bookType"></el-input>
@@ -117,9 +117,6 @@
           <el-button type="text" @click="toggleSearchType">收起搜索区</el-button>
         </div>
       </div>
-    </div>
-    <!--操作按钮-->
-    <div class="clearfix">
       <div class="operation-wrapper">
         <el-tooltip class="item" effect="dark" content="请按照模板格式上传!" placement="top">
           <el-button type="primary">配套图书导入</el-button>
@@ -130,6 +127,18 @@
         <el-button type="primary">批量修改</el-button>
       </div>
     </div>
+    <!--&lt;!&ndash;操作按钮&ndash;&gt;-->
+    <!--<div class="clearfix">-->
+      <!--<div class="operation-wrapper">-->
+        <!--<el-tooltip class="item" effect="dark" content="请按照模板格式上传!" placement="top">-->
+          <!--<el-button type="primary">配套图书导入</el-button>-->
+        <!--</el-tooltip>-->
+        <!--<el-button type="primary">模板下载.xlsx</el-button>-->
+        <!--<el-button type="primary">图书全量同步</el-button>-->
+        <!--<el-button type="primary">图书增量同步</el-button>-->
+        <!--<el-button type="primary">批量修改</el-button>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="table-wrapper clearfix">
       <el-table
         :data="tableData"
@@ -251,8 +260,8 @@
 
 <style scoped>
   .searchBox-wrapper{
-    width: 340px;
-  }
+      width: 340px;
+    }
   .searchBox-wrapper .searchName{
     width: 110px;
   }
@@ -261,5 +270,15 @@
   }
   .searchBox-wrapper.searchBtn{
     width: 100px;
+  }
+  .powerSearch .searchName{
+    width: 140px;
+  }
+  .powerSearch .searchBox-wrapper .searchInput{
+    margin-left: 144px;
+  }
+  .searchBox-wrapper.lg{
+    width: 680px;
+
   }
 </style>
