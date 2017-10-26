@@ -65,7 +65,6 @@ import CommentManage from 'pages/home/publishBooks/CommentManage'
 
 /*用户主页(个人设置)*/
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
-import PersonalChangePassword from 'pages/home/personal/ChangePassword'
 import PersonalSetting from 'pages/home/personal/Setting'
 
 Vue.use(Router)
@@ -167,7 +166,6 @@ export default new Router({
         {
           path: 'personal', name: '用户信息', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
           { path: 'setting', name: '设置中心', component: PersonalSetting },
-          { path: 'pass', name: '修改密码', component: PersonalChangePassword }
         ]
         },
       ]
