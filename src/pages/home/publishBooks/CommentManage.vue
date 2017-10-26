@@ -25,7 +25,19 @@
       </div>
       <!--操作按钮-->
       <div class="pull-right">
-        <el-button type="danger" @click="deleteComment" :disabled="!selectData.length">删除</el-button>
+        <el-popover
+          ref="popover"
+          placement="top"
+          width="160"
+          v-model="deletePopoverVisible">
+          <p>确定删除选中的所有评论吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="deletePopoverVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="deleteComment">确定</el-button>
+          </div>
+        </el-popover>
+        <el-button type="danger" :disabled="!selectData.length" v-popover:popover>删除</el-button>
+
         <el-button type="warning">审核不通过</el-button>
         <el-button type="primary">审核通过</el-button>
       </div>
@@ -101,7 +113,119 @@
 	export default {
 		data() {
 			return {
-        tableData:[{}],
+        tableData:[{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        },{
+          bookName:'人体寄生虫学（第3版）',
+          isbn:'978-7-117-20419-4/R·0420',
+          commentor:'张二',
+          comment:'这本书不错 ，值得推荐',
+          time:'2016-04-12',
+          grade:9
+        }],
         selectData:[],
         searchForm:{
           bookName:'',
@@ -119,7 +243,8 @@
           value:false,
           label:'未读'
         }],
-        totalNum:0,
+        totalNum:300,
+        deletePopoverVisible:false,
       }
 		},
     methods:{
@@ -139,7 +264,7 @@
        * 删除选中行
        */
       deleteComment(){
-
+        this.deletePopoverVisible=false;
       }
     },
 	}
