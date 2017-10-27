@@ -114,6 +114,7 @@ p{word-wrap:break-word}
 .paddingL15 { padding-left: 15px; }
 .paddingL20 { padding-left: 20px; }
 .paddingL30 { padding-left: 30px; }
+.paddingL100 { padding-left: 100px; }
 
 .paddingR0 { padding-right: 0; }
 .paddingR5  { padding-right: 5px; }
@@ -332,6 +333,9 @@ button a,button a:hover,button a:active{
   float: right;
 }
 .table-wrapper{
+  margin: 10px 0;
+}
+.echart-wrapper{
   margin: 10px 0;
 }
 /*高级搜索样式*/
