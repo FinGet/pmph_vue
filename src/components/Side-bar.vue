@@ -15,10 +15,10 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">教材申报</span>
       </el-menu-item>
-      <el-menu-item index="/auth/writers" v-if="isShowSide(3)">
-        <i class="fa fa-university fa-fw"></i>
-        <span slot="title">学校/教师审核</span>
-      </el-menu-item>
+      <!--<el-menu-item index="/auth/writers" v-if="isShowSide(3)">-->
+        <!--<i class="fa fa-university fa-fw"></i>-->
+        <!--<span slot="title">学校/教师审核</span>-->
+      <!--</el-menu-item>-->
       <el-menu-item index="/groupmanage" v-if="isShowSide(4)">
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">我的小组</span>
