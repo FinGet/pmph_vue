@@ -7,6 +7,7 @@
             <el-tab-pane label="主任视图" name="1v3"></el-tab-pane>
             <el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>
             <el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>
+            <el-tab-pane label="结果统计" name="result"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="header_title_tips">
