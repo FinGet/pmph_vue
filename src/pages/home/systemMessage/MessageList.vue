@@ -46,7 +46,6 @@
         </el-table-column>
         <el-table-column
           label="信息标题"
-          width="400"
           show-overflow-tooltip>
           <template scope="scope">
             <el-button type="text" @click="preview(scope.$index,scope.row)">{{scope.row.title}}</el-button>
@@ -54,13 +53,12 @@
         </el-table-column>
         <el-table-column
           prop="sendName"
-          label="发送者"
-          width="120">
+          label="发送者">
         </el-table-column>
         <el-table-column
           prop="sendTime"
           label="发送时间"
-          width="168"
+          width="200"
         >
         </el-table-column>
         <el-table-column
@@ -72,7 +70,8 @@
             {{scope.row.isWithdraw?'已撤回':'已发送'}}
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作"
+        width="300">
           <template scope="scope">
             <el-button
               size="small"

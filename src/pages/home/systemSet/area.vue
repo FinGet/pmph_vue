@@ -225,6 +225,8 @@
                 this.data.forEach(item => {
                   if (item.areaName == this.active.province) {
                     this.selectProvince(item)
+                  } else {
+                    this.selectProvince(this.provinces[0])
                   }
                 })
               }
