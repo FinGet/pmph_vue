@@ -44,8 +44,8 @@
                   </el-form-item>
                   <el-form-item label="性别:">
                     <el-radio-group v-model="formSetting.sex">
-                      <el-radio label="男" :value="男"></el-radio>
-                      <el-radio label="女" :value="女"></el-radio>
+                      <el-radio label="男" value="男"></el-radio>
+                      <el-radio label="女" value="女"></el-radio>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item label="手机号:">
@@ -166,7 +166,7 @@
   }
   .setting-iterm{
     max-width: 500px;
-    padding-top: 60px;
+    padding-top: 30px;
   }
 
   /*设置中用户头像区域*/
