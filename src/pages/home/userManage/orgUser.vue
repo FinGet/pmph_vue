@@ -1,5 +1,24 @@
 <template>
   <div class="orgUser">
+    <div class="clearfix" v-if="isShowHighGrade">
+       <div class="searchBox-wrapper">
+          <div class="searchName">管理员姓名：<span></span></div>
+          <div class="searchInput">
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.realname" @keyup.enter.native="refreshTableData"></el-input>
+          </div>
+        </div>
+       <div class="searchBox-wrapper">
+					<div class="searchName">审核状态：
+						<span></span>
+					</div>
+					<div class="searchInput">
+						<el-select v-model="progress" placeholder="请选择">
+							<el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
+					</div>
+				</div> 
+    </div>
       <div class="clearfix">
         <div class="searchBox-wrapper">
           <div class="searchName">学校名称：<span></span></div>
@@ -13,18 +32,15 @@
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.username" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
-        <div class="searchBox-wrapper">
-          <div class="searchName">管理员姓名：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.realname" @keyup.enter.native="refreshTableData"></el-input>
-          </div>
-        </div>
+        
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="refreshTableData">搜索</el-button>
         </div>
+        <el-button type="text" @click="showMoreSerach">{{isShowHighGrade?"收起":"更多筛选项"}}</el-button>
         <!--操作按钮-->
         <div class="pull-right">
-          <el-button type="primary" @click="addBtn">增加</el-button>
+          <el-button type="primary" @click="addBtn(false)">添加管理员</el-button>
+          <el-button type="primary" @click="addBtn(true)">新建院校</el-button>
         </div>
       </div>
       <!--表格-->
@@ -33,6 +49,8 @@
           border
           :data="tableData"
           style="width: 100%">
+          <el-table-column type="selection" width="55">
+					</el-table-column>
           <el-table-column
             prop="orgName"
             label="学校名称">
@@ -134,6 +152,19 @@
               {{scope.row.isDisabled?'未启用':'启用'}}
             </template>
           </el-table-column>
+          <el-table-column label="委托书" width="110" align="center">
+						<template scope="scope">
+							<a href="javascript:;" v-if="scope.row.proxy" style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
+							<el-tag type="danger" v-if="!scope.row.proxy">未上传</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column prop="progress" label="审核标志" width="100" align="center">
+						<template scope="scope">
+							<el-tag type="success" v-if="scope.row.progress=='0'">已通过</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
+							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
+						</template>
+					</el-table-column>
           <el-table-column
             label="操作"
             width="120">
@@ -157,24 +188,24 @@
       </div>
       <!--增加新用户弹窗-->
       <el-dialog
-        :title="isNew?'新增机构用户':'修改用户信息'"
+        :title="dialogTitle"
         :visible.sync="dialogVisible"
         @close="closeDialog"
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
-          <el-form-item label="机构代码：" prop="username">
+          <el-form-item label="机构代码：" prop="username" v-show="isAddSchool||!isNew">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="管理员姓名：" prop="realname">
+          <el-form-item label="管理员姓名：" prop="realname" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.realname"></el-input>
           </el-form-item>
-          <el-form-item label="用户手机："  prop="handphone">
+          <el-form-item label="用户手机："  prop="handphone" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.handphone"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱：" prop="email">
+          <el-form-item label="用户邮箱：" prop="email" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.email"></el-input>
           </el-form-item>
-          <el-form-item label="所属院校："  prop="orgId">
+          <el-form-item label="所属院校："  prop="orgId" v-show="!isAddSchool||!isNew">
             <el-select
               v-model="form.orgId"
               filterable
@@ -191,13 +222,13 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="启用：" prop="isDisabled">
+          <el-form-item label="启用：" prop="isDisabled" v-show="isAddSchool||!isNew">
             <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
               <el-radio :label="true">不启用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注：">
+          <el-form-item label="备注：" v-show="isAddSchool||!isNew">
             <el-input v-model="form.note"></el-input>
           </el-form-item>
         </el-form>
@@ -208,244 +239,286 @@
   </div>
 </template>
 <script>
-  import ScreenSize from 'common/mixins/ScreenSize.js'
-    export default{
-      mixins:[ScreenSize],
-        data(){
-            return {
-              screenWidth_lg_computed:true,
-              isNew:true,
-              options: [{
-                value: '',
-                label: '全部'
-              }, {
-                value: '0',
-                label: '普通用户'
-              }, {
-                value: '1',
-                label: '教师用户'
-              }, {
-                value: '2',
-                label: '作家用户'
-              }, {
-                value: '3',
-                label: '专家用户'
-              }],
-
-              tableData: [],
-              dialogVisible:false,
-              form:{
-                id:'',
-                realname:'',
-                username:'',
-                orgId:'',
-                handphone:'',
-                email:'',
-                isDisabled:true,
-                note:'',
-              },
-              rules:{
-                username:[
-                  { required: true, message: '请输入用户代码', trigger: 'blur' },
-                  { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
-                ],
-                realname:[
-                  { required: true, message: '请输入用户名称', trigger: 'blur' },
-                ],
-                email:[
-                  { required: true, message: '请输入用户邮箱', trigger: 'blur' },
-                ],
-                handphone:[
-                  { required: true, message: '请输入用户手机号码', trigger: 'blur' },
-                ],
-                orgId:[
-                  { required: true, message: '请输入所属院校', trigger: 'blur' },
-                ],
-                isDsabled:[
-                  { type:'boolean',required: true, message: '请选择是否启用', trigger: 'change' }
-                ]
-              },
-              //搜索所属机构用户
-              OrgNameList: [],
-              loading: false,
-              params:{
-                pageSize:30,
-                pageNumber:1,
-                username:'',
-                realname:'',
-                orgName:''
-              },
-              totalPages:0,
-            }
+import ScreenSize from "common/mixins/ScreenSize.js";
+export default {
+  mixins: [ScreenSize],
+  data() {
+    return {
+      screenWidth_lg_computed: true,
+      isNew: true,
+      isAddSchool:true,
+      isShowHighGrade:false,
+      options: [
+        {
+          value: "",
+          label: "全部"
         },
-        methods:{
-          //点击新增按钮
-          addBtn(){
-            this.isNew=true;
-            this.dialogVisible=true;
-          },
-          //点击修改按钮执行方法
-          eidtInfoBtn(index){
-            this.isNew=false;
-            this.OrgNameList=[{id:this.tableData[index].orgId,orgName:this.tableData[index].orgName}];
-            for(let key in this.form){
-              this.form[key] = this.tableData[index][key];
-            }
-            this.form.isDisabled=!!this.form.isDisabled;
-            this.dialogVisible=true;
-          },
-          /**
+        {
+          value: "0",
+          label: "普通用户"
+        },
+        {
+          value: "1",
+          label: "教师用户"
+        },
+        {
+          value: "2",
+          label: "作家用户"
+        },
+        {
+          value: "3",
+          label: "专家用户"
+        }
+      ],
+      progress:'',
+      state: [
+				{
+					value: '0',
+					label: '全部'
+				},
+				{
+					value: '1',
+					label: '待审核'
+				},
+				{
+					value: '2',
+					label: '已退回'
+				},
+				{
+					value: '3',
+					label: '已通过'
+				}
+			],
+      selections:[],
+      tableData: [],
+      dialogVisible: false,
+      form: {
+        id: "",
+        realname: "",
+        username: "",
+        orgId: "",
+        handphone: "",
+        email: "",
+        isDisabled: true,
+        note: ""
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入用户代码", trigger: "blur" },
+          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
+        ],
+        realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        email: [{ required: true, message: "请输入用户邮箱", trigger: "blur" }],
+        handphone: [{ required: true, message: "请输入用户手机号码", trigger: "blur" }],
+        orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
+        isDsabled: [
+          {
+            type: "boolean",
+            required: true,
+            message: "请选择是否启用",
+            trigger: "change"
+          }
+        ]
+      },
+      //搜索所属机构用户
+      OrgNameList: [],
+      loading: false,
+      params: {
+        pageSize: 30,
+        pageNumber: 1,
+        username: "",
+        realname: "",
+        orgName: ""
+      },
+      totalPages: 0
+    };
+  },
+  computed:{
+   dialogTitle(){
+     return this.isNew?(this.isAddSchool?"新建院校":"添加管理员"):'修改用户信息';
+   }
+  },
+  methods: {
+    //点击新增按钮
+    addBtn(val) {
+      this.isAddSchool=val;
+      this.isNew = true;
+      this.dialogVisible = true;
+    },
+    //点击修改按钮执行方法
+    eidtInfoBtn(index) {
+      this.isNew = false;
+      this.OrgNameList = [
+        {
+          id: this.tableData[index].orgId,
+          orgName: this.tableData[index].orgName
+        }
+      ];
+      for (let key in this.form) {
+        this.form[key] = this.tableData[index][key];
+      }
+      this.form.isDisabled = !!this.form.isDisabled;
+      this.dialogVisible = true;
+    },
+    showMoreSerach(){
+        this.isShowHighGrade=!this.isShowHighGrade;
+    },
+    /* 列表选中切换 */
+    handleSelectionChange(val) {
+      this.selections = val;
+      // console.log(val)
+    },
+    /**
            * 提交表单中搜索所属院校
            * @param query
            */
-          searchOrgName(query) {
-            var self = this;
-            if(query==''){
-              self.OrgNameList=[];
-              return;
-            }
+    searchOrgName(query) {
+      var self = this;
+      if (query == "") {
+        self.OrgNameList = [];
+        return;
+      }
 
-            this.loading = true;
-            this.$axios.get('/orgs/list/orgByOrgName',{
-              params:{orgName:query||''}
-            })
-              .then(function (response) {
-                self.loading = false;
-                let res = response.data;
-                let data = res.data;
-                console.log(data);
-                if(data.length>0){
-                  self.OrgNameList=data;
-                }else{
-                  self.OrgNameList=[]
-                }
-              })
-              .catch(function (error) {
-                self.loading = false;
-                console.error(error);
-              });
-          },
-          /**
+      this.loading = true;
+      this.$axios
+        .get("/orgs/list/orgByOrgName", {
+          params: { orgName: query || "" }
+        })
+        .then(function(response) {
+          self.loading = false;
+          let res = response.data;
+          let data = res.data;
+          console.log(data);
+          if (data.length > 0) {
+            self.OrgNameList = data;
+          } else {
+            self.OrgNameList = [];
+          }
+        })
+        .catch(function(error) {
+          self.loading = false;
+          console.error(error);
+        });
+    },
+    /**
            * 获取表格数据，
            * 提交的参数写在params里
            */
-          refreshTableData(){
-            var self= this;
-            // 为给定 ID 的 user 创建请求
-            this.$axios.get('/users/org/list/orguser',{params:this.params})
-              .then(function (response) {
-                let res = response.data;
-                let data = res.data.rows;
-                self.tableData=data;
-                self.totalPages = res.data.total;
-              })
-              .catch(function (error) {
-                console.error(error);
-              });
-          },
-          /**
+    refreshTableData() {
+      var self = this;
+      // 为给定 ID 的 user 创建请求
+      this.$axios
+        .get("/users/org/list/orguser", { params: this.params })
+        .then(function(response) {
+          let res = response.data;
+          let data = res.data.rows;
+          self.tableData = data;
+          self.totalPages = res.data.total;
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
+    },
+    /**
            * 修改新增弹出点击确认按钮时触发提交表单操作
            */
-          submit(){
-            this.$refs.ruleForm.validate((valid) => {
-              if (valid) {
-                if(this.isNew){
-                  this.addUser();
-                  return;
-                }
+    submit() {
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          if (this.isNew) {
+            this.addUser();
+            return;
+          }
 
-                this.updateUser();
-              } else {
-                console.log('error submit!!');
-                return false;
-              }
-            });
-
-
-          },
-          /**
+          this.updateUser();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    /**
            * 新增用户
            */
-          addUser(){
-            var self = this;
-            this.$axios({
-              method: 'POST',
-              url: '/users/org/add/orguserofback',
-              data:this.$initPostData(this.form),
-            })
-              .then(function (response) {
-                let res = response.data;
-                let data = res.data.rows;
-                //修改成功
-                if(res.code===1){
-                  self.refreshTableData();
-                  self.dialogVisible=false;
-                  self.$message({
-                    type:'success',
-                    message:'添加成功'
-                  });
-                }
-              })
-              .catch(function (error) {
-                self.$message({
-                  type:'error',
-                  message:'添加失败，请重试'
-                });
-              });
-          },
-          /**
+    addUser() {
+      var self = this;
+      this.$axios({
+        method: "POST",
+        url: "/users/org/add/orguserofback",
+        data: this.$initPostData(this.form)
+      })
+        .then(function(response) {
+          let res = response.data;
+          let data = res.data.rows;
+          //修改成功
+          if (res.code === 1) {
+            self.refreshTableData();
+            self.dialogVisible = false;
+            self.$message({
+              type: "success",
+              message: "添加成功"
+            });
+          }
+        })
+        .catch(function(error) {
+          self.$message({
+            type: "error",
+            message: "添加失败，请重试"
+          });
+        });
+    },
+    /**
            * 更新用户
            */
-          updateUser(){
-            var self = this;
-            this.$axios({
-              method: 'PUT',
-              url: '/users/org/update/orguserofback',
-              data:this.$initPostData(this.form),
-            })
-              .then(function (response) {
-                let res = response.data;
-                //修改成功
-                if(res.code===1){
-                  self.refreshTableData();
-                  self.dialogVisible=false;
-                  self.$message({
-                    type:'success',
-                    message:'修改成功'
-                  });
-                }
-              })
-              .catch(function (error) {
-                self.$message({
-                  type:'error',
-                  message:'修改失败，请重试'
-                });
-              });
-          },
-          /**
+    updateUser() {
+      var self = this;
+      this.$axios({
+        method: "PUT",
+        url: "/users/org/update/orguserofback",
+        data: this.$initPostData(this.form)
+      })
+        .then(function(response) {
+          let res = response.data;
+          //修改成功
+          if (res.code === 1) {
+            self.refreshTableData();
+            self.dialogVisible = false;
+            self.$message({
+              type: "success",
+              message: "修改成功"
+            });
+          }
+        })
+        .catch(function(error) {
+          self.$message({
+            type: "error",
+            message: "修改失败，请重试"
+          });
+        });
+    },
+    /**
            * 重置form表单数据
            */
-          resetForm(){
-            this.$refs['ruleForm'].resetFields();
-            console.log(this.form);
-          },
-          /**
+    resetForm() {
+      
+      this.$refs["ruleForm"].resetFields();
+      console.log(this.form);
+    },
+    /**
            * 监听弹出层关闭事件
            */
-          closeDialog(){
-            this.resetForm();
-          }
-        },
-      created(){
-        this.refreshTableData();
-      },
-      mounted(){
-        this.screenWidth_lg_computed = this.screenWidth_lg;
-
-      }
+    closeDialog() {
+      this.resetForm();
     }
+  },
+  created() {
+    this.refreshTableData();
+  },
+  mounted() {
+    this.screenWidth_lg_computed = this.screenWidth_lg;
+  }
+};
 </script>
 <style>
-
 
 </style>

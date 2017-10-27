@@ -6,10 +6,10 @@
           <el-col :span="14" class="search-10">
             <el-input v-model="name" placeholder="请输入收件人或单位" @keyup.enter.native="search"></el-input>
           </el-col>
-          <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+          <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
         </el-col>
         <el-col :span="5" class="msgradio">
-          <el-radio-group v-model="isRead">
+          <el-radio-group v-model="isRead" @change="change">
             <el-radio :label="0">全部</el-radio>
             <el-radio :label="1">已读</el-radio>
             <el-radio :label="2">未读</el-radio>
@@ -33,26 +33,26 @@
           <el-table-column
             label="教师/学校"
             width="120"
-            prop="Teacher"
+            prop="name"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="Company"
+            prop="dptname"
             label="单位"
             width="200">
           </el-table-column>
           <el-table-column
-            prop="Fdate"
+            prop="sendTime"
             label="发送时间"
           >
           </el-table-column>
           <el-table-column
-            prop="Sdate"
+            prop="reciveTime"
             label="接收时间"
           >
           </el-table-column>
           <el-table-column
-            prop="Mobile"
+            prop="handphone"
             label="联系方式"
           >
           </el-table-column>
@@ -62,18 +62,13 @@
             align="center"
           >
             <template scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>状态: {{ scope.row.State }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag :type="scope.row.State=='未读'?'danger':'success'">{{ scope.row.State }}</el-tag>
-                </div>
-              </el-popover>
+              <el-tag :type="scope.row.isRead?'success':'danger'">{{ scope.row.isRead?'已读':'未读' }}</el-tag>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
-    <el-pagination class="pull-right" v-show="tableData.length > 0"
+    <el-pagination class="pull-right" v-show="dataTotal > 20"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
@@ -86,6 +81,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {formatDate} from '../../../../static/commonFun'
   export default {
     data() {
       return {
@@ -114,11 +110,12 @@
       getMessageState() {
         this.$axios.get("/messages/message/"+this.msgId+"/state", {
           params: {
+            name: this.name,
             sessionId: this.getUserData().sessionId,
             msgId: this.msgId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
-            isRead: this.isRead==0?'':(this.isRead==1?true:false)
+            isRead: this.isRead==0?'':this.isRead==1?true:false
           }
         }).then((response) => {
           let res = response.data
@@ -129,6 +126,7 @@
             // 将时间戳转为标准格式
             for (let i=0; i< this.tableData.length; i++) {
               this.tableData[i].sendTime = formatDate(this.tableData[i].sendTime)
+              this.tableData[i].reciveTime = formatDate(this.tableData[i].reciveTime)
             }
             // console.log(this.tableData)
             if (this.dataTotal == 0) {
@@ -174,6 +172,15 @@
         this.pageNumber = val
         this.getMessageState()
       },
+      /**
+       * 选择全部，已读，未读
+       * @param val
+       */
+      change(val) {
+        // console.log(val)
+        this.isRead = val
+        this.getMessageState()
+      }
     },
     components: {
     }

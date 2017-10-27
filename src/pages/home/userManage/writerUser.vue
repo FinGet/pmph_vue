@@ -1,5 +1,31 @@
 <template>
   <div class="orgUser">
+    <div class="clearfix" v-if="highGradeSearch">
+      <div class="searchBox-wrapper">
+         <!--申报职务搜索-->
+        <div class="searchName">用户类型：
+          <span></span>
+        </div>
+        <div class="searchInput">
+          <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+     <div class="searchBox-wrapper">
+      <div class="searchName">审核状态：
+						<span></span>
+					</div>
+					<div class="searchInput">
+						<el-select v-model="progress" placeholder="请选择">
+							<el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
+					</div>
+     </div>
+     </div>
+
     <div class="clearfix">
       <div class="searchBox-wrapper">
         <div class="searchName">账号/姓名：
@@ -17,30 +43,47 @@
           <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
         </div>
       </div>
-      <!--申报职务搜索-->
-      <div class="searchBox-wrapper">
-        <div class="searchName">用户类型：
-          <span></span>
-        </div>
-        <div class="searchInput">
-          <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
+      
       <div class="searchBox-wrapper searchBtn">
         <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
       </div>
-      <!--操作按钮-->
-      <div class="pull-right">
+      <div class="searchBox-wrapper searchBtn">
+        <el-button type="text" @click="showMoreSearch">{{highGradeSearch?"收起":"高级搜索"}}</el-button>
+      </div>
+       <el-popover
+					ref="popover1"
+					placement="top"
+					width="160"
+					v-model="visible1">
+					<p>确认审核不通过</p>
+					<div style="text-align: right; margin: 0">
+						<el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
+						<el-button type="primary" size="mini" @click="check(0)">确定</el-button>
+					</div>
+				</el-popover> 
+        <el-button class="pull-right marginL10" type="success" v-popover:popover1 :disabled="isSelected">审核</el-button>
+        <el-popover
+					ref="popover2"
+					placement="top"
+					width="160"
+					v-model="visible2">
+					<p>确认审核通过</p>
+					<div style="text-align: right; margin: 0">
+						<el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+						<el-button type="primary" size="mini" @click="check(2)">确定</el-button>
+					</div>
+				</el-popover>
+				<el-button class="pull-right" type="danger" v-popover:popover2 :disabled="isSelected">退回</el-button>
+              <!--操作按钮-->
+      <div class="pull-right" style="margin-right:10px;">
         <el-button type="primary" @click="addBtn">增加</el-button>
       </div>
     </div>
-
     <!--表格-->
     <div class="table-wrapper">
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55">
+					</el-table-column>
         <el-table-column prop="realname" label="姓名" width="110">
         </el-table-column>
         <el-table-column prop="username" label="账号" width="120">
@@ -106,6 +149,21 @@
             {{scope.row.isDisabled?'未启用':'启用'}}
           </template>
         </el-table-column>
+
+        <el-table-column label="教师资格证" width="110" align="center">
+						<template scope="scope">
+							<a href="javascript:;" v-if="scope.row.cert"  @click="preview(scope.row.cert)">预览</a>
+							<el-tag type="danger" v-if="!scope.row.cert">未上传</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column prop="progress" label="审核标志" width="100" align="center">
+						<template scope="scope">
+							<el-tag type="success" v-if="scope.row.progress=='0'">已通过</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
+							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
+						</template>
+					</el-table-column>
+
         <el-table-column label="操作" width="120">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
@@ -154,67 +212,104 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 预览教师资格证 -->
+    <el-dialog
+			title="教师资格证"
+			:visible.sync="previewDialogVisible"
+			size="small"
+			top="5%"
+			>
+			<img :src="imgsrc" width="100%" alt="教师资格证">
+		</el-dialog>
   </div>
 </template>
 <script>
-import ScreenSize from 'common/mixins/ScreenSize.js';
+import ScreenSize from "common/mixins/ScreenSize.js";
 export default {
   mixins: [ScreenSize],
   data() {
     return {
       screenWidth_lg_computed: true,
       isNew: true,
+      highGradeSearch:false,
+      selections:'',
+      visible1:false,
+      visible2:false,
       //用户类型数据
-      options: [{
-        value: '',
-        label: '全部'
-      }, {
-        value: '0',
-        label: '普通用户'
-      }, {
-        value: '1',
-        label: '教师用户'
-      }, {
-        value: '2',
-        label: '作家用户'
-      }, {
-        value: '3',
-        label: '专家用户'
-      }],
+      options: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "普通用户"
+        },
+        {
+          value: "1",
+          label: "教师用户"
+        },
+        {
+          value: "2",
+          label: "作家用户"
+        },
+        {
+          value: "3",
+          label: "专家用户"
+        }
+      ],
+      state: [
+				{
+					value: '0',
+					label: '全部'
+				},
+				{
+					value: '1',
+					label: '待审核'
+				},
+				{
+					value: '2',
+					label: '已退回'
+				},
+				{
+					value: '3',
+					label: '已通过'
+				}
+      ],
+      progress: '',
       //表格数据
       tableData: [],
       //是否展开弹出层
       dialogVisible: false,
+      previewDialogVisible: false,
+      imgsrc: "",
       //表单提交数据
       form: {
-        id: '',
-        realname: '',
-        username: '',
-        orgId: '',
-        handphone: '',
-        email: '',
+        id: "",
+        realname: "",
+        username: "",
+        orgId: "",
+        handphone: "",
+        email: "",
         isDsabled: true,
-        note: '',
+        note: ""
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户代码', trigger: 'blur' },
-          { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+          { required: true, message: "请输入用户代码", trigger: "blur" },
+          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
         ],
-        realname: [
-          { required: true, message: '请输入用户名称', trigger: 'blur' },
-        ],
-        email: [
-          { required: true, message: '请输入用户邮箱', trigger: 'blur' },
-        ],
-        handphone: [
-          { required: true, message: '请输入用户手机号码', trigger: 'blur' },
-        ],
-        orgId: [
-          { required: true, message: '请输入所属院校', trigger: 'blur' },
-        ],
+        realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        email: [{ required: true, message: "请输入用户邮箱", trigger: "blur" }],
+        handphone: [{ required: true, message: "请输入用户手机号码", trigger: "blur" }],
+        orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
         isDsabled: [
-          { type: 'boolean', required: true, message: '请选择是否启用', trigger: 'change' }
+          {
+            type: "boolean",
+            required: true,
+            message: "请选择是否启用",
+            trigger: "change"
+          }
         ]
       },
       //搜索所属机构用户
@@ -223,13 +318,21 @@ export default {
       params: {
         pageSize: 30,
         pageNumber: 1,
-        name: '',
-        rank: '',
-        orgName: ''
+        name: "",
+        rank: "",
+        orgName: ""
       },
-      totalPages: 0,
-
-    }
+      totalPages: 0
+    };
+  },
+  computed:{
+    isSelected() {
+			if (this.selections.length > 0) {
+				return false
+			} else {
+				return true
+			}
+		}
   },
   methods: {
     //点击新增按钮
@@ -237,10 +340,52 @@ export default {
       this.isNew = true;
       this.dialogVisible = true;
     },
+    /* 高级搜索切换 */
+    showMoreSearch(){
+      this.highGradeSearch=!this.highGradeSearch;
+    },
+    /* 当前选中切换 */
+    handleSelectionChange(val) {
+			this.selections = val
+    },
+    /* 是否退回 */
+    check(progress){
+			this.visible1 = false
+			this.visible2 = false
+			//console.log(this.selections)
+			var userIds = []
+			this.selections.forEach(item => {
+				// console.log(item)
+				userIds.push(item.id)
+				//console.log(orgUserIds)
+			})
+			this.$axios.put("/auth/writers/check",this.$initPostData({
+				progress: progress,
+				userIds: userIds
+			})).then((response) => {
+				let res = response.data
+				if (res.code == "1") {
+					//console.log(res)
+					this.refreshTableData();
+					this.$message({
+              showClose: true,
+              message: '修改成功!',
+              type: 'success'
+            });
+				}
+			}).catch(error => {
+				console.log(error.msg)
+			})
+		},
     //点击修改按钮执行方法
     eidtInfoBtn(index) {
       this.isNew = false;
-      this.OrgNameList = [{ id: this.tableData[index].orgId, orgName: this.tableData[index].orgName }];
+      this.OrgNameList = [
+        {
+          id: this.tableData[index].orgId,
+          orgName: this.tableData[index].orgName
+        }
+      ];
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
@@ -253,15 +398,16 @@ export default {
      */
     searchOrgName(query) {
       var self = this;
-      if (query == '') {
+      if (query == "") {
         self.OrgNameList = [];
         return;
       }
 
       this.loading = true;
-      this.$axios.get('/orgs/list/orgByOrgName', {
-        params: { orgName: query || '' }
-      })
+      this.$axios
+        .get("/orgs/list/orgByOrgName", {
+          params: { orgName: query || "" }
+        })
         .then(function(response) {
           self.loading = false;
           let res = response.data;
@@ -270,7 +416,7 @@ export default {
           if (data.length > 0) {
             self.OrgNameList = data;
           } else {
-            self.OrgNameList = []
+            self.OrgNameList = [];
           }
         })
         .catch(function(error) {
@@ -285,7 +431,8 @@ export default {
     refreshTableData() {
       var self = this;
       // 为给定 ID 的 user 创建请求
-      this.$axios.get('/users/writer/list/writeruser', { params: this.params })
+      this.$axios
+        .get("/users/writer/list/writeruser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -300,7 +447,7 @@ export default {
      * 修改新增弹出点击确认按钮时触发提交表单操作
      */
     submit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (valid) {
           if (this.isNew) {
             this.addUser();
@@ -309,12 +456,10 @@ export default {
 
           this.updateUser();
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
-
-
     },
     /**
      * 新增用户
@@ -322,9 +467,9 @@ export default {
     addUser() {
       var self = this;
       this.$axios({
-        method: 'POST',
-        url: '/users/writer/add/writeruserofback',
-        data: this.$initPostData(this.form),
+        method: "POST",
+        url: "/users/writer/add/writeruserofback",
+        data: this.$initPostData(this.form)
       })
         .then(function(response) {
           let res = response.data;
@@ -334,15 +479,15 @@ export default {
             self.refreshTableData();
             self.dialogVisible = false;
             self.$message({
-              type: 'success',
-              message: '添加成功'
+              type: "success",
+              message: "添加成功"
             });
           }
         })
         .catch(function(error) {
           self.$message({
-            type: 'error',
-            message: '添加失败，请重试'
+            type: "error",
+            message: "添加失败，请重试"
           });
         });
     },
@@ -352,9 +497,9 @@ export default {
     updateUser() {
       var self = this;
       this.$axios({
-        method: 'PUT',
-        url: '/users/writer/update/writeruserofback',
-        data: this.$initPostData(this.form),
+        method: "PUT",
+        url: "/users/writer/update/writeruserofback",
+        data: this.$initPostData(this.form)
       })
         .then(function(response) {
           let res = response.data;
@@ -363,15 +508,15 @@ export default {
             self.refreshTableData();
             self.dialogVisible = false;
             self.$message({
-              type: 'success',
-              message: '修改成功'
+              type: "success",
+              message: "修改成功"
             });
           }
         })
         .catch(function(error) {
           self.$message({
-            type: 'error',
-            message: '修改失败，请重试'
+            type: "error",
+            message: "修改失败，请重试"
           });
         });
     },
@@ -379,7 +524,7 @@ export default {
      * 重置form表单数据
      */
     resetForm() {
-      this.$refs['ruleForm'].resetFields();
+      this.$refs["ruleForm"].resetFields();
       console.log(this.form);
     },
     /**
@@ -387,6 +532,20 @@ export default {
      */
     closeDialog() {
       this.resetForm();
+    },
+    preview(cert) {
+      this.$axios
+        .get("/image/" + cert)
+        .then(response => {
+          let res = response.data;
+          if (res.code == "1") {
+            this.dialogVisible = true;
+            console.log(res);
+          }
+        })
+        .catch(error => {
+          console.log(error.msg);
+        });
     }
   },
   created() {
@@ -394,9 +553,8 @@ export default {
   },
   mounted() {
     this.screenWidth_lg_computed = this.screenWidth_lg;
-
   }
-}
+};
 </script>
 <style>
 
