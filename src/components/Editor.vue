@@ -4,9 +4,9 @@
   </div>
 </template>
 <script>
-  import '../../static/neditor/neditor.config.js'
-  import '../../static/neditor/neditor.all.min.js'
-  import '../../static/neditor/lang/zh-cn/zh-cn.js'
+  import '../../static/ueditor/ueditor.config.js'
+  import '../../static/ueditor/ueditor.all.min.js'
+  import '../../static/ueditor/lang/zh-cn/zh-cn.js'
   export default {
     name: 'Editor',
     props: {
@@ -28,7 +28,7 @@
       this.editor.addListener("ready", function () {
         _this.$emit('editor_ready');
       });
-      
+
     },
     methods: {
       getContent() { // 获取内容方法

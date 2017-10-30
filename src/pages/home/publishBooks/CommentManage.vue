@@ -4,13 +4,13 @@
       <div class="searchBox-wrapper">
         <div class="searchName">书籍名称/ISBN：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.bookName"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
         <div class="searchName">消息状态：<span></span></div>
         <div class="searchInput">
-          <el-select  v-model="searchForm.state" placeholder="全部" @change="getTableData">
+          <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
             <el-option
               v-for="(item,index) in stateOption"
               :key="item.label"
@@ -74,7 +74,7 @@
             label="评论内容">
           </el-table-column>
           <el-table-column
-            prop="time"
+            prop="gmtCreate"
             label="评论时间"
             width="168">
           </el-table-column>
@@ -118,118 +118,13 @@
           isbn:'978-7-117-20419-4/R·0420',
           commentor:'张二',
           comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
-          grade:9
-        },{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          time:'2016-04-12',
+          gmtCreate:'2016-04-12',
           grade:9
         }],
         selectData:[],
         searchForm:{
-          bookName:'',
-          state:'',
+          name:'',
+          isAuth:'',
           pageSize:30,
           pageNumber:1
         },
@@ -252,7 +147,19 @@
        * 获取表格数据
        */
       getTableData(){
-
+        this.$axios.get('/bookusercomment/list/comment',{params:this.searchForm})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              res.data.rows.map(iterm=>{
+                iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate)
+              })
+              this.tableData = res.data.rows;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
       },
       /**
        * 表格复选框发生变化触发事件
@@ -266,6 +173,9 @@
       deleteComment(){
         this.deletePopoverVisible=false;
       }
+    },
+    created(){
+		  this.getTableData();
     },
 	}
 </script>
