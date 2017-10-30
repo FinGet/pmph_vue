@@ -25,21 +25,9 @@
       </div>
       <!--操作按钮-->
       <div class="pull-right">
-        <el-popover
-          ref="popover"
-          placement="top"
-          width="160"
-          v-model="deletePopoverVisible">
-          <p>确定删除选中的所有评论吗？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="deletePopoverVisible = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="deleteComment">确定</el-button>
-          </div>
-        </el-popover>
-        <el-button type="danger" :disabled="!selectData.length" v-popover:popover>删除</el-button>
-
-        <el-button type="warning">审核不通过</el-button>
-        <el-button type="primary">审核通过</el-button>
+        <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
+        <el-button type="warning" :disabled="!selectData.length" @click="audit(false)">审核不通过</el-button>
+        <el-button type="primary" :disabled="!selectData.length" @click="audit(true)">审核通过</el-button>
       </div>
 
       <!--表格-->
@@ -56,7 +44,7 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="bookName"
+            prop="bookname"
             label="书籍名称">
           </el-table-column>
           <el-table-column
@@ -65,12 +53,12 @@
             width="210">
           </el-table-column>
           <el-table-column
-            prop="commentor"
+            prop="writerName"
             label="评论人"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="comment"
+            prop="content"
             label="评论内容">
           </el-table-column>
           <el-table-column
@@ -79,7 +67,7 @@
             width="168">
           </el-table-column>
           <el-table-column
-            prop="grade"
+            prop="score"
             label="评分"
             width="80">
           </el-table-column>
@@ -87,7 +75,7 @@
             label="审核状态"
             width="120">
             <template scope="scope">
-              {{scope.row.state?'待审核':'审核通过'}}
+              {{scope.row.isAuth?'审核通过':'审核不通过'}}
             </template>
           </el-table-column>
         </el-table>
@@ -113,14 +101,7 @@
 	export default {
 		data() {
 			return {
-        tableData:[{
-          bookName:'人体寄生虫学（第3版）',
-          isbn:'978-7-117-20419-4/R·0420',
-          commentor:'张二',
-          comment:'这本书不错 ，值得推荐',
-          gmtCreate:'2016-04-12',
-          grade:9
-        }],
+        tableData:[],
         selectData:[],
         searchForm:{
           name:'',
@@ -138,8 +119,7 @@
           value:false,
           label:'未读'
         }],
-        totalNum:300,
-        deletePopoverVisible:false,
+        totalNum:0,
       }
 		},
     methods:{
@@ -153,7 +133,8 @@
             if(res.code==1){
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate)
-              })
+              });
+              this.totalNum = res.data.total;
               this.tableData = res.data.rows;
             }
           })
@@ -171,7 +152,61 @@
        * 删除选中行
        */
       deleteComment(){
-        this.deletePopoverVisible=false;
+        this.$confirm("确定删除选中节点吗?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            let select = [];
+            this.selectData.forEach(iterm=>{
+              select.push(iterm.id);
+            });
+            this.$axios.delete('/bookusercomment/delete/comment',{params:{
+              ids:select.join(',')
+            }})
+              .then(response=>{
+                let res = response.data;
+                if(res.code==1){
+                  this.$message.success('删除成功!');
+                  this.getTableData();
+                }else{
+                  this.$message.error('删除失败，请重试！');
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+          })
+      },
+      /**
+       * 点击审核通过或不通过按钮
+       * @param boolean true为审核通过， false为审核不通过
+       */
+      audit(boolean){
+        let url = '/bookusercomment/update/comment';
+        let select = [];
+        this.selectData.forEach(iterm=>{
+          select.push(iterm.id);
+        });
+        this.$axios.put(url,this.$commonFun.initPostData({
+          ids:select.join(','),
+          sessionId:this.getUserData().sessionId,
+          isAuth:!!boolean
+        }))
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$message.success('提交成功');
+              this.getTableData();
+            }else{
+              this.$message.error('操作失败请重试！');
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('操作失败请重试！');
+          })
       }
     },
     created(){
