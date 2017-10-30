@@ -134,7 +134,6 @@
 </template>
 
 <script>
-  import {getLocalTime, formatDate} from '../../../../static/commonFun'
   export default {
     data() {
       return {
@@ -176,7 +175,7 @@
       getMessageList() {
         this.$axios.get("/messages/list/message", {
           params: {
-            sessionId: this.getUserData().sessionId,
+            sessionId: this.$getUserData().sessionId,
             title: this.title,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
@@ -187,7 +186,7 @@
           if (res.code == '1') {
             // 将时间戳转为标准格式
             for (let i=0; i< res.data.rows.length; i++) {
-              res.data.rows[i].sendTime = formatDate(res.data.rows[i].sendTime)
+              res.data.rows[i].sendTime = this.$commonFun.formatDate(res.data.rows[i].sendTime)
             }
 
             this.tableData=res.data.rows

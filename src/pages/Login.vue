@@ -28,7 +28,6 @@
 
 <script>
 //  初始化一些数据
-import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -73,13 +72,6 @@ export default {
           return false;
         }
       })
-
-
-      /* if(this.loginForm.userName){
-        this.$store.dispatch('doLogin',{username:this.userName});
-      }else{
-        window.alert('请输入用户名');
-      } */
     }
   },
   mounted() {

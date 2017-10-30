@@ -85,17 +85,15 @@
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE,BASE_URL} from 'common/config.js';
   import beautyScroll from '@/base/beautyScroll.vue';
-  import {getDateDiff} from '../../../static/commonFun.js'
-  import {mapGetters} from 'vuex'
   import bus from 'common/eventBus/bus.js'
   export default{
     data(){
+      var _this = this;
        return {
          groupListUrl:'/group/list/pmphgroup',
          dialogVisible:false,
-         DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
+         DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
          currentActiveGroupId:undefined,
          inputSearchGroup:'',
          groupListData:[],
@@ -104,11 +102,6 @@
            name:null
          },
        }
-    },
-    computed:{
-      ...mapGetters([
-        'sidebarFlod'
-      ])
     },
     components:{
       beautyScroll
@@ -119,7 +112,7 @@
         this.$emit('clickItem',group)
       },
       changeDateType(num){
-         return  getDateDiff(num);
+         return  this.$commonFun.getDateDiff(num);
       },
       /*点击新建小组按钮*/
       addNew(){
@@ -131,14 +124,14 @@
         this.$axios.get(this.groupListUrl,{
           params:{
             groupName:this.inputSearchGroup,
-            sessionId:this.getUserData().sessionId
+            sessionId:this.$getUserData().sessionId
 
           },
         }).then(function(res){
           console.log(res);
           if(res.data.code==1){
             res.data.data.map(iterm=>{
-              iterm.groupImage=BASE_URL+'image/'+iterm.groupImage;
+              iterm.groupImage=_this.$config.BASE_URL+'image/'+iterm.groupImage;
             });
             _this.groupListData=res.data.data;
             if(res.data.data.length){
@@ -151,7 +144,7 @@
               //保持当前小组选中
 
                 _this.currentActiveGroupId=res.data.data[0].id;
-            
+
               res.data.data.forEach(iterm=>{
                 if(iterm.id==_this.currentActiveGroupId){
                   _this.$emit('clickItem',iterm);
@@ -202,7 +195,7 @@
         console.log(filedata);
         formdata.append('file',filedata);
         formdata.append('groupName',this.newGroupData.name);
-        formdata.append('sessionId',this.getUserData().sessionId);
+        formdata.append('sessionId',this.$getUserData().sessionId);
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -247,15 +240,12 @@
        */
       removeListenMessage(){
         bus.$off('ws:message',this.handlerReceiveMessage)
-      }
-    },
-    watch:{
+      },
       /**
-       * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+       *  当页面左侧导航区域展开和收起时执行此方法
        */
-      sidebarFlod(){
+      handleSideBarFlod(){
         this.$refs.beautyScroll.refresh(280);
-
       },
     },
     created(){
@@ -264,7 +254,8 @@
     mounted(){
       this.$refs.beautyScroll.refresh(300);
       this.startListenMessage();
-      bus.$on('group:info-change',this.getGroupData)
+      bus.$on('group:info-change',this.getGroupData);
+      bus.$on('side-bar:flod_unflod',this.handleSideBarFlod)
     },
     beforeDestroy(){
       this.removeListenMessage();

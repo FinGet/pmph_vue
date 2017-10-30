@@ -236,12 +236,11 @@
   </div>
 </template>
 <script type="text/javascript">
-  import {DEFAULT_USER_IMAGE} from 'common/config.js';
     export default{
       data() {
         return {
           limit_size:6,
-          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
+          DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
           activeName1:'first',
           activeName2: 'first',
           activeName3:'first',

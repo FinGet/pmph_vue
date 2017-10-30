@@ -15,11 +15,6 @@
         active:true
       }
     },
-    computed:{
-      user:function () {
-        return this.$store.getters.getUserData;
-      }
-    },
     created(){
 
     }

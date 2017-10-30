@@ -72,9 +72,9 @@
               <el-button type="primary" icon="search" @click="getWriterUserList">搜索</el-button>
             </div>
             <div class="tableContainer groupmanageTable">
-              <el-table ref="writerUserTable" 
-              :data="writerTableData" 
-              border tooltip-effect="dark" 
+              <el-table ref="writerUserTable"
+              :data="writerTableData"
+              border tooltip-effect="dark"
               @selection-change="writerCheckChange"
               style="width: 100%;margin-bottom:20px;">
                 <el-table-column type="selection" width="55">
@@ -88,14 +88,14 @@
                 <el-table-column prop="orgName" label="工作单位" show-overflow-tooltip>
                 </el-table-column>
               </el-table>
-              <el-pagination class="pull-right" 
-              :page-sizes="[10, 20,30, 50, 100]" 
+              <el-pagination class="pull-right"
+              :page-sizes="[10, 20,30, 50, 100]"
               :current-page.sync="writerParams.pageNumber"
               @size-change="writerSizeChange"
               @current-change="writerCurrentChange"
               v-if="writerPageTotal>writerParams.pageSize"
-              :page-size="writerParams.pageSize" 
-              layout="total, sizes, prev, pager, next, jumper" 
+              :page-size="writerParams.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
               :total="writerPageTotal">
               </el-pagination>
             </div>
@@ -104,12 +104,12 @@
         <el-tab-pane label="社内用户" name="second">
           <el-row>
             <el-col :span="6">
-              <el-tree 
-              :data="treeData" 
+              <el-tree
+              :data="treeData"
               :highlight-current='true'
-              :props="defaultProps" 
-              @node-click="handleNodeClick" 
-              node-key="id" 
+              :props="defaultProps"
+              @node-click="handleNodeClick"
+              node-key="id"
               :default-expanded-keys="[1]"></el-tree>
             </el-col>
             <el-col :span="17" :offset="1">
@@ -120,8 +120,8 @@
                 </el-col>
                 <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
               </el-col>
-              <el-table ref="multipleTable" 
-              :data="usersData" 
+              <el-table ref="multipleTable"
+              :data="usersData"
               border tooltip-effect="dark"
               @selection-change="clubUserSelectChange"
                style="width: 100%;margin-bottom:20px;">
@@ -138,14 +138,14 @@
                 <el-table-column prop="handphone" label="手机号">
                 </el-table-column>
               </el-table>
-              <el-pagination class="pull-right" 
-              @size-change="handleSizeChange" 
-              @current-change="handleCurrentChange" 
-              :current-page="pageNumber" 
-              :page-sizes="[10, 20,30, 50, 100]" 
+              <el-pagination class="pull-right"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pageNumber"
+              :page-sizes="[10, 20,30, 50, 100]"
               v-if="dataTotal>pageSize"
               :page-size="pageSize"
-               layout="total, sizes, prev, pager, next, jumper" 
+               layout="total, sizes, prev, pager, next, jumper"
                :total="dataTotal">
               </el-pagination>
             </el-col>
@@ -160,8 +160,8 @@
 
     <!-- 再次确认弹框 -->
      <el-dialog :visible.sync="againDialogVisible" size="tiny" top="30px" >
-          <el-table 
-          border 
+          <el-table
+          border
           :data="addTableData"
           style="width:100%;"
           >
@@ -176,9 +176,9 @@
         >
         <template scope="scope">
           {{scope.row.isWriter?"是":"否"}}
-          </template>  
+          </template>
       </el-table-column>
-            </el-table>  
+            </el-table>
             <div slot="footer" class="dialog-footer">
        <el-button @click="againDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addNewSubmit">确 定</el-button>
@@ -189,8 +189,7 @@
 
 <script>
 import beautyScroll from '@/base/beautyScroll.vue';
-import { mapGetters } from 'vuex'
-import { DEFAULT_USER_IMAGE } from 'common/config.js';
+import bus from 'common/eventBus/bus.js'
 export default {
   props: ['groupId','refreshMember'],
   data() {
@@ -210,7 +209,7 @@ export default {
       },
       writerPageTotal:0,
       addMemberArr:[],
-      defaultImage: DEFAULT_USER_IMAGE,
+      defaultImage: this.$config.DEFAULT_USER_IMAGE,
       memberListData: [],
       /**
        * 新增小组成员的弹窗数据
@@ -252,20 +251,15 @@ export default {
       isShowAddButton:false
     }
   },
-  computed: {
-    ...mapGetters([
-      'sidebarFlod'
-    ])
-  },
   methods: {
     /* 获取小组成员列表 */
     getGroupMember(val){
         var _this = this;
-        
+
       this.$axios.get(this.groupMemberUrl, {
         params: {
           groupId: val,
-          sessionId: this.getUserData().sessionId
+          sessionId: this.$getUserData().sessionId
         }
       }).then(function(res) {
         if (res.data.code == 1) {
@@ -323,7 +317,7 @@ export default {
        data:this.$initPostData({
        groupId:this.groupId,
        pmphGroupMembers:JSON.stringify(subArr),
-       sessionId:this.getUserData().sessionId,
+       sessionId:this.$getUserData().sessionId,
      })
      }
        ).then((res)=>{
@@ -385,8 +379,8 @@ export default {
     },
     compareList(){
        this.isShowAddButton=false;
-        var id= this.getUserData().userInfo.id,
-            loginType= this.getUserData().userInfo.loginType,
+        var id= this.$getUserData().userInfo.id,
+            loginType= this.$getUserData().userInfo.loginType,
             _this=this;
       this.memberListData.forEach((item)=>{
         if(item.userId==id&&item.userType==loginType&&(item.isAdmin||item.isFounder)){
@@ -423,19 +417,19 @@ export default {
      this.getWriterUserList();
     this.getClubUserData();
     this.getTreeData();
+    },
+    /**
+     *  当页面左侧导航区域展开和收起时执行此方法
+     */
+    handleSideBarFlod(){
+      this.$refs.beautyScroll.refresh(280);
     }
   },
   components: {
     beautyScroll
   },
   watch: {
-    /**
-     * 当左侧导航栏收起或展开式要重新刷新beautyScroll
-     */
-    sidebarFlod() {
-      this.$refs.beautyScroll.refresh(280);
 
-    },
     /* 监测小组id的变化 */
     groupId(newVal, old) {
       this.getGroupMember(newVal);
@@ -448,8 +442,14 @@ export default {
     if(this.groupId){
       this.getGroupMember(this.groupId);
     }
-    
-  }
+
+  },
+  mounted(){
+    /**
+     * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+     */
+    bus.$on('side-bar:flod_unflod',this.handleSideBarFlod)
+  },
 }
 </script>
 

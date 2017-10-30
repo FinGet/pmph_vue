@@ -139,8 +139,8 @@ export default {
     /* 当前小组成员权限比对 */
     initMemberAuth(){
       this.currentMember='';
-       var id= this.getUserData().userInfo.id,
-            loginType= this.getUserData().userInfo.loginType,
+       var id= this.$getUserData().userInfo.id,
+            loginType= this.$getUserData().userInfo.loginType,
             _this=this;
       this.tableData.forEach(function(item){
         if(item.userId==id&&item.userType==loginType){
@@ -161,7 +161,7 @@ export default {
     },
     handleSelectionChange (val) {
       this.selections = val
-     
+
     },
     // 批量修改管理员
     reviseMagage(bool){
@@ -178,7 +178,7 @@ export default {
          url:this.changeAuthUrl,
          data:this.$initPostData({
              pmphGroupMembers:JSON.stringify(subArr),
-             sessionId:this.getUserData().sessionId,
+             sessionId:this.$getUserData().sessionId,
              groupId:this.groupId
          })
        }).then((res)=>{
@@ -202,13 +202,13 @@ export default {
             ids+=item.id+',';
         })
         ids=ids.slice(0,-1);
-        
+
        this.$axios({
          method:'DELETE',
          url:this.deleteMemberUrl,
          params:{
             ids:ids,
-            sessionId:this.getUserData().sessionId,
+            sessionId:this.$getUserData().sessionId,
             groupId:this.groupId
          }
        }).then((res)=>{
@@ -219,7 +219,7 @@ export default {
          }else{
            this.$message.error('删除失败')
          }
-       })   
+       })
       }else{
         this.$message.error('请至少选择一个小组成员');
       }

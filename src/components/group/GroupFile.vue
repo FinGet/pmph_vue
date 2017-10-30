@@ -136,8 +136,6 @@
 </template>
 
 <script>
-  import {formatDate} from '../../../static/commonFun'
-  import {BASE_URL} from 'common/config.js'
   import ScreenSize from 'common/mixins/ScreenSize.js';
 	export default {
     mixins: [ScreenSize],
@@ -187,13 +185,13 @@
 
         let data={
           ids:ids.join(','),
-          sessionId:this.getUserData().sessionId
+          sessionId:this.$getUserData().sessionId
         };
         console.log(data)
         return data
       },
       uploadFileUrl(){
-        return BASE_URL+'group/add/pmphgroupfile'
+        return this.$config.BASE_URL+'group/add/pmphgroupfile'
       },
     },
     methods: {
@@ -241,7 +239,7 @@
             let res = response.data;
             if (res.code == '1') {
               res.data.rows.map(iterm=>{
-                iterm.gmtCreate=formatDate(iterm.gmtCreate);
+                iterm.gmtCreate=this.$commonFun.formatDate(iterm.gmtCreate);
                 iterm.gmtCreate=iterm.gmtCreate;
                 iterm.downloadUrl = BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
               });
@@ -283,7 +281,7 @@
         this.$axios.delete('/group/delete/pmphgroupfile',{params:{
           groupId:this.currentGroupId,
           ids:ids.join(','),
-          sessionId:this.getUserData().sessionId
+          sessionId:this.$getUserData().sessionId
         }})
           .then(response=>{
             let res = response.data;

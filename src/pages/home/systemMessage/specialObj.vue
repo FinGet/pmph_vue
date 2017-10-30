@@ -328,7 +328,7 @@ export default {
       });
 
       data.userIds=userList.join(',');
-      data['sessionId']=this.getUserData().sessionId;
+      data['sessionId']=this.$getUserData().sessionId;
       // console.log(this.formdata)
       this.$axios.post(url,this.$initPostData(data))
         .then(function (response) {

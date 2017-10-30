@@ -31,33 +31,31 @@
   import SideBar from 'components/Side-bar'
   import MessageIcon from 'components/Message-icon'
   import User from 'components/User';
-  import {mapGetters} from 'vuex'
   import Breadcrumb from 'components/Breadcrumb'
   import createWebsocket from 'common/mixins/createWebsocket'
-  import { mySessionStorage} from '../../static/commonFun.js'
+  import bus from 'common/eventBus/bus'
   export default {
     mixins:[createWebsocket],
     data() {
       return {
         isShowBackTop:false,
-        isShowBorder:true
+        isShowBorder:true,
+        sidebarFlod:true,
       }
     },
     computed:{
-      ...mapGetters([
-        'sidebarFlod'
-      ]),
       userData(){
-        return this.getUserData().userInfo;
+        return this.$getUserData().userInfo;
       },
     },
     methods: {
       toggleSideBarBtnFold(){
-        this.$store.commit("TOGGLE_SILDBAR");
+        this.sidebarFlod=!this.sidebarFlod;
+        bus.$emit('side-bar:flod_unflod');
       },
       sidebarWrapperClick(){
         if(!this.sidebarFlod){
-          this.$store.commit("TOGGLE_SILDBAR");
+          bus.$emit('side-bar:flod_unflod');
         }
       },
       backToTop(){

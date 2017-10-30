@@ -28,7 +28,6 @@
 </template>
 
 <script>
-  import {BASE_URL} from 'common/config.js';
 	export default {
     props:{
 	    userData: {
@@ -43,14 +42,14 @@
 		},
     computed:{
       headImage(){
-        return BASE_URL+'image/'+this.userData.avatar;
+        return this.$config.BASE_URL+'image/'+this.userData.avatar;
       },
     },
     methods:{
       logout(){
         this.$axios.get('/pmph/logout',{params:{
-          sessionId:this.getUserData().sessionId,
-          loginType:parseInt(this.getUserData().userInfo.loginType)
+          sessionId:this.$getUserData().sessionId,
+          loginType:parseInt(this.$getUserData().userInfo.loginType)
         }})
           .then(response=>{
             let res = response.data
