@@ -51,7 +51,6 @@
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js';
   import bus from 'common/eventBus/bus.js'
 	export default {
     props:['currentGroup'],
@@ -59,7 +58,7 @@
       return {
         visible:false,
         visible1:false,
-        DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
+        DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
         groupData:{
           filename:undefined,
           groupName:null,
@@ -110,7 +109,7 @@
         formdata.append('file',filedata);
         formdata.append('id',this.currentGroup.id);
         formdata.append('groupName',this.groupData.groupName);
-        formdata.append('sessionId',this.getUserData().sessionId);
+        formdata.append('sessionId',this.$getUserData().sessionId);
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
@@ -136,7 +135,7 @@
       deleteGroup(){
         this.$axios.delete('/group/delete/pmphgroup',{params:{
           id:this.currentGroup.id,
-          sessionId:this.getUserData().sessionId
+          sessionId:this.$getUserData().sessionId
         }})
           .then((response) => {
             let res = response.data;

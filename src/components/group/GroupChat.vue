@@ -79,8 +79,6 @@
   import vueEmoji from '@/base/emoji/emoji.vue'
   import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
-  import {getCursorPosition,setCursorPosition,getNowFormatDate,formatDate} from '../../../static/commonFun.js'
-  import {DEFAULT_USER_IMAGE,DEFAULT_USER_INAGE_ID,BASE_URL} from 'common/config.js'
   import bus from 'common/eventBus/bus.js'
 	export default {
     props:['currentGroup'],
@@ -104,7 +102,7 @@
 		},
     computed:{
       currentUserdata(){
-        return this.getUserData()
+        return this.$getUserData()
       },
       groupId(){
           return this.currentGroup.id;
@@ -120,10 +118,10 @@
           isNew:true,
           userId:this.currentUserdata.userInfo.id,
           userType:this.currentUserdata.userInfo.loginType,
-          header:BASE_URL+'image/'+this.currentUserdata.userInfo.avatar,
+          header:this.$config.BASE_URL+'image/'+this.currentUserdata.userInfo.avatar,
           username:this.currentUserdata.userInfo.username,
           messageData:undefined,
-          time:getNowFormatDate()
+          time:this.$commonFun.getNowFormatDate()
         };
 
         message.messageData = emoji(this.editingTextarea.trim());
@@ -146,7 +144,7 @@
       },
       resetCurrientCursorposition(){
         var textarea = this.$refs.textArea;
-        this.currientCursorposition = getCursorPosition(textarea);
+        this.currientCursorposition = this.$commonFun.getCursorPosition(textarea);
       },
       showEmojiFunction(){
           this.showEmoji=!this.showEmoji;
@@ -182,7 +180,7 @@
         var formdata = new FormData();
         formdata.append('file',filedata);
         formdata.append('ids',this.currentGroup.id);
-        formdata.append('sessionId',this.getUserData().sessionId);
+        formdata.append('sessionId',this.$getUserData().sessionId);
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
@@ -225,10 +223,10 @@
                   isNew:false,
                   userId:iterm.userId,
                   userType:iterm.userType,
-                  header:BASE_URL+'image/'+iterm.avatar,
+                  header:this.$config.BASE_URL+'image/'+iterm.avatar,
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
-                  time:formatDate(iterm.gmtCreate),
+                  time:this.$commonFun.formatDate(iterm.gmtCreate),
                 };
                 tempList.unshift(message)
               });
@@ -266,10 +264,10 @@
             isNew:false,
             userId:data.senderId,
             userType:data.senderType,
-            header:BASE_URL+'image/'+data.senderIcon,
+            header:this.$config.BASE_URL+'image/'+data.senderIcon,
             username:data.senderName,
             messageData:data.content,
-            time:formatDate(data.time),
+            time:this.$commonFun.formatDate(data.time),
           };
           this.messagesList.push(message);
         }

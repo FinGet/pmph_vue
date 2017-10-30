@@ -20,7 +20,8 @@ import {BASE_URL} from "../../src/common/config"
      * window.UEDITOR_HOME_URL = "/xxxx/xxxx/";
      */
     var host = BASE_URL.match(/http:\/\/([^\/]+)/i)[0];
-    window.UEDITOR_HOME_URL=host+'/static/ueditor/'
+    // window.UEDITOR_HOME_URL=host+'/static/ueditor/'//线上配置
+    window.UEDITOR_HOME_URL='/static/ueditor/'//本地开发测试配置
     var URL = window.UEDITOR_HOME_URL || getUEBasePath();
 
     /**

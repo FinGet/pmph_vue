@@ -364,7 +364,7 @@
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
         var url = this.type=='reissue'?'/messages/message/again':'/messages/message/new'
         data.orgIds=this.queryData.join(',');
-        data['sessionId']=this.getUserData().sessionId;
+        data['sessionId']=this.$getUserData().sessionId;
         // console.log(this.formdata)
         this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {

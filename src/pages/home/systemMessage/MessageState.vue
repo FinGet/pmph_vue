@@ -81,7 +81,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {formatDate} from '../../../../static/commonFun'
   export default {
     data() {
       return {
@@ -111,7 +110,7 @@
         this.$axios.get("/messages/message/"+this.msgId+"/state", {
           params: {
             name: this.name,
-            sessionId: this.getUserData().sessionId,
+            sessionId: this.$getUserData().sessionId,
             msgId: this.msgId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
@@ -125,8 +124,8 @@
             this.tableData=res.data.rows
             // 将时间戳转为标准格式
             for (let i=0; i< this.tableData.length; i++) {
-              this.tableData[i].sendTime = formatDate(this.tableData[i].sendTime)
-              this.tableData[i].reciveTime = formatDate(this.tableData[i].reciveTime)
+              this.tableData[i].sendTime = this.$commonFun.formatDate(this.tableData[i].sendTime)
+              this.tableData[i].reciveTime = this.$commonFun.formatDate(this.tableData[i].reciveTime)
             }
             // console.log(this.tableData)
             if (this.dataTotal == 0) {

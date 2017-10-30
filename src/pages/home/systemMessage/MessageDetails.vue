@@ -21,7 +21,6 @@
 </template>
 
 <script>
-    import {BASE_URL} from 'common/config.js'
     export default{
       data(){
         return {
@@ -47,7 +46,7 @@
                 let res = response.data
                 if(res.code==1){
                   res.data.MessageAttachment.map(iterm=>{
-                    iterm.attachment = BASE_URL + iterm.attachment.substring(1)
+                    iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1)
                   })
                   this.previewData.title = res.data.title;
                   this.previewData.content = res.data.content;

@@ -192,7 +192,7 @@
         });
         this.$axios.put(url,this.$commonFun.initPostData({
           ids:select.join(','),
-          sessionId:this.getUserData().sessionId,
+          sessionId:this.$getUserData().sessionId,
           isAuth:!!boolean
         }))
           .then(response=>{

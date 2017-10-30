@@ -198,7 +198,6 @@
   </div>
 </template>
 <script type="text/javascript">
-  import {formatDate} from '../../../../static/commonFun'
   export default {
     data(){
       return{
@@ -283,7 +282,7 @@
             let data = res.data;
             if (res.code == 1) {
               data.rows.map(iterm=>{
-                iterm.gmtCreate = formatDate(iterm.gmtCreate);
+                iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
               });
               this.tableData = data.rows;
               this.totalNum = data.total;

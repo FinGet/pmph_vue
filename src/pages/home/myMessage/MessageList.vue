@@ -86,7 +86,6 @@
 </template>
 
 <script>
-  import {formatDate} from '../../../../static/commonFun'
 	export default {
 		data() {
 			return {
@@ -95,8 +94,8 @@
         searchForm:{
           title:'',
           isRead:'',
-          userId:this.getUserData().userInfo.id,
-          userType:this.getUserData().userInfo.loginType,
+          userId:this.$getUserData().userInfo.id,
+          userType:this.$getUserData().userInfo.loginType,
           pageNumber:1,
           pageSize:30,
         },
@@ -123,7 +122,7 @@
             let res = response.data;
             if(res.code==1){
               res.data.rows.map(iterm=>{
-                iterm.sendTime = formatDate(iterm.sendTime);
+                iterm.sendTime = this.$commonFun.formatDate(iterm.sendTime);
               });
               this.totalNum = res.data.total||0;
               this.tableData=res.data.rows;

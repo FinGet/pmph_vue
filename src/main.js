@@ -9,8 +9,6 @@ import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
-import { mySessionStorage, initPostData, authorityComparison } from '../static/commonFun.js'
-import {BASE_URL} from 'common/config';
 import axios from 'axios'
 /*全局方法和配置挂载*/
 import * as config from 'common/config';
@@ -22,13 +20,13 @@ Vue.use(ElementUI);
 
 
 //请求根地址配置
-axios.defaults.baseURL = BASE_URL;
+axios.defaults.baseURL = config.BASE_URL;
 // axios.defaults.baseURL = 'http://192.168.200.151:8080/pmpheep/';
 
 //全局挂载
 Vue.prototype.$axios = axios;
-Vue.prototype.$mySessionStorage = mySessionStorage;
-Vue.prototype.$initPostData = initPostData;
+Vue.prototype.$mySessionStorage = commonFun.mySessionStorage;
+Vue.prototype.$initPostData = commonFun.initPostData;
 
 
 Vue.prototype.$config = config;
@@ -36,7 +34,7 @@ Vue.prototype.$commonFun = commonFun;
 
 //全局封装一个获取用户信息方法
 var getUserData=function () {
-  var sessionData = mySessionStorage.get('currentUser', 'json')||{};
+  var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
   return {
     token:sessionData.sessionPmphUserToken,
     sessionId:sessionData.userSessionId,
@@ -44,7 +42,7 @@ var getUserData=function () {
     permissionIds:sessionData.pmphUserPermissionIds
   }
 };
-Vue.prototype.getUserData=getUserData;
+Vue.prototype.$getUserData=getUserData;
 
 router.beforeEach((to, from, next) => {
   var userdata = getUserData();
@@ -52,7 +50,7 @@ router.beforeEach((to, from, next) => {
     if (!userdata.userInfo) {
       next('/login')
     }
-    else if (authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
+    else if (commonFun.authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
       next();
     } else {
       ElementUI.Message.error('抱歉，您没有进入该模块的权限');

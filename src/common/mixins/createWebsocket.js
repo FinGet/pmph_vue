@@ -5,7 +5,7 @@ export default {
     if(!WebSocket){
       console.error('浏览器不支持websocket')
     };
-    var userdata = this.getUserData()
+    var userdata = this.$getUserData()
     var userType = userdata.userInfo.loginType || '1';
     var sessionid = userdata.sessionId || '';
     var socket = new WebSocket(BASE_WS_URL + 'websocket?userType=' + userType+'&sessionId='+sessionid);

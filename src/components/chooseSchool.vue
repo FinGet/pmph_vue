@@ -314,7 +314,7 @@
       submit(){
         var self = this;
         this.formdata.orgIds=this.queryData.join(',');
-        this.formdata['sessionId']=this.getUserData().sessionId;
+        this.formdata['sessionId']=this.$getUserData().sessionId;
         this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
           .then(function (response) {
             let res = response.data;

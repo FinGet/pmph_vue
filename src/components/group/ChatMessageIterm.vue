@@ -77,7 +77,7 @@
             this.$axios.post('/group/add/groupmessage',this.$initPostData({
               msgConrent:this.message.messageData,
               groupId:this.groupId,
-              sessionId:this.getUserData().sessionId
+              sessionId:this.$getUserData().sessionId
             }))
               .then((response) => {
                 let res = response.data;

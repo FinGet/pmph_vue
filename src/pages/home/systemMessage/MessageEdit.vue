@@ -71,11 +71,10 @@
 </template>
 <script>
 import Editor from 'components/Editor.vue'
-import {BASE_URL} from 'common/config.js'
 export default {
   data: function() {
     return {
-      fileUploadUrl:BASE_URL+'messages/message/file',
+      fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
       currentMessageType:'add',
       currentMessageId:undefined,
       messageForm:{

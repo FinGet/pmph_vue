@@ -34,15 +34,13 @@
 
 <script>
   import bus from 'common/eventBus/bus.js'
-  import {getDateDiff,getHTMLText} from '../../static/commonFun'
-  import {BASE_URL} from 'common/config.js'
 	export default {
 		data() {
 			return {
 			  receiveMessage:[],
         searchForm:{
-          userId:this.getUserData().userInfo.id,
-          userType:this.getUserData().userInfo.loginType,
+          userId:this.$getUserData().userInfo.id,
+          userType:this.$getUserData().userInfo.loginType,
           pageNumber:1,
           pageSize:5,
         },
@@ -59,9 +57,9 @@
             let res = response.data;
             if(res.code==1){
               res.data.rows.map(iterm=>{
-                iterm.senderAvatar = BASE_URL+'image/'+iterm.senderAvatar;
+                iterm.senderAvatar = this.$config.BASE_URL+'image/'+iterm.senderAvatar;
                 iterm.title = iterm.title.length>18?iterm.title.substring(0,18)+'...':iterm.title;
-                iterm.content=getHTMLText(iterm.content).substring(0,42)+'...';
+                iterm.content=this.$commonFun.getHTMLText(iterm.content).substring(0,42)+'...';
               });
               this.receiveMessage=res.data.rows;
               this.totalNum = res.data.total;
@@ -93,10 +91,10 @@
         var messageObj = {
           senderId:receiveData.senderId,
           senderName:receiveData.senderName,
-          senderAvatar:BASE_URL+'image/'+receiveData.senderIcon,
+          senderAvatar:this.$config.BASE_URL+'image/'+receiveData.senderIcon,
           sendTime:receiveData.time,
           title:receiveData.title.length>18?receiveData.title.substring(0,18)+'...':receiveData.title,
-          content:getHTMLText(receiveData.content).substring(0,42)+'...',
+          content:this.$commonFun.getHTMLText(receiveData.content).substring(0,42)+'...',
           id:receiveData.id,
         };
         this.receiveMessage.push(messageObj);
@@ -108,7 +106,7 @@
        * @returns {*|string}
        */
       dateDiff(time){
-	      return getDateDiff(time)
+	      return this.$commonFun.getDateDiff(time)
       },
       /**
        * 点击msg图标跳转到我的消息列表页面

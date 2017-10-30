@@ -34,7 +34,6 @@
   import {mapGetters} from 'vuex'
   import Breadcrumb from 'components/Breadcrumb'
   import createWebsocket from 'common/mixins/createWebsocket'
-  import { mySessionStorage} from '../../static/commonFun.js'
   export default {
     mixins:[createWebsocket],
     data() {
@@ -48,7 +47,7 @@
         'sidebarFlod'
       ]),
       userData(){
-        return this.getUserData().userInfo;
+        return this.$getUserData().userInfo;
       },
     },
     methods: {
