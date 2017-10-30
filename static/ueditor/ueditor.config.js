@@ -8,7 +8,7 @@
  * 主要有两种修改方案，一种是取消此处注释，然后修改成对应参数；另一种是在实例化编辑器时传入对应参数。
  * 当升级编辑器时，可直接使用旧版配置文件替换新版配置文件,不用担心旧版配置文件中因缺少新功能所需的参数而导致脚本报错。
  **************************提示********************************/
-
+import {BASE_URL} from "../../src/common/config"
 
 (function () {
     /**
@@ -19,7 +19,8 @@
      * 因此，UEditor提供了针对不同页面的编辑器可单独配置的根路径，具体来说，在需要实例化编辑器的页面最顶部写上如下代码即可。当然，需要令此处的URL等于对应的配置。
      * window.UEDITOR_HOME_URL = "/xxxx/xxxx/";
      */
-    window.UEDITOR_HOME_URL='http://localhost:8089/static/ueditor/'
+    var host = BASE_URL.match(/http:\/\/([^\/]+)/i)[0];
+    window.UEDITOR_HOME_URL=host+'/static/ueditor/'
     var URL = window.UEDITOR_HOME_URL || getUEBasePath();
 
     /**

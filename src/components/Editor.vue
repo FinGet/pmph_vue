@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="editor">
     <script id="editor" type="text/plain" ref="editor"></script>
   </div>
 </template>
@@ -44,5 +44,7 @@
   }
 </script>
 <style scoped>
-
+.editor{
+  line-height: 1;
+}
 </style>
