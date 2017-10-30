@@ -86,7 +86,6 @@
 
 <script>
   import beautyScroll from '@/base/beautyScroll.vue';
-  import {mapGetters} from 'vuex'
   import bus from 'common/eventBus/bus.js'
   export default{
     data(){
@@ -103,11 +102,6 @@
            name:null
          },
        }
-    },
-    computed:{
-      ...mapGetters([
-        'sidebarFlod'
-      ]),
     },
     components:{
       beautyScroll
@@ -246,15 +240,12 @@
        */
       removeListenMessage(){
         bus.$off('ws:message',this.handlerReceiveMessage)
-      }
-    },
-    watch:{
+      },
       /**
-       * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+       *  当页面左侧导航区域展开和收起时执行此方法
        */
-      sidebarFlod(){
+      handleSideBarFlod(){
         this.$refs.beautyScroll.refresh(280);
-
       },
     },
     created(){
@@ -263,7 +254,8 @@
     mounted(){
       this.$refs.beautyScroll.refresh(300);
       this.startListenMessage();
-      bus.$on('group:info-change',this.getGroupData)
+      bus.$on('group:info-change',this.getGroupData);
+      bus.$on('side-bar:flod_unflod',this.handleSideBarFlod)
     },
     beforeDestroy(){
       this.removeListenMessage();

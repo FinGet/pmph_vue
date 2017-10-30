@@ -189,7 +189,7 @@
 
 <script>
 import beautyScroll from '@/base/beautyScroll.vue';
-import { mapGetters } from 'vuex'
+import bus from 'common/eventBus/bus.js'
 export default {
   props: ['groupId','refreshMember'],
   data() {
@@ -250,11 +250,6 @@ export default {
       addTableData:[],
       isShowAddButton:false
     }
-  },
-  computed: {
-    ...mapGetters([
-      'sidebarFlod'
-    ])
   },
   methods: {
     /* 获取小组成员列表 */
@@ -422,19 +417,19 @@ export default {
      this.getWriterUserList();
     this.getClubUserData();
     this.getTreeData();
+    },
+    /**
+     *  当页面左侧导航区域展开和收起时执行此方法
+     */
+    handleSideBarFlod(){
+      this.$refs.beautyScroll.refresh(280);
     }
   },
   components: {
     beautyScroll
   },
   watch: {
-    /**
-     * 当左侧导航栏收起或展开式要重新刷新beautyScroll
-     */
-    sidebarFlod() {
-      this.$refs.beautyScroll.refresh(280);
 
-    },
     /* 监测小组id的变化 */
     groupId(newVal, old) {
       this.getGroupMember(newVal);
@@ -448,7 +443,13 @@ export default {
       this.getGroupMember(this.groupId);
     }
 
-  }
+  },
+  mounted(){
+    /**
+     * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+     */
+    bus.$on('side-bar:flod_unflod',this.handleSideBarFlod)
+  },
 }
 </script>
 
