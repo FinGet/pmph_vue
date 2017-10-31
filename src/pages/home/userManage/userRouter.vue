@@ -1,5 +1,5 @@
 <template>
-  <div class="user_router">
+  <div class="user_router" style="height:100%;">
       <transition name="fade" mode="out-in">
       <router-view></router-view>
       </transition>

@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="app-main" ref="main">
-      <div class="app-main-inner"  :class="{'app_main_border':isShowBorder}">
+      <div class="app-main-inner"  :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
 
         <transition name="fade" mode="out-in">
           <router-view></router-view>
@@ -40,6 +40,7 @@
       return {
         isShowBackTop:false,
         isShowBorder:true,
+        isPadding:false,
         sidebarFlod:true,
       }
     },
@@ -79,8 +80,12 @@
        // console.log(this.$router.currentRoute);
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
+            this.isPadding=false;
         if(str=='materialrouter'||str=='groupmanage'||str=='auth'){
           this.isShowBorder=false;
+        }
+        if(str=='user'&&this.$router.currentRoute.name!='社内用户'){
+          this.isPadding=true;
         }
         if(this.$router.currentRoute.name=="通知列表"){
           this.isShowBorder=true;
@@ -163,6 +168,9 @@
       padding:15px 20px;
       background: #fff;
       min-height: 100%;
+  }
+  .app_main_padding{
+         padding:0;
   }
   .nav-top{
     height:38px;
