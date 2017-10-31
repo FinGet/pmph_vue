@@ -4,14 +4,14 @@
     <div class="nextStep-wrapper text-right">
       <el-button type="primary" @click="preview">预览</el-button>
       <el-button type="primary" @click="nextStep()" v-if="currentMessageType!='edit'">下一步</el-button>
-      <el-button type="primary" @click="editSave()" v-if="currentMessageType==='edit'">保存</el-button>
+      <el-button type="primary" @click="editSave()" v-if="currentMessageType=='edit'">保存</el-button>
     </div>
     <!--输入标题-->
     <el-form :model="messageForm" ref="messageForm" :rules="messageRules" label-width="110px">
       <el-form-item label="标题：" prop="title">
            <el-input v-model="messageForm.title" placeholder="请输入文章标题" class="message-title-input"></el-input>
       </el-form-item>
-      <el-form-item label="发送对象：" prop="sendType">
+      <el-form-item label="发送对象：" prop="sendType" v-if="currentMessageType!='edit'">
            <el-radio-group v-model="messageForm.sendType">
             <el-radio :label="1">学校管理员</el-radio>
             <el-radio :label="2">所有人</el-radio>
@@ -19,7 +19,7 @@
             <el-radio :label="4">教材报名者</el-radio>
           </el-radio-group>
       </el-form-item>
-      <el-form-item label="文章内容：" required>
+      <el-form-item label="文章内容：">
         <div class="clearfix">
           <Editor ref="editor" :config="editorConfig"></Editor>
         </div>
@@ -200,23 +200,53 @@ export default {
           let res = response.data;
           console.log(res);
           //初始化title
-          this.messageForm.title=text;
+          this.messageForm.title=res.data.title;
           //初始化message 数据，将内容填充到相应位置
           this.$refs.editor.setContent(res.data.content);
           //将已上传文件push到上传组件文件列表中
-          [].unshift.apply(this.uploadFileList,res.data.files)
+          res.data.MessageAttachment.forEach(iterm=>{
+            iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1);
+            iterm.url = iterm.attachment;
+            iterm.name = iterm.attachmentName;
+          });
+          this.messageForm.originalFileList = res.data.MessageAttachment;
+          this.uploadFileList = res.data.MessageAttachment;
+          console.log(this.uploadFileList)
         })
         .catch(e=>{
+          console.log(e);
           this.$message.error('获取当前系统消息失败！');
-          this.$route.query.type='add';
-          this.currentMessageType='add';
         })
     },
     /**
-     * 编辑消息后保存
+     * 点击修改进入编辑消息后保存
      */
     editSave(){
-
+      console.log(this.messageForm);
+      let filePath = [];
+      this.messageForm.filePathList.forEach(iterm=>{
+        filePath.push(iterm.path);
+      });
+      this.messageForm.content = this.$refs.editor.getContent();
+      this.$axios.put('/messages/update/message',this.$commonFun.initPostData({
+        msgId:this.currentMessageId,
+        msgTitle:this.messageForm.title,
+        content:this.messageForm.content,
+        file:filePath.join(',')
+      }))
+        .then(response=>{
+          let res = response.data;
+          if(res==1){
+            this.$message.success('修改成功！');
+            this.$router.push({name: '消息列表'});
+          }else{
+            this.$message.error('提交失败，请重试！');
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+          this.$message.error('提交失败，请重试！');
+        })
     },
     /**
      * 由选择发送对象页面返回编辑页面，需要将原有内容插入编辑器中，供再次编辑
@@ -226,6 +256,8 @@ export default {
       for(let key in this.messageForm){
         this.messageForm[key] = message[key]
       }
+      console.log(this.$refs.editor);
+      console.log(this.$refs.editor.setContent);
       //将content插入编辑器
       this.$refs.editor.setContent(this.messageForm.content);
       //将已有文件插入列表
@@ -235,24 +267,21 @@ export default {
       this.messageForm.filePathList.forEach(iterm=>{
         this.uploadFileList.push(iterm);
       });
-    }
+    },
   },
   components:{
     Editor
   },
-  created(){
+  mounted(){
     var routerParams = this.$route.params;
     this.currentMessageType = this.$route.query.type;
     this.currentMessageId = this.$route.query.messageId;
     if(this.currentMessageType=='edit'&&this.currentMessageId){
       this.getCurrentMessageData()
     }
-    if(this.currentMessageType=='reEidt'){
+    if(this.currentMessageType=='reEdit'){
       this.reEditMessage(routerParams)
     }
-  },
-  mounted() {
-
   },
   destroyed(){
 

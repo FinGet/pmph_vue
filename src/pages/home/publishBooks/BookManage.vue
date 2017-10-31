@@ -43,9 +43,10 @@
               class="searchInputEle bookType"
               v-else-if="powerSearchValue===2"
               :options="bookTypeList"
-              :props="{label:'typeName',children:'childrenMaterialTypeVO'}"
+              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
               :value="searchForm.path"
-              change-on-select
+              @change="bookTypeChange"
+              :change-on-select="true"
             ></el-cascader>
             <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" v-else-if="powerSearchValue===1"></el-input>
           </div>
@@ -72,8 +73,10 @@
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
+              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
               :value="searchForm.path"
-              change-on-select
+              @change="bookTypeChange"
+              :change-on-select="true"
             ></el-cascader>
           </div>
         </div>
@@ -225,13 +228,13 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="是否重点推荐：">
-            <el-radio-group v-model="form.isEmphasis">
+            <el-radio-group v-model="form.isPromote">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="是否上架：">
-            <el-radio-group v-model="form.isPublish">
+            <el-radio-group v-model="form.isOnSale">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
@@ -251,16 +254,17 @@
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
-              :props="{label:'typeName',children:'childrenMaterialTypeVO'}"
-              :value="form.bookType"
-              change-on-select
+              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :value="form.typeId"
+              @change="bookTypeChange_form"
+              :change-on-select="true"
             ></el-cascader>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="update">确 定</el-button>
       </span>
     </el-dialog>
 	</div>
@@ -271,11 +275,11 @@
 		data() {
 			return {
 			  form:{
+			    bookId:'',
           isNew:true,
-          isEmphasis:true,
-          isPublish:true,
-          tags:[],
-          bookType:[],
+          isPromote:true,
+          isOnSale:true,
+          typeId:[]
         },
 			  searchForm:{
           name:'',
@@ -325,10 +329,12 @@
         tableData:[],
         selectData:[],
         bookTypeList: [],
-        props: {
-          value: 'label',
-          children: 'cities'
-        }
+        bookTypeProps: {
+          label: 'typeName',
+          value:'path',
+          children: 'childrenMaterialTypeVO'
+        },
+        bookTypeSelected:[],
       }
 		},
     methods:{
@@ -336,9 +342,12 @@
        * 获取表格数据
        */
       getTableData(){
+        let path = this.bookTypeSelected[this.bookTypeSelected.length-1];
+        path=path?path:"";
+        console.log(path);
         this.$axios.get('/books/list/book',{params:{
           name:this.searchForm.name,
-          path:'',
+          path:path,
           isNew:this.searchForm.isNew,
           isPromote:this.searchForm.isPromote,
           isOnSale:this.searchForm.isOnSale,
@@ -364,6 +373,8 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              res.data.typeName='全部';
+              res.data.path='';
               this.bookTypeList = res.data.childrenMaterialTypeVO;
               console.log(this.bookTypeList)
             }
@@ -376,6 +387,7 @@
        * 点击展开收起高级搜索文字按钮
        */
       toggleSearchType(){
+        this.bookTypeSelected=[];
         this.powerSearch=!this.powerSearch;
       },
       /**
@@ -389,13 +401,70 @@
        * @param row
        */
       editInfo(row){
+        console.log(row)
         this.dialogVisible=true;
+        this.form.bookId = row.id;
+        this.form.isNew = row.isNew;
+        this.form.isOnSale = row.isOnSale;
+        this.form.isPromote = row.isPromote;
+        var path = row.path?row.path.split('-'):[];
+        path.forEach(t=>{
+          this.form.typeId.push(parseInt(t));
+        });
       },
       /**
        * 批量修改
        */
       bulkEditInfo(){
         this.dialogVisible=true;
+        var ids = [];
+        this.selectData.forEach(iterm=>{
+          ids.push(iterm.id);
+        })
+        this.form.bookId = ids.join(',');
+        this.form.isNew = true;
+        this.form.isOnSale = true;
+        this.form.isPromote = true;
+        this.form.typeId = [1];
+      },
+      /**
+       * 级联下拉值变化时触发此方法
+       * @param res
+       */
+      bookTypeChange(res){
+        this.bookTypeSelected=res;
+      },
+      bookTypeChange_form(res){
+        this.form.typeId=res;
+      },
+      /**
+       * update
+       */
+      update(){
+        let type = this.form.typeId[this.form.typeId.length-1];
+        type=type?type:0;
+
+        this.$axios.put('/books/update/book',this.$commonFun.initPostData({
+          ids:this.form.bookId,
+          isNew:this.form.isNew,
+          isPromote:this.form.isPromote,
+          isOnSale:this.form.isOnSale,
+          type:type,
+        }))
+          .then(response=>{
+            let res = response.data;
+            if(res.code==1){
+              this.$message.success('修改成功');
+              this.dialogVisible=false;
+              this.getTableData();
+            }else{
+              this.$message.error('修改失败，请重试！');
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('修改失败，请重试！');
+          })
       }
     },
     created(){
