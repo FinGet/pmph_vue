@@ -386,7 +386,7 @@
        */
       goBackEdit(){
         var routerParams = this.$route.params;
-        this.$router.push({name: '编辑消息',query:{type:'reEdit'}})
+        this.$router.push({name: '编辑消息',query:{type:'reEdit'},params:routerParams})
       },
       /**
        * 按区域拼音排序
