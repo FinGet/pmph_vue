@@ -72,11 +72,9 @@
             width="80">
           </el-table-column>
           <el-table-column
+            prop="isAuth"
             label="审核状态"
             width="120">
-            <template scope="scope">
-              {{scope.row.isAuth?'审核通过':'审核不通过'}}
-            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -132,7 +130,17 @@
             var res = response.data;
             if(res.code==1){
               res.data.rows.map(iterm=>{
-                iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate)
+                iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
+                switch(iterm.isAuth){
+                  case 0:
+                    iterm.isAuth='审核不通过';
+                    break;
+                  case 1:
+                    iterm.isAuth = '审核通过';
+                    break;
+                  case 2:
+                    iterm.isAuth = '未审核';
+                }
               });
               this.totalNum = res.data.total;
               this.tableData = res.data.rows;

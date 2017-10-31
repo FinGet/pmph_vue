@@ -67,15 +67,11 @@ router.beforeEach((to, from, next) => {
 axios.interceptors.request.use(function (config) {
   var userdata = getUserData();
   //请求发送之前的钩子
-  //console.log(config);
-/*   if(config.url!='http://192.168.200.124:8090/pmpheep/pmph/login'){
-    config.withCredentials=true;
-  }
- */
   if(userdata.token){
      config.headers.Authorization=userdata.token;
   }else{
     router.push('/login');
+    
   }
   return config;
 }, function (error) {

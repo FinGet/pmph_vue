@@ -304,6 +304,7 @@ export default {
 .message-preview{
   max-width: 1060px;
   margin: 0 auto;
+  min-height: 400px;
 }
 .previewTitle{
   color: #14232e;
