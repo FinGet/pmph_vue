@@ -11,7 +11,7 @@
             v-for="item in provinces"
             :key="item.id"
             @click="selectProvince(item)"
-            :class="{'active':item.areaName==active.province}">{{item.areaName}}
+            :class="{'active':item.id == active.pid}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editProvince(item)"></el-button>
               <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
@@ -29,7 +29,7 @@
             v-for="item in cities"
             :key="item.id"
             @click="selectCity(item)"
-            :class="{'active':item.areaName==active.city}">{{item.areaName}}
+            :class="{'active':item.id == active.cid}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editCity(item)"></el-button>
               <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
@@ -48,7 +48,7 @@
             v-for="item in blocks"
             :key="item.id"
             @click="selectBlock(item)"
-            :class="{'active':item.areaName==active.block}">{{item.areaName}}
+            :class="{'active':item.id == active.bid}">{{item.areaName}}
             <div class="pull-right">
               <el-button type="primary" size="mini" icon="edit" @click.stop="editBlock(item)"></el-button>
               <el-button type="danger" size="mini" icon="delete" @click.stop="deleted(item)"></el-button>
@@ -176,9 +176,12 @@
         parentId: 0,
         // active用于当前选中高亮，以及暂存当前选中项供后面方法中调用
         active:{
-          province:'',
-          city:'',
-          block:''
+//          province:'',
+          pid:'',
+//          city:'',
+          cid:'',
+//          block:'',
+          bid:''
         },
         cities: [], // 市级
         provinces: [], // 省级
@@ -212,25 +215,41 @@
             this.data.forEach(item => {
               //this.provinces = []
               this.provinces.push(item)
-              if (this.active.province=='') {
-                this.active.province = this.provinces[0].areaName
-                if (this.provinces[0].chirldren) {
-                  this.active.city = this.provinces[0].chirldren[0].areaName
-                }
-                if (this.provinces[0].chirldren[0].chirldren) {
-                  this.active.province = this.provinces[0].chirldren[0].chirldren[0].areaName
-                }
-                this.selectProvince(this.provinces[0])
-              } else {
-                this.data.forEach(item => {
-                  if (item.areaName == this.active.province) {
-                    this.selectProvince(item)
-                  } else {
-                    this.selectProvince(this.provinces[0])
-                  }
-                })
-              }
+              // console.log(this.active.province)
             })
+            // 主要利用id标志来设置高亮选中状态
+            if (this.active.pid=='') {
+              //this.active.province = this.provinces[0].areaName
+              this.active.pid = this.provinces[0].id
+              if (this.provinces[0].chirldren) {
+                //this.active.city = this.provinces[0].chirldren[0].areaName
+                this.active.cid = this.provinces[0].chirldren[0].id
+              }
+              if (this.provinces[0].chirldren[0].chirldren) {
+                //this.active.block = this.provinces[0].chirldren[0].chirldren[0].areaName
+                this.active.bid = this.provinces[0].chirldren[0].chirldren[0].id
+              }
+              this.selectProvince(this.provinces[0])
+            } else {
+              this.data.forEach(item => {
+                 // console.log(this.active.pid)
+                if (item.id == this.active.pid) {
+                  this.selectProvince(item)
+                }else {
+                  //this.selectProvince(this.provinces[0])
+                }
+              })
+              item.chirldren.forEach(item1 => {
+                if (item1.id == this.active.cid) {
+                  this.selectCity(item1)
+                }
+              })
+              item1.chirldren.forEach(item2 => {
+                if (item2.id == this.active.bid) {
+                  this.selectBlock(item2)
+                }
+              })
+            }
           }
         }).catch(error => {
           console.log(error.msg)
@@ -243,25 +262,34 @@
        * @param sheng
        */
       selectProvince(item) {
-        var oldProvince = this.active.province
+        var oldProvince = this.active.pid
         if (item) {
-          this.active.province = item.areaName
-          this.cities = item.chirldren
+          //this.active.province = item.areaName
+          this.active.pid = item.id
+          if (item.chirldren) {
+            this.cities = item.chirldren
+          } else {
+            this.cities = null
+          }
+          if (this.active.cid =='') {
+            this.active.cid == item.chirldren[0].id
+          }
           if (this.cities == null) {
             this.blocks = null
           } else {
-            // 如果省份改变 则点击市级第一个
-            if (oldProvince != item.areaName ) {
+            // 如果点击省份改变 则点击市级第一个
+            if (oldProvince != item.id ) {
               this.selectCity(item.chirldren[0])
             }
-            if (this.active.city!=item.chirldren[0].areaName) {
+            if (this.active.cid!=item.chirldren[0].id) {
               item.chirldren.forEach(item1 => {
-                if(item1.areaName == this.active.city) {
+                if(item1.id == this.active.cid) {
                   this.selectCity(item1)
                 }
               })
             } else {
               this.selectCity(item.chirldren[0])
+              this.active.cid = this.cities[0].id
             }
           }
         }
@@ -273,14 +301,34 @@
        * @param di
        */
       selectCity(item) {
-        //console.log(item.areaName)
-        this.active.city = item.areaName
-        this.blocks = item.chirldren
-        // console.log(this.blocks[0].areaName)
+        var oldCity = this.active.cid
+        //this.active.city = item.areaName
+        if (item.chirldren) {
+          this.blocks = item.chirldren
+        }else {
+          this.blocks = null
+        }
+        this.active.cid = item.id
+        if (item.chirldren&&this.active.bid =='') {
+          this.active.bid == item.chirldren[0].id
+        }
         if (this.blocks == null) {
           return
         } else {
-          this.active.block = this.blocks[0].areaName
+          // 如果点击市级改变，则县级选中第一个
+          if (oldCity != item.id ) {
+            this.selectBlock(item.chirldren[0])
+          }
+          if (this.active.bid!=item.chirldren[0].id) {
+            item.chirldren.forEach(item1 => {
+              if(item1.id == this.active.bid) {
+                this.selectBlock(item1)
+              }
+            })
+          } else {
+            this.selectBlock(item.chirldren[0])
+            //this.active.bid = this.blocks[0].bid
+          }
         }
       },
       /**
@@ -288,7 +336,8 @@
        * @param name
        */
       selectBlock(item) {
-        this.active.block = item.areaName
+        //this.active.block = item.areaName
+        this.active.bid = item.id
       },
 
 
@@ -325,7 +374,7 @@
         // console.log(this.active.province)
         var parentId = ''
         this.provinces.forEach(item => {
-          if (item.areaName == this.active.province) {
+          if (item.id == this.active.pid) {
             parentId = item.id
           }
         })
@@ -337,7 +386,7 @@
       saveBlock() {
         var parentId = ''
         this.cities.forEach(item => {
-          if (item.areaName == this.active.city) {
+          if (item.id == this.active.cid) {
             parentId = item.id
           }
         })
@@ -387,7 +436,7 @@
       upDataCity() {
         var parentId = ''
         this.provinces.forEach(item => {
-          if (item.areaName == this.active.province) {
+          if (item.id == this.active.pid) {
             parentId = item.id
           }
         })
@@ -399,7 +448,7 @@
       upDataBlock() {
         var parentId = ''
         this.cities.forEach(item => {
-          if (item.areaName == this.active.city) {
+          if (item.id == this.active.cid) {
             parentId = item.id
           }
         })
@@ -426,6 +475,9 @@
               message: '删除成功!',
               type: 'success'
             });
+            if (item.id == this.active.pid) {
+              this.active.pid = ''
+            }
           }
         })
       },
