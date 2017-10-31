@@ -241,13 +241,14 @@
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=this.$commonFun.formatDate(iterm.gmtCreate);
                 iterm.gmtCreate=iterm.gmtCreate;
-                iterm.downloadUrl = BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
+                iterm.downloadUrl = this.$config.BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
               });
               this.tableData=res.data.rows;
               this.fileNum = res.data.total;
             }
           })
           .catch(e=>{
+            console.log(e);
             this.$message.error('获取小组文件失败');
           })
       },
