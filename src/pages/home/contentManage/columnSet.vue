@@ -54,7 +54,7 @@
       <el-form-item label="栏目名称：">
           <el-input placeholder="请输入栏目名称"></el-input>
       </el-form-item>
-      <el-form-item label="所属分类：">
+      <el-form-item label="上级栏目：">
           <el-cascader
             :options="options"
             v-model="dialogForm.selectedOptions"
