@@ -26,7 +26,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="55">
+                width="45">
             </el-table-column>
             <el-table-column
                 prop="id"
@@ -52,17 +52,11 @@
             <el-table-column
                 prop="comment"
                 label="所属栏目"
-                width="100"
+                width="96"
                 >
             </el-table-column>
             <el-table-column
                 prop="creatTime"
-                label="创建时间"
-                width="165"
-                >
-            </el-table-column>
-            <el-table-column
-                prop="publishTime"
                 label="发布时间"
                 width="165"
                 >
@@ -88,7 +82,7 @@
             </el-table-column>
             <el-table-column
                 label="状态"
-                width="115"
+                width="114"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">

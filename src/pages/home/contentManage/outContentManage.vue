@@ -20,7 +20,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="55">
+                width="45">
             </el-table-column>
             <el-table-column
                 prop="id"
@@ -39,12 +39,6 @@
                 prop="comment"
                 label="所属栏目"
                 width="100"
-                >
-            </el-table-column>
-            <el-table-column
-                prop="creatTime"
-                label="创建时间"
-                width="165"
                 >
             </el-table-column>
             <el-table-column
