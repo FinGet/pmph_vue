@@ -83,6 +83,7 @@ export default {
         sendType:1,
         originalFileList:[],
         filePathList:[],
+        removeFile:[],
       },
       messageRules:{
        title:[
@@ -132,6 +133,9 @@ export default {
      */
     uploadFileRemove(file, fileList){
       this.saveFilesToMessageForm(fileList);
+      if(!file.response){
+        this.messageForm.removeFile.push(file.id);
+      }
     },
     saveFilesToMessageForm(fileList){
       fileList = fileList||[];
@@ -193,12 +197,14 @@ export default {
      * 编辑消息时请求当前消息的数据
      */
     getCurrentMessageData(){
+      if(!this.$route.query.id){
+        return;
+      }
       this.$axios.get('/messages/message/content',{params:{
-        userMsgId:this.$route.query.messageId
+        userMsgId:this.$route.query.id
       }})
         .then(response=>{
           let res = response.data;
-          console.log(res);
           //初始化title
           this.messageForm.title=res.data.title;
           //初始化message 数据，将内容填充到相应位置
@@ -211,7 +217,6 @@ export default {
           });
           this.messageForm.originalFileList = res.data.MessageAttachment;
           this.uploadFileList = res.data.MessageAttachment;
-          console.log(this.uploadFileList)
         })
         .catch(e=>{
           console.log(e);
@@ -232,7 +237,8 @@ export default {
         msgId:this.currentMessageId,
         msgTitle:this.messageForm.title,
         content:this.messageForm.content,
-        file:filePath.join(',')
+        file:filePath.join(','),
+        attachment:this.messageForm.removeFile.join(',')
       }))
         .then(response=>{
           let res = response.data;
@@ -253,11 +259,12 @@ export default {
      * 内容参数由路由钩子获取
      */
     reEditMessage(message){
+      if(!message.title){
+        return;
+      }
       for(let key in this.messageForm){
         this.messageForm[key] = message[key]
       }
-      console.log(this.$refs.editor);
-      console.log(this.$refs.editor.setContent);
       //将content插入编辑器
       this.$refs.editor.setContent(this.messageForm.content);
       //将已有文件插入列表
@@ -280,11 +287,14 @@ export default {
       this.getCurrentMessageData()
     }
     if(this.currentMessageType=='reEdit'){
-      this.reEditMessage(routerParams)
+      setTimeout(()=>{
+        this.reEditMessage(routerParams)
+      },1000)
+
     }
   },
-  destroyed(){
-
+  beforeDestroyed(){
+    this.$refs.editor.destroy();
   }
 }
 </script>
