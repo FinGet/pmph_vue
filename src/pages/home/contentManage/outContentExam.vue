@@ -28,7 +28,7 @@
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="55">
+                width="45">
             </el-table-column>
             <el-table-column
                 prop="id"
@@ -109,7 +109,7 @@
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="55">
+                width="45">
             </el-table-column>
             <el-table-column
                 prop="id"

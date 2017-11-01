@@ -10,7 +10,7 @@
     <el-table :data="tableData" border class="table-wrapper" style="margin:15px 0;">
        <el-table-column
                 type="selection"
-                width="55">
+                width="45">
        </el-table-column>
        <el-table-column
           prop="id"
