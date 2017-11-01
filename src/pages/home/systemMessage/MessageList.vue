@@ -231,7 +231,7 @@
         * 点击修改
         */
       handleEdit(index, row) {
-        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.id}});
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId,id:row.id}});
       },
       /**
        * 撤回
