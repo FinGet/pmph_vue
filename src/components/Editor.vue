@@ -17,6 +17,12 @@
         type: Object,
       }
     },
+    data(){
+      return {
+        editor: null,
+        editorHasReady:false,
+      }
+    },
     computed:{
       editorConfig(){
         var option = {};
@@ -27,23 +33,23 @@
         return option;
       },
     },
-    data(){
-      return {
-        editor: null,
-        editorHasReady:false,
-      }
-    },
     mounted(){
       const _this = this;
       this.editor = UE.getEditor('editor', this.editorConfig); // 初始化UE
       this.editor.addListener("ready", function () {
-        this.editorHasReady=true;
+        if(_this.defaultMsg){
+          _this.editor.setContent(Msg);
+        }
+        _this.editorHasReady=true;
         _this.$emit('editor_ready');
       });
     },
     methods: {
       getContent() { // 获取内容方法
-        return this.editor.getContent()
+        if(this.editor){
+          return this.editor.getContent();
+        }
+        return '';
       },
       setContent(Msg){
         var timer;
@@ -51,7 +57,8 @@
           timer = setInterval(()=>{
             this.editor.setContent(Msg);
             clearInterval(timer);
-          },50)
+          },50);
+          return;
         }
         this.editor.setContent(Msg);
       },

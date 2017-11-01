@@ -196,6 +196,7 @@
           width="80">
           <template scope="scope">
             <el-button type="text" @click="editInfo(scope.row)">修改</el-button>
+            <el-button type="text" @click="deleteBook(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -465,7 +466,13 @@
             console.log(e);
             this.$message.error('修改失败，请重试！');
           })
-      }
+      },
+      /**
+       *
+       * @param row
+       */
+      deleteBook(row){
+      },
     },
     created(){
 		  this.getTableData();

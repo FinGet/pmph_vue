@@ -134,7 +134,7 @@ export default {
     uploadFileRemove(file, fileList){
       this.saveFilesToMessageForm(fileList);
       if(!file.response){
-        this.messageForm.removeFile.push(file.id);
+        this.messageForm.removeFile.push(file.fileId);
       }
     },
     saveFilesToMessageForm(fileList){
@@ -211,8 +211,8 @@ export default {
           this.$refs.editor.setContent(res.data.content);
           //将已上传文件push到上传组件文件列表中
           res.data.MessageAttachment.forEach(iterm=>{
+            iterm.fileId = iterm.attachment.split('/file/download/')[1];
             iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1);
-            iterm.url = iterm.attachment;
             iterm.name = iterm.attachmentName;
           });
           this.messageForm.originalFileList = res.data.MessageAttachment;
@@ -242,7 +242,7 @@ export default {
       }))
         .then(response=>{
           let res = response.data;
-          if(res==1){
+          if(res.code==1){
             this.$message.success('修改成功！');
             this.$router.push({name: '消息列表'});
           }else{
