@@ -57,8 +57,11 @@ import MyMessageList from 'pages/home/myMessage/MessageList';
 import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
 /* 内容管理 */
 import ContentRouter from '../pages/home/contentManage/contentRouter'
+import publishRouter from '../pages/home/contentManage/publishRouer'
 import ContentPublish from '../pages/home/contentManage/contentPublish'
-import ContentExam from '../pages/home/contentManage/contentExam'
+import PublishList from '../pages/home/contentManage/publishList'
+import OutContentExam from '../pages/home/contentManage/outContentExam'
+import OutContentManage from '../pages/home/contentManage/outContentManage'
 import ColumnSet from '../pages/home/contentManage/columnSet'
 
 /* 出版图书 */
@@ -147,8 +150,12 @@ export default new Router({
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 16 },children:[
-            { path: 'publish', name: '内容发布', meta: { authorityId: 18 }, component: ContentPublish },
-            { path: 'exam', name: '内容审核', meta: { authorityId: 19 }, component: ContentExam },
+            { path: 'publish', name: '内容发布', meta: { authorityId: 18,replaceName: '内容列表' }, component: publishRouter ,children:[
+              { path: 'list', name: '内容列表',meta: { replaceName: false}, component: PublishList },
+              { path: 'new', name: '添加内容', component: ContentPublish }, 
+            ]},
+            { path: 'manage', name: '社外内容管理', meta: { authorityId: 19 }, component: OutContentManage },
+            { path: 'exam', name: '社外内容审核', meta: { authorityId: 19 }, component: OutContentExam },
             { path: 'set', name: '栏目设置', meta: { authorityId: 20 }, component: ColumnSet },
           ]
         },

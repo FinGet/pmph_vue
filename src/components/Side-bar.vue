@@ -37,8 +37,9 @@
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">内容管理</span>
         </template>
-        <el-menu-item index="/content/publish" v-if="isShowSide(18)">内容发布</el-menu-item>
-        <el-menu-item index="/content/exam" v-if="isShowSide(19)">内容审核</el-menu-item>
+        <el-menu-item index="/content/publish/list" v-if="isShowSide(18)">内容发布</el-menu-item>
+        <el-menu-item index="/content/manage" v-if="isShowSide(18)">社外内容管理</el-menu-item>
+        <el-menu-item index="/content/exam" v-if="isShowSide(19)">社外内容审核</el-menu-item>
         <el-menu-item index="/content/set" v-if="isShowSide(20)">栏目设置</el-menu-item>
       </el-submenu>
       <el-submenu index="/book" v-if="isShowSide(17)">

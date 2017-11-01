@@ -1,5 +1,5 @@
 <template>
-  <div class="content_exam">
+  <div class="out_content_manage">
       <p class="header_p">
           <el-cascader
             :options="options"
@@ -34,7 +34,7 @@
             <el-dropdown-item>批量发布</el-dropdown-item>
         </el-dropdown-menu>
     </el-dropdown>
-         <el-button type="primary" style="float:right;">添加内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">添加内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -136,37 +136,37 @@
   </div>
 </template>
 <style scoped>
-.content_exam .header_p{
+.out_content_manage .header_p{
     overflow: hidden;
 }
-.content_exam .header_p .input {
+.out_content_manage .header_p .input {
   width: 217px;
   margin-right: 10px;
 }
-.content_exam .table_i{
+.out_content_manage .table_i{
     margin-right:10px;
 }
-.content_exam .grey_icon{
+.out_content_manage .grey_icon{
   color:#999;
   cursor: pointer;
 }
-.content_exam .active_green{
+.out_content_manage .active_green{
  color:#13ce66;
 }
-.content_exam .active_orange{
+.out_content_manage .active_orange{
   
    color:rgb(254,215,79);
 }
-.content_exam .active_blue{
+.out_content_manage .active_blue{
   color:#20a0ff;
 }
-.content_exam .active_red{
+.out_content_manage .active_red{
 color:#ff4949;
 }
-.content_exam .active_yellow{
+.out_content_manage .active_yellow{
 color:#f7ba2a;
 }
-.content_exam .active_hide{
+.out_content_manage .active_hide{
 color:#58b7ff;
 }
 </style>
