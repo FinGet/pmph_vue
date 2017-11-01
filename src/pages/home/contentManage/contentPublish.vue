@@ -47,6 +47,9 @@
                 :picker-options="pickerOptions">
          </el-date-picker>
       </el-form-item>
+      <el-form-item label="推荐显示排序：" v-if="formData.isRecommend">
+          <el-input placeholder="输入推荐显示排序" style="width:300px"></el-input>
+      </el-form-item>
       <el-form-item label="是否置顶：">
           <el-radio-group v-model="formData.isStick">
             <el-radio :label="true">是</el-radio>
@@ -62,6 +65,9 @@
                 :picker-options="pickerOptions">
          </el-date-picker>
       </el-form-item>
+      <el-form-item label="分类显示顺序：" v-if="formData.isStick">
+          <el-input placeholder="输入分类显示顺序" style="width:300px"></el-input>
+      </el-form-item>      
       <el-form-item label="是否热门：">
           <el-radio-group v-model="formData.isHot">
             <el-radio :label="true">是</el-radio>
@@ -76,6 +82,9 @@
                 class="date_input"
                 :picker-options="pickerOptions">
          </el-date-picker>
+      </el-form-item>
+      <el-form-item label="热门显示顺序：" v-if="formData.isHot">
+          <el-input placeholder="输入热门显示顺序" style="width:300px"></el-input>
       </el-form-item>
       <el-form-item label="文章内容：">
               <Editor ref="editor" :config="editorConfig"></Editor>
