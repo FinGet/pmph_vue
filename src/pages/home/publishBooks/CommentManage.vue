@@ -63,10 +63,15 @@
           <!--</el-table-column>-->
           <el-table-column
             prop="content"
-            show-overflow-tooltip
             label="评论">
             <template scope="scope">
-              {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+              <div class="ellipsis cursor-pointer blue" @click="showCommentDetail(scope.row)">
+                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+              </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -99,6 +104,13 @@
           :total="totalNum">
         </el-pagination>
       </div>
+
+      <el-dialog
+        title="评论详情"
+        :visible.sync="commentDialogVisible">
+        <span>{{comment.content}}</span>
+        <span slot="footer" class="dialog-footer"> </span>
+      </el-dialog>
     </div>
 	</div>
 </template>
@@ -129,6 +141,10 @@
           label:'未审核'
         }],
         totalNum:0,
+        commentDialogVisible:false,
+        comment:{
+          content:'',
+        },
       }
 		},
     methods:{
@@ -227,7 +243,15 @@
             console.log(e);
             this.$message.error('操作失败请重试！');
           })
-      }
+      },
+      /**
+       * 显示评论详情
+       * @param row
+       */
+      showCommentDetail(row){
+        this.comment.content=row.content;
+        this.commentDialogVisible=true;
+      },
     },
     created(){
 		  this.getTableData();

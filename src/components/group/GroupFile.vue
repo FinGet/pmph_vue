@@ -14,18 +14,7 @@
           ></el-input>
         </div>
         <div class="manmageFile">
-          <el-popover
-            ref="popover"
-            placement="top"
-            width="160"
-            v-model="visible">
-            <p>选中的文件确定删除吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="deleteFile">确定</el-button>
-            </div>
-          </el-popover>
-          <el-button class="pull-left marginR20" type="danger" @click="visible = true" v-if="isManage" :disabled="isSelected" v-popover:popover>删除</el-button>
+          <el-button class="pull-left marginR20" type="danger" v-if="isManage" :disabled="isSelected" @click="deleteFile">删除</el-button>
           <i class="icon-manage marginR20" @click="manageBtn"></i>
         </div>
         <div class="fileupload">
@@ -279,21 +268,29 @@
         if(!ids.length)
           return;
 
-        this.$axios.delete('/group/delete/pmphgroupfile',{params:{
-          groupId:this.currentGroupId,
-          ids:ids.join(','),
-          sessionId:this.$getUserData().sessionId
-        }})
-          .then(response=>{
-            let res = response.data;
-            if (res.code == '1') {
-              this.$message.success('成功删除小组文件');
-              this.getFilelistData();
-            }
+        this.$confirm("确定删除选中文件吗?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/group/delete/pmphgroupfile',{params:{
+              groupId:this.currentGroupId,
+              ids:ids.join(','),
+              sessionId:this.$getUserData().sessionId
+            }})
+              .then(response=>{
+                let res = response.data;
+                if (res.code == '1') {
+                  this.$message.success('成功删除小组文件');
+                  this.getFilelistData();
+                }
+              })
+              .catch(e=>{
+                this.$message.error('删除小组文件失败，请重试');
+              })
           })
-          .catch(e=>{
-            this.$message.error('删除小组文件失败，请重试');
-          })
+          .catch(e=>{})
 
       },
       /**
