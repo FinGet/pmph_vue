@@ -125,7 +125,7 @@
       <el-table :data="commentTableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="55">
+                width="45">
             </el-table-column>
             <el-table-column
                 prop="id"
