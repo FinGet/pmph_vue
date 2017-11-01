@@ -193,7 +193,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="80">
+          width="120">
           <template scope="scope">
             <el-button type="text" @click="editInfo(scope.row)">修改</el-button>
             <el-button type="text" @click="deleteBook(scope.row)">删除</el-button>
@@ -472,6 +472,31 @@
        * @param row
        */
       deleteBook(row){
+        this.$confirm("确定删除该图书?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/books/delete/book',{params:{
+              id:row.id
+            }})
+              .then(response=>{
+                let res = response.data;
+                if(res.code==1){
+                  this.$message.success('删除成功');
+                  this.getTableData();
+                }else{
+                  this.$message.error('删除失败，请重试！');
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+                this.$message.error('删除失败，请重试！');
+              })
+          })
+          .catch(e=>{})
+
       },
     },
     created(){

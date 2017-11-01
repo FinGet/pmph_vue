@@ -43,23 +43,31 @@
             type="selection"
             width="55">
           </el-table-column>
-          <el-table-column
-            prop="bookname"
-            label="书籍名称">
-          </el-table-column>
-          <el-table-column
-            prop="isbn"
-            label="ISBN"
-            width="210">
-          </el-table-column>
-          <el-table-column
-            prop="writerName"
-            label="评论人"
-            width="120">
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--prop="bookname"-->
+            <!--label="书籍名称">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="isbn"-->
+            <!--label="ISBN"-->
+            <!--width="210">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="writerName"-->
+            <!--label="评论人"-->
+            <!--width="120">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--prop="content"-->
+            <!--label="评论内容">-->
+          <!--</el-table-column>-->
           <el-table-column
             prop="content"
-            label="评论内容">
+            show-overflow-tooltip
+            label="评论">
+            <template scope="scope">
+              {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="gmtCreate"
@@ -69,10 +77,10 @@
           <el-table-column
             prop="score"
             label="评分"
-            width="80">
+            width="70">
           </el-table-column>
           <el-table-column
-            prop="isAuth"
+            prop="state"
             label="审核状态"
             width="120">
           </el-table-column>
@@ -111,11 +119,14 @@
           value:'',
           label:'全部'
         },{
-          value:true,
-          label:'已读'
+          value:1,
+          label:'审核通过'
         },{
-          value:false,
-          label:'未读'
+          value:0,
+          label:'审核不通过'
+        },{
+          value:2,
+          label:'未审核'
         }],
         totalNum:0,
       }
@@ -133,13 +144,13 @@
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
                 switch(iterm.isAuth){
                   case 0:
-                    iterm.isAuth='审核不通过';
+                    iterm.state='审核不通过';
                     break;
                   case 1:
-                    iterm.isAuth = '审核通过';
+                    iterm.state = '审核通过';
                     break;
                   case 2:
-                    iterm.isAuth = '未审核';
+                    iterm.state = '未审核';
                 }
               });
               this.totalNum = res.data.total;
