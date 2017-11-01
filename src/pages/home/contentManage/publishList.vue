@@ -1,15 +1,16 @@
 <template>
   <div class="publish_list">
       <p class="header_p">
-          <el-cascader
+          <!-- <el-cascader
             :options="options"
             v-model="selectedOptions"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
             @change="handleChange">
-          </el-cascader>
+          </el-cascader> -->
           <el-input placeholder="输入文章标题" class="input"></el-input>
+          <el-input placeholder="输入内容" class="input"></el-input>
           <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
@@ -20,21 +21,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search">搜索</el-button>
-         <el-dropdown trigger="click" style="float:right;margin-left:10px;">
-            <el-button type="primary">
-             批量操作<i class="el-icon-caret-bottom el-icon--right"></i>
-             </el-button>
-           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>批量删除</el-dropdown-item>
-            <el-dropdown-item>批量审核</el-dropdown-item>
-            <el-dropdown-item>批量推荐</el-dropdown-item>
-            <el-dropdown-item>批量置顶</el-dropdown-item>
-            <el-dropdown-item>批量热门</el-dropdown-item>
-            <el-dropdown-item>批量隐藏</el-dropdown-item>
-            <el-dropdown-item>批量发布</el-dropdown-item>
-        </el-dropdown-menu>
-    </el-dropdown>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">添加内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -319,16 +306,12 @@ export default {
               isHide:true
           },
       ],
-      selectedOptions: [],
       selectValue:'',
       currentPage:1,
 
     };
   },
   methods: {
-    handleChange(value) {
-      console.log(value);
-    },
     handleSizeChange(val){
 
     },

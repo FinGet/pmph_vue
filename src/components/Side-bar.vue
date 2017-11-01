@@ -119,6 +119,9 @@
         /*  if(str=='userrouter'){
             this.activeIndex=this.$router.currentRoute.path;
          } */
+         if(this.$router.currentRoute.name=="添加内容"){
+           this.activeIndex='/content/publish/list';
+         }
          if(str=='materialrouter'){
            this.activeIndex='/materialrouter/materials';
          }
