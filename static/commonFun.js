@@ -230,14 +230,14 @@ export function getHTMLText(str) {
  * @param children 子节点字段
  * @param fn 处理函数
  */
-export function recurveList(objOrList,children,fn){
+export function recurveList(objOrList,children,handleFn){
   children = children?children:'children';
-  for(let key in objOrList){
-    if(fn){
-      fn(objOrList[key],key)
+  for(var key in objOrList){
+    if(handleFn){
+      handleFn(objOrList[key],key)
     }
     if(objOrList[key][children] && objOrList[key][children].length > 0){
-      recurveList(objOrList[key][children],children,fn);
+      recurveList(objOrList[key][children],children,handleFn);
     }
   }
 }
