@@ -4,7 +4,6 @@
   <el-tab-pane label="内容">
            <p class="header_p">
           <el-input placeholder="输入文章标题" class="input"></el-input>
-          <el-input placeholder="输入内容" class="input"></el-input>
           <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
