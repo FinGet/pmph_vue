@@ -67,10 +67,6 @@
             <template scope="scope">
               <div class="ellipsis cursor-pointer blue" @click="showCommentDetail(scope.row)">
                 {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
-                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
-                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
-                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
-                {{scope.row.writerName}}在《{{scope.row.bookname}}》中评论：{{scope.row.content}}
               </div>
             </template>
           </el-table-column>
