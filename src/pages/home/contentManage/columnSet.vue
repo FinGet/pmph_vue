@@ -4,10 +4,10 @@
         栏目名称：
         <el-input placeholder="请输入栏目名称" class="input"></el-input>
         <el-button type="primary" icon="search">搜索</el-button>
-        <el-button type="primary" style="float:right">删除</el-button>
+        <el-button type="danger" style="float:right" :disabled="!isSelected">批量删除</el-button>
         <el-button type="primary" style="float:right" @click="dialogVisible = true">新增栏目</el-button>  
     </p>
-    <el-table :data="tableData" border class="table-wrapper" style="margin:15px 0;">
+    <el-table :data="tableData" @selection-change="handleSelectChange" border class="table-wrapper" style="margin:15px 0;">
        <el-table-column
                 type="selection"
                 width="45">
@@ -187,6 +187,7 @@ export default {
         }
       ],
       dialogVisible:false,
+      selectionData:[],
       dialogForm:{
          selectedOptions:[],
          isBack:'',
@@ -284,10 +285,22 @@ export default {
         }],
     };
   },
+  computed:{
+   isSelected(){
+     if(this.selectionData.length>0){
+       return true ;
+     }else{
+       return false ;
+     }
+   }
+  },
   methods:{
     handleChange(value) {
       console.log(value);
     },
+    handleSelectChange(val){
+      this.selectionData=val; 
+    }
   }
 };
 </script>

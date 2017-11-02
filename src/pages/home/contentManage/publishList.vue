@@ -24,10 +24,6 @@
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
-                type="selection"
-                width="45">
-            </el-table-column>
-            <el-table-column
                 prop="id"
                 label="ID"
                 width="50"
@@ -39,6 +35,13 @@
                 <template scope="scope">
                    <a href="">{{scope.row.title}}</a>
                 </template>
+            </el-table-column>
+            <!-- 管理员才予以显示 -->
+            <el-table-column
+                prop="admin"
+                label="管理员"
+                width="90"
+                >
             </el-table-column>
             <el-table-column
                 label="状态"

@@ -20,9 +20,6 @@
       <el-form-item label="关键字：">
           <el-input class="input" placeholder="请输入关键字"></el-input>
       </el-form-item>
-      <el-form-item label="作者：">
-          <el-input class="input"></el-input>
-      </el-form-item>
       <el-form-item label="创建时间：">
           <el-date-picker
                v-model="formData.creatDate"
