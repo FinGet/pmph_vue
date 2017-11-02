@@ -224,3 +224,20 @@ export function getHTMLText(str) {
   str=str.replace(/\s/g,''); //将空格去掉
   return str;
 }
+
+/**
+ * 数组或对象递归遍历 （其中如果参数是数组，那么数组元素应该是对象形式）
+ * @param objOrList 要递归遍历的对象 or 数组
+ * @param children 子节点字段
+ * @param fn 处理函数
+ */
+export function recurveList(objOrList,children='children',fn){
+  for(let key in objOrList){
+    if(fn){
+      fn(objOrList[key],key)
+    }
+    if(objOrList[key][children] && objOrList[key][children].length > 0){
+      recurveList(objOrList[key][children],children=children,fn);
+    }
+  }
+}

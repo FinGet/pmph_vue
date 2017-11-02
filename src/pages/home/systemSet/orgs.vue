@@ -13,7 +13,7 @@
         <div class="searchInput">
           <el-select v-model="searchForm.orgTypeId" placeholder="全部" @change="getOrgTableData">
             <el-option
-              v-for="item in orgTypeList"
+              v-for="item in orgTypeList_search"
               :key="item.id"
               :label="item.typeName"
               :value="item.id">
@@ -27,7 +27,7 @@
         <div class="searchInput">
           <el-select v-model="searchForm.areaId" placeholder="全部" @change="getOrgTableData">
             <el-option
-              v-for="item in area"
+              v-for="item in area_search"
               :key="item.id"
               :label="item.areaName"
               :value="item.id">
@@ -100,6 +100,7 @@
     <el-dialog
       :title="isNew?'新增院校机构':'修改院校机构信息'"
       :visible.sync="dialogVisible"
+      :before-close="handleDialogClose"
       size="tiny">
       <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="100px" class="padding20" >
         <el-form-item label="院校名称："  prop="orgName">
@@ -125,17 +126,17 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="联系人：">
+        <el-form-item label="联系人：" prop="contactPerson">
           <el-input v-model="form.contactPerson" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话：">
+        <el-form-item label="联系电话：" prop="contactPhone">
           <el-input v-model="form.contactPhone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="备注：">
+        <el-form-item label="备注：" prop="note">
           <el-input v-model="form.note" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="排序码：">
-          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        <el-form-item label="排序码：" prop="sort">
+          <el-input v-model.number="form.sort" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -183,11 +184,11 @@
       size="tiny">
 
       <el-form :model="addOrgTypeForm" :rules="rules_addType" ref="addOrgTypeForm"  label-width="100px" class="padding20" >
-        <el-form-item label="机构类型：">
-          <el-input v-model="addOrgTypeForm.typeName" prop="typeName"></el-input>
+        <el-form-item label="机构类型：" prop="typeName">
+          <el-input v-model="addOrgTypeForm.typeName"></el-input>
         </el-form-item>
-        <el-form-item label="排序码：">
-          <el-input v-model="addOrgTypeForm.sort" prop="sort"></el-input>
+        <el-form-item label="排序码：" prop="sort">
+          <el-input v-model.number="addOrgTypeForm.sort"></el-input>
         </el-form-item>
       </el-form>
 
@@ -224,7 +225,11 @@
           ],
           areaId: [
             { required: true, message: '请选择所属地区', trigger: 'blur' },
-          ]
+          ],
+          contactPerson:[],
+          contactPhone:[],
+          note:[],
+          sort: [],
         },
         searchForm:{
           orgName:'',
@@ -247,19 +252,42 @@
             { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
           ],
           sort: [
-            { type:'number', required: true, message: '请填写排序序号', trigger: 'blur' },
+            { type: 'number', required: true, message: '排序码不能为空', trigger: 'blur' },
+            { type: 'number', message: '排序码必须为数字值', trigger: 'blur' },
           ],
         }
       }
+    },
+    computed:{
+      orgTypeList_search(){
+        var list = [{id:'',typeName:'全部'}];
+        this.orgTypeList.forEach(iterm=>{
+          list.push(iterm);
+        });
+        return list;
+      },
+      area_search(){
+        var list = [{id:'',areaName:'全部'}];
+        this.area.forEach(iterm=>{
+          list.push(iterm);
+        });
+        return list;
+      },
     },
     methods:{
       /**
        * 点击新增按钮
        */
       addBtnClick(){
-//        this.$refs['ruleForm'].resetFields();
         this.isNew=true;
         this.dialogVisible=true;
+      },
+      /**
+       * 关闭新增修改弹窗
+       */
+      handleDialogClose(done){
+        this.$refs['ruleForm'].resetFields();
+        done();
       },
       setOrgsType(){
         this.dialogVisible2 = true;
@@ -442,45 +470,62 @@
        * 新增机构类型
        */
       addOrgType(){
-        this.$axios({
-          method: 'POST',
-          url: '/orgType/add/orgtype',
-          data: this.$initPostData(this.addOrgTypeForm),
-        })
-          .then(response => {
-            let res = response.data;
-            let data = res.data.rows;
-            //修改成功
-            if (res.code == 1) {
-              this.getOrgTypeData();
-              this.dialogVisible3 = false;
-              this.$message.success('添加成功!');
-            }else{
-              this.$message.error(res.msg);
-            }
-          })
-          .catch(e=>{
-            console.log(e);
-            this.$message.error('添加失败，请重试');
-          });
+        this.$refs['addOrgTypeForm'].validate((valid) => {
+          if (valid) {
+            this.$axios({
+              method: 'POST',
+              url: '/orgType/add/orgtype',
+              data: this.$initPostData(this.addOrgTypeForm),
+            })
+              .then(response => {
+                let res = response.data;
+                let data = res.data.rows;
+                //修改成功
+                if (res.code == 1) {
+                  this.getOrgTypeData();
+                  this.dialogVisible3 = false;
+                  this.$message.success('添加成功!');
+                }else{
+                  this.$message.error(res.msg);
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+                this.$message.error('添加失败，请重试');
+              });
+          } else {
+            this.$message.error('请正确填写表单!!');
+            return false;
+          }
+        });
+
       },
       /**
        * 删除机构类型
        * @param id
        */
       deleteOrgType(id){
-        this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
-          .then(response=>{
-            let res = response.data;
-            if (res.code == '1') {
-              this.getOrgTypeData();
-              this.$message.success('删除成功！');
-            }
+
+        this.$confirm('确认删除该机构类型？',"提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
+              .then(response=>{
+                let res = response.data;
+                if (res.code == '1') {
+                  this.getOrgTypeData();
+                  this.$message.success('删除成功！');
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+                this.$message.error('删除失败，请重试');
+              })
           })
-          .catch(e=>{
-            console.log(e);
-            this.$message.error('删除失败，请重试');
-          })
+          .catch(e=>{})
       }
     },
     created() {

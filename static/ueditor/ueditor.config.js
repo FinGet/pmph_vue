@@ -68,7 +68,7 @@ import {BASE_URL} from '../../src/common/config'
         '|',
         // 'customstyle',
         'paragraph',
-        'fontfamily',
+        // 'fontfamily',
         'fontsize',
         '|',
         'directionalityltr',
