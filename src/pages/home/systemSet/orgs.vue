@@ -346,18 +346,27 @@
        * @param orgId
        */
       deleteOrg(orgId){
-        this.$axios.delete('/orgs/delete/org/'+orgId)
-          .then(response=>{
-            let res = response.data;
-            if (res.code == '1') {
-              this.$message.success('删除成功！');
-              this.getOrgTableData();
-            }
+
+        this.$confirm('确认删除该机构？',"提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/orgs/delete/org/'+orgId)
+              .then(response=>{
+                let res = response.data;
+                if (res.code == '1') {
+                  this.$message.success('删除成功！');
+                  this.getOrgTableData();
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+                this.$message.error('删除机构用户失败，请重试');
+              })
           })
-          .catch(e=>{
-            console.log(e);
-            this.$message.error('删除机构用户失败，请重试');
-          })
+          .catch(e=>{})
       },
       /**
        * 修改用户信息

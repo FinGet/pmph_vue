@@ -9,18 +9,7 @@
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
      <div class="pull-right">
-       <el-popover
-         ref="popover"
-         placement="top"
-         width="160"
-         v-model="visible">
-         <p>选中的文件确定删除吗？</p>
-         <div style="text-align: right; margin: 0">
-           <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-           <el-button type="primary" size="mini" @click="visible = false,delet()">确定</el-button>
-         </div>
-       </el-popover>
-       <el-button class="btn" type="danger" icon="delete" :disabled="isSelected"  v-popover:popover>批量删除</el-button>
+       <el-button class="btn" type="danger" icon="delete" :disabled="isSelected"  @click="delet">批量删除</el-button>
        <router-link :to="{ name: '编辑消息',query:{type:'add'}}">
        <el-button class="btn" type="primary" icon="edit">
          发送新消息
@@ -307,26 +296,34 @@
       delet() {
         // console.log(1)
         // console.log(this.multipleSelection)
-        var len = this.multipleSelection.length
-        var arr = []
-        for (var i = 0; i< len; i++) {
-          arr.push(this.multipleSelection[i].msgId)
-        }
-        this.$axios.put("/messages/delete/message",this.$initPostData({
-          msgIds:arr.join(',')
-        })).then((response) => {
-          let res = response.data
-          console.log(res)
-          if (res.code == '1') {
-            this.getMessageList();
-            this.$message({
-              message: '恭喜你，删除成功！',
-              type: 'success'
-            });
-          }
-        }).catch((error) => {
-          console.log(error.msg)
+        this.$confirm('确认删除选中的消息？',"提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
+          .then(()=>{
+            var len = this.multipleSelection.length
+            var arr = []
+            for (var i = 0; i< len; i++) {
+              arr.push(this.multipleSelection[i].msgId)
+            }
+            this.$axios.put("/messages/delete/message",this.$initPostData({
+              msgIds:arr.join(',')
+            })).then((response) => {
+              let res = response.data
+              console.log(res)
+              if (res.code == '1') {
+                this.getMessageList();
+                this.$message({
+                  message: '恭喜你，删除成功！',
+                  type: 'success'
+                });
+              }
+            }).catch((error) => {
+              console.log(error.msg)
+            })
+          })
+          .catch(e=>{})
       }
     },
   }
