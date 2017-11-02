@@ -18,10 +18,6 @@
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
-                type="selection"
-                width="45">
-            </el-table-column>
-            <el-table-column
                 prop="id"
                 label="ID"
                 width="50"
@@ -122,10 +118,6 @@
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="commentTableData" class="table-wrapper" border style="margin:15px 0;">
-            <el-table-column
-                type="selection"
-                width="45">
-            </el-table-column>
             <el-table-column
                 prop="id"
                 label="ID"
