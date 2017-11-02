@@ -35,8 +35,7 @@ export function initPostData(obj, keyArr) {
             paramdata.append(item, obj[item]);
             console.log(item);
         }
-    }
-    else{
+    }else{
         keyArr.forEach(function(str){
             paramdata.append(str,obj[str]);
         })
@@ -231,13 +230,14 @@ export function getHTMLText(str) {
  * @param children 子节点字段
  * @param fn 处理函数
  */
-export function recurveList(objOrList,children='children',fn){
+export function recurveList(objOrList,children,fn){
+  children = children?children:'children';
   for(let key in objOrList){
     if(fn){
       fn(objOrList[key],key)
     }
     if(objOrList[key][children] && objOrList[key][children].length > 0){
-      recurveList(objOrList[key][children],children=children,fn);
+      recurveList(objOrList[key][children],children,fn);
     }
   }
 }
