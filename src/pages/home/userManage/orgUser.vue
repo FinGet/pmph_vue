@@ -6,7 +6,7 @@
     </div>
       <div class="clearfix">
         <div class="searchBox-wrapper">
-          <div class="searchName">学校名称：<span></span></div>
+          <div class="searchName">机构名称：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
           </div>
@@ -29,7 +29,7 @@
         <!--操作按钮-->
         <div class="pull-right">
           <el-button type="primary" @click="addBtn(false)">添加管理员</el-button>
-          <el-button type="primary" @click="addBtn(true)">新建院校</el-button>
+          <el-button type="primary" @click="addBtn(true)">新建机构</el-button>
         </div>
       </div>
       <!--表格-->
@@ -179,7 +179,7 @@
           <el-form-item label="用户邮箱：" prop="email" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.email"></el-input>
           </el-form-item>
-          <el-form-item label="所属院校："  prop="orgId" v-show="!isAddSchool||!isNew">
+          <el-form-item label="所属院校："  prop="orgId" v-show="isAddSchool||!isNew">
             <el-select
               v-model="form.orgId"
               filterable
