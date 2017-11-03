@@ -10,9 +10,15 @@
             <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
           </div>
           <ul class="grouptab clearfix">
-            <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :key="tab.id" :class="{active:currentActive===index}">
+            <li v-for="(tab,index) in tabs"
+                @click="changeTab(index,tab.view)"
+                :key="tab.type"
+                :class="{active:currentActive===index}"
+                v-show="tab.view=='GroupChat'||tab.view=='GroupFile'||(tab.view=='GroupSetting'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder))||(tab.view=='GroupMembers'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin))"
+            >
               {{tab.type}}
             </li>
+
           </ul>
         </div>
         <div
@@ -21,13 +27,19 @@
           :style="{height:wrapperHeight-80+'px'}"
         >
         <transition name="fade" mode="out-in">
-          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList" :groupId.sync="currentGroupId" @refeshMember="refreshMember" :isrefreshMange='isrefreshMange'></component>
+          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList" :crurrentMemberInfo="crurrentMemberInfo" :groupId.sync="currentGroupId" @refeshMember="refreshMember" :isrefreshMange='isrefreshMange'></component>
         </transition>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
       <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap" v-if="currentGroupId">
-        <MembersList @refreshMange="refreshMange" :refreshMember.sync="isrefreshMember"  :groupId.sync="currentGroupId"></MembersList>
+        <MembersList
+          @refreshMange="refreshMange"
+          :refreshMember.sync="isrefreshMember"
+          @getGroupMemberList="getGroupMemberList"
+          :groupId.sync="currentGroupId"
+          :crurrentMemberInfo="crurrentMemberInfo"
+        ></MembersList>
       </el-col>
     </el-row>
   </div>
@@ -58,6 +70,7 @@
           id:null
         },
         currentGroupList:[],
+        crurrentMemberList:[],
         isrefreshMember:false,
         isrefreshMange:false,
         tabs:[
@@ -69,7 +82,35 @@
       }
     },
     computed:{
-
+      crurrentMemberInfo(){
+        let userId= this.$getUserData().userInfo.id;
+        let loginType= this.$getUserData().userInfo.loginType;
+        let info = {
+            id: undefined,
+            groupId: undefined,
+            userId: userId,
+            userType: loginType,
+            avatar: undefined,
+            isWriter: true,
+            isFounder: false,
+            isAdmin: false,
+            isSystemAdmin:!!this.$getUserData().userInfo.isAdmin,
+            displayName: undefined
+          };
+        this.crurrentMemberList.forEach(function(item){
+          if(item.userId==userId&&item.userType==loginType){
+            info.id = item.id;
+            info.groupId = item.groupId;
+            info.avatar = item.avatar;
+            info.isWriter = item.isWriter;
+            info.isFounder = item.isFounder;
+            info.isAdmin = item.isAdmin;
+            info.displayName = item.displayName;
+          }
+        });
+        console.log(info);
+        return info;
+      },
     },
     created(){
       //组件创建后，初始化三列展示区的宽度
@@ -132,7 +173,23 @@
       getGroupList(groupList){
         this.currentGroupList=groupList;
         this.currentGroupId=this.currentGroupList[0].id;
-      }
+      },
+      /**
+       * 获取当前小组成员列表
+       * @param memberList
+       */
+      getGroupMemberList(memberList){
+        this.crurrentMemberList=memberList;
+      },
+    },
+    watch:{
+      /**
+       * 当切换小组时，默认跳转到聊天窗口
+       */
+      currentGroupId(){
+        this.currentActive = 0;
+        this.currentView = 'GroupChat';
+      },
     },
     components:{
       GroupsList,

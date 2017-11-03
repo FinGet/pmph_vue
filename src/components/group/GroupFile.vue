@@ -4,7 +4,7 @@
       <el-col :span="4">
         <div class="filenum">共{{fileNum}}个文件</div>
       </el-col>
-      <div class="clearfix pull-right">
+      <div class="clearfix pull-right paddingT10">
         <div class="search">
           <el-input class=""
                     v-model="searchFormData.fileName"
@@ -15,7 +15,7 @@
         </div>
         <div class="manmageFile">
           <el-button class="pull-left marginR20" type="danger" v-if="isManage" :disabled="isSelected" @click="deleteFile">删除</el-button>
-          <i class="icon-manage marginR20" @click="manageBtn"></i>
+          <i class="icon-manage marginR20" @click="manageBtn" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin||crurrentMemberInfo.isSystemAdmin"></i>
         </div>
         <div class="fileupload">
           <i class="icon-upload cursor-pointer" @click="dialogChooseGroup = true"></i>
@@ -46,13 +46,11 @@
         </el-table-column>
         <el-table-column
           prop="gmtCreate"
-          align="center"
           label="上传时间"
-          min-width="160">
+          width="160">
         </el-table-column>
         <el-table-column
           prop="memberName"
-          align="center"
           label="分享者"
           width="100">
         </el-table-column>
@@ -128,7 +126,7 @@
   import ScreenSize from 'common/mixins/ScreenSize.js';
 	export default {
     mixins: [ScreenSize],
-    props:['currentGroup','currentGroupList'],
+    props:['currentGroup','currentGroupList','crurrentMemberInfo'],
 		data() {
 			return {
         screenWidth_lg_computed: true,

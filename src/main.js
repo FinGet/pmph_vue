@@ -71,7 +71,10 @@ axios.interceptors.request.use(function (config) {
      config.headers.Authorization=userdata.token;
   }else{
     router.push('/login');
-    
+
+  }
+  if(config.method.toLowerCase()=='get'){
+    config.params._timer=+(new Date());
   }
   return config;
 }, function (error) {
