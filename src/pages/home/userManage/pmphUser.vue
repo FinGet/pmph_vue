@@ -54,7 +54,7 @@
               label="角色名称"
             >
               <template scope="scope">
-                <el-tag class="marginTag" v-for="item in scope.row.pmphRoles" :key="item" type="primary">{{item.roleName}}</el-tag>
+                <el-tag class="marginTag" v-for="(item,index) in scope.row.pmphRoles" :key="index" type="primary">{{item.roleName}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column
@@ -102,10 +102,6 @@
     <el-dialog title="修改" :visible.sync="dialogVisible" @close="resetForm('form')" size="tiny">
       <el-form ref="form" :model="form" label-width="100px" class="padding20">
         <el-form-item label="用户账号:"
-                      prop="username"
-                      :rules="[
-                        { required: true, message: '用户代码不能为空'}
-                      ]"
         >
           <el-input v-model="form.username" placeholder="请输入您的用户代码"></el-input>
         </el-form-item>
@@ -221,6 +217,7 @@
         usersData:[],
         name: '',
         path: '',
+        departmentId :'',
         pageNumber: 1,
         pageSize: 20,
         rolenames: [
@@ -269,12 +266,10 @@
         this.$axios.get("/role/pmph/list/role").then((response) => {
           let res = response.data
           if (res.code == '1') {
-            // console.log(res.data)
             this.rolenames = res.data
             for (var i in res.data) {
               this.rolenames[i].label = res.data[i].roleName
               this.rolenames[i].value = res.data[i].id
-              // console.log(this.rolenames)
             }
           }
         })
@@ -284,35 +279,31 @@
        */
       getTree() {
         this.$axios.get('users/pmph/list/pmphdepartment').then((response) => {
-          let res = response.data
-          // console.log(res)
+          let res = response.data;
           if (res.code == '1') {
             this.treeData = res.data.sonDepartment;
           }
         }).catch((error) => {
-          console.log(error.msg)
+          console.log(error)
         })
       },
       /**
        * 初始化用户
        */
       getUsers() {
-        // var name = '', path = '',pageNumber = 1, pageSize = 20
         this.$axios.get('users/pmph/list/pmphuser', {
           params: {
             name: this.name,
             path: this.path,
+            departmentId :this.departmentId ,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
           }
         }).then((response) => {
-          let res = response.data
-          // console.log(res.data.rows)
-          this.dataTotal = res.data.total
-          // console.log(this.dataTotal)
+          let res = response.data;
+          this.dataTotal = res.data.total;
           if (res.code == '1') {
-            this.usersData=res.data.rows
-            console.log(this.usersData)
+            this.usersData=res.data.rows;
             if (this.dataTotal == 0) {
               this.$message({
                 showClose: true,
@@ -322,7 +313,7 @@
             }
           }
         }).catch((error) => {
-          console.log(error.msg)
+          console.log(error)
         })
       },
       /**
@@ -335,7 +326,6 @@
        * 选择每页有多少条数据
        */
       handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`);
         this.pageSize = val
         this.pageNumber = 1
         this.getUsers()
@@ -353,7 +343,8 @@
        */
       handleNodeClick(data) {
         console.log(data.path);
-        this.path = data.path
+        this.path = data.path;
+        this.departmentId = data.id;
         if (data.path == '0') {
           this.path = ''
         }
@@ -379,18 +370,8 @@
         // 每次修改先将this.form.roleName置为空
         this.form.roleIds=[]
         for (var i in data[index].pmphRoles) {
-          this.form.roleIds.push(data[index].pmphRoles[i].id)
-          // console.log(this.form.roleIds)
+          this.form.roleIds.push(data[index].pmphRoles[i].id);
         }
-        console.log(this.form)
-        // this.form.handphone -= 0
-//        if (this.form.isDisabled == 1){
-//          this.form.isDisabled = "启用"
-//        } else {
-//          this.form.isDisabled = "停用"
-//        }
-
-        console.log(this.DepartmentNameList)
       },
       /**
        * 保存修改
@@ -425,8 +406,13 @@
               type: 'success'
             });
             this.getUsers()
+          }else{
+            this.$message.error(res.msg);
           }
         })
+          .catch(e=>{
+            this.$message.error(e.msg);
+          })
       },
       /**
        * 新增用户信息

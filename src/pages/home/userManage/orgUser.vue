@@ -272,10 +272,10 @@
 		</el-row>
 		<el-row>
 			<el-col>
-				<el-table ref="multipleTable" 
-				:data="schoolTableData" 
-				border tooltip-effect="dark" 
-				style="width: 100%" 
+				<el-table ref="multipleTable"
+				:data="schoolTableData"
+				border tooltip-effect="dark"
+				style="width: 100%"
 				@selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
@@ -335,7 +335,7 @@
 		</el-dialog>
   </el-tab-pane>
 </el-tabs>
-    
+
   </div>
 </template>
 <script>
@@ -429,7 +429,7 @@ export default {
 			visible1: false,
 			visible2: false,
 			schoolDialogVisible: false,
-			imgsrc:require('./wts.jpg'),
+			imgsrc:'',
 			value: '全部',
 			schoolTableData: [
 				{
@@ -822,7 +822,7 @@ export default {
            * 重置form表单数据
            */
     resetForm() {
-      
+
       this.$refs["ruleForm"].resetFields();
       console.log(this.form);
     },
