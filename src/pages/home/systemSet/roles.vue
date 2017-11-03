@@ -34,7 +34,7 @@
 
         </div>
         <!-- 新增对话框 -->
-        <el-dialog title="编辑角色" :visible.sync="rolesDialogVisible" :before-close="resetDialogForm"   class="roles_dialog" size="tiny">
+        <el-dialog :title="isAddNewRole?'新增角色':'修改角色'" :visible.sync="rolesDialogVisible" :before-close="resetDialogForm"   class="roles_dialog" size="tiny">
             <div style="padding-right:30px;" >
 
                 <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="95px">
@@ -120,54 +120,50 @@ export default {
                 id: 1
             },
             {
-                label: '规划教材申报',
+                label: '教材申报',
                 id: 2
             },
             {
-                label: '学校/教师审核',
+                label: '我的小组',
                 id: 3
             },
             {
-                label: '我的小组',
+                label: '系统消息',
                 id: 4
             },
             {
-                label: '系统消息',
-                id: 5
-            },
-            {
-                label: '系统日志',
-                id: 6
-            },
-            {
                 label: '内容管理',
-                id: 16,
+                id: 5,
                 children: [
                     {
                         label: '内容发布',
-                        id: 18
+                        id: 9
                     },
                     {
-                        label: '内容审核',
-                        id: 19
+                        label:'社外内容管理',
+                        id:10
+                    },
+                    {
+                        label: '社外内容审核',
+                        id: 11
                     },
                     {
                         label: '栏目设置',
-                        id: 20
+                        id: 12
                     },
                 ]
             },
             {
                 label: '出版图书',
-                id: 17,
+                id: 6,
                 children: [
                     {
                         label: '图书管理',
-                        id: 21
+                        id: 13
                     },
                     {
                         label: '评论审核',
-                        id: 22
+                        id: 14
                     }
                 ]
             },
@@ -178,15 +174,15 @@ export default {
                 children: [
                     {
                         label: '社内用户',
-                        id: 9
+                        id: 15
                     },
                     {
                         label: '作家用户',
-                        id: 10
+                        id: 16
                     },
                     {
                         label: '机构用户',
-                        id: 11
+                        id: 17
                     },
                 ]
             },
@@ -196,19 +192,19 @@ export default {
                 children: [
                     {
                         label: '角色权限',
-                        id: 12
+                        id: 18
                     },
                     {
                         label: '地区',
-                        id: 13
+                        id: 19
                     },
                     {
                         label: '院校机构',
-                        id: 14
+                        id: 20
                     },
                     {
                         label: '社内部门',
-                        id: 15
+                        id: 21
                     },
                 ]
             },
