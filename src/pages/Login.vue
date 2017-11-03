@@ -18,8 +18,8 @@
         <el-button type="primary" @click="submit" class="loginBtn">登录</el-button>
       </div>
       <div class="note marginT30">
-        <p>最高权限:admin1 </p>
-        <p> 密码：123</p>
+        <p>最高权限:admin </p>
+        <p> 密码：888888</p>
         <p>可以在用户管理-社内用户中新增用户，初始密码为123456，来测试用户登录和权限</p>
       </div>
     </div>

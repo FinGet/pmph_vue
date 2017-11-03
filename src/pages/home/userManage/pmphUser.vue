@@ -90,7 +90,7 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
+              :page-sizes="[30,50,100, 200, 300, 400]"
               :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="dataTotal">
@@ -219,7 +219,7 @@
         path: '',
         departmentId :'',
         pageNumber: 1,
-        pageSize: 20,
+        pageSize: 30,
         rolenames: [
           {
             value: '选项1',
