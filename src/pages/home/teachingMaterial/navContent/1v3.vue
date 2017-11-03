@@ -35,6 +35,7 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
+        <el-button type="primary" @click="forceEnd=!forceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <el-button type="primary" @click="showDialog(1)">批量通过</el-button>
         <el-button type="primary" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary">批量导出Excel</el-button>
@@ -179,6 +180,7 @@
   export default{
     data(){
       return{
+        forceEnd:false,
         booksChooseValue5:'',
         booksChooseOptions: [{
           value: '选项1',

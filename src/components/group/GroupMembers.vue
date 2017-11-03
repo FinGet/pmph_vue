@@ -13,10 +13,10 @@
         <div class="pull-left marginT10 marginL10 textcolor">共有{{total}}个成员</div>
         <div class="pull-right clearfix">
           <div class="disinline">
-            <el-button type="warning" @click="reviseMagage(false)" v-if="currentMember=='创建者'">取消管理员</el-button>
+            <el-button type="warning" @click="reviseMagage(false)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">取消管理员</el-button>
           </div>
           <div class="disinline">
-            <el-button type="primary" @click="reviseMagage(true)" v-if="currentMember=='创建者'">设为管理员</el-button>
+            <el-button type="primary" @click="reviseMagage(true)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">设为管理员</el-button>
           </div>
           <div class="disinline marginL10">
             <el-popover
@@ -30,7 +30,7 @@
                 <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
               </div>
             </el-popover>
-            <el-button type="danger" @click="visible=true" v-popover:popover :disabled="idSelected" v-if="currentMember=='创建者'||currentMember=='管理员'">删除</el-button>
+            <el-button type="danger" @click="visible=true" v-popover:popover :disabled="idSelected" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isAdmin">删除</el-button>
           </div>
         </div>
       </el-col>
@@ -92,7 +92,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  props:['groupId','isrefreshMange'],
+  props:['groupId','isrefreshMange','crurrentMemberInfo'],
   data() {
     return {
       memberManageUrl:'/group/list/manager',  //成员管理列表url
@@ -105,7 +105,6 @@ export default {
       currentPage: 1,
       pageSize:10,
       total:0,
-      currentMember:'',
       isMember:false
     }
   },
@@ -132,21 +131,8 @@ export default {
           if(res.data.code==1){
             this.tableData=res.data.data.rows;
             this.total=res.data.data.total;
-            this.initMemberAuth();
           }
      })
-    },
-    /* 当前小组成员权限比对 */
-    initMemberAuth(){
-      this.currentMember='';
-       var id= this.$getUserData().userInfo.id,
-            loginType= this.$getUserData().userInfo.loginType,
-            _this=this;
-      this.tableData.forEach(function(item){
-        if(item.userId==id&&item.userType==loginType){
-                _this.currentMember=item.identity
-        }
-      })
     },
     /* 切换分页条数 */
     handleSizeChange(val) {

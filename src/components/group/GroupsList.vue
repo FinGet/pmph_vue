@@ -46,13 +46,11 @@
     <el-dialog
       title="新增小组"
       :visible.sync="dialogVisible"
+      @close="handleClose"
       size="tiny">
         <div class="addNewPopup">
-          <el-row class="marginB30">
-            <el-col :span="6">
-              <p class="lineHeight-100">小组头像：</p>
-            </el-col>
-            <el-col :span="18">
+          <el-form label-width="120px" :model="newGroupData" :rules="rules" ref="ruleForm">
+            <el-form-item label="小组头像：">
               <div class="headImageWrapper">
                 <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
                   <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
@@ -66,16 +64,11 @@
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
               </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <p>小组名称：</p>
-            </el-col>
-            <el-col :span="18">
+            </el-form-item>
+            <el-form-item label="小组名称：" prop="name">
               <el-input v-model="newGroupData.name" placeholder="请输入小组名称"></el-input>
-            </el-col>
-          </el-row>
+            </el-form-item>
+          </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="createNewGroup">确 定</el-button>
@@ -101,6 +94,12 @@
            filename:undefined,
            name:null
          },
+         rules:{
+           name:[
+             { required: true, message: '请输入小组名称', trigger: 'blur' },
+             { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+           ]
+         },
        }
     },
     components:{
@@ -125,7 +124,6 @@
           params:{
             groupName:this.inputSearchGroup,
             sessionId:this.$getUserData().sessionId
-
           },
         }).then(function(res){
           console.log(res);
@@ -166,6 +164,19 @@
         var self=this;
         var prevDiv = this.$refs.headImageWrapper;
         var file = this.$refs.fileInput;
+        var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
+        // gif在IE浏览器暂时无法显示
+        if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
+          self.newGroupData.filename=undefined;
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于5M
+        if(file.files && file.files[0].size/1000/1000 > 5){
+          this.$message.error("图像图片上传不能大于5M！");
+          self.newGroupData.filename=undefined;
+          return;
+        }
         if (file.files && file.files[0]) {
           var reader = new FileReader();
           reader.onload = function(evt) {
@@ -200,18 +211,25 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/group/add/pmphgroup',formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              self.$message.success('创建小组成功');
-              self.getGroupData();
-              self.dialogVisible=false;
-            }
-          })
-          .catch((error) => {
-            self.$message.error('创建小组失败');
-          });
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            this.$axios.post('/group/add/pmphgroup',formdata,config)
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.$message.success('创建小组成功');
+                  self.getGroupData();
+                  self.dialogVisible=false;
+                }
+              })
+              .catch((error) => {
+                self.$message.error('创建小组失败');
+              });
+          } else {
+            self.$message.error('请完善表单后再添加！');
+            return false;
+          }
+        });
       },
       /**
        * 处理接收到的消息事件
@@ -246,6 +264,14 @@
        */
       handleSideBarFlod(){
         this.$refs.beautyScroll.refresh(280);
+      },
+      /**
+       * 关闭新增小组弹窗时
+       */
+      handleClose(){
+        this.newGroupData.filename=undefined;
+        this.newGroupData.name=null;
+        this.$refs.fileInput.value = '';
       },
     },
     created(){

@@ -33,7 +33,7 @@
         </beauty-scroll>
       </div>
       <transition name="el-fade-in">
-        <div class="addMemberWrapper text-center" v-if="isShowAddButton">
+        <div class="addMemberWrapper text-center" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isAdmin">
           <el-button type="text" icon="plus" @click="addNewMember" class="button">
             新增成员
           </el-button>
@@ -191,7 +191,7 @@
 import beautyScroll from '@/base/beautyScroll.vue';
 import bus from 'common/eventBus/bus.js'
 export default {
-  props: ['groupId','refreshMember'],
+  props: ['groupId','refreshMember','crurrentMemberInfo'],
   data() {
     return {
       dialogVisible: false,
@@ -248,7 +248,6 @@ export default {
       addWriterData:[],
       addClubData:[],
       addTableData:[],
-      isShowAddButton:false
     }
   },
   methods: {
@@ -264,8 +263,7 @@ export default {
       }).then(function(res) {
         if (res.data.code == 1) {
           _this.memberListData = res.data.data;
-          console.log(_this.memberListData);
-          _this.compareList();
+          _this.$emit('getGroupMemberList',res.data.data);
         }
       })
     },
@@ -376,17 +374,6 @@ export default {
           this.path = ''
         }
       this.getClubUserData();
-    },
-    compareList(){
-       this.isShowAddButton=false;
-        var id= this.$getUserData().userInfo.id,
-            loginType= this.$getUserData().userInfo.loginType,
-            _this=this;
-      this.memberListData.forEach((item)=>{
-        if(item.userId==id&&item.userType==loginType&&(item.isAdmin||item.isFounder)){
-          _this.isShowAddButton=true;
-        }
-      })
     },
     /* 社内用户切换分页条数 */
     handleSizeChange(val) {
