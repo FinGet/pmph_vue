@@ -15,40 +15,36 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">教材申报</span>
       </el-menu-item>
-      <el-menu-item index="/auth/writers" v-if="isShowSide(3)">
+      <!-- <el-menu-item index="/auth/writers" v-if="isShowSide(3)">
         <i class="fa fa-university fa-fw"></i>
         <span slot="title">学校/教师审核</span>
-      </el-menu-item>
-      <el-menu-item index="/groupmanage" v-if="isShowSide(4)">
+      </el-menu-item> -->
+      <el-menu-item index="/groupmanage" v-if="isShowSide(3)">
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">我的小组</span>
       </el-menu-item>
-      <el-menu-item index="/message/messagelist" v-if="isShowSide(5)">
+      <el-menu-item index="/message/messagelist" v-if="isShowSide(4)">
         <i class="fa fa-comments-o fa-fw"></i>
         <span slot="title">系统消息</span>
       </el-menu-item>
-      <!--<el-menu-item index="1" v-if="isShowSide(6)">-->
-        <!--<i class="fa fa-file-text-o fa-fw"></i>-->
-        <!--<span slot="title">系统日志</span>-->
-      <!--</el-menu-item>-->
 
-      <el-submenu index="/content" v-if="isShowSide(16)">
+      <el-submenu index="/content" v-if="isShowSide(5)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">内容管理</span>
         </template>
-        <el-menu-item index="/content/publish/list" v-if="isShowSide(18)">内容发布</el-menu-item>
-        <el-menu-item index="/content/manage" v-if="isShowSide(18)">社外内容管理</el-menu-item>
-        <el-menu-item index="/content/exam" v-if="isShowSide(19)">社外内容审核</el-menu-item>
-        <el-menu-item index="/content/set" v-if="isShowSide(20)">栏目设置</el-menu-item>
+        <el-menu-item index="/content/publish/list" v-if="isShowSide(9)">内容发布</el-menu-item>
+        <el-menu-item index="/content/manage" v-if="isShowSide(10)">社外内容管理</el-menu-item>
+        <el-menu-item index="/content/exam" v-if="isShowSide(11)">社外内容审核</el-menu-item>
+        <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item>
       </el-submenu>
-      <el-submenu index="/book" v-if="isShowSide(17)">
+      <el-submenu index="/book" v-if="isShowSide(6)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">出版图书</span>
         </template>
-        <el-menu-item index="/book/manage" v-if="isShowSide(21)">图书管理</el-menu-item>
-        <el-menu-item index="/book/comment" v-if="isShowSide(22)">评论审核</el-menu-item>
+        <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
+        <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
       </el-submenu>
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)">
@@ -56,21 +52,21 @@
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户管理</span>
         </template>
-        <el-menu-item index="/user/pmph" v-if="isShowSide(9)">社内用户</el-menu-item>
-        <el-menu-item index="/user/writer" v-if="isShowSide(10)">作家用户</el-menu-item>
-        <el-menu-item index="/user/org" v-if="isShowSide(11)">机构用户</el-menu-item>
+        <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>
+        <el-menu-item index="/user/writer" v-if="isShowSide(16)">作家用户</el-menu-item>
+        <el-menu-item index="/user/org" v-if="isShowSide(17)">机构用户</el-menu-item>
       </el-submenu>
       <el-submenu index="10" v-if="isShowSide(8)">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统设置</span>
         </template>
-        <el-menu-item index="/set/roles" v-if="isShowSide(12)">角色</el-menu-item>
+        <el-menu-item index="/set/roles" v-if="isShowSide(18)">角色</el-menu-item>
         <!-- <el-menu-item index="/set/authority">权限</el-menu-item> -->
         <!-- <el-menu-item index="10-3">菜单</el-menu-item> -->
-        <el-menu-item index="/set/area" v-if="isShowSide(13)">地区</el-menu-item>
-        <el-menu-item index="/set/orgs" v-if="isShowSide(14)">院校机构</el-menu-item>
-        <el-menu-item index="/set/departments" v-if="isShowSide(15)">社内部门</el-menu-item>
+        <el-menu-item index="/set/area" v-if="isShowSide(19)">地区</el-menu-item>
+        <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item>
+        <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
     </el-menu>
 

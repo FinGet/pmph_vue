@@ -112,13 +112,13 @@ export default new Router({
         },
         {
           path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 7 }, children: [
-            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 9 } },
-            { path: 'writer', name: '作家用户', component: writerUser, meta: { authorityId: 10 } },
-            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 11 } },
+            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 15 } },
+            { path: 'writer', name: '作家用户', component: writerUser, meta: { authorityId: 16 } },
+            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 17 } },
           ]
         },
         {
-          path: 'message', name: '系统消息', component: MessageRouter, meta: { replaceName: '消息列表', authorityId: 5 }, children: [
+          path: 'message', name: '系统消息', component: MessageRouter, meta: { replaceName: '消息列表', authorityId: 4 }, children: [
             { path: 'messagelist', name: '消息列表', component: MessageList, meta: { replaceName: false } }, // 消息列表页面
             { path: 'messagestate', name: '消息状态', component: MessageState },
             { path: 'messageEdit', name: '编辑消息', component: MessageEdit }, //消息编辑页面
@@ -132,14 +132,14 @@ export default new Router({
         /* 系统设置 */
         {
           path: 'set', name: '系统设置', component: systemRouter, meta: { replaceName: false, authorityId: 8 }, children: [
-            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 12 } },
+            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 18 } },
             /*  {path:'authority',name:'权限管理',component:Authority}, */
-            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 16 } },
-            { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 15 } },
-            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 14 } }
+            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 21 } },
+            { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 20 } },
+            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 19 } }
           ]
         },
-        { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { authorityId: 4 } },
+        { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { authorityId: 3 } },
         /*学校/ 教师审核 */
         {
           path: 'auth', name: '学校/教师审核', component: SchoolRouter, meta: { replaceName: false, authorityId: 3 }, children: [
@@ -149,21 +149,21 @@ export default new Router({
         },
         /* 内容管理 */
         {
-          path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 16 },children:[
-            { path: 'publish', name: '内容发布', meta: { authorityId: 18,replaceName: '内容列表' }, component: publishRouter ,children:[
+          path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
+            { path: 'publish', name: '内容发布', meta: { authorityId: 9,replaceName: '内容列表' }, component: publishRouter ,children:[
               { path: 'list', name: '内容列表',meta: { replaceName: false}, component: PublishList },
               { path: 'new', name: '添加内容', component: ContentPublish }, 
             ]},
-            { path: 'manage', name: '社外内容管理', meta: { authorityId: 19 }, component: OutContentManage },
-            { path: 'exam', name: '社外内容审核', meta: { authorityId: 19 }, component: OutContentExam },
-            { path: 'set', name: '栏目设置', meta: { authorityId: 20 }, component: ColumnSet },
+            { path: 'manage', name: '社外内容管理', meta: { authorityId: 10 }, component: OutContentManage },
+            { path: 'exam', name: '社外内容审核', meta: { authorityId: 11 }, component: OutContentExam },
+            { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet },
           ]
         },
         /* 出版图书 */
         {
-          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 17}, children: [
-          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 21 }},
-          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 22 }}
+          path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
+          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 13 }},
+          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 14 }}
           ]
         },
         /* 我的消息 */
