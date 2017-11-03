@@ -64,7 +64,7 @@ export default {
                   _this.$message.error('账号/密码错误');
                 }
           }).catch(function(err) {
-
+                 _this.$message.error('登录失败');
           })
         } else {
           //验证未通过

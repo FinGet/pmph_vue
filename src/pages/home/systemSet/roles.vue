@@ -242,6 +242,8 @@ export default {
       this.$refs["rolesForm"].validate(valid => {
         if (valid) {
           //验证通过
+          /* 添加默认权限 */
+          this.rolesForm.ids=[1];
           if (this.isAddNewRole) {
             //添加
             this.$axios({

@@ -39,7 +39,7 @@
             <!-- 管理员才予以显示 -->
             <el-table-column
                 prop="admin"
-                label="管理员"
+                label="作者"
                 width="90"
                 >
             </el-table-column>

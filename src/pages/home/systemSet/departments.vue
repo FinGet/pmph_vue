@@ -31,8 +31,8 @@
             <el-form-item label="部门名称" prop="dpName">
               <el-input  :disabled="!hasSelected" v-model="selectObj.dpName"></el-input>
             </el-form-item>
-            <el-form-item label="显示顺序" prop="sort">
-              <el-input  :disabled="!hasSelected" v-model.number="selectObj.sort"></el-input>
+            <el-form-item label="排序码" prop="sort">
+              <el-input  :disabled="!hasSelected" v-model="selectObj.sort"></el-input>
             </el-form-item>
             <el-form-item label="备注">
               <el-input  :disabled="!hasSelected" v-model="selectObj.note"></el-input>
@@ -52,10 +52,10 @@
            <el-form-item label="部门名称：" prop="dpName">
                <el-input placeholder="请填写部门名称" v-model="dialogForm.dpName"></el-input>
            </el-form-item>
-           <el-form-item label="显示顺序：" prop="sort">
-               <el-input placeholder="请填写阿拉伯数字" v-model.number="dialogForm.sort"></el-input>
+           <el-form-item label="排序码：" prop="sort">
+               <el-input placeholder="请填写阿拉伯数字" v-model="dialogForm.sort"></el-input>
            </el-form-item>
-           <el-form-item label="备注：">
+           <el-form-item label="备注：" prop="note">
                <el-input v-model="dialogForm.note"></el-input>
            </el-form-item>
          </el-form>
@@ -68,6 +68,8 @@
   </el-row>
 </template>
 <script>
+//引入自定义表单验证规则
+ import {formCheckedRules} from '../../../common/mixins/formCheckRules.js'
 export default {
   data() {
     return {
@@ -93,10 +95,17 @@ export default {
         path: ""
       },
       dialogRules: {
-        dpName: [{ required: true, message: "请填写部门名称", trigger: "blur" }],
+        dpName: [
+          { required: true, message: "请填写部门名称", trigger: "blur" },
+          {min:1,max:20,message:'名称不能超过20字符',trigger:'change'}
+          ],
         sort: [
-          { required: true, message: "顺序不能为空" },
-          { type: "number", message: "顺序必须为数字" }
+          { required: true, message: "不能为空" ,trigger:'blur'},
+          {min:1,max:10,message:'排序码不能超过10字符',trigger:'change'},
+          {validator:formCheckedRules.numberChecked,trigger: "blur"}
+        ],
+        note:[
+          {min:0,max:100,message:'备注不能超过100字符',trigger: "change"}
         ]
       },
       defaultProps: {
@@ -142,7 +151,7 @@ export default {
               this.dialogVisible = false;
               this.$message.success("添加成功");
             } else {
-              this.$message.error("添加失败");
+              this.$message.error(res.data.msg);
             }
           });
         } else {
@@ -215,6 +224,7 @@ export default {
       this.dialogForm.path = data.path;
       this.dialogForm.parentId = data.id;
       this.selectObj = data;
+      this.selectObj.sort=this.selectObj.sort+'';
       console.log(this.selectObj);
     }
   },

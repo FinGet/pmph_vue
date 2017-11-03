@@ -6,7 +6,7 @@ var formCheckedRules={
         if (value.match(reg)) {
             callback();
         } else {
-            callback('请输入数字');
+            callback('请输入正确的数字');
         }
 
     },

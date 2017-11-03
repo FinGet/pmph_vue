@@ -136,7 +136,7 @@
           <el-input v-model="form.note" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="排序码：" prop="sort">
-          <el-input v-model.number="form.sort" auto-complete="off"></el-input>
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -188,7 +188,7 @@
           <el-input v-model="addOrgTypeForm.typeName"></el-input>
         </el-form-item>
         <el-form-item label="排序码：" prop="sort">
-          <el-input v-model.number="addOrgTypeForm.sort"></el-input>
+          <el-input v-model="addOrgTypeForm.sort"></el-input>
         </el-form-item>
       </el-form>
 
@@ -199,6 +199,7 @@
   </div>
 </template>
 <script type="text/javascript">
+import {formCheckedRules} from '../../../common/mixins/formCheckRules.js'
   export default {
     data(){
       return{
@@ -229,7 +230,11 @@
           contactPerson:[],
           contactPhone:[],
           note:[],
-          sort: [],
+          sort: [
+            { required: true, message: '排序码不能为空', trigger: 'blur' },
+            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+          ],
         },
         searchForm:{
           orgName:'',
@@ -252,8 +257,9 @@
             { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
           ],
           sort: [
-            { type: 'number', required: true, message: '排序码不能为空', trigger: 'blur' },
-            { type: 'number', message: '排序码必须为数字值', trigger: 'blur' },
+            { required: true, message: '排序码不能为空', trigger: 'blur' },
+            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+            {validator:formCheckedRules.numberChecked,trigger: "blur"}
           ],
         }
       }
@@ -296,7 +302,7 @@
         this.isNew=false;
 
         for(let key in this.form){
-          this.form[key] = this.tableData[index][key];
+          this.form[key] = this.tableData[index][key]+'';
         }
         this.dialogVisible=true;
       },
@@ -387,6 +393,8 @@
                 if (res.code == '1') {
                   this.$message.success('删除成功！');
                   this.getOrgTableData();
+                }else{
+                  this.$message.error(res.msg);
                 }
               })
               .catch(e=>{
@@ -433,15 +441,17 @@
         })
           .then(response => {
             let res = response.data;
-            let data = res.data.rows;
             //修改成功
             if (res.code == 1) {
               this.getOrgTableData();
               this.dialogVisible = false;
               this.$message.success('添加成功!');
             }else{
+             // console.log(response);
+             //加上+ '' 转化成字符串
               this.$message.error(res.msg);
             }
+
           })
           .catch(e=>{
             console.log(e);
@@ -518,6 +528,8 @@
                 if (res.code == '1') {
                   this.getOrgTypeData();
                   this.$message.success('删除成功！');
+                }else{
+                  this.$message.error(res.msg);
                 }
               })
               .catch(e=>{
