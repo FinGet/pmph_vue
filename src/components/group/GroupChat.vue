@@ -64,11 +64,13 @@
           autofocus
           ref="textArea"
           v-model="editingTextarea"
+          @input="changeTextarea"
           @keyup.enter="sendMessage"
           @focus="textAreaFocus"
           @blur="textAreaBlur"
 
         ></textarea>
+        <p class="tip-text" v-if="250-editingTextarea.length<20">还可输入{{250-editingTextarea.length}}个字符</p>
         <el-button @click="sendMessage"  size="small" class="btn">发送(S)</el-button>
       </div>
     </div>
@@ -273,6 +275,14 @@
         }
       },
       /**
+       * 当聊天输入框发生变化
+       */
+      changeTextarea(){
+        if(this.editingTextarea.length>250){
+          this.editingTextarea=this.editingTextarea.substring(0,250);
+        }
+      },
+      /**
        * 开始监听webSocket推送的消息事件
        */
       startListenMessage(){
@@ -283,7 +293,8 @@
        */
       removeListenMessage(){
         bus.$off('ws:message',this.handlerReceiveMessage)
-      }
+      },
+
     },
     components:{
       vueEmoji,
@@ -413,4 +424,10 @@
 .messageLoadingBox{
   background: #f1f1f1;
 }
+  .tip-text{
+    color: #ccc;
+    margin-right: 90px;
+    text-align: right;
+    margin-top: 10px;
+  }
 </style>
