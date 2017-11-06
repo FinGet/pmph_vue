@@ -199,7 +199,7 @@
   </div>
 </template>
 <script type="text/javascript">
-import {formCheckedRules} from '../../../common/mixins/formCheckRules.js'
+import {formCheckedRules} from '../../../../static/formCheckRules.js'
   export default {
     data(){
       return{

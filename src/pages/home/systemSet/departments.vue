@@ -69,7 +69,7 @@
 </template>
 <script>
 //引入自定义表单验证规则
- import {formCheckedRules} from '../../../common/mixins/formCheckRules.js'
+import {formCheckedRules} from '../../../../static/formCheckRules.js'
 export default {
   data() {
     return {
