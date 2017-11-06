@@ -114,6 +114,7 @@
     max-width: 600px;
     position: relative;
     padding: 0 30px 0 50px;
+    word-wrap:break-word;
   }
   .messageUserHead{
     position: absolute;
