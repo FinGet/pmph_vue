@@ -231,7 +231,8 @@
                   isNew:false,
                   userId:iterm.userId,
                   userType:iterm.userType,
-                  header:this.$config.BASE_URL+'image/'+iterm.avatar,
+//                  header:this.$config.BASE_URL+'image/'+iterm.avatar,
+                  header:this.$config.BASE_URL+'image/59ed934d2d8524d12871e0dd',//测试先把图像写死
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
                   time:this.$commonFun.formatDate(iterm.gmtCreate),
