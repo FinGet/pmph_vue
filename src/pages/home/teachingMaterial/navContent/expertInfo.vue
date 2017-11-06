@@ -9,6 +9,7 @@
         <el-button type="warning">退回</el-button>
         <el-button type="primary">通过</el-button>
         <el-button type="primary">打印</el-button>
+        <el-button type="primary">登录</el-button>
       </div>
 
       <!--图书选择-->

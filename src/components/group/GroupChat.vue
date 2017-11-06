@@ -179,6 +179,12 @@
         if(!filedata){
           return;
         }
+        // 判断文件大小是否符合 文件不大于5M
+        if(filedata.size/1000/1000 > 100){
+          this.$message.error("文件大小不能超过100M！");
+          self.newGroupData.filename=undefined;
+          return;
+        }
         var formdata = new FormData();
         formdata.append('file',filedata);
         formdata.append('ids',this.currentGroup.id);
