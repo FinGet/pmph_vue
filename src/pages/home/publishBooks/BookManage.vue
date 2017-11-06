@@ -124,7 +124,7 @@
         </div>
         <!--搜索按钮-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData()">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -370,8 +370,9 @@
        * 获取书籍类别树数据
        */
       getBookType(){
+        console.log(111);
         this.$axios.get('/books/list/materialtype')
-          .then(response=>{
+          .then((response)=>{
             var res = response.data;
             if(res.code==1){
               res.data.typeName='全部';
