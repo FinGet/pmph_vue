@@ -232,7 +232,7 @@
                   userId:iterm.userId,
                   userType:iterm.userType,
 //                  header:this.$config.BASE_URL+'image/'+iterm.avatar,
-                  header:this.$config.BASE_URL+'image/59ed934d2d8524d12871e0dd',//测试先把图像写死
+                  header:this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8',//测试先把图像写死
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
                   time:this.$commonFun.formatDate(iterm.gmtCreate),
