@@ -110,7 +110,7 @@
               :props="defaultProps"
               @node-click="handleNodeClick"
               node-key="id"
-              :default-expanded-keys="[1]"></el-tree>
+              :default-expanded-keys="[92]"></el-tree>
             </el-col>
             <el-col :span="17" :offset="1">
               <el-col class="marginB10">
