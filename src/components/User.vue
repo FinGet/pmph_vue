@@ -43,7 +43,7 @@
     computed:{
       headImage(){
 //        return this.$config.BASE_URL+'image/'+this.userData.avatar;
-        return this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8';//测试
+        return this.$config.BASE_URL+'image/5a012a17a201ee3ed7590351';//测试
       },
     },
     methods:{

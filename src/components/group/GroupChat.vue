@@ -274,7 +274,7 @@
             userId:data.senderId,
             userType:data.senderType,
 //            header:this.$config.BASE_URL+'image/'+data.senderIcon,
-            header:this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8',//测试
+            header:this.$config.BASE_URL+'image/5a012a17a201ee3ed7590351',//测试
             username:data.senderName,
             messageData:data.content,
             time:this.$commonFun.formatDate(data.time),
