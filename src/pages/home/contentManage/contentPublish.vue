@@ -15,10 +15,10 @@
             @change="handleChange">
           </el-cascader>
       </el-form-item>
-      <el-form-item label="摘要：">
+      <el-form-item label="摘要：" prop="summary">
           <el-input type="textarea" :rows="4" class="input" v-model="formData.summary"></el-input>
       </el-form-item>
-      <el-form-item label="关键字：">
+      <el-form-item label="关键字：" prop="keyword">
           <el-input class="input" placeholder="请输入关键字" v-model="formData.keyword"></el-input>
       </el-form-item>
       <el-form-item label="是否推荐：">
@@ -83,6 +83,7 @@
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <el-upload
             class="upload-demo"
+            style="max-width:300px;"
             :action="fileUploadUrl"
             :on-success="upLoadFileSuccess"
             :on-remove="uploadFileRemove"
@@ -137,21 +138,27 @@ export default {
         isHot:'',
         deadlineHot:'',
         sortHot:'',
-        content:'测试测试测试测试测试测试测试测试内容',
-        file:'hbebgb',
+        content:'',
+        file:[],
         isPublished:'',
         isScheduled:false,
         scheduledTime:'',
         isHide:false,
       },
-      fileList:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+      fileList:[],
       formRules:{
             title:[
               {required:true,message:'标题不能为空',trigger:'blur'},
-              {min:1,max:50,message:'标题过长',trigger:'changer'}
+              {min:1,max:50,message:'标题过长',trigger:'change'}
             ],
             categoryId:[
               {required:true,message:'请选择所属栏目',trigger:'change'}
+            ],
+            summary:[
+              {min:1,max:50,message:'摘要内容过长',trigger:'change'}
+            ],
+            keyword:[
+              {min:1,max:50,message:'关键字过长',trigger:'change'}
             ]
 
       },
@@ -160,7 +167,8 @@ export default {
         label:'categoryName'
       },
       uploadFileList:[],
-      fileUploadUrl:'',
+   //   fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
+        fileUploadUrl: 'http://192.168.200.109:8090/pmpheep/messages/message/file',
       editorConfig: {
           initialFrameWidth: null,
           initialFrameHeight: 500
@@ -181,7 +189,6 @@ export default {
           categoryName:''
         }
       }).then((res)=>{
-         console.log(res);
          if(res.data.code==1){
             this.options=res.data.data;
          }   
@@ -189,31 +196,69 @@ export default {
     },
     /* 发布新内容url */
     addNewContent(){
-       /* this.$refs['addForm'].validate((valid)=>{
+      this.formData.content=this.$refs.editor.getContent();
+      if(!this.formData.content){
+        this.$message.error("内容不能为空");
+        return false;
+      }
+       this.$refs['addForm'].validate((valid)=>{
          if(valid){
-           
+           this.formData.sessionId=this.$getUserData().sessionId;
+           this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
+           console.log(res);
+           })
          }else{
 
          }
-       }) */
-       this.formData.sessionId=this.$getUserData().sessionId;
-       this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
-           console.log(res);
        })
+       
     },
+    /* 栏目选择改变 */
     handleChange(value) {
       this.formData.categoryId=value[value.length-1]+'';
       this.formData.path=value.join('-');
     },
-    upLoadFileSuccess(){
-
+   /*  uploadFileChange(file,filelist){
+      this.formData.file=[];
+     console.log(file,filelist);
+     filelist.forEach((item)=>{
+        this.formData.file.push(item.raw);
+     })
+    }, */
+    /* 文件上传成功回调 */
+    upLoadFileSuccess(res,file,filelist){
+       this.formData.file=[];
+       if(res.code==1){
+         filelist.forEach((item)=>{
+           this.formData.file.push(item.response.data);
+         })
+       }
     },
-    uploadFileRemove(){
-
+    /* 文件移除回调 */
+    uploadFileRemove(file,flielist){
+       this.formData.file=[];
+        filelist.forEach((item)=>{
+           this.formData.file.push(item.response.data);
+         })
+    },
+    initIsEdit(){
+      if(this.$router.currentRoute.query.type=="edit"){
+              if(this.$router.currentRoute.params.title){
+        this.formData=this.$router.currentRoute.params;
+        console.log(this.$router.currentRoute.params);
+      }else{
+        this.$router.push({name:'内容列表'});
+      }
+      }else{
+        return false;
+      }
+      
     }
+
   },
   created(){
    this.getColumnList();
+   this.initIsEdit();
   },
   components:{
           Editor

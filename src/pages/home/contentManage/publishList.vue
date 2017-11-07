@@ -23,12 +23,12 @@
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
-            <el-table-column
+            <!-- <el-table-column
                 prop="id"
                 label="ID"
-                width="50"
+                width="60"
                 >
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="文章标题"
                 >
@@ -38,7 +38,7 @@
             </el-table-column>
             <!-- 管理员才予以显示 -->
             <el-table-column
-                prop="admin"
+                prop="username"
                 label="作者"
                 width="90"
                 v-if="isAdmin"
@@ -49,11 +49,11 @@
                 width="80"
                 >
                 <template scope="scope">
-                    {{scope.row.isPublish?'已发布':'未发布'}}
+                    {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
             </el-table-column>
             <el-table-column
-                prop="comment"
+                prop="categoryName"
                 label="所属栏目"
                 width="96"
                 >
@@ -63,23 +63,26 @@
                 label="发布时间"
                 width="165"
                 >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>
             </el-table-column>
             <el-table-column
                 label="相关统计"
-                width="205"
+                width="240"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
-                        <i class="fa fa-thumbs-o-up table_i" >10</i>
+                        <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
                     </el-tooltip> 
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
-                        <i class="fa fa-book table_i">10</i>
+                        <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>  
                     <el-tooltip class="item" effect="dark" content="评" placement="bottom">
-                        <i class="fa fa-comment table_i">10</i>
+                        <i class="fa fa-comment table_i">{{scope.row.comments}}</i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
-                        <i class="fa fa-star-o table_i">10</i>
+                        <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
                     </el-tooltip>     
                 </template>
             </el-table-column>
@@ -89,13 +92,13 @@
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">
-                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isTop}" ></i>
+                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isStick}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="热门" placement="bottom">
                         <i class="fa fa-fire table_i grey_icon" :class="{active_red:scope.row.isHot}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="推荐" placement="bottom">
-                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.recommend}" ></i>
+                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.isPromote}" ></i>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -105,7 +108,7 @@
                 >
                 <template scope="scope">
                     <el-button type="text">发布</el-button>
-                    <el-button type="text">修改</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text">隐藏</el-button>
                     <el-button type="text">删除</el-button>
                 </template>
@@ -328,12 +331,18 @@ export default {
             console.log(res);
             if (res.data.code==1) {
                 this.pageTotal=res.data.data.total;
+                this.tableData=res.data.data.rows;
             }
          })
       },
       /* 初始化是否管理员 */
       initIsAdmin(){
         this.isAdmin=this.$getUserData().userInfo.isAdmin;
+      },
+      /* 修改内容 */
+      editContent(obj){
+          
+          this.$router.push({name:'添加内容',params:obj,query:{type:'edit'}});
       },
     handleSizeChange(val){
 
