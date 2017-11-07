@@ -5,10 +5,12 @@
            <el-input placeholder="请输入内容标题" class="input" v-model="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：">
-          <el-cascader
+          <el-cascader 
             :options="options"
             :clearable="true"
             class="input"
+            :props="defaultType"
+            :change-on-select="true"
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader>
@@ -84,7 +86,7 @@
             :action="fileUploadUrl"
             :on-success="upLoadFileSuccess"
             :on-remove="uploadFileRemove"
-            :file-list="formData.file">
+            :file-list="fileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
@@ -136,17 +138,19 @@ export default {
         deadlineHot:'',
         sortHot:'',
         content:'测试测试测试测试测试测试测试测试内容',
-        file:[],
+        file:'hbebgb',
         isPublished:'',
         scheduledTime:'',
-        isHide:'',
+        isHide:false,
       },
+      fileList:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
       formRules:{
 
       },
-      /* defaultType:{
-        value:'id'
-      }, */
+      defaultType:{
+        value:'id',
+        label:'categoryName'
+      },
       uploadFileList:[],
       fileUploadUrl:'',
       editorConfig: {
@@ -158,68 +162,7 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ]
+      options: []
     };
   },
   methods: {
@@ -231,22 +174,22 @@ export default {
         }
       }).then((res)=>{
          console.log(res);
-        // this.options=res.data.data;
+         if(res.data.code==1){
+            this.options=res.data.data;
+         }   
       })
     },
     /* 发布新内容url */
     addNewContent(){
+       
        this.formData.sessionId=this.$getUserData().sessionId;
-       this.$axios({
-         method:'POST',
-         url:this.addNewUrl,
-         data:this.$commonFun.initPostData(this.formData)
-       }).then((res)=>{
+       this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
            console.log(res);
        })
     },
     handleChange(value) {
-      console.log(value);
+      this.formData.categoryId=value[value.length-1];
+      this.formData.path=value.join('-');
     },
     upLoadFileSuccess(){
 
