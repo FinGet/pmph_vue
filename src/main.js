@@ -19,8 +19,8 @@ Vue.use(ElementUI);
 
 
 //请求根地址配置
-axios.defaults.baseURL = config.BASE_URL;
- //axios.defaults.baseURL = 'http://192.168.200.126:8090/pmpheep/';
+//axios.defaults.baseURL = config.BASE_URL;
+ axios.defaults.baseURL = 'http://192.168.200.109:8090/pmpheep/';
 
 //全局挂载
 Vue.prototype.$axios = axios;

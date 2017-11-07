@@ -231,6 +231,7 @@ export default {
         }
       }).then((res)=>{
          console.log(res);
+        // this.options=res.data.data;
       })
     },
     /* 发布新内容url */
