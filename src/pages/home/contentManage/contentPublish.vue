@@ -137,8 +137,8 @@ export default {
         isHot:'',
         deadlineHot:'',
         sortHot:'',
-       // content:'测试测试测试测试测试测试测试测试内容',
-        //file:'hbebgb',
+        content:'测试测试测试测试测试测试测试测试内容',
+        file:'hbebgb',
         isPublished:'',
         isScheduled:false,
         scheduledTime:'',
@@ -196,7 +196,7 @@ export default {
 
          }
        }) */
-       //this.formData.sessionId=this.$getUserData().sessionId;
+       this.formData.sessionId=this.$getUserData().sessionId;
        this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
            console.log(res);
        })
