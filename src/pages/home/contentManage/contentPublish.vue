@@ -1,10 +1,10 @@
 <template>
   <div class="content_publish">
-    <el-form :model="formData" :rules="formRules" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="内容标题：" >
+    <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
+      <el-form-item label="内容标题：" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model="formData.title"></el-input>
       </el-form-item>
-      <el-form-item label="所属栏目：">
+      <el-form-item label="所属栏目：" prop="categoryId">
           <el-cascader 
             :options="options"
             :clearable="true"
@@ -137,14 +137,22 @@ export default {
         isHot:'',
         deadlineHot:'',
         sortHot:'',
-        content:'测试测试测试测试测试测试测试测试内容',
-        file:'hbebgb',
+       // content:'测试测试测试测试测试测试测试测试内容',
+        //file:'hbebgb',
         isPublished:'',
+        isScheduled:false,
         scheduledTime:'',
         isHide:false,
       },
       fileList:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
       formRules:{
+            title:[
+              {required:true,message:'标题不能为空',trigger:'blur'},
+              {min:1,max:50,message:'标题过长',trigger:'changer'}
+            ],
+            categoryId:[
+              {required:true,message:'请选择所属栏目',trigger:'change'}
+            ]
 
       },
       defaultType:{
@@ -181,14 +189,20 @@ export default {
     },
     /* 发布新内容url */
     addNewContent(){
-       
-       this.formData.sessionId=this.$getUserData().sessionId;
+       /* this.$refs['addForm'].validate((valid)=>{
+         if(valid){
+           
+         }else{
+
+         }
+       }) */
+       //this.formData.sessionId=this.$getUserData().sessionId;
        this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
            console.log(res);
        })
     },
     handleChange(value) {
-      this.formData.categoryId=value[value.length-1];
+      this.formData.categoryId=value[value.length-1]+'';
       this.formData.path=value.join('-');
     },
     upLoadFileSuccess(){
