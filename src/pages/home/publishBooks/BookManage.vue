@@ -43,8 +43,8 @@
               class="searchInputEle bookType"
               v-else-if="powerSearchValue===2"
               :options="bookTypeList"
-              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
-              :value="searchForm.path"
+              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :value="searchForm.typeId"
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
@@ -73,8 +73,8 @@
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
-              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
-              :value="searchForm.path"
+              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :value="searchForm.typeId"
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
@@ -284,7 +284,7 @@
         },
 			  searchForm:{
           name:'',
-          path:[],
+          typeId:[],
           isNew:'',
           isPromote:'',
           isOnSale:'',
@@ -343,12 +343,19 @@
        * 获取表格数据
        */
       getTableData(){
-        let path = this.bookTypeSelected[this.bookTypeSelected.length-1];
-        path=path?path:"";
+        let id = this.bookTypeSelected[this.bookTypeSelected.length-1];
+        let path = '';
+
+        this.$commonFun.recurveList(this.bookTypeList,'childrenMaterialTypeVO',(iterm)=>{
+            if(id==iterm.id){
+                path=iterm.path;
+            }
+        })
         console.log(path);
         this.$axios.get('/books/list/book',{params:{
           name:this.searchForm.name,
           path:path,
+          type:id,
           isNew:this.searchForm.isNew,
           isPromote:this.searchForm.isPromote,
           isOnSale:this.searchForm.isOnSale,

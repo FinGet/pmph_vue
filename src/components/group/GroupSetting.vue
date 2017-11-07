@@ -33,18 +33,7 @@
 
     <div class="cutLine-dashed clearfix"></div>
     <div class="paddingT10 text-right">
-      <el-popover
-        ref="popover"
-        placement="top"
-        width="160"
-        v-model="visible">
-        <p>确认解散小组吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="deleteGroup">确定</el-button>
-        </div>
-      </el-popover>
-      <el-button  type="danger" v-popover:popover>解散小组</el-button>
+      <el-button  type="danger" @click="deleteGroup">解散小组</el-button>
       <el-button class="marginL10" type="primary"  @click="updateGroup">确认修改</el-button>
     </div>
 	</div>
@@ -133,23 +122,32 @@
        * 解散小组
        */
       deleteGroup(){
-        this.$axios.delete('/group/delete/pmphgroup',{params:{
-          id:this.currentGroup.id,
-          sessionId:this.$getUserData().sessionId
-        }})
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              this.$message.success('删除小组成功');
-              //修改成功通过vue bus派发一个事件
-              bus.$emit('group:info-change')
-            }else{
-              this.$message.error(res.msg);
-            }
+        this.$confirm("确定解散该小组?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/group/delete/pmphgroup',{params:{
+              id:this.currentGroup.id,
+              sessionId:this.$getUserData().sessionId
+            }})
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  this.$message.success('删除小组成功');
+                  //修改成功通过vue bus派发一个事件
+                  bus.$emit('group:info-change')
+                }else{
+                  this.$message.error(res.msg);
+                }
+              })
+              .catch((error) => {
+                this.$message.error('删除小组失败，请重试');
+              });
           })
-          .catch((error) => {
-            this.$message.error('删除小组失败，请重试');
-          });
+          .catch(e=>{})
+
       }
     },
     mounted(){
