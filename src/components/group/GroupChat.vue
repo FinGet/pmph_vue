@@ -232,6 +232,7 @@
                   userId:iterm.userId,
                   userType:iterm.userType,
                   header:this.$config.BASE_URL+'image/'+iterm.avatar,
+//                  header:this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8',//测试先把图像写死
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
                   time:this.$commonFun.formatDate(iterm.gmtCreate),
@@ -272,7 +273,8 @@
             isNew:false,
             userId:data.senderId,
             userType:data.senderType,
-            header:this.$config.BASE_URL+'image/'+data.senderIcon,
+//            header:this.$config.BASE_URL+'image/'+data.senderIcon,
+            header:this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8',//测试
             username:data.senderName,
             messageData:data.content,
             time:this.$commonFun.formatDate(data.time),

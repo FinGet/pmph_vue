@@ -28,7 +28,7 @@
         <span slot="title">系统消息</span>
       </el-menu-item>
 
-      <el-submenu index="/content" v-if="isShowSide(5)">
+      <el-submenu index="/content" v-if="isShowSide(5)||isShowSide(9)||isShowSide(10)||isShowSide(11)||isShowSide(12)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">内容管理</span>
@@ -38,7 +38,7 @@
         <el-menu-item index="/content/exam" v-if="isShowSide(11)">社外内容审核</el-menu-item>
         <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item>
       </el-submenu>
-      <el-submenu index="/book" v-if="isShowSide(6)">
+      <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(13)||isShowSide(14)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">出版图书</span>
@@ -47,7 +47,7 @@
         <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/userrouter" v-if="isShowSide(7)">
+      <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户管理</span>
@@ -56,7 +56,7 @@
         <el-menu-item index="/user/writer" v-if="isShowSide(16)">作家用户</el-menu-item>
         <el-menu-item index="/user/org" v-if="isShowSide(17)">机构用户</el-menu-item>
       </el-submenu>
-      <el-submenu index="10" v-if="isShowSide(8)">
+      <el-submenu index="10" v-if="isShowSide(8)||isShowSide(18)||isShowSide(19)||isShowSide(20)||isShowSide(21)">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统设置</span>

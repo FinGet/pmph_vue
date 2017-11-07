@@ -43,8 +43,8 @@
               class="searchInputEle bookType"
               v-else-if="powerSearchValue===2"
               :options="bookTypeList"
-              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
-              :value="searchForm.path"
+              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :value="searchForm.typeId"
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
@@ -73,8 +73,8 @@
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
-              :props="{ label: 'typeName', value:'path', children: 'childrenMaterialTypeVO' }"
-              :value="searchForm.path"
+              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :value="searchForm.typeId"
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
@@ -124,7 +124,7 @@
         </div>
         <!--搜索按钮-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData()">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -284,7 +284,7 @@
         },
 			  searchForm:{
           name:'',
-          path:[],
+          typeId:[],
           isNew:'',
           isPromote:'',
           isOnSale:'',
@@ -343,12 +343,19 @@
        * 获取表格数据
        */
       getTableData(){
-        let path = this.bookTypeSelected[this.bookTypeSelected.length-1];
-        path=path?path:"";
+        let id = this.bookTypeSelected[this.bookTypeSelected.length-1];
+        let path = '';
+
+        this.$commonFun.recurveList(this.bookTypeList,'childrenMaterialTypeVO',(iterm)=>{
+            if(id==iterm.id){
+                path=iterm.path;
+            }
+        })
         console.log(path);
         this.$axios.get('/books/list/book',{params:{
           name:this.searchForm.name,
           path:path,
+          type:id,
           isNew:this.searchForm.isNew,
           isPromote:this.searchForm.isPromote,
           isOnSale:this.searchForm.isOnSale,
@@ -370,8 +377,9 @@
        * 获取书籍类别树数据
        */
       getBookType(){
+        console.log(111);
         this.$axios.get('/books/list/materialtype')
-          .then(response=>{
+          .then((response)=>{
             var res = response.data;
             if(res.code==1){
               res.data.typeName='全部';

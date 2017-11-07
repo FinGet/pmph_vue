@@ -9,7 +9,7 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入文章标题" class="input"></el-input>
+          <el-input placeholder="输入文章标题" class="input" v-model="searchTitle"></el-input>
           <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
@@ -19,7 +19,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search">搜索</el-button>
+         <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -41,6 +41,7 @@
                 prop="admin"
                 label="作者"
                 width="90"
+                v-if="isAdmin"
                 >
             </el-table-column>
             <el-table-column
@@ -117,10 +118,10 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
+        :page-sizes="[10,20,30,50]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="pageTotal">
       </el-pagination>
     </div>
   </div>
@@ -164,6 +165,7 @@ color:#58b7ff;
 export default {
   data() {
     return {
+       publicListUrl:'/cms/contents',   //获取列表url
       options: [
         {
           value: "zhinan",
@@ -302,18 +304,47 @@ export default {
               isHide:true
           },
       ],
+      isAdmin:false,
       selectValue:'',
       currentPage:1,
+      searchTitle:'',
+      pageTotal:100,
+      pageSize:10
 
     };
   },
   methods: {
+      /* 获取内容列表 */
+      getPublicList(){
+         this.$axios.get(this.publicListUrl,{
+               params:{
+                   title:this.searchTitle,
+                   status:this.selectValue,
+                   sessionId:this.$getUserData().sessionId,
+                   pageSize:this.pageSize,
+                   pageNumber:this.currentPage
+               }
+         }).then((res)=>{
+            console.log(res);
+            if (res.data.code==1) {
+                this.pageTotal=res.data.data.total;
+            }
+         })
+      },
+      /* 初始化是否管理员 */
+      initIsAdmin(){
+        this.isAdmin=this.$getUserData().userInfo.isAdmin;
+      },
     handleSizeChange(val){
 
     },
     handleCurrentChange(val){
 
     }
+  },
+  created(){
+      this.getPublicList();
+      this.initIsAdmin();
   }
 };
 </script>
