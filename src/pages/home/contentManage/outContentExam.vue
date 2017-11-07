@@ -5,25 +5,25 @@
            <p class="header_p">
           <el-cascader
             :options="options"
-            v-model="selectedOptions"
+            :props="defaultProp"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader>
-          <el-input placeholder="输入内容标题" class="input"></el-input>
-          <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
+          <el-input placeholder="输入内容标题" v-model="title" class="input"></el-input>
+          <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
              :label="item.label"
-             :value="item.value"       
+             :value="item.value"
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search">搜索</el-button>
-         
-            <el-button type="danger" style="float:right;" :disabled="!isContentSelected">批量删除</el-button>
+         <el-button type="primary" icon="search" @click="search">搜索</el-button>
+
+            <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
@@ -44,15 +44,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="comment"
+                prop="categoryName"
                 label="所属栏目"
                 width="100"
                 >
             </el-table-column>
             <el-table-column
-                prop="creatTime"
+                prop="gmtCreate"
                 label="创建时间"
-                width="165"
+                width="175"
                 >
             </el-table-column>
             <el-table-column
@@ -68,9 +68,9 @@
                 width="150"
                 >
                 <template scope="scope">
-                    <el-button type="text">通过</el-button>
-                    <el-button type="text">拒绝</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
+                    <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button>
+                    <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -78,13 +78,14 @@
       <!--分页-->
     <div class="pagination-wrapper">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        v-if="conDataTotal>20"
+        @size-change="contentHandleSizeChange"
+        @current-change="contentHandleCurrentChange"
+        :current-page="conPageNumber"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="conPageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="conDataTotal">
       </el-pagination>
     </div>
   </el-tab-pane>
@@ -103,7 +104,7 @@
           <span style="margin-left:10px;">评论者账号：</span>
           <el-input placeholder="输入账号" class="input"></el-input>
          <el-button type="primary" icon="search">搜索</el-button>
-         
+
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
       </p>
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
@@ -159,13 +160,13 @@
       <!--分页-->
     <div class="pagination-wrapper">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        @size-change="commentHandleSizeChange"
+        @current-change="commentHandleCurrentChange"
+        :current-page="comPageNumber"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="comPageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="comDataTotal">
       </el-pagination>
     </div>
   </el-tab-pane>
@@ -173,110 +174,16 @@
 
   </div>
 </template>
-<style scoped>
-.content_exam .header_p {
-  overflow: hidden;
-}
-.content_exam .header_p .input {
-  width: 217px;
-  margin-right: 10px;
-}
-.content_exam .table_i {
-  margin-right: 10px;
-}
-.content_exam .grey_icon {
-  color: #999;
-  cursor: pointer;
-}
-.content_exam .active_green {
-  color: #13ce66;
-}
-.content_exam .active_orange {
-  color: rgb(254, 215, 79);
-}
-.content_exam .active_blue {
-  color: #20a0ff;
-}
-.content_exam .active_red {
-  color: #ff4949;
-}
-.content_exam .active_yellow {
-  color: #f7ba2a;
-}
-.content_exam .active_hide {
-  color: #58b7ff;
-}
-.content_exam .el-tabs--border-card {
-  border: 0;
-  box-shadow: none;
-}
-</style>
+
 <script type="text/javascript">
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
+      options: [],
+      defaultProp:{
+        label: 'categoryName',
+        value: 'id'
+      },
       selectOp: [
         {
           value: 0,
@@ -303,56 +210,7 @@ export default {
           label: "是否隐藏"
         }
       ],
-      tableData: [
-        {
-          id: 1,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: true,
-          isExam: true,
-          isTop: true,
-          isHot: true,
-          recommend: true,
-          isHide: true
-        },
-        {
-          id: 2,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: true,
-          isExam: false,
-          isTop: true,
-          isHot: true,
-          recommend: true,
-          isHide: false
-        },
-        {
-          id: 3,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: false,
-          isExam: true,
-          isTop: true,
-          isHot: false,
-          recommend: true,
-          isHide: true
-        },
-        {
-          id: 4,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: true,
-          isExam: true,
-          isTop: false,
-          isHot: true,
-          recommend: false,
-          isHide: true
-        }
-      ],
+      tableData: [],
       commentTableData: [
         {
           id: 1,
@@ -383,7 +241,15 @@ export default {
       contentSelectData:[],
       commentSelectData:[],
       selectValue: "",
-      currentPage: 1
+      conPageNumber: 1,
+      conPageSize:20,
+      menuId:'',
+      comPageNumber: 1,
+      comPageSize:20,
+      title:'',
+      status:'',
+      conDataTotal: 0,
+      comDataTotal: 0
     };
   },
   computed: {
@@ -402,21 +268,209 @@ export default {
       }
       }
   },
+  mounted(){
+    this.getContentLists()
+    this.getMenuLists()
+  },
   methods: {
+    /**
+     * 初始化内容列表
+     */
+    getContentLists(){
+      this.$axios.get("/cms/check",{
+        params:{
+          sessionId: this.$getUserData().sessionId,
+          pageNumber: this.conPageNumber,
+          pageSize: this.conPageSize,
+          title: this.title,
+          status: this.status,
+          categoryId:this.menuId
+        }
+      }).then((response) => {
+        let res = response.data
+        this.conDataTotal = res.data.total
+        if (res.code == '1') {
+          for (let i=0; i< res.data.rows.length; i++) {
+            res.data.rows[i].gmtCreate = this.$commonFun.formatDate(res.data.rows[i].gmtCreate)
+          }
+          this.tableData = res.data.rows
+          // console.log(this.tableData)
+        }
+      }).catch(e=>{
+        this.$message.error('内容列表请求失败，请重试');
+      })
+    },
+    /**
+     * 初始化栏目列表
+     */
+    getMenuLists(){
+      console.log(this.options)
+      this.$axios.get("/cms/set",{
+        params:{
+          categoryName:''
+        }
+      }).then((response) => {
+        let res = response.data
+        if (res.code == '1') {
+          this.options=res.data
+          console.log(this.options)
+        }
+      }).catch(e=>{
+        this.$message.error('栏目数请求失败，请重试');
+      })
+    },
+    search() {
+      this.getContentLists()
+    },
+    /**
+     * 通过/拒绝
+     * 2  /  1
+     */
+    isPass(id, status){
+      // console.log(status)
+      this.$axios.put('/cms/check/content',this.$initPostData({
+          sessionId: this.$getUserData().sessionId,
+          authStatus: status,
+          id: id
+        }))
+        .then(response=>{
+          let res = response.data;
+          if(res.code==1){
+              if(status == 2){
+                this.$message.success('通过成功');
+              } else {
+                this.$message.success('拒绝成功');
+              }
+              this.getContentLists()
+          }else{
+              this.$message.error('请求失败，请重试');
+          }
+        })
+        .catch(e=>{
+          this.$message.error('请求失败，请重试');
+        })
+    },
+    /**
+     * 批量删除
+     */
+    batchRemove(){
+      var ids = []
+      this.contentSelectData.forEach(item => {
+        ids.push(item.id)
+      })
+      console.log(ids)
+      this.$axios.delete('/cms/check/content',{
+        params: {
+          ids: ids.join(',')
+        }
+      }).then(response => {
+        let res = response.data
+        if(res.code == '1') {
+          this.$message.success('删除成功');
+          this.getContentLists()
+        }else{
+          this.$message.error('删除失败');
+        }
+      }).catch(e=>{
+        this.$message.error('请求失败，请重试');
+      })
+    },
+    /**
+     * 删除
+     */
+    deleted(id){
+      this.$axios.delete('/cms/check/'+id+'/content').then(response => {
+        let res = response.data
+        if(res.code == '1') {
+          this.$message.success('删除成功');
+          this.getContentLists()
+        }else{
+          this.$message.error('删除失败');
+        }
+      }).catch(e=>{
+        this.$message.error('请求失败，请重试');
+      })
+    },
+    /**
+     * 内容页搜索
+     */
+    search(){
+      this.getContentLists()
+    },
       /* 内容table切换选项 */
     contentSelectChange(val){
        this.contentSelectData=val;
-      },
+    },
       /* 评论table切换选项 */
     commentSelectChange(val){
         this.commentSelectData=val;
     },
     handleChange(value) {
-      console.log(value);
+      this.menuId = value[0]
+      // console.log(this.menuId)
     },
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {}
+    /**
+     * 内容页分页
+     * @param val
+     */
+    contentHandleSizeChange(val) {
+      this.conPageSize= val
+      this.getContentLists()
+    },
+    contentHandleCurrentChange(val) {
+      this.conPageNumber = val
+      this.getContentLists()
+    },
+    /**
+     * 评论页分页
+     * @param val
+     */
+    commentHandleSizeChange(val) {
+
+    },
+    commentHandleCurrentChange(){
+
+    }
+
   }
 }
 </script>
+<style scoped>
+  .content_exam .header_p {
+    overflow: hidden;
+  }
+  .content_exam .header_p .input {
+    width: 217px;
+    margin-right: 10px;
+  }
+  .content_exam .table_i {
+    margin-right: 10px;
+  }
+  .content_exam .grey_icon {
+    color: #999;
+    cursor: pointer;
+  }
+  .content_exam .active_green {
+    color: #13ce66;
+  }
+  .content_exam .active_orange {
+    color: rgb(254, 215, 79);
+  }
+  .content_exam .active_blue {
+    color: #20a0ff;
+  }
+  .content_exam .active_red {
+    color: #ff4949;
+  }
+  .content_exam .active_yellow {
+    color: #f7ba2a;
+  }
+  .content_exam .active_hide {
+    color: #58b7ff;
+  }
+  .content_exam .el-tabs--border-card {
+    border: 0;
+    box-shadow: none;
+  }
+</style>
 
