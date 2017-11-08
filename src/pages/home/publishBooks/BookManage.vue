@@ -367,6 +367,9 @@
             var res = response.data;
             if(res.code==1){
               this.totalNum = res.data.total;
+              res.data.rows.map(iterm=>{
+                  iterm.path = iterm.path + '-' + iterm.type;
+              });
               this.tableData = res.data.rows;
             }
           })
@@ -420,7 +423,6 @@
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
         });
-        typelist.push(row.id);
         this.form.typeId = typelist;
         console.log(this.form.typeId);
         this.dialogVisible=true;
