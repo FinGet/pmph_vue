@@ -208,7 +208,8 @@
         v-if="totalNum > searchForm.pageSize"
         :page-sizes="[30,50,100, 200, 300, 400]"
         :page-size="searchForm.pageSize"
-        :current-page="searchForm.pageNumber"
+        :current-page.sync="searchForm.pageNumber"
+        @size-change="paginationSizeChange"
         @current-change="getTableData"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalNum">
@@ -222,19 +223,19 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" label-width="120px" class="form">
-          <el-form-item label="是否新书推荐：">
+          <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否重点推荐：">
+          <el-form-item label="是否重点推荐：" required>
             <el-radio-group v-model="form.isPromote">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否上架：">
+          <el-form-item label="是否上架：" required>
             <el-radio-group v-model="form.isOnSale">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -251,7 +252,7 @@
               <!--</el-option>-->
             <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="书籍类别：">
+          <el-form-item label="书籍类别：" required>
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
@@ -434,7 +435,7 @@
         this.form.isNew = true;
         this.form.isOnSale = true;
         this.form.isPromote = true;
-        this.form.typeId = [1];
+        this.form.typeId = [];
       },
       /**
        * 级联下拉值变化时触发此方法
@@ -450,9 +451,12 @@
        * update
        */
       update(){
+        if(!this.form.typeId.length){
+            this.$message.error('请选择书籍类别！');
+            return;
+        }
         let type = this.form.typeId[this.form.typeId.length-1];
         type=type?type:0;
-
         this.$axios.put('/books/update/book',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
@@ -505,6 +509,15 @@
           })
           .catch(e=>{})
 
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNumber=1;
+        this.getTableData();
       },
     },
     created(){
