@@ -110,7 +110,7 @@
                     <el-button type="text">发布</el-button>
                     <el-button type="text" @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text">隐藏</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -122,7 +122,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[10,20,30,50]"
-        :page-size="100"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageTotal">
       </el-pagination>
@@ -169,68 +169,8 @@ export default {
   data() {
     return {
        publicListUrl:'/cms/contents',   //获取列表url
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
+       editContentUrl:'/cms/content/',    //修改查询url
+       deleteContentUrl:'/cms/content/',   //删除内容url
       selectOp:[
          {
              value:0,
@@ -257,56 +197,7 @@ export default {
              label:'是否隐藏',
          },
       ],
-      tableData:[
-          {
-              id:1,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:true,
-              isTop:true,
-              isHot:true,
-              recommend:true,
-              isHide:true
-          },
-          {
-              id:2,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:false,
-              isTop:true,
-              isHot:true,
-              recommend:true,
-              isHide:false
-          },
-          {
-              id:3,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:false,
-              isExam:true,
-              isTop:true,
-              isHot:false,
-              recommend:true,
-              isHide:true
-          },
-          {
-              id:4,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:true,
-              isTop:false,
-              isHot:true,
-              recommend:false,
-              isHide:true
-          },
-      ],
+      tableData:[],
       isAdmin:false,
       selectValue:'',
       currentPage:1,
@@ -341,14 +232,32 @@ export default {
       },
       /* 修改内容 */
       editContent(obj){
-          
-          this.$router.push({name:'添加内容',params:obj,query:{type:'edit'}});
+          this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
+              }
+          })    
+      },
+      /* 删除内容 */
+      deleteContent(obj){
+         this.$axios.delete(this.deleteContentUrl+obj.id).then((res)=>{
+             console.log(res);
+             if(res.data.code==1){
+                 this.getPublicList();
+                 this.$message.success('删除操作成功');
+             }
+         })
       },
     handleSizeChange(val){
-
+     this.pageSize=val;
+     this.currentPage=1;
+     this.getPublicList();
     },
     handleCurrentChange(val){
-
+         this.currentPage=val;
+         this.getPublicList();
     }
   },
   created(){

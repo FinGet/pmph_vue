@@ -10,6 +10,7 @@
             :clearable="true"
             class="input"
             :props="defaultType"
+            v-model="defaultCategoryId"
             :change-on-select="true"
             placeholder="请选择栏目"
             @change="handleChange">
@@ -33,6 +34,8 @@
                 type="datetime"
                 placeholder="选择推荐到期时间"
                 class="date_input"
+                format="yyyy-MM-dd HH:mm:ss"
+                @change="promoteDateChange"
                 :picker-options="pickerOptions">
          </el-date-picker>
       </el-form-item>
@@ -51,6 +54,7 @@
                 type="datetime"
                 placeholder="选择置顶到期时间"
                 class="date_input"
+                @change="stickDateChange"
                 :picker-options="pickerOptions">
          </el-date-picker>
       </el-form-item>
@@ -69,7 +73,7 @@
                 type="datetime"
                 placeholder="选择热门到期时间"
                 class="date_input"
-                
+                @change="hotDateChange"
                 :picker-options="pickerOptions">
          </el-date-picker>
       </el-form-item>
@@ -105,6 +109,7 @@
                 type="datetime"
                 placeholder="选择定时发布时间"
                 style="margin:0 15px 0 25px;"
+                @change="scheduledDateChange"
                 :picker-options="pickerOptions">
          </el-date-picker>
          <el-checkbox v-model="formData.isHide">隐藏</el-checkbox>
@@ -113,65 +118,62 @@
     </el-form>
     <div class="bottom_box">
           <el-button >返回</el-button>
-          <el-button type="primary" @click="addNewContent">确定</el-button>
+          <el-button type="primary" @click="ContentSubmit">确定</el-button>
     </div>
   </div>
 </template>
 <script type="text/javascript">
-import Editor from '../../../components/Editor.vue'
+import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl:'/cms/content/new',  //发布内容url
-      columnListUrl:'/cms/set',    //栏目列表Url
+      addNewUrl: "/cms/content/new", //发布内容url
+      columnListUrl: "/cms/set", //栏目列表Url
+      editContentUrl:'/cms/content/update',    //修改提交url
       formData: {
-        title:'',
-        categoryId:'',
-        summary:'',
-        keyword:'',
-        isPromote:'',
-        deadlinePromote:'',
-        sortPromote:'',
-        isStick:'',
-        deadlineStick:'',
-        sort:'',
-        isHot:'',
-        deadlineHot:'',
-        sortHot:'',
-        content:'',
-        file:[],
-        isPublished:'',
-        isScheduled:false,
-        scheduledTime:'',
-        isHide:false,
+        title: "",
+        categoryId: "",
+        summary: "",
+        keyword: "",
+        isPromote: "",
+        deadlinePromote: "",
+        sortPromote: "",
+        isStick: "",
+        deadlineStick: "",
+        sort: "",
+        isHot: "",
+        deadlineHot: "",
+        sortHot: "",
+        content: "",
+        file: [],
+        isPublished: "",
+        isScheduled: false,
+        scheduledTime: "",
+        isHide: false
       },
-      fileList:[],
-      formRules:{
-            title:[
-              {required:true,message:'标题不能为空',trigger:'blur'},
-              {min:1,max:50,message:'标题过长',trigger:'change'}
-            ],
-            categoryId:[
-              {required:true,message:'请选择所属栏目',trigger:'change'}
-            ],
-            summary:[
-              {min:1,max:50,message:'摘要内容过长',trigger:'change'}
-            ],
-            keyword:[
-              {min:1,max:50,message:'关键字过长',trigger:'change'}
-            ]
-
+      isEditContent:false,
+      fileList: [],
+      formRules: {
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" },
+          { min: 1, max: 50, message: "标题过长", trigger: "change" }
+        ],
+        categoryId: [{ required: true, message: "请选择所属栏目", trigger: "change,blur" }],
+        summary: [{ min: 1, max: 50, message: "摘要内容过长", trigger: "change" }],
+        keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }]
       },
-      defaultType:{
-        value:'id',
-        label:'categoryName'
+      defaultType: {
+        value: "id",
+        label: "categoryName"
       },
-      uploadFileList:[],
-   //   fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
-        fileUploadUrl: 'http://192.168.200.109:8090/pmpheep/messages/message/file',
+      defaultCategoryId:[],
+      uploadFileList: [],
+      //   fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
+      fileUploadUrl:
+        "http://192.168.200.109:8090/pmpheep/messages/message/file",
       editorConfig: {
-          initialFrameWidth: null,
-          initialFrameHeight: 500
+        initialFrameWidth: null,
+        initialFrameHeight: 500
       },
       pickerOptions: {
         disabledDate(time) {
@@ -181,87 +183,158 @@ export default {
       options: []
     };
   },
+  computed: {},
   methods: {
     /* 获得栏目列表 */
-    getColumnList(){
-      this.$axios.get(this.columnListUrl,{
-        params:{
-          categoryName:''
-        }
-      }).then((res)=>{
-         if(res.data.code==1){
-            this.options=res.data.data;
-         }   
-      })
+    getColumnList() {
+      this.$axios
+        .get(this.columnListUrl, {
+          params: {
+            categoryName: ""
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.options = res.data.data;
+          }
+        });
     },
     /* 发布新内容url */
-    addNewContent(){
-      this.formData.content=this.$refs.editor.getContent();
-      if(!this.formData.content){
+    ContentSubmit() {
+      this.formData.content = this.$refs.editor.getContent();
+      if (!this.formData.content) {
         this.$message.error("内容不能为空");
         return false;
       }
-       this.$refs['addForm'].validate((valid)=>{
-         if(valid){
-           this.formData.sessionId=this.$getUserData().sessionId;
-           this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
-           console.log(res);
-           })
-         }else{
+      this.$refs["addForm"].validate(valid => {
+        if (valid) {
+          this.formData.sessionId = this.$getUserData().sessionId;
+          /* 判断新增还是修改 */
+          if(!this.isEditContent){
+              this.$axios
+            .post(this.addNewUrl, this.$commonFun.initPostData(this.formData))
+            .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+                this.$message.success("添加成功");
+                this.$router.push({ name: "内容列表" });
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          }else{
+            this.$axios.put(this.editContentUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
+                console.log(res);
+            })
+          }
+          
 
-         }
-       })
-       
+
+        } else {
+          return false;
+        }
+      });
     },
     /* 栏目选择改变 */
     handleChange(value) {
-      this.formData.categoryId=value[value.length-1]+'';
-      this.formData.path=value.join('-');
+      this.formData.categoryId = value[value.length - 1] + "";
+      this.formData.path = value.join("-");
+      console.log(value);
     },
-   /*  uploadFileChange(file,filelist){
-      this.formData.file=[];
-     console.log(file,filelist);
-     filelist.forEach((item)=>{
-        this.formData.file.push(item.raw);
-     })
-    }, */
     /* 文件上传成功回调 */
-    upLoadFileSuccess(res,file,filelist){
-       this.formData.file=[];
-       if(res.code==1){
-         filelist.forEach((item)=>{
-           this.formData.file.push(item.response.data);
-         })
-       }
-    },
-    /* 文件移除回调 */
-    uploadFileRemove(file,flielist){
-       this.formData.file=[];
-        filelist.forEach((item)=>{
-           this.formData.file.push(item.response.data);
-         })
-    },
-    initIsEdit(){
-      if(this.$router.currentRoute.query.type=="edit"){
-              if(this.$router.currentRoute.params.title){
-        this.formData=this.$router.currentRoute.params;
-        console.log(this.$router.currentRoute.params);
-      }else{
-        this.$router.push({name:'内容列表'});
-      }
-      }else{
-        return false;
+    upLoadFileSuccess(res, file, filelist) {
+      this.formData.file = [];
+      if (res.code == 1) {
+        filelist.forEach(item => {
+          if(item.response){
+            console.log(item);
+            this.formData.file.push(item.response.data);
+          }  
+        });
       }
       
+    },
+    /* 文件移除回调 */
+    uploadFileRemove(file, flielist) {
+      if(!this.isEditContent){
+          this.formData.file = [];
+         filelist.forEach(item => {
+        this.formData.file.push(item.response.data);
+      });
+      }else{
+        
+        if(file.attachment){
+          if(!this.formData.attachment){
+            this.formData.attachment=[];
+          }
+            this.formData.attachment.push(file.attachment);
+        }   
+      }
+      
+    },
+    /* 推荐到期时间改变 */
+    promoteDateChange(val) {
+      console.log(val);
+      this.formData.deadlinePromote = val;
+    },
+    /* 置顶到期时间改变 */
+    stickDateChange(val) {
+      this.formData.deadlineStick = val;
+    },
+    /* 热门到期时间改变 */
+    hotDateChange(val) {
+      this.formData.deadlineHot = val;
+    },
+    /* 定时发布时间改变 */
+    scheduledDateChange(val) {
+      this.formData.scheduledTime = val;
+    },
+    /* 初始化是新增还是修改 */
+    initIsEdit() {
+      if (this.$router.currentRoute.query.type == "edit") {
+           var editData=this.$router.currentRoute.params;
+        if (editData.content) {
+          this.isEditContent=true;
+          for(var item in editData.cmsContent){
+            if(item.indexOf('gmt')!=0){
+                 this.formData[item]=editData.cmsContent[item];
+            } 
+          }
+          /* 设置默认栏目 */
+          this.formData.categoryId=this.formData.categoryId+'';
+          this.defaultCategoryId=editData.cmsContent.path.split('-');
+         for(var i in  this.defaultCategoryId){
+               this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
+         }   
+          /* 填充默认内容 */
+          this.$nextTick(()=>{
+             this.$refs.editor.setContent(editData.content.content);
+          })
+          /* 填充默认附件 */
+         editData.cmsExtras.forEach((item)=>{
+          var obj={};
+          console.log(item);
+          obj.name=item.attachmentName;
+          obj.url=item.attachment;
+          obj.attachment=item.attachment.split('/').pop();
+          this.fileList.push(obj);
+         })
+         this.formData.attachment=[];
+        } else {
+          this.$router.push({ name: "内容列表" });
+        }
+      } else {
+        return false;
+      }
     }
-
   },
-  created(){
-   this.getColumnList();
-   this.initIsEdit();
+  created() {
+    this.getColumnList();
+    this.initIsEdit();
   },
-  components:{
-          Editor
+  components: {
+    Editor
   }
 };
 </script>
@@ -269,12 +342,12 @@ export default {
 .content_publish .input {
   width: 500px;
 }
-.content_publish .date_input{
-    width:300px;
+.content_publish .date_input {
+  width: 300px;
 }
-.content_publish .bottom_box{
-    margin-left:45%;
-    transform: translateX(-50%);
-    display: inline-block;
+.content_publish .bottom_box {
+  margin-left: 45%;
+  transform: translateX(-50%);
+  display: inline-block;
 }
 </style>

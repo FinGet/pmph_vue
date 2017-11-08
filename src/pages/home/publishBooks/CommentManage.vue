@@ -26,8 +26,8 @@
       <!--操作按钮-->
       <div class="pull-right">
         <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
-        <el-button type="warning" :disabled="!selectData.length" @click="audit(false)">审核不通过</el-button>
-        <el-button type="primary" :disabled="!selectData.length" @click="audit(true)">审核通过</el-button>
+        <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
+        <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">审核通过</el-button>
       </div>
 
       <!--表格-->
@@ -213,9 +213,9 @@
       },
       /**
        * 点击审核通过或不通过按钮
-       * @param boolean true为审核通过， false为审核不通过
+       * @param num 1为审核通过， 0为审核不通过
        */
-      audit(boolean){
+      audit(num){
         let url = '/bookusercomment/update/comment';
         let select = [];
         this.selectData.forEach(iterm=>{
@@ -224,7 +224,7 @@
         this.$axios.put(url,this.$commonFun.initPostData({
           ids:select.join(','),
           sessionId:this.$getUserData().sessionId,
-          isAuth:!!boolean
+          isAuth:num
         }))
           .then(response=>{
             var res = response.data;

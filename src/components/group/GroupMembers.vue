@@ -173,7 +173,7 @@ export default {
                  this.$emit('refeshMember');
                  this.getMemberManageList();
                }else{
-                 this.$message.error('修改失败')
+                 this.$message.error(res.data.msg);
                }
          })
      }else{

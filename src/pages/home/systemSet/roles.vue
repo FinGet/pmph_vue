@@ -54,7 +54,7 @@
                         <el-input v-model="rolesForm.sort" placeholder="请输入排序码"></el-input>
                     </el-form-item>
                     <el-form-item label="备注：" prop="note">
-                        <el-input v-model="rolesForm.note" placeholder="请输入排序码"></el-input>
+                        <el-input v-model="rolesForm.note" placeholder="请输入备注"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
