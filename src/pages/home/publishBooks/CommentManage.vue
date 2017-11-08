@@ -95,6 +95,7 @@
           :page-sizes="[30,50,100, 200, 300, 400]"
           :page-size="searchForm.pageSize"
           :current-page="searchForm.pageNumber"
+          @size-change="paginationSizeChange"
           @current-change="getTableData"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalNum">
@@ -247,6 +248,15 @@
       showCommentDetail(row){
         this.comment.content=row.content;
         this.commentDialogVisible=true;
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNumber=1;
+        this.getTableData();
       },
     },
     created(){

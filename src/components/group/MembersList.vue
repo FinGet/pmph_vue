@@ -118,7 +118,7 @@
                 <el-col :span="4">
                   <el-input placeholder="请输入" v-model="searchVal"></el-input>
                 </el-col>
-                <el-button type="primary" icon="search" class="marginL10">搜索</el-button>
+                <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
               </el-col>
               <el-table ref="multipleTable"
               :data="usersData"

@@ -97,7 +97,7 @@
          rules:{
            name:[
              { required: true, message: '请输入小组名称', trigger: 'blur' },
-             { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+             { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
            ]
          },
        }
@@ -171,10 +171,18 @@
           self.newGroupData.filename=undefined;
           return;
         }
-        // 判断文件大小是否符合 文件不大于5M
-        if(file.files && file.files[0].size/1000/1000 > 5){
-          this.$message.error("图像图片上传不能大于5M！");
+        // 判断文件大小是否符合 文件不为0
+        if(file.files && file.files[0].size<1){
+          this.$message.error("图片大小不能小于1bt");
           self.newGroupData.filename=undefined;
+          file.value='';
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于5M
+        if(file.files && file.files[0].size/1000/1000 > 10 && file.files[0].size<1){
+          this.$message.error("图片大小不能大于10M");
+          self.newGroupData.filename=undefined;
+          file.value='';
           return;
         }
         if (file.files && file.files[0]) {

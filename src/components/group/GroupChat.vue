@@ -175,14 +175,20 @@
        */
       uploadFile(){
         let self= this;
-        var filedata = this.$refs.fileInput.files[0];
+        var file = this.$refs.fileInput
+        var filedata = file.files[0];
         if(!filedata){
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.files && file.files[0].size<1){
+          this.$message.error("文件大小不能小于1bt");
+          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不大于5M
         if(filedata.size/1000/1000 > 100){
           this.$message.error("文件大小不能超过100M！");
-          self.newGroupData.filename=undefined;
           return;
         }
         var formdata = new FormData();
