@@ -411,16 +411,19 @@
        * @param row
        */
       editInfo(row){
-        console.log(row)
-        this.dialogVisible=true;
+        var typelist = []
         this.form.bookId = row.id;
         this.form.isNew = row.isNew;
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
-        var path = row.path?row.path.split('-'):[];
-        path.forEach(t=>{
-          this.form.typeId.push(parseInt(t));
+        typelist = row.path?row.path.split('-'):[];
+        typelist.forEach((t,i)=>{
+          typelist[i]=parseInt(t);
         });
+        typelist.push(row.id);
+        this.form.typeId = typelist;
+        console.log(this.form.typeId);
+        this.dialogVisible=true;
       },
       /**
        * 批量修改
