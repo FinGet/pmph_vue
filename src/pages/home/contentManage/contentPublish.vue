@@ -226,6 +226,12 @@ export default {
           }else{
             this.$axios.put(this.editContentUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
                 console.log(res);
+                if(res.data.code==1){
+                  this.$message.success('修改成功');
+                  this.$router.push({ name: "内容列表" });
+                }else {
+                this.$message.error(res.data.msg);
+              }
             })
           }
           
@@ -298,7 +304,8 @@ export default {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
-                 this.formData[item]=editData.cmsContent[item];
+              console.log(editData.cmsContent[item],typeof editData.cmsContent[item]);
+                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             } 
           }
           /* 设置默认栏目 */
