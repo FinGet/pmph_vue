@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">书籍名称/ISBN：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name"></el-input>
+          <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model="searchForm.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
@@ -129,13 +129,13 @@
           label:'全部'
         },{
           value:1,
-          label:'审核通过'
+          label:'已通过'
         },{
           value:0,
-          label:'审核不通过'
+          label:'已退回'
         },{
           value:2,
-          label:'未审核'
+          label:'待审核'
         }],
         totalNum:0,
         commentDialogVisible:false,
@@ -157,13 +157,13 @@
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
                 switch(iterm.isAuth){
                   case 0:
-                    iterm.state='审核不通过';
+                    iterm.state='已通过';
                     break;
                   case 1:
-                    iterm.state = '审核通过';
+                    iterm.state = '已退回';
                     break;
                   case 2:
-                    iterm.state = '未审核';
+                    iterm.state = '待审核';
                 }
               });
               this.totalNum = res.data.total;
