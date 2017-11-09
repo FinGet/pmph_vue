@@ -4,7 +4,7 @@
       <!--高级搜索-->
       <div  v-if="powerSearch">
         <div class="searchBox-wrapper powerSearch" :class="{lg:powerSearchValue===2}">
-          <el-select v-model="powerSearchValue" class="searchName" placeholder="请选择">
+          <el-select v-model="powerSearchValue" @change="powerSearchTypeChange" class="searchName" placeholder="请选择">
             <el-option
               v-for="item in powerSearchList"
               :key="item.value"
@@ -48,7 +48,7 @@
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
-            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" v-else-if="powerSearchValue===1"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===1"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -63,7 +63,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">书籍名称/ISBN：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="getTableData" v-model="searchForm.name"></el-input>
           </div>
         </div>
         <!--书名选择框-->
@@ -124,7 +124,7 @@
         </div>
         <!--搜索按钮-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData()">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -400,6 +400,13 @@
        * 点击展开收起高级搜索文字按钮
        */
       toggleSearchType(){
+        //表单重置
+        this.searchForm.name='';
+        this.searchForm.typeId=[];
+        this.searchForm.isNew='';
+        this.searchForm.isPromote='';
+        this.searchForm.isOnSale='';
+
         this.bookTypeSelected=[];
         this.powerSearch=!this.powerSearch;
       },
@@ -524,6 +531,16 @@
         this.searchForm.pageNumber=1;
         this.getTableData();
       },
+      /**
+       * 高级搜索切换搜索条件时
+       */
+      powerSearchTypeChange(val){
+        this.searchForm.name='';
+        this.searchForm.typeId=[];
+        this.searchForm.isNew='';
+        this.searchForm.isPromote='';
+        this.searchForm.isOnSale='';
+      }
     },
     created(){
 		  this.getTableData();
