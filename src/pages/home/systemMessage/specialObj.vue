@@ -2,6 +2,7 @@
   <div class="special_obj">
     <!--操作按钮-->
     <div class="operation-wrapper">
+      <el-button type="primary" @click="back">返回编辑</el-button>
       <span class="green inline-block marginR10">已选中<span>{{hasSelect.length}}</span>个人</span>
       <el-button type="primary" @click="send" :disabled="clubSelectData.length==0&&writerSelectData.length==0&&orgSelectData.length==0">发送</el-button>
     </div>
@@ -483,6 +484,9 @@ export default {
     mergeSelectData(){
       this.hasSelect=[];
       this.hasSelect=this.clubSelectData.concat(this.writerSelectData.concat(this.orgSelectData));
+    },
+    back(){
+      this.$router.go(-1)
     }
   },
   created() {
