@@ -170,7 +170,7 @@ export default {
     },
     // 批量删除
     deleted () {
-      this.$confirm("确定删除选中文件吗?", "提示",{
+      this.$confirm("确定解散该小组?", "提示",{
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -196,9 +196,13 @@ export default {
               this.$emit('refeshMember');
               this.getMemberManageList();
             }else{
-              this.$message.error('删除失败')
+              this.$message.error(res.data.msg)
             }
           })
+            .catch((error) => {
+              console.log(error);
+              this.$message.error('删除失败，请重试');
+            });
         })
         .catch(e=>{})
     }
