@@ -10,6 +10,7 @@
                     v-model="searchFormData.fileName"
                     placeholder="请输入内容"
                     icon="search"
+                    @keyup.enter.native="Search"
                     :on-icon-click="Search"
           ></el-input>
         </div>
@@ -27,7 +28,6 @@
         :data="tableData"
         stripe
         border
-        max-height="750"
         ref="multipleTable"
         @selection-change="fileSelectionChange"
         style="width: 100%">
@@ -83,13 +83,14 @@
     </div>
     <!--分页-->
     <div class="pagination-wrapper">
-      <el-pagination v-if="totalPages>searchFormData.pageSize"
+      <el-pagination v-if="fileNum>searchFormData.pageSize"
                      :page-sizes="[30,50,100, 200, 300, 400]"
-                     :page-size="params.pageSize"
-                     :current-page.sync="params.pageNumber"
+                     :page-size="searchFormData.pageSize"
+                     @size-change="paginationSizeChange"
+                     :current-page.sync="searchFormData.pageNumber"
                      @current-change="getFilelistData"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total="totalPages"
+                     :total="fileNum"
       >
       </el-pagination>
     </div>
@@ -139,7 +140,6 @@
         groupSelection: [],
         // tableData文件列表
         tableData: [],
-        totalPages:0,
         searchFormData:{
           groupId:this.currentGroup.id,
           pageNumber:1,
@@ -304,8 +304,21 @@
        * @param e input内置事件对象
        */
       filechange(e){
-        var filedata = this.$refs.fileInput.files[0];
-        if(!filedata){
+        var file = this.$refs.fileInput;
+        var filedata = file.files[0];
+        var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
+        var fileName=file.value.substring(0,file.value.lastIndexOf(".")-1).toLowerCase();
+        if(!filedata||!ext){
+          return;
+        }
+        //文件名不超过40个字符
+        if(fileName.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 类型判断
+        if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
+          this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
@@ -328,12 +341,21 @@
               this.getFilelistData();
               this.dialogChooseGroup=false;
             }else{
-              this.$message.error('上传文件失败，请重试');
+              this.$message.error(res.msg);
             }
           })
           .catch((error) => {
             this.$message.error('上传文件失败，请重试');
           });
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchFormData.pageSize=val;
+        this.searchFormData.pageNumber=1;
+        this.getFilelistData();
       },
     },
     created(){
@@ -357,6 +379,9 @@
 <style scoped>
   .groupfile{
     padding:0 30px 10px 30px;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
   }
   .filenum{
     float: left;

@@ -66,7 +66,7 @@
               </div>
             </el-form-item>
             <el-form-item label="小组名称：" prop="name">
-              <el-input v-model="newGroupData.name" placeholder="请输入小组名称"></el-input>
+              <el-input v-model="newGroupData.name" placeholder="请输入小组名称" @keyup.enter.native="createNewGroup"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -165,6 +165,7 @@
         var prevDiv = this.$refs.headImageWrapper;
         var file = this.$refs.fileInput;
         var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
+        if(!ext){return;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
           this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
@@ -228,6 +229,8 @@
                   self.$message.success('创建小组成功');
                   self.getGroupData();
                   self.dialogVisible=false;
+                }else{
+                  self.$message.error(res.msg);
                 }
               })
               .catch((error) => {
