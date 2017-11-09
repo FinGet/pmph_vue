@@ -4,7 +4,7 @@
       <!--高级搜索-->
       <div  v-if="powerSearch">
         <div class="searchBox-wrapper powerSearch" :class="{lg:powerSearchValue===2}">
-          <el-select v-model="powerSearchValue" class="searchName" placeholder="请选择">
+          <el-select v-model="powerSearchValue" @change="powerSearchTypeChange" class="searchName" placeholder="请选择">
             <el-option
               v-for="item in powerSearchList"
               :key="item.value"
@@ -48,7 +48,7 @@
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
-            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" v-else-if="powerSearchValue===1"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===1"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -63,7 +63,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">书籍名称/ISBN：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="getTableData" v-model="searchForm.name"></el-input>
           </div>
         </div>
         <!--书名选择框-->
@@ -124,7 +124,7 @@
         </div>
         <!--搜索按钮-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData()">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -208,7 +208,8 @@
         v-if="totalNum > searchForm.pageSize"
         :page-sizes="[30,50,100, 200, 300, 400]"
         :page-size="searchForm.pageSize"
-        :current-page="searchForm.pageNumber"
+        :current-page.sync="searchForm.pageNumber"
+        @size-change="paginationSizeChange"
         @current-change="getTableData"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalNum">
@@ -222,19 +223,19 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" label-width="120px" class="form">
-          <el-form-item label="是否新书推荐：">
+          <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否重点推荐：">
+          <el-form-item label="是否重点推荐：" required>
             <el-radio-group v-model="form.isPromote">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否上架：">
+          <el-form-item label="是否上架：" required>
             <el-radio-group v-model="form.isOnSale">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -251,7 +252,7 @@
               <!--</el-option>-->
             <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="书籍类别：">
+          <el-form-item label="书籍类别：" required>
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
@@ -366,6 +367,9 @@
             var res = response.data;
             if(res.code==1){
               this.totalNum = res.data.total;
+              res.data.rows.map(iterm=>{
+                  iterm.path = iterm.path + '-' + iterm.type;
+              });
               this.tableData = res.data.rows;
             }
           })
@@ -396,6 +400,13 @@
        * 点击展开收起高级搜索文字按钮
        */
       toggleSearchType(){
+        //表单重置
+        this.searchForm.name='';
+        this.searchForm.typeId=[];
+        this.searchForm.isNew='';
+        this.searchForm.isPromote='';
+        this.searchForm.isOnSale='';
+
         this.bookTypeSelected=[];
         this.powerSearch=!this.powerSearch;
       },
@@ -410,16 +421,18 @@
        * @param row
        */
       editInfo(row){
-        console.log(row)
-        this.dialogVisible=true;
+        var typelist = []
         this.form.bookId = row.id;
         this.form.isNew = row.isNew;
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
-        var path = row.path?row.path.split('-'):[];
-        path.forEach(t=>{
-          this.form.typeId.push(parseInt(t));
+        typelist = row.path?row.path.split('-'):[];
+        typelist.forEach((t,i)=>{
+          typelist[i]=parseInt(t);
         });
+        this.form.typeId = typelist;
+        console.log(this.form.typeId);
+        this.dialogVisible=true;
       },
       /**
        * 批量修改
@@ -434,7 +447,7 @@
         this.form.isNew = true;
         this.form.isOnSale = true;
         this.form.isPromote = true;
-        this.form.typeId = [1];
+        this.form.typeId = [];
       },
       /**
        * 级联下拉值变化时触发此方法
@@ -450,9 +463,12 @@
        * update
        */
       update(){
+        if(!this.form.typeId.length){
+            this.$message.error('请选择书籍类别！');
+            return;
+        }
         let type = this.form.typeId[this.form.typeId.length-1];
         type=type?type:0;
-
         this.$axios.put('/books/update/book',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
@@ -506,6 +522,25 @@
           .catch(e=>{})
 
       },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNumber=1;
+        this.getTableData();
+      },
+      /**
+       * 高级搜索切换搜索条件时
+       */
+      powerSearchTypeChange(val){
+        this.searchForm.name='';
+        this.searchForm.typeId=[];
+        this.searchForm.isNew='';
+        this.searchForm.isPromote='';
+        this.searchForm.isOnSale='';
+      }
     },
     created(){
 		  this.getTableData();

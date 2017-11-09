@@ -23,12 +23,12 @@
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
-            <el-table-column
+            <!-- <el-table-column
                 prop="id"
                 label="ID"
-                width="50"
+                width="60"
                 >
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="文章标题"
                 >
@@ -38,7 +38,7 @@
             </el-table-column>
             <!-- 管理员才予以显示 -->
             <el-table-column
-                prop="admin"
+                prop="username"
                 label="作者"
                 width="90"
                 v-if="isAdmin"
@@ -49,11 +49,11 @@
                 width="80"
                 >
                 <template scope="scope">
-                    {{scope.row.isPublish?'已发布':'未发布'}}
+                    {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
             </el-table-column>
             <el-table-column
-                prop="comment"
+                prop="categoryName"
                 label="所属栏目"
                 width="96"
                 >
@@ -63,23 +63,26 @@
                 label="发布时间"
                 width="165"
                 >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>
             </el-table-column>
             <el-table-column
                 label="相关统计"
-                width="205"
+                width="240"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
-                        <i class="fa fa-thumbs-o-up table_i" >10</i>
+                        <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
                     </el-tooltip> 
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
-                        <i class="fa fa-book table_i">10</i>
+                        <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>  
                     <el-tooltip class="item" effect="dark" content="评" placement="bottom">
-                        <i class="fa fa-comment table_i">10</i>
+                        <i class="fa fa-comment table_i">{{scope.row.comments}}</i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
-                        <i class="fa fa-star-o table_i">10</i>
+                        <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
                     </el-tooltip>     
                 </template>
             </el-table-column>
@@ -89,13 +92,13 @@
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">
-                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isTop}" ></i>
+                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isStick}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="热门" placement="bottom">
                         <i class="fa fa-fire table_i grey_icon" :class="{active_red:scope.row.isHot}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="推荐" placement="bottom">
-                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.recommend}" ></i>
+                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.isPromote}" ></i>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -105,9 +108,9 @@
                 >
                 <template scope="scope">
                     <el-button type="text">发布</el-button>
-                    <el-button type="text">修改</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text">隐藏</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -119,7 +122,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[10,20,30,50]"
-        :page-size="100"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageTotal">
       </el-pagination>
@@ -166,68 +169,8 @@ export default {
   data() {
     return {
        publicListUrl:'/cms/contents',   //获取列表url
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
+       editContentUrl:'/cms/content/',    //修改查询url
+       deleteContentUrl:'/cms/content/',   //删除内容url
       selectOp:[
          {
              value:0,
@@ -254,56 +197,7 @@ export default {
              label:'是否隐藏',
          },
       ],
-      tableData:[
-          {
-              id:1,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:true,
-              isTop:true,
-              isHot:true,
-              recommend:true,
-              isHide:true
-          },
-          {
-              id:2,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:false,
-              isTop:true,
-              isHot:true,
-              recommend:true,
-              isHide:false
-          },
-          {
-              id:3,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:false,
-              isExam:true,
-              isTop:true,
-              isHot:false,
-              recommend:true,
-              isHide:true
-          },
-          {
-              id:4,
-              title:'关于开展“精准扶贫示范企业”试点工作的通知',
-              comment:'信息快报',
-              creatTime:'2017/10/23  03:47:00',
-              isPublish:true,
-              isExam:true,
-              isTop:false,
-              isHot:true,
-              recommend:false,
-              isHide:true
-          },
-      ],
+      tableData:[],
       isAdmin:false,
       selectValue:'',
       currentPage:1,
@@ -328,6 +222,7 @@ export default {
             console.log(res);
             if (res.data.code==1) {
                 this.pageTotal=res.data.data.total;
+                this.tableData=res.data.data.rows;
             }
          })
       },
@@ -335,11 +230,34 @@ export default {
       initIsAdmin(){
         this.isAdmin=this.$getUserData().userInfo.isAdmin;
       },
+      /* 修改内容 */
+      editContent(obj){
+          this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
+              }
+          })    
+      },
+      /* 删除内容 */
+      deleteContent(obj){
+         this.$axios.delete(this.deleteContentUrl+obj.id).then((res)=>{
+             console.log(res);
+             if(res.data.code==1){
+                 this.getPublicList();
+                 this.$message.success('删除操作成功');
+             }
+         })
+      },
     handleSizeChange(val){
-
+     this.pageSize=val;
+     this.currentPage=1;
+     this.getPublicList();
     },
     handleCurrentChange(val){
-
+         this.currentPage=val;
+         this.getPublicList();
     }
   },
   created(){

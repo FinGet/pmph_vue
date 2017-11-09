@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">书籍名称/ISBN：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name"></el-input>
+          <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model="searchForm.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
@@ -26,8 +26,8 @@
       <!--操作按钮-->
       <div class="pull-right">
         <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
-        <el-button type="warning" :disabled="!selectData.length" @click="audit(false)">审核不通过</el-button>
-        <el-button type="primary" :disabled="!selectData.length" @click="audit(true)">审核通过</el-button>
+        <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
+        <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">审核通过</el-button>
       </div>
 
       <!--表格-->
@@ -95,6 +95,7 @@
           :page-sizes="[30,50,100, 200, 300, 400]"
           :page-size="searchForm.pageSize"
           :current-page="searchForm.pageNumber"
+          @size-change="paginationSizeChange"
           @current-change="getTableData"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalNum">
@@ -128,13 +129,13 @@
           label:'全部'
         },{
           value:1,
-          label:'审核通过'
+          label:'已通过'
         },{
           value:0,
-          label:'审核不通过'
+          label:'已退回'
         },{
           value:2,
-          label:'未审核'
+          label:'待审核'
         }],
         totalNum:0,
         commentDialogVisible:false,
@@ -156,13 +157,13 @@
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
                 switch(iterm.isAuth){
                   case 0:
-                    iterm.state='审核不通过';
+                    iterm.state='已通过';
                     break;
                   case 1:
-                    iterm.state = '审核通过';
+                    iterm.state = '已退回';
                     break;
                   case 2:
-                    iterm.state = '未审核';
+                    iterm.state = '待审核';
                 }
               });
               this.totalNum = res.data.total;
@@ -213,9 +214,9 @@
       },
       /**
        * 点击审核通过或不通过按钮
-       * @param boolean true为审核通过， false为审核不通过
+       * @param num 1为审核通过， 0为审核不通过
        */
-      audit(boolean){
+      audit(num){
         let url = '/bookusercomment/update/comment';
         let select = [];
         this.selectData.forEach(iterm=>{
@@ -224,7 +225,7 @@
         this.$axios.put(url,this.$commonFun.initPostData({
           ids:select.join(','),
           sessionId:this.$getUserData().sessionId,
-          isAuth:!!boolean
+          isAuth:num
         }))
           .then(response=>{
             var res = response.data;
@@ -247,6 +248,15 @@
       showCommentDetail(row){
         this.comment.content=row.content;
         this.commentDialogVisible=true;
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNumber=1;
+        this.getTableData();
       },
     },
     created(){

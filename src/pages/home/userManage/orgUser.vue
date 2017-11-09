@@ -244,30 +244,8 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-popover
-					ref="popover1"
-					placement="top"
-					width="160"
-					v-model="visible1">
-					<p>确认审核</p>
-					<div style="text-align: right; margin: 0">
-						<el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="check(0)">确定</el-button>
-					</div>
-				</el-popover>
-				<el-button class="pull-right marginL10" type="success" v-popover:popover1 :disabled="isSelected">审核</el-button>
-				<el-popover
-					ref="popover2"
-					placement="top"
-					width="160"
-					v-model="visible2">
-					<p>确认是否退回</p>
-					<div style="text-align: right; margin: 0">
-						<el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-						<el-button type="primary" size="mini" @click="check(2)">确定</el-button>
-					</div>
-				</el-popover>
-				<el-button class="pull-right" type="danger" v-popover:popover2 :disabled="isSelected">退回</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">批量审核</el-button>
+				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">批量退回</el-button>
 			</el-col>
 		</el-row>
 		<el-row>
