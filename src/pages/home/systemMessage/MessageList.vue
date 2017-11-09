@@ -126,6 +126,7 @@
   export default {
     data() {
       return {
+        popVisible:false,
         dialogVisible:false,
         reissueForm:{
           title:'',
@@ -226,9 +227,14 @@
        * 撤回
        */
       handleRecall(index, row) {
-        this.$axios.put('/messages/withdraw/message',this.$initPostData({
-          msgId:row.msgId
-        }))
+        this.$confirm("确定删除选中文件吗?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$axios.put('/messages/withdraw/message',this.$initPostData({
+            msgId:row.msgId
+          }))
           .then(response=>{
             let res = response.data;
             if(res.code==1){
@@ -241,6 +247,7 @@
           .catch(e=>{
             this.$message.error('撤销失败，请重试');
           })
+        })
       },
       /**
        * 点击补发
