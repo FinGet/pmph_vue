@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">院校名称：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入关键字" class="searchInputEle" v-model="searchForm.orgName"></el-input>
+          <el-input placeholder="请输入关键字" class="searchInputEle"  @keyup.native.enter="getOrgTableData" v-model="searchForm.orgName"></el-input>
         </div>
       </div>
       <!--申报职务搜索-->
@@ -87,10 +87,11 @@
     <div class="pagination-wrapper">
       <el-pagination
         v-if="totalNum > searchForm.pageSize"
-        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-sizes="[10,20,30,50]"
         :page-size="searchForm.pageSize"
         :current-page="searchForm.pageNumber"
-        @current-change="getOrgTableData"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalNum">
       </el-pagination>
@@ -220,6 +221,7 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
         rules: {
           orgName: [
             { required: true, message: '请输入院校名称', trigger: 'blur' },
+            /* {validator:formCheckedRules.chinaStringChecked,trigger: "blur"}  */
           ],
           orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
@@ -227,11 +229,16 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
           areaId: [
             { required: true, message: '请选择所属地区', trigger: 'blur' },
           ],
-          contactPerson:[],
-          contactPhone:[],
-          note:[],
+          contactPerson:[
+            { min:1,max:20, message: "联系人名称长度过长", trigger: "change" }
+          ],
+          contactPhone:[
+            {validator:formCheckedRules.phoneNumberChecked,trigger: "blur"}   
+          ],
+          note:[
+            { min:1,max:20, message: "备注长度不能超过20", trigger: "change" },
+          ],
           sort: [
-            { required: true, message: '排序码不能为空', trigger: 'blur' },
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
           ],
@@ -241,7 +248,7 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
           orgTypeId:'',
           areaId:'',
           pageNumber:1,
-          pageSize:30,
+          pageSize:10,
         },
         orgTypeList: [],
 
@@ -257,7 +264,6 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
             { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
           ],
           sort: [
-            { required: true, message: '排序码不能为空', trigger: 'blur' },
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
           ],
@@ -287,12 +293,23 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
       addBtnClick(){
         this.isNew=true;
         this.dialogVisible=true;
+        
       },
       /**
        * 关闭新增修改弹窗
        */
       handleDialogClose(done){
-        this.$refs['ruleForm'].resetFields();
+        this.$refs.ruleForm.resetFields();
+        this.form={
+          id:'',
+          orgName:'',
+          orgTypeId:'',
+          areaId:'',
+          contactPerson:'',
+          contactPhone:'',
+          note:'',
+          sort:'',
+        },
         done();
       },
       setOrgsType(){
@@ -302,7 +319,7 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
         this.isNew=false;
 
         for(let key in this.form){
-          this.form[key] = this.tableData[index][key]+'';
+          this.form[key] = !this.tableData[index][key]?this.tableData[index][key]:this.tableData[index][key]+'';
         }
         this.dialogVisible=true;
       },
@@ -375,6 +392,15 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
             this.$message.error('获取机构类型数据失败');
           });
       },
+      handleSizeChange(val){
+       this.searchForm.pageSize=val;
+       this.searchForm.pageNumber=1;
+       this.getOrgTableData();
+      },
+      handleCurrentChange(val){
+        this.searchForm.pageNumber=val;
+        this.getOrgTableData();
+      },
       /**
        * 删除机构用户
        * @param orgId
@@ -393,8 +419,8 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
                 if (res.code == '1') {
                   this.$message.success('删除成功！');
                   this.getOrgTableData();
-                }else{
-                  this.$message.error(res.msg);
+                }else if(res.code==2){
+                  this.$message.error('该机构内还有用户，请先将用户删除');
                 }
               })
               .catch(e=>{
@@ -539,6 +565,8 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
           })
           .catch(e=>{})
       }
+    },
+    watch:{
     },
     created() {
       this.getOrgTableData();

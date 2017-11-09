@@ -3,8 +3,17 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
            <p class="header_p">
-          <el-input placeholder="输入文章标题" class="input"></el-input>
-          <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
+           <el-cascader 
+            :options="options"
+            :clearable="true"
+            class="input"
+            :props="defaultType"
+            :change-on-select="true"
+            placeholder="请选择栏目"
+            @change="handleChange">
+          </el-cascader>  
+          <el-input placeholder="输入文章标题" class="input" v-model="contentParams.title"></el-input>
+          <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,29 +27,25 @@
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
-                prop="id"
-                label="ID"
-                width="50"
-                >
-            </el-table-column>
-            <el-table-column
                 label="文章标题"
                 >
                 <template scope="scope">
-                   <a href="">{{scope.row.title}}</a>
+                  <el-button type="text">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
             <el-table-column
-                prop="comment"
+                prop="categoryName"
                 label="所属栏目"
                 width="100"
                 >
             </el-table-column>
             <el-table-column
-                prop="creatTime"
                 label="发布时间"
                 width="165"
                 >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>
             </el-table-column>
             <el-table-column
                 label="相关统计"
@@ -48,16 +53,16 @@
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
-                        <i class="fa fa-thumbs-o-up table_i" >10</i>
+                        <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
                     </el-tooltip> 
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
-                        <i class="fa fa-book table_i">10</i>
+                        <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>  
                     <el-tooltip class="item" effect="dark" content="评" placement="bottom">
-                        <i class="fa fa-comment table_i">10</i>
+                        <i class="fa fa-comment table_i">{{scope.row.comments}}</i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
-                        <i class="fa fa-star-o table_i">10</i>
+                        <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
                     </el-tooltip>     
                 </template>
             </el-table-column>
@@ -67,18 +72,18 @@
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">
-                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isTop}" ></i>
+                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isStick}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="热门" placement="bottom">
                         <i class="fa fa-fire table_i grey_icon" :class="{active_red:scope.row.isHot}" ></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="推荐" placement="bottom">
-                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.recommend}" ></i>
+                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.isPromote}" ></i>
                     </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
-                prop="name"
+                prop="username"
                 label="审核人"
                 width="90"
                 >
@@ -88,9 +93,9 @@
                 width="150"
                 >
                 <template scope="scope">
-                    <el-button type="text">修改</el-button>
-                    <el-button type="text">隐藏</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button>
+                    <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -221,68 +226,21 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
+      outContentUrl:'/cms/manage',  //内容列表url
+      editContentUrl:'/cms/content/',    //修改查询url
+      columnListUrl: "/cms/set", //栏目列表Url
+      contentParams:{
+          categoryId:'',
+          title:'',
+          status:'',
+          pageSize:10,
+          pageNumber:1
+      },
+      options: [],
+      defaultType: {
+        value: "id",
+        label: "categoryName"
+      },
       selectOp: [
         {
           value: 2,
@@ -375,13 +333,80 @@ export default {
             link:''
           },
       ],
-      selectValue: "",
       currentPage: 1
     };
   },
   methods: {
+    /* 获取内容列表 */
+    getOutContentList(){
+      this.contentParams.sessionId=this.$getUserData().sessionId;
+     this.$axios.get(this.outContentUrl,{
+       params:this.contentParams
+     }).then((res)=>{
+       console.log(res);
+       if(res.data.code==1){
+         this.tableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 获得栏目列表 */
+    getColumnList() {
+      this.$axios
+        .get(this.columnListUrl, {
+          params: {
+            categoryName: ""
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.options = res.data.data;
+          }
+        });
+    },
+    /* 修改内容 */
+    editContent(obj){
+      this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
+              }
+          })    
+    },
+    /* 隐藏内容 */
+     hideContent(obj){
+      this.$axios.put('/cms/manage/content/'+obj.id+'/hide').then((res)=>{
+        console.log(res);
+        if(res.data.code==1){
+          this.getOutContentList();
+          this.$message.success('内容已隐藏');
+        }else{
+          this.$message.eroor(res.data.msg);
+        }
+      })
+     },
+     /* 删除内容 */
+     deleteContent(obj){
+      this.$axios.delete('/cms/manage/content/'+obj.id).then((res)=>{
+        if(res.data.code==1){
+          this.getOutContentList();
+          this.$message.success('内容已删除');
+        }else{
+          tthis.$message.error(res.data.msg);
+        }
+      })
+     },
+    /* 栏目选项改变 */
+    handleChange(value){
+      this.contentParams.categoryId = value[value.length - 1] + "";
+    },
     handleSizeChange(val) {},
     handleCurrentChange(val) {}
+  },
+  created(){
+    this.getOutContentList();
+   this.getColumnList();
   }
 };
 </script>

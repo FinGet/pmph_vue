@@ -29,6 +29,7 @@ export var mySessionStorage = {
 
 /* post数据格式封装 */
 export function initPostData(obj, keyArr) {
+  var URLSearchParams = require('url-search-params');
     var paramdata = new URLSearchParams();
     if (!keyArr) {
         for (var item in obj) {
