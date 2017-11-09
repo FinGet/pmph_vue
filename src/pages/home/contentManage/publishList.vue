@@ -1,5 +1,5 @@
 <template>
-  <div class="publish_list">
+  <div class="publish_list" >
       <p class="header_p">
           <!-- <el-cascader
             :options="options"
@@ -33,7 +33,7 @@
                 label="文章标题"
                 >
                 <template scope="scope">
-                   <a href="">{{scope.row.title}}</a>
+                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
             <!-- 管理员才予以显示 -->
@@ -59,7 +59,6 @@
                 >
             </el-table-column>
             <el-table-column
-                prop="creatTime"
                 label="发布时间"
                 width="165"
                 >
@@ -107,9 +106,9 @@
                 width="190"
                 >
                 <template scope="scope">
-                    <el-button type="text">发布</el-button>
+                    <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button>
                     <el-button type="text" @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text">隐藏</el-button>
+                    <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button>
                     <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -230,6 +229,22 @@ export default {
       initIsAdmin(){
         this.isAdmin=this.$getUserData().userInfo.isAdmin;
       },
+      /* 查看详情 */
+      contentDetail(obj){
+           
+      },
+      /* 发布内容 */
+      publishContent(obj){
+           this.$axios.put('/cms/content/'+obj.id+'/publish').then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                  this.$message.success("文章已发布");
+                  this.getPublicList();
+              }else{
+                  this.$message.error(res.data.msg);
+              }
+           })
+      },
       /* 修改内容 */
       editContent(obj){
           this.$axios.get(this.editContentUrl+obj.id,{
@@ -240,10 +255,20 @@ export default {
               }
           })    
       },
+      /* 隐藏内容 */
+      hideContent(obj){
+         this.$axios.put('/cms/content/'+obj.id+'/hide').then((res)=>{
+           if(res.data.code==1){
+              this.$message.success('内容已隐藏');
+              this.getPublicList();
+           }else{
+                  this.$message.error(res.data.msg);
+              }
+         })
+      },
       /* 删除内容 */
       deleteContent(obj){
          this.$axios.delete(this.deleteContentUrl+obj.id).then((res)=>{
-             console.log(res);
              if(res.data.code==1){
                  this.getPublicList();
                  this.$message.success('删除操作成功');

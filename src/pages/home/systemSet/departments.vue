@@ -34,7 +34,7 @@
             <el-form-item label="排序码" prop="sort">
               <el-input  :disabled="!hasSelected" v-model="selectObj.sort"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item label="备注" prop="note">
               <el-input  :disabled="!hasSelected" v-model="selectObj.note"></el-input>
             </el-form-item>
           </el-form>
@@ -100,12 +100,11 @@ export default {
           {min:1,max:20,message:'名称不能超过20字符',trigger:'change'}
           ],
         sort: [
-          { required: true, message: "不能为空" ,trigger:'blur'},
           {min:1,max:10,message:'排序码不能超过10字符',trigger:'change'},
           {validator:formCheckedRules.numberChecked,trigger: "blur"}
         ],
         note:[
-          {min:0,max:100,message:'备注不能超过100字符',trigger: "change"}
+          {min:0,max:20,message:'备注不能超过20字符',trigger: "change"}
         ]
       },
       defaultProps: {
@@ -178,6 +177,8 @@ export default {
               if (res.data.code == 1) {
                 this.$message.success("删除成功");
                 this.getTreeData();
+              }else if(res.data.code == 3){
+                this.$message.error('该部门中还有用户，不能删除部门');
               }
             });
         })

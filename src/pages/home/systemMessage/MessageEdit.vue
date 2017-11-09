@@ -2,6 +2,7 @@
   <div class="message-edit">
 
     <div class="nextStep-wrapper text-right">
+      <el-button type="primary" @click="back">返回</el-button>
       <el-button type="primary" @click="preview">预览</el-button>
       <el-button type="primary" @click="nextStep()" v-if="currentMessageType!='edit'">下一步</el-button>
       <el-button type="primary" @click="editSave()" v-if="currentMessageType=='edit'">保存</el-button>
@@ -19,7 +20,7 @@
             <el-radio :label="4">教材报名者</el-radio>
           </el-radio-group>
       </el-form-item>
-      <el-form-item label="文章内容：">
+      <el-form-item label="消息内容：" >
         <div class="clearfix">
           <Editor ref="editor" :config="editorConfig"></Editor>
         </div>
@@ -37,6 +38,7 @@
             :action="fileUploadUrl"
             :on-success="upLoadFileSuccess"
             :on-remove="uploadFileRemove"
+            :before-upload="beforeUpload"
             :file-list="uploadFileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
@@ -89,6 +91,9 @@ export default {
        title:[
           { required: true, message: '请输入文章标题', trigger: 'blur' },
        ],
+       content:[
+          { required: true, message: '请输入消息内容', trigger: 'blur' },
+       ],
        sendType:[
           {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
        ],
@@ -127,6 +132,21 @@ export default {
      */
     upLoadFileSuccess(response, file, fileList){
       this.saveFilesToMessageForm(fileList);
+    },
+    /**
+     * 上传之前检验
+     */
+    beforeUpload(file){
+      // console.log(file)
+      const isLt0M = file.size / 1024 / 1024 > 0;
+      const nameLen = file.name.length < 80;
+      if (!isLt0M) {
+        this.$message.error('上传文件大小不能小于 0kb!');
+      }
+      if (!nameLen) {
+        this.$message.error('上传文件名字长度不能超过80个字符!');
+      }
+      return isLt0M&&nameLen
     },
     /**
      * 移除已添加文件
@@ -168,6 +188,7 @@ export default {
       this.$refs['messageForm'].validate((valid) => {
           if (valid) {
             this.messageForm.content = this.$refs.editor.getContent();
+            console.log(this.$refs.editor.getContent())
              switch(this.messageForm.sendType){
                 case 1:
                   this.$router.push({name:'选择学校',query:{type:'new'},params:this.messageForm});
@@ -275,6 +296,9 @@ export default {
         this.uploadFileList.push(iterm);
       });
     },
+    back(){
+      this.$router.go(-1)
+    }
   },
   components:{
     Editor

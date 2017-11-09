@@ -283,8 +283,8 @@
 					</el-table-column>
 					<el-table-column prop="progress" label="审核标志" width="100" align="center">
 						<template scope="scope">
-							<el-tag type="success" v-if="scope.row.progress=='0'">已通过</el-tag>
-							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='0'">待审核</el-tag>
+							<el-tag type="success" v-if="scope.row.progress=='1'">已通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
 					</el-table-column>
@@ -349,7 +349,7 @@ export default {
       ],
       state: [
 				{
-					value: '1',
+					value: '0',
 					label: '待审核'
 				},
 				{
@@ -357,7 +357,7 @@ export default {
 					label: '已退回'
 				},
 				{
-					value: '3',
+					value: '1',
 					label: '已通过'
 				}
 			],

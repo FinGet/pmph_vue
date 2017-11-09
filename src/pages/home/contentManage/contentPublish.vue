@@ -304,7 +304,6 @@ export default {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
-              console.log(editData.cmsContent[item],typeof editData.cmsContent[item]);
                  this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             } 
           }
@@ -315,13 +314,13 @@ export default {
                this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
          }   
           /* 填充默认内容 */
-          this.$nextTick(()=>{
-             this.$refs.editor.setContent(editData.content.content);
-          })
+          var _this=this;
+          setTimeout(function() {
+             _this.$refs.editor.setContent(editData.content.content);
+          }, 1000);
           /* 填充默认附件 */
          editData.cmsExtras.forEach((item)=>{
           var obj={};
-          console.log(item);
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();

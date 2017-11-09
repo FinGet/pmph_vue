@@ -3,8 +3,8 @@
     <el-row>
       <el-col :span="12">
         <div class="search-title">消息标题:</div>
-        <el-col :span="6" class="search-10">
-          <el-input v-model="title" placeholder="请输入搜索内容" @keyup.enter.native="search"></el-input>
+        <el-col :span="8" class="search-10">
+          <el-input v-model="title" placeholder="请输入搜索内容" @keyup.enter.native="search" @change="limitLength"></el-input>
         </el-col>
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
@@ -126,6 +126,7 @@
   export default {
     data() {
       return {
+        popVisible:false,
         dialogVisible:false,
         reissueForm:{
           title:'',
@@ -226,9 +227,14 @@
        * 撤回
        */
       handleRecall(index, row) {
-        this.$axios.put('/messages/withdraw/message',this.$initPostData({
-          msgId:row.msgId
-        }))
+        this.$confirm("确定删除选中文件吗?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$axios.put('/messages/withdraw/message',this.$initPostData({
+            msgId:row.msgId
+          }))
           .then(response=>{
             let res = response.data;
             if(res.code==1){
@@ -241,6 +247,7 @@
           .catch(e=>{
             this.$message.error('撤销失败，请重试');
           })
+        })
       },
       /**
        * 点击补发
@@ -324,6 +331,16 @@
             })
           })
           .catch(e=>{})
+      },
+      /**
+       * 限制输入长度
+       */
+      limitLength(value){
+        if (value.length > 50) {
+          this.$message.error('输入内容不能超过50个字');
+          this.title = value.substring(0,50)
+          // console.log(this.title)
+        }
       }
     },
   }
