@@ -348,6 +348,8 @@
         if (data.path == '0') {
           this.path = ''
         }
+        this.pageNumber=1 
+        this.pageSize=30,
         this.getUsers()
       },
       /**
