@@ -3,7 +3,7 @@
     <!--操作按钮-->
     <div class="operation-wrapper">
       <span class="green inline-block marginR10">已选中<span>{{hasSelect.length}}</span>个人</span>
-      <el-button type="primary" @click="send">发送</el-button>
+      <el-button type="primary" @click="send" :disabled="clubSelectData.length==0&&writerSelectData.length==0&&orgSelectData.length==0">发送</el-button>
     </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="社内用户" name="first">
@@ -21,7 +21,7 @@
             <el-col class="marginB10">
               <span class="pull-left s-title">账号/姓名:</span>
               <el-col :span="4">
-                <el-input placeholder="请输入" v-model="clubUserParams.searchVal"></el-input>
+                <el-input placeholder="请输入" v-model="clubUserParams.name"></el-input>
               </el-col>
               <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
             </el-col>
@@ -210,6 +210,7 @@
               @size-change="orgSizeChange"
               @current-change="orgCurrentChange"
               :current-page.sync="orgUserParams.pageNumber"
+              v-if="orgPageTotal>orgUserParams.pageSize"
               :page-sizes="[10,20, 30, 50, 100]"
               :page-size="orgUserParams.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
@@ -232,8 +233,9 @@ export default {
       writerUserUrl: '/users/writer/list/writeruser',  //获取作家用户url
       orgUserUrl:'/users/org/list/orguser',  //获取机构用户url
       clubUserParams: {
-        searchVal: "",
+        name: "",
         path: "",
+        departmentId: '' ,
         pageNumber: 1,
         pageSize: 10,
       },
@@ -413,11 +415,14 @@ export default {
     },
     /* 点击社内用户树 */
     handleNodeClick(data) {
-      console.log(data.path);
+      console.log(data);
       this.clubUserParams.path = data.path;
       if (data.path == "0") {
         this.clubUserParams.path = "";
       }
+      this.clubUserParams.departmentId = data.id;
+      this.clubUserParams.pageNumber = 1,
+      this.clubUserParams.pageSize = 10,
       this.getClubUserData();
     },
     /* 社内用户分页size改变 */
