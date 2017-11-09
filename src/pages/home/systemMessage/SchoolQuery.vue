@@ -9,7 +9,7 @@
           返回编辑
         </el-button>
         <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
-          发布
+          发送
           <span v-if="queryData.length>0">({{queryData.length}})</span>
         </el-button>
       </div>
