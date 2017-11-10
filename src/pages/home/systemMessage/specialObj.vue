@@ -22,7 +22,7 @@
             <el-col class="marginB10">
               <span class="pull-left s-title">账号/姓名:</span>
               <el-col :span="4">
-                <el-input placeholder="请输入" v-model="clubUserParams.name"></el-input>
+                <el-input placeholder="请输入" v-model="clubUserParams.name" @keyup.enter.native="getClubUserData"></el-input>
               </el-col>
               <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
             </el-col>
@@ -86,13 +86,13 @@
           <div class="searchBox-wrapper">
             <span>账号/姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="writerUserParams.name" class="searchInputEle "></el-input>
+              <el-input placeholder="请输入内容" v-model="writerUserParams.name" @keyup.enter.native="getWriterUserData" class="searchInputEle "></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>所属院校：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="writerUserParams.orgName" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="writerUserParams.orgName" @keyup.enter.native="getWriterUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
@@ -163,19 +163,19 @@
           <div class="searchBox-wrapper">
             <span>学校名称：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.orgName" class="searchInputEle"></el-input>
-            </div>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.orgName" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
+            </div> 
           </div>
           <div class="searchBox-wrapper">
             <span>机构代码：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.username" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.username" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>管理员姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.realname" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入内容" v-model="orgUserParams.realname" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBtn-wrapper">
