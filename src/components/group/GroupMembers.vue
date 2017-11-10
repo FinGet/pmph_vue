@@ -7,30 +7,20 @@
                     placeholder="请输入"
                     icon="search"
                     v-model="searchValue"
+                    @keyup.enter.native="getMemberManageList"
                     :on-icon-click="getMemberManageList"
           ></el-input>
         </div>
         <div class="pull-left marginT10 marginL10 textcolor">共有{{total}}个成员</div>
         <div class="pull-right clearfix">
           <div class="disinline">
-            <el-button type="warning" @click="reviseMagage(false)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">取消管理员</el-button>
+            <el-button type="warning" :disabled="idSelected" @click="reviseMagage(false)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">取消管理员</el-button>
           </div>
           <div class="disinline">
-            <el-button type="primary" @click="reviseMagage(true)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">设为管理员</el-button>
+            <el-button type="primary" :disabled="idSelected" @click="reviseMagage(true)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin">设为管理员</el-button>
           </div>
           <div class="disinline marginL10">
-            <el-popover
-              ref="popover"
-              placement="top"
-              width="160"
-              v-model="visible">
-              <p>选中的成员确定删除吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="visible = false,deleted()">确定</el-button>
-              </div>
-            </el-popover>
-            <el-button type="danger" @click="visible=true" v-popover:popover :disabled="idSelected" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isAdmin">删除</el-button>
+            <el-button type="danger" @click="deleted" :disabled="idSelected" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isAdmin">删除</el-button>
           </div>
         </div>
       </el-col>
@@ -59,7 +49,7 @@
           <el-table-column
             prop="identity"
             label="身份"
-            width="120">
+            width="80">
            <!--  <template scope="scope">
               {{scope.row.rank=='1'?'创建人':scope.row.rank=='2'?'管理员':'成员'}}
             </template> -->
@@ -77,16 +67,18 @@
         </el-table>
       </el-col>
     </el-row>
-    <el-pagination class="pull-right"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20,30, 50, 100]"
-      v-if="total>pageSize"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total">
-    </el-pagination>
+    <div class="pagination-wrapper">
+      <el-pagination class="pull-right"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20,30, 50, 100]"
+        v-if="total>pageSize"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+      </div>
   </div>
 </template>
 
@@ -151,7 +143,6 @@ export default {
     },
     // 批量修改管理员
     reviseMagage(bool){
-     if(!this.idSelected){
        var subArr=[];
        this.selections.forEach((item)=>{
          var obj ={};
@@ -176,39 +167,44 @@ export default {
                  this.$message.error(res.data.msg);
                }
          })
-     }else{
-       this.$message.error('请至少选择一个小组成员');
-     }
     },
     // 批量删除
     deleted () {
-      if(!this.idSelected){
-        var ids='';
-        this.selections.forEach(function(item){
+      this.$confirm("确定解散该小组?", "提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(()=>{
+          var ids='';
+          this.selections.forEach(function(item){
             ids+=item.id+',';
-        })
-        ids=ids.slice(0,-1);
+          })
+          ids=ids.slice(0,-1);
 
-       this.$axios({
-         method:'DELETE',
-         url:this.deleteMemberUrl,
-         params:{
-            ids:ids,
-            sessionId:this.$getUserData().sessionId,
-            groupId:this.groupId
-         }
-       }).then((res)=>{
-         if(res.data.code==1){
-           this.$message.success('删除成功')
-           this.$emit('refeshMember');
-           this.getMemberManageList();
-         }else{
-           this.$message.error('删除失败')
-         }
-       })
-      }else{
-        this.$message.error('请至少选择一个小组成员');
-      }
+          this.$axios({
+            method:'DELETE',
+            url:this.deleteMemberUrl,
+            params:{
+              ids:ids,
+              sessionId:this.$getUserData().sessionId,
+              groupId:this.groupId
+            }
+          }).then((res)=>{
+            if(res.data.code==1){
+              this.$message.success('删除成功')
+              this.$emit('refeshMember');
+              this.getMemberManageList();
+            }else{
+              this.$message.error(res.data.msg)
+            }
+          })
+            .catch((error) => {
+              console.log(error);
+              this.$message.error('删除失败，请重试');
+            });
+        })
+        .catch(e=>{})
     }
   },
   watch:{
@@ -227,7 +223,10 @@ export default {
 
 <style>
   .groupmember{
-    padding: 10px 30px;
+    padding:20px 30px;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
   }
   .disinline{
     display: inline-block;

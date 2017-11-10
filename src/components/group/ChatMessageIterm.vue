@@ -85,6 +85,7 @@
                   self.state = self.defaultState.completed;
                 }else{
                   self.state = self.defaultState.error;
+                  self.$message.error(res.msg);
                 }
               })
               .catch((error) => {

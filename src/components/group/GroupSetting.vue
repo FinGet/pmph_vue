@@ -1,11 +1,8 @@
 <template>
 	<div class="groupsetting">
     <div class="addNewPopup paddingB30">
-      <el-row class="marginB30">
-        <el-col :span="6">
-          <p class="lineHeight-100">小组头像：</p>
-        </el-col>
-        <el-col :span="18">
+      <el-form label-width="120px" :model="groupData" :rules="rules" ref="ruleForm">
+        <el-form-item label="小组头像：">
           <div class="headImageWrapper">
             <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
               <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
@@ -19,16 +16,11 @@
               <img :src="groupData.groupImage" class="avatar">
             </div>
           </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="6">
-          <p>小组名称：</p>
-        </el-col>
-        <el-col :span="18">
-          <el-input v-model="groupData.groupName" placeholder="请输入小组名称"></el-input>
-        </el-col>
-      </el-row>
+        </el-form-item>
+        <el-form-item label="小组名称：" prop="groupName">
+          <el-input v-model="groupData.groupName" @keyup.enter.native="updateGroup" placeholder="请输入小组名称"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
 
     <div class="cutLine-dashed clearfix"></div>
@@ -52,6 +44,12 @@
           filename:undefined,
           groupName:null,
           groupImage:null,
+        },
+        rules:{
+          groupName:[
+            { required: true, message: '请输入小组名称', trigger: 'blur' },
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          ]
         },
       };
     },
@@ -88,8 +86,8 @@
        */
       updateGroup(){
         //小组名称不能为空
-        if(!this.groupData.groupName){
-          this.$message.error('请输入小组名称');
+        if(!this.groupData.groupName||this.groupData.groupName.length>20){
+          this.$message.error('请输入正确的小组名称');
           return false;
         }
         let self= this;
@@ -166,6 +164,9 @@
 <style scoped>
   .groupsetting{
     padding: 60px 30px 0;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
   }
   .lineHeight-100{line-height: 100px;}
   .addNewPopup{

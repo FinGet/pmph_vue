@@ -5,7 +5,7 @@ var formCheckedRules={
         var reg = '^[0-9]*$';   //阿拉伯数字验证正则
         if (!value.match(reg)) {
             callback('请输入正确的数字');          
-        } else if (value >= 2147483647){
+        } else if (value > 2147483647){
             callback('输入数字过大');
         }else{
             callback()
