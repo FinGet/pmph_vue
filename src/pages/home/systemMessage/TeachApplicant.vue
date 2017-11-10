@@ -9,7 +9,7 @@
           <div class="searchBox-wrapper max">
             <div class="searchName">书名搜索：<span></span></div>
             <div class="searchInput">
-              <el-input placeholder="请输入教材名称" v-model="materialName" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入教材名称" v-model="materialName" @keyup.enter.native="search" class="searchInputEle"></el-input>
             </div>
           </div>
           <!--书名搜索-->
@@ -31,6 +31,7 @@
               label="教材名称">
             </el-table-column>
           </el-table>
+
         </div>
       </el-col>
       <el-col :span="1">
@@ -45,8 +46,10 @@
         </div>
         <!--表格-->
         <div class="table-wrapper">
+
           <el-table
             :data="booksData"
+            ref="booksData"
             border
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -133,6 +136,7 @@
        */
       search(){
         this.getData()
+        this.booksData = []
       },
       /**
        * 点击教材
@@ -143,19 +147,22 @@
           let res = response.data
           if (res.code == '1') {
             this.booksData = res.data
+            arr.forEach(row => {
+              this.$refs.booksData.toggleRowSelection(res.data)
+            })
           }
         })
       },
       handleSelectionChange(val){
         this.selections = val
-        console.log(val)
+        // console.log(val)
         var bookIds = []
         val.forEach(item=> {
           bookIds.push(item.id)
         })
         this.reissueFormData.bookIds = bookIds.join(',')
         this.formdata.bookIds = bookIds.join(',')
-        console.log(this.reissueFormData.bookIds)
+        // console.log(this.reissueFormData.bookIds)
       },
       /**
        * 发送
