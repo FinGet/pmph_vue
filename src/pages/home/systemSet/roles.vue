@@ -116,7 +116,7 @@ export default {
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[
-            {min:0,max:100,message:'备注不能超过100字符',trigger: "change"}
+            {min:0,max:20,message:'备注不能超过20字符',trigger: "change"}
         ]    
       },
       powerTreeVisible: false,
@@ -126,7 +126,7 @@ export default {
         {
           label: "个人中心（首页）",
           id: 1,
-          disabled:true
+         // disabled:true
         },
         {
           label: "教材申报",
@@ -246,6 +246,7 @@ export default {
           this.rolesForm.ids=[1];
           if (this.isAddNewRole) {
             //添加
+            this.rolesForm.ids=[1];
             this.$axios({
               method: "POST",
               url: this.addRoleUrl,
@@ -283,8 +284,11 @@ export default {
                   _this.$message.success("修改成功");
                   _this.getListData();
                   _this.rolesDialogVisible = false;
-                } else {
-                  _this.$message.error("修改失败,请确认是否信息有误");
+                } else if(res.data.code == 1){
+                   _this.$message.error("修改失败,角色名称重复");
+
+                }else{
+                   _this.$message.error("修改失败,请确认是否信息有误");
                 }
               })
               .catch(function(err) {
