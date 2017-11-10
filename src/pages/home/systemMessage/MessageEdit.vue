@@ -90,6 +90,7 @@ export default {
       messageRules:{
        title:[
           { required: true, message: '请输入文章标题', trigger: 'blur' },
+          {max:50, message: '长度不能超过50个字符', trigger: 'blur'}
        ],
        content:[
           { required: true, message: '请输入消息内容', trigger: 'blur' },
@@ -139,7 +140,7 @@ export default {
     beforeUpload(file){
       // console.log(file)
       const isLt0M = file.size / 1024 / 1024 > 0;
-      const nameLen = file.name.length < 80;
+      const nameLen = file.name.length <= 80;
       if (!isLt0M) {
         this.$message.error('上传文件大小不能小于 0kb!');
       }

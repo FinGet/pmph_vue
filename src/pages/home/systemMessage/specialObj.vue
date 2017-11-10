@@ -2,8 +2,8 @@
   <div class="special_obj">
     <!--操作按钮-->
     <div class="operation-wrapper">
-      <el-button type="primary" @click="back">返回编辑</el-button>
       <span class="green inline-block marginR10">已选中<span>{{hasSelect.length}}</span>个人</span>
+      <el-button type="primary" @click="back">返回编辑</el-button>
       <el-button type="primary" @click="send" :disabled="clubSelectData.length==0&&writerSelectData.length==0&&orgSelectData.length==0">发送</el-button>
     </div>
     <el-tabs v-model="activeName">
@@ -138,7 +138,7 @@
               </el-table-column>
               <el-table-column
                 prop="orgName"
-                label="工作单位"
+                label="所属院校"
                 show-overflow-tooltip>
               </el-table-column>
             </el-table>
@@ -297,6 +297,7 @@ export default {
         orgIds:'',
         userIds:'',
         bookIds:'',
+        senderId:''
       },
       type:'new',
       reissueFormData:{
@@ -308,6 +309,7 @@ export default {
         orgIds:'',
         userIds:'',
         bookIds:'',
+        senderId:''
       },
     };
   },
@@ -486,7 +488,8 @@ export default {
       this.hasSelect=this.clubSelectData.concat(this.writerSelectData.concat(this.orgSelectData));
     },
     back(){
-      this.$router.go(-1)
+      var routerParams = this.$route.params;
+      this.$router.push({name: '编辑消息',query:{type:'reEdit'},params:routerParams})
     }
   },
   created() {
@@ -506,12 +509,14 @@ export default {
     if(routerQuery.type=='reissue'){
       this.type = routerQuery.type;
       this.reissueFormData.id=routerParams.msgId;
+      this.reissueFormData.senderId = routerParams.senderId
       this.reissueFormData.title=routerParams.title;
       this.reissueFormData.sendType = routerParams.sendType;
     }else{
       this.formdata.title=routerParams.title;
       this.formdata.content=routerParams.content;
       this.formdata.sendType = routerParams.sendType;
+      this.formdata.senderId = '';
       let filePath = [];
       routerParams.filePathList.forEach(iterm=>{
         filePath.push(iterm.path);
