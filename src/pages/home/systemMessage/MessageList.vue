@@ -132,6 +132,7 @@
           title:'',
           reissueMsgId:undefined,
           reissueSendType:1,
+          senderId: ''
         },
         visible: false,
         tableData: [],
@@ -257,6 +258,7 @@
       handleReissue(index, row) {
         this.reissueForm.title = row.title;
         this.reissueForm.reissueMsgId = row.msgId;
+        this.reissueForm.senderId = row.senderId
         this.dialogVisible=true;
       },
       /**
@@ -265,16 +267,16 @@
       reissue(){
         switch (this.reissueForm.reissueSendType){
           case 1 :
-            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId},query:{type:'reissue'}});
             break;
           case 2:
-            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title},query:{type:'reissue'}});
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId},query:{type:'reissue'}});
             break;
           case 3:
-            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
+            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId}});
             break;
           case 4:
-            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title}});
+            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId}});
             break;
             dafault:
               this.$message({
