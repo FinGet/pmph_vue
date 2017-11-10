@@ -91,6 +91,7 @@
             :action="fileUploadUrl"
             :on-success="upLoadFileSuccess"
             :on-remove="uploadFileRemove"
+            :before-upload="beforeAvatarUpload"
             :file-list="fileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
@@ -260,6 +261,14 @@ export default {
       this.formData.categoryId = value[value.length - 1] + "";
       this.formData.path = value.join("-");
       console.log(value);
+    },
+    /* 文件上传大小判断 */
+    beforeAvatarUpload(file){
+      const isLt100M = file.size / 1024 / 1024 < 100;
+       if (!isLt100M) {
+          this.$message.error('上传文件大小不能超过 100MB!');
+        }
+        return isLt100M;
     },
     /* 文件上传成功回调 */
     upLoadFileSuccess(res, file, filelist) {
