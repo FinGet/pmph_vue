@@ -20,7 +20,7 @@
             <el-radio :label="4">教材报名者</el-radio>
           </el-radio-group>
       </el-form-item>
-      <el-form-item label="消息内容：" >
+      <el-form-item label="消息内容：" prop="content">
         <div class="clearfix">
           <Editor ref="editor" :config="editorConfig"></Editor>
         </div>
@@ -138,16 +138,20 @@ export default {
      * 上传之前检验
      */
     beforeUpload(file){
-      // console.log(file)
+      console.log(file)
+      const isEXE = file.type !== 'application/x-msdownload' && file.type !== '';
       const isLt0M = file.size / 1024 / 1024 > 0;
       const nameLen = file.name.length <= 80;
       if (!isLt0M) {
         this.$message.error('上传文件大小不能小于 0kb!');
       }
+      if (!isEXE) {
+        this.$message.error('上传文件不能是可执行文件!');
+      }
       if (!nameLen) {
         this.$message.error('上传文件名字长度不能超过80个字符!');
       }
-      return isLt0M&&nameLen
+      return isLt0M&&nameLen&&isEXE
     },
     /**
      * 移除已添加文件
@@ -298,7 +302,7 @@ export default {
       });
     },
     back(){
-      this.$router.go(-1)
+      this.$router.push({name: '消息列表'})
     }
   },
   components:{
