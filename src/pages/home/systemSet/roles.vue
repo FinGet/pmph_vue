@@ -107,15 +107,15 @@ export default {
         id: [{ required: true, message: "请输入角色代码", trigger: "blur" }],
         roleName: [
             { required: true, message: "请输入角色名称", trigger: "blur" },
-            {min:0,max:20,message:'名称不能超过20字符',trigger: "change"}
+            {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
             ],
         isDisabled: [{ required: true, message: "请选择", trigger: "change" }],
         sort: [
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change,blur" },
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[
-            {min:0,max:20,message:'备注不能超过20字符',trigger: "change"}
+            {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}
         ]    
       },
       powerTreeVisible: false,

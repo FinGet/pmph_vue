@@ -221,6 +221,7 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
         rules: {
           orgName: [
             { required: true, message: '请输入院校名称', trigger: 'blur' },
+            { min:1,max:20, message: "院校名称长度过长", trigger: "change,blur" },
             /* {validator:formCheckedRules.chinaStringChecked,trigger: "blur"}  */
           ],
           orgTypeId: [
@@ -230,16 +231,16 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
             { required: true, message: '请选择所属地区', trigger: 'blur' },
           ],
           contactPerson:[
-            { min:1,max:20, message: "联系人名称长度过长", trigger: "change" }
+            { min:1,max:20, message: "联系人名称长度过长", trigger: "change,blur" }
           ],
           contactPhone:[
             {validator:formCheckedRules.phoneNumberChecked,trigger: "blur"}   
           ],
           note:[
-            { min:1,max:20, message: "备注长度不能超过20", trigger: "change" },
+            { min:1,max:20, message: "备注长度不能超过20", trigger: "change,blur" },
           ],
           sort: [
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change,blur" },
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
           ],
         },

@@ -61,10 +61,10 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogVislble" :before-close="handleClose" size="tiny">
       <el-form :label-position="labelPosition" :rules="dialogRules" ref="ruleForm"  label-width="80px" :model="dialogForm">
         <el-form-item label="名称" prop="areaName">
-          <el-input v-model="dialogForm.areaName"></el-input>
+          <el-input v-model="dialogForm.areaName" @keyup.native.enter="dialogSubmit"></el-input>
         </el-form-item>
         <el-form-item label="显示顺序" prop="sort">
-          <el-input v-model="dialogForm.sort"></el-input>
+          <el-input v-model="dialogForm.sort" @keyup.native.enter="dialogSubmit"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="pull-right" type="primary" @click="dialogSubmit">保存</el-button>
@@ -85,9 +85,12 @@ export default {
       dialogStatus: "", // 0 省级  1市级  2县级
       isAddNew: true, //是否新增
       dialogRules: {
-        areaName: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        areaName: [
+          { required: true, message: "请输入名称", trigger: "blur" },
+          { min: 1, max: 20, message: "名称过长", trigger: "change,blur" }
+        ],
         sort: [
-          { min: 1, max: 10, message: "长度不能超过10位", trigger: "change" },
+          { min: 1, max: 10, message: "长度不能超过10位", trigger: "change,blur" },
           { validator: formCheckedRules.numberChecked, trigger: "blur" }
         ]
       },
@@ -139,16 +142,16 @@ export default {
   created() {
     this.getAreaTree("provinces");
   },
-  watch:{
-   dialogVislble(val){
-    if(!val){
+  watch: {
+    dialogVislble(val) {
+      if (!val) {
         this.dialogForm = {
-        name: "",
-        sort: "",
-        id: ""
-      };
+          name: "",
+          sort: "",
+          id: ""
+        };
+      }
     }
-   }
   },
   mounted() {},
   methods: {
@@ -210,11 +213,17 @@ export default {
 
     /* 对话框数据提交 */
     dialogSubmit() {
-      if (this.isAddNew) {
-        this.addNew();
-      } else {
-        this.updateArea();
-      }
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          if (this.isAddNew) {
+            this.addNew();
+          } else {
+            this.updateArea();
+          }
+        } else {
+          console.log("error");
+        }
+      });
     },
 
     /*-------------------api请求-------------------*/
@@ -223,26 +232,39 @@ export default {
        * @param item
        */
     deleted(str, item) {
-      this.$axios
-        .delete("/area/delete/areabatch", {
-          params: {
-            id: item.id
-          }
-        })
-        .then(response => {
-          let res = response.data;
-          if (res.code == "1") {
-            //console.log(res)
-            this.getAreaTree(str, item.parentId);
-            this.$message({
-              showClose: true,
-              message: "删除成功!",
-              type: "success"
+      this.$confirm("此操作将删除当前点击地区，是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .delete("/area/delete/areabatch", {
+              params: {
+                id: item.id
+              }
+            })
+            .then(response => {
+              let res = response.data;
+              if (res.code == "1") {
+                //console.log(res)
+                this.getAreaTree(str, item.parentId);
+                this.$message({
+                  showClose: true,
+                  message: "删除成功!",
+                  type: "success"
+                });
+                if (item.id == this.active.pid) {
+                  this.active.pid = "";
+                }
+              }
             });
-            if (item.id == this.active.pid) {
-              this.active.pid = "";
-            }
-          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
     },
     /**
@@ -273,6 +295,8 @@ export default {
               type: "success"
             });
             this.dialogVislble = false;
+          } else if (res.data.code == 2) {
+            this.$message.error("地区名称已存在");
           }
         });
     },

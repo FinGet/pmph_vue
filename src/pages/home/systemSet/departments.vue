@@ -97,14 +97,14 @@ export default {
       dialogRules: {
         dpName: [
           { required: true, message: "请填写部门名称", trigger: "blur" },
-          {min:1,max:20,message:'名称不能超过20字符',trigger:'change'}
+          {min:1,max:20,message:'名称不能超过20字符',trigger:'change,blur'}
           ],
         sort: [
-          {min:1,max:10,message:'排序码不能超过10字符',trigger:'change'},
+          {min:1,max:10,message:'排序码不能超过10字符',trigger:'change,blur'},
           {validator:formCheckedRules.numberChecked,trigger: "blur"}
         ],
         note:[
-          {min:0,max:20,message:'备注不能超过20字符',trigger: "change"}
+          {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}
         ]
       },
       defaultProps: {
@@ -224,7 +224,9 @@ export default {
       this.hasSelected = true;
       this.dialogForm.path = data.path;
       this.dialogForm.parentId = data.id;
-      this.selectObj = data;
+      for(var i in data){
+        this.selectObj[i]=data[i];
+      }
       this.selectObj.sort=this.selectObj.sort+'';
       console.log(this.selectObj);
     }
