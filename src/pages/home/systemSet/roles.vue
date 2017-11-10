@@ -111,7 +111,6 @@ export default {
             ],
         isDisabled: [{ required: true, message: "请选择", trigger: "change" }],
         sort: [
-            { required: true, message: "请输入排序码", trigger: "blur" },
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
             {validator:formCheckedRules.numberChecked,trigger: "blur"}
             ],
@@ -126,7 +125,7 @@ export default {
         {
           label: "个人中心（首页）",
           id: 1,
-         // disabled:true
+          disabled:true
         },
         {
           label: "教材申报",
