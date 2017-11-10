@@ -180,6 +180,7 @@
           orgIds:'',
           userIds:'',
           bookIds:'',
+          senderId:''
         },
         formdata:{
           title:'',
@@ -420,12 +421,14 @@
       if(routerQuery.type=='reissue'){
         this.type = routerQuery.type;
         this.reissueFormData.id=routerParams.msgId;
+        this.reissueFormData.senderId = routerParams.senderId;
         this.reissueFormData.title=routerParams.title;
         this.reissueFormData.sendType = routerParams.sendType;
       }else{
         this.formdata.title=routerParams.title;
         this.formdata.content=routerParams.content;
         this.formdata.sendType = routerParams.sendType;
+        this.formdata.senderId = '';
         let filePath = [];
         routerParams.filePathList.forEach(iterm=>{
           filePath.push(iterm.path);
