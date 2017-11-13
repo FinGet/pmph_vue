@@ -354,7 +354,7 @@
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
-        if(filedata.size/1000/1000 > 100){
+        if(filedata.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
           file.value='';
           self.newGroupData.filename=undefined;
