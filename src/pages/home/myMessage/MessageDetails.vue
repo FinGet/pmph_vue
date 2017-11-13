@@ -42,9 +42,13 @@
           .then(response=>{
             let res = response.data
             if(res.code==1){
+              if(res.data.is_withdraw){//如果该条消息已被撤回，则弹窗提示
+                this.msgIsWithdraw()
+                return;
+              }
               res.data.messageAttachments.map(iterm=>{
                 iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1)
-              })
+              });
               this.previewData.title = res.data.title;
               this.previewData.content = res.data.content;
               this.previewData.senderName = res.data.senderName;
@@ -57,7 +61,19 @@
           .catch(e=>{
             this.$message.error('页面内容加载失败，请重试');
           })
-      }
+      },
+      msgIsWithdraw(){
+        this.$confirm("该条消息已被撤回！", "提示",{
+          confirmButtonText: "确定",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$router.go(-1);
+          })
+          .catch(()=>{
+            this.$router.go(-1);
+          })
+      },
     },
     created(){
       this.msgId=this.$route.query.msgId;

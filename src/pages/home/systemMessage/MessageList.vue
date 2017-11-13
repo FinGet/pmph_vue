@@ -228,7 +228,7 @@
        * 撤回
        */
       handleRecall(index, row) {
-        this.$confirm("确定删除选中文件吗?", "提示",{
+        this.$confirm("确定撤回此条消息?", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -242,7 +242,7 @@
                 this.$message.success('成功撤销此消息');
                 row.isWithdraw=true;
             }else{
-                this.$message.error('撤销失败，请重试');
+                this.$message.error(res.msg);
             }
           })
           .catch(e=>{
