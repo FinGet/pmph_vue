@@ -15,11 +15,12 @@
           ></el-input>
         </div>
         <div class="manmageFile">
-          <el-button class="pull-left marginR20" type="danger" v-if="isManage" :disabled="isSelected" @click="deleteFile">删除</el-button>
-          <i class="icon-manage marginR20" @click="manageBtn" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin||crurrentMemberInfo.isSystemAdmin"></i>
+          <el-button type="danger" v-if="isManage" :disabled="isSelected" @click="deleteFile"  size="small">删除</el-button>
+          <el-button class="marginR20" @click="manageBtn(1)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin||crurrentMemberInfo.isSystemAdmin" type="primary" size="small">管理文件</el-button>
+          <el-button class="marginR20" @click="manageBtn(0)" v-else type="primary" size="small">管理我的文件</el-button>
         </div>
         <div class="fileupload">
-          <i class="icon-upload cursor-pointer" @click="dialogChooseGroup = true"></i>
+          <el-button @click="dialogChooseGroup = true" type="primary" size="small">上传</el-button>
         </div>
       </div>
     </el-row>
@@ -140,6 +141,7 @@
         groupSelection: [],
         // tableData文件列表
         tableData: [],
+        fileList: [],
         searchFormData:{
           groupId:this.currentGroup.id,
           pageNumber:1,
@@ -180,6 +182,16 @@
       uploadFileUrl(){
         return this.$config.BASE_URL+'group/add/pmphgroupfile'
       },
+      myFileList(){
+        var list = [];
+        console.log(this.crurrentMemberInfo);
+        this.fileList.forEach(iterm=>{
+          if(iterm.memberId == this.crurrentMemberInfo.id){
+            list.push(iterm);
+          }
+        });
+        return list;
+      },
     },
     methods: {
       /**
@@ -212,8 +224,16 @@
        */
       manageBtn(){
         this.isManage=!this.isManage;
+        //普通成员展示自己的文件
+        if(this.isManage&&!(this.crurrentMemberInfo.isFounder||this.crurrentMemberInfo.isAdmin||this.crurrentMemberInfo.isSystemAdmin)){
+          this.tableData = this.myFileList;
+        }else{
+          this.tableData = this.fileList;
+        }
         if(!this.isManage){
-          this.$refs.multipleTable.clearSelection()
+          this.tableData = this.fileList;
+          this.$refs.multipleTable.clearSelection();
+
         }
       },
       /**
@@ -231,6 +251,10 @@
                 iterm.downloadUrl = this.$config.BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
               });
               this.tableData=res.data.rows;
+              this.fileList = [];
+              res.data.rows.forEach(iterm=>{
+                this.fileList.push(iterm);
+              });
               this.fileNum = res.data.total;
             }
           })
@@ -314,16 +338,25 @@
         //文件名不超过40个字符
         if(fileName.length>40){
           this.$message.error("文件名不能超过40个字符");
+          file.value='';
           return;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+          file.value='';
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.files && file.files[0].size<1){
+          this.$message.error("文件大小不能小于1bt");
+          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(filedata.size/1000/1000 > 100){
           this.$message.error("文件大小不能超过100M！");
+          file.value='';
           self.newGroupData.filename=undefined;
           return;
         }
@@ -342,10 +375,12 @@
               this.dialogChooseGroup=false;
             }else{
               this.$message.error(res.msg);
+              file.value='';
             }
           })
           .catch((error) => {
             this.$message.error('上传文件失败，请重试');
+            file.value='';
           });
       },
       /**
