@@ -15,7 +15,7 @@
           <div class="MemberHead" v-for="(item,index) in memberListData" :key="item.id">
             <div class="MemberHead-inner">
               <span class="MemberHeadImg">
-                <img :src="item.avatar?$config.BASE_URL+'image/'+item.avatar:defaultImage" alt="小组头像">
+                <img :src="item.avatar?$config.DEFAULT_BASE_URL+item.avatar:defaultImage" alt="小组头像">
               </span>
               <div class="MemberHeadName">
                 <span>{{item.displayName}}</span>

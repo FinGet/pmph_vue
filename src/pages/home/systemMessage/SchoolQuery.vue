@@ -325,7 +325,9 @@
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
           this.area_school[index].schoolList.forEach(t => {
-            this.area_school[index].checkedSchools.push(t.id);
+            if(this.select_orgType==0||t.type ==this.select_orgType){
+              this.area_school[index].checkedSchools.push(t.id);
+            }
           })
         }
         this.area_school[index].isIndeterminate=false;
@@ -347,9 +349,13 @@
         this.area_school.forEach((iterm,index)=>{
           iterm.checkAll=true;
           iterm.checkedSchools=[];
-          iterm.schoolList.forEach((t,i)=>{
-            iterm.checkedSchools.push(t.id);
-          })
+          if(this.select_provinces.length==0||this.select_provinces.includes(iterm.id)){
+            iterm.schoolList.forEach((t,i)=>{
+              if(this.select_orgType==0||t.type ==this.select_orgType){
+                iterm.checkedSchools.push(t.id);
+              }
+            })
+          }
           iterm.isIndeterminate=false;
         })
       },
