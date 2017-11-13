@@ -68,8 +68,6 @@
   </el-row>
 </template>
 <script>
-//引入自定义表单验证规则
-import {formCheckedRules} from '../../../../static/formCheckRules.js'
 export default {
   data() {
     return {
@@ -101,7 +99,7 @@ export default {
           ],
         sort: [
           {min:1,max:10,message:'排序码不能超过10字符',trigger:'change,blur'},
-          {validator:formCheckedRules.numberChecked,trigger: "blur"}
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ],
         note:[
           {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}

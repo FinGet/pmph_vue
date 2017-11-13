@@ -147,8 +147,8 @@
           let res = response.data
           if (res.code == '1') {
             this.booksData = res.data
-            arr.forEach(row => {
-              this.$refs.booksData.toggleRowSelection(res.data)
+            res.data.forEach(row => {
+              this.$refs.booksData.toggleRowSelection(row)
             })
           }
         })

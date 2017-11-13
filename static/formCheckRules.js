@@ -18,8 +18,9 @@ var formCheckedRules={
         var reg1 ="^(\(\d{3,4}\)|\d{3,4}-)?\d{7,8}$";
         //手机号码验证规则
         var reg2 ="^1[0-9]{10}$";
+
         if(value){
-            if (value.match(reg1) || value.match(reg2)) {
+            if ((value+'').match(reg1) || (value+'').match(reg2)) {
                 callback();
             } else {
                 callback('请正确输入电话号码');
@@ -28,17 +29,36 @@ var formCheckedRules={
             callback();
         }
     },
-
     //中文输入验证
     chinaStringChecked: function (rule, value, callback) {
         var reg ="^[\u4e00-\u9fa5]+$";
-        if (value.match(reg)){
+        if ((value+'').match(reg)){
             callback();
         }else{
             callback('请正确输入院校名称');
         }
+    },
+    //数组格式不能为空验证
+    arrChecked: function (rule, value, callback){
+        if(value.length!=0){
+            callback();
+        }else{
+            callback("不能为空");
+        }
+        
+    },
+    //str不为空验证
+    strChecked: function (rule, value, callback){
+        console.log(value);
+        if (value){
+            callback();
+        }else{
+            callback("不能为空");
+        }
+        
     }
 }
+
 export {
     formCheckedRules
 }
