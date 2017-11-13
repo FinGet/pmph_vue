@@ -54,7 +54,7 @@
               </div>
             </div>
             <div class="searchBox-wrapper">
-              <span>工作单位：</span>
+              <span>所属院校：</span>
               <div>
                 <el-input placeholder="请输入内容" v-model="writerParams.orgName" class="searchInputEle"></el-input>
               </div>
@@ -62,7 +62,7 @@
             <div class="searchBox-wrapper">
               <span>用户类型：</span>
               <div>
-                <el-select v-model="writerParams.rank" placeholder="请选择">
+                <el-select v-model="writerParams.rank" placeholder="请选择" @change="getWriterUserList">
                   <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -85,7 +85,7 @@
                 </el-table-column>
                 <el-table-column prop="position" label="遴选职位">
                 </el-table-column>
-                <el-table-column prop="orgName" label="工作单位" show-overflow-tooltip>
+                <el-table-column prop="orgName" label="所属院校" show-overflow-tooltip>
                 </el-table-column>
               </el-table>
               <el-pagination class="pull-right"

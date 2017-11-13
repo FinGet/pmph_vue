@@ -108,7 +108,6 @@
             info.displayName = item.displayName;
           }
         });
-        console.log(info);
         return info;
       },
     },
