@@ -156,8 +156,8 @@
         </el-form-item>
         <el-form-item label="启用：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
-            <el-radio label="false">启用</el-radio>
-            <el-radio label="true">不启用</el-radio>
+            <el-radio :label="false">启用</el-radio>
+            <el-radio :label="true">不启用</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -222,14 +222,17 @@ export default {
             trigger: "blur"
           }
         ],
-        email: [{ type: "email", message: "邮箱格式不正确", trigger: "blur" }],
+        email: [
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          ],
         departmentId: [
           {
             validator: departmentIdChecked,
-            trigger: "change"
+            trigger: "blur"
           }
         ],
-        isDisabled: [{ required: true, message: "请选择是否启用", trigger: "blur" }]
+        isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }]
       },
       // element
       defaultProps: {
@@ -423,7 +426,7 @@ export default {
         }
       ];
       for (var key in data[index]) {
-        this.form[key] =(typeof data[index][key])=='boolean'?data[index][key]+'':data[index][key];
+        this.form[key] =data[index][key];
       }
       // 每次修改先将this.form.roleName置为空
       this.form.roleIds = [];
