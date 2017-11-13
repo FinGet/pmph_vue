@@ -42,7 +42,7 @@
           .then(response=>{
             let res = response.data
             if(res.code==1){
-              if(res.data){//如果该条消息已被撤回，则弹窗提示
+              if(res.data.is_withdraw){//如果该条消息已被撤回，则弹窗提示
                 this.msgIsWithdraw()
                 return;
               }
