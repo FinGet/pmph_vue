@@ -20,7 +20,8 @@
             <el-radio :label="4">教材报名者</el-radio>
           </el-radio-group>
       </el-form-item>
-      <el-form-item label="消息内容：" prop="content">
+      <el-form-item label="消息内容：" required>
+        <el-input v-model="messageForm.title" class="none"></el-input>
         <div class="clearfix">
           <Editor ref="editor" :config="editorConfig"></Editor>
         </div>
@@ -92,9 +93,6 @@ export default {
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           {max:50, message: '长度不能超过50个字符', trigger: 'blur'}
        ],
-       content:[
-          { required: true, message: '请输入消息内容', trigger: 'blur' },
-       ],
        sendType:[
           {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
        ],
@@ -138,20 +136,24 @@ export default {
      * 上传之前检验
      */
     beforeUpload(file){
+
+      const ext = file.name.substring(file.name.lastIndexOf('.')+1);
       console.log(file)
-      const isEXE = file.type !== 'application/x-msdownload' && file.type !== '';
-      const isLt0M = file.size / 1024 / 1024 > 0;
+      const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
       const nameLen = file.name.length <= 80;
-      if (!isLt0M) {
+      if (file.size / 1024 / 1024==0) {
         this.$message.error('上传文件大小不能小于 0kb!');
       }
-      if (!isEXE) {
+      if (file.size / 1024 / 1024>100) {
+        this.$message.error('文件大小不能超过100M！');
+      }
+      if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
         this.$message.error('上传文件不能是可执行文件!');
       }
       if (!nameLen) {
         this.$message.error('上传文件名字长度不能超过80个字符!');
       }
-      return isLt0M&&nameLen&&isEXE
+      return isLt0M&&nameLen&&!(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif')
     },
     /**
      * 移除已添加文件
@@ -190,6 +192,10 @@ export default {
      * 点击下一步
      */
     nextStep(){
+      if(!this.$refs.editor.getContent()){
+        this.$message.error('内容不能为空');
+        return;
+      }
       this.$refs['messageForm'].validate((valid) => {
           if (valid) {
             this.messageForm.content = this.$refs.editor.getContent();
@@ -390,4 +396,7 @@ export default {
 .fontSize-16{
   font-size: 16px;
 }
+  .message-preview img{
+    max-width: 100%;
+  }
 </style>
