@@ -185,11 +185,13 @@
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+          file.value='';
           return;
         }
         //文件名不超过40个字符
         if(fileName.length>40){
           this.$message.error("文件名不能超过40个字符");
+          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不为0
@@ -201,6 +203,7 @@
         // 判断文件大小是否符合 文件不大于100M
         if(filedata.size/1000/1000 > 100){
           this.$message.error("文件大小不能超过100M！");
+          file.value='';
           return;
         }
         var formdata = new FormData();
@@ -217,10 +220,12 @@
 
             }else{
               self.$message.error(res.msg);
+              file.value='';
             }
           })
           .catch((error) => {
             self.$message.error('上传文件失败，请重试');
+            file.value='';
           });
       },
       /**

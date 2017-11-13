@@ -164,13 +164,13 @@
       <el-dialog
         :title="dialogTitle"
         :visible.sync="dialogVisible"
-        @close="closeDialog"
+        @close="resetForm"
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
           <el-form-item label="机构代码：" prop="username" v-show="isAddSchool||!isNew">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="管理员姓名：" prop="realname" v-show="!isAddSchool||!isNew">
+          <el-form-item label="管理员姓名：" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.realname"></el-input>
           </el-form-item>
           <el-form-item label="用户手机："  prop="handphone" v-show="!isAddSchool||!isNew">
@@ -380,8 +380,14 @@ export default {
           { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
         ],
         realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
-        email: [{ required: true, message: "请输入用户邮箱", trigger: "blur" }],
-        handphone: [{ required: true, message: "请输入用户手机号码", trigger: "blur" }],
+        email: [
+          { required: true, message: "请输入用户邮箱", trigger: "blur" },
+          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '邮箱格式不对' }
+          ],
+        handphone: [
+          { required: true, message: "请输入用户手机号码", trigger: "blur" },
+          { pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码' }
+        ],
         orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
         isDsabled: [
           {
@@ -512,13 +518,14 @@ export default {
            * 修改新增弹出点击确认按钮时触发提交表单操作
            */
     submit() {
+      console.log(this.form.orgId)
+      this.form.orgId += ''
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           if (this.isNew) {
             this.addUser();
             return;
           }
-
           this.updateUser();
         } else {
           console.log("error submit!!");
@@ -531,6 +538,7 @@ export default {
            */
     addUser() {
       var self = this;
+      this.form.orgId -= 0
       this.$axios({
         method: "POST",
         url: "/users/org/add/orguserofback",
@@ -561,6 +569,7 @@ export default {
            */
     updateUser() {
       var self = this;
+      this.form.orgId -= 0
       this.$axios({
         method: "PUT",
         url: "/users/org/update/orguserofback",
@@ -576,6 +585,11 @@ export default {
               type: "success",
               message: "修改成功"
             });
+          } else if (code === 3) {
+            self.$message({
+              type: "error",
+              message: "机构代码不能修改"
+            });
           }
         })
         .catch(function(error) {
@@ -586,16 +600,26 @@ export default {
         });
     },
     /**
-           * 重置form表单数据
-           */
+     * 重置form表单数据
+     */
     resetForm() {
-
-      this.$refs["ruleForm"].resetFields();
-      console.log(this.form);
+      this.form =  {
+        id: "",
+        realname: "",
+        username: "",
+        orgId: "",
+        handphone: "",
+        email: "",
+        isDisabled: true,
+        note: ""
+      } 
+      // 因为有非必填项，所以不能用this.$refs.ruleForm.resetFields();清除
+      // this.$refs.ruleForm.resetFields();
+      // console.log(this.$refs.ruleForm);
     },
     /**
-           * 监听弹出层关闭事件
-           */
+     * 监听弹出层关闭事件
+     */
     closeDialog() {
       this.resetForm();
     },

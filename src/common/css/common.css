@@ -55,6 +55,9 @@ p{word-wrap:break-word}
 /*=================================================================
   布局相关
   =================================================================*/
+.none{
+  display: none;
+}
 .inline-block{
   display: inline-block;
 }
@@ -263,7 +266,7 @@ button a,button a:hover,button a:active{
 }
 
 /*必填项 * 图标*/
-.required-fields:after{
+.required-fields:before{
   content: ' *';
   color: red;
   font-size: 120%;

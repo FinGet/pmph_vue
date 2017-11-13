@@ -95,7 +95,7 @@ export default {
       selections: [],
       visible: false,
       currentPage: 1,
-      pageSize:10,
+      pageSize:30,
       total:0,
       isMember:false
     }
