@@ -120,7 +120,7 @@
           isNew:true,
           userId:this.currentUserdata.userInfo.id,
           userType:this.currentUserdata.userInfo.loginType,
-          header:this.$config.BASE_URL+'image/'+this.currentUserdata.userInfo.avatar,
+          header:this.$config.DEFAULT_BASE_URL + this.currentUserdata.userInfo.avatar,
           username:this.currentUserdata.userInfo.username,
           messageData:undefined,
           time:this.$commonFun.getNowFormatDate()
@@ -254,8 +254,7 @@
                   isNew:false,
                   userId:iterm.userId,
                   userType:iterm.userType,
-                  header:this.$config.BASE_URL+'image/'+iterm.avatar,
-//                  header:this.$config.BASE_URL+'image/5a006b942d85697d21c52ef8',//测试先把图像写死
+                  header:this.$config.DEFAULT_BASE_URL+iterm.avatar,
                   username:iterm.memberName,
                   messageData:iterm.msgContent,
                   time:this.$commonFun.formatDate(iterm.gmtCreate),
@@ -296,8 +295,7 @@
             isNew:false,
             userId:data.senderId,
             userType:data.senderType,
-//            header:this.$config.BASE_URL+'image/'+data.senderIcon,
-            header:this.$config.BASE_URL+'image/5a012a17a201ee3ed7590351',//测试
+            header:this.$config.DEFAULT_BASE_URL+data.senderIcon,
             username:data.senderName,
             messageData:data.content,
             time:this.$commonFun.formatDate(data.time),
