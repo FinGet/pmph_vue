@@ -1,4 +1,4 @@
-require('url-search-params-polyfill');
+//require('url-search-params-polyfill');
 
 //获取sessionStorage
 function getSessionStorage(key, format) {
