@@ -397,14 +397,16 @@ export default {
        * 选择部门
        */
     handleNodeClick(data) {
+      console.log(data);
       console.log(data.path);
       this.path = data.path;
       this.departmentId = data.id;
       if (data.path == "0") {
         this.path = "";
       }
-      this.pageNumber = 1;
-      (this.pageSize = 30), this.getUsers();
+         this.pageSize=10;
+         this.pageNumber=1;
+            this.getUsers();
     },
     /**
        * 选中数据将选中的数据赋值给multipleSelection
