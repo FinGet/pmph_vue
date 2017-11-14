@@ -41,7 +41,7 @@
       <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(13)||isShowSide(14)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
-          <span slot="title">出版图书</span>
+          <span slot="title">商品管理</span>
         </template>
         <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
         <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>

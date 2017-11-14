@@ -57,7 +57,7 @@
             let res = response.data;
             if(res.code==1){
               res.data.rows.map(iterm=>{
-                iterm.senderAvatar = this.$config.BASE_URL+'image/'+iterm.senderAvatar;
+                iterm.senderAvatar = this.$config.DEFAULT_BASE_URL+iterm.senderAvatar;
                 iterm.title = iterm.title.length>18?iterm.title.substring(0,18)+'...':iterm.title;
                 iterm.content=this.$commonFun.getHTMLText(iterm.content).substring(0,42)+'...';
               });
@@ -91,7 +91,7 @@
         var messageObj = {
           senderId:receiveData.senderId,
           senderName:receiveData.senderName,
-          senderAvatar:this.$config.BASE_URL+'image/'+receiveData.senderIcon,
+          senderAvatar:this.$config.DEFAULT_BASE_URL+receiveData.senderIcon,
           sendTime:receiveData.time,
           title:receiveData.title.length>18?receiveData.title.substring(0,18)+'...':receiveData.title,
           content:this.$commonFun.getHTMLText(receiveData.content).substring(0,42)+'...',
