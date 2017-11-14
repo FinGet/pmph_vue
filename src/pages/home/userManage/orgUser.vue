@@ -244,7 +244,7 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">批量审核</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">批量审核</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">批量退回</el-button>
 			</el-col>
 		</el-row>
@@ -693,10 +693,10 @@ export default {
               type: "success"
             });
           }else if (res.code == '2') {
-            this.$message({
+           this.$message({
               showClose: true,
-              message: "已退回不能再审核!",
-              type: "danger"
+              message: "已退回，不能修改!",
+              type: "warning"
             });
           }
           console.log(res.code)
