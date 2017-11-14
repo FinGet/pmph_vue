@@ -8,7 +8,16 @@
               <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
             </el-tooltip>
             <!--上传文件按钮-->
-            <input type="file" @change="filechange" ref="fileInput" class="fileInput" />
+            <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
+            <el-upload
+              class="fileInput"
+              ref="upload"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :on-change="filechange"
+              :show-file-list="false"
+              :auto-upload="false">
+              <el-button class="fileInput">上传</el-button>
+            </el-upload>
             <div ref="headImageWrapper" v-show="groupData.filename">
               <img :src="DEFAULT_USER_IMAGE" class="avatar">
             </div>
@@ -63,23 +72,42 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(e){
+      filechange(file){
         var self=this;
-        var prevDiv = this.$refs.headImageWrapper;
-        var file = this.$refs.fileInput;
-        if (file.files && file.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function(evt) {
-            self.groupData.filename=evt.target.result;
-            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
-          }
-          reader.readAsDataURL(file.files[0]);
-        } else {
-          if(!file.value){
-            self.groupData.filename=undefined;
-          }
-          prevDiv.innerHTML = '<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+        let prevDiv = this.$refs.headImageWrapper;
+        let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+
+        if(!ext){return;}
+        // gif在IE浏览器暂时无法显示
+        if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
+          self.groupData.filename=undefined;
+          return;
         }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size==0){
+          this.$message.error("图片大小不能小于1bt");
+          self.groupData.filename=undefined;
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于10M
+        if(file.size/1024/1024 > 10){
+          this.$message.error("图片大小不能大于10M");
+          self.groupData.filename=undefined;
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          self.groupData.filename=file.raw;
+          prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+        }
+        reader.readAsDataURL(file.raw);
       },
       /**
        * 修改小组
@@ -91,7 +119,7 @@
           return false;
         }
         let self= this;
-        var filedata = this.groupData.filename?this.$refs.fileInput.files[0]:'';
+        var filedata = this.groupData.filename?this.groupData.filename:'';
         var formdata = new FormData();
         formdata.append('file',filedata);
         formdata.append('id',this.currentGroup.id);
