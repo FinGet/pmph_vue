@@ -120,10 +120,11 @@
     <div class="pagination-wrapper">
       <el-pagination
       v-if="totalPages>params.pageSize"
-      :page-sizes="[30,50,100, 200, 300, 400]"
+      :page-sizes="[10,20,30, 50, 100]"
       :page-size="params.pageSize"
       :current-page.sync="params.pageNumber"
-       @current-change="refreshTableData"
+      @size-change="writerSizeChange"
+       @current-change="writerCurrentChange"
        layout="total, sizes, prev, pager, next, jumper"
        :total="totalPages">
       </el-pagination>
@@ -232,7 +233,7 @@
 					<el-table-column prop="progress" label="审核标志" width="100" align="center">
 						<template scope="scope">
               <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
-							<el-tag type="warning" v-if="scope.row.progress=='1'">已提交</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
 							<el-tag type="success" v-if="scope.row.progress=='3'">通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
@@ -301,13 +302,13 @@ export default {
         }
       ],
       state: [
-        {
+/*         {
           value: '0',
 					label: '未提交'
-        },
+        }, */
 				{
 					value: '1',
-					label: '已提交'
+					label: '待审核'
 				},
 				{
 					value: '2',
@@ -367,7 +368,7 @@ export default {
       OrgNameList: [],
       loading: false,
       params: {
-        pageSize: 30,
+        pageSize: 10,
         pageNumber: 1,
         name: "",
         rank: "",
@@ -478,6 +479,15 @@ export default {
         .catch(function(error) {
           console.error(error);
         });
+    },
+    writerSizeChange(val){
+      this.params.pageSize=val;
+      this.params.pageNumber=1;
+      this.refreshTableData();
+    },
+    writerCurrentChange(val){
+      this.params.pageNumbber=val;
+      this.refreshTableData();
     },
     /**
      * 修改新增弹出点击确认按钮时触发提交表单操作
@@ -636,12 +646,15 @@ export default {
 				if (res.code == "1") {
 					//console.log(res)
 					this.getWritersList()
+          
 					this.$message({
               showClose: true,
-              message: '修改成功!',
+              message: progress==0?'审核通过!':'已退回',
               type: 'success'
             });
-				}
+				}else if(res.code ==2){
+          this.$message.error("请勿选中已审核过的用户");
+        }
 			}).catch(error => {
 				console.log(error.msg)
 			})
@@ -657,13 +670,11 @@ export default {
 			this.selections = val
 		},
 		handleSizeChange(val) {
-      console.log('size',val);
       this.pageSize=val;
       this.pageNumber=1;
       this.getWritersList();
 		},
 		handleCurrentChange(val) {
-       console.log("当前页",val);
       this.pageNumber=val;
       this.getWritersList(); 
 		},
