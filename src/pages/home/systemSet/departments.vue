@@ -177,6 +177,8 @@ export default {
                 this.getTreeData();
               }else if(res.data.code == 3){
                 this.$message.error('该部门中还有用户，不能删除部门');
+              }else if(res.data.code == 2){
+                this.$message.error('该部门中还有子部门，不能删除');
               }
             });
         })

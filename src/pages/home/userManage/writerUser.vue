@@ -351,7 +351,7 @@ export default {
         handphone: [
           {validator: this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
           ],
-        orgId: [{ validator:departmentIdChecked, trigger: "blur" }],
+        orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
         isDisabled: [
           {
             type: "boolean",
@@ -528,6 +528,8 @@ export default {
               type: "success",
               message: "添加成功"
             });
+          }else if(res.code === 3){
+            self.$message.error('用户代码已存在');
           }
         })
         .catch(function(error) {
