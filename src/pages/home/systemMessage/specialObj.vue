@@ -98,7 +98,8 @@
           <div class="searchBox-wrapper">
             <span>用户类型：</span>
             <div>
-              <el-select v-model="writerUserParams.rank" placeholder="请选择">
+              <el-select v-model="writerUserParams.rank" placeholder="请选择"
+                         @change="getWriterUserData">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -164,7 +165,7 @@
             <span>学校名称：</span>
             <div>
               <el-input placeholder="请输入内容" v-model="orgUserParams.orgName" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
-            </div> 
+            </div>
           </div>
           <div class="searchBox-wrapper">
             <span>机构代码：</span>

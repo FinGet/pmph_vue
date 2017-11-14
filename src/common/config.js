@@ -14,5 +14,5 @@ export const BASE_URL = 'http://120.76.221.250/pmpheep/';
 // export const BASE_URL = 'http://192.168.200.126:8090/pmpheep/';
 
 //默认头像地址
-export const DEFAULT_USER_IMAGE = BASE_URL+'image/5a012a17a201ee3ed7590351';
-export const DEFAULT_USER_INAGE_ID = '5a012a17a201ee3ed7590351';
+export const DEFAULT_USER_IMAGE = BASE_URL.split('/pmpheep/')[0]+'/static/default_user_iamge.png';
+export const DEFAULT_BASE_URL = BASE_URL.split('/pmpheep/')[0];

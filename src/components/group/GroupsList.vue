@@ -56,7 +56,17 @@
                   <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
                 </el-tooltip>
                 <!--上传文件按钮-->
-                <input type="file" @change="filechange" ref="fileInput" class="fileInput" />
+                <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
+
+                <el-upload
+                  class="fileInput"
+                  ref="upload"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :on-change="filechange"
+                  :show-file-list="false"
+                  :auto-upload="false">
+                  <el-button class="fileInput">上传</el-button>
+                </el-upload>
                 <div ref="headImageWrapper" v-show="newGroupData.filename">
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
@@ -78,7 +88,7 @@
 </template>
 
 <script>
-  import beautyScroll from '@/base/beautyScroll.vue';
+  import beautyScroll from 'components/beautyScroll.vue';
   import bus from 'common/eventBus/bus.js'
   export default{
     data(){
@@ -129,7 +139,7 @@
           console.log(res);
           if(res.data.code==1){
             res.data.data.map(iterm=>{
-              iterm.groupImage=_this.$config.BASE_URL+'image/'+iterm.groupImage;
+              iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
             });
             _this.groupListData=res.data.data;
             if(res.data.data.length){
@@ -160,11 +170,10 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(e){
-        var self=this;
-        var prevDiv = this.$refs.headImageWrapper;
-        var file = this.$refs.fileInput;
-        var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
+      filechange(file){
+        let self=this;
+        let prevDiv = this.$refs.headImageWrapper;
+        let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         if(!ext){return;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
@@ -172,33 +181,29 @@
           self.newGroupData.filename=undefined;
           return;
         }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
         // 判断文件大小是否符合 文件不为0
-        if(file.files && file.files[0].size<1){
+        if(file.size==0){
           this.$message.error("图片大小不能小于1bt");
           self.newGroupData.filename=undefined;
-          file.value='';
           return;
         }
-        // 判断文件大小是否符合 文件不大于5M
-        if(file.files && file.files[0].size/1000/1000 > 10 && file.files[0].size<1){
+        // 判断文件大小是否符合 文件不大于10M
+        if(file.size/1024/1024 > 10){
           this.$message.error("图片大小不能大于10M");
           self.newGroupData.filename=undefined;
-          file.value='';
           return;
         }
-        if (file.files && file.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function(evt) {
-            self.newGroupData.filename=evt.target.result;
-            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
-          }
-          reader.readAsDataURL(file.files[0]);
-        } else {
-          if(!file.value){
-            self.newGroupData.filename=undefined;
-          }
-          prevDiv.innerHTML = '<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          self.newGroupData.filename=file.raw;
+          prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
         }
+        reader.readAsDataURL(file.raw);
       },
       /**
        * 创建小组
@@ -210,7 +215,7 @@
           return false;
         }
         let self= this;
-        var filedata = this.newGroupData.filename?this.$refs.fileInput.files[0]:'';
+        var filedata = this.newGroupData.filename?this.newGroupData.filename:'';
         var formdata = new FormData();
         console.log(filedata);
         formdata.append('file',filedata);
@@ -282,7 +287,6 @@
       handleClose(){
         this.newGroupData.filename=undefined;
         this.newGroupData.name=null;
-        this.$refs.fileInput.value = '';
       },
     },
     created(){

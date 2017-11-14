@@ -11,7 +11,7 @@
           <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
         </div>
       </div>
-      <div class="searchBox-wrapper">
+      <div class="searchBox-wrapper" >
         <div class="searchName">所属院校：
           <span></span>
         </div>
@@ -120,37 +120,38 @@
     <div class="pagination-wrapper">
       <el-pagination
       v-if="totalPages>params.pageSize"
-      :page-sizes="[30,50,100, 200, 300, 400]"
+      :page-sizes="[10,20,30, 50, 100]"
       :page-size="params.pageSize"
       :current-page.sync="params.pageNumber"
-       @current-change="refreshTableData"
+      @size-change="writerSizeChange"
+       @current-change="writerCurrentChange"
        layout="total, sizes, prev, pager, next, jumper"
        :total="totalPages">
       </el-pagination>
     </div>
     <!--增加新用户弹窗-->
-    <el-dialog :title="isNew?'新增作家用户':'修改用户信息'" :visible.sync="dialogVisible" @close="closeDialog" size="tiny">
+    <el-dialog :title="isNew?'新增':'修改用户信息'" :visible.sync="dialogVisible" :before-close="closeDialog" size="tiny">
       <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="padding20">
         <el-form-item label="用户代码：" prop="username">
-          <el-input v-model="form.username"></el-input>
+          <el-input v-model="form.username" :disabled="!isNew"  placeholder="输入用户代码"></el-input>
         </el-form-item>
         <el-form-item label="用户名称：" prop="realname">
-          <el-input v-model="form.realname"></el-input>
+          <el-input v-model="form.realname" placeholder="输入用户名称"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机：" prop="handphone">
-          <el-input v-model="form.handphone"></el-input>
+        <el-form-item label="用户手机：" prop="handphone" >
+          <el-input v-model="form.handphone" placeholder="手机号码"></el-input>
         </el-form-item>
         <el-form-item label="用户邮箱：" prop="email">
-          <el-input v-model="form.email"></el-input>
+          <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="所属院校：" prop="orgId">
+        <el-form-item label="所属院校：" prop="orgId" required>
           <el-select v-model="form.orgId" filterable remote placeholder="请输入关键词搜索" loading-text="正在搜索..." :remote-method="searchOrgName" :loading="loading">
             <el-option v-for="item in OrgNameList" :key="item.id" :label="item.orgName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：" prop="isDsabled">
-          <el-radio-group v-model="form.isDsabled">
+        <el-form-item label="启用：" prop="isDisabled">
+          <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
             <el-radio :label="true">不启用</el-radio>
           </el-radio-group>
@@ -232,7 +233,7 @@
 					<el-table-column prop="progress" label="审核标志" width="100" align="center">
 						<template scope="scope">
               <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
-							<el-tag type="warning" v-if="scope.row.progress=='1'">已提交</el-tag>
+							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
 							<el-tag type="success" v-if="scope.row.progress=='3'">通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
@@ -241,11 +242,11 @@
 			</el-col>
 			<el-col>
 				<el-pagination class="pull-right marginT10"
-                       v-if="dataTotal>20"
+                       v-if="dataTotal>pageSize"
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="currentPage"
-                       :page-sizes="[10, 20, 30, 40]"
+                       :current-page="pageNumber"
+                       :page-sizes="[10, 20, 30,50]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
                        :total="dataTotal">
@@ -271,6 +272,13 @@ import ScreenSize from "common/mixins/ScreenSize.js";
 export default {
   mixins: [ScreenSize],
   data() {
+    var departmentIdChecked=(rule, value, callback)=>{
+         if(value){
+            callback();
+         }else{
+           callback('请输入关键字搜索并选择一个部门');
+         }
+    }
     return {
       screenWidth_lg_computed: true,
       isNew: true,
@@ -294,13 +302,13 @@ export default {
         }
       ],
       state: [
-        {
+/*         {
           value: '0',
 					label: '未提交'
-        },
+        }, */
 				{
 					value: '1',
-					label: '已提交'
+					label: '待审核'
 				},
 				{
 					value: '2',
@@ -324,32 +332,43 @@ export default {
         orgId: "",
         handphone: "",
         email: "",
-        isDsabled: true,
+        isDisabled: true,
         note: ""
       },
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
+          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" }
         ],
-        realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
-        email: [{ required: true, message: "请输入用户邮箱", trigger: "blur" }],
-        handphone: [{ required: true, message: "请输入用户手机号码", trigger: "blur" }],
-        orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
-        isDsabled: [
+        realname: [
+          { required: true, message: "请输入用户名称", trigger: "blur" },
+          { min: 1, max: 20, message: "用户名称过长", trigger: "change,blur" }
+          ],
+        email: [
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          ],
+        handphone: [
+          {validator: this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
+          ],
+        orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
+        isDisabled: [
           {
             type: "boolean",
             required: true,
             message: "请选择是否启用",
             trigger: "change"
           }
+        ],
+        note:[
+          {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
       },
       //搜索所属机构用户
       OrgNameList: [],
       loading: false,
       params: {
-        pageSize: 30,
+        pageSize: 10,
         pageNumber: 1,
         name: "",
         rank: "",
@@ -357,7 +376,6 @@ export default {
       },
       totalPages: 0,
 
-      currentPage: 1,
 			visible1: false,
 			visible2: false,
 			selections:'',
@@ -366,7 +384,7 @@ export default {
       orgName:  '',
       realname: '',
       progress: '',
-      pageSize: 20,
+      pageSize: 10,
       pageNumber: 1,
       dataTotal: 0
     };
@@ -384,6 +402,16 @@ export default {
     //点击新增按钮
     addBtn() {
       this.isNew = true;
+      this.form={
+        id: "",
+        realname: "",
+        username: "",
+        orgId: "",
+        handphone: "",
+        email: "",
+        isDisabled: true,
+        note: ""
+      }
       this.dialogVisible = true;
     },
     //点击修改按钮执行方法
@@ -398,7 +426,7 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
-      this.form.isDsabled = !!this.form.isDsabled;
+      this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
     },
     /**
@@ -452,6 +480,15 @@ export default {
           console.error(error);
         });
     },
+    writerSizeChange(val){
+      this.params.pageSize=val;
+      this.params.pageNumber=1;
+      this.refreshTableData();
+    },
+    writerCurrentChange(val){
+      this.params.pageNumbber=val;
+      this.refreshTableData();
+    },
     /**
      * 修改新增弹出点击确认按钮时触发提交表单操作
      */
@@ -491,6 +528,8 @@ export default {
               type: "success",
               message: "添加成功"
             });
+          }else if(res.code === 3){
+            self.$message.error('用户代码已存在');
           }
         })
         .catch(function(error) {
@@ -539,8 +578,9 @@ export default {
     /**
      * 监听弹出层关闭事件
      */
-    closeDialog() {
+    closeDialog(done) {
       this.resetForm();
+      done();
     },
     preview(cert) {
       this.$axios
@@ -608,12 +648,15 @@ export default {
 				if (res.code == "1") {
 					//console.log(res)
 					this.getWritersList()
+          
 					this.$message({
               showClose: true,
-              message: '修改成功!',
+              message: progress==0?'审核通过!':'已退回',
               type: 'success'
             });
-				}
+				}else if(res.code ==2){
+          this.$message.error("请勿选中已审核过的用户");
+        }
 			}).catch(error => {
 				console.log(error.msg)
 			})
@@ -629,10 +672,13 @@ export default {
 			this.selections = val
 		},
 		handleSizeChange(val) {
-			console.log(`每页 ${val} 条`);
+      this.pageSize=val;
+      this.pageNumber=1;
+      this.getWritersList();
 		},
 		handleCurrentChange(val) {
-			console.log(`当前页: ${val}`);
+      this.pageNumber=val;
+      this.getWritersList(); 
 		},
 		/**
 		 * 预览教师资格证

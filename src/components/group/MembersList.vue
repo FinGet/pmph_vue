@@ -15,7 +15,7 @@
           <div class="MemberHead" v-for="(item,index) in memberListData" :key="item.id">
             <div class="MemberHead-inner">
               <span class="MemberHeadImg">
-                <img :src="item.avatar?$config.BASE_URL+'image/'+item.avatar:defaultImage" alt="小组头像">
+                <img :src="item.avatar?$config.DEFAULT_BASE_URL+item.avatar:defaultImage" alt="小组头像">
               </span>
               <div class="MemberHeadName">
                 <span>{{item.displayName}}</span>
@@ -188,7 +188,7 @@
 </template>
 
 <script>
-import beautyScroll from '@/base/beautyScroll.vue';
+import beautyScroll from 'components/beautyScroll.vue';
 import bus from 'common/eventBus/bus.js'
 export default {
   props: ['groupId','refreshMember','crurrentMemberInfo'],
@@ -240,6 +240,7 @@ export default {
       treeData:[],
       searchVal:'',
       path:'',
+      departmentId:'',
       pageNumber:1,
       pageSize:10,
       dataTotal:0,
@@ -336,6 +337,7 @@ export default {
           params: {
             name: this.searchVal,
             path: this.path,
+            departmentId:this.departmentId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize
           }
@@ -369,10 +371,15 @@ export default {
     },
     /* 社内用户树点击操作 */
     handleNodeClick(data) {
-      this.path = data.path
+      console.log(data);
+      console.log(data.path);
+      this.path = data.path;
+      this.departmentId=data.id;
         if (data.path == '0') {
           this.path = ''
         }
+        this.pageSize=10;
+         this.pageNumber=1;
       this.getClubUserData();
     },
     /* 社内用户切换分页条数 */

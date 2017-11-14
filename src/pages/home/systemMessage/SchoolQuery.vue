@@ -1,14 +1,13 @@
-<script src="../../../router/index.js"></script>
 <template>
   <div class="query">
     <!--操作按钮区-->
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" @click="goBackEdit">
+        <el-button type="primary" @click="goBackEdit" size="large">
           返回编辑
         </el-button>
-        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn" size="large">
           发送
           <span v-if="queryData.length>0">({{queryData.length}})</span>
         </el-button>
@@ -71,22 +70,32 @@
         <div class="pull-left">
           <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
           <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
+
+          <div class="searchBox-wrapper">
+            <div class="searchInput">
+              <el-input placeholder="请输入" class="searchInputEle" @keyup.enter.native="goToSearchPosition" v-model="searchName" @change="searchOnPage"></el-input>
+            </div>
+          </div>
+          <div class="searchBox-wrapper searchBtn">
+            <el-button  type="primary" icon="search" @click="goToSearchPosition">搜索</el-button>
+          </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>
+          <!--<el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>-->
+          <!--<el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>-->
         </div>
       </div>
       <div class="area-list"
            v-for="(item,index) in area_school"
            :key="index"
+           :class="'area'+item.id"
            v-if="(select_provinces.includes(item.id))||select_provinces.length==0">
         <div>
           <el-checkbox
             :indeterminate="item.isIndeterminate"
             v-model="item.checkAll"
             @change="checkAllChange(item)">
-            {{item.province}}
+            <span v-html="item.province"></span>
           </el-checkbox>
         </div>
         <div>
@@ -95,7 +104,7 @@
               v-for="(city,index) in item.schoolList"
               :label="city.id"
               :key="index"
-              v-if="select_orgType==0||city.type==select_orgType">{{city.name}}</el-checkbox>
+              v-if="select_orgType==0||city.type==select_orgType"><span v-html="city.name"></span></el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -220,6 +229,8 @@
           date:'2017/10/1',
         }],
         dialogVisible2:false,
+        searchName:'',
+        searchResultFirstId:'',
       };
     },
     computed: {
@@ -313,7 +324,9 @@
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
           this.area_school[index].schoolList.forEach(t => {
-            this.area_school[index].checkedSchools.push(t.id);
+            if(this.select_orgType==0||t.type ==this.select_orgType){
+              this.area_school[index].checkedSchools.push(t.id);
+            }
           })
         }
         this.area_school[index].isIndeterminate=false;
@@ -335,9 +348,13 @@
         this.area_school.forEach((iterm,index)=>{
           iterm.checkAll=true;
           iterm.checkedSchools=[];
-          iterm.schoolList.forEach((t,i)=>{
-            iterm.checkedSchools.push(t.id);
-          })
+          if(this.select_provinces.length==0||this.select_provinces.includes(iterm.id)){
+            iterm.schoolList.forEach((t,i)=>{
+              if(this.select_orgType==0||t.type ==this.select_orgType){
+                iterm.checkedSchools.push(t.id);
+              }
+            })
+          }
           iterm.isIndeterminate=false;
         })
       },
@@ -408,6 +425,33 @@
             return x['name'].localeCompare(y['name'])>0?this.sortOrg:!this.sortOrg;
           })
         })
+      },
+      /**
+       * 点击搜索
+       */
+      searchOnPage(){
+        var highLightHtml=`<span class="bg-yellow">${this.searchName}</span>`;
+        this.searchResultFirstId=undefined;
+        this.area_school.forEach((iterm,i)=>{
+          iterm.schoolList.forEach((t,j)=>{
+            this.area_school[i].schoolList[j].name=this.$commonFun.getHTMLText(this.area_school[i].schoolList[j].name);
+            if(t.name.indexOf(this.searchName)>-1){
+              if(!this.searchResultFirstId){
+                this.searchResultFirstId=iterm.id;
+              }
+              this.area_school[i].schoolList[j].name=this.area_school[i].schoolList[j].name.replace(this.searchName,highLightHtml);
+            }
+          })
+        });
+      },
+      /**
+       * ，定位到第一个匹配项处
+       */
+      goToSearchPosition(){
+        console.log(this.searchResultFirstId);
+        var dom = document.getElementsByClassName('area'+this.searchResultFirstId);
+        var top = dom[0].getBoundingClientRect().top;
+        document.getElementsByClassName('app-main')[0].scrollTop=top-300;//通过scrollTop设置滚动到指定
       }
     },
     created(){
@@ -438,6 +482,7 @@
 
       this.getSchools()
     },
+
   }
 </script>
 
@@ -449,6 +494,8 @@
   .fastQuery>div>div:first-child{
     color:#999;
     width: 80px;
+    text-align: left;
+    word-break: break-all;
     float: left;
   }
   .fastQuery>div>div:last-child{
@@ -469,14 +516,18 @@
   }
   .area-list>div:first-child{
     display: inline-block;
-    width: 80px;
-    text-align: center;
+    width: 120px;
+    text-align: left;
+    word-break: break-all;
     float: left;
   }
   .area-list>div:last-child{
-    margin-left: 90px;
+    margin-left: 130px;
     padding-left: 20px;
     text-align: left;
     border-left: 1px solid #e5e5e5;
+  }
+  .searchBox-wrapper{
+    float: none;
   }
 </style>

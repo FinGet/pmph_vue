@@ -115,10 +115,17 @@
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
+        <el-upload
+          ref="upload"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-change="filechange"
+          :show-file-list="false"
+          :auto-upload="false">
           <el-button type="primary" :disabled="groupSelection.length==0" class="relative">
             上传文件
-             <input type="file" @change="filechange" ref="fileInput" class="fileInput" />
           </el-button>
+        </el-upload>
+
       </span>
     </el-dialog>
 	</div>
@@ -250,6 +257,7 @@
                 iterm.gmtCreate=iterm.gmtCreate;
                 iterm.downloadUrl = this.$config.BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
               });
+              this.isManage=false;
               this.tableData=res.data.rows;
               this.fileList = [];
               res.data.rows.forEach(iterm=>{
@@ -306,6 +314,8 @@
                 if (res.code == '1') {
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
+                }else{
+                  this.$message.error(res.msg);
                 }
               })
               .catch(e=>{
@@ -327,36 +337,30 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(e){
-        var file = this.$refs.fileInput;
-        var filedata = file.files[0];
-        var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
-        var fileName=file.value.substring(0,file.value.lastIndexOf(".")-1).toLowerCase();
+      filechange(file){
+        var filedata = file.raw;
+        var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         if(!filedata||!ext){
           return;
         }
         //文件名不超过40个字符
-        if(fileName.length>40){
+        if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
-          file.value='';
           return;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
-          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不为0
-        if(file.files && file.files[0].size<1){
+        if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
-          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
-        if(filedata.size/1000/1000 > 100){
+        if(file.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
-          file.value='';
           self.newGroupData.filename=undefined;
           return;
         }
@@ -375,12 +379,10 @@
               this.dialogChooseGroup=false;
             }else{
               this.$message.error(res.msg);
-              file.value='';
             }
           })
           .catch((error) => {
             this.$message.error('上传文件失败，请重试');
-            file.value='';
           });
       },
       /**

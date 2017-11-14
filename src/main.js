@@ -12,7 +12,7 @@ import axios from 'axios'
 /*全局方法和配置挂载*/
 import * as config from 'common/config';
 import * as commonFun from '../static/commonFun.js'
-
+import {formCheckedRules} from '../static/formCheckRules.js'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
@@ -30,7 +30,7 @@ Vue.prototype.$initPostData = commonFun.initPostData;
 
 Vue.prototype.$config = config;
 Vue.prototype.$commonFun = commonFun;
-
+Vue.prototype.$formCheckedRules = formCheckedRules;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
@@ -73,7 +73,7 @@ axios.interceptors.request.use(function (config) {
     router.push('/login');
 
   }
- 
+
      /* 解决IE缓存添加一个随机时间戳 */
   if (config.params){
     config.params._timer=''
