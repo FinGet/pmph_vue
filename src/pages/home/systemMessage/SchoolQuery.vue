@@ -4,10 +4,10 @@
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" @click="goBackEdit"  size="large">
+        <el-button type="primary" @click="goBackEdit" size="large">
           返回编辑
         </el-button>
-        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn"  size="large">
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn" size="large">
           发送
           <span v-if="queryData.length>0">({{queryData.length}})</span>
         </el-button>
