@@ -93,7 +93,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="遴选主编/副主编/编委" width="230">
+          label="遴选主编" width="230">
           <template scope="scope">
               <span class="scopeSpan1">
                 <span v-if="scope.row.state==0"></span>
@@ -124,18 +124,37 @@
               </span>
           </template>
         </el-table-column>
+
         <el-table-column
-          label="当前进度">
+          label="遴选编委" width="230">
           <template scope="scope">
-            <span v-if="scope.row.state==0">名单未产生</span>
-            <span v-if="scope.row.state==1">名单已确认</span>
-            <span v-if="scope.row.state==2">遴选中</span>
-            <span v-if="scope.row.state==3">遴选中</span>
-            <span v-if="scope.row.state==4">遴选中</span>
-            <span v-if="scope.row.state==5">通过</span>
-            <span v-if="scope.row.state==6">结果公布</span>
-            <span v-if="scope.row.state==7">再次修改</span>
-            <span v-if="scope.row.state==8">再次修改</span>
+              <span class="scopeSpan1">
+                <span v-if="scope.row.state==0"></span>
+                <span v-else>共{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
+              </span>
+            <span class="scopeSpan2">
+                <span v-if="scope.row.state==0">待遴选</span>
+                <span v-if="scope.row.state==1">
+                  <span>策划编辑已确认</span>
+                  <span>项目编辑已确认</span>
+                </span>
+                <span v-if="scope.row.state==2">策划编辑已确认</span>
+                <span v-if="scope.row.state==3">项目编辑已确认</span>
+                <span v-if="scope.row.state==4"></span>
+                <span v-if="scope.row.state==5">通过</span>
+                <span v-if="scope.row.state==6">结果已公布</span>
+                <span v-if="scope.row.state==7">通过 <el-tag type="warning">变动</el-tag></span>
+                <span v-if="scope.row.state==8">结果公布 <el-tag type="warning">变动</el-tag></span>
+              </span>
+            <span class="scopeSpan3">
+                <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
+                  <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+                    <el-button type="text">
+                      <i class="fa fa-pencil fa-fw"></i>
+                    </el-button>
+                  </router-link>
+                </el-tooltip>
+              </span>
           </template>
         </el-table-column>
         <!--主任 end-->
@@ -143,11 +162,11 @@
         <el-table-column
           label="操作">
           <template scope="scope">
-            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">通过</el-button>
-            <el-button type="text" v-else @click="showDialog(1,scope.row)">通过</el-button>
+            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">名单确认</el-button>
+            <el-button type="text" v-else @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">结果公布</el-button>
-            <el-button type="text" :disabled="true" v-else>结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">终结果公布</el-button>
+            <el-button type="text" :disabled="true" v-else>终结果公布</el-button>
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>

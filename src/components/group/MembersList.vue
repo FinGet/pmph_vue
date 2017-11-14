@@ -188,7 +188,7 @@
 </template>
 
 <script>
-import beautyScroll from '@/base/beautyScroll.vue';
+import beautyScroll from 'components/beautyScroll.vue';
 import bus from 'common/eventBus/bus.js'
 export default {
   props: ['groupId','refreshMember','crurrentMemberInfo'],

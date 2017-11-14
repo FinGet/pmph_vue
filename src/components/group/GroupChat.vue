@@ -66,8 +66,6 @@
           v-model="editingTextarea"
           @input="changeTextarea"
           @keyup.enter="sendMessage"
-          @focus="textAreaFocus"
-          @blur="textAreaBlur"
 
         ></textarea>
         <p class="tip-text" v-if="250-editingTextarea.length<20">还可输入{{250-editingTextarea.length}}个字符</p>
@@ -78,8 +76,6 @@
 </template>
 
 <script>
-  import vueEmoji from '@/base/emoji/emoji.vue'
-  import { emoji } from '@/base/emoji/emoji-api.js'
   import ChatMessageIterm from './ChatMessageIterm.vue'
   import bus from 'common/eventBus/bus.js'
 	export default {
@@ -126,7 +122,7 @@
           time:this.$commonFun.getNowFormatDate()
         };
 
-        message.messageData = emoji(this.editingTextarea.trim());
+        message.messageData = this.editingTextarea.trim();
         if(!message.messageData){
             this.sendMessageIsEmpty();
             return;
@@ -135,34 +131,6 @@
         //发送完消息清空textarea
         this.editingTextarea = '';
 
-      },
-      textAreaFocus(){
-          this.textAreaIsFocus=true;
-        //        先重置当前选中位置
-        this.resetCurrientCursorposition();
-      },
-      textAreaBlur(){
-        this.textAreaIsFocus=false;
-      },
-      resetCurrientCursorposition(){
-        var textarea = this.$refs.textArea;
-        this.currientCursorposition = this.$commonFun.getCursorPosition(textarea);
-      },
-      showEmojiFunction(){
-          this.showEmoji=!this.showEmoji;
-      },
-      selectEmoji(code){
-        //        先重置当前选中位置
-        this.resetCurrientCursorposition();
-//          console.log(code)
-//        关闭表情弹窗
-        this.showEmoji=false;
-        let newText = this.editingTextarea.substr(0,this.currientCursorposition.start);
-        console.log(newText);
-        newText += code;
-        console.log(newText);
-        newText += this.editingTextarea.substr(this.currientCursorposition.end,this.editingTextarea.length);
-        this.editingTextarea=newText;
       },
       /**
        * 点击发送按钮，当消息为空时触发此方法
@@ -326,7 +294,6 @@
 
     },
     components:{
-      vueEmoji,
       ChatMessageIterm
     },
     created(){

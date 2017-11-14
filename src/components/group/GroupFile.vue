@@ -250,6 +250,7 @@
                 iterm.gmtCreate=iterm.gmtCreate;
                 iterm.downloadUrl = this.$config.BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
               });
+              this.isManage=false;
               this.tableData=res.data.rows;
               this.fileList = [];
               res.data.rows.forEach(iterm=>{
@@ -306,6 +307,8 @@
                 if (res.code == '1') {
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
+                }else{
+                  this.$message.error(res.msg);
                 }
               })
               .catch(e=>{

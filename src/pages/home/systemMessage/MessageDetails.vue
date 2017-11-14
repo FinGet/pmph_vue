@@ -51,7 +51,7 @@
                   this.previewData.title = res.data.title;
                   this.previewData.content = res.data.content;
                   this.previewData.senderName = res.data.senderName;
-                  this.previewData.sendTime = this.$commonFun.formatDate(res.data.sendTime);
+                  this.previewData.sendTime = this.$commonFun.formatDate(res.data.senderDate);
                   this.previewData.files = res.data.MessageAttachment||[];
                 }else{
                     this.$message.error('页面内容加载失败，请重试!');

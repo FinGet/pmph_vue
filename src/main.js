@@ -73,7 +73,7 @@ axios.interceptors.request.use(function (config) {
     router.push('/login');
 
   }
- 
+
      /* 解决IE缓存添加一个随机时间戳 */
   if (config.params){
     config.params._timer=''

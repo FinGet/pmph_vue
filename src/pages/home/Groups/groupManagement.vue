@@ -76,8 +76,8 @@
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
+          {type:'成员管理',view:'GroupMembers'},
           {type:'小组设置',view:'GroupSetting'},
-          {type:'成员管理',view:'GroupMembers'}
         ]
       }
     },

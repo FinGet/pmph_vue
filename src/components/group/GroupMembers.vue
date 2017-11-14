@@ -164,13 +164,7 @@ export default {
                  this.$emit('refeshMember');
                  this.getMemberManageList();
                }else{
-                 var msg = res.data.msg.split('===>');
-                 if(msg.length<2){
-                   this.$message.error('请求失败，请重试！');
-                   return;
-                 }
-
-                 this.$message.error(res.data.msg[1]);
+                 this.$message.error(res.data.msg);
                }
          })
     },
