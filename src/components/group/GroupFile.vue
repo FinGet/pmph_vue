@@ -306,6 +306,8 @@
                 if (res.code == '1') {
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
+                }else{
+                  this.$message.error(res.msg);
                 }
               })
               .catch(e=>{

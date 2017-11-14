@@ -129,7 +129,7 @@ export default {
             }],
             searchValue: '',
             selectState: '',
-            searchChecked: true,
+            searchChecked: false,
             currentPage: 1,
             totalPage: 400,
             tableData: [
