@@ -25,6 +25,7 @@ import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBook
 import ApplicationSchoolQuery from 'components/chooseSchool'
 import Result from 'pages/home/teachingMaterial/navContent/Result/index'
 import EditNotice from 'pages/home/teachingMaterial/navContent/EditNotice'
+import SetTopicNum from 'pages/home/teachingMaterial/navContent/SetTopicNum'
 
 /* 小组 */
 import GroupManage from 'pages/home/Groups/groupManagement'
@@ -109,6 +110,7 @@ export default new Router({
                 { path: 'chief', name: '遴选主编/副主编', component: Chief },
                 { path: 'pre-select', name: '预选编委', component: preSelect },
                 { path: 'applicationschoolquery', name: '教材申报选择学校', component: ApplicationSchoolQuery, meta: { isShowTags: true } },
+                { path: 'set-topic', name: '设置选题号', component: SetTopicNum, meta: { isShowTags: true }  },
               ]
             },
 

@@ -15,20 +15,6 @@
           </el-select>
         </div>
       </div>
-      <!--申报职务搜索-->
-      <div class="searchBox-wrapper">
-        <div class="searchName">进度：<span></span></div>
-        <div class="searchInput">
-          <el-select v-model="currentState" placeholder="全部">
-            <el-option
-              v-for="item in currentStateList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
       <!--姓名搜索-->
       <div class="searchBox-wrapper searchBtn">
         <el-button  type="primary" icon="search">搜索</el-button>
@@ -166,7 +152,7 @@
             <el-button type="text" v-else @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">终结果公布</el-button>
-            <el-button type="text" :disabled="true" v-else>终结果公布</el-button>
+            <el-button type="text" :disabled="true" v-else>最终结果公布</el-button>
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
