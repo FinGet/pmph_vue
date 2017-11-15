@@ -2,12 +2,9 @@
   <div class="messagestate">
     <el-row>
       <el-col :span="24">
-        <el-col :span="10">
-          <el-col :span="8" class="search-10">
-            <el-input v-model="name" placeholder="请输入姓名" @keyup.enter.native="search"></el-input>
-          </el-col>
-          <el-col :span="8" class="search-10">
-            <el-input v-model="name" placeholder="请输入机构名称" @keyup.enter.native="search"></el-input>
+        <el-col :span="8">
+          <el-col :span="14" class="search-10">
+            <el-input v-model="name" placeholder="请输入姓名/机构名称" @keyup.enter.native="search"></el-input>
           </el-col>
           <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
         </el-col>
@@ -41,7 +38,7 @@
           </el-table-column>
           <el-table-column
             prop="dptname"
-            label="机构名称"
+            label="单位"
             width="200">
           </el-table-column>
           <el-table-column

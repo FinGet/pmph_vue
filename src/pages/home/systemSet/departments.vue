@@ -64,7 +64,7 @@
            <el-button @click="dialogVisible = false">取 消</el-button>
            <el-button type="primary" @click="addTreeNode">确 定</el-button>
          </div>
-      </el-dialog>  
+      </el-dialog>
   </el-row>
 </template>
 <script>
@@ -131,7 +131,7 @@ export default {
      this.$nextTick(()=>{
         this.$refs.dialogForm.resetFields();
      })
-     
+
     },
     /* 添加子节点 */
     addTreeNode() {

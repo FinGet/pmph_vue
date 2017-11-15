@@ -3,7 +3,7 @@
         <div class="roles_list">
             <h4>角色列表</h4>
             <p>
-                <el-input class="input" v-model="searchValue"  placeholder="请输入角色名称" @keyup.enter.native="getListData()"></el-input>
+                <el-input class="input" v-model="searchValue"  placeholder="请输入" @keyup.enter.native="getListData()"></el-input>
                 <el-button type="primary" icon="search" @click="getListData()">搜索</el-button>
                 <el-button type="primary pull-right" @click="addNewRoles()">增加</el-button>
             </p>
@@ -13,7 +13,7 @@
                 </el-table-column>
                 <el-table-column prop="roleName" label="角色名称">
                 </el-table-column>
-                <el-table-column prop="sort" label="排序码">
+                <el-table-column prop="sort" label="显示顺序">
                 </el-table-column>
                 <el-table-column prop="isDisabled" label="是否启用">
                     <template scope="scope">
@@ -41,22 +41,22 @@
 
                 <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="95px">
                     <el-form-item label="角色代码："  prop="id" v-if="!isAddNewRole">
-                        <el-input v-model="rolesForm.id" :disabled="true" placeholder="请输入角色代码"></el-input>
+                        <el-input v-model="rolesForm.id" :disabled="true" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="角色名称：" prop="roleName">
-                        <el-input v-model="rolesForm.roleName" placeholder="请输入角色名称"></el-input>
+                        <el-input v-model="rolesForm.roleName" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="启用：" prop="isDisabled">
-                        <el-select v-model="rolesForm.isDisabled" placeholder="请选择">
-                            <el-option label="启用" value="false"></el-option>
-                            <el-option label="禁用" value="true"></el-option>
-                        </el-select>
+                        <el-radio-group v-model="rolesForm.isDisabled">
+                          <el-radio :label="false">启用</el-radio>
+                          <el-radio :label="true">禁用</el-radio>
+                        </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="排序码：" prop="sort">
-                        <el-input v-model="rolesForm.sort" placeholder="请输入排序码"></el-input>
+                    <el-form-item label="显示顺序：" prop="sort">
+                        <el-input v-model="rolesForm.sort" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="备注：" prop="note">
-                        <el-input v-model="rolesForm.note" placeholder="请输入备注"></el-input>
+                        <el-input v-model="rolesForm.note" placeholder="请输入"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -69,9 +69,9 @@
         <el-dialog title="角色权限设置" :visible.sync="powerTreeVisible" size="tiny">
             <div>
                 <transition name="fade" mode="out-in">
-                <el-tree class="tree_box" ref="powerTree" :data="treeData" 
-                show-checkbox node-key="id" :props="defaultProps" 
-                v-if="powerTreeVisible" 
+                <el-tree class="tree_box" ref="powerTree" :data="treeData"
+                show-checkbox node-key="id" :props="defaultProps"
+                v-if="powerTreeVisible"
                 :default-checked-keys="defaultCheckedData"
                 ></el-tree>
                 </transition>
@@ -98,8 +98,8 @@ export default {
       rolesForm: {
         id: "",
         roleName: "",
-        isDisabled: "",
-        sort: "",
+        isDisabled: false,
+        sort: '',
         note: ""
       },
       isAddNewRole: true,
@@ -109,14 +109,14 @@ export default {
             { required: true, message: "请输入角色名称", trigger: "blur" },
             {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
             ],
-        isDisabled: [{ required: true, message: "请选择", trigger: "change" }],
+        isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
         sort: [
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change,blur" },
+            {min:1,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" },
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[
             {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}
-        ]    
+        ]
       },
       powerTreeVisible: false,
       defaultCheckedData: [1, 2],
@@ -162,7 +162,7 @@ export default {
           ]
         },
         {
-          label: "出版图书",
+          label: "商品管理",
           id: 6,
           children: [
             {
@@ -342,6 +342,10 @@ export default {
         .then(function(res) {
           console.log(res);
           if (res.data.code == 1) {
+            res.data.data.map(iterm=>{
+              iterm.isDisabled=!!iterm.isDisabled;
+              iterm.sort=iterm.sort+'';
+            })
             _this.rolesListData = res.data.data;
           }
         })
@@ -360,7 +364,7 @@ export default {
     reviseRoles(obj) {
       for (var item in obj) {
         // obj[item]=obj[item]+'';
-        this.rolesForm[item] = obj[item] + "";
+        this.rolesForm[item] = obj[item];
       }
       this.isAddNewRole = false;
       // this.rolesForm = obj;
