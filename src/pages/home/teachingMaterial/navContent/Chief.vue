@@ -105,7 +105,9 @@
             align="center"
           >
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"></el-checkbox>
+              <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"
+                           :disabled="!scope.row.edit||$route.query.type=='pres'"
+              ></el-checkbox>
             </template>
           </el-table-column>
 
@@ -113,7 +115,7 @@
                            width="80"
                            align="center">
             <template scope="scope">
-              <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor" size="mini"></el-input>
+              <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor||!scope.row.edit||$route.query.type=='pres'" size="mini"></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -121,7 +123,8 @@
             width="120"
             align="center">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"></el-checkbox>
+              <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"
+                           :disabled="!scope.row.edit||$route.query.type=='pres'"></el-checkbox>
             </template>
           </el-table-column>
 
@@ -129,7 +132,7 @@
                            width="80"
                            align="center">
             <template scope="scope">
-              <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor" size="mini"></el-input>
+              <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor||!scope.row.edit||$route.query.type=='pres'" size="mini"></el-input>
             </template>
           </el-table-column>
 
@@ -139,7 +142,7 @@
             width="120"
             align="center">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)"></el-checkbox>
+              <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)" :disabled="!scope.row.edit||$route.query.type=='chief'"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>
@@ -246,7 +249,7 @@
             chiefEditorNo:'',
             isSubeditor:false,
             subeditorNo:'',
-            isMember:false
+            isMember:true
           },
           {
             name: '李四',
@@ -299,6 +302,27 @@
     created(){
       this.level = this.$route.query.level;
       this.level = this.level?parseInt(this.level):1;
+
+      let type = this.$route.query.type;
+
+      if(type=='pres'){
+        this.tableData.map(iterm=>{
+          if(iterm.isChiefEditor||iterm.isSubeditor){
+            iterm.edit=false;
+          }else{
+            iterm.edit=true;
+          }
+        })
+      }
+      if(type=='chief'){
+        this.tableData.map(iterm=>{
+          if(iterm.isMember){
+            iterm.edit=false;
+          }else{
+            iterm.edit=true;
+          }
+        })
+      }
 
     },
     methods:{
