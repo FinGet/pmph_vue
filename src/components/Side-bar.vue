@@ -62,10 +62,8 @@
           <span slot="title">系统设置</span>
         </template>
         <el-menu-item index="/set/roles" v-if="isShowSide(18)">角色</el-menu-item>
-        <!-- <el-menu-item index="/set/authority">权限</el-menu-item> -->
-        <!-- <el-menu-item index="10-3">菜单</el-menu-item> -->
-        <el-menu-item index="/set/area" v-if="isShowSide(19)">地区</el-menu-item>
-        <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item>
+        <!-- <el-menu-item index="/set/area" v-if="isShowSide(19)">地区</el-menu-item>
+        <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item> -->
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
     </el-menu>
