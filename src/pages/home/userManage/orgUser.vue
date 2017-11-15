@@ -29,7 +29,7 @@
         <!--操作按钮-->
         <div class="pull-right">
           <!-- <el-button type="primary" @click="addBtn(false)">添加管理员</el-button> -->
-          <el-button type="primary" @click="setOrgsType">机构类型设置</el-button>
+          <!-- <el-button type="primary" @click="setOrgsType">机构类型设置</el-button> -->
           <el-button type="primary" @click="addBtn(true)">新建机构用户</el-button>
         </div>
       </div>
@@ -242,16 +242,13 @@
         </span>
       </el-dialog>
       <!--机构类型设置-->
-      <el-dialog
+      <!-- <el-dialog
         title="机构类型设置"
         :visible.sync="dialogVisible2"
         size="tiny">
-
-        <!--操作按钮-->
         <div class="text-right">
           <el-button  type="primary" @click="dialogVisible3=true">新增</el-button>
         </div>
-        <!--表格-->
         <div class="table-wrapper clearfix">
           <el-table
             :data="orgTypeList"
@@ -272,9 +269,9 @@
             </el-table-column>
           </el-table>
         </div>
-      </el-dialog>
+      </el-dialog> -->
       <!--新增机构类型-->
-      <el-dialog
+      <!-- <el-dialog
         title="机构类型设置"
         :visible.sync="dialogVisible3"
         size="tiny">
@@ -291,7 +288,7 @@
         <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="addOrgType">保 存</el-button>
         </span>
-      </el-dialog>
+      </el-dialog> -->
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -516,20 +513,21 @@ export default {
       pageNumber:1,
       // 机构类型
       orgTypeList: [],
-      addOrgTypeForm:{ // 新增机构类型弹窗表单
+      // 新增机构类型弹窗表单
+      addOrgTypeForm:{
         typeName:'',
         sort:''
       },
       // 新增机构类型表单验证
-      rules_addType:{
-        typeName: [
-          { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
-        ],
-        sort: [
-          { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-        ],
-      }
+      // rules_addType:{
+      //   typeName: [
+      //     { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
+      //   ],
+      //   sort: [
+      //     { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+      //     {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+      //   ],
+      // }
     };
   },
   computed:{
@@ -552,9 +550,9 @@ export default {
       this.dialogVisible = true;
     },
     // 点击机构类型设置
-    setOrgsType(){
-      this.dialogVisible2 = true;
-    },
+    // setOrgsType(){
+    //   this.dialogVisible2 = true;
+    // },
     /**
        * 获取机构类型
        */
@@ -583,66 +581,66 @@ export default {
     /**
        * 新增机构类型
        */
-    addOrgType(){
-      this.$refs['addOrgTypeForm'].validate((valid) => {
-        if (valid) {
-          this.$axios({
-            method: 'POST',
-            url: '/orgType/add/orgtype',
-            data: this.$initPostData(this.addOrgTypeForm),
-          })
-            .then(response => {
-              let res = response.data;
-              let data = res.data.rows;
-              //修改成功
-              if (res.code == 1) {
-                this.getOrgTypeData();
-                this.dialogVisible3 = false;
-                this.$message.success('添加成功!');
-              }else{
-                this.$message.error(res.msg);
-              }
-            })
-            .catch(e=>{
-              console.log(e);
-              this.$message.error('添加失败，请重试');
-            });
-        } else {
-          this.$message.error('请正确填写表单!!');
-          return false;
-        }
-      });
+    // addOrgType(){
+    //   this.$refs['addOrgTypeForm'].validate((valid) => {
+    //     if (valid) {
+    //       this.$axios({
+    //         method: 'POST',
+    //         url: '/orgType/add/orgtype',
+    //         data: this.$initPostData(this.addOrgTypeForm),
+    //       })
+    //         .then(response => {
+    //           let res = response.data;
+    //           let data = res.data.rows;
+    //           //修改成功
+    //           if (res.code == 1) {
+    //             this.getOrgTypeData();
+    //             this.dialogVisible3 = false;
+    //             this.$message.success('添加成功!');
+    //           }else{
+    //             this.$message.error(res.msg);
+    //           }
+    //         })
+    //         .catch(e=>{
+    //           console.log(e);
+    //           this.$message.error('添加失败，请重试');
+    //         });
+    //     } else {
+    //       this.$message.error('请正确填写表单!!');
+    //       return false;
+    //     }
+    //   });
 
-    },
+    // },
     /**
        * 删除机构类型
        * @param id
        */
-    deleteOrgType(id){
+    // deleteOrgType(id){
 
-      this.$confirm('确认删除该机构类型？',"提示",{
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(()=>{
-          this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
-            .then(response=>{
-              let res = response.data;
-              if (res.code == '1') {
-                this.getOrgTypeData();
-                this.$message.success('删除成功！');
-              }else{
-                this.$message.error(res.msg);
-              }
-            })
-            .catch(e=>{
-              console.log(e);
-              this.$message.error('删除失败，请重试');
-            })
-        })
-        .catch(e=>{})
-    },
+    //   this.$confirm('确认删除该机构类型？',"提示",{
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(()=>{
+    //       this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
+    //         .then(response=>{
+    //           let res = response.data;
+    //           if (res.code == '1') {
+    //             this.getOrgTypeData();
+    //             this.$message.success('删除成功！');
+    //           }else{
+    //             this.$message.error(res.msg);
+    //           }
+    //         })
+    //         .catch(e=>{
+    //           console.log(e);
+    //           this.$message.error('删除失败，请重试');
+    //         })
+    //     })
+    //     .catch(e=>{})
+    // },
     //点击修改按钮执行方法
     eidtInfoBtn(index) {
       this.isNew = false;
