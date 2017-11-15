@@ -1,5 +1,7 @@
 <template>
   <div class="publish_list" >
+      <el-tabs type="border-card">
+  <el-tab-pane label="内容">
       <p class="header_p">
 
           <el-input placeholder="输入文章标题" class="input" v-model="searchTitle"></el-input>
@@ -39,15 +41,15 @@
                     {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                 prop="categoryName"
                 label="所属栏目"
                 width="96"
                 >
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="发布时间"
-                width="165"
+                width="168"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
@@ -72,21 +74,8 @@
                     </el-tooltip>     
                 </template>
             </el-table-column>
-            <el-table-column
-                label="状态"
-                width="114"
-                >
-                <template scope="scope">
-                    <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">
-                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isStick}" ></i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="热门" placement="bottom">
-                        <i class="fa fa-fire table_i grey_icon" :class="{active_red:scope.row.isHot}" ></i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="推荐" placement="bottom">
-                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.isPromote}" ></i>
-                    </el-tooltip>
-                </template>
+            <el-table-column label="显示顺序" width="110">
+
             </el-table-column>
             <el-table-column
                 label="操作"
@@ -148,6 +137,85 @@
             </div>
         </div>
     </el-dialog>
+  </el-tab-pane>
+  <el-tab-pane label="评论">
+      <p class="header_p">
+          <el-cascader
+            :options="options"
+            v-model="selectedOptions"
+            :clearable="true"
+            class="input"
+            placeholder="请选择栏目"
+            @change="handleChange">
+          </el-cascader>
+          <span style="margin-left:10px;">内容标题：</span>
+          <el-input placeholder="输入内容标题" class="input"></el-input>
+          <span style="margin-left:10px;">评论者账号：</span>
+          <el-input placeholder="输入账号" class="input"></el-input>
+         <el-button type="primary" icon="search">搜索</el-button>
+
+            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
+      </p>
+      <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
+            <el-table-column
+                type="selection"
+                width="45">
+            </el-table-column>
+            <el-table-column
+                prop="id"
+                label="ID"
+                width="70"
+                >
+            </el-table-column>
+            <el-table-column
+                label="评论内容"
+                >
+                <template scope="scope">
+                   <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a>
+                </template>
+            </el-table-column>
+            <el-table-column
+                prop="creatTime"
+                label="创建时间"
+                width="165"
+                >
+            </el-table-column>
+            <el-table-column
+                label="原文链接"
+                width="95"
+                >
+                <template scope="scope">
+                      <el-button type="text">查看</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                width="150"
+                >
+                <template scope="scope">
+                    <el-button type="text">通过</el-button>
+                    <el-button type="text">拒绝</el-button>
+                    <el-button type="text">删除</el-button>
+                </template>
+            </el-table-column>
+
+      </el-table>
+
+    <div class="pagination-wrapper">
+      <el-pagination
+        @size-change="commentHandleSizeChange"
+        @current-change="commentHandleCurrentChange"
+        :current-page="comPageNumber"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="comPageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="comDataTotal">
+      </el-pagination>
+    </div>
+  </el-tab-pane>
+</el-tabs>
+      
+
   </div>
 </template>
 <style scoped>
@@ -194,6 +262,10 @@ color:#58b7ff;
  margin-left:50%;
  transform: translateX(-50%);
 }
+ .publish_list .el-tabs--border-card {
+    border: 0;
+    box-shadow: none;
+  }
 </style>
 <script type="text/javascript">
 export default {
@@ -241,9 +313,25 @@ export default {
       currentPage:1,
       searchTitle:'',
       pageTotal:100,
-      pageSize:10
-
+      pageSize:10,
+      /* 评论*/
+      options:[],
+      selectedOptions:[],
+      commentTableData:[],
+      comPageSize:10,
+      comDataTotal:20,
+      comPageNumber:1,
+      commentSelectData:[],
     };
+  },
+  computed:{
+      isCommentSelected(){
+      if(this.commentSelectData.length>0){
+          return true ;
+      }else{
+          return false ;
+      }
+      }
   },
   methods: {
       /* 获取内容列表 */
@@ -330,6 +418,18 @@ export default {
     handleCurrentChange(val){
          this.currentPage=val;
          this.getPublicList();
+    },
+    commentSelectChange(){
+       this.commentSelectData=val;
+    },
+    handleChange(){
+
+    },
+    commentHandleSizeChange(){
+
+    },
+    commentHandleCurrentChange(){
+
     }
   },
   created(){

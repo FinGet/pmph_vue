@@ -136,8 +136,8 @@
           <el-button type="primary">配套图书导入</el-button>
         </el-tooltip>
         <el-button type="primary">模板下载.xlsx</el-button>
-        <el-button type="primary">图书全量同步</el-button>
-        <el-button type="primary">图书增量同步</el-button>
+        <el-button type="primary" >图书全量同步</el-button>
+        <el-button type="primary" @click="bookSyncVisible=true">图书增量同步</el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
@@ -269,6 +269,35 @@
         <el-button type="primary" @click="update">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 同步弹窗 -->
+    <el-dialog 
+    title="图书同步"
+      :visible.sync="bookSyncVisible"
+      size="small">
+      <div>
+        <p style="margin-bottom:10px;">
+          <el-button type="primary" style="margin-right:10px">上传书目录</el-button>
+          请按照模板格式上传：
+          <el-button type="text" style="color:#337ab7">模板下载.xlsx</el-button>
+        </p>
+        <p style="margin-bottom:10px;color:#FF4949">（* ）Excel文档格式请按照模板格式，否则将导致导入失败，请确认后再操作！</p>
+
+        <el-table :data="bookSyncData" border style="margin-bottom:10px">
+         <el-table-column label="本版号">
+
+         </el-table-column>
+         <el-table-column label="书名">
+
+         </el-table-column>
+         <el-table-column label="作者" width="110">
+
+         </el-table-column>
+        </el-table>
+
+        <el-button type="primary">开始同步</el-button>
+      </div>
+    </el-dialog>
 	</div>
 </template>
 
@@ -283,6 +312,8 @@
           isOnSale:true,
           typeId:[]
         },
+        bookSyncVisible:false,
+        bookSyncData:[],
 			  searchForm:{
           name:'',
           typeId:[],

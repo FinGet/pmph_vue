@@ -1,7 +1,5 @@
 <template>
   <div class="content_exam">
-      <el-tabs type="border-card">
-  <el-tab-pane label="内容">
            <p class="header_p">
           <el-cascader
             :options="options"
@@ -40,14 +38,8 @@
                 label="内容标题"
                 >
                 <template scope="scope">
-                   <a href="">{{scope.row.title}}</a>
+                   <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
-            </el-table-column>
-            <el-table-column
-                prop="categoryName"
-                label="所属栏目"
-                width="100"
-                >
             </el-table-column>
             <el-table-column
                 prop="gmtCreate"
@@ -62,6 +54,9 @@
                 <template scope="scope">
                       <el-button type="text">查看</el-button>
                 </template>
+            </el-table-column>
+            <el-table-column label="作者" width="110">
+
             </el-table-column>
             <el-table-column
                 label="操作"
@@ -88,89 +83,38 @@
         :total="conDataTotal">
       </el-pagination>
     </div>
-  </el-tab-pane>
-  <el-tab-pane label="评论">
-                 <p class="header_p">
-          <el-cascader
-            :options="options"
-            v-model="selectedOptions"
-            :clearable="true"
-            class="input"
-            placeholder="请选择栏目"
-            @change="handleChange">
-          </el-cascader>
-          <span style="margin-left:10px;">内容标题：</span>
-          <el-input placeholder="输入内容标题" class="input"></el-input>
-          <span style="margin-left:10px;">评论者账号：</span>
-          <el-input placeholder="输入账号" class="input"></el-input>
-         <el-button type="primary" icon="search">搜索</el-button>
-
-            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
-      </p>
-      <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
-            <el-table-column
-                type="selection"
-                width="45">
-            </el-table-column>
-            <el-table-column
-                prop="id"
-                label="ID"
-                width="70"
-                >
-            </el-table-column>
-            <el-table-column
-                label="评论内容"
-                >
-                <template scope="scope">
-                   <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="column"
-                label="所属栏目"
-                width="100"
-                >
-            </el-table-column>
-            <el-table-column
-                prop="creatTime"
-                label="创建时间"
-                width="165"
-                >
-            </el-table-column>
-            <el-table-column
-                label="原文链接"
-                width="95"
-                >
-                <template scope="scope">
-                      <el-button type="text">查看</el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                width="150"
-                >
-                <template scope="scope">
-                    <el-button type="text">通过</el-button>
-                    <el-button type="text">拒绝</el-button>
-                    <el-button type="text">删除</el-button>
-                </template>
-            </el-table-column>
-
-      </el-table>
-      <!--分页-->
-    <div class="pagination-wrapper">
-      <el-pagination
-        @size-change="commentHandleSizeChange"
-        @current-change="commentHandleCurrentChange"
-        :current-page="comPageNumber"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="comPageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="comDataTotal">
-      </el-pagination>
-    </div>
-  </el-tab-pane>
-</el-tabs>
+       <!-- 内容详情查看界面 -->
+         <el-dialog 
+     title=""
+     :visible.sync="showContentDetail"
+     size="large">
+       <div style="padding:0 10%;">
+        <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
+         <p class="senderInfo text-center paddingT10">
+      <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+       </p>
+       <el-form label-width="100px">
+          <el-form-item label="摘要：">
+             <p>{{contentDetailData.cmsContent.summary}}</p>
+         </el-form-item>
+         <el-form-item label="关键字：">
+             {{contentDetailData.cmsContent.keyword}}
+         </el-form-item>
+         <el-form-item label="内容：">
+             <p v-html="contentDetailData.content.content"></p>
+         </el-form-item>
+         <el-form-item label="附件：">
+              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+         </el-form-item>
+       </el-form>
+        </div>
+        <div style="width:100%;overflow:hidden">
+            <div class="center_box">
+            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            </div>
+        </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -179,6 +123,7 @@
 export default {
   data() {
     return {
+      editContentUrl:'/cms/content/',    //修改查询url
       options: [],
       defaultProp:{
         label: 'categoryName',
@@ -249,7 +194,14 @@ export default {
       title:'',
       status:'',
       conDataTotal: 0,
-      comDataTotal: 0
+      comDataTotal: 0,
+      showContentDetail:false,
+      contentDetailData:{
+         cmsContent:'',
+         cmsExtras:'',
+         listObj:'',
+         content:'',
+      },
     };
   },
   computed: {
@@ -430,7 +382,19 @@ export default {
     },
     commentHandleCurrentChange(){
 
-    }
+    },
+          /* 查看详情 */
+      contentDetail(obj){        
+         this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              if(res.data.code==1){
+                this.contentDetailData=res.data.data;
+                this.contentDetailData.listObj=obj;
+                console.log(this.contentDetailData);
+              }
+          })
+           this.showContentDetail=true;
+      },
 
   }
 }
@@ -472,5 +436,15 @@ export default {
     border: 0;
     box-shadow: none;
   }
+  .previewTitle{
+  color: #14232e;
+  font-size: 26px;
+  font-weight: 500;
+}
+.content_exam .center_box{
+    float:left;
+ margin-left:50%;
+ transform: translateX(-50%);
+}
 </style>
 
