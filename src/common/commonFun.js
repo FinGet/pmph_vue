@@ -59,6 +59,55 @@ export function authorityComparison(matchArr, userArr) {
 }
 
 /**=================================================================
+ cookie相关
+ =================================================================*/
+export let Cookie = {
+  /**
+   * getCookie
+   * @param name
+   * @returns {*}
+   */
+  get(name) {
+    var strCookie = document.cookie;
+    var arrCookie = strCookie.split("; ");
+    for (var i = 0; i < arrCookie.length; i++) {
+      var arr = arrCookie[i].split("=");
+      if (arr[0] == name)return arr[1];
+    }
+    return "";
+  },
+
+  /**
+   * 添加cookie
+   * @param name
+   * @param value
+   * @param expiresHours
+   * @param domain
+   */
+  set(name, value, expiresHours,domain) {
+    var cookieString = name + "=" + (!!value?value:'');
+    var date = new Date();
+
+    if(domain!=undefined)
+      domain=";domain="+domain;
+    else
+      domain='';
+
+    date.setTime(date.getTime() + expiresHours * 3600 * 1000);
+    cookieString = cookieString + domain+"; path=/; expires=" + date.toGMTString();
+
+    document.cookie = cookieString;
+  },
+  /**
+   * 删除cookie
+   * @param name
+   */
+  remove(name){
+    this.set(name,'',-1);
+  },
+};
+
+/**=================================================================
   时间相关
   =================================================================*/
 

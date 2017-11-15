@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="searchBox-wrapper">
-          <div class="searchName">机构代码：<span></span></div>
+          <div class="searchName">机构账号：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.username" @keyup.enter.native="refreshTableData"></el-input>
           </div>
@@ -28,8 +28,9 @@
         </div>
         <!--操作按钮-->
         <div class="pull-right">
-          <el-button type="primary" @click="addBtn(false)">添加管理员</el-button>
-          <el-button type="primary" @click="addBtn(true)">新建机构</el-button>
+          <!-- <el-button type="primary" @click="addBtn(false)">添加管理员</el-button> -->
+          <!-- <el-button type="primary" @click="setOrgsType">机构类型设置</el-button> -->
+          <el-button type="primary" @click="addBtn(true)">新建机构用户</el-button>
         </div>
       </div>
       <!--表格-->
@@ -40,11 +41,16 @@
           style="width: 100%">
           <el-table-column
             prop="orgName"
-            label="学校名称">
+            label="机构名称">
           </el-table-column>
           <el-table-column
             prop="username"
-            label="机构代码"
+            label="机构账号"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="orgTypeName"
+            label="机构类型"
             width="100">
           </el-table-column>
           <el-table-column
@@ -90,7 +96,7 @@
           </el-table-column>
 
           <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
-          <el-table-column
+          <!-- <el-table-column
             v-if="screenWidth_lg_computed"
             prop="position"
             label="职务"
@@ -101,9 +107,9 @@
             prop="title"
             label="职称"
             width="100">
-          </el-table-column>
+          </el-table-column> -->
 
-          <el-table-column
+          <!-- <el-table-column
             v-if="!screenWidth_lg_computed"
             label="职务/职称"
             width="100">
@@ -121,22 +127,23 @@
                 </p>
               </el-tooltip>
             </template>
-          </el-table-column>
+          </el-table-column> -->
 
           <el-table-column
             prop="address"
-            label="地址">
+            label="邮寄地址">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="postcode"
             label="邮编"
             width="100">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
-            label="启用"
-            width="80">
+            label="启用标识"
+            width="100"
+            align="center">
             <template scope="scope">
-              {{scope.row.isDisabled?'未启用':'启用'}}
+              {{scope.row.isDisabled?'禁用':'启用'}}
             </template>
           </el-table-column>
           <el-table-column
@@ -167,19 +174,42 @@
         @close="resetForm"
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
-          <el-form-item label="机构代码：" prop="username" v-show="isAddSchool||!isNew">
+          <el-form-item label="机构账号：" prop="username">
             <el-input v-model="form.username" :disabled="!isNew"></el-input>
           </el-form-item>
-          <el-form-item label="管理员姓名：" v-show="!isAddSchool||!isNew">
+          <el-form-item label="机构名称：" prop="orgName">
+            <el-input v-model="form.orgName"></el-input>
+          </el-form-item>
+          <el-form-item label="机构类型："  prop="orgTypeId">
+          <el-select v-model="form.orgTypeId" placeholder="请选择院校类型">
+            <el-option
+              v-for="item in orgTypeList"
+              :key="item.id"
+              :label="item.typeName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+          <el-form-item label="管理员姓名：">
             <el-input v-model="form.realname"></el-input>
           </el-form-item>
-          <el-form-item label="用户手机："  prop="handphone" v-show="!isAddSchool||!isNew">
+          <el-form-item label="手机号："  prop="handphone" >
             <el-input v-model="form.handphone"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱：" prop="email" v-show="!isAddSchool||!isNew">
+          <el-form-item label="邮箱：" prop="email" >
             <el-input v-model="form.email"></el-input>
           </el-form-item>
-          <el-form-item label="所属院校："  prop="orgId" v-show="isAddSchool||!isNew">
+          <el-form-item label="所属地区："  prop="areaId">
+          <el-select v-model="form.areaId" placeholder="请选择">
+            <el-option
+              v-for="item in area"
+              :key="item.id"
+              :label="item.areaName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+          <!-- <el-form-item label="所属院校："  prop="orgId" >
             <el-select
               v-model="form.orgId"
               filterable
@@ -195,27 +225,77 @@
                 :value="item.id">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="启用：" prop="isDisabled" v-show="isAddSchool||!isNew">
+          </el-form-item> -->
+          <el-form-item label="启用标识：" prop="isDisabled">
             <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
-              <el-radio :label="true">不启用</el-radio>
+              <el-radio :label="true">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注：" v-show="isAddSchool||!isNew">
+          <el-form-item label="备注：">
             <el-input v-model="form.note"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible=false">取 消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
+      <!--机构类型设置-->
+      <!-- <el-dialog
+        title="机构类型设置"
+        :visible.sync="dialogVisible2"
+        size="tiny">
+        <div class="text-right">
+          <el-button  type="primary" @click="dialogVisible3=true">新增</el-button>
+        </div>
+        <div class="table-wrapper clearfix">
+          <el-table
+            :data="orgTypeList"
+            style="width: 100%">
+            <el-table-column
+              prop="typeName"
+              label="机构类型">
+            </el-table-column>
+            <el-table-column
+              prop="sort"
+              label="显示顺序">
+            </el-table-column>
+            <el-table-column
+              label="操作">
+              <template scope="scope">
+                <el-button type="text" @click="deleteOrgType(scope.row.id)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-dialog> -->
+      <!--新增机构类型-->
+      <!-- <el-dialog
+        title="机构类型设置"
+        :visible.sync="dialogVisible3"
+        size="tiny">
+
+        <el-form :model="addOrgTypeForm" :rules="rules_addType" ref="addOrgTypeForm"  label-width="100px" class="padding20" >
+          <el-form-item label="机构类型：" prop="typeName">
+            <el-input v-model="addOrgTypeForm.typeName"></el-input>
+          </el-form-item>
+          <el-form-item label="机构排列顺序：" prop="sort">
+            <el-input v-model="addOrgTypeForm.sort"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addOrgType">保 存</el-button>
+        </span>
+      </el-dialog> -->
   </el-tab-pane>
-  <el-tab-pane label="学校审核">
+  <!-- 学校审核 -->
+  <el-tab-pane label="审核管理员">
       <el-row>
 			<el-col>
 				<div class="searchBox-wrapper">
-					<div class="searchName">管理员姓名:
+					<div class="searchName">姓名/账号:
 						<span></span>
 					</div>
 					<div class="searchInput">
@@ -223,7 +303,7 @@
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
-					<div class="searchName">学校名称：
+					<div class="searchName">机构名称：
 						<span></span>
 					</div>
 					<div class="searchInput">
@@ -244,8 +324,8 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">批量审核</el-button>
-				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">批量退回</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">通过</el-button>
+				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">退回</el-button>
 			</el-col>
 		</el-row>
 		<el-row>
@@ -259,11 +339,11 @@
 					</el-table-column>
 					<el-table-column label="管理员姓名" prop="realname" width="120">
 					</el-table-column>
-					<el-table-column prop="username" label="用户名" width="150">
+					<el-table-column prop="username" label="机构账号" width="150">
 					</el-table-column>
 					<el-table-column prop="orgName" label="所属学校">
 					</el-table-column>
-					<el-table-column prop="handphone" label="手机">
+					<el-table-column prop="handphone" label="手机号">
 					</el-table-column>
 					<el-table-column prop="email" label="邮箱" show-overflow-tooltip>
 					</el-table-column>
@@ -271,7 +351,7 @@
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
-					<el-table-column prop="address" label="地址" show-overflow-tooltip>
+					<el-table-column prop="address" label="邮寄地址" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="postcode" label="邮编" width="90">
 					</el-table-column>
@@ -281,7 +361,7 @@
 							<el-tag type="danger" v-if="!scope.row.proxy">未上传</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="progress" label="审核标志" width="100" align="center">
+					<el-table-column prop="progress" label="审核状态" width="100" align="center">
 						<template scope="scope">
 							<el-tag type="warning" v-if="scope.row.progress=='0'">待审核</el-tag>
 							<el-tag type="success" v-if="scope.row.progress=='1'">已通过</el-tag>
@@ -323,9 +403,11 @@ export default {
   data() {
     return {
       screenWidth_lg_computed: true,
-      isNew: true,
-      isAddSchool:true,
-      options: [
+      isNew: true, // 判断是否是新增
+      // isAddSchool:true,
+      area:[], // 所属地区
+      // 用户类别
+      options: [ 
         {
           value: "",
           label: "全部"
@@ -347,6 +429,7 @@ export default {
           label: "专家用户"
         }
       ],
+      // 审核状态
       state: [
 				{
 					value: '0',
@@ -361,19 +444,27 @@ export default {
 					label: '已通过'
 				}
 			],
-      selections:[],
-      tableData: [],
-      dialogVisible: false,
+      selections:[], // 选中项
+      tableData: [], // 机构用户数据
+      dialogVisible: false, // 新增用户弹窗
+      dialogVisible2: false, // 机构类型设置弹窗
+      dialogVisible3: false, // 新增机构类型弹窗
+      // 弹窗表单中间变量
       form: {
         id: "",
         realname: "",
         username: "",
         orgId: "",
+        orgName: "",
         handphone: "",
+        orgTypeId: "",
+        // orgTypeName:"",
         email: "",
+        areaId:'',
         isDisabled: true,
         note: ""
       },
+      // 表单校验规则
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
@@ -386,19 +477,18 @@ export default {
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
         ],
-        orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
-        isDisabled: [
-          {
-            type: "boolean",
-            required: true,
-            message: "请选择是否启用",
-            trigger: "change"
-          }
-        ]
+        orgName: [{ required: true, message: "请输入机构名称", trigger: "blur" }],
+        orgTypeName:[{ required: true, message: "请输入机构类型", trigger: "blur" }],
+        orgTypeId: [
+            { required: true, message: '请选择院校类型', trigger: 'blur' },
+        ],
+        areaId: [{required: true, message: "请选择机构所属地区",trigger:"blur"}],
+        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}]
       },
       //搜索所属机构用户
       OrgNameList: [],
       loading: false,
+      // 机构用户 搜索，传输参数
       params: {
         pageSize: 30,
         pageNumber: 1,
@@ -406,25 +496,43 @@ export default {
         realname: "",
         orgName: ""
       },
-      totalPages: 0,
-      currentPage: 1,
+      totalPages: 0,// 数据总量
+      currentPage: 1,// 当前页码
 			visible1: false,
-			visible2: false,
-			schoolDialogVisible: false,
-			imgsrc:'',
-			value: '全部',
-			schoolTableData: [],
+      visible2: false,
+			schoolDialogVisible: false,// 学校委托书弹窗
+			imgsrc:'', // 委托书图片路径
+      value: '全部',
+			schoolTableData: [], // 审核管理员数据
+      // 审核管理员
       dataTotal:0,
       orgName:'',
       realname:'',
       progress:'',
       pageSize:20,
-      pageNumber:1
+      pageNumber:1,
+      // 机构类型
+      orgTypeList: [],
+      // 新增机构类型弹窗表单
+      addOrgTypeForm:{
+        typeName:'',
+        sort:''
+      },
+      // 新增机构类型表单验证
+      // rules_addType:{
+      //   typeName: [
+      //     { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
+      //   ],
+      //   sort: [
+      //     { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
+      //     {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+      //   ],
+      // }
     };
   },
   computed:{
    dialogTitle(){
-     return this.isNew?(this.isAddSchool?"新建院校":"添加管理员"):'修改用户信息';
+     return this.isNew?"新建机构用户":'修改用户信息';
    },
    isSelected() {
       if (this.selections.length > 0) {
@@ -437,22 +545,115 @@ export default {
   methods: {
     //点击新增按钮
     addBtn(val) {
-      this.isAddSchool=val;
+      // this.isAddSchool=val;
       this.isNew = true;
       this.dialogVisible = true;
     },
+    // 点击机构类型设置
+    // setOrgsType(){
+    //   this.dialogVisible2 = true;
+    // },
+    /**
+       * 获取机构类型
+       */
+    getOrgTypeData(){
+      this.$axios.get('/orgType/list/orgtype',{params: {typeName:''}})
+        .then(response=>{
+          let res = response.data;
+          let data = res.data;
+          if (res.code == 1) {
+            data.map(iterm=>{
+              iterm.id = iterm.id+'';
+            });
+            this.orgTypeList = data;
+            if(this.orgTypeList.length>0){
+              this.form.orgTypeId = this.orgTypeList[0].id;
+            }
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+          this.$message.error('获取机构类型数据失败');
+        });
+    },
+    /**
+       * 新增机构类型
+       */
+    // addOrgType(){
+    //   this.$refs['addOrgTypeForm'].validate((valid) => {
+    //     if (valid) {
+    //       this.$axios({
+    //         method: 'POST',
+    //         url: '/orgType/add/orgtype',
+    //         data: this.$initPostData(this.addOrgTypeForm),
+    //       })
+    //         .then(response => {
+    //           let res = response.data;
+    //           let data = res.data.rows;
+    //           //修改成功
+    //           if (res.code == 1) {
+    //             this.getOrgTypeData();
+    //             this.dialogVisible3 = false;
+    //             this.$message.success('添加成功!');
+    //           }else{
+    //             this.$message.error(res.msg);
+    //           }
+    //         })
+    //         .catch(e=>{
+    //           console.log(e);
+    //           this.$message.error('添加失败，请重试');
+    //         });
+    //     } else {
+    //       this.$message.error('请正确填写表单!!');
+    //       return false;
+    //     }
+    //   });
+
+    // },
+    /**
+       * 删除机构类型
+       * @param id
+       */
+    // deleteOrgType(id){
+
+    //   this.$confirm('确认删除该机构类型？',"提示",{
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(()=>{
+    //       this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
+    //         .then(response=>{
+    //           let res = response.data;
+    //           if (res.code == '1') {
+    //             this.getOrgTypeData();
+    //             this.$message.success('删除成功！');
+    //           }else{
+    //             this.$message.error(res.msg);
+    //           }
+    //         })
+    //         .catch(e=>{
+    //           console.log(e);
+    //           this.$message.error('删除失败，请重试');
+    //         })
+    //     })
+    //     .catch(e=>{})
+    // },
     //点击修改按钮执行方法
     eidtInfoBtn(index) {
       this.isNew = false;
-      this.OrgNameList = [
-        {
-          id: this.tableData[index].orgId,
-          orgName: this.tableData[index].orgName
-        }
-      ];
+      // this.OrgNameList = [
+      //   {
+      //     id: this.tableData[index].orgId,
+      //     orgName: this.tableData[index].orgName
+      //   }
+      // ];
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
+      console.log(this.form.orgName)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
     },
@@ -510,6 +711,28 @@ export default {
         })
         .catch(function(error) {
           console.error(error);
+        });
+    },
+    /**
+       * 获取所属部门信息
+       */
+    getAreaData(){
+      this.$axios.get('/area/areatree',{params: {parentId:0}})
+        .then(response=>{
+          let res = response.data;
+          let data = res.data;
+          if (res.code == 1) {
+            data.map(iterm=>{
+              iterm.id = iterm.id+'';
+            });
+            this.area = data;
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+          this.$message.error('获取机构类型数据失败');
         });
     },
     /**
@@ -586,7 +809,7 @@ export default {
           } else if (code === 3) {
             self.$message({
               type: "error",
-              message: "机构代码不能修改"
+              message: "机构账号不能修改"
             });
           }
         })
@@ -606,6 +829,10 @@ export default {
         realname: "",
         username: "",
         orgId: "",
+        orgName: "",
+        orgTypeId:"",
+        // orgTypeName:'',
+        areaId: "",
         handphone: "",
         email: "",
         isDisabled: true,
@@ -743,6 +970,8 @@ export default {
   created() {
     this.refreshTableData();
     this.getOrgsList();
+    this.getAreaData();
+    this.getOrgTypeData();
   },
   mounted() {
     this.screenWidth_lg_computed = this.screenWidth_lg;

@@ -102,7 +102,7 @@
             >
               <div class="groupHead-inner">
                 <span class="groupHeadImg">
-                  <img :src="item.avatar?$config.BASE_URL+'image/'+item.avatar:DEFAULT_USER_IMAGE" alt="小组头像">
+                  <img :src="item.avatar" alt="小组头像">
                 </span>
                 <div class="groupHeadName">
                   <span>{{item.name}}</span>
@@ -356,10 +356,10 @@
             state:0
           }],
           groupListData:[
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:'5a012a17a201ee3ed7590351'},
-            {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10,avatar:'5a012a17a201ee3ed7590351'},
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:'5a012a17a201ee3ed7590351'},
-            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8,avatar:'5a012a17a201ee3ed7590351'}],
+            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8,avatar:this.$config.DEFAULT_USER_IMAGE}],
         };
       },
       computed:{

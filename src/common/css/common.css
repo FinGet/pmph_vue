@@ -58,6 +58,8 @@ p{word-wrap:break-word}
 .green{color: #1ab194;}
 
 .bg-yellow{background-color: yellow;}
+.bg-none{background: none !important;}
+.bg-none *{background: none !important;}
 
 /*=================================================================
   布局相关
