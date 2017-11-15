@@ -312,6 +312,7 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+    background-color: #eff1ef;
   }
   .groupList-inner{
     box-sizing: border-box;
@@ -364,10 +365,10 @@
     cursor: pointer;
   }
   .groupHead:hover{
-    background: rgba(0,0,0,.15);
+    background: #dcdfdc;
   }
   .groupHead.active{
-    background: rgba(0,0,0,.2);
+    background: #e6e7e6;
   }
   .groupHead.firstIterm{
     /*background: rgba(255,255,255,.1);*/
