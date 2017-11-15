@@ -1,7 +1,5 @@
 <template>
   <div class="out_content_manage">
-      <el-tabs type="border-card">
-  <el-tab-pane label="内容">
            <p class="header_p">
            <el-cascader 
             :options="options"
@@ -30,14 +28,8 @@
                 label="文章标题"
                 >
                 <template scope="scope">
-                  <el-button type="text">{{scope.row.title}}</el-button>
+                  <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
-            </el-table-column>
-            <el-table-column
-                prop="categoryName"
-                label="所属栏目"
-                width="100"
-                >
             </el-table-column>
             <el-table-column
                 label="发布时间"
@@ -48,43 +40,18 @@
                 </template>
             </el-table-column>
             <el-table-column
-                label="相关统计"
-                width="205"
+                label="被查看次数"
+                width="110"
                 >
                 <template scope="scope">
-                    <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
-                        <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
-                    </el-tooltip> 
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
-                    </el-tooltip>  
-                    <el-tooltip class="item" effect="dark" content="评" placement="bottom">
-                        <i class="fa fa-comment table_i">{{scope.row.comments}}</i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
-                        <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
                     </el-tooltip>     
                 </template>
             </el-table-column>
             <el-table-column
-                label="状态"
-                width="115"
-                >
-                <template scope="scope">
-                    <el-tooltip class="item" effect="dark" content="置顶" placement="bottom">
-                        <i class="fa fa-chevron-up table_i grey_icon" :class="{active_blue:scope.row.isStick}" ></i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="热门" placement="bottom">
-                        <i class="fa fa-fire table_i grey_icon" :class="{active_red:scope.row.isHot}" ></i>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="推荐" placement="bottom">
-                        <i class="fa fa-star table_i grey_icon" :class="{active_yellow:scope.row.isPromote}" ></i>
-                    </el-tooltip>
-                </template>
-            </el-table-column>
-            <el-table-column
                 prop="username"
-                label="审核人"
+                label="作者"
                 width="90"
                 >
             </el-table-column>
@@ -112,76 +79,38 @@
         :total="400">
       </el-pagination>
     </div>
-  </el-tab-pane>
-  <el-tab-pane label="评论">
-             <p class="header_p">
-           <span>内容标题：</span>
-          <el-input placeholder="输入内容" class="input"></el-input>
-          <span>评论者账号：</span>
-          <el-input placeholder="输入评论者账号" class="input"></el-input>
-         <el-button type="primary" icon="search">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
-      </p>
-      <el-table :data="commentTableData" class="table-wrapper" border style="margin:15px 0;">
-            <el-table-column
-                prop="id"
-                label="ID"
-                width="50"
-                >
-            </el-table-column>
-            <el-table-column
-                label="文章标题"
-                >
-                <template scope="scope">
-                   <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a>
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="column"
-                label="所属栏目"
-                width="100"
-                >
-            </el-table-column>
-            <el-table-column
-                prop="creatTime"
-                label="创建时间"
-                width="165"
-                >
-            </el-table-column>
-            <el-table-column
-                label="原文链接"
-                width="95"
-                >
-                <template scope="scope">
-                    <el-button type="text">查看</el-button>
-                </template>    
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                width="150"
-                >
-                <template scope="scope">
-                    <el-button type="text">修改</el-button>
-                    <el-button type="text">隐藏</el-button>
-                    <el-button type="text">删除</el-button>
-                </template>
-            </el-table-column>
-
-      </el-table>
-      <!--分页-->
-    <div class="pagination-wrapper">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
-      </el-pagination>
-    </div>
-  </el-tab-pane>
-</el-tabs>
+     <!-- 内容详情查看界面 -->
+         <el-dialog 
+     title=""
+     :visible.sync="showContentDetail"
+     size="large">
+       <div style="padding:0 10%;">
+        <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
+         <p class="senderInfo text-center paddingT10">
+      <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+       </p>
+       <el-form label-width="100px">
+          <el-form-item label="摘要：">
+             <p>{{contentDetailData.cmsContent.summary}}</p>
+         </el-form-item>
+         <el-form-item label="关键字：">
+             {{contentDetailData.cmsContent.keyword}}
+         </el-form-item>
+         <el-form-item label="内容：">
+             <p v-html="contentDetailData.content.content"></p>
+         </el-form-item>
+         <el-form-item label="附件：">
+              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+         </el-form-item>
+       </el-form>
+        </div>
+        <div style="width:100%;overflow:hidden">
+            <div class="center_box">
+            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            </div>
+        </div>
+    </el-dialog>
   </div>
 </template>
 <style scoped>
@@ -220,6 +149,16 @@
 }
 .out_content_manage .active_hide {
   color: #58b7ff;
+}
+.previewTitle{
+  color: #14232e;
+  font-size: 26px;
+  font-weight: 500;
+}
+.out_content_manage .center_box{
+    float:left;
+ margin-left:50%;
+ transform: translateX(-50%);
 }
 </style>
 <script type="text/javascript">
@@ -333,7 +272,15 @@ export default {
             link:''
           },
       ],
-      currentPage: 1
+      currentPage: 1,
+      showContentDetail:false,
+      contentDetailData:{
+         cmsContent:'',
+         cmsExtras:'',
+         listObj:'',
+         content:'',
+      },
+
     };
   },
   methods: {
@@ -364,6 +311,18 @@ export default {
           }
         });
     },
+      /* 查看详情 */
+      contentDetail(obj){        
+         this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              if(res.data.code==1){
+                this.contentDetailData=res.data.data;
+                this.contentDetailData.listObj=obj;
+                console.log(this.contentDetailData);
+              }
+          })
+           this.showContentDetail=true;
+      },
     /* 修改内容 */
     editContent(obj){
       this.$axios.get(this.editContentUrl+obj.id,{

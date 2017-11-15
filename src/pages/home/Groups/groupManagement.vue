@@ -227,7 +227,7 @@
   }
   .currentGroupName{
     font-size: 16px;
-    padding-bottom: 16px;
+    padding-bottom: 9px;
   }
   .groupmanageMembershap .groupmanageHead{
     padding: 36px 10px;

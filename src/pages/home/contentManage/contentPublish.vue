@@ -22,6 +22,9 @@
       <el-form-item label="关键字：" prop="keyword">
           <el-input class="input" placeholder="请输入关键字" v-model="formData.keyword"></el-input>
       </el-form-item>
+      <el-form-item label="显示顺序：" prop="sort">
+          <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
+      </el-form-item>
       <!-- <el-form-item label="是否推荐：">
           <el-radio-group v-model="formData.isPromote">
             <el-radio :label="true">是</el-radio>
@@ -145,6 +148,7 @@ export default {
         isHot: "",
         deadlineHot: "",
         sortHot: "", */
+        sort:'',
         content: "",
         file: [],
         isPublished: "",
