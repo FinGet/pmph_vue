@@ -168,7 +168,7 @@
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
           <el-form-item label="机构代码：" prop="username" v-show="isAddSchool||!isNew">
-            <el-input v-model="form.username"></el-input>
+            <el-input v-model="form.username" :disabled="!isNew"></el-input>
           </el-form-item>
           <el-form-item label="管理员姓名：" v-show="!isAddSchool||!isNew">
             <el-input v-model="form.realname"></el-input>
@@ -244,7 +244,7 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">批量审核</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">批量审核</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">批量退回</el-button>
 			</el-col>
 		</el-row>
@@ -379,17 +379,15 @@ export default {
           { required: true, message: "请输入用户代码", trigger: "blur" },
           { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
         ],
-        realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        // realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
         email: [
-          { required: true, message: "请输入用户邮箱", trigger: "blur" },
           { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '邮箱格式不对' }
           ],
         handphone: [
-          { required: true, message: "请输入用户手机号码", trigger: "blur" },
-          { pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码' }
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
         ],
         orgId: [{ required: true, message: "请输入所属院校", trigger: "blur" }],
-        isDsabled: [
+        isDisabled: [
           {
             type: "boolean",
             required: true,
@@ -685,6 +683,7 @@ export default {
         )
         .then(response => {
           let res = response.data;
+          console.log(res.code)
           if (res.code == "1") {
             //console.log(res)
             this.getOrgsList();
@@ -693,7 +692,14 @@ export default {
               message: "修改成功!",
               type: "success"
             });
+          }else if (res.code == '2') {
+           this.$message({
+              showClose: true,
+              message: "已退回，不能修改!",
+              type: "warning"
+            });
           }
+          console.log(res.code)
         })
         .catch(error => {
           console.log(error.msg);

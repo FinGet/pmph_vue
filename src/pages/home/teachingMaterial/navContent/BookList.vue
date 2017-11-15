@@ -75,8 +75,9 @@
 
         <div class="out_bottom_box">
             <div class="bottom_box">
-                <el-button type="primary" class="bottom_button" @click="$router.go(-2)" >保存但不发布</el-button>
-                <el-button type="primary" class="bottom_button">保存并发布</el-button>
+                <el-button type="primary" class="bottom_button">暂存</el-button>
+                <el-button type="primary" class="bottom_button" @click="$router.push({name:'编辑通知详情'})" >发布</el-button>
+                <el-checkbox class="marginL20" v-model="formData.onlySchool">仅选中学校可见</el-checkbox>
             </div>
         </div>
         <!-- 教材分类选择弹框 -->
@@ -95,13 +96,14 @@ export default {
                 bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
                 releaseText: '学校教育>研究生教材',
                 round: 3,
-                classify: ''
+                classify: '',
+                onlySchool:false
             },
             fileList: [],
             dialogVisible: false,
             extendListData: [
                 {
-                    orderNum: 1,
+                    orderNum: '1',
                     orderNumVisible: false,
                     bookName: '请填写书名',
                     bookNameVisible: false,
@@ -109,7 +111,7 @@ export default {
                     editionVisible: false
                 },
                 {
-                    orderNum: 3,
+                    orderNum: '3',
                     orderNumVisible: false,
                     bookName: '请填写书名',
                     bookNameVisible: false,
@@ -117,7 +119,7 @@ export default {
                     editionVisible: false
                 },
                 {
-                    orderNum: 2,
+                    orderNum: '2',
                     orderNumVisible: false,
                     bookName: '请填写书名',
                     bookNameVisible: false,
@@ -266,7 +268,7 @@ export default {
 .extend_list tr td {
     width: 25%;
     color: #5e5e5e;
-    /*text-align: center;*/
+    text-align: center;
     padding: 5px 0;
 }
 

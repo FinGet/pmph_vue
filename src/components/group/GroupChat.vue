@@ -33,31 +33,17 @@
     <div class="ChatInput" :class="{active:textAreaIsFocus}">
       <div class="ChatInputTool">
         <div>
-          <!--发送表情按钮-->
-          <!--<span @click="showEmojiFunction"><i class="fa fa-smile-o fa-lg"></i></span>-->
-          <!--上传文件按钮-->
-          <div class="ChatInputFileBtn">
+          <el-upload
+            class="ChatInputFileBtn"
+            ref="upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-change="uploadFile"
+            :show-file-list="false"
+            :auto-upload="false">
             <i class="fa fa-paperclip fa-lg"></i>
-            <input type="file" class="ChatInputFileBtn" @change="uploadFile" ref="fileInput">
-          </div>
+          </el-upload>
         </div>
         <div class="pull-right"></div>
-
-        <!--emoji表情-->
-        <transition name="fade" mode="">
-          <div class="emojiBox" v-if="showEmoji" >
-            <el-button
-              class="pop-close"
-              :plain="true"
-              type="danger"
-              size="mini"
-              icon="close"
-              @click="showEmoji = false"></el-button>
-            <vue-emoji
-              @select="selectEmoji">
-            </vue-emoji>
-          </div>
-        </transition>
       </div>
       <div class="ChatInputTextArea">
         <textarea
@@ -141,37 +127,32 @@
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
        */
-      uploadFile(){
+      uploadFile(file){
+        console.log(file);
         let self= this;
-        var file = this.$refs.fileInput
-        var filedata = file.files[0];
-        var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
-        var fileName=file.value.substring(0,file.value.lastIndexOf(".")-1).toLowerCase();
+        var filedata = file.raw;
+        var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         if(!filedata||!ext){
           return;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
-          file.value='';
           return;
         }
         //文件名不超过40个字符
-        if(fileName.length>40){
+        if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
-          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不为0
-        if(file.files && file.files[0].size<1){
+        if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
-          file.value='';
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
-        if(filedata.size/1024/1024 > 100){
+        if(file.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
-          file.value='';
           return;
         }
         var formdata = new FormData();
