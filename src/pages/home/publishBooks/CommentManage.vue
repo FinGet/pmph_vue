@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="searchBox-wrapper">
-        <div class="searchName">消息状态：<span></span></div>
+        <div class="searchName">审核状态：<span></span></div>
         <div class="searchInput">
           <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
             <el-option
@@ -26,8 +26,8 @@
       <!--操作按钮-->
       <div class="pull-right">
         <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
-        <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
-        <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">审核通过</el-button>
+        <!-- <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button> -->
+        <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
       </div>
 
       <!--表格-->

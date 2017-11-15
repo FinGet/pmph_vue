@@ -64,7 +64,7 @@
             </el-table-column>
             <el-table-column
               prop="textbookName"
-              label="教材名称">
+              label="书籍名称">
             </el-table-column>
             <el-table-column
               prop="textbookRound"

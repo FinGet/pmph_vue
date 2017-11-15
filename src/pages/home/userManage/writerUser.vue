@@ -1,10 +1,10 @@
 <template>
   <div class="writerUser">
     <el-tabs type="border-card">
-  <el-tab-pane label="作家用户">
+  <el-tab-pane label="个人用户">
        <div class="clearfix">
       <div class="searchBox-wrapper">
-        <div class="searchName">账号/姓名：
+        <div class="searchName">姓名/账号：
           <span></span>
         </div>
         <div class="searchInput">
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="searchBox-wrapper" >
-        <div class="searchName">所属院校：
+        <div class="searchName">所属机构：
           <span></span>
         </div>
         <div class="searchInput">
@@ -36,7 +36,7 @@
       </div>
               <!--操作按钮-->
       <div class="pull-right" style="margin-right:10px;">
-        <el-button type="primary" @click="addBtn">增加</el-button>
+        <el-button type="primary" @click="addBtn">新建用户</el-button>
       </div>
     </div>
     <!--表格-->
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column prop="username" label="账号" width="120">
         </el-table-column>
-        <el-table-column prop="orgName" label="所属院校">
+        <el-table-column prop="orgName" label="所属机构">
         </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
         <el-table-column v-if="screenWidth_lg" label="手机号" width="160">
@@ -98,13 +98,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="address" label="地址" show-overflow-tooltip>
+        <el-table-column prop="address" label="邮寄地址" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="rankName" label="用户类型" width="120">
         </el-table-column>
-        <el-table-column label="启用" width="80">
+        <el-table-column label="启用标识" width="95">
           <template scope="scope">
-            {{scope.row.isDisabled?'未启用':'启用'}}
+            {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
 
@@ -130,21 +130,21 @@
       </el-pagination>
     </div>
     <!--增加新用户弹窗-->
-    <el-dialog :title="isNew?'新增':'修改用户信息'" :visible.sync="dialogVisible" :before-close="closeDialog" size="tiny">
+    <el-dialog :title="isNew?'新增用户':'修改用户信息'" :visible.sync="dialogVisible" :before-close="closeDialog" size="tiny">
       <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="padding20">
-        <el-form-item label="用户代码：" prop="username">
-          <el-input v-model="form.username" :disabled="!isNew"  placeholder="输入用户代码"></el-input>
+        <el-form-item label="账号：" prop="username">
+          <el-input v-model="form.username" :disabled="!isNew"  placeholder="输入账号"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称：" prop="realname">
-          <el-input v-model="form.realname" placeholder="输入用户名称"></el-input>
+        <el-form-item label="姓名：" prop="realname">
+          <el-input v-model="form.realname" placeholder="输入用户姓名"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机：" prop="handphone" >
+        <el-form-item label="手机号" prop="handphone" >
           <el-input v-model="form.handphone" placeholder="手机号码"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱：" prop="email">
+        <el-form-item label="邮箱：" prop="email">
           <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="所属院校：" prop="orgId" required>
+        <el-form-item label="所属机构：" prop="orgId" required>
           <el-select v-model="form.orgId" filterable remote placeholder="请输入关键词搜索" loading-text="正在搜索..." :remote-method="searchOrgName" :loading="loading">
             <el-option v-for="item in OrgNameList" :key="item.id" :label="item.orgName" :value="item.id">
             </el-option>
@@ -153,7 +153,7 @@
         <el-form-item label="启用：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
-            <el-radio :label="true">不启用</el-radio>
+            <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注：" prop="note">
@@ -161,16 +161,17 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
   </el-tab-pane>
-  <el-tab-pane label="教师审核">
+  <el-tab-pane label="审核教师">
     	<div class="teacher_check">
 		<el-row>
 			<el-col>
 				<div class="searchBox-wrapper">
-					<div class="searchName">教师姓名：
+					<div class="searchName">姓名/账号：
 						<span></span>
 					</div>
 					<div class="searchInput">
@@ -199,8 +200,8 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">批量审核</el-button>
-				<el-button class="pull-right" type="danger"  @click="check(2)" :disabled="isSelected">批量退回</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">通过</el-button>
+				<el-button class="pull-right" type="danger"  @click="check(2)" :disabled="isSelected">退回</el-button>
 			</el-col>
 		</el-row>
 		<el-row>
@@ -210,13 +211,13 @@
 					</el-table-column>
 					<el-table-column label="教师姓名" prop="realname" width="120">
 					</el-table-column>
-					<el-table-column prop="username" label="用户名" width="150">
+					<el-table-column prop="username" label="账号" width="150">
 					</el-table-column>
 					<el-table-column prop="idcard" label="身份证" width="190">
 					</el-table-column>
-					<el-table-column prop="orgName" label="所属学校">
+					<el-table-column prop="orgName" label="所属机构">
 					</el-table-column>
-					<el-table-column prop="handphone" label="手机">
+					<el-table-column prop="handphone" label="手机号">
 					</el-table-column>
 					<el-table-column prop="email" label="邮箱" width="220" show-overflow-tooltip>
 					</el-table-column>
@@ -230,9 +231,9 @@
 							<el-tag type="danger" v-if="!scope.row.cert">未上传</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="progress" label="审核标志" width="100" align="center">
+					<el-table-column prop="progress" label="审核状态" width="100" align="center">
 						<template scope="scope">
-              <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
+              <!-- <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag> -->
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
 							<el-tag type="success" v-if="scope.row.progress=='3'">通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>

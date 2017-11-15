@@ -119,7 +119,7 @@ export default new Router({
         {
           path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 7 }, children: [
             { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 15 } },
-            { path: 'writer', name: '作家用户', component: writerUser, meta: { authorityId: 16 } },
+            { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 16 } },
             { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 17 } },
           ]
         },
