@@ -38,7 +38,7 @@
       this.editor = UE.getEditor('editor', this.editorConfig); // 初始化UE
       this.editor.addListener("ready", function () {
         if(_this.defaultMsg){
-          _this.editor.setContent(Msg);
+          _this.editor.setContent(_this.defaultMsg);
         }
         _this.editorHasReady=true;
         _this.$emit('editor_ready');
