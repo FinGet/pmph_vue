@@ -23,11 +23,13 @@
                 </el-table-column>
                 <el-table-column prop="note" label="备注">
                 </el-table-column>
-                <el-table-column label="操作" width="140">
+                <el-table-column label="操作" width="190">
                     <template scope="scope">
                         <el-button type="text" @click="reviseRoles(scope.row)">修改</el-button>
-                        <span style="line-height:16px">|</span>
+                        <!-- <span style="line-height:16px">|</span> -->
                         <el-button type="text" @click="updatePower(scope.row)">更新权限</el-button>
+                        <!-- <span style="line-height:16px">|</span> -->
+                        <el-button type="text" >删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

@@ -34,7 +34,7 @@
           width="55">
         </el-table-column>
         <el-table-column
-          label="信息标题"
+          label="标题"
           show-overflow-tooltip>
           <template scope="scope">
             <el-button type="text" @click="preview(scope.$index,scope.row)">{{scope.row.title}}</el-button>

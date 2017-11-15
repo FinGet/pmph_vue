@@ -53,7 +53,7 @@
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>
-        <el-menu-item index="/user/writer" v-if="isShowSide(16)">作家用户</el-menu-item>
+        <el-menu-item index="/user/writer" v-if="isShowSide(16)">个人用户</el-menu-item>
         <el-menu-item index="/user/org" v-if="isShowSide(17)">机构用户</el-menu-item>
       </el-submenu>
       <el-submenu index="10" v-if="isShowSide(8)||isShowSide(18)||isShowSide(19)||isShowSide(20)||isShowSide(21)">

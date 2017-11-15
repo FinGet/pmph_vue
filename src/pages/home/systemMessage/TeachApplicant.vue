@@ -7,7 +7,7 @@
         <div class="clearfix paddingT20">
           <!--书名搜索-->
           <div class="searchBox-wrapper max">
-            <div class="searchName">书名搜索：<span></span></div>
+            <div class="searchName">教材名称：<span></span></div>
             <div class="searchInput">
               <el-input placeholder="请输入教材名称" v-model="materialName" @keyup.enter.native="search" class="searchInputEle"></el-input>
             </div>
@@ -64,7 +64,7 @@
             </el-table-column>
             <el-table-column
               prop="textbookName"
-              label="教材名称">
+              label="书籍名称">
             </el-table-column>
             <el-table-column
               prop="textbookRound"

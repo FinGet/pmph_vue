@@ -2,9 +2,12 @@
   <div class="messagestate">
     <el-row>
       <el-col :span="24">
-        <el-col :span="8">
-          <el-col :span="14" class="search-10">
-            <el-input v-model="name" placeholder="请输入收件人或单位" @keyup.enter.native="search"></el-input>
+        <el-col :span="10">
+          <el-col :span="8" class="search-10">
+            <el-input v-model="name" placeholder="请输入姓名" @keyup.enter.native="search"></el-input>
+          </el-col>
+          <el-col :span="8" class="search-10">
+            <el-input v-model="name" placeholder="请输入机构名称" @keyup.enter.native="search"></el-input>
           </el-col>
           <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
         </el-col>
@@ -31,14 +34,14 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
-            label="教师/学校"
+            label="姓名"
             width="120"
             prop="name"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="dptname"
-            label="单位"
+            label="机构名称"
             width="200">
           </el-table-column>
           <el-table-column
