@@ -330,12 +330,16 @@ export default {
         },
         //下拉点击
         handleClickDrop(command) {
-            // console.log(command,str,a);
-            if (command == 'setBookList') {
+            switch (command){
+              case 'set':
+                this.$router.push({name:'设置选题号'});
+                break;
+              case 'setBookList':
                 this.$router.push({ name: '设置书目录' });
-            }
-            if (command == 'messagestate') {
+                break;
+              case 'messagestate':
                 this.$router.push({ name: '消息状态' });
+                break;
             }
         },
 

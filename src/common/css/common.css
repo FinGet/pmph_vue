@@ -35,9 +35,15 @@ p{word-wrap:break-word}
 }
 
 /*字体相关*/
+.lineheight-1{line-height: 1;}
+.lineheight-16{line-height: 16px;}
+.lineheight-18{line-height: 18px;}
+.lineheight-24{line-height: 24px;}
+.lineheight-28{line-height: 28px;}
 .lineheight-36{line-height: 36px;}
 
 .page-title{
+  padding: 10px 0 20px;
   font-size: 16px;
   font-weight: bold;
 }
@@ -106,6 +112,44 @@ p{word-wrap:break-word}
 .fixed{
   position: fixed;
 }
+/*=================================================================
+  width && height
+  =================================================================*/
+
+.width20{width: 20px;}
+.width40{width: 40px;}
+.width60{width: 60px;}
+.width80{width: 80px;}
+.width100{width: 100px;}
+.width150{width: 150px;}
+.width200{width: 200px;}
+.width250{width: 250px;}
+.width300{width: 300px;}
+.width350{width: 350px;}
+.width400{width: 400px;}
+.width500{width: 500px;}
+.width600{width: 600px;}
+.width800{width: 800px;}
+.width1000{width: 1000px;}
+
+.height10{height: 10px;}
+.height20{height: 20px;}
+.height30{height: 30px;}
+.height40{height: 40px;}
+.height50{height: 50px;}
+.height60{height: 60px;}
+.height70{height: 70px;}
+.height80{height: 80px;}
+.height100{height: 100px;}
+.height120{height: 120px;}
+.height160{height: 160px;}
+.height180{height: 180px;}
+.height200{height: 200px;}
+.height300{height: 300px;}
+.height400{height: 400px;}
+.height500{height: 500px;}
+
+
 
 /*=================================================================
   padding
@@ -419,7 +463,12 @@ a.table-link:hover{
   opacity: 0;
 }
 
-
+.el-button{
+  min-width: 80px;
+}
+.el-button--text{
+  min-width: inherit;
+}
 
 /*重置editor样式*/
 @import "responsive.css";

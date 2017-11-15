@@ -1,145 +1,160 @@
 <template>
     <div class="teachMaterial">
-      <div class="history" ref="history">
-        <div class="history-icon" @click="showHistory"></div>
-        <div class="history-list" ref="historyList">
+      <p class="bookTitle">医学心理学与精神病学（第4版）</p>
+
+      <div class="teachingMaterial-search clearfix">
+        <!--姓名搜索-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">姓名：<span></span></div>
+          <div class="searchInput">
+            <el-input v-model="input" placeholder="请输入姓名"></el-input>
+          </div>
+        </div>
+        <!--申报职位搜索-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">申报职位：<span></span></div>
+          <div class="searchInput">
+            <el-select v-model="value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <!--搜索-->
+        <div class="searchBox-wrapper searchBtn">
+          <el-button  type="primary" icon="search">搜索</el-button>
+        </div>
+
+        <div class="operation-wrapper">
+          <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
+          <el-button type="primary">确认</el-button>
+          <el-button type="warning">重置</el-button>
         </div>
       </div>
-      <el-row>
-        <el-col>
-          <p class="bookTitle">医学心理学与精神病学（第4版）</p>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-col>
-            <div class="search-title">姓名:</div>
-            <el-col :span="4" class="search-10">
-              <el-input v-model="input" placeholder="请输入姓名"></el-input>
-            </el-col>
-            <div class="search-title">申报职位:</div>
-            <el-col :span="4" class="search-10">
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-            <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-            <el-button class="btn pull-right" type="primary">确认</el-button>
-            <el-button class="btn pull-right" type="warning">重置</el-button>
-          </el-col>
-          <el-table
-            ref="multipleTable"
-            :data="tableData"
-            border
-            stripe
-            tooltip-effect="dark"
-            max-height="750"
-            style="width: 100%"
-            @selection-change="handleSelectionChange">
-            <el-table-column
-              label="姓名"
-              prop="name"
-            >
-            </el-table-column>
-            <el-table-column
-              label="性别"
-            >
-              <template scope="scope">
-                <p>{{scope.row.sex === 0? '男' : '女'}}</p>
-              </template>
-            </el-table-column>
-              <el-table-column
-                label="申报单位"
-              >
-                <template scope="scope">
-                  <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
-                </template>
-              </el-table-column>
-            <el-table-column
-              label="工作单位"
-            >
-              <template scope="scope">
-                <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
-              </template>
-            </el-table-column>
-              <el-table-column label="申请职位"
-                prop="jobApplication"
-              >
-              </el-table-column>
-              <el-table-column
-                label="学校审核"
-                width="100"
-                align="center"
-              >
-                <template scope="scope">
-                  <el-tooltip :content="'状态:'+scope.row.schoolSaudit" placement="top-start">
-                    <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
-            <el-table-column
-              label="出版社审核"
-              width="130"
-              align="center"
-            >
-              <template scope="scope">
-                <el-tooltip :content="'状态:'+scope.row.pressAudit" placement="top-start">
-                  <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
-                </el-tooltip>
-              </template>
-            </el-table-column>
 
+      <div class="table-wrapper">
+        <el-table
+          ref="multipleTable"
+          :data="tableData"
+          border
+          stripe
+          tooltip-effect="dark"
+          max-height="750"
+          style="width: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            label="姓名"
+            prop="name"
+          >
+          </el-table-column>
+          <el-table-column
+            label="性别"
+          >
+            <template scope="scope">
+              <p>{{scope.row.sex === 0? '男' : '女'}}</p>
+            </template>
+          </el-table-column>
             <el-table-column
-              label="是否主编"
+              label="申报单位"
+            >
+              <template scope="scope">
+                <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
+              </template>
+            </el-table-column>
+          <el-table-column
+            label="工作单位"
+          >
+            <template scope="scope">
+              <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
+            </template>
+          </el-table-column>
+            <el-table-column label="申请职位"
+              prop="jobApplication"
+            >
+            </el-table-column>
+            <el-table-column
+              label="学校审核"
               width="100"
               align="center"
             >
               <template scope="scope">
-                <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"></el-checkbox>
+                <el-tooltip :content="'状态:'+scope.row.schoolSaudit" placement="top-start">
+                  <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
+          <el-table-column
+            label="出版社审核"
+            width="130"
+            align="center"
+          >
+            <template scope="scope">
+              <el-tooltip :content="'状态:'+scope.row.pressAudit" placement="top-start">
+                <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-            <el-table-column label="排位"
-                             width="80"
-                             align="center">
-              <template scope="scope">
-                <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor" size="mini"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="是否副主编"
-              width="120"
-              align="center">
-              <template scope="scope">
-                <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"></el-checkbox>
-              </template>
-            </el-table-column>
+          <el-table-column
+            label="是否主编"
+            width="100"
+            align="center"
+          >
+            <template scope="scope">
+              <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"></el-checkbox>
+            </template>
+          </el-table-column>
 
-            <el-table-column label="排位"
-                             width="80"
-                             align="center">
-              <template scope="scope">
-                <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor" size="mini"></el-input>
-              </template>
-            </el-table-column>
+          <el-table-column label="排位"
+                           width="80"
+                           align="center">
+            <template scope="scope">
+              <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor" size="mini"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="是否副主编"
+            width="120"
+            align="center">
+            <template scope="scope">
+              <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"></el-checkbox>
+            </template>
+          </el-table-column>
 
-            <el-table-column
-              v-if="level<2"
-              label="是否编委"
-              width="120"
-              align="center">
-              <template scope="scope">
-                <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)"></el-checkbox>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-col>
-      </el-row>
+          <el-table-column label="排位"
+                           width="80"
+                           align="center">
+            <template scope="scope">
+              <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor" size="mini"></el-input>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            v-if="level<2"
+            label="是否编委"
+            width="120"
+            align="center">
+            <template scope="scope">
+              <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)"></el-checkbox>
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </div>
+
+      <el-dialog
+        title="修改记录"
+        :visible.sync="dialogVisible">
+        <div class="history-box"></div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
 </template>
 
@@ -147,6 +162,7 @@
   export default {
     data() {
       return {
+        dialogVisible:false,
         level:undefined,
         input:'',
         input1:'',
@@ -326,39 +342,13 @@
 </script>
 
 <style>
-  .search-title{
-    margin: 10px 0 0 10px;
+  .bookTitle{
+    margin: 10px 0 20px;
     font-size: 16px;
-    float: left;
     height:36px;
     line-height: 36px;
   }
-  .history{
-    position: fixed;
-    right:-500px;
-    top:50%;
-    z-index: 1000;
-    width: 500px;
-    height: 600px;
-    margin-top: -300px;
-    /*border:1px solid rgba(42,63,84,.7);*/
-    transition: all .28s;
-    /*overflow: hidden;*/
-  }
-  .history-list{
-    width: 500px;
-    height: 600px;
-    background: rgba(42,63,84,.3);
-    overflow-y: scroll;
-  }
-  .history-icon{
-    position: absolute;
-    left: -17px;
-    top:300px;
-    margin-top: -57px;
-    width: 17px;
-    height: 115px;
-    cursor: pointer;
-    background: url("../../../../common/images/history-icon.png");
+  .history-box{
+    min-height: 400px;
   }
 </style>

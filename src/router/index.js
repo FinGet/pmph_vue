@@ -6,6 +6,8 @@ import Home from 'pages/Home.vue';
 const Index = () => import(/* webpackChunkName: "group-foo" */ '../pages/Index');
 /* import Index from '../pages/Index'; */
 import NoFind from 'pages/404.vue';
+
+/* 教材申报 */
 /* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
 const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
@@ -22,6 +24,8 @@ import preSelect from '../pages/home/teachingMaterial/navContent/preSelect'
 import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
 import ApplicationSchoolQuery from 'components/chooseSchool'
 import Result from 'pages/home/teachingMaterial/navContent/Result/index'
+import EditNotice from 'pages/home/teachingMaterial/navContent/EditNotice'
+import SetTopicNum from 'pages/home/teachingMaterial/navContent/SetTopicNum'
 
 /* 小组 */
 import GroupManage from 'pages/home/Groups/groupManagement'
@@ -92,6 +96,7 @@ export default new Router({
             { path: 'materials', name: '通知列表', component: ApplicationList, meta: { replaceName: false } },
 
             { path: 'notice', name: '通知详情', component: Notice },
+            { path: 'edit-notice', name: '编辑通知详情', component: EditNotice },
             {
               path: 'materialnav', name: '书目列表', component: ApplicationNav, meta: { replaceName: '申报表审核' }, children: [
                 { path: '1v1', name: '策划编辑视图', component: BooksSelect_1v1, meta: { applicationName: '1v1' } },
@@ -105,6 +110,7 @@ export default new Router({
                 { path: 'chief', name: '遴选主编/副主编', component: Chief },
                 { path: 'pre-select', name: '预选编委', component: preSelect },
                 { path: 'applicationschoolquery', name: '教材申报选择学校', component: ApplicationSchoolQuery, meta: { isShowTags: true } },
+                { path: 'set-topic', name: '设置选题号', component: SetTopicNum, meta: { isShowTags: true }  },
               ]
             },
 
@@ -152,7 +158,7 @@ export default new Router({
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
             { path: 'publish', name: '内容发布', meta: { authorityId: 9,replaceName: '内容列表' }, component: publishRouter ,children:[
               { path: 'list', name: '内容列表',meta: { replaceName: false}, component: PublishList },
-              { path: 'new', name: '添加内容', component: ContentPublish }, 
+              { path: 'new', name: '添加内容', component: ContentPublish },
             ]},
             { path: 'manage', name: '社外内容管理', meta: { authorityId: 10 }, component: OutContentManage },
             { path: 'exam', name: '社外内容审核', meta: { authorityId: 11 }, component: OutContentExam },

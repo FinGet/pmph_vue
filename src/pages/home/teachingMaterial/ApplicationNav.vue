@@ -4,9 +4,9 @@
           <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
           <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
             <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
-            <el-tab-pane label="主任视图" name="1v3"></el-tab-pane>
-            <el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>
-            <el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>
+            <el-tab-pane label="职位遴选表" name="1v3"></el-tab-pane>
+            <!--<el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>-->
+            <!--<el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>-->
             <el-tab-pane label="结果统计" name="result"></el-tab-pane>
           </el-tabs>
         </div>
@@ -38,7 +38,7 @@ export default {
 	methods: {
     routerChange(tag) {
       this.$router.push(this.activeTagName);
-      this.activeTagName = this.$router.currentRoute.meta.applicationName;
+      this.activeTagName = this.$router.currentRoute.meta.applicationName||'';
     },
     initActiveTag(val){
      this.activeFirst=false;
@@ -46,8 +46,11 @@ export default {
          if(val=='presscheck'){
            this.activeFirst=true;
          }
-         if(val=='1v1'){
+         else if(val=='1v1'){
           this.activeLast=true;
+         }
+         else{
+           this.activeLast='';
          }
     }
   },

@@ -307,9 +307,7 @@
 <style scoped>
   /*小组列表*/
   .groupList{
-    background-color: #687887;
     height: 100%;
-    color:#fff;
     overflow: hidden;
     position: relative;
   }
@@ -320,10 +318,15 @@
     position: relative;
   }
   .searchBox{
-    padding: 0 10px;
+    padding: 0 10px 24px 10px ;
     position: absolute;
     top: 10px;
     left: 0;
+    width:100%;
+    box-sizing: border-box;
+    border-bottom:1px solid rgba(0,0,0,.1);
+    z-index: 100;
+    /* border-bottom:1px solid rgba(0,0,0,0.1); */
   }
   .memberShape{
     height: 100%;
@@ -336,13 +339,11 @@
     height: 40px;
     line-height: 40px;
     width: 100%;
-    color:#fff;
     border-top: 1px solid rgba(0,0,0,.1);
     z-index: 10;
     cursor: pointer;
   }
   .addGroupWrapper .button{
-    color:#fff;
   }
 
   .textbook{
@@ -361,10 +362,10 @@
     cursor: pointer;
   }
   .groupHead:hover{
-    background: rgba(255,255,255,.15);
+    background: rgba(0,0,0,.15);
   }
   .groupHead.active{
-    background: rgba(255,255,255,.2);
+    background: rgba(0,0,0,.2);
   }
   .groupHead.firstIterm{
     /*background: rgba(255,255,255,.1);*/
@@ -394,7 +395,7 @@
     width: 50px;
     height: 14px;
     font-size: 12px;
-    color: rgba(255,255,255,.5);
+    color: rgba(0,0,0,.5);
 
   }
   .groupHeadName{
