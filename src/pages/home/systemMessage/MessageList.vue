@@ -2,9 +2,9 @@
   <div class="message-list">
     <el-row>
       <el-col :span="12">
-        <div class="search-title">消息标题:</div>
+        <div class="search-title">标题:</div>
         <el-col :span="8" class="search-10">
-          <el-input v-model="title" placeholder="请输入搜索内容" @keyup.enter.native="search" @change="limitLength"></el-input>
+          <el-input v-model="title" placeholder="请输入" @keyup.enter.native="search" @change="limitLength"></el-input>
         </el-col>
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
@@ -34,7 +34,7 @@
           width="55">
         </el-table-column>
         <el-table-column
-          label="信息标题"
+          label="标题"
           show-overflow-tooltip>
           <template scope="scope">
             <el-button type="text" @click="preview(scope.$index,scope.row)">{{scope.row.title}}</el-button>

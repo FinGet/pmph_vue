@@ -4,7 +4,7 @@
       <el-col :span="24">
         <el-col :span="8">
           <el-col :span="14" class="search-10">
-            <el-input v-model="name" placeholder="请输入收件人或单位" @keyup.enter.native="search"></el-input>
+            <el-input v-model="name" placeholder="请输入姓名/机构名称" @keyup.enter.native="search"></el-input>
           </el-col>
           <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
         </el-col>
@@ -31,7 +31,7 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
-            label="教师/学校"
+            label="姓名"
             width="120"
             prop="name"
             show-overflow-tooltip>

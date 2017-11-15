@@ -16,7 +16,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="结束日期:" required class="pull-left">
+            <el-form-item label="实际结束日期:" required class="pull-left">
               <el-col>
                 <el-form-item prop="endDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.endDate" style="width: 100%;"></el-date-picker>
@@ -107,7 +107,7 @@
                   border
                   style="width: 100%">
                   <el-table-column
-                    label="名称"
+                    label="姓名"
                   >
                     <template scope="scope">
                       <span v-if="!scope.row.isNameInput">{{scope.row.name}}

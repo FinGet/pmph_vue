@@ -2,7 +2,7 @@
 	<div>
     <div class="clearfix">
       <div class="searchBox-wrapper">
-        <div class="searchName">消息标题：<span></span></div>
+        <div class="searchName">标题：<span></span></div>
         <div class="searchInput">
           <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.title"></el-input>
         </div>
