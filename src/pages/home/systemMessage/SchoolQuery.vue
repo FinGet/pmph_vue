@@ -73,7 +73,7 @@
 
           <div class="searchBox-wrapper">
             <div class="searchInput">
-              <el-input placeholder="请输入" class="searchInputEle" @keyup.enter.native="goToSearchPosition" v-model="searchName" @change="searchOnPage"></el-input>
+              <el-input placeholder="请输入搜索关键字" class="searchInputEle" @keyup.enter.native="goToSearchPosition" v-model="searchName" @change="searchOnPage"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper searchBtn">
@@ -81,8 +81,8 @@
           </div>
         </div>
         <div class="pull-right">
-          <!--<el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>-->
-          <!--<el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>-->
+          <el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
@@ -159,9 +159,11 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="name"
-            label="通知名称">
+            label="学校名称">
           </el-table-column>
+          <template scope="scope">
+            <p class="bg-none" v-html="scope.row.name"></p>
+          </template>
         </el-table>
       </div>
 
@@ -177,8 +179,8 @@
   export default {
     data() {
       return {
-        sortArea:false,
-        sortOrg:false,
+        sortArea:-1,
+        sortOrg:-1,
         type:'new',
         reissueFormData:{
           id:'',
@@ -290,10 +292,11 @@
                   type:tempType[i],
                   name:tempName[i]
                 })
-              })
-
-              tempList.push(tempObj);
-            })
+              });
+              if(tempObj.province){
+                tempList.push(tempObj);
+              }
+            });
             this.area_school= tempList;
           }
         })
@@ -410,19 +413,22 @@
        * 按区域拼音排序
        */
       sortByArea(){
-        this.sortArea = !this.sortArea;
+        this.sortArea = this.sortArea*(-1);
         this.area_school.sort((x,y)=>{
-          return x['province'].localeCompare(y['province'])>0?this.sortArea:!this.sortArea;
+          let temp = x['province'].localeCompare(y['province'],"zh");
+          return temp==0?0:(temp>0?this.sortArea:this.sortArea*(-1));
         });
+        console.log(this.area_school)
       },
       /**
        * 按机构名称拼音排序
        */
       sortByOrg(){
-        this.sortOrg = !this.sortOrg;
+        this.sortOrg = this.sortOrg*(-1);
         this.area_school.forEach(iterm=>{
           iterm.schoolList.sort((x,y)=>{
-            return x['name'].localeCompare(y['name'])>0?this.sortOrg:!this.sortOrg;
+            let temp = x['name'].localeCompare(y['name'],"zh");
+            return temp==0?0:(temp>0?this.sortOrg:this.sortOrg*(-1));
           })
         })
       },

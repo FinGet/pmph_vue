@@ -4,7 +4,7 @@
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn">
+        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn" size="large">
           发布
           <span v-if="queryData.length>0">({{queryData.length}})</span>
         </el-button>
@@ -67,31 +67,41 @@
         <div class="pull-left">
           <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
           <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
+
+          <div class="searchBox-wrapper">
+            <div class="searchInput">
+              <el-input placeholder="请输入搜索关键字" class="searchInputEle" @keyup.enter.native="goToSearchPosition" v-model="searchName" @change="searchOnPage"></el-input>
+            </div>
+          </div>
+          <div class="searchBox-wrapper searchBtn">
+            <el-button  type="primary" icon="search" @click="goToSearchPosition">搜索</el-button>
+          </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
-           v-for="(iterm,index) in area_school"
+           v-for="(item,index) in area_school"
            :key="index"
-           v-if="(select_provinces.includes(iterm.id))||select_provinces.length==0">
+           :class="'area'+item.id"
+           v-if="(select_provinces.includes(item.id))||select_provinces.length==0">
         <div>
           <el-checkbox
-            :indeterminate="iterm.isIndeterminate"
-            v-model="iterm.checkAll"
-            @change="checkAllChange(iterm)">
-            {{iterm.province}}
+            :indeterminate="item.isIndeterminate"
+            v-model="item.checkAll"
+            @change="checkAllChange(item)">
+            <span v-html="item.province"></span>
           </el-checkbox>
         </div>
         <div>
-          <el-checkbox-group v-model="iterm.checkedSchools"  @change="handleCheckedSchoolChange(iterm)">
+          <el-checkbox-group v-model="item.checkedSchools"  @change="handleCheckedSchoolChange(item)">
             <el-checkbox
-              v-for="(city,index) in iterm.schoolList"
+              v-for="(city,index) in item.schoolList"
               :label="city.id"
               :key="index"
-              v-if="select_orgType==0||city.type==select_orgType">{{city.name}}</el-checkbox>
+              v-if="select_orgType==0||city.type==select_orgType"><span v-html="city.name"></span></el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -129,7 +139,7 @@
             label="操作"
             width="80">
             <template scope="scope">
-              <el-button type="text" @click="chooseHistory(scope.$index)">选择</el-button>
+              <el-button type="text" @click="chooseHistory(scope.$index,scope.row.orgIds)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -146,8 +156,10 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="name"
-            label="通知名称">
+            label="学校名称">
+              <template scope="scope">
+                <p class="bg-none" v-html="scope.row.name"></p>
+              </template>
           </el-table-column>
         </el-table>
       </div>
@@ -164,9 +176,25 @@
   export default {
     data() {
       return {
+        sortArea:-1,
+        sortOrg:-1,
+        type:'new',
+        reissueFormData:{
+          id:'',
+          title:'',
+          content:'',
+          file:'',
+          sendType:1,
+          orgIds:'',
+          userIds:'',
+          bookIds:'',
+          senderId:''
+        },
         formdata:{
-          content:'1234',
-          sendType:'1',
+          title:'',
+          content:'',
+          file:'',
+          sendType:1,
           orgIds:'',
           userIds:'',
           bookIds:'',
@@ -176,47 +204,32 @@
         showPublishBtn:false,
         select_provinces:[],
         select_orgType:0,
-        area_school:[{
-          id:0,
-          province:'北京',
-          isIndeterminate:false,
-          checkAll:false,
-          checkedSchools:[],
-          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-          ]
-        },{
-          id:4,
-          province:'天京',
-          isIndeterminate:false,
-          checkAll:false,
-          checkedSchools:[],
-          schoolList:[{id:1,type:1,name:'清华大学'},{id:2,type:1,name:'北京大学'},{id:3,type:2,name:'中国武警总医院'},{id:4,type:2,name:'协和医院'},{id:5,type:3,name:'中日友好医院'},
-            {id:6,type:3,name:'北京医院'},{id:7,type:1,name:'中国人民解放军总医院'},{id:8,type:2,name:'北京回龙观医院'},{id:9,type:4,name:'北大方正软件技术学院卫生分院'}
-          ]
-        }],
+        area_school:[],
         dialogVisible:false,
         historyData:[],
-        tableData:[{
-          id:'123',
-          sort:0,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        },{
-          id:'123',
-          sort:1,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        },{
-          id:'123',
-          sort:2,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        }],
+        tableData:[
+          {
+            orgIds:'123',
+            sort:0,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          },{
+            orgIds:'123',
+            sort:1,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          },{
+            orgIds:'123',
+            sort:2,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          }],
         dialogVisible2:false,
+        searchName:'',
+        searchResultFirstId:'',
       };
     },
     computed: {
@@ -241,10 +254,57 @@
     },
     methods: {
       /**
+       * 加载学校列表
+       */
+      getSchools() {
+        var schoolName = []
+        var schoolType = []
+        var schoolId = []
+        this.$axios.get("/messages/message/send_object",{
+          params:{
+            sendType: this.formdata.sendType,
+            pageSize: 20,
+            pageNumber: 1,
+            userNameOrUserCode: '',
+            orgName: '',
+            materialName: ''
+          }
+        }).then((response) => {
+          let res = response.data
+          if (res.code == '1') {
+            var tempList=[];
+            res.data.orgVo.forEach(iterm=>{
+              let tempObj = {};
+              tempObj.id=iterm.areaId;
+              tempObj.province = iterm.areaName;
+              tempObj.isIndeterminate = false;
+              tempObj.checkAll = false;
+              tempObj.checkedSchools = [];
+              tempObj.schoolList =[];
+              let tempType = iterm.orgTypeId.split(',');
+              let tempName = iterm.orgName.split(',');
+              iterm.id.split(',').forEach((t,i)=>{
+                tempObj.schoolList.push({
+                  id:t,
+                  type:tempType[i],
+                  name:tempName[i]
+                })
+              })
+              if(tempObj.province){
+                tempList.push(tempObj);
+              }
+            });
+            this.area_school= tempList;
+          }
+        })
+      },
+      /**
        * 点击快速选择历史弹窗中的选择按钮
        * @param tableIndex 选中表格数据的index值
        */
-      chooseHistory(tableIndex){
+      chooseHistory(tableIndex,id){
+        // console.log(id)
+        this.formdata.bookIds = id
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
       },
@@ -264,7 +324,9 @@
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
           this.area_school[index].schoolList.forEach(t => {
-            this.area_school[index].checkedSchools.push(t.id);
+            if(this.select_orgType==0||t.type ==this.select_orgType){
+              this.area_school[index].checkedSchools.push(t.id);
+            }
           })
         }
         this.area_school[index].isIndeterminate=false;
@@ -286,9 +348,13 @@
         this.area_school.forEach((iterm,index)=>{
           iterm.checkAll=true;
           iterm.checkedSchools=[];
-          iterm.schoolList.forEach((t,i)=>{
-            iterm.checkedSchools.push(t.id);
-          })
+          if(this.select_provinces.length==0||this.select_provinces.includes(iterm.id)){
+            iterm.schoolList.forEach((t,i)=>{
+              if(this.select_orgType==0||t.type ==this.select_orgType){
+                iterm.checkedSchools.push(t.id);
+              }
+            })
+          }
           iterm.isIndeterminate=false;
         })
       },
@@ -309,38 +375,67 @@
         this.dialogVisible2=true;
       },
       /**
-       * 提交表单
+       * 点击发布按钮
        */
       submit(){
-        var self = this;
-        this.formdata.orgIds=this.queryData.join(',');
-        this.formdata['sessionId']=this.$getUserData().sessionId;
-        this.$axios.post('/messages/message/new',this.$initPostData(this.formdata))
-          .then(function (response) {
-            let res = response.data;
-            if(res.code===1){
-              self.$message.success('发布成功！');
-              self.$router.push({name: '消息列表'});
+        this.$message.success('发布成功！');
+        this.$router.push({name:'通知列表'});
+      },
+      /**
+       * 按区域拼音排序
+       */
+      sortByArea(){
+        this.sortArea = this.sortArea*(-1);
+        this.area_school.sort((x,y)=>{
+          let temp = x['province'].localeCompare(y['province'],"zh");
+          return temp==0?0:(temp>0?this.sortArea:this.sortArea*(-1));
+        });
+      },
+      /**
+       * 按机构名称拼音排序
+       */
+      sortByOrg(){
+        this.sortOrg = this.sortOrg*(-1);
+        this.area_school.forEach(iterm=>{
+          iterm.schoolList.sort((x,y)=>{
+            let temp = x['name'].localeCompare(y['name'],"zh");
+            return temp==0?0:(temp>0?this.sortOrg:this.sortOrg*(-1));
+          })
+        })
+      },
+      /**
+       * 点击搜索
+       */
+      searchOnPage(){
+        var highLightHtml=`<span class="bg-yellow">${this.searchName}</span>`;
+        this.searchResultFirstId=undefined;
+        this.area_school.forEach((iterm,i)=>{
+          iterm.schoolList.forEach((t,j)=>{
+            this.area_school[i].schoolList[j].name=this.$commonFun.getHTMLText(this.area_school[i].schoolList[j].name);
+            if(t.name.indexOf(this.searchName)>-1){
+              if(!this.searchResultFirstId){
+                this.searchResultFirstId=iterm.id;
+              }
+              this.area_school[i].schoolList[j].name=this.area_school[i].schoolList[j].name.replace(this.searchName,highLightHtml);
             }
           })
-          .catch(function (error) {
-            self.$message({
-              type:'error',
-              message:'发布失败，请重试'
-            });
-          });
+        });
+      },
+      /**
+       * ，定位到第一个匹配项处
+       */
+      goToSearchPosition(){
+        console.log(this.searchResultFirstId);
+        var dom = document.getElementsByClassName('area'+this.searchResultFirstId);
+        var top = dom[0].getBoundingClientRect().top;
+        document.getElementsByClassName('app-main')[0].scrollTop=top-300;//通过scrollTop设置滚动到指定
       }
     },
     created(){
-      var routerParams = this.$route.params;
-      console.log(routerParams);
-      if(!routerParams.content){
-        this.$message.error('页面未收到发送消息内容');
-        this.router.push({name: '编辑消息'});
-      }
-      this.formdata.content=JSON.stringify(routerParams.content);
-      this.formdata.sendType=routerParams.sendType;
+
+      this.getSchools()
     },
+
   }
 </script>
 
@@ -352,6 +447,8 @@
   .fastQuery>div>div:first-child{
     color:#999;
     width: 80px;
+    text-align: left;
+    word-break: break-all;
     float: left;
   }
   .fastQuery>div>div:last-child{
@@ -372,14 +469,18 @@
   }
   .area-list>div:first-child{
     display: inline-block;
-    width: 80px;
-    text-align: center;
+    width: 120px;
+    text-align: left;
+    word-break: break-all;
     float: left;
   }
   .area-list>div:last-child{
-    margin-left: 90px;
+    margin-left: 130px;
     padding-left: 20px;
     text-align: left;
     border-left: 1px solid #e5e5e5;
+  }
+  .searchBox-wrapper{
+    float: none;
   }
 </style>

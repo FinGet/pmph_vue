@@ -150,7 +150,7 @@
 
             <el-form-item label="主任:">
               <el-col :span="24">
-                <el-button type="primary"  size="small" @click="chooseProjectDirector">项目主任设置</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectDirector">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
                 <el-tag
                   v-for="tag in projectDirectorData"
@@ -205,8 +205,9 @@
 
             <el-form-item label="项目编辑:">
               <el-col :span="24">
-                <el-button type="primary"  size="small" @click="chooseProjectEditor">项目编辑设置</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectEditor">选择</el-button>
                 <el-tag
+                  class="marginR10"
                   v-for="tag in projectEditorData"
                   :key="tag.name"
                   :closable="true"
@@ -255,6 +256,16 @@
                   <!--</el-table-column>-->
                 <!--</el-table>-->
               </el-col>
+            </el-form-item>
+            <el-form-item label="分配项目编辑权限:">
+              <el-select v-model="value5" multiple placeholder="请选择，权限不能为空" class="width800">
+                <el-option
+                  v-for="item in rolesList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="邮寄地址:" class="pull-left">
@@ -441,6 +452,29 @@
           round: 3,
           classify: ''
         },
+        value5:[0,1,2,5],
+        rolesList:[{
+          id:0,
+          name:'分配策划编辑'
+        },{
+          id:1,
+          name:'遴选主编副主编'
+        },{
+          id:2,
+          name:'遴选编委'
+        },{
+          id:3,
+          name:'名单确认'
+        },{
+          id:4,
+          name:'最终结果公布'
+        },{
+          id:5,
+          name:'创建小组'
+        },{
+          id:6,
+          name:'强制结束整套教材'
+        }],
         fileList:[],
         tableData:[
           {

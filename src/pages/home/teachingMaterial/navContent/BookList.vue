@@ -27,10 +27,10 @@
                     </el-form-item>
                 </el-form-item>
             </el-form-item>
-            <el-form-item label="扩展项：">
+            <el-form-item label="书目录：">
                 <table class="extend_list">
                     <tr>
-                        <td>序号</td>
+                        <td>书序</td>
                         <td>书名</td>
                         <td>版次</td>
                         <td>
@@ -76,7 +76,7 @@
         <div class="out_bottom_box">
             <div class="bottom_box">
                 <el-button type="primary" class="bottom_button">暂存</el-button>
-                <el-button type="primary" class="bottom_button" @click="$router.push({name:'编辑通知详情'})" >下一步</el-button>
+                <el-button type="primary" class="bottom_button" @click="$router.push({name:'编辑通知详情'})" >保存，下一步</el-button>
                 <el-checkbox class="marginL20" v-model="formData.onlySchool">仅选中学校可见</el-checkbox>
             </div>
         </div>
