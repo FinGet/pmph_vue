@@ -74,7 +74,6 @@
   </div>
 </template>
 <script>
-import { formCheckedRules } from "../../../../static/formCheckRules.js";
 import Vue from "vue";
 export default {
   data() {
@@ -91,7 +90,7 @@ export default {
         ],
         sort: [
           { min: 1, max: 10, message: "长度不能超过10位", trigger: "change,blur" },
-          { validator: formCheckedRules.numberChecked, trigger: "blur" }
+          { validator: this.$formCheckedRules.numberChecked, trigger: "blur" }
         ]
       },
       // 对话框表单

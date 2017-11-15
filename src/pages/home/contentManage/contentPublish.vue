@@ -22,7 +22,7 @@
       <el-form-item label="关键字：" prop="keyword">
           <el-input class="input" placeholder="请输入关键字" v-model="formData.keyword"></el-input>
       </el-form-item>
-      <el-form-item label="是否推荐：">
+      <!-- <el-form-item label="是否推荐：">
           <el-radio-group v-model="formData.isPromote">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
@@ -79,7 +79,7 @@
       </el-form-item>
       <el-form-item label="热门显示顺序：" prop="sortHot"  v-if="formData.isHot">
           <el-input placeholder="输入热门显示顺序" style="width:300px" v-model="formData.sortHot"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="文章内容：">
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
@@ -125,7 +125,6 @@
 </template>
 <script type="text/javascript">
 import Editor from "../../../components/Editor.vue";
-import {formCheckedRules} from '../../../../static/formCheckRules.js'
 export default {
   data() {
     return {
@@ -137,7 +136,7 @@ export default {
         categoryId: "",
         summary: "",
         keyword: "",
-        isPromote: "",
+        /* isPromote: "",
         deadlinePromote: "",
         sortPromote: "",
         isStick: "",
@@ -145,7 +144,7 @@ export default {
         sort: "",
         isHot: "",
         deadlineHot: "",
-        sortHot: "",
+        sortHot: "", */
         content: "",
         file: [],
         isPublished: "",
@@ -165,15 +164,15 @@ export default {
         keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }],
         sortPromote:[
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ],
         sort:[
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ],
         sortHot:[
            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ]
       },
       defaultType: {
@@ -182,9 +181,9 @@ export default {
       },
       defaultCategoryId:[],
       uploadFileList: [],
-      //   fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
-      fileUploadUrl:
-        "http://192.168.200.109:8090/pmpheep/messages/message/file",
+         fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
+      /* fileUploadUrl:
+        "http://192.168.200.109:8090/pmpheep/messages/message/file", */
       editorConfig: {
         initialFrameWidth: null,
         initialFrameHeight: 500

@@ -7,7 +7,7 @@
           <p class="page-title">人民卫生出版社：</p>
           <!--操作按钮-->
           <div class="pull-right">
-            <el-button type="primary" @click="openAddDialog" :disabled="!hasSelected">添加子节点</el-button>
+            <el-button type="primary" @click="openAddDialog" :disabled="!hasSelected">添加子部门</el-button>
             <el-button type="danger" @click="deleteNode" :disabled="!hasSelected">删除</el-button>
           </div>
         </div>
@@ -31,7 +31,7 @@
             <el-form-item label="部门名称" prop="dpName">
               <el-input  :disabled="!hasSelected" v-model="selectObj.dpName"></el-input>
             </el-form-item>
-            <el-form-item label="排序码" prop="sort">
+            <el-form-item label="显示顺序" prop="sort">
               <el-input  :disabled="!hasSelected" v-model="selectObj.sort"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
@@ -47,12 +47,12 @@
     </el-col>
 
     <!-- 添加弹框 -->
-       <el-dialog title="新增节点" :visible.sync="dialogVisible" size="tiny">
+       <el-dialog title="新增部门" :visible.sync="dialogVisible" size="tiny">
          <el-form :model="dialogForm" :rules="dialogRules" ref="dialogForm" label-width="110px">
            <el-form-item label="部门名称：" prop="dpName">
                <el-input placeholder="请填写部门名称" v-model="dialogForm.dpName"></el-input>
            </el-form-item>
-           <el-form-item label="排序码：" prop="sort">
+           <el-form-item label="显示顺序：" prop="sort">
                <el-input placeholder="请填写阿拉伯数字" v-model="dialogForm.sort"></el-input>
            </el-form-item>
            <el-form-item label="备注：" prop="note">
@@ -98,7 +98,7 @@ export default {
           {min:1,max:20,message:'名称不能超过20字符',trigger:'change,blur'}
           ],
         sort: [
-          {min:1,max:10,message:'排序码不能超过10字符',trigger:'change,blur'},
+          {min:1,max:10,message:'不能超过10字符',trigger:'change,blur'},
           {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ],
         note:[
@@ -158,7 +158,7 @@ export default {
     },
     /* 删除对应的树节点 */
     deleteNode() {
-      this.$confirm("确定删除选中节点吗?", "提示", {
+      this.$confirm("确定删除选中部门吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -193,7 +193,7 @@ export default {
     editSubmit() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          this.$confirm("确定修改当前节点吗？", "提示", {
+          this.$confirm("确定修改当前部门吗？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"

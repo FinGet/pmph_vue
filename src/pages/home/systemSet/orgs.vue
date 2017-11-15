@@ -200,7 +200,6 @@
   </div>
 </template>
 <script type="text/javascript">
-import {formCheckedRules} from '../../../../static/formCheckRules.js'
   export default {
     data(){
       return{
@@ -234,14 +233,14 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
             { min:1,max:20, message: "联系人名称长度过长", trigger: "change,blur" }
           ],
           contactPhone:[
-            {validator:formCheckedRules.phoneNumberChecked,trigger: "blur"}   
+            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}   
           ],
           note:[
             { min:1,max:20, message: "备注长度不能超过20", trigger: "change,blur" },
           ],
           sort: [
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change,blur" },
-            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
           ],
         },
         searchForm:{
@@ -266,7 +265,7 @@ import {formCheckedRules} from '../../../../static/formCheckRules.js'
           ],
           sort: [
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
           ],
         }
       }

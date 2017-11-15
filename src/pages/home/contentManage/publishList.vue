@@ -1,14 +1,7 @@
 <template>
   <div class="publish_list" >
       <p class="header_p">
-          <!-- <el-cascader
-            :options="options"
-            v-model="selectedOptions"
-            :clearable="true"
-            class="input"
-            placeholder="请选择栏目"
-            @change="handleChange">
-          </el-cascader> -->
+
           <el-input placeholder="输入文章标题" class="input" v-model="searchTitle"></el-input>
           <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
@@ -23,12 +16,6 @@
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
-            <!-- <el-table-column
-                prop="id"
-                label="ID"
-                width="60"
-                >
-            </el-table-column> -->
             <el-table-column
                 label="文章标题"
                 >
@@ -126,6 +113,41 @@
         :total="pageTotal">
       </el-pagination>
     </div>
+
+    <!-- 文章查看界面 -->
+    <el-dialog 
+     title=""
+     :visible.sync="showContentDetail"
+     size="large">
+       <div style="padding:0 10%;">
+        <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
+         <p class="senderInfo text-center paddingT10">
+      <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+       </p>
+       <el-form label-width="100px">
+          <el-form-item label="摘要：">
+             <p>{{contentDetailData.cmsContent.summary}}</p>
+         </el-form-item>
+         <el-form-item label="关键字：">
+             {{contentDetailData.cmsContent.keyword}}
+         </el-form-item>
+         <el-form-item label="内容：">
+             <p v-html="contentDetailData.content.content"></p>
+         </el-form-item>
+         <el-form-item label="附件：">
+              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+         </el-form-item>
+       </el-form>
+        </div>
+        <div style="width:100%;overflow:hidden">
+            <div class="center_box">
+            <el-button type="primary">审核通过</el-button>
+            <el-button type="danger">审核不通过</el-button>
+            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            </div>
+        </div>
+    </el-dialog>
   </div>
 </template>
 <style scoped>
@@ -162,6 +184,16 @@ color:#f7ba2a;
 .publish_list .active_hide{
 color:#58b7ff;
 }
+.previewTitle{
+  color: #14232e;
+  font-size: 26px;
+  font-weight: 500;
+}
+.publish_list .center_box{
+    float:left;
+ margin-left:50%;
+ transform: translateX(-50%);
+}
 </style>
 <script type="text/javascript">
 export default {
@@ -196,6 +228,13 @@ export default {
              label:'是否隐藏',
          },
       ],
+      showContentDetail:false,
+      contentDetailData:{
+         cmsContent:'',
+         cmsExtras:'',
+         listObj:'',
+         content:'',
+      },
       tableData:[],
       isAdmin:false,
       selectValue:'',
@@ -230,8 +269,16 @@ export default {
         this.isAdmin=this.$getUserData().userInfo.isAdmin;
       },
       /* 查看详情 */
-      contentDetail(obj){
-           
+      contentDetail(obj){        
+         this.$axios.get(this.editContentUrl+obj.id,{
+          }).then((res)=>{
+              if(res.data.code==1){
+                this.contentDetailData=res.data.data;
+                this.contentDetailData.listObj=obj;
+                console.log(this.contentDetailData);
+              }
+          })
+           this.showContentDetail=true;
       },
       /* 发布内容 */
       publishContent(obj){
