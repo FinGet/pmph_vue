@@ -38,7 +38,7 @@
           </el-table-column>
           <el-table-column
             prop="dptname"
-            label="单位"
+            label="机构名称"
             width="200">
           </el-table-column>
           <el-table-column

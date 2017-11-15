@@ -69,7 +69,7 @@
 					</el-table-column>
 					<el-table-column prop="idcard" label="身份证" width="190">
 					</el-table-column>
-					<el-table-column prop="orgName" label="所属学校">
+					<el-table-column prop="orgName" label="机构名称">
 					</el-table-column>
 					<el-table-column prop="handphone" label="手机">
 					</el-table-column>

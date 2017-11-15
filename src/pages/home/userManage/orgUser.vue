@@ -237,7 +237,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="dialogVisible=false">取 消</el-button>
+          <el-button @click="dialogVisible=false">取 消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
@@ -341,7 +341,7 @@
 					</el-table-column>
 					<el-table-column prop="username" label="机构账号" width="150">
 					</el-table-column>
-					<el-table-column prop="orgName" label="所属学校">
+					<el-table-column prop="orgName" label="机构名称">
 					</el-table-column>
 					<el-table-column prop="handphone" label="手机号">
 					</el-table-column>
@@ -407,7 +407,7 @@ export default {
       // isAddSchool:true,
       area:[], // 所属地区
       // 用户类别
-      options: [ 
+      options: [
         {
           value: "",
           label: "全部"
@@ -837,7 +837,7 @@ export default {
         email: "",
         isDisabled: true,
         note: ""
-      } 
+      }
       // 因为有非必填项，所以不能用this.$refs.ruleForm.resetFields();清除
       // this.$refs.ruleForm.resetFields();
       // console.log(this.$refs.ruleForm);

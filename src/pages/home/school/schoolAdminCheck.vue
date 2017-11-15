@@ -60,10 +60,10 @@
 		</el-row>
 		<el-row>
 			<el-col>
-				<el-table ref="multipleTable" 
-				:data="tableData" 
-				border tooltip-effect="dark" 
-				style="width: 100%" 
+				<el-table ref="multipleTable"
+				:data="tableData"
+				border tooltip-effect="dark"
+				style="width: 100%"
 				@selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
@@ -71,7 +71,7 @@
 					</el-table-column>
 					<el-table-column prop="username" label="用户名" width="150">
 					</el-table-column>
-					<el-table-column prop="orgName" label="所属学校">
+					<el-table-column prop="orgName" label="机构名称">
 					</el-table-column>
 					<el-table-column prop="handphone" label="手机">
 					</el-table-column>

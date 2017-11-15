@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="6">
         <div class="tree-title">
-          <p>所属组织：</p>
+          <p>社内部门：</p>
         </div>
         <el-tree :data="treeData"
                  :highlight-current=true
@@ -16,9 +16,9 @@
       </el-col>
       <el-col :span="17" :offset="1">
         <el-col>
-          <span class="pull-left s-title">账号/姓名:</span>
+          <span class="pull-left s-title">姓名/账号:</span>
           <el-col :span="4">
-            <el-input placeholder="请输入用户名" v-model="name" @keyup.enter.native="search"></el-input>
+            <el-input placeholder="请输入" v-model="name" @keyup.enter.native="search"></el-input>
           </el-col>
           <el-button type="primary" icon="search" class="marginL10" @click="search">搜索</el-button>
           <!--操作按钮-->
@@ -64,7 +64,7 @@
             </el-table-column>
             <el-table-column
               prop="use"
-              label="启用"
+              label="启用标识"
               align="center"
               width="80"
             >
@@ -101,27 +101,27 @@
     </el-row>
     <el-dialog title="修改" :visible.sync="dialogVisible" :before-close="handleDialog"  @close="resetForm('form')" size="tiny">
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" class="padding20">
-        <el-form-item label="用户账号:"
+        <el-form-item label="账号:"
                       prop="username"
         >
           <el-input v-model="form.username" :disabled="!isNew" placeholder="请输入您的用户代码"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称:"
+        <el-form-item label="姓名:"
                       prop="realname"
                     >
           <el-input v-model="form.realname" placeholder="请输入您的用户名称"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机:"
+        <el-form-item label="手机号:"
                       prop="handphone"
         >
           <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱:"
+        <el-form-item label="邮箱:"
                       prop="email"
         >
           <el-input v-model="form.email" placeholder="请输入您的邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="用户角色:"
+        <el-form-item label="角色名称:"
                       prop="roleIds"
                       required
                     >
@@ -157,11 +157,12 @@
         <el-form-item label="启用：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
-            <el-radio :label="true">不启用</el-radio>
+            <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible=false">取消</el-button>
           <el-button type="primary" @click="save">保存</el-button>
         </span>
     </el-dialog>

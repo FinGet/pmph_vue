@@ -83,7 +83,7 @@
               待分配
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
                 <el-button type="text">
-                  <i class="fa fa-pencil fa-fw"></i>
+                  <i class="fa fa-pencil fa-fw" @click="chooseVisiable2=true"></i>
                 </el-button>
               </el-tooltip>
             </p>
@@ -164,9 +164,14 @@
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
         </span>
     </el-dialog>
+
+    <el-dialog title="分配策划编辑" :visible.sync="chooseVisiable2" size="large" top="5%">
+      <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
+  import Departments from 'components/departments'
   export default{
     data(){
       return{
@@ -393,7 +398,161 @@
           editorialBoard:['李建国','王尔尔','赵三三','一一一','二二人','三三'],
         }],
         dialogVisible:false,
-        dialogContent:''
+        chooseVisiable2:false,
+        Multichoice:'', // 是否可以多选，传递给Departments子组件
+        dialogContent:'',
+        proptableData:[
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'李四',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'王二',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'赵武',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'张三',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'王二',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          },
+          {
+            name:'赵武',
+            username:'zs',
+            isNameInput:false,
+            isPhoneInput:false,
+            isEmailInput:false,
+            email:'123@qq.com',
+            role:'主任项目编辑',
+            phone:'1383838438'
+          }
+        ],
       }
     },
     methods:{
@@ -412,8 +571,14 @@
         this.dialogContent = html;
 
         this.dialogVisible=!this.dialogVisible;
+      },
+      add(){
+        this.chooseVisiable2=false;
       }
     },
+    components:{
+      Departments
+    }
   }
 </script>
 <style>

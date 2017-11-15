@@ -25,7 +25,7 @@
     </el-col>
     <el-col :span="12">
       <div class="paddingL30">
-        <p class="page-title paddingB20">编辑部门信息：</p>
+        <p class="page-title paddingB20">部门信息：</p>
         <div class="max-width-460">
           <el-form label-position="right" :rules="dialogRules" ref="editForm" label-width="80px" :model="selectObj">
             <el-form-item label="部门名称" prop="dpName">
