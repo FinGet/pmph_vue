@@ -15,6 +15,20 @@
           </el-select>
         </div>
       </div>
+      <!--进度搜索-->
+      <div class="searchBox-wrapper">
+        <div class="searchName">进度：<span></span></div>
+        <div class="searchInput">
+          <el-select v-model="currentState" placeholder="全部">
+            <el-option
+              v-for="item in currentStateList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
       <!--姓名搜索-->
       <div class="searchBox-wrapper searchBtn">
         <el-button  type="primary" icon="search">搜索</el-button>
@@ -86,8 +100,8 @@
             <span v-else-if="scope.row.state==3">傅松滨</span>
             <span v-else-if="scope.row.state==4">陈朝阳</span>
             <span v-else>待遴选</span>
-            <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
-              <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+            <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
+              <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid,type:'chief'}}">
                 <el-button type="text">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -104,8 +118,8 @@
             <span v-else-if="scope.row.state==3">王家乐</span>
             <span v-else-if="scope.row.state==4">王家梁</span>
             <span v-else>待遴选</span>
-            <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top">
-              <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid}}">
+            <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
+              <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.bookid,type:'pres'}}">
                 <el-button type="text">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -118,15 +132,16 @@
         <el-table-column
           label="操作">
           <template scope="scope">
-            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==5||scope.row.state==6||scope.row.state==8">名单确认</el-button>
+            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button>
             <el-button type="text" v-else @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)"  v-if="scope.row.state==1||scope.row.state==5||scope.row.state==7||scope.row.state==8">终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)"  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button>
             <el-button type="text" :disabled="true" v-else>最终结果公布</el-button>
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text">创建小组</el-button>
+            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state>4">创建小组</el-button>
+            <el-button type="text" v-else>创建小组</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -182,13 +197,16 @@
           label:'全部'
         },{
           value:2,
-          label:'待选主编/副主编'
+          label:'名单未确认'
         },{
           value:3,
-          label:'已分配主编/副主编'
+          label:'名单已确认'
         },{
           value:4,
-          label:'...'
+          label:'结果已公布'
+        },{
+          value:5,
+          label:'强制结束'
         }],
         tableData: [{
           state:0,

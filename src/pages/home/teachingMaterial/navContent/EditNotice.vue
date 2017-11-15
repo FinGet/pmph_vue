@@ -4,7 +4,7 @@
     <div class="clearfix marginT30">
       <div class="operation-wrapper">
         <el-button  type="primary" size="large" class="marginR20">预览</el-button>
-        <el-button  type="primary" size="large" class="marginR20" @click="$router.push({name:'教材申报选择学校'})">保存，下一步</el-button>
+        <el-button  type="primary" size="large" class="marginR20" @click="$router.push({name:'设置书目录'})">保存，下一步</el-button>
       </div>
     </div>
     <!--输入标题-->

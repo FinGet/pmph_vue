@@ -267,6 +267,16 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="分配策划编辑权限:">
+              <el-select v-model="value6" multiple placeholder="请选择，权限不能为空" class="width800">
+                <el-option
+                  v-for="item in rolesList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
 
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
@@ -402,8 +412,7 @@
 
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
-              <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-              <el-button type="primary" @click="$router.push({ name: '设置书目录' })">保存,下一步</el-button>
+              <el-button type="primary" @click="$router.push({ name: '编辑通知详情' })">下一步</el-button>
             </el-form-item>
 
           </el-form>
@@ -452,7 +461,8 @@
           round: 3,
           classify: ''
         },
-        value5:[0,1,2,5],
+        value5:[0,1,2,3,5],
+        value6:[0,1,2,5],
         rolesList:[{
           id:0,
           name:'分配策划编辑'
