@@ -15,7 +15,7 @@
                 </el-table-column>
                 <el-table-column prop="sort" label="显示顺序">
                 </el-table-column>
-                <el-table-column prop="isDisabled" label="是否启用">
+                <el-table-column prop="isDisabled" label="启用标识">
                     <template scope="scope">
                         <p v-if="!scope.row.isDisabled">启用</p>
                         <p v-if="scope.row.isDisabled">禁用</p>
@@ -46,7 +46,7 @@
                     <el-form-item label="角色名称：" prop="roleName">
                         <el-input v-model="rolesForm.roleName" placeholder="请输入"></el-input>
                     </el-form-item>
-                    <el-form-item label="启用：" prop="isDisabled">
+                    <el-form-item label="启用标识：" prop="isDisabled">
                         <el-radio-group v-model="rolesForm.isDisabled">
                           <el-radio :label="false">启用</el-radio>
                           <el-radio :label="true">禁用</el-radio>

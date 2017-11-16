@@ -171,7 +171,7 @@
       <el-dialog
         :title="dialogTitle"
         :visible.sync="dialogVisible"
-        @close="resetForm"
+        :before-close="resetForm"
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
           <el-form-item label="机构账号：" prop="username">
@@ -209,23 +209,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-          <!-- <el-form-item label="所属院校："  prop="orgId" >
-            <el-select
-              v-model="form.orgId"
-              filterable
-              remote
-              placeholder="请输入关键词"
-              loading-text="正在搜索..."
-              :remote-method="searchOrgName"
-              :loading="loading">
-              <el-option
-                v-for="item in OrgNameList"
-                :key="item.id"
-                :label="item.orgName"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="启用标识：" prop="isDisabled">
             <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
@@ -241,54 +224,6 @@
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
-      <!--机构类型设置-->
-      <!-- <el-dialog
-        title="机构类型设置"
-        :visible.sync="dialogVisible2"
-        size="tiny">
-        <div class="text-right">
-          <el-button  type="primary" @click="dialogVisible3=true">新增</el-button>
-        </div>
-        <div class="table-wrapper clearfix">
-          <el-table
-            :data="orgTypeList"
-            style="width: 100%">
-            <el-table-column
-              prop="typeName"
-              label="机构类型">
-            </el-table-column>
-            <el-table-column
-              prop="sort"
-              label="显示顺序">
-            </el-table-column>
-            <el-table-column
-              label="操作">
-              <template scope="scope">
-                <el-button type="text" @click="deleteOrgType(scope.row.id)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-dialog> -->
-      <!--新增机构类型-->
-      <!-- <el-dialog
-        title="机构类型设置"
-        :visible.sync="dialogVisible3"
-        size="tiny">
-
-        <el-form :model="addOrgTypeForm" :rules="rules_addType" ref="addOrgTypeForm"  label-width="100px" class="padding20" >
-          <el-form-item label="机构类型：" prop="typeName">
-            <el-input v-model="addOrgTypeForm.typeName"></el-input>
-          </el-form-item>
-          <el-form-item label="机构排列顺序：" prop="sort">
-            <el-input v-model="addOrgTypeForm.sort"></el-input>
-          </el-form-item>
-        </el-form>
-
-        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addOrgType">保 存</el-button>
-        </span>
-      </el-dialog> -->
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -447,8 +382,6 @@ export default {
       selections:[], // 选中项
       tableData: [], // 机构用户数据
       dialogVisible: false, // 新增用户弹窗
-      dialogVisible2: false, // 机构类型设置弹窗
-      dialogVisible3: false, // 新增机构类型弹窗
       // 弹窗表单中间变量
       form: {
         id: "",
@@ -518,16 +451,6 @@ export default {
         typeName:'',
         sort:''
       },
-      // 新增机构类型表单验证
-      // rules_addType:{
-      //   typeName: [
-      //     { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
-      //   ],
-      //   sort: [
-      //     { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-      //     {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-      //   ],
-      // }
     };
   },
   computed:{
@@ -539,6 +462,13 @@ export default {
         return false;
       } else {
         return true;
+      }
+    }
+  },
+  watch:{
+    dialogVisible(val){
+      if(!val){
+        this.closeDialog();
       }
     }
   },
@@ -578,89 +508,15 @@ export default {
           this.$message.error('获取机构类型数据失败');
         });
     },
-    /**
-       * 新增机构类型
-       */
-    // addOrgType(){
-    //   this.$refs['addOrgTypeForm'].validate((valid) => {
-    //     if (valid) {
-    //       this.$axios({
-    //         method: 'POST',
-    //         url: '/orgType/add/orgtype',
-    //         data: this.$initPostData(this.addOrgTypeForm),
-    //       })
-    //         .then(response => {
-    //           let res = response.data;
-    //           let data = res.data.rows;
-    //           //修改成功
-    //           if (res.code == 1) {
-    //             this.getOrgTypeData();
-    //             this.dialogVisible3 = false;
-    //             this.$message.success('添加成功!');
-    //           }else{
-    //             this.$message.error(res.msg);
-    //           }
-    //         })
-    //         .catch(e=>{
-    //           console.log(e);
-    //           this.$message.error('添加失败，请重试');
-    //         });
-    //     } else {
-    //       this.$message.error('请正确填写表单!!');
-    //       return false;
-    //     }
-    //   });
-
-    // },
-    /**
-       * 删除机构类型
-       * @param id
-       */
-    // deleteOrgType(id){
-
-    //   this.$confirm('确认删除该机构类型？',"提示",{
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     type: "warning"
-    //   })
-    //     .then(()=>{
-    //       this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
-    //         .then(response=>{
-    //           let res = response.data;
-    //           if (res.code == '1') {
-    //             this.getOrgTypeData();
-    //             this.$message.success('删除成功！');
-    //           }else{
-    //             this.$message.error(res.msg);
-    //           }
-    //         })
-    //         .catch(e=>{
-    //           console.log(e);
-    //           this.$message.error('删除失败，请重试');
-    //         })
-    //     })
-    //     .catch(e=>{})
-    // },
     //点击修改按钮执行方法
     eidtInfoBtn(index) {
       this.isNew = false;
-      // this.OrgNameList = [
-      //   {
-      //     id: this.tableData[index].orgId,
-      //     orgName: this.tableData[index].orgName
-      //   }
-      // ];
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
       console.log(this.form.orgName)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
-    },
-    /* 列表选中切换 */
-    handleSelectionChange(val) {
-      this.selections = val;
-      // console.log(val)
     },
     /**
            * 提交表单中搜索所属院校
@@ -762,7 +618,7 @@ export default {
       this.form.orgId -= 0
       this.$axios({
         method: "POST",
-        url: "/users/org/add/orguserofback",
+        url: "/users/org/add/orguserandorgofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -776,6 +632,8 @@ export default {
               type: "success",
               message: "添加成功"
             });
+          }else {
+            self.$message.error(res.msg);
           }
         })
         .catch(function(error) {
@@ -823,8 +681,15 @@ export default {
     /**
      * 重置form表单数据
      */
-    resetForm() {
-      this.form =  {
+    resetForm(done) {
+      this.$refs.ruleForm.resetFields();
+      done();
+    },
+    /**
+     * 监听弹出层关闭事件
+     */
+    closeDialog() {
+     this.form =  {
         id: "",
         realname: "",
         username: "",
@@ -838,15 +703,6 @@ export default {
         isDisabled: true,
         note: ""
       }
-      // 因为有非必填项，所以不能用this.$refs.ruleForm.resetFields();清除
-      // this.$refs.ruleForm.resetFields();
-      // console.log(this.$refs.ruleForm);
-    },
-    /**
-     * 监听弹出层关闭事件
-     */
-    closeDialog() {
-      this.resetForm();
     },
       /**
      * 请求初始化列表
@@ -941,6 +797,7 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.pageSize = val;
+      this.currentPage=1;
       this.getOrgsList();
     },
     /**@argument val pageNumber */

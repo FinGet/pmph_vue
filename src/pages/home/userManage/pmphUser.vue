@@ -101,27 +101,27 @@
     </el-row>
     <el-dialog title="修改" :visible.sync="dialogVisible" :before-close="handleDialog"  @close="resetForm('form')" size="tiny">
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" class="padding20">
-        <el-form-item label="账号:"
+        <el-form-item label="账号："
                       prop="username"
         >
           <el-input v-model="form.username" :disabled="!isNew" placeholder="请输入您的用户代码"></el-input>
         </el-form-item>
-        <el-form-item label="姓名:"
+        <el-form-item label="姓名："
                       prop="realname"
                     >
           <el-input v-model="form.realname" placeholder="请输入您的用户名称"></el-input>
         </el-form-item>
-        <el-form-item label="手机号:"
+        <el-form-item label="手机号："
                       prop="handphone"
         >
           <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱:"
+        <el-form-item label="邮箱："
                       prop="email"
         >
           <el-input v-model="form.email" placeholder="请输入您的邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="角色名称:"
+        <el-form-item label="角色名称："
                       prop="roleIds"
                       required
                     >
@@ -154,7 +154,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：" prop="isDisabled">
+        <el-form-item label="启用标识：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
             <el-radio :label="true">禁用</el-radio>

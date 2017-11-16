@@ -235,7 +235,7 @@
 						<template scope="scope">
               <!-- <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag> -->
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
-							<el-tag type="success" v-if="scope.row.progress=='3'">通过</el-tag>
+							<el-tag type="success" v-if="scope.row.progress=='3'">已通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
 					</el-table-column>
@@ -313,7 +313,7 @@ export default {
 				},
 				{
 					value: '2',
-					label: '被退回'
+					label: '已退回'
 				},
 				{
 					value: '3',
@@ -656,7 +656,7 @@ export default {
               type: 'success'
             });
 				}else if(res.code ==2){
-          this.$message.error("请勿选中已审核过的用户");
+          this.$message.error("已审核的用户不能再次审核");
         }
 			}).catch(error => {
 				console.log(error.msg)
