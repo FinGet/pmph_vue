@@ -16,7 +16,7 @@
                  node-key="id"
                  :highlight-current="true"
                  :expand-on-click-node="false"
-                 :default-expanded-keys="[treeData[0].id]"
+                 :default-expanded-keys="[treeData[0]?treeData[0].id:92]"
                  @node-click="checkNode"
                  ref="tree"
                  class="no-border expand-icon-lg"

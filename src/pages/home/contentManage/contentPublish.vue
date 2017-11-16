@@ -131,7 +131,7 @@ import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl: "/pmpheep/cms/content/new", //发布内容url
+      addNewUrl: "/cms/ new_content", //发布内容url
       columnListUrl: "/pmpheep/cms/set", //栏目列表Url
       editContentUrl:'/pmpheep/cms/content/update',    //修改提交url
       formData: {

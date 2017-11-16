@@ -358,15 +358,16 @@ export default {
       },
       /* 查看详情 */
       contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id,{
+         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
           }).then((res)=>{
               if(res.data.code==1){
                 this.contentDetailData=res.data.data;
                 this.contentDetailData.listObj=obj;
+                this.showContentDetail=true;
                 console.log(this.contentDetailData);
               }
           })
-           this.showContentDetail=true;
+           
       },
       /* 发布内容 */
       publishContent(obj){
@@ -382,7 +383,7 @@ export default {
       },
       /* 修改内容 */
       editContent(obj){
-          this.$axios.get(this.editContentUrl+obj.id,{
+          this.$axios.get(this.editContentUrl+obj.id+'/search',{
           }).then((res)=>{
               console.log(res);
               if(res.data.code==1){
@@ -403,7 +404,7 @@ export default {
       },
       /* 删除内容 */
       deleteContent(obj){
-         this.$axios.delete(this.deleteContentUrl+obj.id).then((res)=>{
+         this.$axios.delete(this.deleteContentUrl+obj.id+'/delete').then((res)=>{
              if(res.data.code==1){
                  this.getPublicList();
                  this.$message.success('删除操作成功');
