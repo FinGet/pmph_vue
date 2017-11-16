@@ -580,7 +580,7 @@ export default {
        * 获取所属部门信息
        */
     getAreaData(){
-      this.$axios.get('/area/areachirldren',{params: {parentId:0}})
+      this.$axios.get('/pmpheep/area/areachirldren',{params: {parentId:0}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -716,7 +716,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/pmpheep/auth/orgs/list", {
+        .get("/pmpheep/auth/org_list", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
