@@ -84,7 +84,7 @@
       </el-pagination>
     </div>
        <!-- 内容详情查看界面 -->
-         <el-dialog 
+         <el-dialog
      title=""
      :visible.sync="showContentDetail"
      size="large">
@@ -229,7 +229,7 @@ export default {
      * 初始化内容列表
      */
     getContentLists(){
-      this.$axios.get("/cms/check",{
+      this.$axios.get("/pmpheep/cms/check",{
         params:{
           sessionId: this.$getUserData().sessionId,
           pageNumber: this.conPageNumber,
@@ -257,7 +257,7 @@ export default {
      */
     getMenuLists(){
       console.log(this.options)
-      this.$axios.get("/cms/set",{
+      this.$axios.get("/pmpheep/cms/set",{
         params:{
           categoryName:''
         }
@@ -280,7 +280,7 @@ export default {
      */
     isPass(id, status){
       // console.log(status)
-      this.$axios.put('/cms/check/content',this.$initPostData({
+      this.$axios.put('/pmpheep/cms/check/content',this.$initPostData({
           sessionId: this.$getUserData().sessionId,
           authStatus: status,
           id: id
@@ -311,7 +311,7 @@ export default {
         ids.push(item.id)
       })
       console.log(ids)
-      this.$axios.delete('/cms/check/content',{
+      this.$axios.delete('/pmpheep/cms/check/content',{
         params: {
           ids: ids.join(',')
         }
@@ -331,7 +331,7 @@ export default {
      * 删除
      */
     deleted(id){
-      this.$axios.delete('/cms/check/'+id+'/content').then(response => {
+      this.$axios.delete('/pmpheep/cms/check/'+id+'/content').then(response => {
         let res = response.data
         if(res.code == '1') {
           this.$message.success('删除成功');
@@ -384,7 +384,7 @@ export default {
 
     },
           /* 查看详情 */
-      contentDetail(obj){        
+      contentDetail(obj){
          this.$axios.get(this.editContentUrl+obj.id,{
           }).then((res)=>{
               if(res.data.code==1){

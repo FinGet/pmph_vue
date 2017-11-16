@@ -71,10 +71,10 @@
 export default {
   data() {
     return {
-      treeDataUrl: "/departments/pmphdepartmenttree", //获取社内部门树url
-      addNodeUrl: "/departments/add/pmphdepartment", //添加节点url
-      deleteNodelUrl: "/departments/delete/pmphdepartmentbatch", //删除节点url
-      editNodeUrl: "/departments/update/pmphdepartment", //修改节点url
+      treeDataUrl: "/pmpheep/departments/pmphdepartmenttree", //获取社内部门树url
+      addNodeUrl: "/pmpheep/departments/add/pmphdepartment", //添加节点url
+      deleteNodelUrl: "/pmpheep/departments/delete/pmphdepartmentbatch", //删除节点url
+      editNodeUrl: "/pmpheep/departments/update/pmphdepartment", //修改节点url
       treeData: [],
       hasSelected: false,
       multipleSelection: [],

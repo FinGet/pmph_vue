@@ -162,7 +162,7 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/group/add/pmphgroupfile',formdata,config)
+        this.$axios.post('/pmpheep/group/add/pmphgroupfile',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
@@ -186,7 +186,7 @@
       getHistoryMessage(){
         var self = this;
         this.messageLoading=true;
-        this.$axios.get('/group/list/message',{params:{
+        this.$axios.get('/pmpheep/group/list/message',{params:{
           groupId:this.currentGroup.id,
           pageSize:this.getHistoryMesListForm.pageSize,
           pageNumber:this.getHistoryMesListForm.pageNumber,

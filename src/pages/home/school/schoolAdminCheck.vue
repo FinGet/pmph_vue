@@ -394,7 +394,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/auth/orgs/list", {
+        .get("/pmpheep/auth/orgs/list", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -443,7 +443,7 @@ export default {
       });
       this.$axios
         .put(
-          "/auth/orgs/check",
+          "/pmpheep/auth/orgs/check",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
@@ -487,7 +487,7 @@ export default {
 		 * @argument index */
     preview(proxy) {
       this.$axios
-        .get("/image/" + proxy)
+        .get("/pmpheep/image/" + proxy)
         .then(response => {
           let res = response.data;
           if (res.code == "1") {

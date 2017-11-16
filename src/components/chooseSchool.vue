@@ -260,7 +260,7 @@
         var schoolName = []
         var schoolType = []
         var schoolId = []
-        this.$axios.get("/messages/message/send_object",{
+        this.$axios.get("/pmpheep/messages/message/send_object",{
           params:{
             sendType: this.formdata.sendType,
             pageSize: 20,

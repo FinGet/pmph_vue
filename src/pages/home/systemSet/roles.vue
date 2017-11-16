@@ -88,10 +88,10 @@
 export default {
   data() {
     return {
-      listUrl: "/role/pmph/list", //列表数据接口
-      revisePowerUrl: "/role/pmph/resources", //更新权限接口
-      addRoleUrl: "/role/pmph/add", //添加角色接口
-      editRoleUrl: "/role/pmph/update", //修改角色接口
+      listUrl: "/pmpheep/role/pmph/list", //列表数据接口
+      revisePowerUrl: "/pmpheep/role/pmph/resources", //更新权限接口
+      addRoleUrl: "/pmpheep/role/pmph/add", //添加角色接口
+      editRoleUrl: "/pmpheep/role/pmph/update", //修改角色接口
       searchValue: "",
       rolesListData: [],
       rolesDialogVisible: false,

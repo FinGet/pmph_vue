@@ -443,7 +443,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/orgs/list/orgByOrgName", {
+        .get("/pmpheep/orgs/list/orgByOrgName", {
           params: { orgName: query || "" }
         })
         .then(function(response) {
@@ -470,7 +470,7 @@ export default {
       var self = this;
       // 为给定 ID 的 user 创建请求
       this.$axios
-        .get("/users/writer/list/writeruser", { params: this.params })
+        .get("/pmpheep/users/writer/list/writeruser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -515,7 +515,7 @@ export default {
       var self = this;
       this.$axios({
         method: "POST",
-        url: "/users/writer/add/writeruserofback",
+        url: "/pmpheep/users/writer/add/writeruserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -547,7 +547,7 @@ export default {
       var self = this;
       this.$axios({
         method: "PUT",
-        url: "/users/writer/update/writeruserofback",
+        url: "/pmpheep/users/writer/update/writeruserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -585,7 +585,7 @@ export default {
     },
     preview(cert) {
       this.$axios
-        .get("/image/" + cert)
+        .get("/pmpheep/image/" + cert)
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
@@ -602,7 +602,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/auth/writers/list",{
+      this.$axios.get("/pmpheep/auth/writers/list",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -641,7 +641,7 @@ export default {
 				userIds.push(item.id)
 				//console.log(orgUserIds)
 			})
-			this.$axios.put("/auth/writers/check",this.$initPostData({
+			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
 				progress: progress,
 				userIds: userIds
 			})).then((response) => {
@@ -649,7 +649,7 @@ export default {
 				if (res.code == "1") {
 					//console.log(res)
 					this.getWritersList()
-          
+
 					this.$message({
               showClose: true,
               message: progress==0?'审核通过!':'已退回',
@@ -679,13 +679,13 @@ export default {
 		},
 		handleCurrentChange(val) {
       this.pageNumber=val;
-      this.getWritersList(); 
+      this.getWritersList();
 		},
 		/**
 		 * 预览教师资格证
 		 * @argument index */
 		preview(cert) {
-			this.$axios.get("/image/"+cert).then(response => {
+			this.$axios.get("/pmpheep/image/"+cert).then(response => {
 				let res = response.data
 				if (res.code == '1'){
 					this.dialogVisible = true

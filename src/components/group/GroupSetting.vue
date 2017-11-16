@@ -129,7 +129,7 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/group/update/pmphgroup',formdata,config)
+        this.$axios.post('/pmpheep/group/update/pmphgroup',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
@@ -154,7 +154,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/group/delete/pmphgroup',{params:{
+            this.$axios.delete('/pmpheep/group/delete/pmphgroup',{params:{
               id:this.currentGroup.id,
               sessionId:this.$getUserData().sessionId
             }})

@@ -39,7 +39,7 @@
             if(!this.msgId){
               this.$message.error('未读取到消息id，请重试!');
             }
-            this.$axios.get('/messages/message/content',{params:{
+            this.$axios.get('/pmpheep/messages/message/content',{params:{
                 userMsgId:this.msgId
               }})
               .then(response=>{
