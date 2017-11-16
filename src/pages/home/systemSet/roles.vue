@@ -23,13 +23,13 @@
                 </el-table-column>
                 <el-table-column prop="note" label="备注">
                 </el-table-column>
-                <el-table-column label="操作" width="190">
+                <el-table-column label="操作" width="150">
                     <template scope="scope">
                         <el-button type="text" @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <el-button type="text" @click="updatePower(scope.row)">更新权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" @click="deleteRole(scope.row)">删除</el-button>
+                        <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,10 +88,10 @@
 export default {
   data() {
     return {
-      listUrl: "/role/pmph/list", //列表数据接口
-      revisePowerUrl: "/role/pmph/resources", //更新权限接口
-      addRoleUrl: "/role/pmph/add", //添加角色接口
-      editRoleUrl: "/role/pmph/update", //修改角色接口
+      listUrl: "/pmpheep/role/pmph/list", //列表数据接口
+      revisePowerUrl: "/pmpheep/role/pmph/resources", //更新权限接口
+      addRoleUrl: "/pmpheep/role/pmph/add", //添加角色接口
+      editRoleUrl: "/pmpheep/role/pmph/update", //修改角色接口
       deleteRoleUrl:'',   //删除角色url
       searchValue: "",
       rolesListData: [],

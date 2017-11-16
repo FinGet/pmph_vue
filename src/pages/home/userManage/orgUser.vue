@@ -402,7 +402,8 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
+          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" },
+           {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
         ],
         // realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
         email: [

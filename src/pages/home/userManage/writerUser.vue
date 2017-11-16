@@ -339,7 +339,8 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" }
+          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" },
+          {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
