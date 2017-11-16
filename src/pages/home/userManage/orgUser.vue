@@ -403,8 +403,8 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" },
-           {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
+          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
+          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
