@@ -341,13 +341,8 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-<<<<<<< HEAD
           { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
           { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
-=======
-          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" },
-          {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
->>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
@@ -604,11 +599,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-<<<<<<< HEAD
-      this.$axios.get("/auth/writer_list",{
-=======
       this.$axios.get("/pmpheep/auth/writers/list",{
->>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -646,7 +637,6 @@ export default {
 				// console.log(item)
 				userIds.push(item.id)
 				//console.log(orgUserIds)
-<<<<<<< HEAD
       })
       var title='';
       if(progress==0) {
@@ -680,29 +670,6 @@ export default {
             console.log(error.msg)
           })
         })
-=======
-			})
-			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
-				progress: progress,
-				userIds: userIds
-			})).then((response) => {
-				let res = response.data
-				if (res.code == "1") {
-					//console.log(res)
-					this.getWritersList()
-
-					this.$message({
-              showClose: true,
-              message: progress==0?'审核通过!':'已退回',
-              type: 'success'
-            });
-				}else if(res.code ==2){
-          this.$message.error("已审核的用户不能再次审核");
-        }
-			}).catch(error => {
-				console.log(error.msg)
-			})
->>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
 		},
     /**
      * 搜索
