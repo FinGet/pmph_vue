@@ -403,13 +403,8 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-<<<<<<< HEAD
-          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
-          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
-=======
           { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" },
            {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
->>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
@@ -721,11 +716,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-<<<<<<< HEAD
-        .get("/auth/org_list", {
-=======
         .get("/pmpheep/auth/orgs/list", {
->>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
           params: {
             orgName: this.orgName,
             realname: this.realname,
