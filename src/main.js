@@ -11,8 +11,8 @@ import 'common/css/common.css'
 import axios from 'axios'
 /*全局方法和配置挂载*/
 import * as config from 'common/config';
-import * as commonFun from '../src/common/commonFun.js'
-import {formCheckedRules} from '../src/common/formCheckRules.js'
+import * as commonFun from './common/js/commonFun.js'
+import {formCheckedRules} from './common/js/formCheckRules.js'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
