@@ -29,7 +29,7 @@
                         <!-- <span style="line-height:16px">|</span> -->
                         <el-button type="text" @click="updatePower(scope.row)">更新权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" >删除</el-button>
+                        <el-button type="text" @click="deleteRole(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -92,6 +92,7 @@ export default {
       revisePowerUrl: "/role/pmph/resources", //更新权限接口
       addRoleUrl: "/role/pmph/add", //添加角色接口
       editRoleUrl: "/role/pmph/update", //修改角色接口
+      deleteRoleUrl:'',   //删除角色url
       searchValue: "",
       rolesListData: [],
       rolesDialogVisible: false,
@@ -104,7 +105,7 @@ export default {
       },
       isAddNewRole: true,
       rolesFormRules: {
-        id: [{ required: true, message: "请输入角色代码", trigger: "blur" }],
+        id: [{type:'number' ,required: true, message: "请输入角色代码", trigger: "blur" }],
         roleName: [
             { required: true, message: "请输入角色名称", trigger: "blur" },
             {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
@@ -370,6 +371,10 @@ export default {
       // this.rolesForm = obj;
       this.rolesDialogVisible = true;
       // this.$refs['rolesForm'].resetFields();
+    },
+    //删除角色
+    deleteRole(obj){
+      console.log(obj);
     },
     resetDialogForm() {
       this.$refs["rolesForm"].resetFields();

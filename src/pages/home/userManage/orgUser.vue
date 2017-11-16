@@ -159,10 +159,11 @@
       <!--分页-->
       <div class="pagination-wrapper">
         <el-pagination v-if="totalPages>params.pageSize"
-          :page-sizes="[30,50,100, 200, 300, 400]"
+          :page-sizes="[10,20,30, 50, 100]"
           :page-size="params.pageSize"
            :current-page.sync="params.pageNumber"
-           @current-change="refreshTableData"
+           @size-change="orgHandleSizeChange"
+           @current-change="orgHandleCurrentChange"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalPages">
         </el-pagination>
@@ -310,7 +311,7 @@
                        v-if="dataTotal>20"
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="currentPage"
+                       :current-page="pageNumber"
                        :page-sizes="[10, 20, 30, 40]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
@@ -423,14 +424,13 @@ export default {
       loading: false,
       // 机构用户 搜索，传输参数
       params: {
-        pageSize: 30,
+        pageSize: 10,
         pageNumber: 1,
         username: "",
         realname: "",
         orgName: ""
       },
       totalPages: 0,// 数据总量
-      currentPage: 1,// 当前页码
 			visible1: false,
       visible2: false,
 			schoolDialogVisible: false,// 学校委托书弹窗
@@ -442,7 +442,7 @@ export default {
       orgName:'',
       realname:'',
       progress:'',
-      pageSize:20,
+      pageSize:10,
       pageNumber:1,
       // 机构类型
       orgTypeList: [],
@@ -573,7 +573,7 @@ export default {
        * 获取所属部门信息
        */
     getAreaData(){
-      this.$axios.get('/area/areatree',{params: {parentId:0}})
+      this.$axios.get('/area/areachirldren',{params: {parentId:0}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -793,11 +793,20 @@ export default {
       this.selections = val;
       // console.log(val)
     },
+    orgHandleSizeChange(val){
+     this.params.pageSize=val;
+     this.params.pageNumber=1;
+     this.refreshTableData();
+    },
+    orgHandleCurrentChange(val){
+     this.params.pageNumber=val;
+     this.refreshTableData();
+    },
     /**@argument val pageSize */
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.pageSize = val;
-      this.currentPage=1;
+      this.pageNumber=1;
       this.getOrgsList();
     },
     /**@argument val pageNumber */
