@@ -1,14 +1,14 @@
 <template>
   <div class="content_exam">
            <p class="header_p">
-          <el-cascader
+          <!-- <el-cascader
             :options="options"
             :props="defaultProp"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
             @change="handleChange">
-          </el-cascader>
+          </el-cascader> -->
           <el-input placeholder="输入内容标题" v-model="title" class="input"></el-input>
           <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option

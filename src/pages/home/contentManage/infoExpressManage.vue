@@ -1,7 +1,7 @@
 <template>
   <div class="out_content_manage">
            <p class="header_p">
-           <el-cascader
+           <!-- <el-cascader
             :options="options"
             :clearable="true"
             class="input"
@@ -9,7 +9,7 @@
             :change-on-select="true"
             placeholder="请选择栏目"
             @change="handleChange">
-          </el-cascader>
+          </el-cascader> -->
           <el-input placeholder="输入文章标题" class="input" v-model="contentParams.title"></el-input>
           <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
@@ -21,7 +21,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
