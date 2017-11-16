@@ -248,7 +248,7 @@
        */
       getFilelistData(){
         this.searchFormData.groupId = this.currentGroupId;
-        this.$axios.get('/group/list/groupfile',{params: this.searchFormData})
+        this.$axios.get('/pmpheep/group/list/groupfile',{params: this.searchFormData})
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
@@ -304,7 +304,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/group/delete/pmphgroupfile',{params:{
+            this.$axios.delete('/pmpheep/group/delete/pmphgroupfile',{params:{
               groupId:this.currentGroupId,
               ids:ids.join(','),
               sessionId:this.$getUserData().sessionId
@@ -371,7 +371,7 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/group/add/pmphgroupfile',formdata,config)
+        this.$axios.post('/pmpheep/group/add/pmphgroupfile',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {

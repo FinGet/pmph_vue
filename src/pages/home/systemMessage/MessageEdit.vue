@@ -232,7 +232,7 @@ export default {
       if(!this.$route.query.id){
         return;
       }
-      this.$axios.get('/messages/message/content',{params:{
+      this.$axios.get('/pmpheep/messages/message/content',{params:{
         userMsgId:this.$route.query.id
       }})
         .then(response=>{
@@ -265,7 +265,7 @@ export default {
         filePath.push(iterm.path);
       });
       this.messageForm.content = this.$refs.editor.getContent();
-      this.$axios.put('/messages/update/message',this.$commonFun.initPostData({
+      this.$axios.put('/pmpheep/messages/update/message',this.$commonFun.initPostData({
         msgId:this.currentMessageId,
         msgTitle:this.messageForm.title,
         content:this.messageForm.content,

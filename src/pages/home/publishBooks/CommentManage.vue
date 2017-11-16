@@ -149,7 +149,7 @@
        * 获取表格数据
        */
       getTableData(){
-        this.$axios.get('/bookusercomment/list/comment',{params:this.searchForm})
+        this.$axios.get('/pmpheep/bookusercomment/list/comment',{params:this.searchForm})
           .then(response=>{
             var res = response.data;
             if(res.code==1){
@@ -194,7 +194,7 @@
             this.selectData.forEach(iterm=>{
               select.push(iterm.id);
             });
-            this.$axios.delete('/bookusercomment/delete/comment',{params:{
+            this.$axios.delete('/pmpheep/bookusercomment/delete/comment',{params:{
               ids:select.join(',')
             }})
               .then(response=>{
@@ -217,7 +217,7 @@
        * @param num 1为审核通过， 0为审核不通过
        */
       audit(num){
-        let url = '/bookusercomment/update/comment';
+        let url = '/pmpheep/bookusercomment/update/comment';
         let select = [];
         this.selectData.forEach(iterm=>{
           select.push(iterm.id);

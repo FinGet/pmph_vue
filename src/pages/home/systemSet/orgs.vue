@@ -510,7 +510,7 @@
           if (valid) {
             this.$axios({
               method: 'POST',
-              url: '/orgType/add/orgtype',
+              url: '/pmpheep/orgType/add/orgtype',
               data: this.$initPostData(this.addOrgTypeForm),
             })
               .then(response => {
@@ -548,7 +548,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
+            this.$axios.delete('/pmpheep/orgType/delete/orgtype',{params:{id:id}})
               .then(response=>{
                 let res = response.data;
                 if (res.code == '1') {

@@ -149,7 +149,7 @@
         this.selectData.forEach(iterm=>{
           selectIds.push(iterm.id);
         });
-        this.$axios.put('/messages/delete/mymessage',this.$initPostData({
+        this.$axios.put('/pmpheep/messages/delete/mymessage',this.$initPostData({
           ids:selectIds.join(','),
         }))
           .then((response) => {

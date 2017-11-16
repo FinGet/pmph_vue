@@ -531,7 +531,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/orgs/list/orgByOrgName", {
+        .get("/pmpheep/orgs/list/orgByOrgName", {
           params: { orgName: query || "" }
         })
         .then(function(response) {

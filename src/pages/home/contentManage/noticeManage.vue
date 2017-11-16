@@ -123,7 +123,7 @@
 export default {
   data() {
     return {
-      editContentUrl:'/cms/content/',    //修改查询url
+      editContentUrl:'/pmpheep/cms/content/',    //修改查询url
       options: [],
       defaultProp:{
         label: 'categoryName',
