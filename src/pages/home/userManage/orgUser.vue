@@ -763,9 +763,18 @@ export default {
         orgUserIds.push(item.id);
         //console.log(orgUserIds)
       });
-      this.$axios
-        .put(
-          "/pmpheep/auth/orgs/check",
+      var title='';
+      if(progress==1) {
+        title = "是否确认通过?"
+      } else {
+        title = "是否确认退回?"
+      }
+      this.$confirm(title, "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+      this.$axios.put("/pmpheep/auth/org_check",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
@@ -789,11 +798,12 @@ export default {
               type: "warning"
             });
           }
-          console.log(res.code)
+          // console.log(res.code)
         })
         .catch(error => {
           console.log(error.msg);
         });
+      })
     },
     /**@argument val 当选中项 */
     handleSelectionChange(val) {
