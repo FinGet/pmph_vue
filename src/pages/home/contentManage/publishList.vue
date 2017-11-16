@@ -15,7 +15,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容'})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column

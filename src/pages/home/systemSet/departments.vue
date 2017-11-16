@@ -207,6 +207,7 @@ export default {
             console.log(res);
             if(res.data.code==1){
               this.$message.success('修改成功');
+              this.getTreeData();
             }
           });
             })
