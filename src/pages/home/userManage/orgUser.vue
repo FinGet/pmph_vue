@@ -148,10 +148,11 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="120">
+            align="center">
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
               <el-button type="text">登录</el-button>
+              <el-button type="text">查看详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -402,23 +403,33 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
+<<<<<<< HEAD
+          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
+          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
+=======
           { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" },
            {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         ],
-        // realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        orgName: [
+          { required: true, message: "请输入机构名称", trigger: "blur" },
+          { min: 2, max: 16, message: "请输入2~16个字", trigger: "change,blur" }
+          ],
         email: [
-          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '邮箱格式不对' }
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
           ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
-        ],
-        orgName: [{ required: true, message: "请输入机构名称", trigger: "blur" }],
-        orgTypeName:[{ required: true, message: "请输入机构类型", trigger: "blur" }],
+          ],
         orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
         ],
         areaId: [{required: true, message: "请选择机构所属地区",trigger:"blur"}],
-        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}]
+        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
+        note:[
+          {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
+        ]
       },
       //搜索所属机构用户
       OrgNameList: [],
@@ -515,7 +526,7 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
-      console.log(this.form.orgName)
+      console.log(this.form.orgTypeId)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
     },
@@ -710,7 +721,11 @@ export default {
      */
     getOrgsList() {
       this.$axios
+<<<<<<< HEAD
+        .get("/auth/org_list", {
+=======
         .get("/pmpheep/auth/orgs/list", {
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
           params: {
             orgName: this.orgName,
             realname: this.realname,
