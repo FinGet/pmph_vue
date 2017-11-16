@@ -36,7 +36,7 @@
     },
     methods:{
       getMsgContent(){
-        this.$axios.get('/messages/detail/mymessage',{params:{
+        this.$axios.get('/pmpheep/messages/detail/mymessage',{params:{
           id:this.msgId
         }})
           .then(response=>{

@@ -159,7 +159,7 @@ export default {
        */
     getAreaTree(str, parentId) {
       this.$axios
-        .get("/area/areachirldren", {
+        .get("/pmpheep/area/areachirldren", {
           params: {
             parentId: parentId ? parentId : 0
           }
@@ -238,7 +238,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .delete("/area/delete/areabatch", {
+            .delete("/pmpheep/area/delete/areabatch", {
               params: {
                 id: item.id
               }
@@ -278,7 +278,7 @@ export default {
       var parentId = this[this.objKey][0].parentId;
       this.$axios
         .post(
-          "/area/add/area",
+          "/pmpheep/area/add/area",
           this.$commonFun.initPostData({
             parentId: parentId,
             areaName: this.dialogForm.areaName,
@@ -305,7 +305,7 @@ export default {
     updateArea() {
       this.$axios
         .put(
-          "area/update/area",
+          "/pmpheep/area/update/area",
           this.$initPostData({
             parentId: this.dialogForm.parentId,
             id: this.dialogForm.id,

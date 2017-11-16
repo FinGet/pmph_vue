@@ -5,7 +5,7 @@
            <el-input placeholder="请输入内容标题" class="input" v-model="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
-          <el-cascader 
+          <el-cascader
             :options="options"
             :clearable="true"
             class="input"
@@ -63,7 +63,7 @@
       </el-form-item>
       <el-form-item label="分类显示顺序：" prop="sort"  v-if="formData.isStick">
           <el-input placeholder="输入分类显示顺序" style="width:300px" v-model="formData.sort"></el-input>
-      </el-form-item>      
+      </el-form-item>
       <el-form-item label="是否热门：">
           <el-radio-group v-model="formData.isHot">
             <el-radio :label="true">是</el-radio>
@@ -108,7 +108,7 @@
             <el-radio :label="true">定时发布</el-radio>
           </el-radio-group>
           <el-form-item v-if="formData.isPublished" style="display:inline-block">
-              <el-date-picker 
+              <el-date-picker
                v-model="formData.scheduledTime"
                 type="datetime"
                 placeholder="选择定时发布时间"
@@ -131,9 +131,9 @@ import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl: "/cms/content/new", //发布内容url
-      columnListUrl: "/cms/set", //栏目列表Url
-      editContentUrl:'/cms/content/update',    //修改提交url
+      addNewUrl: "/pmpheep/cms/content/new", //发布内容url
+      columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+      editContentUrl:'/pmpheep/cms/content/update',    //修改提交url
       formData: {
         title: "",
         categoryId: "",
@@ -251,7 +251,7 @@ export default {
               }
             })
           }
-          
+
 
 
         } else {
@@ -281,10 +281,10 @@ export default {
           if(item.response){
             console.log(item);
             this.formData.file.push(item.response.data);
-          }  
+          }
         });
       }
-      
+
     },
     /* 文件移除回调 */
     uploadFileRemove(file, flielist) {
@@ -294,15 +294,15 @@ export default {
         this.formData.file.push(item.response.data);
       });
       }else{
-        
+
         if(file.attachment){
           if(!this.formData.attachment){
             this.formData.attachment=[];
           }
             this.formData.attachment.push(file.attachment);
-        }   
+        }
       }
-      
+
     },
     /* 推荐到期时间改变 */
     promoteDateChange(val) {
@@ -330,14 +330,14 @@ export default {
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
                  this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
-            } 
+            }
           }
           /* 设置默认栏目 */
           this.formData.categoryId=this.formData.categoryId+'';
           this.defaultCategoryId=editData.cmsContent.path.split('-');
          for(var i in  this.defaultCategoryId){
                this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
-         }   
+         }
           /* 填充默认内容 */
           var _this=this;
           setTimeout(function() {

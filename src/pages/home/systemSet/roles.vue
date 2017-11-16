@@ -15,7 +15,7 @@
                 </el-table-column>
                 <el-table-column prop="sort" label="显示顺序">
                 </el-table-column>
-                <el-table-column prop="isDisabled" label="是否启用">
+                <el-table-column prop="isDisabled" label="启用标识">
                     <template scope="scope">
                         <p v-if="!scope.row.isDisabled">启用</p>
                         <p v-if="scope.row.isDisabled">禁用</p>
@@ -23,13 +23,13 @@
                 </el-table-column>
                 <el-table-column prop="note" label="备注">
                 </el-table-column>
-                <el-table-column label="操作" width="190">
+                <el-table-column label="操作" width="150">
                     <template scope="scope">
                         <el-button type="text" @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <el-button type="text" @click="updatePower(scope.row)">更新权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" >删除</el-button>
+                        <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -46,7 +46,7 @@
                     <el-form-item label="角色名称：" prop="roleName">
                         <el-input v-model="rolesForm.roleName" placeholder="请输入"></el-input>
                     </el-form-item>
-                    <el-form-item label="启用：" prop="isDisabled">
+                    <el-form-item label="启用标识：" prop="isDisabled">
                         <el-radio-group v-model="rolesForm.isDisabled">
                           <el-radio :label="false">启用</el-radio>
                           <el-radio :label="true">禁用</el-radio>
@@ -88,10 +88,11 @@
 export default {
   data() {
     return {
-      listUrl: "/role/pmph/list", //列表数据接口
-      revisePowerUrl: "/role/pmph/resources", //更新权限接口
-      addRoleUrl: "/role/pmph/add", //添加角色接口
-      editRoleUrl: "/role/pmph/update", //修改角色接口
+      listUrl: "/pmpheep/role/pmph/list", //列表数据接口
+      revisePowerUrl: "/pmpheep/role/pmph/resources", //更新权限接口
+      addRoleUrl: "/pmpheep/role/pmph/add", //添加角色接口
+      editRoleUrl: "/pmpheep/role/pmph/update", //修改角色接口
+      deleteRoleUrl:'',   //删除角色url
       searchValue: "",
       rolesListData: [],
       rolesDialogVisible: false,
@@ -104,7 +105,7 @@ export default {
       },
       isAddNewRole: true,
       rolesFormRules: {
-        id: [{ required: true, message: "请输入角色代码", trigger: "blur" }],
+        id: [{type:'number' ,required: true, message: "请输入角色代码", trigger: "blur" }],
         roleName: [
             { required: true, message: "请输入角色名称", trigger: "blur" },
             {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
@@ -370,6 +371,10 @@ export default {
       // this.rolesForm = obj;
       this.rolesDialogVisible = true;
       // this.$refs['rolesForm'].resetFields();
+    },
+    //删除角色
+    deleteRole(obj){
+      console.log(obj);
     },
     resetDialogForm() {
       this.$refs["rolesForm"].resetFields();

@@ -164,7 +164,7 @@
        * 加载消息列表
        */
       getMessageList() {
-        this.$axios.get("/messages/list/message", {
+        this.$axios.get("/pmpheep/messages/list/message", {
           params: {
             sessionId: this.$getUserData().sessionId,
             title: this.title,
@@ -233,7 +233,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$axios.put('/messages/withdraw/message',this.$initPostData({
+          this.$axios.put('/pmpheep/messages/withdraw/message',this.$initPostData({
             msgId:row.msgId
           }))
           .then(response=>{
@@ -316,7 +316,7 @@
             for (var i = 0; i< len; i++) {
               arr.push(this.multipleSelection[i].msgId)
             }
-            this.$axios.put("/messages/delete/message",this.$initPostData({
+            this.$axios.put("/pmpheep/messages/delete/message",this.$initPostData({
               msgIds:arr.join(',')
             })).then((response) => {
               let res = response.data

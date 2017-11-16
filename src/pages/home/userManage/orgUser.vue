@@ -160,10 +160,11 @@
       <!--分页-->
       <div class="pagination-wrapper">
         <el-pagination v-if="totalPages>params.pageSize"
-          :page-sizes="[30,50,100, 200, 300, 400]"
+          :page-sizes="[10,20,30, 50, 100]"
           :page-size="params.pageSize"
            :current-page.sync="params.pageNumber"
-           @current-change="refreshTableData"
+           @size-change="orgHandleSizeChange"
+           @current-change="orgHandleCurrentChange"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalPages">
         </el-pagination>
@@ -172,7 +173,7 @@
       <el-dialog
         :title="dialogTitle"
         :visible.sync="dialogVisible"
-        @close="resetForm"
+        :before-close="resetForm"
         size="tiny">
         <el-form :model="form" :rules="rules" ref="ruleForm"  label-width="110px" class="padding20">
           <el-form-item label="机构账号：" prop="username">
@@ -210,23 +211,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-          <!-- <el-form-item label="所属院校："  prop="orgId" >
-            <el-select
-              v-model="form.orgId"
-              filterable
-              remote
-              placeholder="请输入关键词"
-              loading-text="正在搜索..."
-              :remote-method="searchOrgName"
-              :loading="loading">
-              <el-option
-                v-for="item in OrgNameList"
-                :key="item.id"
-                :label="item.orgName"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="启用标识：" prop="isDisabled">
             <el-radio-group v-model="form.isDisabled">
               <el-radio :label="false">启用</el-radio>
@@ -242,54 +226,6 @@
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
-      <!--机构类型设置-->
-      <!-- <el-dialog
-        title="机构类型设置"
-        :visible.sync="dialogVisible2"
-        size="tiny">
-        <div class="text-right">
-          <el-button  type="primary" @click="dialogVisible3=true">新增</el-button>
-        </div>
-        <div class="table-wrapper clearfix">
-          <el-table
-            :data="orgTypeList"
-            style="width: 100%">
-            <el-table-column
-              prop="typeName"
-              label="机构类型">
-            </el-table-column>
-            <el-table-column
-              prop="sort"
-              label="显示顺序">
-            </el-table-column>
-            <el-table-column
-              label="操作">
-              <template scope="scope">
-                <el-button type="text" @click="deleteOrgType(scope.row.id)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-dialog> -->
-      <!--新增机构类型-->
-      <!-- <el-dialog
-        title="机构类型设置"
-        :visible.sync="dialogVisible3"
-        size="tiny">
-
-        <el-form :model="addOrgTypeForm" :rules="rules_addType" ref="addOrgTypeForm"  label-width="100px" class="padding20" >
-          <el-form-item label="机构类型：" prop="typeName">
-            <el-input v-model="addOrgTypeForm.typeName"></el-input>
-          </el-form-item>
-          <el-form-item label="机构排列顺序：" prop="sort">
-            <el-input v-model="addOrgTypeForm.sort"></el-input>
-          </el-form-item>
-        </el-form>
-
-        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addOrgType">保 存</el-button>
-        </span>
-      </el-dialog> -->
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -376,7 +312,7 @@
                        v-if="dataTotal>20"
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="currentPage"
+                       :current-page="pageNumber"
                        :page-sizes="[10, 20, 30, 40]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
@@ -448,8 +384,6 @@ export default {
       selections:[], // 选中项
       tableData: [], // 机构用户数据
       dialogVisible: false, // 新增用户弹窗
-      dialogVisible2: false, // 机构类型设置弹窗
-      dialogVisible3: false, // 新增机构类型弹窗
       // 弹窗表单中间变量
       form: {
         id: "",
@@ -469,8 +403,13 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
+<<<<<<< HEAD
           { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
           { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
+=======
+          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" },
+           {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
@@ -497,14 +436,13 @@ export default {
       loading: false,
       // 机构用户 搜索，传输参数
       params: {
-        pageSize: 30,
+        pageSize: 10,
         pageNumber: 1,
         username: "",
         realname: "",
         orgName: ""
       },
       totalPages: 0,// 数据总量
-      currentPage: 1,// 当前页码
 			visible1: false,
       visible2: false,
 			schoolDialogVisible: false,// 学校委托书弹窗
@@ -516,7 +454,7 @@ export default {
       orgName:'',
       realname:'',
       progress:'',
-      pageSize:20,
+      pageSize:10,
       pageNumber:1,
       // 机构类型
       orgTypeList: [],
@@ -525,16 +463,6 @@ export default {
         typeName:'',
         sort:''
       },
-      // 新增机构类型表单验证
-      // rules_addType:{
-      //   typeName: [
-      //     { required: true, message: '机构类型名称不能为空', trigger: 'blur' },
-      //   ],
-      //   sort: [
-      //     { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-      //     {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-      //   ],
-      // }
     };
   },
   computed:{
@@ -546,6 +474,13 @@ export default {
         return false;
       } else {
         return true;
+      }
+    }
+  },
+  watch:{
+    dialogVisible(val){
+      if(!val){
+        this.closeDialog();
       }
     }
   },
@@ -564,7 +499,7 @@ export default {
        * 获取机构类型
        */
     getOrgTypeData(){
-      this.$axios.get('/orgType/list/orgtype',{params: {typeName:''}})
+      this.$axios.get('/pmpheep/orgType/list/orgtype',{params: {typeName:''}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -585,89 +520,15 @@ export default {
           this.$message.error('获取机构类型数据失败');
         });
     },
-    /**
-       * 新增机构类型
-       */
-    // addOrgType(){
-    //   this.$refs['addOrgTypeForm'].validate((valid) => {
-    //     if (valid) {
-    //       this.$axios({
-    //         method: 'POST',
-    //         url: '/orgType/add/orgtype',
-    //         data: this.$initPostData(this.addOrgTypeForm),
-    //       })
-    //         .then(response => {
-    //           let res = response.data;
-    //           let data = res.data.rows;
-    //           //修改成功
-    //           if (res.code == 1) {
-    //             this.getOrgTypeData();
-    //             this.dialogVisible3 = false;
-    //             this.$message.success('添加成功!');
-    //           }else{
-    //             this.$message.error(res.msg);
-    //           }
-    //         })
-    //         .catch(e=>{
-    //           console.log(e);
-    //           this.$message.error('添加失败，请重试');
-    //         });
-    //     } else {
-    //       this.$message.error('请正确填写表单!!');
-    //       return false;
-    //     }
-    //   });
-
-    // },
-    /**
-       * 删除机构类型
-       * @param id
-       */
-    // deleteOrgType(id){
-
-    //   this.$confirm('确认删除该机构类型？',"提示",{
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     type: "warning"
-    //   })
-    //     .then(()=>{
-    //       this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
-    //         .then(response=>{
-    //           let res = response.data;
-    //           if (res.code == '1') {
-    //             this.getOrgTypeData();
-    //             this.$message.success('删除成功！');
-    //           }else{
-    //             this.$message.error(res.msg);
-    //           }
-    //         })
-    //         .catch(e=>{
-    //           console.log(e);
-    //           this.$message.error('删除失败，请重试');
-    //         })
-    //     })
-    //     .catch(e=>{})
-    // },
     //点击修改按钮执行方法
     eidtInfoBtn(index) {
       this.isNew = false;
-      // this.OrgNameList = [
-      //   {
-      //     id: this.tableData[index].orgId,
-      //     orgName: this.tableData[index].orgName
-      //   }
-      // ];
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
       console.log(this.form.orgTypeId)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
-    },
-    /* 列表选中切换 */
-    handleSelectionChange(val) {
-      this.selections = val;
-      // console.log(val)
     },
     /**
            * 提交表单中搜索所属院校
@@ -682,7 +543,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/orgs/list/orgByOrgName", {
+        .get("/pmpheep/orgs/list/orgByOrgName", {
           params: { orgName: query || "" }
         })
         .then(function(response) {
@@ -709,7 +570,7 @@ export default {
       var self = this;
       // 为给定 ID 的 user 创建请求
       this.$axios
-        .get("/users/org/list/orguser", { params: this.params })
+        .get("/pmpheep/users/org/list/orguser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -724,7 +585,7 @@ export default {
        * 获取所属部门信息
        */
     getAreaData(){
-      this.$axios.get('/area/areatree',{params: {parentId:0}})
+      this.$axios.get('/area/areachirldren',{params: {parentId:0}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -769,7 +630,7 @@ export default {
       this.form.orgId -= 0
       this.$axios({
         method: "POST",
-        url: "/users/org/add/orguserofback",
+        url: "/pmpheep/users/org/add/orguserandorgofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -783,6 +644,8 @@ export default {
               type: "success",
               message: "添加成功"
             });
+          }else {
+            self.$message.error(res.msg);
           }
         })
         .catch(function(error) {
@@ -800,7 +663,7 @@ export default {
       this.form.orgId -= 0
       this.$axios({
         method: "PUT",
-        url: "/users/org/update/orguserofback",
+        url: "/pmpheep/users/org/update/orguserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -830,8 +693,15 @@ export default {
     /**
      * 重置form表单数据
      */
-    resetForm() {
-      this.form =  {
+    resetForm(done) {
+      this.$refs.ruleForm.resetFields();
+      done();
+    },
+    /**
+     * 监听弹出层关闭事件
+     */
+    closeDialog() {
+     this.form =  {
         id: "",
         realname: "",
         username: "",
@@ -845,22 +715,17 @@ export default {
         isDisabled: true,
         note: ""
       }
-      // 因为有非必填项，所以不能用this.$refs.ruleForm.resetFields();清除
-      // this.$refs.ruleForm.resetFields();
-      // console.log(this.$refs.ruleForm);
-    },
-    /**
-     * 监听弹出层关闭事件
-     */
-    closeDialog() {
-      this.resetForm();
     },
       /**
      * 请求初始化列表
      */
     getOrgsList() {
       this.$axios
+<<<<<<< HEAD
         .get("/auth/org_list", {
+=======
+        .get("/pmpheep/auth/orgs/list", {
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -909,7 +774,7 @@ export default {
       });
       this.$axios
         .put(
-          "/auth/orgs/check",
+          "/pmpheep/auth/orgs/check",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
@@ -944,10 +809,20 @@ export default {
       this.selections = val;
       // console.log(val)
     },
+    orgHandleSizeChange(val){
+     this.params.pageSize=val;
+     this.params.pageNumber=1;
+     this.refreshTableData();
+    },
+    orgHandleCurrentChange(val){
+     this.params.pageNumber=val;
+     this.refreshTableData();
+    },
     /**@argument val pageSize */
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.pageSize = val;
+      this.pageNumber=1;
       this.getOrgsList();
     },
     /**@argument val pageNumber */
@@ -961,7 +836,7 @@ export default {
 		 * @argument index */
     preview(proxy) {
       this.$axios
-        .get("/image/" + proxy)
+        .get("/pmpheep/image/" + proxy)
         .then(response => {
           let res = response.data;
           if (res.code == "1") {

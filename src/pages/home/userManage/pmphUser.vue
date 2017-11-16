@@ -102,27 +102,27 @@
     </el-row>
     <el-dialog title="修改" :visible.sync="dialogVisible" :before-close="handleDialog"  @close="resetForm('form')" size="tiny">
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" class="padding20">
-        <el-form-item label="账号:"
+        <el-form-item label="账号："
                       prop="username"
         >
           <el-input v-model="form.username" :disabled="!isNew" placeholder="请输入您的用户代码"></el-input>
         </el-form-item>
-        <el-form-item label="姓名:"
+        <el-form-item label="姓名："
                       prop="realname"
                     >
           <el-input v-model="form.realname" placeholder="请输入您的用户名称"></el-input>
         </el-form-item>
-        <el-form-item label="手机号:"
+        <el-form-item label="手机号："
                       prop="handphone"
         >
           <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱:"
+        <el-form-item label="邮箱："
                       prop="email"
         >
           <el-input v-model="form.email" placeholder="请输入您的邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="角色名称:"
+        <el-form-item label="角色名称："
                       prop="roleIds"
                       required
                     >
@@ -155,7 +155,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：" prop="isDisabled">
+        <el-form-item label="启用标识：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
             <el-radio :label="true">禁用</el-radio>
@@ -180,7 +180,7 @@ export default {
          }
     }
     return {
-      api_addPmphUser: "/users/pmph/add",
+      api_addPmphUser: "/pmpheep/users/pmph/add",
       isNew: true,
       multipleSelection: [],
       dialogVisible: false,
@@ -293,7 +293,7 @@ export default {
        * 获取用户角色
        */
     getRoleName() {
-      this.$axios.get("/role/pmph/list/role").then(response => {
+      this.$axios.get("/pmpheep/role/pmph/list/role").then(response => {
         let res = response.data;
         if (res.code == "1") {
           this.rolenames = res.data;
@@ -309,7 +309,7 @@ export default {
        */
     getTree() {
       this.$axios
-        .get("users/pmph/list/pmphdepartment")
+        .get("/pmpheep/users/pmph/list/pmphdepartment")
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
@@ -325,7 +325,7 @@ export default {
        */
     getUsers() {
       this.$axios
-        .get("users/pmph/list/pmphuser", {
+        .get("/pmpheep/users/pmph/list/pmphuser", {
           params: {
             name: this.name,
             path: this.path,
@@ -458,7 +458,7 @@ export default {
     updateUser() {
       this.$axios
         .put(
-          "/users/pmph/update/pmphuserofback",
+          "/pmpheep/users/pmph/update/pmphuserofback",
           this.$initPostData({
             username: this.form.username,
             id: this.form.id,
@@ -542,7 +542,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/departments/list/pmphdepartment", {
+        .get("/pmpheep/departments/list/pmphdepartment", {
           params: { dpName: query || "" }
         })
         .then(function(response) {

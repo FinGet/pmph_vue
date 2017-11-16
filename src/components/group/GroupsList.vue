@@ -95,7 +95,7 @@
     data(){
       var _this = this;
        return {
-         groupListUrl:'/group/list/pmphgroup',
+         groupListUrl:'/pmpheep/group/list/pmphgroup',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
          currentActiveGroupId:undefined,
@@ -228,7 +228,7 @@
         };  //添加请求头
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            this.$axios.post('/group/add/pmphgroup',formdata,config)
+            this.$axios.post('/pmpheep/group/add/pmphgroup',formdata,config)
               .then((response) => {
                 let res = response.data;
                 if (res.code == '1') {

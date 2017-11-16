@@ -237,7 +237,7 @@
 						<template scope="scope">
               <!-- <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag> -->
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
-							<el-tag type="success" v-if="scope.row.progress=='3'">通过</el-tag>
+							<el-tag type="success" v-if="scope.row.progress=='3'">已通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
 						</template>
 					</el-table-column>
@@ -315,7 +315,7 @@ export default {
 				},
 				{
 					value: '2',
-					label: '被退回'
+					label: '已退回'
 				},
 				{
 					value: '3',
@@ -341,8 +341,13 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
+<<<<<<< HEAD
           { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
           { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
+=======
+          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" },
+          {validator:this.$formCheckedRules.englishStringChecked,trigger:'blur'}
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
@@ -439,7 +444,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/orgs/list/orgByOrgName", {
+        .get("/pmpheep/orgs/list/orgByOrgName", {
           params: { orgName: query || "" }
         })
         .then(function(response) {
@@ -466,7 +471,7 @@ export default {
       var self = this;
       // 为给定 ID 的 user 创建请求
       this.$axios
-        .get("/users/writer/list/writeruser", { params: this.params })
+        .get("/pmpheep/users/writer/list/writeruser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -511,7 +516,7 @@ export default {
       var self = this;
       this.$axios({
         method: "POST",
-        url: "/users/writer/add/writeruserofback",
+        url: "/pmpheep/users/writer/add/writeruserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -544,7 +549,7 @@ export default {
       var self = this;
       this.$axios({
         method: "PUT",
-        url: "/users/writer/update/writeruserofback",
+        url: "/pmpheep/users/writer/update/writeruserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -582,7 +587,7 @@ export default {
     },
     preview(cert) {
       this.$axios
-        .get("/image/" + cert)
+        .get("/pmpheep/image/" + cert)
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
@@ -599,7 +604,11 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
+<<<<<<< HEAD
       this.$axios.get("/auth/writer_list",{
+=======
+      this.$axios.get("/pmpheep/auth/writers/list",{
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -637,6 +646,7 @@ export default {
 				// console.log(item)
 				userIds.push(item.id)
 				//console.log(orgUserIds)
+<<<<<<< HEAD
       })
       var title='';
       if(progress==0) {
@@ -670,6 +680,29 @@ export default {
             console.log(error.msg)
           })
         })
+=======
+			})
+			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
+				progress: progress,
+				userIds: userIds
+			})).then((response) => {
+				let res = response.data
+				if (res.code == "1") {
+					//console.log(res)
+					this.getWritersList()
+
+					this.$message({
+              showClose: true,
+              message: progress==0?'审核通过!':'已退回',
+              type: 'success'
+            });
+				}else if(res.code ==2){
+          this.$message.error("已审核的用户不能再次审核");
+        }
+			}).catch(error => {
+				console.log(error.msg)
+			})
+>>>>>>> b73b2692eed0ef52aecc71f111ee7ba7ea61597b
 		},
     /**
      * 搜索
@@ -688,13 +721,13 @@ export default {
 		},
 		handleCurrentChange(val) {
       this.pageNumber=val;
-      this.getWritersList(); 
+      this.getWritersList();
 		},
 		/**
 		 * 预览教师资格证
 		 * @argument index */
 		preview(cert) {
-			this.$axios.get("/image/"+cert).then(response => {
+			this.$axios.get("/pmpheep/image/"+cert).then(response => {
 				let res = response.data
 				if (res.code == '1'){
 					this.dialogVisible = true

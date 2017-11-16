@@ -7,7 +7,7 @@
           <p class="page-title">人民卫生出版社：</p>
           <!--操作按钮-->
           <div class="pull-right">
-            <el-button type="primary" @click="openAddDialog" :disabled="!hasSelected">添加子部门</el-button>
+            <el-button type="primary" @click="openAddDialog" :disabled="!(hasSelected||isCheckTop)">添加子部门</el-button>
             <el-button type="danger" @click="deleteNode" :disabled="!hasSelected">删除</el-button>
           </div>
         </div>
@@ -16,7 +16,7 @@
                  node-key="id"
                  :highlight-current="true"
                  :expand-on-click-node="false"
-                 :default-expanded-keys="[1]"
+                 :default-expanded-keys="[treeData[0].id]"
                  @node-click="checkNode"
                  ref="tree"
                  class="no-border expand-icon-lg"
@@ -27,7 +27,7 @@
       <div class="paddingL30">
         <p class="page-title paddingB20">部门信息：</p>
         <div class="max-width-460">
-          <el-form label-position="right" :rules="dialogRules" ref="editForm" label-width="80px" :model="selectObj">
+          <el-form label-position="right" :rules="dialogRules" ref="editForm" label-width="85px" :model="selectObj">
             <el-form-item label="部门名称" prop="dpName">
               <el-input  :disabled="!hasSelected" v-model="selectObj.dpName"></el-input>
             </el-form-item>
@@ -71,10 +71,10 @@
 export default {
   data() {
     return {
-      treeDataUrl: "/departments/pmphdepartmenttree", //获取社内部门树url
-      addNodeUrl: "/departments/add/pmphdepartment", //添加节点url
-      deleteNodelUrl: "/departments/delete/pmphdepartmentbatch", //删除节点url
-      editNodeUrl: "/departments/update/pmphdepartment", //修改节点url
+      treeDataUrl: "/pmpheep/departments/pmphdepartmenttree", //获取社内部门树url
+      addNodeUrl: "/pmpheep/departments/add/pmphdepartment", //添加节点url
+      deleteNodelUrl: "/pmpheep/departments/delete/pmphdepartmentbatch", //删除节点url
+      editNodeUrl: "/pmpheep/departments/update/pmphdepartment", //修改节点url
       treeData: [],
       hasSelected: false,
       multipleSelection: [],
@@ -85,6 +85,7 @@ export default {
         sort: "",
         note: ""
       },
+      isCheckTop:false,
       dialogForm: {
         dpName: "",
         sort: "",
@@ -229,6 +230,10 @@ export default {
       }
       this.selectObj.sort=this.selectObj.sort+'';
       console.log(this.selectObj);
+           if(data.path==0){
+         this.hasSelected = false;
+        this.isCheckTop=true;
+      }
     }
   },
   created() {
