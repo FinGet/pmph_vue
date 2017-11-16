@@ -30,7 +30,7 @@
 export default {
   data() {
     return {
-      loginUrl:'/pmph/login',
+      loginUrl:'/pmpheep/pmph/login',
       loginForm: {
         username: '',
         password: ''

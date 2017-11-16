@@ -179,7 +179,7 @@ export default {
          }
     }
     return {
-      api_addPmphUser: "/users/pmph/add",
+      api_addPmphUser: "/pmpheep/users/pmph/add",
       isNew: true,
       multipleSelection: [],
       dialogVisible: false,
@@ -292,7 +292,7 @@ export default {
        * 获取用户角色
        */
     getRoleName() {
-      this.$axios.get("/role/pmph/list/role").then(response => {
+      this.$axios.get("/pmpheep/role/pmph/list/role").then(response => {
         let res = response.data;
         if (res.code == "1") {
           this.rolenames = res.data;
@@ -308,7 +308,7 @@ export default {
        */
     getTree() {
       this.$axios
-        .get("users/pmph/list/pmphdepartment")
+        .get("/pmpheep/users/pmph/list/pmphdepartment")
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
@@ -324,7 +324,7 @@ export default {
        */
     getUsers() {
       this.$axios
-        .get("users/pmph/list/pmphuser", {
+        .get("/pmpheep/users/pmph/list/pmphuser", {
           params: {
             name: this.name,
             path: this.path,
@@ -457,7 +457,7 @@ export default {
     updateUser() {
       this.$axios
         .put(
-          "/users/pmph/update/pmphuserofback",
+          "/pmpheep/users/pmph/update/pmphuserofback",
           this.$initPostData({
             username: this.form.username,
             id: this.form.id,
@@ -541,7 +541,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/departments/list/pmphdepartment", {
+        .get("/pmpheep/departments/list/pmphdepartment", {
           params: { dpName: query || "" }
         })
         .then(function(response) {

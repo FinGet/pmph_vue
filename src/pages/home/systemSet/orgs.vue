@@ -233,7 +233,7 @@
             { min:1,max:20, message: "联系人名称长度过长", trigger: "change,blur" }
           ],
           contactPhone:[
-            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}   
+            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
           ],
           note:[
             { min:1,max:20, message: "备注长度不能超过20", trigger: "change,blur" },
@@ -293,7 +293,7 @@
       addBtnClick(){
         this.isNew=true;
         this.dialogVisible=true;
-        
+
       },
       /**
        * 关闭新增修改弹窗
@@ -327,7 +327,7 @@
        * 获取当前表格数据
        */
       getOrgTableData(){
-        this.$axios.get('/orgs/list/org',{params: this.searchForm})
+        this.$axios.get('/pmpheep/orgs/list/org',{params: this.searchForm})
           .then(response=>{
             let res = response.data;
             let data = res.data;
@@ -349,7 +349,7 @@
        * 获取机构类型
        */
       getOrgTypeData(){
-        this.$axios.get('/orgType/list/orgtype',{params: {typeName:''}})
+        this.$axios.get('/pmpheep/orgType/list/orgtype',{params: {typeName:''}})
           .then(response=>{
             let res = response.data;
             let data = res.data;
@@ -374,7 +374,7 @@
        * 获取所属部门信息
        */
       getAreaData(){
-        this.$axios.get('/area/areatree',{params: {parentId:0}})
+        this.$axios.get('/pmpheep/area/areatree',{params: {parentId:0}})
           .then(response=>{
             let res = response.data;
             let data = res.data;
@@ -413,7 +413,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/orgs/delete/org/'+orgId)
+            this.$axios.delete('/pmpheep/orgs/delete/org/'+orgId)
               .then(response=>{
                 let res = response.data;
                 if (res.code == '1') {
@@ -436,7 +436,7 @@
       submitEdit(){
         this.$axios({
           method: 'PUT',
-          url: '/orgs/update/org',
+          url: '/pmpheep/orgs/update/org',
           data: this.$initPostData(this.form),
         })
           .then(response => {
@@ -462,7 +462,7 @@
       submitAdd(){
         this.$axios({
           method: 'POST',
-          url: '/orgs/add/org',
+          url: '/pmpheep/orgs/add/org',
           data: this.$initPostData(this.form),
         })
           .then(response => {
@@ -510,7 +510,7 @@
           if (valid) {
             this.$axios({
               method: 'POST',
-              url: '/orgType/add/orgtype',
+              url: '/pmpheep/orgType/add/orgtype',
               data: this.$initPostData(this.addOrgTypeForm),
             })
               .then(response => {
@@ -548,7 +548,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/orgType/delete/orgtype',{params:{id:id}})
+            this.$axios.delete('/pmpheep/orgType/delete/orgtype',{params:{id:id}})
               .then(response=>{
                 let res = response.data;
                 if (res.code == '1') {

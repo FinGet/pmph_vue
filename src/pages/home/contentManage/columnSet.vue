@@ -186,7 +186,7 @@ export default {
      */
     getMenuLists() {
       // console.log(this.options)
-      this.$axios.get("/cms/set", {
+      this.$axios.get("/pmpheep/cms/set", {
         params: {
           categoryName: this.categoryName
         }
@@ -230,7 +230,7 @@ export default {
      */
     addMenu() {
       // console.log(this.dialogForm.path)
-      this.$axios.post('/cms/set/new', this.$initPostData({
+      this.$axios.post('/pmpheep/cms/set/new', this.$initPostData({
         categoryName: this.dialogForm.categoryName, // 栏目名称
         parentId: this.dialogForm.parentId ? this.dialogForm.parentId : '0', // 上级栏目
         path: this.dialogForm.path ? this.dialogForm.path.join('-') : '0', // 根节点路径
@@ -278,7 +278,7 @@ export default {
      * 新增栏目角色列表加载
      */
     getRoleList() {
-      this.$axios.get('/role/pmph/list/role').then(response => {
+      this.$axios.get('/pmpheep/role/pmph/list/role').then(response => {
         let res = response.data
         if (res.code == '1') {
           this.dialogVisible = true
@@ -294,7 +294,7 @@ export default {
      *@argument id
      */
     getDetail(id) {
-      this.$axios.get('/cms/set/detail', {
+      this.$axios.get('/pmpheep/cms/set/detail', {
         params: {
           categoryId: id
         }
@@ -334,7 +334,7 @@ export default {
      * 修改数据
      */
     upData() {
-      this.$axios.put('/cms/set/update', this.$initPostData({
+      this.$axios.put('/pmpheep/cms/set/update', this.$initPostData({
         id: this.id,
         categoryName: this.dialogForm.categoryName, // 栏目名称
         parentId: this.dialogForm.parentId ? this.dialogForm.parentId : '0', // 上级栏目
@@ -385,7 +385,7 @@ export default {
         ids.push(item.id)
       })
       console.log(ids)
-      this.$axios.delete('/cms/set/category', {
+      this.$axios.delete('/pmpheep/cms/set/category', {
         params: {
           ids: ids.join(',')
         }
@@ -405,7 +405,7 @@ export default {
      * 删除
      */
     deleted(id) {
-      this.$axios.delete('/cms/set/' + id + '/category').then(response => {
+      this.$axios.delete('/pmpheep/cms/set/' + id + '/category').then(response => {
         let res = response.data
         if (res.code == '1') {
           this.$message.success('删除成功');

@@ -271,7 +271,7 @@
     </el-dialog>
 
     <!-- 同步弹窗 -->
-    <el-dialog 
+    <el-dialog
     title="图书同步"
       :visible.sync="bookSyncVisible"
       size="small">
@@ -384,7 +384,7 @@
             }
         })
         console.log(path);
-        this.$axios.get('/books/list/book',{params:{
+        this.$axios.get('/pmpheep/books/list/book',{params:{
           name:this.searchForm.name,
           path:path,
           type:id,
@@ -413,7 +413,7 @@
        */
       getBookType(){
         console.log(111);
-        this.$axios.get('/books/list/materialtype')
+        this.$axios.get('/pmpheep/books/list/materialtype')
           .then((response)=>{
             var res = response.data;
             if(res.code==1){
@@ -500,7 +500,7 @@
         }
         let type = this.form.typeId[this.form.typeId.length-1];
         type=type?type:0;
-        this.$axios.put('/books/update/book',this.$commonFun.initPostData({
+        this.$axios.put('/pmpheep/books/update/book',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
@@ -533,7 +533,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/books/delete/book',{params:{
+            this.$axios.delete('/pmpheep/books/delete/book',{params:{
               id:row.id
             }})
               .then(response=>{

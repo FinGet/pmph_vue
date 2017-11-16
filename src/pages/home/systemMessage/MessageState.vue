@@ -107,7 +107,7 @@
        * 初始化数据
        */
       getMessageState() {
-        this.$axios.get("/messages/message/"+this.msgId+"/state", {
+        this.$axios.get("/pmpheep/messages/message/"+this.msgId+"/state", {
           params: {
             name: this.name,
             sessionId: this.$getUserData().sessionId,

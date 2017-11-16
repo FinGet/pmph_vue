@@ -357,7 +357,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/auth/writers/list",{
+      this.$axios.get("/pmpheep/auth/writers/list",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -396,7 +396,7 @@ export default {
 				userIds.push(item.id)
 				//console.log(orgUserIds)
 			})
-			this.$axios.put("/auth/writers/check",this.$initPostData({
+			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
 				progress: progress,
 				userIds: userIds
 			})).then((response) => {
@@ -434,7 +434,7 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
 		preview(cert) {
-			this.$axios.get("/image/"+cert).then(response => {
+			this.$axios.get("/pmpheep/image/"+cert).then(response => {
 				let res = response.data
 				if (res.code == '1'){
 					this.dialogVisible = true

@@ -47,7 +47,7 @@
     },
     methods:{
       logout(){
-        this.$axios.get('/pmph/logout',{params:{
+        this.$axios.get('/pmpheep/pmph/logout',{params:{
           sessionId:this.$getUserData().sessionId,
           loginType:parseInt(this.$getUserData().userInfo.loginType)
         }})

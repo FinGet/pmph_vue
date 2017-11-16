@@ -117,7 +117,7 @@
        * 获取消息列表数据
        */
       getTableData(){
-        this.$axios.get('/messages/list/mymessage',{params:this.searchForm})
+        this.$axios.get('/pmpheep/messages/list/mymessage',{params:this.searchForm})
           .then(response=>{
             let res = response.data;
             if(res.code==1){
@@ -149,7 +149,7 @@
         this.selectData.forEach(iterm=>{
           selectIds.push(iterm.id);
         });
-        this.$axios.put('/messages/delete/mymessage',this.$initPostData({
+        this.$axios.put('/pmpheep/messages/delete/mymessage',this.$initPostData({
           ids:selectIds.join(','),
         }))
           .then((response) => {

@@ -230,10 +230,10 @@
 export default {
   data() {
     return {
-      clubTreeUrl: "users/pmph/list/pmphdepartment", //获取社内用户成员树url
-      clubUserUrl: "users/pmph/list/pmphuser", //获取社内用户url
-      writerUserUrl: '/users/writer/list/writeruser',  //获取作家用户url
-      orgUserUrl:'/users/org/list/orguser',  //获取机构用户url
+      clubTreeUrl: "/pmpheep/users/pmph/list/pmphdepartment", //获取社内用户成员树url
+      clubUserUrl: "/pmpheep/users/pmph/list/pmphuser", //获取社内用户url
+      writerUserUrl: '/pmpheep/users/writer/list/writeruser',  //获取作家用户url
+      orgUserUrl:'/pmpheep/users/org/list/orguser',  //获取机构用户url
       clubUserParams: {
         name: "",
         path: "",
@@ -318,7 +318,7 @@ export default {
     send() {
       var self = this;
       var userList = [];
-      var url = this.type=='reissue'?'/messages/message/again':'/messages/message/new';
+      var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/new';
       var data = this.type=='reissue'?this.reissueFormData:this.formdata;
       /**
        * 这里先写死，社内用户的userType=1,作家用户的userType=2,机构用户的userType=3

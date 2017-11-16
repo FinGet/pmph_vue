@@ -1,7 +1,7 @@
 <template>
   <div class="out_content_manage">
            <p class="header_p">
-           <el-cascader 
+           <el-cascader
             :options="options"
             :clearable="true"
             class="input"
@@ -9,14 +9,14 @@
             :change-on-select="true"
             placeholder="请选择栏目"
             @change="handleChange">
-          </el-cascader>  
+          </el-cascader>
           <el-input placeholder="输入文章标题" class="input" v-model="contentParams.title"></el-input>
           <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
              :label="item.label"
-             :value="item.value"       
+             :value="item.value"
              >
          </el-option>
          </el-select>
@@ -46,7 +46,7 @@
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
-                    </el-tooltip>     
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
@@ -80,7 +80,7 @@
       </el-pagination>
     </div>
      <!-- 内容详情查看界面 -->
-         <el-dialog 
+         <el-dialog
      title=""
      :visible.sync="showContentDetail"
      size="large">
@@ -165,9 +165,9 @@
 export default {
   data() {
     return {
-      outContentUrl:'/cms/manage',  //内容列表url
-      editContentUrl:'/cms/content/',    //修改查询url
-      columnListUrl: "/cms/set", //栏目列表Url
+      outContentUrl:'/pmpheep/cms/manage',  //内容列表url
+      editContentUrl:'/pmpheep/cms/content/',    //修改查询url
+      columnListUrl: "/pmpheep/cms/set", //栏目列表Url
       contentParams:{
           categoryId:'',
           title:'',
@@ -248,7 +248,7 @@ export default {
       ],
       commentTableData:[
           {
-            id:1,  
+            id:1,
             name:'张武',
             title:'文章标题11',
             column:'信息快报',
@@ -312,7 +312,7 @@ export default {
         });
     },
       /* 查看详情 */
-      contentDetail(obj){        
+      contentDetail(obj){
          this.$axios.get(this.editContentUrl+obj.id,{
           }).then((res)=>{
               if(res.data.code==1){
@@ -331,11 +331,11 @@ export default {
               if(res.data.code==1){
                  this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
               }
-          })    
+          })
     },
     /* 隐藏内容 */
      hideContent(obj){
-      this.$axios.put('/cms/manage/content/'+obj.id+'/hide').then((res)=>{
+      this.$axios.put('/pmpheep/cms/manage/content/'+obj.id+'/hide').then((res)=>{
         console.log(res);
         if(res.data.code==1){
           this.getOutContentList();
@@ -347,7 +347,7 @@ export default {
      },
      /* 删除内容 */
      deleteContent(obj){
-      this.$axios.delete('/cms/manage/content/'+obj.id).then((res)=>{
+      this.$axios.delete('/pmpheep/cms/manage/content/'+obj.id).then((res)=>{
         if(res.data.code==1){
           this.getOutContentList();
           this.$message.success('内容已删除');

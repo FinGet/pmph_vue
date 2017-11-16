@@ -263,7 +263,7 @@
         var schoolName = []
         var schoolType = []
         var schoolId = []
-        this.$axios.get("/messages/message/send_object",{
+        this.$axios.get("/pmpheep/messages/message/send_object",{
           params:{
             sendType: this.formdata.sendType,
             pageSize: 20,
@@ -383,7 +383,7 @@
       submit(){
         var self = this;
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
-        var url = this.type=='reissue'?'/messages/message/again':'/messages/message/new'
+        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/new'
         data.orgIds=this.queryData.join(',');
         data['sessionId']=this.$getUserData().sessionId;
         // console.log(this.formdata)

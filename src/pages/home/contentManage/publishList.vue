@@ -10,7 +10,7 @@
              v-for="item in selectOp"
              :key="item.value"
              :label="item.label"
-             :value="item.value"       
+             :value="item.value"
              >
          </el-option>
          </el-select>
@@ -62,16 +62,16 @@
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
                         <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
-                    </el-tooltip> 
+                    </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
-                    </el-tooltip>  
+                    </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="评" placement="bottom">
                         <i class="fa fa-comment table_i">{{scope.row.comments}}</i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
                         <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
-                    </el-tooltip>     
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="显示顺序" width="110">
@@ -104,7 +104,7 @@
     </div>
 
     <!-- 文章查看界面 -->
-    <el-dialog 
+    <el-dialog
      title=""
      :visible.sync="showContentDetail"
      size="large">
@@ -214,7 +214,7 @@
     </div>
   </el-tab-pane>
 </el-tabs>
-      
+
 
   </div>
 </template>
@@ -237,7 +237,7 @@
  color:#13ce66;
 }
 .publish_list .active_orange{
-  
+
    color:rgb(254,215,79);
 }
 .publish_list .active_blue{
@@ -271,9 +271,9 @@ color:#58b7ff;
 export default {
   data() {
     return {
-       publicListUrl:'/cms/contents',   //获取列表url
-       editContentUrl:'/cms/content/',    //修改查询url
-       deleteContentUrl:'/cms/content/',   //删除内容url
+       publicListUrl:'/pmpheep/cms/contents',   //获取列表url
+       editContentUrl:'/pmpheep/cms/content/',    //修改查询url
+       deleteContentUrl:'/pmpheep/cms/content/',   //删除内容url
       selectOp:[
          {
              value:0,
@@ -357,7 +357,7 @@ export default {
         this.isAdmin=this.$getUserData().userInfo.isAdmin;
       },
       /* 查看详情 */
-      contentDetail(obj){        
+      contentDetail(obj){
          this.$axios.get(this.editContentUrl+obj.id,{
           }).then((res)=>{
               if(res.data.code==1){
@@ -370,7 +370,7 @@ export default {
       },
       /* 发布内容 */
       publishContent(obj){
-           this.$axios.put('/cms/content/'+obj.id+'/publish').then((res)=>{
+           this.$axios.put('/pmpheep/cms/content/'+obj.id+'/publish').then((res)=>{
               console.log(res);
               if(res.data.code==1){
                   this.$message.success("文章已发布");
@@ -388,11 +388,11 @@ export default {
               if(res.data.code==1){
                  this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
               }
-          })    
+          })
       },
       /* 隐藏内容 */
       hideContent(obj){
-         this.$axios.put('/cms/content/'+obj.id+'/hide').then((res)=>{
+         this.$axios.put('/pmpheep/cms/content/'+obj.id+'/hide').then((res)=>{
            if(res.data.code==1){
               this.$message.success('内容已隐藏');
               this.getPublicList();

@@ -487,7 +487,7 @@ export default {
        * 获取机构类型
        */
     getOrgTypeData(){
-      this.$axios.get('/orgType/list/orgtype',{params: {typeName:''}})
+      this.$axios.get('/pmpheep/orgType/list/orgtype',{params: {typeName:''}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -531,7 +531,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/orgs/list/orgByOrgName", {
+        .get("/pmpheep/orgs/list/orgByOrgName", {
           params: { orgName: query || "" }
         })
         .then(function(response) {
@@ -558,7 +558,7 @@ export default {
       var self = this;
       // 为给定 ID 的 user 创建请求
       this.$axios
-        .get("/users/org/list/orguser", { params: this.params })
+        .get("/pmpheep/users/org/list/orguser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -618,7 +618,7 @@ export default {
       this.form.orgId -= 0
       this.$axios({
         method: "POST",
-        url: "/users/org/add/orguserandorgofback",
+        url: "/pmpheep/users/org/add/orguserandorgofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -651,7 +651,7 @@ export default {
       this.form.orgId -= 0
       this.$axios({
         method: "PUT",
-        url: "/users/org/update/orguserofback",
+        url: "/pmpheep/users/org/update/orguserofback",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -709,7 +709,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/auth/orgs/list", {
+        .get("/pmpheep/auth/orgs/list", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -758,7 +758,7 @@ export default {
       });
       this.$axios
         .put(
-          "/auth/orgs/check",
+          "/pmpheep/auth/orgs/check",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
@@ -820,7 +820,7 @@ export default {
 		 * @argument index */
     preview(proxy) {
       this.$axios
-        .get("/image/" + proxy)
+        .get("/pmpheep/image/" + proxy)
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
