@@ -218,7 +218,6 @@
         console.log(filedata);
         formdata.append('file',filedata);
         formdata.append('groupName',this.newGroupData.name);
-        formdata.append('sessionId',this.$getUserData().sessionId);
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
