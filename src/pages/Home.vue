@@ -30,7 +30,7 @@
 <script>
   import SideBar from 'components/Side-bar'
   import MessageIcon from 'components/Message-icon'
-  import User from 'components/User';
+  import User from 'components/User-headIcon';
   import Breadcrumb from 'components/Breadcrumb'
   import createWebsocket from 'common/mixins/createWebsocket'
   import bus from 'common/eventBus/bus'
