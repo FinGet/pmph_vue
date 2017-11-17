@@ -83,6 +83,7 @@
       /**
        * 确认提交表单
        */
+
       submit(){
         var self = this;
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
