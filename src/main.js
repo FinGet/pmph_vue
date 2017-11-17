@@ -12,7 +12,7 @@ import axios from 'axios'
 /*全局方法和配置挂载*/
 import * as config from 'common/config';
 import * as commonFun from './common/js/commonFun.js'
-import {formCheckedRules} from './common/js/formCheckRules.js'
+import {formCheckedRules,formRules} from './common/js/formCheckRules.js'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
@@ -31,6 +31,7 @@ Vue.prototype.$initPostData = commonFun.initPostData;
 Vue.prototype.$config = config;
 Vue.prototype.$commonFun = commonFun;
 Vue.prototype.$formCheckedRules = formCheckedRules;
+Vue.prototype.$formRules = formRules;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
