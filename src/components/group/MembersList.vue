@@ -197,9 +197,9 @@ export default {
       dialogVisible: false,
       groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
       writerUserUrl: '/pmpheep/users/writer/list/writeruser',  //获取作家用户url
-      clubUserUrl:'/pmpheep/departments/list/department',  //获取社内用户url
+      clubUserUrl:'/pmpheep/users/pmph/list/pmphUser',  //获取社内用户url
       clubTreeUrl:'/pmpheep/users/pmph/list/pmphDepartment',//获取社内用户成员树url
-      addMemberUrl:'/pmpheep/group/add/pmphgroupmember',  //添加小组成员url
+      addMemberUrl:'/pmpheep/group/add/groupMember',  //添加小组成员url
       writerParams: {
         orgName: '',
         name: '',
