@@ -4,7 +4,7 @@
       <el-col :span="12">
         <div class="search-title">标题:</div>
         <el-col :span="8" class="search-10">
-          <el-input v-model="title" placeholder="请输入" @keyup.enter.native="search" @change="limitLength"></el-input>
+          <el-input v-model="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
         </el-col>
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
@@ -332,18 +332,8 @@
             })
           })
           .catch(e=>{})
-      },
-      /**
-       * 限制输入长度
-       */
-      limitLength(value){
-        if (value.length > 50) {
-          this.$message.error('输入内容不能超过50个字');
-          this.title = value.substring(0,50)
-          // console.log(this.title)
-        }
       }
-    },
+    }
   }
 </script>
 

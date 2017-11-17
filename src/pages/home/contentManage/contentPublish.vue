@@ -83,7 +83,7 @@
       <el-form-item label="热门显示顺序：" prop="sortHot"  v-if="formData.isHot">
           <el-input placeholder="输入热门显示顺序" style="width:300px" v-model="formData.sortHot"></el-input>
       </el-form-item> -->
-      <el-form-item label="文章内容：">
+      <el-form-item label="文章内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
       <el-form-item label="附件：">
@@ -131,7 +131,7 @@ import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl: "/pmpheep/cms/content/new", //发布内容url
+      addNewUrl: "/cms/ new_content", //发布内容url
       columnListUrl: "/pmpheep/cms/set", //栏目列表Url
       editContentUrl:'/pmpheep/cms/content/update',    //修改提交url
       formData: {
@@ -197,26 +197,27 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      options: []
+      options: [
+        {
+          id:1,
+          categoryName:'文章管理',
+          children:null
+        },
+        {
+          id:2,
+          categoryName:'信息快报管理',
+          children:null
+        },
+        {
+          id:3,
+          categoryName:'公告管理',
+          children:null
+        }
+        ]
     };
   },
   computed: {},
   methods: {
-    /* 获得栏目列表 */
-    getColumnList() {
-      this.$axios
-        .get(this.columnListUrl, {
-          params: {
-            categoryName: ""
-          }
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == 1) {
-            this.options = res.data.data;
-          }
-        });
-    },
     /* 发布新内容url */
     ContentSubmit() {
       this.formData.content = this.$refs.editor.getContent();
@@ -355,13 +356,13 @@ export default {
         } else {
           this.$router.push({ name: "内容列表" });
         }
-      } else {
-        return false;
+      } else if(this.$router.currentRoute.query.columnId){
+                this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
+
       }
     }
   },
   created() {
-    this.getColumnList();
     this.initIsEdit();
   },
   components: {

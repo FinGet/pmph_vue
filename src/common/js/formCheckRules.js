@@ -38,6 +38,15 @@ var formCheckedRules={
             callback('请正确输入院校名称');
         }
     },
+    //英文输入验证
+    englishStringChecked: function (rule, value, callback) {
+        var reg ='^[A-Za-z]+$';
+        if(value.match(reg)){
+            callback();
+        }else{
+            callback('请输入英文字符');
+        }
+    },
     //数组格式不能为空验证
     arrChecked: function (rule, value, callback){
         if(value.length!=0){

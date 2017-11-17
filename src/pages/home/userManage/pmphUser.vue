@@ -66,7 +66,7 @@
               prop="use"
               label="启用标识"
               align="center"
-              width="80"
+              width="100"
             >
               <template scope="scope">
                 {{scope.row.isDisabled? '停用' : '启用'}}
@@ -79,6 +79,7 @@
               <template scope="scope">
                 <el-button type="text" @click="isNew = false,dialogVisible = true,modify(scope.$index, usersData)">修改</el-button>
                 <el-button type="text">登录</el-button>
+                <el-button type="text">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>

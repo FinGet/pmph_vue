@@ -148,10 +148,11 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="120">
+            align="center">
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
               <el-button type="text">登录</el-button>
+              <el-button type="text">查看详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -159,10 +160,11 @@
       <!--分页-->
       <div class="pagination-wrapper">
         <el-pagination v-if="totalPages>params.pageSize"
-          :page-sizes="[30,50,100, 200, 300, 400]"
+          :page-sizes="[10,20,30, 50, 100]"
           :page-size="params.pageSize"
            :current-page.sync="params.pageNumber"
-           @current-change="refreshTableData"
+           @size-change="orgHandleSizeChange"
+           @current-change="orgHandleCurrentChange"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalPages">
         </el-pagination>
@@ -310,7 +312,7 @@
                        v-if="dataTotal>20"
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="currentPage"
+                       :current-page="pageNumber"
                        :page-sizes="[10, 20, 30, 40]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
@@ -401,36 +403,41 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
+          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
+          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
         ],
-        // realname: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        orgName: [
+          { required: true, message: "请输入机构名称", trigger: "blur" },
+          { min: 2, max: 16, message: "请输入2~16个字", trigger: "change,blur" }
+          ],
         email: [
-          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '邮箱格式不对' }
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
           ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
-        ],
-        orgName: [{ required: true, message: "请输入机构名称", trigger: "blur" }],
-        orgTypeName:[{ required: true, message: "请输入机构类型", trigger: "blur" }],
+          ],
         orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
         ],
         areaId: [{required: true, message: "请选择机构所属地区",trigger:"blur"}],
-        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}]
+        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
+        note:[
+          {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
+        ]
       },
       //搜索所属机构用户
       OrgNameList: [],
       loading: false,
       // 机构用户 搜索，传输参数
       params: {
-        pageSize: 30,
+        pageSize: 10,
         pageNumber: 1,
         username: "",
         realname: "",
         orgName: ""
       },
       totalPages: 0,// 数据总量
-      currentPage: 1,// 当前页码
 			visible1: false,
       visible2: false,
 			schoolDialogVisible: false,// 学校委托书弹窗
@@ -442,7 +449,7 @@ export default {
       orgName:'',
       realname:'',
       progress:'',
-      pageSize:20,
+      pageSize:10,
       pageNumber:1,
       // 机构类型
       orgTypeList: [],
@@ -514,7 +521,7 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
-      console.log(this.form.orgName)
+      console.log(this.form.orgTypeId)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
     },
@@ -573,7 +580,7 @@ export default {
        * 获取所属部门信息
        */
     getAreaData(){
-      this.$axios.get('/pmpheep/area/areatree',{params: {parentId:0}})
+      this.$axios.get('/pmpheep/area/areachirldren',{params: {parentId:0}})
         .then(response=>{
           let res = response.data;
           let data = res.data;
@@ -709,7 +716,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/pmpheep/auth/orgs/list", {
+        .get("/pmpheep/auth/org_list", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -756,9 +763,18 @@ export default {
         orgUserIds.push(item.id);
         //console.log(orgUserIds)
       });
-      this.$axios
-        .put(
-          "/pmpheep/auth/orgs/check",
+      var title='';
+      if(progress==1) {
+        title = "是否确认通过?"
+      } else {
+        title = "是否确认退回?"
+      }
+      this.$confirm(title, "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+      this.$axios.put("/pmpheep/auth/org_check",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
@@ -782,22 +798,32 @@ export default {
               type: "warning"
             });
           }
-          console.log(res.code)
+          // console.log(res.code)
         })
         .catch(error => {
           console.log(error.msg);
         });
+      })
     },
     /**@argument val 当选中项 */
     handleSelectionChange(val) {
       this.selections = val;
       // console.log(val)
     },
+    orgHandleSizeChange(val){
+     this.params.pageSize=val;
+     this.params.pageNumber=1;
+     this.refreshTableData();
+    },
+    orgHandleCurrentChange(val){
+     this.params.pageNumber=val;
+     this.refreshTableData();
+    },
     /**@argument val pageSize */
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.pageSize = val;
-      this.currentPage=1;
+      this.pageNumber=1;
       this.getOrgsList();
     },
     /**@argument val pageNumber */

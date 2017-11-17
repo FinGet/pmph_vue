@@ -35,9 +35,9 @@
         <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
       </div>
               <!--操作按钮-->
-      <div class="pull-right" style="margin-right:10px;">
-        <el-button type="primary" @click="addBtn">新建用户</el-button>
-      </div>
+      <!-- <div class="pull-right" style="margin-right:10px;">
+        <el-button type="primary" @click="addBtn">新增用户</el-button>
+      </div> -->
     </div>
     <!--表格-->
     <div class="table-wrapper">
@@ -102,16 +102,18 @@
         </el-table-column>
         <el-table-column prop="rankName" label="用户类型" width="120">
         </el-table-column>
-        <el-table-column label="启用标识" width="95">
+        <el-table-column label="启用标识" width="95" align="center">
           <template scope="scope">
             {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" 
+        align="center">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
+            <el-button type="text">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -150,7 +152,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="启用：" prop="isDisabled">
+        <el-form-item label="启用标识：" prop="isDisabled">
           <el-radio-group v-model="form.isDisabled">
             <el-radio :label="false">启用</el-radio>
             <el-radio :label="true">禁用</el-radio>
@@ -179,7 +181,7 @@
 					</div>
 				</div>
 				<div class="searchBox-wrapper">
-					<div class="searchName">学校名称：
+					<div class="searchName">所属机构：
 						<span></span>
 					</div>
 					<div class="searchInput">
@@ -339,11 +341,12 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { min: 1, max: 20, message: "用户代码过长", trigger: "change,blur" }
+          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
+          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
-          { min: 1, max: 20, message: "用户名称过长", trigger: "change,blur" }
+          { min: 2, max: 16, message: "请输入2~16个字", trigger: "change,blur" }
           ],
         email: [
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
@@ -353,14 +356,7 @@ export default {
           {validator: this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
           ],
         orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
-        isDisabled: [
-          {
-            type: "boolean",
-            required: true,
-            message: "请选择是否启用",
-            trigger: "change"
-          }
-        ],
+        isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
         note:[
           {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
@@ -519,8 +515,8 @@ export default {
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
+          console.log(response)
           let res = response.data;
-          let data = res.data.rows;
           //修改成功
           if (res.code === 1) {
             self.refreshTableData();
@@ -529,14 +525,15 @@ export default {
               type: "success",
               message: "添加成功"
             });
-          }else if(res.code === 3){
-            self.$message.error('用户代码已存在');
+          }else{
+            self.$message.error(res.msg);
           }
         })
         .catch(function(error) {
+          // console.log(error)
           self.$message({
             type: "error",
-            message: "添加失败，请重试"
+            message: error
           });
         });
     },
@@ -602,7 +599,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/pmpheep/auth/writers/list",{
+      this.$axios.get("/pmpheep/auth/writer_list",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -640,27 +637,39 @@ export default {
 				// console.log(item)
 				userIds.push(item.id)
 				//console.log(orgUserIds)
-			})
-			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
-				progress: progress,
-				userIds: userIds
-			})).then((response) => {
-				let res = response.data
-				if (res.code == "1") {
-					//console.log(res)
-					this.getWritersList()
-
-					this.$message({
-              showClose: true,
-              message: progress==0?'审核通过!':'已退回',
-              type: 'success'
-            });
-				}else if(res.code ==2){
-          this.$message.error("已审核的用户不能再次审核");
-        }
-			}).catch(error => {
-				console.log(error.msg)
-			})
+      })
+      var title='';
+      if(progress==0) {
+        title = "是否确认通过?"
+      } else {
+        title = "是否确认退回?"
+      }
+      this.$confirm(title, "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$axios.put("/auth/writer_check",this.$initPostData({
+            progress: progress,
+            userIds: userIds
+          })).then((response) => {
+            let res = response.data
+            if (res.code == "1") {
+              //console.log(res)
+              this.getWritersList()
+              
+              this.$message({
+                  showClose: true,
+                  message: progress==0?'审核通过!':'已退回',
+                  type: 'success'
+                });
+            }else if(res.code ==2){
+              this.$message.error(res.msg);
+            }
+          }).catch(error => {
+            console.log(error.msg)
+          })
+        })
 		},
     /**
      * 搜索
@@ -694,7 +703,7 @@ export default {
 			}).catch((error) => {
         console.log(error.msg)
       })
-		}
+		},
   },
   created() {
     this.refreshTableData();
