@@ -293,3 +293,10 @@ export function recurveList(objOrList,children,handleFn){
     }
   }
 }
+
+/**
+ * 处理接口返回的msg 将返回错误信息中的====>去掉
+ */
+export function handleMsg(msg) {
+ return this.replace(/(\S*)===>/,'');
+}

@@ -4,7 +4,7 @@
   <el-tab-pane label="内容">
       <p class="header_p">
 
-          <el-input placeholder="输入文章标题" class="input" v-model="searchTitle"></el-input>
+          <el-input placeholder="输入文章标题" class="input" v-model.trim="searchTitle"></el-input>
           <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
@@ -404,12 +404,26 @@ export default {
       },
       /* 删除内容 */
       deleteContent(obj){
+            this.$confirm('此操作将删除该条内容, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
          this.$axios.delete(this.deleteContentUrl+obj.id+'/delete').then((res)=>{
              if(res.data.code==1){
                  this.getPublicList();
                  this.$message.success('删除操作成功');
+             }else{
+                 this.$message.error(res.data.msg.msgTrim());
              }
          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
       },
     handleSizeChange(val){
      this.pageSize=val;

@@ -7,7 +7,7 @@
           id="groupListSearch"
           placeholder="小组搜索"
           icon="search"
-          v-model="inputSearchGroup"
+          v-model.trim="inputSearchGroup"
           :on-icon-click="getGroupData"
           @keyup.enter.native="getGroupData"
           >
@@ -118,6 +118,7 @@
     },
     methods:{
       clickGroup(group){
+        console.log(group)
         this.currentActiveGroupId = group.id;
         this.$emit('clickItem',group)
       },
@@ -137,7 +138,6 @@
             sessionId:this.$getUserData().sessionId
           },
         }).then(function(res){
-          console.log(res);
           if(res.data.code==1){
             res.data.data.map(iterm=>{
               iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
@@ -236,7 +236,7 @@
                   self.getGroupData();
                   self.dialogVisible=false;
                 }else{
-                  self.$message.error(res.msg);
+                  self.$message.error(res.msg.msgTrim());
                 }
               })
               .catch((error) => {
@@ -253,12 +253,11 @@
        * 将小组最后收到消息时间改为当前时间
        */
       handlerReceiveMessage(data){
-        console.log('小组聊天窗口成功收到消息',data);
         let message={};
         data=JSON.parse(data);
         if(data.msgType==3){
           this.groupListData.forEach(iterm=>{
-            if(iterm.id = data.groupId){
+            if(iterm.id == data.groupId){
               iterm.gmtLastMessage = +(new Date())
             }
           });
