@@ -394,7 +394,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/pmpheep/auth/orgs/list", {
+        .get("/pmpheep/auth/orgList", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -443,7 +443,7 @@ export default {
       });
       this.$axios
         .put(
-          "/pmpheep/auth/orgs/check",
+          "/pmpheep/auth/orgCheck",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds

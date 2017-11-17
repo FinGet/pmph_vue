@@ -9,6 +9,7 @@
             :options="options"
             :clearable="true"
             class="input"
+            :disabled="true"
             :props="defaultType"
             v-model="defaultCategoryId"
             :change-on-select="true"
@@ -131,7 +132,7 @@ import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl: "/cms/ new_content", //发布内容url
+      addNewUrl: "/cms/newContent", //发布内容url
       columnListUrl: "/pmpheep/cms/set", //栏目列表Url
       editContentUrl:'/pmpheep/cms/content/update',    //修改提交url
       formData: {
