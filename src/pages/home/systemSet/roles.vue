@@ -259,7 +259,7 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 } else {
-                  _this.$message.error(res.data.msg.split('>')[1]);
+                  _this.$message.error(res.data.msg.msgTrim());
                 }
               })
               .catch(function(err) {
@@ -285,7 +285,7 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 }else{
-                   _this.$message.error(res.data.msg.split('>')[1]);
+                   _this.$message.error(res.data.msg.msgTrim());
                 }
               })
               .catch(function(err) {
@@ -319,7 +319,7 @@ export default {
             _this.getListData();
             _this.$message.success("更新成功");
           } else {
-            _this.$message.error(res.data.msg.split('>')[1]);
+            _this.$message.error(res.data.msg.msgTrim());
           }
           _this.powerTreeVisible = false;
         })
