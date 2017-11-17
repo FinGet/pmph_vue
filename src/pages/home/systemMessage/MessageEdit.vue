@@ -272,7 +272,7 @@ export default {
         filePath.push(iterm.path);
       });
       this.messageForm.content = this.$refs.editor.getContent();
-      this.$axios.put('/pmpheep/messages/update_message',this.$commonFun.initPostData({
+      this.$axios.put('/pmpheep/messages/updateMessage',this.$commonFun.initPostData({
         msgId:this.currentMessageId,
         msgTitle:this.messageForm.title,
         content:this.messageForm.content,

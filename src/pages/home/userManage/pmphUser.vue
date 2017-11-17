@@ -39,6 +39,9 @@
               label="姓名"
               width="120"
               prop="realname">
+              <template scope="scope">
+                <a class="name" @click="showDetail(scope.$index)">{{scope.row.realname}}</a>
+              </template>
             </el-table-column>
             <el-table-column
               prop="username"
@@ -79,7 +82,7 @@
               <template scope="scope">
                 <el-button type="text" @click="isNew = false,dialogVisible = true,modify(scope.$index, usersData)">修改</el-button>
                 <el-button type="text">登录</el-button>
-                <el-button type="text">查看详情</el-button>
+                <!-- <el-button type="text">查看详情</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -219,10 +222,7 @@ export default {
           }
         ],
         handphone: [
-          {
-            validator: this.$formCheckedRules.phoneNumberChecked,
-            trigger: "blur"
-          }
+         { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
         ],
         email: [
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
@@ -273,7 +273,9 @@ export default {
         }
       ],
       DepartmentNameList: [],
-      loading: false
+      loading: false,
+      detailTable: [] ,//详细信息
+      detailVisible: false // 详细信息弹窗
     };
   },
   mounted() {
@@ -567,6 +569,19 @@ export default {
           self.loading = false;
           console.error(error);
         });
+    },
+    /**
+     * 点击查看详情
+     */
+    showDetail(index){
+      // this.detailVisible = true;
+      // this.detailTable.push(this.tableData[index]);
+    },
+    /**
+     * 弹窗关闭，清空详情表格
+     */
+    clearDetailTable(){
+      // this.detailTable = []
     }
   }
 };
@@ -586,5 +601,8 @@ export default {
 }
 .marginTag {
   margin-left: 3px;
+}
+.name{
+  cursor: pointer;
 }
 </style>

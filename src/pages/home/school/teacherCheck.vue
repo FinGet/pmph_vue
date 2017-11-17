@@ -357,7 +357,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/pmpheep/auth/writers/list",{
+      this.$axios.get("/pmpheep/auth/writerList",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,
@@ -396,7 +396,7 @@ export default {
 				userIds.push(item.id)
 				//console.log(orgUserIds)
 			})
-			this.$axios.put("/pmpheep/auth/writers/check",this.$initPostData({
+			this.$axios.put("/pmpheep/auth/writerCheck",this.$initPostData({
 				progress: progress,
 				userIds: userIds
 			})).then((response) => {

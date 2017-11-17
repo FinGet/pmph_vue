@@ -315,7 +315,7 @@
             for (var i = 0; i< len; i++) {
               arr.push(this.multipleSelection[i].msgId)
             }
-            this.$axios.put("/pmpheep/messages/delete_message",this.$initPostData({
+            this.$axios.put("/pmpheep/messages/deleteMessage",this.$initPostData({
               msgIds:arr.join(',')
             })).then((response) => {
               let res = response.data
