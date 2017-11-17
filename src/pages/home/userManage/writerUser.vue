@@ -43,6 +43,9 @@
     <div class="table-wrapper">
       <el-table :data="tableData" border style="width: 100%" >
         <el-table-column prop="realname" label="姓名" width="110">
+          <template scope="scope">
+            <a class="name" @click="showDetail(scope.$index)">{{scope.row.realname}}</a>
+          </template>
         </el-table-column>
         <el-table-column prop="username" label="账号" width="120">
         </el-table-column>
@@ -113,7 +116,7 @@
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
-            <el-button type="text">查看详情</el-button>
+            <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -167,6 +170,81 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 查看详情 -->
+      <el-dialog
+        title="个人用户详情"
+        :visible.sync="detailVisible"
+        size='large'
+        @close="clearDetailTable"
+      >
+        <el-table
+        :data="detailTable"
+        border
+        style="width: 100%">
+          <el-table-column
+            prop="realname"
+            label="姓名"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="username"
+            label="账号"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="idcard"
+            label="身份证号"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="orgName"
+            label="所属机构"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="position"
+            label="职务"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="title"
+            label="职称"
+            width="100">
+          </el-table-column>
+          <el-table-column label="手机号" width="160">
+          <template scope="scope">
+            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+            {{scope.row.handphone}}
+          </template>
+        </el-table-column>
+        <el-table-column label="邮箱">
+          <template scope="scope">
+            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+            {{scope.row.email}}
+          </template>
+        </el-table-column>
+          <el-table-column
+            prop="address"
+            label="邮寄地址">
+          </el-table-column>
+          <el-table-column
+            prop="rankName"
+            label="用户类型">
+          </el-table-column>
+          <el-table-column
+            label="启用标识"
+            width="95"
+            align="center">
+            <template scope="scope">
+              {{scope.row.isDisabled?'禁用':'启用'}}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="note"
+            label="备注">
+          </el-table-column>
+        </el-table>
+      </el-dialog> 
   </el-tab-pane>
   <el-tab-pane label="审核教师">
     	<div class="teacher_check">
@@ -383,7 +461,9 @@ export default {
       progress: '',
       pageSize: 10,
       pageNumber: 1,
-      dataTotal: 0
+      dataTotal: 0,
+      detailVisible: false, //查看详情
+      detailTable: [] // 详情数据
     };
   },
   computed:{
@@ -703,7 +783,20 @@ export default {
 			}).catch((error) => {
         console.log(error.msg)
       })
-		},
+    },
+    /**
+     * 点击查看详情
+     */
+    showDetail(index){
+      this.detailVisible = true;
+      this.detailTable.push(this.tableData[index]);
+    },
+    /**
+     * 弹窗关闭，清空详情表格
+     */
+    clearDetailTable(){
+      this.detailTable = []
+    }
   },
   created() {
     this.refreshTableData();
@@ -718,5 +811,8 @@ export default {
 .writerUser .el-tabs--border-card{
   border:0;
   box-shadow: none;
+}
+.name{
+  cursor: pointer;
 }
 </style>

@@ -6,17 +6,17 @@
     </div>
       <div class="clearfix">
         <div class="searchBox-wrapper">
-          <div class="searchName">机构名称：<span></span></div>
+          <div class="searchName">名称/账号：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
-        <div class="searchBox-wrapper">
+        <!-- <div class="searchBox-wrapper">
           <div class="searchName">机构账号：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.username" @keyup.enter.native="refreshTableData"></el-input>
           </div>
-        </div>
+        </div> -->
         <div class="searchBox-wrapper">
           <div class="searchName">管理员姓名：<span></span></div>
           <div class="searchInput">
@@ -273,22 +273,25 @@
             label="职称"
             width="100">
           </el-table-column>
-          <el-table-column
-            prop="handphone"
-            label="手机号"
-            width="130">
-          </el-table-column>
-          <el-table-column
-            prop="email"
-            label="邮箱">
-          </el-table-column>
+          <el-table-column label="手机号" width="160">
+          <template scope="scope">
+            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+            {{scope.row.handphone}}
+          </template>
+        </el-table-column>
+        <el-table-column label="邮箱">
+          <template scope="scope">
+            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+            {{scope.row.email}}
+          </template>
+        </el-table-column>
           <el-table-column
             prop="address"
             label="邮寄地址">
           </el-table-column>
           <el-table-column
             label="启用标识"
-            width="100"
+            width="95"
             align="center">
             <template scope="scope">
               {{scope.row.isDisabled?'禁用':'启用'}}
@@ -510,9 +513,9 @@ export default {
       params: {
         pageSize: 10,
         pageNumber: 1,
-        username: "",
+        // username: "",
         realname: "",
-        orgName: ""
+        name: ""
       },
       totalPages: 0,// 数据总量
 			visible1: false,
