@@ -128,13 +128,10 @@
           value:'',
           label:'全部'
         },{
-          value:1,
+          value:true,
           label:'已通过'
         },{
-          value:0,
-          label:'已退回'
-        },{
-          value:2,
+          value:false,
           label:'待审核'
         }],
         totalNum:0,
@@ -155,15 +152,10 @@
             if(res.code==1){
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
-                switch(iterm.isAuth){
-                  case 0:
-                    iterm.state='已通过';
-                    break;
-                  case 1:
-                    iterm.state = '已退回';
-                    break;
-                  case 2:
-                    iterm.state = '待审核';
+                if(iterm.isAuth){
+                  iterm.state='已通过';
+                }else{
+                  iterm.state = '待审核';
                 }
               });
               this.totalNum = res.data.total;

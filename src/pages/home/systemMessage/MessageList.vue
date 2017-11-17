@@ -65,12 +65,10 @@
             <el-button
               size="small"
               type="text"
-              :disabled="scope.row.isWithdraw"
               @click="handleEdit(scope.$index, scope.row)">修改</el-button>
             <el-button
               size="small"
               type="text"
-              :disabled="scope.row.isWithdraw"
               @click="handleReissue(scope.$index, scope.row)">补发</el-button>
             <el-button
               size="small"
@@ -80,6 +78,7 @@
             <el-button
               size="small"
               type="text"
+              :disabled="scope.row.isWithdraw"
               @click="handleState(scope.row.msgId, scope.row)">消息状态</el-button>
           </template>
         </el-table-column>
@@ -233,7 +232,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$axios.put('/pmpheep/messages/withdraw/message',this.$initPostData({
+          this.$axios.put('/pmpheep/messages/withdraw',this.$initPostData({
             msgId:row.msgId
           }))
           .then(response=>{
@@ -316,7 +315,7 @@
             for (var i = 0; i< len; i++) {
               arr.push(this.multipleSelection[i].msgId)
             }
-            this.$axios.put("/pmpheep/messages/delete/message",this.$initPostData({
+            this.$axios.put("/pmpheep/messages/delete_message",this.$initPostData({
               msgIds:arr.join(',')
             })).then((response) => {
               let res = response.data
