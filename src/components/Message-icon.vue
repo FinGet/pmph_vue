@@ -52,7 +52,7 @@
        * 获取未读消息
        */
       getMessageList(){
-        this.$axios.get('/pmpheep/messages/icon/mymessage',{params:this.searchForm})
+        this.$axios.get('/pmpheep/messages/list/myMessageIcon',{params:this.searchForm})
           .then(response=>{
             let res = response.data;
             if(res.code==1){

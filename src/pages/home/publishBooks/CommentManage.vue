@@ -146,7 +146,7 @@
        * 获取表格数据
        */
       getTableData(){
-        this.$axios.get('/pmpheep/bookusercomment/list/comment',{params:this.searchForm})
+        this.$axios.get('/pmpheep/bookusercomment/list',{params:this.searchForm})
           .then(response=>{
             var res = response.data;
             if(res.code==1){
@@ -186,7 +186,7 @@
             this.selectData.forEach(iterm=>{
               select.push(iterm.id);
             });
-            this.$axios.delete('/pmpheep/bookusercomment/delete/comment',{params:{
+            this.$axios.delete('/pmpheep/bookusercomment/delete',{params:{
               ids:select.join(',')
             }})
               .then(response=>{
@@ -215,7 +215,7 @@
           type: "warning"
         })
           .then(()=>{
-            let url = '/pmpheep/bookusercomment/update/comment';
+            let url = '/pmpheep/bookusercomment/update';
             let select = [];
             this.selectData.forEach(iterm=>{
               select.push(iterm.id);
