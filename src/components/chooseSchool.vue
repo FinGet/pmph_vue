@@ -1,13 +1,16 @@
+/**
+封装选择学校组件，提供操作按钮卡槽slot，和获取选中学校方法getSelectData,
+卡槽：操作按钮区域
+方法：getSelectData 获取选中学校
+事件：selectChange 当所选学校发生变化  参数 function(list){} 参数形式[{},{}]
+*/
 <template>
   <div class="query">
     <!--操作按钮区-->
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn" size="large">
-          发布
-          <span v-if="queryData.length>0">({{queryData.length}})</span>
-        </el-button>
+        <slot></slot>
       </div>
     </div>
     <!--快速选择区域-->
@@ -29,6 +32,7 @@
           </el-tag>
         </div>
       </div>
+      <!--选择区域-->
       <div class="clearfix">
         <div class="justify-align">
           区域：&nbsp;&nbsp;<span></span>
@@ -44,18 +48,22 @@
           </el-select>
         </div>
       </div>
-      <div class="clearfix">
+      <!--选择机构类型-->
+      <div class="clearfix marginB20">
         <div class="justify-align">
           机构类型：&nbsp;&nbsp;<span></span>
         </div>
         <div>
-          <el-radio-group v-model="select_orgType">
-            <el-radio-button :label="0">全部</el-radio-button>
-            <el-radio-button :label="1">本科</el-radio-button>
-            <el-radio-button :label="2">医院</el-radio-button>
-            <el-radio-button :label="3">职教</el-radio-button>
-            <el-radio-button :label="4">本科&职教</el-radio-button>
-          </el-radio-group>
+          <el-checkbox class="marginR30"
+                       :indeterminate="select_orgType.isIndeterminate"
+                       v-model="select_orgType.checkAll"
+                       @change="_checkAllTypeChange()">
+            全部
+          </el-checkbox>
+          <span class="vertical-line"></span>
+          <el-checkbox-group v-model="select_orgType.types" class="inline-block marginL20">
+            <el-checkbox v-for="iterm in orgTypeList" :label="iterm.id" :key="iterm.id"  @change="_handleCheckedTypeChange()">{{iterm.name}}</el-checkbox>
+          </el-checkbox-group>
         </div>
       </div>
 
@@ -65,21 +73,21 @@
     <div class="border-T paddingT20">
       <div class="control-area clearfix paddingB20">
         <div class="pull-left">
-          <el-button  type="primary" size="small" @click="checkedAll">全选</el-button>
-          <el-button  type="primary" size="small" @click="uncheckedAll">清空</el-button>
+          <el-button  type="primary" size="small" @click="_checkedAll">全选</el-button>
+          <el-button  type="primary" size="small" @click="_un_checkedAll">清空</el-button>
 
           <div class="searchBox-wrapper">
             <div class="searchInput">
-              <el-input placeholder="请输入搜索关键字" class="searchInputEle" @keyup.enter.native="goToSearchPosition" v-model="searchName" @change="searchOnPage"></el-input>
+              <el-input placeholder="请输入搜索关键字" class="searchInputEle" @keyup.enter.native="_goToSearchPosition" v-model="searchName" @change="_searchOnPage"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper searchBtn">
-            <el-button  type="primary" icon="search" @click="goToSearchPosition">搜索</el-button>
+            <el-button  type="primary" icon="search" @click="_goToSearchPosition">搜索</el-button>
           </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small" @click="sortByArea">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small" @click="sortByOrg">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByArea">按区域拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByOrg">按机构拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
@@ -91,17 +99,17 @@
           <el-checkbox
             :indeterminate="item.isIndeterminate"
             v-model="item.checkAll"
-            @change="checkAllChange(item)">
+            @change="_checkAllChange(item)">
             <span v-html="item.province"></span>
           </el-checkbox>
         </div>
         <div>
-          <el-checkbox-group v-model="item.checkedSchools"  @change="handleCheckedSchoolChange(item)">
+          <el-checkbox-group v-model="item.checkedSchools"  @change="_handleCheckedSchoolChange(item)">
             <el-checkbox
               v-for="(city,index) in item.schoolList"
               :label="city.id"
               :key="index"
-              v-if="select_orgType==0||city.type==select_orgType"><span v-html="city.name"></span></el-checkbox>
+              v-if="city.type in select_orgType.types"><span v-html="city.name"></span></el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -139,35 +147,11 @@
             label="操作"
             width="80">
             <template scope="scope">
-              <el-button type="text" @click="chooseHistory(scope.$index,scope.row.orgIds)">选择</el-button>
+              <el-button type="text" @click="_chooseHistory(scope.$index,scope.row.orgIds)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
-    </el-dialog>
-
-    <!--已选择院校预览-->
-    <el-dialog
-      title="已选中机构"
-      :visible.sync="dialogVisible2">
-      <div class="table-wrapper">
-        <el-table
-          :data="hasCheckedOrgList"
-          stripe
-          style="width: 100%">
-          <el-table-column
-            label="学校名称">
-              <template scope="scope">
-                <p class="bg-none" v-html="scope.row.name"></p>
-              </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -178,32 +162,25 @@
       return {
         sortArea:-1,
         sortOrg:-1,
-        type:'new',
-        reissueFormData:{
-          id:'',
-          title:'',
-          content:'',
-          file:'',
-          sendType:1,
-          orgIds:'',
-          userIds:'',
-          bookIds:'',
-          senderId:''
-        },
-        formdata:{
-          title:'',
-          content:'',
-          file:'',
-          sendType:1,
-          orgIds:'',
-          userIds:'',
-          bookIds:'',
-        },
-        selectAll:true,
-        sortByTime:true,
-        showPublishBtn:false,
         select_provinces:[],
-        select_orgType:0,
+        orgTypeList:[{
+          id:1,
+          name:'本科'
+        },{
+          id:2,
+          name:'医院'
+        },{
+          id:3,
+          name:'职教'
+        },{
+          id:4,
+          name:'本科&职教'
+        }],
+        select_orgType:{
+          checkAll:true,
+          isIndeterminate:false,
+          types:[1,2,3,4],
+        },
         area_school:[],
         dialogVisible:false,
         historyData:[],
@@ -227,42 +204,39 @@
             total:34,
             date:'2017/10/1',
           }],
-        dialogVisible2:false,
         searchName:'',
-        searchResultFirstId:'',
+        searchResultFirstId:undefined,
       };
     },
-    computed: {
-      queryData(){
-        var list = [];
-        this.area_school.forEach((iterm,index)=>{
-          [].push.apply(list,iterm.checkedSchools);
-        });
-        return list;
-      },
+    computed:{
+      /**
+       * 已选中学校列表
+       */
       hasCheckedOrgList(){
-        var list = [];
+        let list = [];
         this.area_school.forEach((iterm,index)=>{
-          iterm.schoolList.forEach((t,i)=>{
-            if(iterm.checkedSchools.includes(t.id)){
-              list.push(t);
-            }
-          })
+          if(this.select_provinces.length==0 || this.select_provinces.includes(iterm.id)){
+            iterm.schoolList.forEach((t,i)=>{
+              if(iterm.checkedSchools.includes(t.id)&&(this.select_orgType.types.includes(t.type))){
+                list.push(t);
+              }
+            })
+          }
         });
         return list;
-      },
+      }
     },
     methods: {
       /**
        * 加载学校列表
        */
-      getSchools() {
+      _getSchools() {
         var schoolName = []
         var schoolType = []
         var schoolId = []
-        this.$axios.get("/pmpheep/messages/message/send_object",{
+        this.$axios.get("/pmpheep/messages/message/sendObject",{
           params:{
-            sendType: this.formdata.sendType,
+            sendType: 1,
             pageSize: 20,
             pageNumber: 1,
             userNameOrUserCode: '',
@@ -286,10 +260,10 @@
               iterm.id.split(',').forEach((t,i)=>{
                 tempObj.schoolList.push({
                   id:t,
-                  type:tempType[i],
+                  type:parseInt(tempType[i]),
                   name:tempName[i]
                 })
-              })
+              });
               if(tempObj.province){
                 tempList.push(tempObj);
               }
@@ -302,9 +276,7 @@
        * 点击快速选择历史弹窗中的选择按钮
        * @param tableIndex 选中表格数据的index值
        */
-      chooseHistory(tableIndex,id){
-        // console.log(id)
-        this.formdata.bookIds = id
+      _chooseHistory(tableIndex,id){
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
       },
@@ -319,12 +291,12 @@
        * 当省份复选框发生变化
        * @param iterm
        */
-      checkAllChange(iterm){
+      _checkAllChange(iterm){
         var index = this.area_school.indexOf(iterm);
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
           this.area_school[index].schoolList.forEach(t => {
-            if(this.select_orgType==0||t.type ==this.select_orgType){
+            if(this.select_orgType.types.includes(t.type)){
               this.area_school[index].checkedSchools.push(t.id);
             }
           })
@@ -335,22 +307,46 @@
        * 学校复选框发生变化时
        * @param iterm
        */
-      handleCheckedSchoolChange(iterm){
+      _handleCheckedSchoolChange(iterm){
         var index = this.area_school.indexOf(iterm);
         let checkedCount = this.area_school[index].checkedSchools.length;
         this.area_school[index].checkAll = checkedCount === this.area_school[index].schoolList.length;
         this.area_school[index].isIndeterminate = checkedCount > 0 && checkedCount < this.area_school[index].schoolList.length;
       },
+
+      /**
+       * 当机构类型复选框发生变化
+       * @param iterm
+       */
+      _checkAllTypeChange(iterm){
+        let list = [];
+        this.select_orgType.types.splice(0);
+        if(this.select_orgType.checkAll){
+          this.orgTypeList.forEach(t => {
+            this.select_orgType.types.push(t.id);
+          })
+        }
+        this.select_orgType.isIndeterminate=false;
+      },
+      /**
+       * 机构类型复选框发生变化时
+       * @param iterm
+       */
+      _handleCheckedTypeChange(iterm){
+        let checkedCount = this.select_orgType.types.length;
+        this.select_orgType.checkAll = checkedCount == this.orgTypeList.length;
+        this.select_orgType.isIndeterminate = checkedCount > 0 && checkedCount < this.orgTypeList.length;
+      },
       /**
        * 点击全选按钮
        */
-      checkedAll(){
+      _checkedAll(){
         this.area_school.forEach((iterm,index)=>{
           iterm.checkAll=true;
           iterm.checkedSchools=[];
           if(this.select_provinces.length==0||this.select_provinces.includes(iterm.id)){
             iterm.schoolList.forEach((t,i)=>{
-              if(this.select_orgType==0||t.type ==this.select_orgType){
+              if(this.select_orgType.types.includes(t.type)){
                 iterm.checkedSchools.push(t.id);
               }
             })
@@ -361,7 +357,7 @@
       /**
        * 点击清空按钮
        */
-      uncheckedAll(){
+      _un_checkedAll(){
         this.area_school.forEach((iterm,index)=>{
           iterm.checkAll=false;
           iterm.checkedSchools=[];
@@ -369,32 +365,20 @@
         })
       },
       /**
-       * 提交表单
-       */
-      publishBtn(){
-        this.dialogVisible2=true;
-      },
-      /**
-       * 点击发布按钮
-       */
-      submit(){
-        this.$message.success('发布成功！');
-        this.$router.push({name:'通知列表'});
-      },
-      /**
        * 按区域拼音排序
        */
-      sortByArea(){
+      _sortByArea(){
         this.sortArea = this.sortArea*(-1);
         this.area_school.sort((x,y)=>{
           let temp = x['province'].localeCompare(y['province'],"zh");
           return temp==0?0:(temp>0?this.sortArea:this.sortArea*(-1));
         });
+        console.log(this.area_school)
       },
       /**
        * 按机构名称拼音排序
        */
-      sortByOrg(){
+      _sortByOrg(){
         this.sortOrg = this.sortOrg*(-1);
         this.area_school.forEach(iterm=>{
           iterm.schoolList.sort((x,y)=>{
@@ -406,7 +390,7 @@
       /**
        * 点击搜索
        */
-      searchOnPage(){
+      _searchOnPage(){
         var highLightHtml=`<span class="bg-yellow">${this.searchName}</span>`;
         this.searchResultFirstId=undefined;
         this.area_school.forEach((iterm,i)=>{
@@ -424,16 +408,26 @@
       /**
        * ，定位到第一个匹配项处
        */
-      goToSearchPosition(){
+      _goToSearchPosition(){
         console.log(this.searchResultFirstId);
         var dom = document.getElementsByClassName('area'+this.searchResultFirstId);
         var top = dom[0].getBoundingClientRect().top;
         document.getElementsByClassName('app-main')[0].scrollTop=top-300;//通过scrollTop设置滚动到指定
+      },
+      /**
+       * 获取当前选择学校数据
+       */
+      getSelectData(){
+        return this.hasCheckedOrgList;
+      }
+    },
+    watch:{
+      hasCheckedOrgList(){
+        this.$emit('selectChange',this.hasCheckedOrgList);
       }
     },
     created(){
-
-      this.getSchools()
+      this._getSchools()
     },
 
   }
