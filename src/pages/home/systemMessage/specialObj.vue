@@ -318,7 +318,7 @@ export default {
     send() {
       var self = this;
       var userList = [];
-      var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/new';
+      var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage';
       var data = this.type=='reissue'?this.reissueFormData:this.formdata;
       /**
        * 这里先写死，社内用户的userType=1,作家用户的userType=2,机构用户的userType=3

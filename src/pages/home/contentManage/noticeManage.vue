@@ -311,7 +311,7 @@ export default {
         ids.push(item.id)
       })
       console.log(ids)
-      this.$axios.delete('/pmpheep/cms/check/content',{
+      this.$axios.delete('/pmpheep/cms/check/delete',{
         params: {
           ids: ids.join(',')
         }
@@ -331,7 +331,7 @@ export default {
      * 删除
      */
     deleted(id){
-      this.$axios.delete('/pmpheep/cms/check/'+id+'/content').then(response => {
+      this.$axios.delete('/pmpheep/cms/check/'+id+'/update').then(response => {
         let res = response.data
         if(res.code == '1') {
           this.$message.success('删除成功');

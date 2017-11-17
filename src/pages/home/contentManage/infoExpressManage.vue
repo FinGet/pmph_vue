@@ -347,7 +347,7 @@ export default {
      },
      /* 删除内容 */
      deleteContent(obj){
-      this.$axios.delete('/pmpheep/cms/manage/content/'+obj.id).then((res)=>{
+      this.$axios.delete('/pmpheep/cms/manage/content/'+obj.id+'/delete').then((res)=>{
         if(res.data.code==1){
           this.getOutContentList();
           this.$message.success('内容已删除');

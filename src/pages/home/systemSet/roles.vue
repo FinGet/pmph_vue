@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       listUrl: "/pmpheep/role/pmph/list", //列表数据接口
-      revisePowerUrl: "/pmpheep/role/pmph/resources", //更新权限接口
+      revisePowerUrl: "/pmpheep/role/pmph/resource", //更新权限接口
       addRoleUrl: "/pmpheep/role/pmph/add", //添加角色接口
       editRoleUrl: "/pmpheep/role/pmph/update", //修改角色接口
       deleteRoleUrl:'',   //删除角色url
