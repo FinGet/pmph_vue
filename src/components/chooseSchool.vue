@@ -234,7 +234,7 @@
         var schoolName = []
         var schoolType = []
         var schoolId = []
-        this.$axios.get("/pmpheep/messages/message/send_object",{
+        this.$axios.get("/pmpheep/messages/message/sendObject",{
           params:{
             sendType: 1,
             pageSize: 20,
