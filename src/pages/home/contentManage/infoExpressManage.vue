@@ -21,7 +21,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -31,6 +31,12 @@
                   <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
+            <el-table-column
+                prop="username"
+                label="作者"
+                width="90"
+                >
+            </el-table-column>            
             <el-table-column
                 label="发布时间"
                 width="165"
@@ -49,19 +55,14 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column
-                prop="username"
-                label="作者"
-                width="90"
-                >
-            </el-table-column>
+
             <el-table-column
                 label="操作"
-                width="150"
+                width="120"
                 >
                 <template scope="scope">
                     <el-button type="text" @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button>
+                    <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>

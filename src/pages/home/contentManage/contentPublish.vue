@@ -9,6 +9,7 @@
             :options="options"
             :clearable="true"
             class="input"
+            :disabled="true"
             :props="defaultType"
             v-model="defaultCategoryId"
             :change-on-select="true"
