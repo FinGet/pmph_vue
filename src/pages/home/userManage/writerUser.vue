@@ -419,19 +419,19 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
-          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
+          { pattern: /^[A-Za-z0-9]+$/, message: '只能输入英文和数字' },
+          { min: 1, max: 20, message: "请输入1~20个英文和数字", trigger: "change,blur" }
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
-          { min: 2, max: 16, message: "请输入2~16个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
           ],
         email: [
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
           ],
         handphone: [
-          {validator: this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
           ],
         orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
         isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],

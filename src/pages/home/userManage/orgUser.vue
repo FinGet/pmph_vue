@@ -485,14 +485,14 @@ export default {
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
-          { min: 1, max: 20, message: "请输入0~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
           ],
         email: [
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
         ],
         name:[
-          { min: 1, max: 20, message: "请输入0~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
         ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
