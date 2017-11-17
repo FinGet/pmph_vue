@@ -87,12 +87,8 @@
       submit(){
         var self = this;
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
-        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage';
-        let orgIdsList = [];
-        this.hasCheckedOrgList.forEach(iterm=>{
-          orgIdsList.push(iterm.id);
-        });
-        data.orgIds=orgIdsList.join(',');
+        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage'
+        data.orgIds=this.queryData.join(',');
         data['sessionId']=this.$getUserData().sessionId;
         this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {
