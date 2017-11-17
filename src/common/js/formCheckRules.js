@@ -96,8 +96,8 @@ function checkType (str, type) {
 let formRules = {
   /**
    * 表单验证之是否必须
-   * @param msg
-   * @param trigger
+   * @param msg 提示信息
+   * @param trigger 触发方式
    */
   required(msg='请输入内容',trigger='blur,change'){
     return { required: true, message: msg, trigger: trigger }
