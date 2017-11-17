@@ -138,16 +138,22 @@
     <el-dialog :title="isNew?'新增用户':'修改用户信息'" :visible.sync="dialogVisible" :before-close="closeDialog" size="tiny">
       <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="padding20">
         <el-form-item label="账号：" prop="username">
-          <el-input v-model="form.username" :disabled="!isNew"  placeholder="输入账号"></el-input>
+          <el-input v-model="form.username" :disabled="!isNew"  placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="姓名：" prop="realname">
-          <el-input v-model="form.realname" placeholder="输入用户姓名"></el-input>
+          <el-input v-model="form.realname" placeholder="请输入用户姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="职务：">
+          <el-input v-model="form.position" placeholder="请输入职务"></el-input>
+        </el-form-item>
+        <el-form-item label="职称：">
+          <el-input v-model="form.title" placeholder="请输入职称"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="handphone" >
-          <el-input v-model="form.handphone" placeholder="手机号码"></el-input>
+          <el-input v-model="form.handphone" placeholder="请输入手机号码"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：" prop="email">
-          <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
+          <el-input v-model="form.email" placeholder="请请输入邮箱"></el-input>
         </el-form-item>
         <el-form-item label="所属机构：" prop="orgId" required>
           <el-select v-model="form.orgId" filterable remote placeholder="请输入关键词搜索" loading-text="正在搜索..." :remote-method="searchOrgName" :loading="loading">
@@ -412,6 +418,8 @@ export default {
         username: "",
         orgId: "",
         handphone: "",
+        position:"",
+        title:"",
         email: "",
         isDisabled: true,
         note: ""
@@ -485,6 +493,8 @@ export default {
         username: "",
         orgId: "",
         handphone: "",
+        position:"",
+        title:"",
         email: "",
         isDisabled: true,
         note: ""
