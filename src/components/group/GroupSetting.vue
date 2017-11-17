@@ -113,36 +113,45 @@
        * 修改小组
        */
       updateGroup(){
-        //小组名称不能为空
-        if(!this.groupData.groupName||this.groupData.groupName.length>20){
-          this.$message.error('请输入正确的小组名称');
-          return false;
-        }
-        let self= this;
-        var filedata = this.groupData.filename?this.groupData.filename:'';
-        var formdata = new FormData();
-        formdata.append('file',filedata);
-        formdata.append('id',this.currentGroup.id);
-        formdata.append('groupName',this.groupData.groupName);
-        formdata.append('sessionId',this.$getUserData().sessionId);
-
-        let config = {
-          headers:{'Content-Type':'multipart/form-data'}
-        };  //添加请求头
-        this.$axios.post('/pmpheep/group/update/pmphgroupdetail',formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              self.$message.success('修改小组成功');
-              //修改成功通过vue bus派发一个事件
-              bus.$emit('group:info-change')
-            }else{
-              self.$message.error('修改小组失败，请重试');
+        this.$confirm("确定修改该小组信息?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            //小组名称不能为空
+            if(!this.groupData.groupName||this.groupData.groupName.length>20){
+              this.$message.error('请输入正确的小组名称');
+              return false;
             }
+            let self= this;
+            var filedata = this.groupData.filename?this.groupData.filename:'';
+            var formdata = new FormData();
+            formdata.append('file',filedata);
+            formdata.append('id',this.currentGroup.id);
+            formdata.append('groupName',this.groupData.groupName);
+            formdata.append('sessionId',this.$getUserData().sessionId);
+
+            let config = {
+              headers:{'Content-Type':'multipart/form-data'}
+            };  //添加请求头
+            this.$axios.post('/pmpheep/group/update/pmphgroupdetail',formdata,config)
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.$message.success('修改小组成功');
+                  //修改成功通过vue bus派发一个事件
+                  bus.$emit('group:info-change')
+                }else{
+                  self.$message.error('修改小组失败，请重试');
+                }
+              })
+              .catch((error) => {
+                self.$message.error('修改小组失败，请重试');
+              });
           })
-          .catch((error) => {
-            self.$message.error('修改小组失败，请重试');
-          });
+          .catch(e=>{})
+
       },
       /**
        * 解散小组

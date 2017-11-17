@@ -6,7 +6,7 @@
           <el-input class="fileinput"
                     placeholder="请输入"
                     icon="search"
-                    v-model="searchValue"
+                    v-model.trim="searchValue"
                     @keyup.enter.native="getMemberManageList"
                     :on-icon-click="getMemberManageList"
           ></el-input>
@@ -164,7 +164,7 @@ export default {
                  this.$emit('refeshMember');
                  this.getMemberManageList();
                }else{
-                 this.$message.error(res.data.msg);
+                 this.$message.error(res.data.msg.msgTrim());
                }
          })
     },

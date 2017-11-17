@@ -234,7 +234,6 @@
        * 处理条件：1、消息是小组消息，2、消息的小组id等于当前小组id，3、消息的userid不在不等于当前用户id
        */
       handlerReceiveMessage(data){
-        console.log('小组聊天窗口成功收到消息',data);
         let message={};
         data=JSON.parse(data);
         if(data.msgType==3 && ((data.groupId==this.currentGroup.id && data.senderId!=this.currentUserdata.userInfo.id)||!!!data.senderType)){

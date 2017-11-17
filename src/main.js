@@ -103,6 +103,13 @@ axios.interceptors.response.use(function (response) {
 });
 
 
+/**
+ * 添加原型方法
+ */
+String.prototype.msgTrim=function() {
+  return this.replace(/(\S*)===>/g, '');
+};
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

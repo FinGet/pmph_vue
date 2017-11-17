@@ -77,7 +77,6 @@
        * @param data
        */
 	    handleReceiveMessage(data){
-	      console.log('收到webSocket消息：',data);
 	      var receiveData;
 	      try{
           receiveData = JSON.parse(data);
