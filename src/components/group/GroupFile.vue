@@ -48,25 +48,25 @@
         <el-table-column
           prop="gmtCreate"
           label="上传时间"
-          width="160">
+          width="168">
         </el-table-column>
         <el-table-column
           prop="memberName"
           label="分享者"
-          width="100">
+          width="110">
         </el-table-column>
         <el-table-column
           v-if="screenWidth_lg_computed"
           prop="groupCount"
           align="center"
           label="上传小组数"
-          width="116">
+          width="106">
         </el-table-column>
         <el-table-column
           prop="download"
           align="center"
           label="下载次数"
-          width="108">
+          width="100">
         </el-table-column>
         <el-table-column
           label="下载"

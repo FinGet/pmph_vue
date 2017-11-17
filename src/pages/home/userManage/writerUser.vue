@@ -599,7 +599,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/pmpheep/auth/writers/list",{
+      this.$axios.get("/pmpheep/auth/writer_list",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,

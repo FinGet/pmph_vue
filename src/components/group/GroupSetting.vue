@@ -129,7 +129,7 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/pmpheep/group/update/pmphgroup',formdata,config)
+        this.$axios.post('/pmpheep/group/update/pmphgroupdetail',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
