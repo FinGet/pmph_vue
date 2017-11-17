@@ -7,7 +7,7 @@
       <div class="clearfix pull-right paddingT10">
         <div class="search">
           <el-input class=""
-                    v-model="searchFormData.fileName"
+                    v-model.trim="searchFormData.fileName"
                     placeholder="请输入内容"
                     icon="search"
                     @keyup.enter.native="Search"
@@ -183,7 +183,6 @@
           ids:ids.join(','),
           sessionId:this.$getUserData().sessionId
         };
-        console.log(data)
         return data
       },
       uploadFileUrl(){
@@ -197,6 +196,7 @@
             list.push(iterm);
           }
         });
+        console.log(list);
         return list;
       },
     },
@@ -213,7 +213,6 @@
        */
       groupSelectionChange(val) {
         this.groupSelection = val
-        console.log(this.groupSelection);
       },
 
       /**
@@ -224,7 +223,6 @@
         this.dialogChooseGroup = false
         this.groupSelection = []
         this.$refs.fileTable.clearSelection()
-        // console.log(this.groupSelection)
       },
       /**
        * 点击管理按钮
@@ -315,7 +313,7 @@
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
                 }else{
-                  this.$message.error(res.msg);
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch(e=>{
@@ -331,7 +329,6 @@
        */
       fileSelectionChange(val) {
         this.fileSelection=val
-        console.log(this.fileSelection);
       },
       /**
        * 上传头像input发生改变时触发
@@ -378,7 +375,7 @@
               this.getFilelistData();
               this.dialogChooseGroup=false;
             }else{
-              this.$message.error(res.msg);
+              this.$message.error(res.msg.msgTrim());
             }
           })
           .catch((error) => {

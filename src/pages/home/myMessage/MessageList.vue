@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">标题：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.title"></el-input>
+          <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchForm.title" @keyup.enter.native="getTableData"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
@@ -145,25 +145,32 @@
        * 删除消息
        */
       deleteMsg(){
-        var selectIds=[];
-        this.selectData.forEach(iterm=>{
-          selectIds.push(iterm.id);
-        });
-        this.$axios.put('/pmpheep/messages/delete/mymessage',this.$initPostData({
-          ids:selectIds.join(','),
-        }))
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              this.getTableData();
-              this.$message.success('删除成功！');
-            }else{
-              this.$message.error('删除失败，请重试！');
-            }
-          }).catch((error) => {
-          this.$message.success('删除失败，请重试！');
-          console.log(error.msg)
-        })
+        this.$confirm('确认删除选中消息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          var selectIds=[];
+          this.selectData.forEach(iterm=>{
+            selectIds.push(iterm.id);
+          });
+          this.$axios.put('/pmpheep/messages/delete/mymessage',this.$initPostData({
+            ids:selectIds.join(','),
+          }))
+            .then((response) => {
+              let res = response.data;
+              if (res.code == '1') {
+                this.getTableData();
+                this.$message.success('删除成功！');
+              }else{
+                this.$message.error('删除失败，请重试！');
+              }
+            }).catch((error) => {
+            this.$message.success('删除失败，请重试！');
+            console.log(error.msg)
+          })
+        }).catch(() => {});
+
       },
       /**
        * 跳转到消息详情页面

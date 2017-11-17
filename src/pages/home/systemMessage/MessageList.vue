@@ -4,7 +4,7 @@
       <el-col :span="12">
         <div class="search-title">标题:</div>
         <el-col :span="8" class="search-10">
-          <el-input v-model="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
+          <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
         </el-col>
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
@@ -241,7 +241,7 @@
                 this.$message.success('成功撤销此消息');
                 row.isWithdraw=true;
             }else{
-                this.$message.error(res.msg);
+                this.$message.error(res.msg.msgTrim());
             }
           })
           .catch(e=>{

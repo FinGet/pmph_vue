@@ -4,7 +4,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">书籍名称/ISBN：<span></span></div>
         <div class="searchInput">
-          <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model="searchForm.name"></el-input>
+          <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
         </div>
       </div>
       <div class="searchBox-wrapper">
@@ -176,7 +176,7 @@
        * 删除选中行
        */
       deleteComment(){
-        this.$confirm("确定删除选中节点吗?", "提示",{
+        this.$confirm("确定删除所选评论？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -209,29 +209,38 @@
        * @param num 1为审核通过， 0为审核不通过
        */
       audit(num){
-        let url = '/pmpheep/bookusercomment/update/comment';
-        let select = [];
-        this.selectData.forEach(iterm=>{
-          select.push(iterm.id);
-        });
-        this.$axios.put(url,this.$commonFun.initPostData({
-          ids:select.join(','),
-          sessionId:this.$getUserData().sessionId,
-          isAuth:num
-        }))
-          .then(response=>{
-            var res = response.data;
-            if(res.code==1){
-              this.$message.success('提交成功');
-              this.getTableData();
-            }else{
-              this.$message.error('操作失败请重试！');
-            }
+        this.$confirm("确定审核通过所选评论？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            let url = '/pmpheep/bookusercomment/update/comment';
+            let select = [];
+            this.selectData.forEach(iterm=>{
+              select.push(iterm.id);
+            });
+            this.$axios.put(url,this.$commonFun.initPostData({
+              ids:select.join(','),
+              sessionId:this.$getUserData().sessionId,
+              isAuth:num
+            }))
+              .then(response=>{
+                var res = response.data;
+                if(res.code==1){
+                  this.$message.success('提交成功');
+                  this.getTableData();
+                }else{
+                  this.$message.error('操作失败请重试！');
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+                this.$message.error('操作失败请重试！');
+              })
           })
-          .catch(e=>{
-            console.log(e);
-            this.$message.error('操作失败请重试！');
-          })
+          .catch(e=>{})
+
       },
       /**
        * 显示评论详情
