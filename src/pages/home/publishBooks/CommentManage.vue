@@ -195,7 +195,7 @@
                   this.$message.success('删除成功!');
                   this.getTableData();
                 }else{
-                  this.$message.error('删除失败，请重试！');
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch(e=>{
