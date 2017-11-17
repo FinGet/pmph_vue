@@ -311,7 +311,7 @@ export default {
        */
     getTree() {
       this.$axios
-        .get("/pmpheep/users/pmph/list/pmphdepartment")
+        .get("/pmpheep/users/pmph/list/pmphDepartment")
         .then(response => {
           let res = response.data;
           if (res.code == "1") {
@@ -327,7 +327,7 @@ export default {
        */
     getUsers() {
       this.$axios
-        .get("/pmpheep/users/pmph/list/pmphuser", {
+        .get("/pmpheep/users/pmph/list/pmphUser", {
           params: {
             name: this.name,
             path: this.path,
@@ -460,7 +460,7 @@ export default {
     updateUser() {
       this.$axios
         .put(
-          "/pmpheep/users/pmph/update/pmphuserofback",
+          "/pmpheep/users/pmph/update/updateUser",
           this.$initPostData({
             username: this.form.username,
             id: this.form.id,
@@ -544,7 +544,7 @@ export default {
 
       this.loading = true;
       this.$axios
-        .get("/pmpheep/departments/list/pmphdepartment", {
+        .get("/pmpheep/departments/list/department", {
           params: { dpName: query || "" }
         })
         .then(function(response) {

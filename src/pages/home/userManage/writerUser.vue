@@ -546,7 +546,7 @@ export default {
       var self = this;
       // 为给定 ID 的 user 创建请求
       this.$axios
-        .get("/pmpheep/users/writer/list/writeruser", { params: this.params })
+        .get("/pmpheep/users/writer/list/writerUser", { params: this.params })
         .then(function(response) {
           let res = response.data;
           let data = res.data.rows;
@@ -591,7 +591,7 @@ export default {
       var self = this;
       this.$axios({
         method: "POST",
-        url: "/pmpheep/users/writer/add/writeruserofback",
+        url: "/pmpheep/users/writer/addUser",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
@@ -624,7 +624,7 @@ export default {
       var self = this;
       this.$axios({
         method: "PUT",
-        url: "/pmpheep/users/writer/update/writeruserofback",
+        url: "/pmpheep/users/writer/updateUser",
         data: this.$initPostData(this.form)
       })
         .then(function(response) {
