@@ -29,13 +29,13 @@
         <div class="max-width-460">
           <el-form label-position="right" :rules="dialogRules" ref="editForm" label-width="85px" :model="selectObj">
             <el-form-item label="部门名称" prop="dpName">
-              <el-input  :disabled="!hasSelected" v-model="selectObj.dpName"></el-input>
+              <el-input  :disabled="!hasSelected" v-model.trim="selectObj.dpName"></el-input>
             </el-form-item>
             <el-form-item label="显示顺序" prop="sort">
-              <el-input  :disabled="!hasSelected" v-model="selectObj.sort"></el-input>
+              <el-input  :disabled="!hasSelected" v-model.trim="selectObj.sort"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
-              <el-input  :disabled="!hasSelected" v-model="selectObj.note"></el-input>
+              <el-input  :disabled="!hasSelected" v-model.trim="selectObj.note"></el-input>
             </el-form-item>
           </el-form>
           <!--操作按钮-->
@@ -50,13 +50,13 @@
        <el-dialog title="新增部门" :visible.sync="dialogVisible" size="tiny">
          <el-form :model="dialogForm" :rules="dialogRules" ref="dialogForm" label-width="110px">
            <el-form-item label="部门名称：" prop="dpName">
-               <el-input placeholder="请填写部门名称" v-model="dialogForm.dpName"></el-input>
+               <el-input placeholder="请填写部门名称" v-model.trim="dialogForm.dpName"></el-input>
            </el-form-item>
            <el-form-item label="显示顺序：" prop="sort">
-               <el-input placeholder="请填写阿拉伯数字" v-model="dialogForm.sort"></el-input>
+               <el-input placeholder="请填写阿拉伯数字" v-model.trim="dialogForm.sort"></el-input>
            </el-form-item>
            <el-form-item label="备注：" prop="note">
-               <el-input v-model="dialogForm.note"></el-input>
+               <el-input v-model.trim="dialogForm.note"></el-input>
            </el-form-item>
          </el-form>
 

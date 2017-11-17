@@ -10,7 +10,7 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入文章标题" class="input" v-model="contentParams.title"></el-input>
+          <el-input placeholder="输入文章标题" class="input" v-model.trim="contentParams.title"></el-input>
           <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"

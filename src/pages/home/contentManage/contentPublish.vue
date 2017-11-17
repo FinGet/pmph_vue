@@ -2,7 +2,7 @@
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
       <el-form-item label="内容标题：" prop="title">
-           <el-input placeholder="请输入内容标题" class="input" v-model="formData.title"></el-input>
+           <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
           <el-cascader
@@ -18,13 +18,13 @@
           </el-cascader>
       </el-form-item>
       <el-form-item label="摘要：" prop="summary">
-          <el-input type="textarea" :rows="4" class="input" v-model="formData.summary"></el-input>
+          <el-input type="textarea" :rows="4" class="input" v-model.trim="formData.summary"></el-input>
       </el-form-item>
       <el-form-item label="关键字：" prop="keyword">
-          <el-input class="input" placeholder="请输入关键字" v-model="formData.keyword"></el-input>
+          <el-input class="input" placeholder="请输入关键字" v-model.trim="formData.keyword"></el-input>
       </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
-          <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
+          <el-input class="input" placeholder="请输入数字" v-model.trim="formData.sort"></el-input>
       </el-form-item>
       <!-- <el-form-item label="是否推荐：">
           <el-radio-group v-model="formData.isPromote">
