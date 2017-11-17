@@ -79,12 +79,12 @@
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="190"
+                width="120"
                 >
                 <template scope="scope">
-                    <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button>
+                    <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
                     <el-button type="text" @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button>
+                    <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>

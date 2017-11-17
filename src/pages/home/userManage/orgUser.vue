@@ -42,6 +42,9 @@
           <el-table-column
             prop="orgName"
             label="机构名称">
+            <template scope="scope">
+                    <a class="title" @click="showDetail(scope.$index)">{{scope.row.orgName}}</a>
+                </template>
           </el-table-column>
           <el-table-column
             prop="username"
@@ -148,11 +151,13 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            align="center">
+            width="110"
+            align="center"
+            >
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
               <el-button type="text">登录</el-button>
-              <el-button type="text">查看详情</el-button>
+              <!-- <el-button type="text">查看详情</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -183,16 +188,16 @@
             <el-input v-model="form.orgName"></el-input>
           </el-form-item>
           <el-form-item label="机构类型："  prop="orgTypeId">
-          <el-select v-model="form.orgTypeId" placeholder="请选择院校类型">
-            <el-option
-              v-for="item in orgTypeList"
-              :key="item.id"
-              :label="item.typeName"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-          <el-form-item label="管理员姓名：">
+            <el-select v-model="form.orgTypeId" placeholder="请选择院校类型">
+              <el-option
+                v-for="item in orgTypeList"
+                :key="item.id"
+                :label="item.typeName"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="管理员姓名：" prop="name">
             <el-input v-model="form.realname"></el-input>
           </el-form-item>
           <el-form-item label="手机号："  prop="handphone" >
@@ -225,7 +230,76 @@
           <el-button @click="dialogVisible=false">取 消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
+      
       </el-dialog>
+      <!-- 查看详情 -->
+      <el-dialog
+        title="机构用户详情"
+        :visible.sync="detailVisible"
+        size='large'
+        @close="clearDetailTable"
+      >
+        <el-table
+        :data="detailData"
+        border
+        style="width: 100%">
+          <el-table-column
+            prop="orgName"
+            label="机构名称"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="username"
+            label="机构账号"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="orgTypeName"
+            label="机构类型"
+            width="100"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="realname"
+            label="管理员名称">
+          </el-table-column>
+          <el-table-column
+            prop="position"
+            label="职务"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="title"
+            label="职称"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="handphone"
+            label="手机号"
+            width="130">
+          </el-table-column>
+          <el-table-column
+            prop="email"
+            label="邮箱">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="邮寄地址">
+          </el-table-column>
+          <el-table-column
+            label="启用标识"
+            width="100"
+            align="center">
+            <template scope="scope">
+              {{scope.row.isDisabled?'禁用':'启用'}}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="note"
+            label="备注">
+          </el-table-column>
+        </el-table>
+      </el-dialog> 
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -403,20 +477,23 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户代码", trigger: "blur" },
-          { pattern: /^[A-Za-z]+$/, message: '只能输入英文' },
-          { min: 2, max: 16, message: "请输入2~16个英文字母", trigger: "change,blur" }
+          { pattern: /^[A-Za-z0-9]+$/, message: '只能输入英文和数字' },
+          { min: 1, max: 20, message: "请输入1~20个英文数字", trigger: "change,blur" }
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
-          { min: 2, max: 16, message: "请输入2~16个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "请输入0~20个字", trigger: "change,blur" }
           ],
         email: [
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
-          ],
+        ],
+        name:[
+          { min: 1, max: 20, message: "请输入0~20个字", trigger: "change,blur" }
+        ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
-          ],
+        ],
         orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
         ],
@@ -454,10 +531,12 @@ export default {
       // 机构类型
       orgTypeList: [],
       // 新增机构类型弹窗表单
-      addOrgTypeForm:{
-        typeName:'',
-        sort:''
-      },
+      // addOrgTypeForm:{
+      //   typeName:'',
+      //   sort:''
+      // },
+      detailVisible:false, // 查看详情弹窗
+      detailData: [] // 详情数据
     };
   },
   computed:{
@@ -521,14 +600,14 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.tableData[index][key];
       }
-      console.log(this.form.orgTypeId)
+      // console.log(this.form.orgTypeId)
       this.form.isDisabled = !!this.form.isDisabled;
       this.dialogVisible = true;
     },
     /**
-           * 提交表单中搜索所属院校
-           * @param query
-           */
+     * 提交表单中搜索所属院校
+     * @param query
+     */
     searchOrgName(query) {
       var self = this;
       if (query == "") {
@@ -848,6 +927,20 @@ export default {
         .catch(error => {
           console.log(error.msg);
         });
+    },
+    /**
+     * 查看详情
+     * @param index 索引
+     */
+    showDetail(index) {
+      this.detailVisible = true;
+      this.detailData.push(this.tableData[index]);
+    },
+    /**
+     * 弹窗关闭，清空详情表格
+     */
+    clearDetailTable(){
+      this.detailData = []
     }
   },
   created() {
@@ -865,5 +958,8 @@ export default {
 .orgUser .el-tabs--border-card{
   border:0;
   box-shadow: none;
+}
+.title{
+  cursor: pointer;
 }
 </style>

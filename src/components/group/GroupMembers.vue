@@ -183,13 +183,13 @@ export default {
           ids=ids.slice(0,-1);
 
           this.$axios({
-            method:'DELETE',
+            method:'PUT',
             url:this.deleteMemberUrl,
-            params:{
+            data:this.$commonFun.initPostData({
               ids:ids,
               sessionId:this.$getUserData().sessionId,
               groupId:this.groupId
-            }
+            })
           }).then((res)=>{
             if(res.data.code==1){
               this.$message.success('删除成功')

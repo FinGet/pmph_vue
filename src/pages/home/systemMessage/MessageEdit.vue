@@ -56,6 +56,10 @@
       size="large">
       <div class="message-preview paddingR20 paddingL20">
         <h5 class="previewTitle text-center">{{previewData.title}}</h5>
+        <p class="senderInfo text-center paddingT10">
+          <span class="marginR10">{{currentUserInfo.realname}}</span>
+          <span>{{$commonFun.getNowFormatDate()}}</span>
+        </p>
         <div class="previewContent paddingB20" v-html="previewData.content"></div>
         <!--附件-->
         <el-row v-if="previewData.fileList.length">
@@ -123,6 +127,9 @@ export default {
       });
 
       return data;
+    },
+    currentUserInfo(){
+      return this.$getUserData().userInfo;
     },
   },
   methods: {
@@ -265,7 +272,11 @@ export default {
         filePath.push(iterm.path);
       });
       this.messageForm.content = this.$refs.editor.getContent();
+<<<<<<< HEAD
       this.$axios.put('/pmpheep/messages/updateMessage',this.$commonFun.initPostData({
+=======
+      this.$axios.put('/pmpheep/messages/update_message',this.$commonFun.initPostData({
+>>>>>>> a72f24dcb87394924e284e46b674ff2331f0fec9
         msgId:this.currentMessageId,
         msgTitle:this.messageForm.title,
         content:this.messageForm.content,

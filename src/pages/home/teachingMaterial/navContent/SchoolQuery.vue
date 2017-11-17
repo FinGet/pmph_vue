@@ -4,11 +4,8 @@
     <div class="query-operation paddingR20">
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" @click="goBackEdit" size="large" v-if="type=='new'">
-          返回编辑
-        </el-button>
         <el-button type="primary" :disabled="!queryData.length>0" @click="publishBtn" size="large">
-          发送
+          发布
           <span v-if="queryData.length>0">({{queryData.length}})</span>
         </el-button>
       </div>
@@ -53,9 +50,9 @@
         </div>
         <div>
           <el-checkbox class="marginR30"
-            :indeterminate="select_orgType.isIndeterminate"
-            v-model="select_orgType.checkAll"
-            @change="checkAllTypeChange()">
+                       :indeterminate="select_orgType.isIndeterminate"
+                       v-model="select_orgType.checkAll"
+                       @change="checkAllTypeChange()">
             全部
           </el-checkbox>
           <span class="vertical-line"></span>
@@ -159,6 +156,7 @@
       <div class="table-wrapper">
         <el-table
           :data="hasCheckedOrgList"
+          stripe
           style="width: 100%">
           <el-table-column
             label="学校名称">
@@ -231,28 +229,27 @@
         historyData:[],
         tableData:[
           {
-          orgIds:'123',
-          sort:0,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        },{
-          orgIds:'123',
-          sort:1,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        },{
-          orgIds:'123',
-          sort:2,
-          name:'全国高等学校健康服务与管理专业第一轮规划教材',
-          total:34,
-          date:'2017/10/1',
-        }],
+            orgIds:'123',
+            sort:0,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          },{
+            orgIds:'123',
+            sort:1,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          },{
+            orgIds:'123',
+            sort:2,
+            name:'全国高等学校健康服务与管理专业第一轮规划教材',
+            total:34,
+            date:'2017/10/1',
+          }],
         dialogVisible2:false,
         searchName:'',
         searchResultFirstId:'',
-        checkedOrgList:[],
       };
     },
     computed: {
@@ -264,7 +261,7 @@
         return list;
       },
       hasCheckedOrgList(){
-        let list = [];
+        var list = [];
         this.area_school.forEach((iterm,index)=>{
           if(this.select_provinces.length==0 || this.select_provinces.includes(iterm.id)){
             iterm.schoolList.forEach((t,i)=>{
@@ -426,30 +423,8 @@
        * 点击发布按钮
        */
       submit(){
-        var self = this;
-        var data = this.type=='reissue'?this.reissueFormData:this.formdata;
-<<<<<<< HEAD
-        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage'
-=======
-        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/new_message'
->>>>>>> a72f24dcb87394924e284e46b674ff2331f0fec9
-        data.orgIds=this.queryData.join(',');
-        data['sessionId']=this.$getUserData().sessionId;
-        // console.log(this.formdata)
-        this.$axios.post(url,this.$initPostData(data))
-          .then(function (response) {
-            let res = response.data;
-            if(res.code===1){
-              self.$message.success('发布成功！');
-              self.$router.push({name: '消息列表'});
-            }
-          })
-          .catch(function (error) {
-            self.$message({
-              type:'error',
-              message:'发布失败，请重试'
-            });
-          });
+        this.$message.success('发布成功！');
+        this.$router.push({name:'通知列表'});
       },
       /**
        * 返回编辑, 将路由带过来的参数再传给编辑消息页面
@@ -510,31 +485,6 @@
       }
     },
     created(){
-      var routerParams = this.$route.params;
-      var routerQuery = this.$route.query;
-      console.log(routerParams);
-      if((!routerParams.content&&!routerParams.title)&&!routerParams.msgId){
-        this.$message.error('页面未收到发送消息内容');
-        this.$router.push({name: '编辑消息'});
-      }
-      if(routerQuery.type=='reissue'){
-        this.type = routerQuery.type;
-        this.reissueFormData.id=routerParams.msgId;
-        this.reissueFormData.senderId = routerParams.senderId;
-        this.reissueFormData.title=routerParams.title;
-        this.reissueFormData.sendType = routerParams.sendType;
-      }else{
-        this.formdata.title=routerParams.title;
-        this.formdata.content=routerParams.content;
-        this.formdata.sendType = routerParams.sendType;
-        this.formdata.senderId = '';
-        let filePath = [];
-        routerParams.filePathList.forEach(iterm=>{
-          filePath.push(iterm.path);
-        });
-        this.formdata.file=filePath.join(',');
-      }
-
       this.getSchools()
     },
 
