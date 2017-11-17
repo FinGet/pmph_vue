@@ -143,7 +143,7 @@
                   //修改成功通过vue bus派发一个事件
                   bus.$emit('group:info-change')
                 }else{
-                  self.$message.error('修改小组失败，请重试');
+                  self.$message.error(res.msg.msgTrim());
                 }
               })
               .catch((error) => {
@@ -174,7 +174,7 @@
                   //修改成功通过vue bus派发一个事件
                   bus.$emit('group:info-change')
                 }else{
-                  this.$message.error(res.msg);
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch((error) => {

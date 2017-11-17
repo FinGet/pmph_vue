@@ -196,7 +196,7 @@ export default {
               this.$emit('refeshMember');
               this.getMemberManageList();
             }else{
-              this.$message.error(res.data.msg)
+              this.$message.error(res.data.msg.msgTrim())
             }
           })
             .catch((error) => {

@@ -236,7 +236,7 @@
                   self.getGroupData();
                   self.dialogVisible=false;
                 }else{
-                  self.$message.error(res.msg);
+                  self.$message.error(res.msg.msgTrim());
                 }
               })
               .catch((error) => {

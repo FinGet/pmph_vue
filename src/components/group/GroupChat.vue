@@ -168,7 +168,7 @@
             if (res.code == '1') {
 
             }else{
-              self.$message.error(res.msg);
+              self.$message.error(res.msg.msgTrim());
               file.value='';
             }
           })

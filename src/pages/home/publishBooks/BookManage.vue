@@ -48,7 +48,7 @@
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
-            <el-input placeholder="请输入" class="searchInputEle" v-model="searchForm.name" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===1"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchForm.name" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===1"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -63,7 +63,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">书籍名称/ISBN：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="getTableData" v-model="searchForm.name"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="getTableData" v-model.trim="searchForm.name"></el-input>
           </div>
         </div>
         <!--书名选择框-->

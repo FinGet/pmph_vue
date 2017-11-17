@@ -313,7 +313,7 @@
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
                 }else{
-                  this.$message.error(res.msg);
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch(e=>{
@@ -375,7 +375,7 @@
               this.getFilelistData();
               this.dialogChooseGroup=false;
             }else{
-              this.$message.error(res.msg);
+              this.$message.error(res.msg.msgTrim());
             }
           })
           .catch((error) => {
