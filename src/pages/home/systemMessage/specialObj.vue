@@ -318,11 +318,7 @@ export default {
     send() {
       var self = this;
       var userList = [];
-<<<<<<< HEAD
       var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage';
-=======
-      var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/new_message';
->>>>>>> a72f24dcb87394924e284e46b674ff2331f0fec9
       var data = this.type=='reissue'?this.reissueFormData:this.formdata;
       /**
        * 这里先写死，社内用户的userType=1,作家用户的userType=2,机构用户的userType=3

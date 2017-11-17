@@ -315,11 +315,7 @@
             for (var i = 0; i< len; i++) {
               arr.push(this.multipleSelection[i].msgId)
             }
-<<<<<<< HEAD
             this.$axios.put("/pmpheep/messages/deleteMessage",this.$initPostData({
-=======
-            this.$axios.put("/pmpheep/messages/delete_message",this.$initPostData({
->>>>>>> a72f24dcb87394924e284e46b674ff2331f0fec9
               msgIds:arr.join(',')
             })).then((response) => {
               let res = response.data

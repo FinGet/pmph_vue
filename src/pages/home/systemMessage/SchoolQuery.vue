@@ -428,11 +428,7 @@
       submit(){
         var self = this;
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
-<<<<<<< HEAD
         var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage'
-=======
-        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/new_message'
->>>>>>> a72f24dcb87394924e284e46b674ff2331f0fec9
         data.orgIds=this.queryData.join(',');
         data['sessionId']=this.$getUserData().sessionId;
         // console.log(this.formdata)
