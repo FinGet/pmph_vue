@@ -3,7 +3,7 @@
         <div class="roles_list">
             <h4>角色列表</h4>
             <p>
-                <el-input class="input" v-model="searchValue"  placeholder="请输入" @keyup.enter.native="getListData()"></el-input>
+                <el-input class="input" v-model.trim="searchValue"  placeholder="请输入" @keyup.enter.native="getListData()"></el-input>
                 <el-button type="primary" icon="search" @click="getListData()">搜索</el-button>
                 <el-button type="primary pull-right" @click="addNewRoles()">增加</el-button>
             </p>
@@ -25,9 +25,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width="150">
                     <template scope="scope">
-                        <el-button type="text" @click="reviseRoles(scope.row)">修改</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" @click="updatePower(scope.row)">更新权限</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false" @click="updatePower(scope.row)">更新权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
                     </template>
@@ -39,12 +39,12 @@
         <el-dialog :title="isAddNewRole?'新增角色':'修改角色'" :visible.sync="rolesDialogVisible" :before-close="resetDialogForm"   class="roles_dialog" size="tiny">
             <div style="padding-right:30px;" >
 
-                <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="95px">
+                <el-form ref="rolesForm" :model="rolesForm" :rules="rolesFormRules"  label-width="110px">
                     <el-form-item label="角色代码："  prop="id" v-if="!isAddNewRole">
-                        <el-input v-model="rolesForm.id" :disabled="true" placeholder="请输入"></el-input>
+                        <el-input v-model.trim="rolesForm.id" :disabled="true" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="角色名称：" prop="roleName">
-                        <el-input v-model="rolesForm.roleName" placeholder="请输入"></el-input>
+                        <el-input v-model.trim="rolesForm.roleName" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="启用标识：" prop="isDisabled">
                         <el-radio-group v-model="rolesForm.isDisabled">
@@ -53,10 +53,10 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="显示顺序：" prop="sort">
-                        <el-input v-model="rolesForm.sort" placeholder="请输入"></el-input>
+                        <el-input v-model.trim="rolesForm.sort" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="备注：" prop="note">
-                        <el-input v-model="rolesForm.note" placeholder="请输入"></el-input>
+                        <el-input v-model.trim="rolesForm.note" placeholder="请输入"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -230,7 +230,7 @@ export default {
       this.isAddNewRole = true;
       this.rolesForm = {
         roleName: "",
-        isDisabled: "false",
+        isDisabled: false,
         sort: "",
         note: ""
       };
@@ -259,7 +259,7 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 } else {
-                  _this.$message.error("添加失败,请确认填写信息是否有误/已存在");
+                  _this.$message.error(res.data.msg.msgTrim());
                 }
               })
               .catch(function(err) {
@@ -284,11 +284,8 @@ export default {
                   _this.$message.success("修改成功");
                   _this.getListData();
                   _this.rolesDialogVisible = false;
-                } else if(res.data.code == 1){
-                   _this.$message.error("修改失败,角色名称重复");
-
                 }else{
-                   _this.$message.error("修改失败,请确认是否信息有误");
+                   _this.$message.error(res.data.msg.msgTrim());
                 }
               })
               .catch(function(err) {
@@ -322,7 +319,7 @@ export default {
             _this.getListData();
             _this.$message.success("更新成功");
           } else {
-            _this.$message.error("更新失败");
+            _this.$message.error(res.data.msg.msgTrim());
           }
           _this.powerTreeVisible = false;
         })
@@ -357,6 +354,7 @@ export default {
     },
     //更新权限按钮
     updatePower(obj) {
+      console.log(obj);
       this.defaultCheckedData = obj.pmphRolePermissionChild;
       this.revisePowerId = obj.id;
       this.powerTreeVisible = true;
