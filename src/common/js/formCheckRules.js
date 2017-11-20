@@ -106,6 +106,10 @@ let formRules = {
   number(msg='输入不是数字',trigger='blur,change'){
     return { type: 'number', required: true, message: msg, trigger: trigger }
   },
+  //boolean 类型
+  boolean(msg='请输入/选择',trigger='blur,change'){
+    return { type:'boolean',required: true, message: msg, trigger: trigger };
+  },
   //邮箱
   email(msg='请输入正确的邮箱地址',trigger='blur,change'){
     return { type: 'email', message: msg, trigger: trigger }
@@ -114,7 +118,7 @@ let formRules = {
   phone(msg='请输入正确的手机号',trigger='blur'){
     return {
       validator:function (rule, value, callback){
-        if(checkType('phone')||checkType('tel')){
+        if(checkType(value,'phone')||checkType(value,'tel')){
           callback();
         }else{
           callback(msg);
@@ -130,7 +134,15 @@ let formRules = {
   //sort 排序码限制10位数内
   sort(msg='显示顺序不能超过10位数',trigger='blur,change'){
     return { min:1,max:10, message: msg, trigger: trigger }
-  }
+  },
+  //str20 最多二十个字符
+  str20(msg='不能超过20个字符',trigger='blur,change'){
+    return { min:1,max:20, message: msg, trigger: trigger }
+  },
+  //str10 最多十个字符
+  str10(msg='不能超过10个字符',trigger='blur,change'){
+    return { min:1,max:20, message: msg, trigger: trigger }
+  },
 
 };
 

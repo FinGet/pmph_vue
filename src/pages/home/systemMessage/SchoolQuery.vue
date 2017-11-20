@@ -87,7 +87,7 @@
       submit(){
         var self = this;
         var data = this.type=='reissue'?this.reissueFormData:this.formdata;
-        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/message/newMessage';
+        var url = this.type=='reissue'?'/pmpheep/messages/message/again':'/pmpheep/messages/newMessage';
         var idList = [];
         this.hasCheckedOrgList.forEach(iterm=>{
           idList.push(iterm.id);
