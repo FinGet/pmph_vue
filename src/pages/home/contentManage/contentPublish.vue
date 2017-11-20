@@ -24,7 +24,7 @@
           <el-input class="input" placeholder="请输入关键字" v-model.trim="formData.keyword"></el-input>
       </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
-          <el-input class="input" placeholder="请输入数字" v-model.trim="formData.sort"></el-input>
+          <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
       <!-- <el-form-item label="是否推荐：">
           <el-radio-group v-model="formData.isPromote">
@@ -122,7 +122,7 @@
       </el-form-item>
     </el-form>
     <div class="bottom_box">
-          <el-button >返回</el-button>
+          <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="ContentSubmit">确定</el-button>
     </div>
   </div>
@@ -167,17 +167,9 @@ export default {
         categoryId: [{ required: true, message: "请选择所属栏目", trigger: "change,blur" }],
         summary: [{ min: 1, max: 50, message: "摘要内容过长", trigger: "change" }],
         keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }],
-        sortPromote:[
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-        ],
         sort:[
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-        ],
-        sortHot:[
-           { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
+            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "blur" },
         ]
       },
       defaultType: {
@@ -237,7 +229,7 @@ export default {
               console.log(res);
               if (res.data.code == 1) {
                 this.$message.success("添加成功");
-                this.$router.push({ name: "内容列表" });
+                this.$router.push({ name: "文章管理" });
               } else {
                 this.$message.error(res.data.msg);
               }
@@ -247,7 +239,7 @@ export default {
                 console.log(res);
                 if(res.data.code==1){
                   this.$message.success('修改成功');
-                  this.$router.push({ name: "内容列表" });
+                  this.$router.push({ name: "文章管理" });
                 }else {
                 this.$message.error(res.data.msg);
               }
@@ -325,21 +317,27 @@ export default {
     },
     /* 初始化是新增还是修改 */
     initIsEdit() {
+      if(this.$router.currentRoute.query.columnId){
+                this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
+
+      }else{
+        this.$router.push({ name: "文章管理" });
+      }
       if (this.$router.currentRoute.query.type == "edit") {
            var editData=this.$router.currentRoute.params;
         if (editData.content) {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
-                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
+                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
             }
           }
           /* 设置默认栏目 */
-          this.formData.categoryId=this.formData.categoryId+'';
+        /*   this.formData.categoryId=this.formData.categoryId+'';
           this.defaultCategoryId=editData.cmsContent.path.split('-');
          for(var i in  this.defaultCategoryId){
                this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
-         }
+         } */
           /* 填充默认内容 */
           var _this=this;
           setTimeout(function() {
@@ -355,11 +353,8 @@ export default {
          })
          this.formData.attachment=[];
         } else {
-          this.$router.push({ name: "内容列表" });
+          this.$router.push({ name: "文章管理" });
         }
-      } else if(this.$router.currentRoute.query.columnId){
-                this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
-
       }
     }
   },
