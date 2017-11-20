@@ -736,7 +736,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$axios.put("/auth/writerCheck",this.$initPostData({
+          this.$axios.put("/pmpheep/auth/writerCheck",this.$initPostData({
             progress: progress,
             userIds: userIds.join(',')
           })).then((response) => {
@@ -747,7 +747,7 @@ export default {
               
               this.$message({
                   showClose: true,
-                  message: progress==0?'审核通过!':'已退回',
+                  message: progress==3?'审核通过!':'已退回',
                   type: 'success'
                 });
             }else if(res.code ==2){
