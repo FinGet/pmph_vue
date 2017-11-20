@@ -333,7 +333,7 @@ export default {
             }
           }
           /* 设置默认栏目 */
-          this.formData.categoryId=this.formData.categoryId;
+          this.formData.categoryId=parseInt(this.formData.categoryId);
         /*   this.formData.categoryId=this.formData.categoryId+'';
           this.defaultCategoryId=editData.cmsContent.path.split('-');
          for(var i in  this.defaultCategoryId){
