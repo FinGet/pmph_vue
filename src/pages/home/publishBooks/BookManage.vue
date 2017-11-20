@@ -420,7 +420,6 @@
               res.data.typeName='全部';
               res.data.path='';
               this.bookTypeList = res.data.childrenMaterialTypeVO;
-              console.log(this.bookTypeList)
             }
           })
           .catch(e=>{
@@ -533,7 +532,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/pmpheep/books/delete/book',{params:{
+            this.$axios.delete('/pmpheep/books/delete',{params:{
               id:row.id
             }})
               .then(response=>{

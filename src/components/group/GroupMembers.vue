@@ -87,7 +87,7 @@ export default {
   props:['groupId','isrefreshMange','crurrentMemberInfo'],
   data() {
     return {
-      memberManageUrl:'/pmpheep/group/list/pmphGroupMember',  //成员管理列表url
+      memberManageUrl:'/pmpheep/group/list/manager',  //成员管理列表url
       changeAuthUrl:'/pmpheep/group/update/identity', //修改管理员权限url
       deleteMemberUrl:'/pmpheep/group/delete/pmphGroupMembers', //批量删除url
       tableData:[],
