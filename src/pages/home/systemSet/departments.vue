@@ -4,23 +4,10 @@
       <div class="paddingR30">
 
         <div class="max-width-460 paddingB20 clearfix">
-          <p class="page-title">人民卫生出版社：</p>
-          <!--操作按钮-->
-          <div class="pull-right">
-            <el-button type="primary" @click="openAddDialog" :disabled="!(hasSelected||isCheckTop)">添加子部门</el-button>
-            <el-button type="danger" @click="deleteNode" :disabled="!hasSelected">删除</el-button>
-          </div>
+          <p class="page-title">社内部门：</p>
+          <!--社内部门树状图-->
+          <pmph-tree @node-click="handleNodeClick" @delete-node="handleDeleteTreeNode" ref="pmphTree" manage></pmph-tree>
         </div>
-        <el-tree :data="treeData"
-                 :props="defaultProps"
-                 node-key="id"
-                 :highlight-current="true"
-                 :expand-on-click-node="false"
-                 :default-expanded-keys="[treeData[0]?treeData[0].id:92]"
-                 @node-click="checkNode"
-                 ref="tree"
-                 class="no-border expand-icon-lg"
-        ></el-tree>
       </div>
     </el-col>
     <el-col :span="12">
@@ -45,29 +32,10 @@
         </div>
       </div>
     </el-col>
-
-    <!-- 添加弹框 -->
-       <el-dialog title="新增部门" :visible.sync="dialogVisible" size="tiny">
-         <el-form :model="dialogForm" :rules="dialogRules" ref="dialogForm" label-width="110px">
-           <el-form-item label="部门名称：" prop="dpName">
-               <el-input placeholder="请填写部门名称" v-model.trim="dialogForm.dpName"></el-input>
-           </el-form-item>
-           <el-form-item label="显示顺序：" prop="sort">
-               <el-input placeholder="请填写阿拉伯数字" v-model.trim="dialogForm.sort"></el-input>
-           </el-form-item>
-           <el-form-item label="备注：" prop="note">
-               <el-input v-model.trim="dialogForm.note"></el-input>
-           </el-form-item>
-         </el-form>
-
-         <div slot="footer" class="dialog-footer">
-           <el-button @click="dialogVisible = false">取 消</el-button>
-           <el-button type="primary" @click="addTreeNode">确 定</el-button>
-         </div>
-      </el-dialog>
   </el-row>
 </template>
 <script>
+import pmphTree from 'components/pmph-tree';
 export default {
   data() {
     return {
@@ -75,121 +43,27 @@ export default {
       addNodeUrl: "/pmpheep/departments/add", //添加节点url
       deleteNodelUrl: "/pmpheep/departments/delete", //删除节点url
       editNodeUrl: "/pmpheep/departments/update", //修改节点url
-      treeData: [],
       hasSelected: false,
-      multipleSelection: [],
-      dialogVisible: false,
-      currentPage: 1,
       selectObj: {
         dpName: "",
         sort: "",
         note: ""
       },
-      isCheckTop:false,
-      dialogForm: {
-        dpName: "",
-        sort: "",
-        note: "",
-        parentId: "",
-        path: ""
-      },
       dialogRules: {
         dpName: [
-          { required: true, message: "请填写部门名称", trigger: "blur" },
-          {min:1,max:20,message:'名称不能超过20字符',trigger:'change,blur'}
-          ],
+          this.$formRules.required('请填写部门名称','blur'),
+          this.$formRules.name('名称不能超过20字符','change,blur')
+        ],
         sort: [
           {min:1,max:10,message:'不能超过10字符',trigger:'change,blur'},
           {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ],
-        note:[
-          {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}
-        ]
+        note:[this.$formRules.name('备注不能超过20字符','change,blur')]
       },
-      defaultProps: {
-        children: "sonDepartment",
-        label: "dpName"
-      }
+
     };
   },
   methods: {
-    /* 获取部门树数据 */
-    getTreeData() {
-      this.$axios
-        .get(this.treeDataUrl, {
-          params: {}
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == 1) {
-            this.treeData = res.data.data.sonDepartment;
-          }
-        });
-    },
-    /* 打开添加子节点对话框 */
-    openAddDialog(){
-     this.dialogVisible=true;
-     this.$nextTick(()=>{
-        this.$refs.dialogForm.resetFields();
-     })
-
-    },
-    /* 添加子节点 */
-    addTreeNode() {
-      this.$refs.dialogForm.validate(valid => {
-        if (valid) {
-          this.$axios({
-            method: "POST",
-            url: this.addNodeUrl,
-            data: this.$initPostData(this.dialogForm)
-          }).then(res => {
-            console.log(res);
-            if (res.data.code == 1) {
-              this.getTreeData();
-              this.dialogVisible = false;
-              this.$message.success("添加成功");
-            } else {
-              this.$message.error(res.data.msg);
-            }
-          });
-        } else {
-          return false;
-        }
-      });
-    },
-    /* 删除对应的树节点 */
-    deleteNode() {
-      this.$confirm("确定删除选中部门吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$axios
-            .delete(this.deleteNodelUrl, {
-              params: {
-                id: this.selectObj.id
-              }
-            })
-            .then(res => {
-              console.log(res);
-              if (res.data.code == 1) {
-                this.$message.success("删除成功");
-                this.getTreeData();
-              }else if(res.data.code == 3){
-                this.$message.error('该部门中还有用户，不能删除部门');
-              }else if(res.data.code == 2){
-                this.$message.error('该部门中还有子部门，不能删除');
-              }
-            });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
     /* 修改选中节点 */
     editSubmit() {
       this.$refs.editForm.validate(valid => {
@@ -204,10 +78,12 @@ export default {
             url: this.editNodeUrl,
             data: this.$initPostData(this.selectObj)
           }).then((res) => {
-            console.log(res);
             if(res.data.code==1){
               this.$message.success('修改成功');
-              this.getTreeData();
+              this.$refs.pmphTree.refresh();
+              //重置右侧表单
+              this.hasSelected = false;
+              this.$refs.editForm.resetFields();
             }
           });
             })
@@ -222,23 +98,30 @@ export default {
         }
       });
     },
-    checkNode(data) {
-      this.hasSelected = true;
-      this.dialogForm.path = data.path;
-      this.dialogForm.parentId = data.id;
+    /**
+     * 监听点击社内部门树状图节点时触发
+     * @param data
+     */
+    handleNodeClick(data) {
       for(var i in data){
         this.selectObj[i]=data[i];
       }
       this.selectObj.sort=this.selectObj.sort+'';
-      console.log(this.selectObj);
-           if(data.path==0){
-         this.hasSelected = false;
-        this.isCheckTop=true;
-      }
-    }
+      this.hasSelected = !!!(data.path==0);//最顶层'人民卫生出版社'不可以修改
+    },
+    /**
+     * 监听社内部门树状图节点删除事件
+     */
+    handleDeleteTreeNode(){
+      //重置右侧表单
+      this.hasSelected = false;
+      this.$refs.editForm.resetFields();
+    },
+  },
+  components:{
+    pmphTree
   },
   created() {
-    this.getTreeData();
   }
 };
 </script>
@@ -250,6 +133,9 @@ export default {
 .tree-title {
   line-height: 36px;
   margin-bottom: 20px;
+}
+.page-title{
+  padding: 10px 0 0;
 }
 .max-width-460 {
   max-width: 460px;
