@@ -52,33 +52,6 @@
         <el-table-column prop="orgName" label="所属机构">
         </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
-        <el-table-column v-if="screenWidth_lg" label="手机号" width="160">
-          <template scope="scope">
-            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
-            {{scope.row.handphone}}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="screenWidth_lg" label="邮箱" width="180">
-          <template scope="scope">
-            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
-            {{scope.row.email}}
-          </template>
-        </el-table-column>
-
-        <el-table-column v-if="!screenWidth_lg" label="联系方式" width="180">
-          <template scope="scope">
-            <p>
-              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
-              {{scope.row.handphone}}
-            </p>
-            <p>
-              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
-              {{scope.row.email}}
-            </p>
-          </template>
-        </el-table-column>
-
-        <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
         <el-table-column v-if="screenWidth_lg_computed" prop="position" label="职务" width="120">
         </el-table-column>
         <el-table-column v-if="screenWidth_lg_computed" prop="title" label="职称" width="100">
@@ -100,7 +73,32 @@
             </el-tooltip>
           </template>
         </el-table-column>
+        <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
+        <el-table-column v-if="screenWidth_lg" label="手机号" width="160">
+          <template scope="scope">
+            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+            {{scope.row.handphone}}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="screenWidth_lg" label="邮箱" width="220">
+          <template scope="scope">
+            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+            {{scope.row.email}}
+          </template>
+        </el-table-column>
 
+        <el-table-column v-if="!screenWidth_lg" label="联系方式" width="180">
+          <template scope="scope">
+            <p>
+              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+              {{scope.row.handphone}}
+            </p>
+            <p>
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+              {{scope.row.email}}
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column prop="address" label="邮寄地址" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="rankName" label="用户类型" width="120">
@@ -299,17 +297,25 @@
 					</el-table-column>
 					<el-table-column prop="username" label="账号" width="150">
 					</el-table-column>
-					<el-table-column prop="idcard" label="身份证" width="190">
+          <el-table-column prop="orgName" label="所属机构">
 					</el-table-column>
-					<el-table-column prop="orgName" label="所属机构">
-					</el-table-column>
-					<el-table-column prop="handphone" label="手机号">
-					</el-table-column>
-					<el-table-column prop="email" label="邮箱" width="220" show-overflow-tooltip>
-					</el-table-column>
-					<el-table-column prop="position" label="职务">
+          <el-table-column prop="position" label="职务">
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
+					</el-table-column>
+					<el-table-column label="手机号" width="160">
+            <template scope="scope">
+              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+              {{scope.row.handphone}}
+            </template>
+          </el-table-column>
+          <el-table-column label="邮箱" width="220">
+            <template scope="scope">
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+              {{scope.row.email}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="idcard" label="身份证" width="190">
 					</el-table-column>
 					<el-table-column label="教师资格证" width="110" align="center">
 						<template scope="scope">
@@ -689,7 +695,7 @@ export default {
      * 请求初始化列表
      */
     getWritersList() {
-      this.$axios.get("/pmpheep/auth/writer_list",{
+      this.$axios.get("/pmpheep/auth/writerList",{
         params:{
           orgName:  this.orgName,
           realname: this.realname,
