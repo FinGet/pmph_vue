@@ -387,7 +387,7 @@ export default {
           }).then((res)=>{
               console.log(res);
               if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
+                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:1}});
               }
           })
       },

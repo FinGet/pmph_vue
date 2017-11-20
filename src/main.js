@@ -13,7 +13,6 @@ import axios from 'axios'
 import * as config from 'common/config';
 import * as commonFun from './common/js/commonFun.js'
 import {formCheckedRules,formRules} from './common/js/formCheckRules.js'
-
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
@@ -105,7 +104,8 @@ axios.interceptors.response.use(function (response) {
 
 
 /**
- * 添加原型方法
+ * 添加原型方法,去掉字符串中===>及===>前的所有内容
+ * 使用示例：str.msgTrim()
  */
 String.prototype.msgTrim=function() {
   return this.replace(/(\S*)===>/g, '');

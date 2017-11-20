@@ -102,13 +102,13 @@ export default {
 }
 
 .login-page-inner {
-  height: 420px;
+  height: 306px;
   max-width: 300px;
   margin: 0 auto;
   position: relative;
   top: 50%;
   padding: 20px;
-  margin-top: -300px;
+  margin-top: -180px;
   z-index: 10;
 }
 

@@ -6,7 +6,7 @@
         <p class="page-title">教材列表：</p>
         <div class="clearfix paddingT20">
           <!--书名搜索-->
-          <div class="searchBox-wrapper max">
+          <div class="searchBox-wrapper lg">
             <div class="searchName">教材名称：<span></span></div>
             <div class="searchInput">
               <el-input placeholder="请输入" v-model="materialName" @keyup.enter.native="search" class="searchInputEle"></el-input>
@@ -41,7 +41,7 @@
         <p class="page-title">书籍列表：</p>
         <!--操作按钮-->
         <div class="text-right paddingT20">
-          <el-button type="primary"  @click="back">返回编辑</el-button>
+          <el-button type="primary"  @click="back" v-if="type=='new'">返回编辑</el-button>
           <el-button type="primary" :disabled="selections.length==0" @click="send">发送</el-button>
         </div>
         <!--表格-->
@@ -128,6 +128,9 @@
           if (res.code == '1') {
             this.materialData = res.data.Material
             // console.log(this.booksData)
+            if(this.materialData.length>0){
+              this.cellClick(this.materialData[0]);
+            }
           }
         })
       },

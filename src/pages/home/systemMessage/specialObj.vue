@@ -22,7 +22,7 @@
             <el-col class="marginB10">
               <span class="pull-left s-title">账号/姓名:</span>
               <el-col :span="4">
-                <el-input placeholder="请输入" v-model="clubUserParams.name" @keyup.enter.native="getClubUserData"></el-input>
+                <el-input placeholder="请输入" v-model.trim="clubUserParams.name" @keyup.enter.native="getClubUserData"></el-input>
               </el-col>
               <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
             </el-col>
@@ -86,13 +86,13 @@
           <div class="searchBox-wrapper">
             <span>账号/姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="writerUserParams.name" @keyup.enter.native="getWriterUserData" class="searchInputEle "></el-input>
+              <el-input placeholder="请输入" v-model.trim="writerUserParams.name" @keyup.enter.native="getWriterUserData" class="searchInputEle "></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>所属院校：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="writerUserParams.orgName" @keyup.enter.native="getWriterUserData" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入" v-model.trim="writerUserParams.orgName" @keyup.enter.native="getWriterUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
@@ -162,21 +162,15 @@
       <el-tab-pane label="机构用户" name="three">
         <div class="tabsContainer">
           <div class="searchBox-wrapper">
-            <span>学校名称：</span>
+            <span>学校名称/账号：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.orgName" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
-            </div>
-          </div>
-          <div class="searchBox-wrapper">
-            <span>机构代码：</span>
-            <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.username" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入" v-model.trim="orgUserParams.name" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
             <span>管理员姓名：</span>
             <div>
-              <el-input placeholder="请输入内容" v-model="orgUserParams.realname" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入" v-model.trim="orgUserParams.realname" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBtn-wrapper">
@@ -230,10 +224,10 @@
 export default {
   data() {
     return {
-      clubTreeUrl: "/pmpheep/users/pmph/list/pmphdepartment", //获取社内用户成员树url
-      clubUserUrl: "/pmpheep/users/pmph/list/pmphuser", //获取社内用户url
-      writerUserUrl: '/pmpheep/users/writer/list/writeruser',  //获取作家用户url
-      orgUserUrl:'/pmpheep/users/org/list/orguser',  //获取机构用户url
+      clubUserUrl:'/pmpheep/users/pmph/list/pmphUser',  //获取社内用户url
+      clubTreeUrl:'/pmpheep/users/pmph/list/pmphDepartment',//获取社内用户成员树url
+      writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
+      orgUserUrl:'/pmpheep/users/org/list/orgUser',  //获取机构用户url
       clubUserParams: {
         name: "",
         path: "",
@@ -257,8 +251,7 @@ export default {
       writerTableData:[],
       writerPageTotal:0,
       orgUserParams:{
-        username:'',
-        orgName:'',
+        name:'',
         realname:'',
         pageSize:10,
         pageNumber:1

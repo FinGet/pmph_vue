@@ -106,7 +106,7 @@
            name:null
          },
          rules:{
-           name:[this.$formRules.required(),this.$formRules.name()]
+           name:[this.$formRules.required('小组名不能为空','blur'),this.$formRules.name()]
          },
        }
     },
@@ -115,7 +115,6 @@
     },
     methods:{
       clickGroup(group){
-        console.log(group)
         this.currentActiveGroupId = group.id;
         this.$emit('clickItem',group)
       },

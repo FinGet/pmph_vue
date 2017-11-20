@@ -128,7 +128,6 @@
        * 当聊天窗口中上传文件组件上传成功后执行此回调
        */
       uploadFile(file){
-        console.log(file);
         let self= this;
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
@@ -162,7 +161,7 @@
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
-        this.$axios.post('/pmpheep/group/add/pmphgroupfile',formdata,config)
+        this.$axios.post('/pmpheep/group/add/pmphGroupFile',formdata,config)
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
