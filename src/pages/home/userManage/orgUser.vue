@@ -236,72 +236,54 @@
       <el-dialog
         title="机构用户详情"
         :visible.sync="detailVisible"
-        size='large'
         @close="clearDetailTable"
       >
-        <el-table
-        :data="detailData"
-        border
-        style="width: 100%">
-          <el-table-column
-            prop="orgName"
-            label="机构名称"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="username"
-            label="机构账号"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="orgTypeName"
-            label="机构类型"
-            width="100"
-            align="center">
-          </el-table-column>
-          <el-table-column
-            prop="realname"
-            label="管理员名称">
-          </el-table-column>
-          <el-table-column
-            prop="position"
-            label="职务"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="title"
-            label="职称"
-            width="100">
-          </el-table-column>
-          <el-table-column label="手机号" width="160">
-          <template scope="scope">
-            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
-            {{scope.row.handphone}}
-          </template>
-        </el-table-column>
-        <el-table-column label="邮箱">
-          <template scope="scope">
-            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
-            {{scope.row.email}}
-          </template>
-        </el-table-column>
-          <el-table-column
-            prop="address"
-            label="邮寄地址">
-          </el-table-column>
-          <el-table-column
-            label="启用标识"
-            width="95"
-            align="center">
-            <template scope="scope">
-              {{scope.row.isDisabled?'禁用':'启用'}}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="note"
-            label="备注">
-          </el-table-column>
-        </el-table>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div>机构名称：<span></span></div>
+            <div>{{detailData.orgName}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>机构账号：<span></span></div>
+            <div>{{detailData.username}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>机构类型：<span></span></div>
+            <div>{{detailData.orgTypeName}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>管理员姓名：<span></span></div>
+            <div>{{detailData.realname}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>职务：<span></span></div>
+            <div>{{detailData.position}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>职称：<span></span></div>
+            <div>{{detailData.title}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>手机号：<span></span></div>
+            <div>{{detailData.handphone}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>邮箱：<span></span></div>
+            <div>{{detailData.email}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>邮寄地址：<span></span></div>
+            <div>{{detailData.address}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>启用标识：<span></span></div>
+            <div>{{detailData.disabled?'启用':'禁用'}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>备注：<span></span></div>
+            <div>{{detailData.note}}</div>
+          </div>
+        </div>
       </el-dialog> 
   </el-tab-pane>
   <!-- 学校审核 -->
@@ -547,7 +529,19 @@ export default {
       //   sort:''
       // },
       detailVisible:false, // 查看详情弹窗
-      detailData: [] // 详情数据
+      detailData: {
+        orgName:"",
+        address:"",
+        email:"",
+        handphone:"",
+        note:"",
+        orgTypeName:"",
+        realname:"",
+        position:"",
+        title:"",
+        username:"",
+        disabled: false
+      } // 详情数据
     };
   },
   computed:{
@@ -945,13 +939,28 @@ export default {
      */
     showDetail(index) {
       this.detailVisible = true;
-      this.detailData.push(this.tableData[index]);
+      // this.detailData.push(this.tableData[index]);
+      for (var key in this.detailData) {
+        this.detailData[key] = this.tableData[index][key]
+      }
     },
     /**
      * 弹窗关闭，清空详情表格
      */
     clearDetailTable(){
-      this.detailData = []
+      this.detailData ={
+        orgName:"",
+        address:"",
+        email:"",
+        handphone:"",
+        note:"",
+        orgTypeName:"",
+        realname:"",
+        position:"",
+        title:"",
+        username:"",
+        disabled: false
+      }
     }
   },
   created() {
@@ -972,5 +981,17 @@ export default {
 }
 .title{
   cursor: pointer;
+}
+.detail-info-box .detail-info-item>div{
+  display: inline-block;
+  font-size: 16px;
+}
+.detail-info-box .detail-info-item{
+  display: inline-block;
+  height: 36px;
+  width: 50%;
+  max-width: 410px;
+  line-height: 36px;
+  vertical-align: middle;
 }
 </style>
