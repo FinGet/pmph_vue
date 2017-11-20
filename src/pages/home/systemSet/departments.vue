@@ -137,6 +137,9 @@ export default {
 .page-title{
   padding: 10px 0 0;
 }
+.page-title.paddingB20{
+  padding-bottom: 20px;
+}
 .max-width-460 {
   max-width: 460px;
 }

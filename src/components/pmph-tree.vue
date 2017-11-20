@@ -1,6 +1,11 @@
 /**
 封装社内用户树状图组件，提供两个功能，查询和对树结构的修改。通过参数控制是否显示增加删除操作按钮
+props: manage 是否显示操作按钮（即'添加子部门'和'删除'按钮），默认为false
 
+events:(1) node-click 当点击节点时触发，参数data为当前节点数据
+       (2) delete-node 当前节点删除成功后触发
+
+methods: refresh 刷新当前树状图
 */
 <template>
 	<div class="pmph-tree">
@@ -110,7 +115,7 @@
         this.hasSelected = true;
         this.dialogForm.path = data.path;
         this.dialogForm.parentId = data.id;
-        this.$emit('node-click',data,node)
+        this.$emit('node-click',data)
       },
       /**
        * 添加子部门
@@ -161,19 +166,13 @@
                   this.$message.success("删除成功");
                   this._getTree();
                   this.$emit('delete-node');
-                }else if(res.data.code == 3){
-                  this.$message.error('该部门中还有用户，不能删除部门');
-                }else if(res.data.code == 2){
-                  this.$message.error('该部门中还有子部门，不能删除');
+                }else{
+                  this.$message.error(res.data.msg.msgTrim());
                 }
-              });
+              })
+              .catch(e=>{console.log(e)})
           })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
-          });
+          .catch(() => {});
       },
       /**
        *  打开添加子节点对话框

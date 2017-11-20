@@ -106,6 +106,10 @@ let formRules = {
   number(msg='输入不是数字',trigger='blur,change'){
     return { type: 'number', required: true, message: msg, trigger: trigger }
   },
+  //boolean 类型
+  boolean(msg='请输入/选择',trigger='blur,change'){
+    return { type:'boolean',required: true, message: msg, trigger: trigger };
+  },
   //邮箱
   email(msg='请输入正确的邮箱地址',trigger='blur,change'){
     return { type: 'email', message: msg, trigger: trigger }
