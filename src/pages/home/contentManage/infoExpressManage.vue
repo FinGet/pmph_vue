@@ -209,43 +209,6 @@ export default {
           isHot: true,
           recommend: true,
           isHide: true
-        },
-        {
-          id: 2,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          name:'冯举',
-          isPublish: true,
-          isExam: false,
-          isTop: true,
-          isHot: true,
-          recommend: true,
-          isHide: false
-        },
-        {
-          id: 3,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: false,
-          isExam: true,
-          isTop: true,
-          isHot: false,
-          recommend: true,
-          isHide: true
-        },
-        {
-          id: 4,
-          title: "关于开展“精准扶贫示范企业”试点工作的通知",
-          comment: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          isPublish: true,
-          isExam: true,
-          isTop: false,
-          isHot: true,
-          recommend: false,
-          isHide: true
         }
       ],
       commentTableData:[

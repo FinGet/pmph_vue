@@ -164,7 +164,7 @@ export default {
           { required: true, message: "标题不能为空", trigger: "blur" },
           { min: 1, max: 50, message: "标题过长", trigger: "change" }
         ],
-        categoryId: [{ required: true, message: "请选择所属栏目", trigger: "change,blur" }],
+        categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
         summary: [{ min: 1, max: 50, message: "摘要内容过长", trigger: "change" }],
         keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }],
         sort:[
@@ -319,7 +319,7 @@ export default {
     initIsEdit() {
       if(this.$router.currentRoute.query.columnId){
                 this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
-
+                this.formData.categoryId=this.$router.currentRoute.query.columnId;
       }else{
         this.$router.push({ name: "文章管理" });
       }
@@ -333,6 +333,7 @@ export default {
             }
           }
           /* 设置默认栏目 */
+          this.formData.categoryId=parseInt(this.formData.categoryId);
         /*   this.formData.categoryId=this.formData.categoryId+'';
           this.defaultCategoryId=editData.cmsContent.path.split('-');
          for(var i in  this.defaultCategoryId){
