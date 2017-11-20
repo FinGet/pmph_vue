@@ -196,7 +196,7 @@ export default {
     return {
       dialogVisible: false,
       groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
-      writerUserUrl: '/pmpheep/users/writer/list/writeruser',  //获取作家用户url
+      writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
       clubUserUrl:'/pmpheep/users/pmph/list/pmphUser',  //获取社内用户url
       clubTreeUrl:'/pmpheep/users/pmph/list/pmphDepartment',//获取社内用户成员树url
       addMemberUrl:'/pmpheep/group/add/groupMember',  //添加小组成员url

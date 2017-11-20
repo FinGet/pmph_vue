@@ -126,7 +126,7 @@ export default {
 			visible2: false,
 			dialogVisible: false,
 			selections:'',
-			imgsrc:require('./jszgez.jpg'),
+			imgsrc:"",
 			state: [
 				{
 					value: '0',

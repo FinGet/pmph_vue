@@ -462,7 +462,7 @@ export default {
 			visible1: false,
 			visible2: false,
 			selections:'',
-			imgsrc:require('./jszgez.jpg'),
+			imgsrc:"",
 			teachTableData: [],
       orgName:  '',
       realname: '',

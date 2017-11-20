@@ -74,7 +74,7 @@
             //state状态改为loading
             this.state = this.defaultState.loading;
             //ajax请求
-            this.$axios.post('/pmpheep/group/add/groupmessage',this.$initPostData({
+            this.$axios.post('/pmpheep/group/add/groupMessage',this.$initPostData({
               msgConrent:this.message.messageData,
               groupId:this.groupId,
               sessionId:this.$getUserData().sessionId
