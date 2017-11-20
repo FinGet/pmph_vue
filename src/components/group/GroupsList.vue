@@ -95,7 +95,7 @@
     data(){
       var _this = this;
        return {
-         groupListUrl:'/pmpheep/group/list/pmphgroup',
+         groupListUrl:'/pmpheep/group/list/pmphGroup',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
          currentActiveGroupId:undefined,
@@ -218,14 +218,13 @@
         console.log(filedata);
         formdata.append('file',filedata);
         formdata.append('groupName',this.newGroupData.name);
-        formdata.append('sessionId',this.$getUserData().sessionId);
 
         let config = {
           headers:{'Content-Type':'multipart/form-data'}
         };  //添加请求头
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            this.$axios.post('/pmpheep/group/add/pmphgroup',formdata,config)
+            this.$axios.post('/pmpheep/group/add',formdata,config)
               .then((response) => {
                 let res = response.data;
                 if (res.code == '1') {

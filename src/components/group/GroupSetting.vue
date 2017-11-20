@@ -163,7 +163,7 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete('/pmpheep/group/delete/pmphgroup',{params:{
+            this.$axios.delete('/pmpheep/group/delete/group',{params:{
               id:this.currentGroup.id,
               sessionId:this.$getUserData().sessionId
             }})
