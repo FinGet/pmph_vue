@@ -24,7 +24,7 @@
           <el-input class="input" placeholder="请输入关键字" v-model.trim="formData.keyword"></el-input>
       </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
-          <el-input class="input" placeholder="请输入数字" v-model.trim="formData.sort"></el-input>
+          <el-input class="input" placeholder="请输入数字" v-model.number.trim="formData.sort"></el-input>
       </el-form-item>
       <!-- <el-form-item label="是否推荐：">
           <el-radio-group v-model="formData.isPromote">
@@ -174,10 +174,6 @@ export default {
         sort:[
             { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-        ],
-        sortHot:[
-           { min:1,max:10, message: "排序码长度不能超过10位", trigger: "change" },
-            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
         ]
       },
       defaultType: {
@@ -325,21 +321,27 @@ export default {
     },
     /* 初始化是新增还是修改 */
     initIsEdit() {
+      if(this.$router.currentRoute.query.columnId){
+                this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
+
+      }else{
+        this.$router.push({ name: "文章管理" });
+      }
       if (this.$router.currentRoute.query.type == "edit") {
            var editData=this.$router.currentRoute.params;
         if (editData.content) {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
-                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
+                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
             }
           }
           /* 设置默认栏目 */
-          this.formData.categoryId=this.formData.categoryId+'';
+        /*   this.formData.categoryId=this.formData.categoryId+'';
           this.defaultCategoryId=editData.cmsContent.path.split('-');
          for(var i in  this.defaultCategoryId){
                this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
-         }
+         } */
           /* 填充默认内容 */
           var _this=this;
           setTimeout(function() {
@@ -355,11 +357,8 @@ export default {
          })
          this.formData.attachment=[];
         } else {
-          this.$router.push({ name: "内容列表" });
+          this.$router.push({ name: "文章管理" });
         }
-      } else if(this.$router.currentRoute.query.columnId){
-                this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
-
       }
     }
   },

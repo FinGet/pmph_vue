@@ -1,5 +1,5 @@
-//require('url-search-params-polyfill');
 
+import 'url-search-params-polyfill'
 //获取sessionStorage
 function getSessionStorage(key, format) {
     var data;
