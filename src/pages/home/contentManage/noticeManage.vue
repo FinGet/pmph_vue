@@ -248,7 +248,7 @@ export default {
           // console.log(this.tableData)
         }
       }).catch(e=>{
-        this.$message.error('内容列表请求失败，请重试');
+       // this.$message.error('内容列表请求失败，请重试');
       })
     },
     /**
