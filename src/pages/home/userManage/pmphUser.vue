@@ -49,21 +49,23 @@
               width="120">
             </el-table-column>
             <el-table-column
-              prop="email"
-              label="邮箱"
-            >
-            </el-table-column>
-            <el-table-column
               label="角色名称"
             >
               <template scope="scope">
                 <el-tag class="marginTag" v-for="(item,index) in scope.row.pmphRoles" :key="index" type="primary">{{item.roleName}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="handphone"
-              label="手机号"
-            >
+            <el-table-column label="手机号" width="160">
+              <template scope="scope">
+                <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+                {{scope.row.handphone}}
+              </template>
+            </el-table-column>
+            <el-table-column label="邮箱" width="220">
+              <template scope="scope">
+                <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+                {{scope.row.email}}
+              </template>
             </el-table-column>
             <el-table-column
               prop="use"

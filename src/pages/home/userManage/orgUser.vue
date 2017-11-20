@@ -6,7 +6,7 @@
     </div>
       <div class="clearfix">
         <div class="searchBox-wrapper">
-          <div class="searchName">名称/账号：<span></span></div>
+          <div class="searchName">姓名/账号：<span></span></div>
           <div class="searchInput">
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
           </div>
@@ -18,9 +18,9 @@
           </div>
         </div> -->
         <div class="searchBox-wrapper">
-          <div class="searchName">管理员姓名：<span></span></div>
+          <div class="searchName">机构名称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.realname" @keyup.enter.native="refreshTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -351,28 +351,36 @@
 				@selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
-					<el-table-column label="管理员姓名" prop="realname" width="120">
+          <el-table-column prop="orgName" label="机构名称">
 					</el-table-column>
-					<el-table-column prop="username" label="机构账号" width="150">
+          <el-table-column prop="username" label="机构账号" width="100">
 					</el-table-column>
-					<el-table-column prop="orgName" label="机构名称">
+					<el-table-column label="管理员姓名" prop="realname" width="110">
 					</el-table-column>
-					<el-table-column prop="handphone" label="手机号">
-					</el-table-column>
-					<el-table-column prop="email" label="邮箱" show-overflow-tooltip>
-					</el-table-column>
-					<el-table-column prop="position" label="职务">
+          <el-table-column prop="position" label="职务">
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
+					<el-table-column label="手机号" width="160">
+            <template scope="scope">
+              <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+              {{scope.row.handphone}}
+            </template>
+          </el-table-column>
+          <el-table-column label="邮箱">
+            <template scope="scope">
+              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+              {{scope.row.email}}
+            </template>
+          </el-table-column>
 					<el-table-column prop="address" label="邮寄地址" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="postcode" label="邮编" width="90">
 					</el-table-column>
 					<el-table-column label="委托书" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.proxy" style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
-							<el-tag type="danger" v-if="!scope.row.proxy">未上传</el-tag>
+							<a href="javascript:;" v-if="scope.row.proxy&&scope.row.proxy!='DEFAULT'" style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
+							<el-tag type="danger" v-if="!scope.row.proxy||scope.row.proxy=='DEFAULT'">未上传</el-tag>
 						</template>
 					</el-table-column>
 					<el-table-column prop="progress" label="审核状态" width="100" align="center">
@@ -514,7 +522,7 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         // username: "",
-        realname: "",
+        orgName: "",
         name: ""
       },
       totalPages: 0,// 数据总量
@@ -798,7 +806,7 @@ export default {
      */
     getOrgsList() {
       this.$axios
-        .get("/pmpheep/auth/org_list", {
+        .get("/pmpheep/auth/orgList", {
           params: {
             orgName: this.orgName,
             realname: this.realname,
@@ -856,7 +864,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-      this.$axios.put("/pmpheep/auth/org_check",
+      this.$axios.put("/pmpheep/auth/orgCheck",
           this.$initPostData({
             progress: progress,
             orgUserIds: orgUserIds
