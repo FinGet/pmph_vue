@@ -187,7 +187,7 @@ export default {
       selectValue: "",
       conPageNumber: 1,
       conPageSize:20,
-      menuId:'',
+      menuId:3,
       comPageNumber: 1,
       comPageSize:20,
       title:'',
@@ -228,7 +228,7 @@ export default {
      * 初始化内容列表
      */
     getContentLists(){
-      this.$axios.get("/pmpheep/cms/check",{
+      this.$axios.get("/pmpheep/cms/notice",{
         params:{
           sessionId: this.$getUserData().sessionId,
           pageNumber: this.conPageNumber,
@@ -330,7 +330,7 @@ export default {
      * 删除
      */
     deleted(id){
-      this.$axios.delete('/pmpheep/cms/check/'+id+'/update').then(response => {
+      this.$axios.delete('/pmpheep/cms/notice/'+id+'/update').then(response => {
         let res = response.data
         if(res.code == '1') {
           this.$message.success('删除成功');

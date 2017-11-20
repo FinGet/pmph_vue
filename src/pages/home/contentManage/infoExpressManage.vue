@@ -166,9 +166,10 @@
 export default {
   data() {
     return {
-      outContentUrl:'/pmpheep/cms/manage',  //内容列表url
+      outContentUrl:'/pmpheep/cms/letters',  //内容列表url
       editContentUrl:'/pmpheep/cms/content/',    //修改查询url
-      columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+     // columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+      deleteInfoUrl:'/pmpheep/cms/letters/content/',    //信息快报删除url
       contentParams:{
           categoryId:'',
           title:'',
@@ -298,7 +299,7 @@ export default {
      })
     },
     /* 获得栏目列表 */
-    getColumnList() {
+/*     getColumnList() {
       this.$axios
         .get(this.columnListUrl, {
           params: {
@@ -311,7 +312,7 @@ export default {
             this.options = res.data.data;
           }
         });
-    },
+    }, */
       /* 查看详情 */
       contentDetail(obj){
          this.$axios.get(this.editContentUrl+obj.id,{
@@ -348,7 +349,7 @@ export default {
      },
      /* 删除内容 */
      deleteContent(obj){
-      this.$axios.delete('/pmpheep/cms/manage/content/'+obj.id+'/delete').then((res)=>{
+      this.$axios.delete(this.deleteInfoUrl+obj.id+'/delete').then((res)=>{
         if(res.data.code==1){
           this.getOutContentList();
           this.$message.success('内容已删除');
@@ -366,7 +367,6 @@ export default {
   },
   created(){
     this.getOutContentList();
-   this.getColumnList();
   }
 };
 </script>
