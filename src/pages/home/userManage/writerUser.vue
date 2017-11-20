@@ -2,43 +2,43 @@
   <div class="writerUser">
     <el-tabs type="border-card">
   <el-tab-pane label="个人用户">
-       <div class="clearfix">
-      <div class="searchBox-wrapper">
-        <div class="searchName">姓名/账号：
-          <span></span>
-        </div>
-        <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
-        </div>
+  <div class="clearfix">
+    <div class="searchBox-wrapper">
+      <div class="searchName">姓名/账号：
+        <span></span>
       </div>
-      <div class="searchBox-wrapper" >
-        <div class="searchName">所属机构：
-          <span></span>
-        </div>
-        <div class="searchInput">
-          <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
-        </div>
+      <div class="searchInput">
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
       </div>
-            <div class="searchBox-wrapper">
-         <!--申报职务搜索-->
-        <div class="searchName">用户类型：
-          <span></span>
-        </div>
-        <div class="searchInput">
-          <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData" clearable>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="searchBox-wrapper searchBtn">
-        <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
-      </div>
-              <!--操作按钮-->
-      <!-- <div class="pull-right" style="margin-right:10px;">
-        <el-button type="primary" @click="addBtn">新增用户</el-button>
-      </div> -->
     </div>
+    <div class="searchBox-wrapper" >
+      <div class="searchName">所属机构：
+        <span></span>
+      </div>
+      <div class="searchInput">
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
+      </div>
+    </div>
+          <div class="searchBox-wrapper">
+      <!--申报职务搜索-->
+      <div class="searchName">用户类型：
+        <span></span>
+      </div>
+      <div class="searchInput">
+        <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData" clearable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+    </div>
+    <div class="searchBox-wrapper searchBtn">
+      <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
+    </div>
+            <!--操作按钮-->
+    <!-- <div class="pull-right" style="margin-right:10px;">
+      <el-button type="primary" @click="addBtn">新增用户</el-button>
+    </div> -->
+  </div>
     <!--表格-->
     <div class="table-wrapper">
       <el-table :data="tableData" border style="width: 100%" >
@@ -110,7 +110,7 @@
         </el-table-column>
 
         <el-table-column label="操作" 
-        align="center">
+          align="center">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
@@ -178,76 +178,54 @@
       <el-dialog
         title="个人用户详情"
         :visible.sync="detailVisible"
-        size='large'
         @close="clearDetailTable"
       >
-        <el-table
-        :data="detailTable"
-        border
-        style="width: 100%">
-          <el-table-column
-            prop="realname"
-            label="姓名"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="username"
-            label="账号"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="idcard"
-            label="身份证号"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="orgName"
-            label="所属机构"
-            align="center">
-          </el-table-column>
-          <el-table-column
-            prop="position"
-            label="职务"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="title"
-            label="职称"
-            width="100">
-          </el-table-column>
-          <el-table-column label="手机号" width="160">
-          <template scope="scope">
-            <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
-            {{scope.row.handphone}}
-          </template>
-        </el-table-column>
-        <el-table-column label="邮箱">
-          <template scope="scope">
-            <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
-            {{scope.row.email}}
-          </template>
-        </el-table-column>
-          <el-table-column
-            prop="address"
-            label="邮寄地址">
-          </el-table-column>
-          <el-table-column
-            prop="rankName"
-            label="用户类型">
-          </el-table-column>
-          <el-table-column
-            label="启用标识"
-            width="95"
-            align="center">
-            <template scope="scope">
-              {{scope.row.isDisabled?'禁用':'启用'}}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="note"
-            label="备注">
-          </el-table-column>
-        </el-table>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div>姓名：<span></span></div>
+            <div>{{detailData.realname}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>账号：<span></span></div>
+            <div>{{detailData.username}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>身份证号：<span></span></div>
+            <div>{{detailData.idcard}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>所属机构：<span></span></div>
+            <div>{{detailData.orgName}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>职务：<span></span></div>
+            <div>{{detailData.position}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>职称：<span></span></div>
+            <div>{{detailData.title}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>手机号：<span></span></div>
+            <div>{{detailData.handphone}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>邮箱：<span></span></div>
+            <div>{{detailData.email}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>邮寄地址：<span></span></div>
+            <div>{{detailData.address}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>启用标识：<span></span></div>
+            <div>{{detailData.isDisabled?'启用':'禁用'}}</div>
+          </div>
+          <div class="detail-info-item">
+            <div>备注：<span></span></div>
+            <div>{{detailData.note}}</div>
+          </div>
+        </div>
       </el-dialog> 
   </el-tab-pane>
   <el-tab-pane label="审核教师">
@@ -284,7 +262,7 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
-				<el-button class="pull-right marginL10" type="success" @click="check(0)" :disabled="isSelected">通过</el-button>
+				<el-button class="pull-right marginL10" type="success" @click="check(3)" :disabled="isSelected">通过</el-button>
 				<el-button class="pull-right" type="danger"  @click="check(2)" :disabled="isSelected">退回</el-button>
 			</el-col>
 		</el-row>
@@ -319,13 +297,13 @@
 					</el-table-column>
 					<el-table-column label="教师资格证" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.cert" style="color:#0000ff;" @click="preview(scope.row.cert)">预览</a>
-							<el-tag type="danger" v-if="!scope.row.cert">未上传</el-tag>
+							<a href="javascript:;" v-if="scope.row.cert&&scope.row.cert!='DEFAULT'" style="color:#0000ff;" @click="preview(scope.row.cert)">预览</a>
+							<el-tag type="danger" v-if="!scope.row.cert||scope.row.cert=='DEFAULT'">未上传</el-tag>
 						</template>
 					</el-table-column>
 					<el-table-column prop="progress" label="审核状态" width="100" align="center">
 						<template scope="scope">
-              <!-- <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag> -->
+              <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
 							<el-tag type="success" v-if="scope.row.progress=='3'">已通过</el-tag>
 							<el-tag type="danger" v-if="scope.row.progress=='2'">已退回</el-tag>
@@ -477,7 +455,20 @@ export default {
       pageNumber: 1,
       dataTotal: 0,
       detailVisible: false, //查看详情
-      detailTable: [] // 详情数据
+      detailData: {
+        realname:'',
+        username:"", 
+        idcard:"", 
+        orgName:"", 
+        position:"", 
+        title:"", 
+        handphone:"", 
+        email:"", 
+        address:"", 
+        rankName:"", 
+        isDisabled:"", 
+        note:""
+      } // 详情数据
     };
   },
   computed:{
@@ -732,10 +723,10 @@ export default {
 			this.selections.forEach(item => {
 				// console.log(item)
 				userIds.push(item.id)
-				//console.log(orgUserIds)
+				console.log(userIds)
       })
       var title='';
-      if(progress==0) {
+      if(progress==3) {
         title = "是否确认通过?"
       } else {
         title = "是否确认退回?"
@@ -745,9 +736,9 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$axios.put("/auth/writer_check",this.$initPostData({
+          this.$axios.put("/auth/writerCheck",this.$initPostData({
             progress: progress,
-            userIds: userIds
+            userIds: userIds.join(',')
           })).then((response) => {
             let res = response.data
             if (res.code == "1") {
@@ -805,13 +796,28 @@ export default {
      */
     showDetail(index){
       this.detailVisible = true;
-      this.detailTable.push(this.tableData[index]);
+      for(var key in this.detailData) {
+        this.detailData[key] = this.tableData[index][key]
+      }
     },
     /**
      * 弹窗关闭，清空详情表格
      */
     clearDetailTable(){
-      this.detailTable = []
+      this.detailData = {
+        realname:'',
+        username:"", 
+        idcard:"", 
+        orgName:"", 
+        position:"", 
+        title:"", 
+        handphone:"", 
+        email:"", 
+        address:"", 
+        rankName:"", 
+        isDisabled:"", 
+        note:""
+      }
     }
   },
   created() {
@@ -830,5 +836,17 @@ export default {
 }
 .name{
   cursor: pointer;
+}
+.detail-info-box .detail-info-item>div{
+  display: inline-block;
+  font-size: 16px;
+}
+.detail-info-box .detail-info-item{
+  display: inline-block;
+  height: 36px;
+  width: 50%;
+  max-width: 410px;
+  line-height: 36px;
+  vertical-align: middle;
 }
 </style>
