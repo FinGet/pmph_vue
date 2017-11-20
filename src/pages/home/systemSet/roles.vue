@@ -43,7 +43,7 @@
                     <el-form-item label="角色代码："  prop="id" v-if="!isAddNewRole">
                         <el-input v-model.trim="rolesForm.id" :disabled="true" placeholder="请输入"></el-input>
                     </el-form-item>
-                    <el-form-item label="角色名称：" prop="roleName">
+                    <el-form-item label="角色名称：" prop="roleName" >
                         <el-input v-model.trim="rolesForm.roleName" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="启用标识：" prop="isDisabled">
@@ -107,7 +107,7 @@ export default {
       rolesFormRules: {
         id: [{type:'number' ,required: true, message: "请输入角色代码", trigger: "blur" }],
         roleName: [
-            { required: true, message: "请输入角色名称", trigger: "blur" },
+             /* { required: true, message: "请输入角色名称", trigger: "blur" }, */
             {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
             ],
         isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
