@@ -316,7 +316,10 @@ export default {
     },
     /* 文件移除回调 */
     uploadFileRemove(file, flielist) {
-      this.fileList=filelist;
+      this.fileList=[];
+      flielist.forEach((item)=>{
+       this.fileList.push(item);
+      })
       if(!this.isEditContent){
           this.formData.file = [];
          filelist.forEach(item => {
