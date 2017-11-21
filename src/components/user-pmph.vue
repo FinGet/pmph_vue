@@ -1,5 +1,15 @@
 /**
 封装一个社内用户组件
+props:
+        (1) show_manage 是否显示表格中操作栏按钮（即'修改'和'登录'按钮），默认为false
+        (2) show_isDisabled 是否显示表格启用列，默认为false
+        (3) show_nameShowMore 可点击用户名显示更多信息，默认为false
+        (4) select 是否显示复选框 默认false
+        (5) multiple 是否多选 默认true
+events:
+        (1) selection-change 当前表格选中项发生变化时 参数 val 当前选中项列表
+methods:
+        (1) getSelectedData 获取当前选中数据列表
 */
 <template>
   <div>
@@ -8,14 +18,14 @@
       <el-col :span="6">
         <p class="page-title">社内部门：</p>
         <!--社内部门树状图-->
-        <pmph-tree @node-click="handleNodeClick" ref="pmphTree"></pmph-tree>
+        <pmph-tree @node-click="_handleNodeClick" ref="pmphTree"></pmph-tree>
       </el-col>
       <!--右侧表格信息-->
       <el-col :span="17" :offset="1">
         <!--搜索+操作按钮-->
         <div class="clearfix">
           <div class="searchBox-wrapper">
-            <div class="searchName">院校名称：<span></span></div>
+            <div class="searchName">姓名/账号：<span></span></div>
             <div class="searchInput">
               <el-input placeholder="请输入" class="searchInputEle"  @keyup.native.enter="_getTableData" v-model.trim="searchForm.name"></el-input>
             </div>
@@ -39,13 +49,20 @@
             border
             tooltip-effect="dark"
             style="width: 100%"
-            @selection-change="handleSelectionChange">
+            @select-all="tableSelectAll"
+            @selection-change="_handleSelectionChange">
+            <el-table-column
+              v-if="select"
+              type="selection"
+              width="55">
+            </el-table-column>
             <el-table-column
               label="姓名"
               width="120"
               prop="realname">
               <template scope="scope">
-                <el-button type="text" @click="">{{scope.row.realname}}</el-button>
+                <el-button type="text" @click="" v-if="show_nameShowMore">{{scope.row.realname}}</el-button>
+                <p v-else>{{scope.row.realname}}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -68,6 +85,7 @@
               label="手机号">
             </el-table-column>
             <el-table-column
+              v-if="show_isDisabled"
               prop="use"
               label="启用标识"
               align="center"
@@ -77,10 +95,11 @@
               </template>
             </el-table-column>
             <el-table-column
+              v-if="show_manage"
               label="操作"
               align="center">
               <template scope="scope">
-                <el-button type="text" @click="">修改</el-button>
+                <el-button type="text" @click="_openUpdateDialog(scope.$index)">修改</el-button>
                 <el-button type="text">登录</el-button>
                 <!-- <el-button type="text">查看详情</el-button> -->
               </template>
@@ -92,8 +111,8 @@
         <div class="pagination-wrapper">
           <el-pagination
             v-if="dataTotal > searchForm.pageSize"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+            @size-change="_handleSizeChange"
+            @current-change="_handleCurrentChange"
             :current-page="searchForm.pageNumber"
             :page-sizes="[10,20,30,50,100]"
             :page-size="searchForm.pageSize"
@@ -105,15 +124,94 @@
     </el-row>
 
     <!--弹窗-->
+    <el-dialog title="修改" :visible.sync="dialogVisible" @close="_resetForm('form')" ref="from" size="tiny">
+      <el-form ref="form" :model="form" :rules="formRules" label-width="100px" class="padding20">
+        <el-form-item label="账号：" prop="username">
+          <el-input v-model.trim="form.username" :disabled="true" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名：" prop="realname">
+          <el-input v-model.trim="form.realname" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号：" prop="handphone">
+          <el-input v-model.number="form.handphone" type="phone" placeholder="请输入您的手机"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱：" prop="email">
+          <el-input v-model.trim="form.email" placeholder="请输入您的邮箱"></el-input>
+        </el-form-item>
+        <el-form-item label="角色名称：" prop="roleIds" required>
+          <el-select v-model="form.roleIds" multiple placeholder="请选择">
+            <el-option
+              v-for="item in rolenames"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
+        <el-form-item label="所属部门：" required  prop="departmentId">
+          <el-select
+            v-model="form.departmentId"
+            filterable
+            remote
+            placeholder="请输入关键词搜索"
+            loading-text="正在搜索..."
+            :remote-method="_searchDepartmentName"
+            :loading="loading">
+            <el-option
+              v-for="item in DepartmentNameList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="启用标识：" prop="isDisabled">
+          <el-radio-group v-model="form.isDisabled">
+            <el-radio :label="false">启用</el-radio>
+            <el-radio :label="true">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="_updateUser">保存</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import pmphTree from 'components/pmph-tree';
   export default {
+    props:{
+      show_manage:{
+        type: Boolean,
+        required: false
+      },
+      show_isDisabled:{
+        type: Boolean,
+        required: false
+      },
+      show_nameShowMore:{
+        type: Boolean,
+        required: false
+      },
+      select:{
+        type: Boolean,
+        required: false
+      },
+      multiple:{
+        type: Boolean,
+        required: true
+      }
+    },
     data() {
       return {
+        api_pmph_user:'/pmpheep/users/pmph/list/pmphUser',
+        api_pmph_update:'/pmpheep/users/pmph/update/updateUser',
+        api_pmph_roles:'/pmpheep/role/pmph/list/role',
+        api_pmph_departmentList:'/pmpheep/departments/list/department',
         searchForm:{
           name:'',
           path:'',
@@ -124,6 +222,51 @@
         dataTotal:0,
         tableData:[],
         selectData:[],
+        rolenames:[],
+
+        dialogVisible:false,
+        rolenames:[],
+        form: {// 修改弹窗 表单
+          id: "",
+          departmentName: "",
+          email: "",
+          handphone: "",
+          isDisabled: false,
+          name: "",
+          note: "",
+          departmentId: "",
+          realname: "",
+          roleIds: [],
+          sort: "",
+          username: ""
+        },
+        formRules: {
+          username: [
+            { required: true, message: "用户账号不能为空", trigger: "blur" },
+            { min: 1, max: 20, message: "账号长度过长", trigger: "change,blur" }
+          ],
+          realname: [
+            { required: true, message: "用户名称不能为空", trigger: "blur" },
+            { min: 1, max: 20, message: "名称长度过长", trigger: "change,blur" }
+          ],
+          roleIds: [
+            {
+              validator: this.$formCheckedRules.arrChecked,
+              trigger: "change"
+            }
+          ],
+          handphone: [
+            { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
+          ],
+          email: [
+            { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+            { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          ],
+          departmentId: [],
+          isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }]
+        },
+        loading: false,
+        DepartmentNameList:[],
       }
     },
     methods:{
@@ -131,19 +274,52 @@
        * 获取当前用户表格数据
        */
       _getTableData(){
-
+        this.$axios.get(this.api_pmph_user, {
+            params: this.searchForm
+          })
+          .then(response => {
+            let res = response.data;
+            if (res.code == "1") {
+              this.tableData = res.data.rows;
+              this.dataTotal = res.data.total;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
+      /**
+       * 获取用户角色
+       */
+      _getRoleName() {
+        this.$axios.get("/pmpheep/role/pmph/list/role")
+          .then(response => {
+            let res = response.data;
+            if (res.code == "1") {
+              this.rolenames = res.data;
+              for (var i in res.data) {
+                this.rolenames[i].label = res.data[i].roleName;
+                this.rolenames[i].value = res.data[i].id;
+              }
+            }
+        });
       },
       /**
        * 监听点击社内部门树状图节点时触发
        * @param data 当前点击节点数据
        */
       _handleNodeClick(data){
-
+        this.searchForm.path = data.path;
+        this.searchForm.departmentId = data.id;
+        if (data.path == 0) {
+          this.searchForm.path = "";
+        }
+        this._getTableData();
       },
       /**
        * 选择每页有多少条数据
        */
-      handleSizeChange(val) {
+      _handleSizeChange(val) {
         this.searchForm.pageSize = val;
         this.searchForm.pageNumber = 1;
         this._getTableData();
@@ -151,7 +327,7 @@
       /**
        * 选择当前第几页
        */
-      handleCurrentChange(val) {
+      _handleCurrentChange(val) {
         this.searchForm.pageNumber = val;
         this._getTableData();
       },
@@ -159,12 +335,134 @@
        * 选中数据将选中的数据赋值给multipleSelection
        * @param val
        */
-      handleSelectionChange(val) {
-        this.selectData = val;
+      _handleSelectionChange(val) {
+        if(!this.multiple){
+          if (val.length>1){
+            this.$refs.table.clearSelection();
+            this.$refs.table.toggleRowSelection(val[val.length-1],true);
+          }
+          this.selectData = [val[val.length-1]];
+        }else{
+          this.selectData = val;
+        }
+        this.$emit('selection-change', this.selectData);
       },
+      /**
+       * 当点击全选时
+       */
+      tableSelectAll(){
+        if(!this.multiple){
+          this.$refs.table.clearSelection();
+          this.selectData = [];
+          this.$message.error('只能选择一个用户');
+        }
+      },
+      /**
+       * 远程搜索
+       */
+      _openUpdateDialog(index){
+        this.dialogVisible = true;
+        this.DepartmentNameList = [{
+            id: this.tableData[index].departmentId,
+            name: this.tableData[index].departmentName || "-"
+          }];
+        for (var key in this.tableData[index]) {
+          this.form[key] =this.tableData[index][key];
+        }
+        // 每次修改先将this.form.roleName置为空
+        this.form.roleIds = [];
+        for (var i in this.tableData[index].pmphRoles) {
+          this.form.roleIds.push(this.tableData[index].pmphRoles[i].id);
+        }
+      },
+      /**
+       * 重置表单
+       * @param form
+       */
+      _resetForm(form){
+        this.$refs[form].resetFields();
+      },
+      /**
+       * 远程搜索
+       */
+      _searchDepartmentName(query) {
+        var self = this;
+        if (query == "") {
+          self.DepartmentNameList = [];
+          return;
+        }
+
+        this.loading = true;
+        this.$axios.get(this.api_pmph_departmentList, {
+            params: { dpName: query || "" }
+          })
+          .then(function(response) {
+            self.loading = false;
+            let res = response.data;
+            let data = res.data;
+            if (data.length > 0) {
+              self.DepartmentNameList = [];
+              for (var i in data) {
+                self.DepartmentNameList.push({
+                  id: data[i].id,
+                  name: data[i].dpName
+                });
+              }
+            } else {
+              self.DepartmentNameList = [];
+            }
+          })
+          .catch(function(error) {
+            self.loading = false;
+            console.error(error);
+          });
+      },
+      /**
+       * 修改用户信息
+       */
+      _updateUser() {
+        this.$axios.put(this.api_pmph_update,this.$initPostData({
+              username: this.form.username,
+              id: this.form.id,
+              roleIds: this.form.roleIds.join(","),
+              realname: this.form.realname,
+              departmentId: this.form.departmentId,
+              email: this.form.email,
+              handphone: this.form.handphone,
+              isDisabled: this.form.isDisabled
+            })
+          )
+          .then(response => {
+            let res = response.data;
+            if (res.code == 1) {
+              console.log(res);
+              this.dialogVisible = false;
+              this.$message({
+                message: "恭喜你，修改成功！",
+                type: "success"
+              });
+              this.getUsers();
+            } else {
+              this.$message.error(res.msg);
+            }
+          })
+          .catch(e => {
+            this.$message.error(e.msg);
+          });
+      },
+      /**
+       *  获取选中数据
+       */
+      getSelectedData(){
+        return this.selectData;
+      }
     },
     components:{
       pmphTree
+    },
+    created(){
+      this._getTableData();
+      this._getRoleName();
     },
   }
 </script>

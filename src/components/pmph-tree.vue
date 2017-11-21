@@ -21,6 +21,8 @@ methods: refresh 刷新当前树状图
                :expand-on-click-node=false
                :props="defaultProps"
                @node-click="_handleNodeClick"
+               lazy
+               :load="_loadNode"
                node-key="id"
                :default-expanded-keys="[92]"
       ></el-tree>
@@ -93,12 +95,20 @@ methods: refresh 刷新当前树状图
       /**
        * 请求组织树
        */
-      _getTree() {
-        this.$axios.get(this.api_pmph_list)
+      _getTree(id='',callback) {
+        this.$axios.get(this.api_pmph_list,{params:{
+          id:id
+        }})
           .then(response => {
             let res = response.data;
             if (res.code == 1) {
-              this.treeData = res.data.sonDepartment;
+              if(callback){
+                callback(res.data);
+              }
+              if(id!=''){
+                return;
+              }
+              this.treeData = [res.data];
               if(this.treeData.length>0){
                 this.default_expanded_keys = [this.treeData[0].id];
               }
@@ -116,6 +126,15 @@ methods: refresh 刷新当前树状图
         this.dialogForm.path = data.path;
         this.dialogForm.parentId = data.id;
         this.$emit('node-click',data)
+      },
+      /**
+       * 展开式加载子节点
+       */
+      _loadNode(node, resolve){
+        console.log(node);
+        this._getTree(node.key,(data)=>{
+          resolve(data.sonDepartment);
+        })
       },
       /**
        * 添加子部门

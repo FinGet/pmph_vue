@@ -872,13 +872,13 @@ export default {
             this.getOrgsList();
             this.$message({
               showClose: true,
-              message: "修改成功!",
+              message: "审核成功!",
               type: "success"
             });
           }else if (res.code == '2') {
            this.$message({
               showClose: true,
-              message: "已退回，不能修改!",
+              message: res.msg,
               type: "warning"
             });
           }
