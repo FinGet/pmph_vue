@@ -20,7 +20,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search">搜索</el-button>
+         <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -42,7 +42,7 @@
                 width="165"
                 >
                 <template scope="scope">
-                    {{$commonFun.formatDate(scope.row.authDate)}}
+                    {{scope.row.authDate}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -73,18 +73,18 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="contentParams.pageNumber"
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="contentParams.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="totalPage">
       </el-pagination>
     </div>
      <!-- 内容详情查看界面 -->
-         <el-dialog
-     title=""
-     :visible.sync="showContentDetail"
-     size="large">
+   <el-dialog
+            title=""
+            :visible.sync="showContentDetail"
+            size="large">
        <div style="padding:0 10%;">
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
@@ -151,32 +151,32 @@
 .out_content_manage .active_hide {
   color: #58b7ff;
 }
-.previewTitle{
+.previewTitle {
   color: #14232e;
   font-size: 26px;
   font-weight: 500;
 }
-.out_content_manage .center_box{
-    float:left;
- margin-left:50%;
- transform: translateX(-50%);
+.out_content_manage .center_box {
+  float: left;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 <script type="text/javascript">
 export default {
   data() {
     return {
-      outContentUrl:'/pmpheep/cms/letters',  //内容列表url
-      editContentUrl:'/pmpheep/cms/content/',    //修改查询url
-     // columnListUrl: "/pmpheep/cms/set", //栏目列表Url
-      deleteInfoUrl:'/pmpheep/cms/letters/content/',    //信息快报删除url
-      contentParams:{
-          categoryId:'',
-          title:'',
-          status:'',
-          pageSize:10,
-          pageNumber:1
+      outContentUrl: "/pmpheep/cms/letters", //内容列表url
+      // columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+      deleteInfoUrl: "/pmpheep/cms/letters/content/", //信息快报删除url
+      contentParams: {
+        categoryId: "",
+        title: "",
+        status: "",
+        pageSize: 10,
+        pageNumber: 1
       },
+      totalPage:10,
       options: [],
       defaultType: {
         value: "id",
@@ -202,7 +202,7 @@ export default {
           title: "关于开展“精准扶贫示范企业”试点工作的通知",
           comment: "信息快报",
           creatTime: "2017/10/23  03:47:00",
-          name:'张武',
+          name: "张武",
           isPublish: true,
           isExam: true,
           isTop: true,
@@ -211,58 +211,60 @@ export default {
           isHide: true
         }
       ],
-      commentTableData:[
-          {
-            id:1,
-            name:'张武',
-            title:'文章标题11',
-            column:'信息快报',
-            creatTime: "2017/10/23  03:47:00",
-            link:''
-          },
-          {
-            id:2,
-            name:'冯举',
-            title:'文章标题22',
-            column:'医学随笔',
-            creatTime: "2017/10/23  03:47:00",
-            link:''
-          },
-          {
-            id:3,
-            name:'王五',
-            title:'文章标题3',
-            column:'通知公告',
-            creatTime: "2017/10/23  03:47:00",
-            link:''
-          },
+      commentTableData: [
+        {
+          id: 1,
+          name: "张武",
+          title: "文章标题11",
+          column: "信息快报",
+          creatTime: "2017/10/23  03:47:00",
+          link: ""
+        },
+        {
+          id: 2,
+          name: "冯举",
+          title: "文章标题22",
+          column: "医学随笔",
+          creatTime: "2017/10/23  03:47:00",
+          link: ""
+        },
+        {
+          id: 3,
+          name: "王五",
+          title: "文章标题3",
+          column: "通知公告",
+          creatTime: "2017/10/23  03:47:00",
+          link: ""
+        }
       ],
-      currentPage: 1,
-      showContentDetail:false,
-      contentDetailData:{
-         cmsContent:'',
-         cmsExtras:'',
-         listObj:'',
-         content:'',
-      },
-
+      showContentDetail: false,
+      contentDetailData: {
+        cmsContent: "",
+        cmsExtras: "",
+        listObj: "",
+        content: ""
+      }
     };
   },
   methods: {
     /* 获取内容列表 */
-    getOutContentList(){
-      this.contentParams.sessionId=this.$getUserData().sessionId;
-     this.$axios.get(this.outContentUrl,{
-       params:this.contentParams
-     }).then((res)=>{
-       console.log(res);
-       if(res.data.code==1){
-         this.tableData=res.data.data.rows;
-       }
-     })
+    getOutContentList() {
+      this.contentParams.sessionId = this.$getUserData().sessionId;
+      this.$axios
+        .get(this.outContentUrl, {
+          params: this.contentParams
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.tableData = res.data.data.rows;
+            this.totalPage=res.data.data.total;
+
+          }
+        });
     },
     /* 获得栏目列表 */
-/*     getColumnList() {
+    /*     getColumnList() {
       this.$axios
         .get(this.columnListUrl, {
           params: {
@@ -276,59 +278,60 @@ export default {
           }
         });
     }, */
-      /* 查看详情 */
-      contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id,{
-          }).then((res)=>{
-              if(res.data.code==1){
-                this.contentDetailData=res.data.data;
-                this.contentDetailData.listObj=obj;
-                console.log(this.contentDetailData);
-              }
-          })
-           this.showContentDetail=true;
-      },
-    /* 修改内容 */
-    editContent(obj){
-      this.$axios.get(this.editContentUrl+obj.id,{
-          }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit'}});
-              }
-          })
+    /* 查看详情 */
+    contentDetail(obj) {
+      this.$axios
+        .get(this.outContentUrl + "/" + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            console.log(this.contentDetailData);
+          }
+        });
+      this.showContentDetail = true;
     },
-    /* 隐藏内容 */
-     hideContent(obj){
-      this.$axios.put('/pmpheep/cms/manage/content/'+obj.id+'/hide').then((res)=>{
-        console.log(res);
-        if(res.data.code==1){
+    /* 修改内容 */
+    editContent(obj) {
+      this.$axios
+        .get(this.outContentUrl + "/" + obj.id + "/detail", {})
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$router.push({
+              name: "添加内容",
+              params: res.data.data,
+              query: { type: "edit", columnId: 2 }
+            });
+          }
+        });
+    },
+    /* 删除内容 */
+    deleteContent(obj) {
+      this.$axios.delete(this.deleteInfoUrl + obj.id + "/delete").then(res => {
+        if (res.data.code == 1) {
           this.getOutContentList();
-          this.$message.success('内容已隐藏');
-        }else{
-          this.$message.eroor(res.data.msg);
-        }
-      })
-     },
-     /* 删除内容 */
-     deleteContent(obj){
-      this.$axios.delete(this.deleteInfoUrl+obj.id+'/delete').then((res)=>{
-        if(res.data.code==1){
-          this.getOutContentList();
-          this.$message.success('内容已删除');
-        }else{
+          this.$message.success("内容已删除");
+        } else {
           tthis.$message.error(res.data.msg);
         }
-      })
-     },
+      });
+    },
     /* 栏目选项改变 */
-    handleChange(value){
+    handleChange(value) {
       this.contentParams.categoryId = value[value.length - 1] + "";
     },
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {}
+    handleSizeChange(val) {
+      this.contentParams.pageSize=val;
+      this.contentParams.pageNumber=1;
+      this.getOutContentList();
+    },
+    handleCurrentChange(val) {
+      this.contentParams.pageNumber=val;
+      this.getOutContentList();
+    }
   },
-  created(){
+  created() {
     this.getOutContentList();
   }
 };
