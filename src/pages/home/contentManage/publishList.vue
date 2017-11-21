@@ -15,7 +15,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
+         <!-- <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button> -->
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -42,8 +42,8 @@
                 </template>
             </el-table-column> -->
             <el-table-column
-                label="审核"
-                width="80"
+                label="审核状态"
+                width="110"
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">待审核</p>
@@ -52,7 +52,7 @@
                 </template>
             </el-table-column> 
             <el-table-column
-                label="发布时间"
+                label="审核时间"
                 width="168"
                 >
                 <template scope="scope">
@@ -77,9 +77,6 @@
                         <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
                     </el-tooltip>
                 </template>
-            </el-table-column>
-            <el-table-column label="显示顺序" width="110">
-
             </el-table-column>
             <el-table-column
                 label="操作"
@@ -118,14 +115,9 @@
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="100px">
-          <el-form-item label="摘要：">
-             <p>{{contentDetailData.cmsContent.summary}}</p>
-         </el-form-item>
-         <el-form-item label="关键字：">
-             {{contentDetailData.cmsContent.keyword}}
-         </el-form-item>
-         <el-form-item label="内容：">
+       <el-form label-width="55px">
+
+         <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">

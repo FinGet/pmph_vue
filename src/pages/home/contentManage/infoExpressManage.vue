@@ -46,6 +46,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                label="发布状态"
+                width="100"
+                >
+            </el-table-column> 
+            <el-table-column
                 label="被查看次数"
                 width="110"
                 >
@@ -91,14 +96,8 @@
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="100px">
-          <el-form-item label="摘要：">
-             <p>{{contentDetailData.cmsContent.summary}}</p>
-         </el-form-item>
-         <el-form-item label="关键字：">
-             {{contentDetailData.cmsContent.keyword}}
-         </el-form-item>
-         <el-form-item label="内容：">
+       <el-form label-width="55px">
+         <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
