@@ -102,55 +102,8 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="社内用户" name="second">
-          <el-row>
-            <el-col :span="6">
-              <el-tree
-              :data="treeData"
-              :highlight-current='true'
-              :props="defaultProps"
-              @node-click="handleNodeClick"
-              node-key="id"
-              :default-expanded-keys="[92]"></el-tree>
-            </el-col>
-            <el-col :span="17" :offset="1">
-              <el-col class="marginB10">
-                <span class="pull-left s-title">账号/姓名:</span>
-                <el-col :span="4">
-                  <el-input placeholder="请输入" v-model="searchVal"></el-input>
-                </el-col>
-                <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
-              </el-col>
-              <el-table ref="multipleTable"
-              :data="usersData"
-              border tooltip-effect="dark"
-              @selection-change="clubUserSelectChange"
-               style="width: 100%;margin-bottom:20px;">
-                <el-table-column type="selection" width="55">
-                </el-table-column>
-                <el-table-column label="姓名" width="110" prop="realname">
-                </el-table-column>
-                <el-table-column prop="username" label="账号" width="120">
-                </el-table-column>
-                <el-table-column prop="email" label="邮箱">
-                </el-table-column>
-                <el-table-column prop="role" label="角色名称">
-                </el-table-column>
-                <el-table-column prop="handphone" label="手机号">
-                </el-table-column>
-              </el-table>
-              <el-pagination class="pull-right"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="pageNumber"
-              :page-sizes="[10, 20,30, 50, 100]"
-              v-if="dataTotal>pageSize"
-              :page-size="pageSize"
-               layout="total, sizes, prev, pager, next, jumper"
-               :total="dataTotal">
-              </el-pagination>
-            </el-col>
-          </el-row>
-
+          <!--社内用户组件-->
+          <user-pmph @selection-change="clubUserSelectChange" select ></user-pmph>
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
@@ -190,6 +143,8 @@
 <script>
 import beautyScroll from 'components/beautyScroll.vue';
 import bus from 'common/eventBus/bus.js'
+
+import userPmph from 'components/user-pmph'
 export default {
   props: ['groupId','refreshMember','crurrentMemberInfo'],
   data() {
@@ -197,8 +152,6 @@ export default {
       dialogVisible: false,
       groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
       writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
-      clubUserUrl:'/pmpheep/users/pmph/list/pmphUser',  //获取社内用户url
-      clubTreeUrl:'/pmpheep/users/pmph/list/pmphDepartment',//获取社内用户成员树url
       addMemberUrl:'/pmpheep/group/add/groupMember',  //添加小组成员url
       writerParams: {
         orgName: '',
@@ -233,18 +186,6 @@ export default {
         value: '3',
         label: '专家用户'
       }],
-      defaultProps: {
-        children: 'sonDepartment',
-        label: 'dpName'
-      },
-      treeData:[],
-      searchVal:'',
-      path:'',
-      departmentId:'',
-      pageNumber:1,
-      pageSize:10,
-      dataTotal:0,
-      usersData:[],
       againDialogVisible:false,     //再次确认弹窗
       addWriterData:[],
       addClubData:[],
@@ -331,63 +272,7 @@ export default {
           }
      })
     },
-    /* 获取社内用户列表 */
-    getClubUserData(){
-     this.$axios.get(this.clubUserUrl, {
-          params: {
-            name: this.searchVal,
-            path: this.path,
-            departmentId:this.departmentId,
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize
-          }
-        }).then((response) => {
-          let res = response.data
-          this.dataTotal = res.data.total
-          if (res.code == '1') {
-            this.usersData=res.data.rows
-            if (this.dataTotal == 0) {
-              this.$message({
-                showClose: true,
-                message: '没有这条数据!',
-                type: 'warning'
-              });
-            }
-          }
-        }).catch((error) => {
-        })
-    },
-    /* 获取社内用户树列表 */
-    getTreeData(){
-     this.$axios.get(this.clubTreeUrl).then((response) => {
-          let res = response.data
-          console.log(res);
-          if (res.code == '1') {
-            this.treeData = res.data.sonDepartment;
-            console.log(this.treeData);
-          }
-        }).catch((error) => {
-        })
-    },
-    /* 社内用户树点击操作 */
-    handleNodeClick(data) {
-      console.log(data);
-      console.log(data.path);
-      this.path = data.path;
-      this.departmentId=data.id;
-        if (data.path == '0') {
-          this.path = ''
-        }
-        this.pageSize=10;
-         this.pageNumber=1;
-      this.getClubUserData();
-    },
-    /* 社内用户切换分页条数 */
-    handleSizeChange(val) {
-      this.pageSize=val;
-      this.pageNumber=1;
-      this.getClubUserData();
-    },
+
     /* 作家用户切换分页条数 */
     writerSizeChange(val){
 
@@ -400,17 +285,10 @@ export default {
       this.writerParams.pageNumber=val;
       this.getWriterUserList();
     },
-    /* 社内用户切换当前页数 */
-    handleCurrentChange(val) {
-      this.pageNumber=val;
-      this.getClubUserData();
-    },
     /* 点击新增成员按钮 */
     addNewMember(){
      this.dialogVisible=true;
      this.getWriterUserList();
-    this.getClubUserData();
-    this.getTreeData();
     },
     /**
      *  当页面左侧导航区域展开和收起时执行此方法
@@ -420,7 +298,8 @@ export default {
     }
   },
   components: {
-    beautyScroll
+    beautyScroll,
+    userPmph
   },
   watch: {
 

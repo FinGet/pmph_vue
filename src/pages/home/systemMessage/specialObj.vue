@@ -8,76 +8,8 @@
     </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="社内用户" name="first">
-        <el-row>
-          <el-col :span="6">
-            <el-tree :data="treeData"
-                     :props="defaultProps"
-                     :highlight-current='true'
-                     @node-click="handleNodeClick"
-                     node-key="id"
-                     :default-expanded-keys="[1]"
-            ></el-tree>
-          </el-col>
-          <el-col :span="17" :offset="1">
-            <el-col class="marginB10">
-              <span class="pull-left s-title">账号/姓名:</span>
-              <el-col :span="4">
-                <el-input placeholder="请输入" v-model.trim="clubUserParams.name" @keyup.enter.native="getClubUserData"></el-input>
-              </el-col>
-              <el-button type="primary" icon="search" class="marginL10" @click="getClubUserData">搜索</el-button>
-            </el-col>
-            <el-table
-              ref="multipleTable"
-              :data="clubUsersData"
-              border
-              @selection-change="clubSelectChange"
-              tooltip-effect="dark"
-              style="width: 100%;margin-bottom:20px;"
-            >
-              <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                label="姓名"
-                width="120"
-                prop="realname">
-              </el-table-column>
-              <el-table-column
-                prop="username"
-                label="账号"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="email"
-                label="邮箱"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="角色名称"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="handphone"
-                label="手机号"
-              >
-              </el-table-column>
-            </el-table>
-            <el-pagination
-              class="pull-right"
-              @size-change="clubSizeChange"
-              @current-change="clubCurrentChange"
-              :current-page="clubUserParams.pageNumber"
-              :page-sizes="[10, 20, 30, 50, 100]"
-              v-if="clubDataTotal>clubUserParams.pageSize"
-              :page-size="clubUserParams.pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="clubDataTotal">
-            </el-pagination>
-          </el-col>
-        </el-row>
-
+        <!--社内用户组件-->
+        <user-pmph @selection-change="clubSelectChange" select ></user-pmph>
       </el-tab-pane>
 
 
@@ -221,22 +153,12 @@
 </template>
 
 <script>
+  import userPmph from 'components/user-pmph'
 export default {
   data() {
     return {
-      clubUserUrl:'/pmpheep/users/pmph/list/pmphUser',  //获取社内用户url
-      clubTreeUrl:'/pmpheep/users/pmph/list/pmphDepartment',//获取社内用户成员树url
       writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
       orgUserUrl:'/pmpheep/users/org/list/orgUser',  //获取机构用户url
-      clubUserParams: {
-        name: "",
-        path: "",
-        departmentId: '' ,
-        pageNumber: 1,
-        pageSize: 10,
-      },
-      clubDataTotal: 1,
-      clubUsersData: [],
       clubSelectData:[], //社内用户选中
       writerSelectData:[],//作家用户选择
       orgSelectData:[], //机构用户选中
@@ -276,12 +198,6 @@ export default {
         value: '3',
         label: '专家用户'
       }],
-      defaultProps: {
-        children: 'sonDepartment',
-        label: 'dpName'
-      },
-      treeData: [],
-      tableData2: [],
       //点击发送时所带参数
       formdata:{
         title:'',
@@ -345,44 +261,6 @@ export default {
         });
     },
 
-    /* 获取社内用户树列表 */
-    getTreeData() {
-      this.$axios
-        .get(this.clubTreeUrl)
-        .then(response => {
-          let res = response.data;
-          if (res.code == "1") {
-            this.treeData = res.data.sonDepartment;
-          }
-        })
-        .catch(error => {
-          console.log(error.msg);
-        });
-    },
-    /* 获取社内用户列表 */
-    getClubUserData() {
-      this.$axios
-        .get(this.clubUserUrl, {
-          params: this.clubUserParams
-        })
-        .then(response => {
-          let res = response.data;
-          this.clubDataTotal = res.data.total;
-          if (res.code == "1") {
-            this.clubUsersData = res.data.rows;
-            if (this.dataTotal == 0) {
-              this.$message({
-                showClose: true,
-                message: "没有这条数据!",
-                type: "warning"
-              });
-            }
-          }
-        })
-        .catch(error => {
-          console.log(error.msg);
-        });
-    },
     /* 获取作家用户列表 */
     getWriterUserData(){
       this.$axios.get(this.writerUserUrl, {
@@ -410,29 +288,6 @@ export default {
                 console.error(error);
               });
     },
-    /* 点击社内用户树 */
-    handleNodeClick(data) {
-      console.log(data);
-      this.clubUserParams.path = data.path;
-      if (data.path == "0") {
-        this.clubUserParams.path = "";
-      }
-      this.clubUserParams.departmentId = data.id;
-      this.clubUserParams.pageNumber = 1,
-      this.clubUserParams.pageSize = 10,
-      this.getClubUserData();
-    },
-    /* 社内用户分页size改变 */
-    clubSizeChange(el) {
-      this.clubUserParams.pageSize = el;
-      this.clubUserParams.pageNumber = 1;
-      this.getClubUserData();
-    },
-    /* 社内用户点击分页 */
-    clubCurrentChange(el) {
-      this.clubUserParams.pageNumber = el;
-      this.getClubUserData();
-    },
     /* 作家用户分页size改变 */
     writerSizeChange(el){
        this.writerUserParams.pageSize=el;
@@ -457,21 +312,18 @@ export default {
     },
     /* 社内用户选择项改变 */
     clubSelectChange(el) {
-      console.log(el);
       this.clubSelectData=[];
       this.clubSelectData=el;
       this.mergeSelectData();
     },
     /* 作家用户选择项改变 */
     writerSelectChange(el){
-    console.log(el);
     this.writerSelectData=[];
     this.writerSelectData=el;
     this.mergeSelectData();
     },
     /* 机构用户选择改变 */
     orgSelectChange(el){
-      console.log(el);
        this.orgSelectData=[];
        this.orgSelectData=el;
        this.mergeSelectData();
@@ -487,8 +339,6 @@ export default {
     }
   },
   created() {
-    this.getTreeData();
-    this.getClubUserData();
     this.getWriterUserData();
     this.getOrgUserData();
 
@@ -518,6 +368,9 @@ export default {
       this.formdata.file=filePath.join(',');
     }
 
+  },
+  components:{
+    userPmph
   }
 };
 </script>
