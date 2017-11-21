@@ -54,30 +54,13 @@
     <el-dialog
       :visible.sync="previewShow"
       size="large">
-      <div class="message-preview paddingR20 paddingL20">
-        <h5 class="previewTitle text-center">{{previewData.title}}</h5>
-        <p class="senderInfo text-center paddingT10">
-          <span class="marginR10">{{currentUserInfo.realname}}</span>
-          <span>{{$commonFun.getNowFormatDate()}}</span>
-        </p>
-        <div class="previewContent paddingB20" v-html="previewData.content"></div>
-        <!--附件-->
-        <el-row v-if="previewData.fileList.length">
-          <el-col :span="2" class="fontSize-16">
-            附件 ：
-          </el-col>
-          <el-col :span="22">
-            <div class="previewFile" title="预览界面不提供下载附件功能">
-              <span v-for="(iterm,index) in previewData.fileList" :key="index">{{iterm.name}}</span>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
+      <message-detail :msgData="previewData" readOnly></message-detail>
     </el-dialog>
   </div>
 </template>
 <script>
 import Editor from 'components/Editor.vue'
+import messageDetail from 'components/message-detail'
 export default {
   data: function() {
     return {
@@ -118,12 +101,14 @@ export default {
       var data = {};
       data.title = this.messageForm.title;
       data.content = this.messageForm.content;
-      data.fileList = [];
+      data.senderName = this.$getUserData().userInfo.realname;
+      data.sendTime = this.$commonFun.getNowFormatDate();
+      data.files = [];
       this.messageForm.originalFileList.forEach(iterm=>{
-        data.fileList.push(iterm);
+        data.files.push(iterm);
       });
       this.messageForm.filePathList.forEach(iterm=>{
-        data.fileList.push(iterm);
+        data.files.push(iterm);
       });
 
       return data;
@@ -285,7 +270,7 @@ export default {
             this.$message.success('修改成功！');
             this.$router.push({name: '消息列表'});
           }else{
-            this.$message.error('提交失败，请重试！');
+            this.$message.error(res.msg.msgTrim());
           }
         })
         .catch(e=>{
@@ -319,7 +304,8 @@ export default {
     }
   },
   components:{
-    Editor
+    Editor,
+    messageDetail
   },
   mounted(){
     var routerParams = this.$route.params;
@@ -341,7 +327,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .message-edit {
   max-width: 1580px;
 }

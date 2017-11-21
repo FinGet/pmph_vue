@@ -131,7 +131,6 @@ methods: refresh 刷新当前树状图
        * 展开式加载子节点
        */
       _loadNode(node, resolve){
-        console.log(node);
         this._getTree(node.key,(data)=>{
           resolve(data.sonDepartment);
         })

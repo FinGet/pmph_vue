@@ -179,14 +179,7 @@
               res.data.rows[i].sendTime = this.$commonFun.formatDate(res.data.rows[i].sendTime)
             }
 
-            this.tableData=res.data.rows
-            if (this.dataTotal == 0) {
-              this.$message({
-                showClose: true,
-                message: '没有数据!',
-                type: 'warning'
-              });
-            }
+            this.tableData=res.data.rows;
           }
         }).catch((error) => {
           console.log(error.msg)

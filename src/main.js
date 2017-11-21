@@ -10,7 +10,7 @@ import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
 import axios from 'axios'
 
-/*插件*/
+/*polyfill插件*/
 require('../static/ie9-oninput-polyfill');//解决ie9输入框绑不响应删除键bug
 
 /*全局方法和配置挂载*/
