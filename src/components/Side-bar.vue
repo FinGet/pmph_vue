@@ -33,7 +33,7 @@
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">内容管理</span>
         </template>
-        <el-menu-item index="/content/publish/list" v-if="isShowSide(9)">文章管理</el-menu-item>
+        <el-menu-item index="/content/list" v-if="isShowSide(9)">文章管理</el-menu-item>
         <el-menu-item index="/content/info" v-if="isShowSide(10)">信息快报管理</el-menu-item>
         <el-menu-item index="/content/notice" v-if="isShowSide(11)">公告管理</el-menu-item>
         <!-- <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item> -->

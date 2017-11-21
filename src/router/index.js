@@ -61,7 +61,6 @@ import MyMessageList from 'pages/home/myMessage/MessageList';
 import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
 /* 内容管理 */
 import ContentRouter from '../pages/home/contentManage/contentRouter'
-import publishRouter from '../pages/home/contentManage/publishRouer'
 import ContentPublish from '../pages/home/contentManage/contentPublish'
 import PublishList from '../pages/home/contentManage/publishList'
 import noticeManage from '../pages/home/contentManage/noticeManage'
@@ -156,10 +155,8 @@ export default new Router({
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
-            { path: 'publish', name: '内容发布', meta: { authorityId: 9,replaceName: '文章管理' }, component: publishRouter ,children:[
               { path: 'list', name: '文章管理',meta: { replaceName: false}, component: PublishList },
               { path: 'new', name: '添加内容', component: ContentPublish },
-            ]},
             { path: 'info', name: '信息快报管理', meta: { authorityId: 10 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */

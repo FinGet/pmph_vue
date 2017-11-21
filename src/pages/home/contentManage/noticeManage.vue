@@ -91,7 +91,7 @@
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+      <span>{{contentDetailData.listObj.gmtCreate?contentDetailData.listObj.gmtCreate:'2017-11-14 10:17:52'}}</span>
        </p>
        <el-form label-width="100px">
           <el-form-item label="摘要：">
