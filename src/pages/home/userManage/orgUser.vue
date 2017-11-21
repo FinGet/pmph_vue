@@ -197,7 +197,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="管理员姓名：" prop="name">
+          <el-form-item label="管理员姓名：" prop="realname">
             <el-input v-model="form.realname"></el-input>
           </el-form-item>
           <el-form-item label="手机号："  prop="handphone" >
@@ -222,7 +222,7 @@
               <el-radio :label="true">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注：">
+          <el-form-item label="备注：" prop="note">
             <el-input v-model="form.note"></el-input>
           </el-form-item>
         </el-form>
@@ -240,48 +240,58 @@
       >
         <div class="detail-info-box">
           <div class="detail-info-item">
-            <div>机构名称：<span></span></div>
-            <div>{{detailData.orgName}}</div>
+            <div class="title">机构名称：<span></span></div>
+            <div class="info">{{detailData.orgName}}</div>
           </div>
           <div class="detail-info-item">
-            <div>机构账号：<span></span></div>
-            <div>{{detailData.username}}</div>
+            <div class="title">机构账号：<span></span></div>
+            <div class="info">{{detailData.username}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">机构类型：<span></span></div>
+            <div class="info">{{detailData.orgTypeName}}</div>
           </div>
           <div class="detail-info-item">
-            <div>机构类型：<span></span></div>
-            <div>{{detailData.orgTypeName}}</div>
+            <div class="title">管理员姓名：<span></span></div>
+            <div class="info">{{detailData.realname}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">职务：<span></span></div>
+            <div class="info">{{detailData.position}}</div>
           </div>
           <div class="detail-info-item">
-            <div>管理员姓名：<span></span></div>
-            <div>{{detailData.realname}}</div>
+            <div class="title">职称：<span></span></div>
+            <div class="info">{{detailData.title}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">手机号：<span></span></div>
+            <div class="info">{{detailData.handphone}}</div>
           </div>
           <div class="detail-info-item">
-            <div>职务：<span></span></div>
-            <div>{{detailData.position}}</div>
+            <div class="title">邮箱：<span></span></div>
+            <div class="info">{{detailData.email}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">邮寄地址：<span></span></div>
+            <div class="info">{{detailData.address}}</div>
           </div>
           <div class="detail-info-item">
-            <div>职称：<span></span></div>
-            <div>{{detailData.title}}</div>
+            <div class="title">启用标识：<span></span></div>
+            <div class="info">{{detailData.disabled?'启用':'禁用'}}</div>
           </div>
+        </div>
+        <div class="detail-info-box">
           <div class="detail-info-item">
-            <div>手机号：<span></span></div>
-            <div>{{detailData.handphone}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>邮箱：<span></span></div>
-            <div>{{detailData.email}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>邮寄地址：<span></span></div>
-            <div>{{detailData.address}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>启用标识：<span></span></div>
-            <div>{{detailData.disabled?'启用':'禁用'}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>备注：<span></span></div>
-            <div>{{detailData.note}}</div>
+            <div class="title">备注：<span></span></div>
+            <div class="info">{{detailData.note}}</div>
           </div>
         </div>
       </el-dialog> 
@@ -481,7 +491,7 @@ export default {
           { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
         ],
-        name:[
+        realname:[
           { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
         ],
         handphone: [
@@ -982,7 +992,7 @@ export default {
 .title{
   cursor: pointer;
 }
-.detail-info-box .detail-info-item>div{
+/* .detail-info-box .detail-info-item>div{
   display: inline-block;
   font-size: 16px;
 }
@@ -993,5 +1003,22 @@ export default {
   max-width: 410px;
   line-height: 36px;
   vertical-align: middle;
+} */
+.detail-info-box{
+  display: flex;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.detail-info-item{
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+.detail-info-item .title{
+  width: 100px;
+  text-align: justify;
+}
+.detail-info-item .info{
+  flex: 1;
 }
 </style>
