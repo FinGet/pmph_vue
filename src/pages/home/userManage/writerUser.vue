@@ -182,48 +182,58 @@
       >
         <div class="detail-info-box">
           <div class="detail-info-item">
-            <div>姓名：<span></span></div>
-            <div>{{detailData.realname}}</div>
+            <div class="title">姓名：<span></span></div>
+            <div class="info">{{detailData.realname}}</div>
           </div>
           <div class="detail-info-item">
-            <div>账号：<span></span></div>
-            <div>{{detailData.username}}</div>
+            <div class="title">账号：<span></span></div>
+            <div class="info">{{detailData.username}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">身份证号：<span></span></div>
+            <div class="info">{{detailData.idcard}}</div>
           </div>
           <div class="detail-info-item">
-            <div>身份证号：<span></span></div>
-            <div>{{detailData.idcard}}</div>
+            <div class="title">所属机构：<span></span></div>
+            <div class="info">{{detailData.orgName}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">职务：<span></span></div>
+            <div class="info">{{detailData.position}}</div>
           </div>
           <div class="detail-info-item">
-            <div>所属机构：<span></span></div>
-            <div>{{detailData.orgName}}</div>
+            <div class="title">职称：<span></span></div>
+            <div class="info">{{detailData.title}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">手机号：<span></span></div>
+            <div class="info">{{detailData.handphone}}</div>
           </div>
           <div class="detail-info-item">
-            <div>职务：<span></span></div>
-            <div>{{detailData.position}}</div>
+            <div class="title">邮箱：<span></span></div>
+            <div class="info">{{detailData.email}}</div>
+          </div>
+        </div>
+        <div class="detail-info-box">
+          <div class="detail-info-item">
+            <div class="title">邮寄地址：<span></span></div>
+            <div class="info">{{detailData.address}}</div>
           </div>
           <div class="detail-info-item">
-            <div>职称：<span></span></div>
-            <div>{{detailData.title}}</div>
+            <div class="title">启用标识：<span></span></div>
+            <div class="info">{{detailData.isDisabled?'启用':'禁用'}}</div>
           </div>
+        </div>
+        <div class="detail-info-box">
           <div class="detail-info-item">
-            <div>手机号：<span></span></div>
-            <div>{{detailData.handphone}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>邮箱：<span></span></div>
-            <div>{{detailData.email}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>邮寄地址：<span></span></div>
-            <div>{{detailData.address}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>启用标识：<span></span></div>
-            <div>{{detailData.isDisabled?'启用':'禁用'}}</div>
-          </div>
-          <div class="detail-info-item">
-            <div>备注：<span></span></div>
-            <div>{{detailData.note}}</div>
+            <div class="title">备注：<span></span></div>
+            <div class="info">{{detailData.note}}</div>
           </div>
         </div>
       </el-dialog>
@@ -836,16 +846,21 @@ export default {
 .name{
   cursor: pointer;
 }
-.detail-info-box .detail-info-item>div{
-  display: inline-block;
+.detail-info-box{
+  display: flex;
   font-size: 16px;
+  margin-bottom: 10px;
 }
-.detail-info-box .detail-info-item{
-  display: inline-block;
-  height: 36px;
-  width: 50%;
-  max-width: 410px;
-  line-height: 36px;
-  vertical-align: middle;
+.detail-info-item{
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+.detail-info-item .title{
+  width: 80px;
+  text-align: justify;
+}
+.detail-info-item .info{
+  flex: 1;
 }
 </style>

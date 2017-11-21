@@ -61,8 +61,8 @@ methods:
               width="120"
               prop="realname">
               <template scope="scope">
-                <el-button type="text" @click="" v-if="show_nameShowMore">{{scope.row.realname}}</el-button>
-                <p v-else>{{scope.row.realname}}</p>
+                <!-- <el-button type="text" @click="">{{scope.row.realname}}</el-button> -->
+                <p>{{scope.row.realname}}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -190,10 +190,6 @@ methods:
         required: false
       },
       show_isDisabled:{
-        type: Boolean,
-        required: false
-      },
-      show_nameShowMore:{
         type: Boolean,
         required: false
       },

@@ -106,7 +106,7 @@
       <el-form-item label="是否发布：">
           <el-radio-group v-model="formData.isPublished">
             <el-radio :label="false">立即发布</el-radio>
-            <el-radio :label="true">定时发布</el-radio>
+            <!-- <el-radio :label="true">定时发布</el-radio> -->
           </el-radio-group>
           <el-form-item v-if="formData.isPublished" style="display:inline-block">
               <el-date-picker
@@ -132,30 +132,26 @@ import Editor from "../../../components/Editor.vue";
 export default {
   data() {
     return {
-      addNewUrl: "/cms/newContent", //发布内容url
+      newContentUrl: "/pmpheep/cms/newContent", //新建文章
+      newLettersUrl:'/pmpheep/cms/newLetters', //新建信息快报
+      newNoticeUrl:'/pmpheep/cms/newNotice' , //新建公告管理
       columnListUrl: "/pmpheep/cms/set", //栏目列表Url
-      editContentUrl:'/pmpheep/cms/content/update',    //修改提交url
+      editContentUrl:'/pmpheep/cms/content/update',    //修改文章
+      editLettersUrl:'/pmpheep/cms/letters/update',  //修改信息快报
+      editNoticeUrl:'/pmpheep/cms/notice/update',  //修改公告
       formData: {
         title: "",
         categoryId: "",
         summary: "",
         keyword: "",
-        /* isPromote: "",
-        deadlinePromote: "",
-        sortPromote: "",
-        isStick: "",
-        deadlineStick: "",
-        sort: "",
-        isHot: "",
-        deadlineHot: "",
-        sortHot: "", */
         sort:'',
         content: "",
         file: [],
         isPublished: "",
         isScheduled: false,
         scheduledTime: "",
-        isHide: false
+        isHide: false,
+        path:'0'
       },
       isEditContent:false,
       fileList: [],
@@ -209,7 +205,56 @@ export default {
         ]
     };
   },
-  computed: {},
+  computed: {
+    addNewUrl(){
+      switch (this.$router.currentRoute.query.columnId) {
+        case 1:
+          return this.newContentUrl;
+          break;
+        case 2: 
+          return this.newLettersUrl;
+        case 3:
+         return this.newNoticeUrl;  
+        default:
+          break;
+      }
+    },
+    editUrl(){
+      switch (this.$router.currentRoute.query.columnId) {
+        case 1:
+          return this.editContentUrl;
+          break;
+        case 2:
+        return this.editLettersUrl;
+        break;
+        case 3:
+        return this.editNoticeUrl;
+        break;
+        default:
+          break;
+      }
+    },
+    routerName(){
+      switch (this.$router.currentRoute.query.columnId) {
+        case 1:
+          return '文章管理'
+          break;
+        case 2 :
+         return  '信息快报管理'
+         break;
+         case 3 :
+         return  '公告管理'
+         break;
+        default:
+        break;
+      }
+    }
+  },
+  watch:{
+   /* 'formData.isScheduled':function(val){
+      this.formData.isPublished=!val;
+   } */
+  },
   methods: {
     /* 发布新内容url */
     ContentSubmit() {
@@ -229,17 +274,17 @@ export default {
               console.log(res);
               if (res.data.code == 1) {
                 this.$message.success("添加成功");
-                this.$router.push({ name: "文章管理" });
+                this.$router.push({ name: this.routerName });
               } else {
                 this.$message.error(res.data.msg);
               }
             });
           }else{
-            this.$axios.put(this.editContentUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
+            this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
                   this.$message.success('修改成功');
-                  this.$router.push({ name: "文章管理" });
+                  this.$router.push({ name: this.routerName });
                 }else {
                 this.$message.error(res.data.msg);
               }
@@ -329,8 +374,13 @@ export default {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
             if(item.indexOf('gmt')!=0){
+                if(typeof editData.cmsContent[item]!='boolean'){
                  this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
+            }else{
+                this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
+            }
+            
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);
@@ -354,7 +404,7 @@ export default {
          })
          this.formData.attachment=[];
         } else {
-          this.$router.push({ name: "文章管理" });
+          this.$router.go(-1);
         }
       }
     }

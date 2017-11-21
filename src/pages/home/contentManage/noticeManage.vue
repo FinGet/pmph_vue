@@ -9,8 +9,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入内容标题" v-model.trim="title" class="input"></el-input>
-          <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <el-input placeholder="输入公告标题" v-model.trim="title" class="input"></el-input>
+          <!-- <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,7 +18,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select>
+         </el-select> -->
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
@@ -32,7 +32,7 @@
                 >
             </el-table-column>
             <el-table-column
-                label="内容标题"
+                label="公告标题"
                 >
                 <template scope="scope">
                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
@@ -63,7 +63,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text">修改</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -155,32 +155,6 @@ export default {
         }
       ],
       tableData: [],
-      commentTableData: [
-        {
-          id: 1,
-          name: "张三",
-          title: "测试文章标题",
-          column: "信息快报",
-          creatTime: "2017/10/23  03:47:00",
-          link: ""
-        },
-        {
-          id: 2,
-          name: "李四",
-          title: "测试文章标题1",
-          column: "医学随笔",
-          creatTime: "2017/10/23  03:47:00",
-          link: ""
-        },
-        {
-          id: 3,
-          name: "王五",
-          title: "测试文章标题33",
-          column: "通知公告",
-          creatTime: "2017/10/23  03:47:00",
-          link: ""
-        }
-      ],
       selectedOptions: [],
       contentSelectData:[],
       commentSelectData:[],
@@ -221,7 +195,6 @@ export default {
   },
   mounted(){
     this.getContentLists()
-    this.getMenuLists()
   },
   methods: {
     /**
@@ -244,86 +217,11 @@ export default {
           for (let i=0; i< res.data.rows.length; i++) {
             res.data.rows[i].gmtCreate = this.$commonFun.formatDate(res.data.rows[i].gmtCreate)
           }
-          this.tableData = res.data.rows
+          this.tableData = res.data.rows;
           // console.log(this.tableData)
         }
       }).catch(e=>{
        // this.$message.error('内容列表请求失败，请重试');
-      })
-    },
-    /**
-     * 初始化栏目列表
-     */
-    getMenuLists(){
-      console.log(this.options)
-      this.$axios.get("/pmpheep/cms/set",{
-        params:{
-          categoryName:''
-        }
-      }).then((response) => {
-        let res = response.data
-        if (res.code == '1') {
-          this.options=res.data
-          console.log(this.options)
-        }
-      }).catch(e=>{
-        this.$message.error('栏目数请求失败，请重试');
-      })
-    },
-    search() {
-      this.getContentLists()
-    },
-    /**
-     * 通过/拒绝
-     * 2  /  1
-     */
-    isPass(id, status){
-      // console.log(status)
-      this.$axios.put('/pmpheep/cms/check/content',this.$initPostData({
-          sessionId: this.$getUserData().sessionId,
-          authStatus: status,
-          id: id
-        }))
-        .then(response=>{
-          let res = response.data;
-          if(res.code==1){
-              if(status == 2){
-                this.$message.success('通过成功');
-              } else {
-                this.$message.success('拒绝成功');
-              }
-              this.getContentLists()
-          }else{
-              this.$message.error('请求失败，请重试');
-          }
-        })
-        .catch(e=>{
-          this.$message.error('请求失败，请重试');
-        })
-    },
-    /**
-     * 批量删除
-     */
-    batchRemove(){
-      var ids = []
-      this.contentSelectData.forEach(item => {
-        ids.push(item.id)
-      })
-      console.log(ids)
-      this.$axios.delete('/pmpheep/cms/check/delete',{
-        params: {
-          ids: ids.join(',')
-        }
-      }).then(response => {
-        let res = response.data
-        if(res.code == '1') {
-          this.$message.success('删除成功');
-          this.getContentLists()
-        }else{
-          this.$message.error('删除失败');
-        }
-      }).catch(e=>{
-        this.$message.error('请求失败，请重试');
       })
     },
     /**
@@ -365,7 +263,8 @@ export default {
      * @param val
      */
     contentHandleSizeChange(val) {
-      this.conPageSize= val
+      this.conPageSize= val;
+      this.conPageNumber=1;
       this.getContentLists()
     },
     contentHandleCurrentChange(val) {
@@ -384,7 +283,7 @@ export default {
     },
           /* 查看详情 */
       contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id,{
+         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
           }).then((res)=>{
               if(res.data.code==1){
                 this.contentDetailData=res.data.data;
@@ -394,6 +293,16 @@ export default {
           })
            this.showContentDetail=true;
       },
+    /* 修改内容 */
+    editContent(obj){
+      this.$axios.get(this.editContentUrl+obj.id+'/detail',{
+          }).then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:3}});
+              }
+          })
+    }      
 
   }
 }
