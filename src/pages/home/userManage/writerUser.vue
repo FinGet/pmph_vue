@@ -52,12 +52,12 @@
         <el-table-column prop="orgName" label="所属机构">
         </el-table-column>
         <!--如果是大屏幕显示两列，小屏幕是将用户邮箱和手机两列合并-->
-        <el-table-column v-if="screenWidth_lg_computed" prop="position" label="职务" width="120">
+        <el-table-column v-if="screenWidth_lg" prop="position" label="职务" width="120">
         </el-table-column>
-        <el-table-column v-if="screenWidth_lg_computed" prop="title" label="职称" width="100">
+        <el-table-column v-if="screenWidth_lg" prop="title" label="职称" width="100">
         </el-table-column>
 
-        <el-table-column v-if="!screenWidth_lg_computed" label="职务/职称" width="120">
+        <el-table-column v-if="!screenWidth_lg" label="职务/职称" width="120">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
               <p>
@@ -109,7 +109,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" 
+        <el-table-column label="操作"
           align="center">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
@@ -226,7 +226,7 @@
             <div>{{detailData.note}}</div>
           </div>
         </div>
-      </el-dialog> 
+      </el-dialog>
   </el-tab-pane>
   <el-tab-pane label="审核教师">
     	<div class="teacher_check">
@@ -351,7 +351,6 @@ export default {
          }
     }
     return {
-      screenWidth_lg_computed: true,
       isNew: true,
       //用户类型数据
       options: [
@@ -457,16 +456,16 @@ export default {
       detailVisible: false, //查看详情
       detailData: {
         realname:'',
-        username:"", 
-        idcard:"", 
-        orgName:"", 
-        position:"", 
-        title:"", 
-        handphone:"", 
-        email:"", 
-        address:"", 
-        rankName:"", 
-        isDisabled:"", 
+        username:"",
+        idcard:"",
+        orgName:"",
+        position:"",
+        title:"",
+        handphone:"",
+        email:"",
+        address:"",
+        rankName:"",
+        isDisabled:"",
         note:""
       } // 详情数据
     };
@@ -744,7 +743,7 @@ export default {
             if (res.code == "1") {
               //console.log(res)
               this.getWritersList()
-              
+
               this.$message({
                   showClose: true,
                   message: progress==3?'审核通过!':'已退回',
@@ -806,16 +805,16 @@ export default {
     clearDetailTable(){
       this.detailData = {
         realname:'',
-        username:"", 
-        idcard:"", 
-        orgName:"", 
-        position:"", 
-        title:"", 
-        handphone:"", 
-        email:"", 
-        address:"", 
-        rankName:"", 
-        isDisabled:"", 
+        username:"",
+        idcard:"",
+        orgName:"",
+        position:"",
+        title:"",
+        handphone:"",
+        email:"",
+        address:"",
+        rankName:"",
+        isDisabled:"",
         note:""
       }
     }
@@ -825,7 +824,7 @@ export default {
     this.getWritersList();
   },
   mounted() {
-    this.screenWidth_lg_computed = this.screenWidth_lg;
+
   }
 };
 </script>

@@ -5,7 +5,7 @@ props:
         (2) show_isDisabled 是否显示表格启用列，默认为false
         (3) show_nameShowMore 可点击用户名显示更多信息，默认为false
         (4) select 是否显示复选框 默认false
-        (5) multiple 是否多选 默认true
+        (5) radio 是否多选 默认true
 events:
         (1) selection-change 当前表格选中项发生变化时 参数 val 当前选中项列表
 methods:
@@ -201,9 +201,9 @@ methods:
         type: Boolean,
         required: false
       },
-      multiple:{
+      radio:{
         type: Boolean,
-        required: true
+        required: false
       }
     },
     data() {
@@ -336,7 +336,7 @@ methods:
        * @param val
        */
       _handleSelectionChange(val) {
-        if(!this.multiple){
+        if(this.radio){
           if (val.length>1){
             this.$refs.table.clearSelection();
             this.$refs.table.toggleRowSelection(val[val.length-1],true);
@@ -351,7 +351,7 @@ methods:
        * 当点击全选时
        */
       tableSelectAll(){
-        if(!this.multiple){
+        if(this.radio){
           this.$refs.table.clearSelection();
           this.selectData = [];
           this.$message.error('只能选择一个用户');

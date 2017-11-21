@@ -17,7 +17,7 @@ module.exports={
       return this.screenWidth < 1360 ? true : false;
     }
   },
-  mounted(){
+  created(){
     this.screenWidth = document.documentElement.clientWidth || document.body.clientWeight;
     this.screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
     console.log('当前窗口大小为：'+this.screenWidth+' x '+this.screenHeight);
