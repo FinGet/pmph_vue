@@ -63,7 +63,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text">修改</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -214,9 +214,9 @@ export default {
         let res = response.data
         this.conDataTotal = res.data.total
         if (res.code == '1') {
-         /*  for (let i=0; i< res.data.rows.length; i++) {
+          for (let i=0; i< res.data.rows.length; i++) {
             res.data.rows[i].gmtCreate = this.$commonFun.formatDate(res.data.rows[i].gmtCreate)
-          } */
+          }
           this.tableData = res.data.rows;
           // console.log(this.tableData)
         }

@@ -52,7 +52,7 @@
                 width="168"
                 >
                 <template scope="scope">
-                    {{$commonFun.formatDate(scope.row.authDate)}}
+                    {{scope.row.authDate}}
                 </template>
             </el-table-column>
             <el-table-column
