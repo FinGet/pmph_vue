@@ -33,20 +33,24 @@
                 v-if="isAdmin"
                 >
             </el-table-column>
-            <el-table-column
-                label="状态"
+            <!-- <el-table-column
+                label="发布"
                 width="80"
                 >
                 <template scope="scope">
                     {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
-            </el-table-column>
-            <!-- <el-table-column
-                prop="categoryName"
-                label="所属栏目"
-                width="96"
-                >
             </el-table-column> -->
+            <el-table-column
+                label="审核"
+                width="80"
+                >
+                <template scope="scope">
+                    <p v-if="scope.row.authStatus==0">待审核</p>
+                    <p v-if="scope.row.authStatus==1">已退回</p>
+                    <p v-if="scope.row.authStatus==2">已通过</p>
+                </template>
+            </el-table-column> 
             <el-table-column
                 label="发布时间"
                 width="168"
@@ -112,7 +116,7 @@
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+      <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
        </p>
        <el-form label-width="100px">
           <el-form-item label="摘要：">
@@ -131,8 +135,8 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
-            <el-button type="primary">审核通过</el-button>
-            <el-button type="danger">审核不通过</el-button>
+            <el-button type="primary" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
+            <el-button type="danger" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
             <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
@@ -274,6 +278,7 @@ export default {
        publicListUrl:'/pmpheep/cms/contents',   //获取列表url
        editContentUrl:'/pmpheep/cms/content/',    //修改查询url
        deleteContentUrl:'/pmpheep/cms/content/',   //删除内容url
+       examineUrl:'/pmpheep/cms/content/check',  //审核内容
       selectOp:[
          {
              value:0,
@@ -283,7 +288,7 @@ export default {
              value:1,
              label:'是否审核',
          },
-         {
+/*          {
              value:2,
              label:'是否置顶',
          },
@@ -298,7 +303,7 @@ export default {
          {
              value:5,
              label:'是否隐藏',
-         },
+         }, */
       ],
       showContentDetail:false,
       contentDetailData:{
@@ -391,16 +396,23 @@ export default {
               }
           })
       },
-      /* 隐藏内容 */
-      hideContent(obj){
-         this.$axios.put('/pmpheep/cms/content/'+obj.id+'/hide').then((res)=>{
-           if(res.data.code==1){
-              this.$message.success('内容已隐藏');
-              this.getPublicList();
+      /* 审核内容 */
+      examineContent(obj,status){
+       console.log(obj);
+       this.$axios.put(this.examineUrl,this.$commonFun.initPostData({
+            id:obj.id,
+            authStatus:status,
+            sessionId:this.$getUserData().sessionId
+       })).then((res)=>{
+           console.log(res);
+           if (res.data.code==1) {
+               this.$message.success('审核成功');
+               this.showContentDetail=false;   
+               this.getPublicList();
            }else{
-                  this.$message.error(res.data.msg);
-              }
-         })
+               this.$message.error(res.data.msg);
+           }
+       })
       },
       /* 删除内容 */
       deleteContent(obj){

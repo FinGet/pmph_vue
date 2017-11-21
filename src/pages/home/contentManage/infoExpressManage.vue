@@ -10,8 +10,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入文章标题" class="input" v-model.trim="contentParams.title"></el-input>
-          <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title"></el-input>
+          <!-- <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -19,13 +19,13 @@
              :value="item.value"
              >
          </el-option>
-         </el-select>
+         </el-select> -->
          <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
-                label="文章标题"
+                label="信息快报标题"
                 >
                 <template scope="scope">
                   <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
@@ -281,7 +281,7 @@ export default {
     /* 查看详情 */
     contentDetail(obj) {
       this.$axios
-        .get(this.outContentUrl + "/" + obj.id + "/detail", {})
+        .get(this.outContentUrl + "/content/" + obj.id + "/detail", {})
         .then(res => {
           if (res.data.code == 1) {
             this.contentDetailData = res.data.data;
@@ -294,7 +294,7 @@ export default {
     /* 修改内容 */
     editContent(obj) {
       this.$axios
-        .get(this.outContentUrl + "/" + obj.id + "/detail", {})
+        .get(this.outContentUrl + "/content/" + obj.id + "/detail", {})
         .then(res => {
           console.log(res);
           if (res.data.code == 1) {

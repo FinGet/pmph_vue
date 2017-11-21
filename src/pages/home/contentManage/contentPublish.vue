@@ -104,11 +104,11 @@
         </div>
       </el-form-item>
       <el-form-item label="是否发布：">
-          <el-radio-group v-model="formData.isScheduled">
+          <el-radio-group v-model="formData.isPublished">
             <el-radio :label="false">立即发布</el-radio>
-            <el-radio :label="true">定时发布</el-radio>
+            <!-- <el-radio :label="true">定时发布</el-radio> -->
           </el-radio-group>
-          <el-form-item v-if="formData.isScheduled" style="display:inline-block">
+          <el-form-item v-if="formData.isPublished" style="display:inline-block">
               <el-date-picker
                v-model="formData.scheduledTime"
                 type="datetime"
@@ -251,9 +251,9 @@ export default {
     }
   },
   watch:{
-   'formData.isScheduled':function(val){
+   /* 'formData.isScheduled':function(val){
       this.formData.isPublished=!val;
-   }
+   } */
   },
   methods: {
     /* 发布新内容url */
@@ -373,11 +373,14 @@ export default {
         if (editData.content) {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
-            if(item.indexOf('gmt')!=0&&(typeof editData.cmsContent[item]!='boolean')){
+            if(item.indexOf('gmt')!=0){
+                if(typeof editData.cmsContent[item]!='boolean'){
                  this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
             }else{
                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
+            }
+            
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);

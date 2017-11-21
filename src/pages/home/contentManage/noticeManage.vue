@@ -9,8 +9,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入内容标题" v-model.trim="title" class="input"></el-input>
-          <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <el-input placeholder="输入公告标题" v-model.trim="title" class="input"></el-input>
+          <!-- <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,7 +18,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select>
+         </el-select> -->
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
@@ -32,7 +32,7 @@
                 >
             </el-table-column>
             <el-table-column
-                label="内容标题"
+                label="公告标题"
                 >
                 <template scope="scope">
                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
