@@ -262,7 +262,7 @@ export default {
                     this.$message.success("暂存成功");
                     break;
                   case 1:
-                   this.$message.success("发布成功");
+                    this.$message.success("发布成功");
                    break;
                   default:
                     break;
