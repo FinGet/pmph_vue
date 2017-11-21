@@ -613,7 +613,7 @@ export default {
               message: "添加成功"
             });
           }else{
-            self.$message.error(res.msg);
+            self.$message.error(res.msg.msgTrim());
           }
         })
         .catch(function(error) {
@@ -751,7 +751,7 @@ export default {
                   type: 'success'
                 });
             }else if(res.code ==2){
-              this.$message.error(res.msg);
+              this.$message.error(res.msg.msgTrim());
             }
           }).catch(error => {
             console.log(error.msg)

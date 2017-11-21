@@ -591,7 +591,7 @@ export default {
               this.form.orgTypeId = this.orgTypeList[0].id;
             }
           } else {
-            this.$message.error(res.msg);
+            this.$message.error(res.msg.msgTrim());
           }
         })
         .catch(e=>{
@@ -674,7 +674,7 @@ export default {
             });
             this.area = data;
           } else {
-            this.$message.error(res.msg);
+            this.$message.error(res.msg.msgTrim());
           }
         })
         .catch(e=>{
@@ -724,7 +724,7 @@ export default {
               message: "添加成功"
             });
           }else {
-            self.$message.error(res.msg);
+            self.$message.error(res.msg.msgTrim());
           }
         })
         .catch(function(error) {
@@ -878,7 +878,7 @@ export default {
           }else if (res.code == '2') {
            this.$message({
               showClose: true,
-              message: res.msg,
+              message: res.msg.msgTrim(),
               type: "warning"
             });
           }
