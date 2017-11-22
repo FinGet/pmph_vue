@@ -159,12 +159,6 @@
                 width="45">
             </el-table-column>
             <el-table-column
-                prop="id"
-                label="ID"
-                width="70"
-                >
-            </el-table-column>
-            <el-table-column
                 label="评论内容"
                 >
                 <template scope="scope">
@@ -335,7 +329,7 @@ export default {
         .get(this.publicListUrl, {
           params: {
             title: this.searchTitle,
-            status: this.selectValue,
+            authStatus: this.selectValue,
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
             pageNumber: this.currentPage
