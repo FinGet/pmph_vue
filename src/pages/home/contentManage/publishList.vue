@@ -3,9 +3,10 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-
+           
           <el-input placeholder="输入文章标题" class="input" v-model.trim="searchTitle"></el-input>
-          <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
+          <span>审核状态：</span>
+          <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -15,7 +16,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
-         <!-- <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button> -->
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -136,13 +137,13 @@
   </el-tab-pane>
   <el-tab-pane label="评论">
       <p class="header_p">
-          <el-cascader
+          <!-- <el-cascader
             :options="options"
             v-model="selectedOptions"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
-            @change="handleChange">
+            @change="handleChange"> -->
           </el-cascader>
           <span style="margin-left:10px;">内容标题：</span>
           <el-input placeholder="输入内容标题" class="input"></el-input>
@@ -274,28 +275,16 @@ export default {
       selectOp:[
          {
              value:0,
-             label:'是否发布',
+             label:'待审核',
          },
          {
              value:1,
-             label:'是否审核',
+             label:'已退回',
          },
-/*          {
+         {
              value:2,
-             label:'是否置顶',
+             label:'已通过',
          },
-         {
-             value:3,
-             label:'是否热门',
-         },
-         {
-             value:4,
-             label:'是否推荐',
-         },
-         {
-             value:5,
-             label:'是否隐藏',
-         }, */
       ],
       showContentDetail:false,
       contentDetailData:{
