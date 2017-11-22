@@ -120,6 +120,7 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>  
             <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
@@ -179,7 +180,7 @@ export default {
   data() {
     return {
       outContentUrl: "/pmpheep/cms/letters", //内容列表url
-      // columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+      publishedUrl:'/pmpheep/cms/letters/update',  //发布url
       deleteInfoUrl: "/pmpheep/cms/letters/content/", //信息快报删除url
       contentParams: {
         categoryId: "",
@@ -270,21 +271,20 @@ export default {
           }
         });
     },
-    /* 获得栏目列表 */
-    /*     getColumnList() {
-      this.$axios
-        .get(this.columnListUrl, {
-          params: {
-            categoryName: ""
-          }
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == 1) {
-            this.options = res.data.data;
-          }
-        });
-    }, */
+    /* 发布 */
+    publishSubmit(){
+      this.contentDetailData.listObj.isPublished=true;
+      this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(this.contentDetailData.listObj)).then((res)=>{
+                console.log(res);
+                if(res.data.code==1){
+                   this.$message.success("发布成功");
+                   this.getOutContentList();
+                   this.showContentDetail=false;
+                }else {
+                this.$message.error(res.data.msg);
+              }
+            })    
+    },
     /* 查看详情 */
     contentDetail(obj) {
       this.$axios
