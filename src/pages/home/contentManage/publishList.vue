@@ -146,9 +146,19 @@
             @change="handleChange"> -->
           </el-cascader>
           <span style="margin-left:10px;">文章标题：</span>
-          <el-input placeholder="输入内容标题" class="input"></el-input>
+          <el-input placeholder="输入内容标题" class="input" v-model="commentTitle"></el-input>
           <span style="margin-left:10px;">姓名/账号：</span>
-          <el-input placeholder="输入姓名/账号" class="input"></el-input>
+          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
+          <span>审核状态：</span>
+          <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
+           <el-option
+             v-for="item in selectOp"
+             :key="item.value"
+             :label="item.label"
+             :value="item.value"
+             >
+         </el-option>
+         </el-select>
          <el-button type="primary" icon="search">搜索</el-button>
 
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
@@ -162,12 +172,24 @@
                 label="评论内容"
                 >
                 <template scope="scope">
-                   <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a>
+                   <!-- <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a> -->
                 </template>
             </el-table-column>
             <el-table-column
+                label="文章标题"
+                >
+                <template scope="scope">
+                   
+                </template>
+            </el-table-column>
+            <el-table-column
+              label="评论人"
+              width="100"
+            >
+            </el-table-column>
+            <el-table-column
                 prop="creatTime"
-                label="创建时间"
+                label="评论时间"
                 width="165"
                 >
             </el-table-column>
@@ -181,14 +203,14 @@
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
             </el-table-column> 
-            <el-table-column
+<!--             <el-table-column
                 label="原文链接"
                 width="95"
                 >
                 <template scope="scope">
                       <el-button type="text">查看</el-button>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="操作"
                 width="150"
@@ -275,6 +297,7 @@ export default {
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
+      commentListUrl:'/cms/comments',         //评论列表url
       selectOp: [
         {
           value: 0,
@@ -310,7 +333,10 @@ export default {
       comPageSize: 10,
       comDataTotal: 20,
       comPageNumber: 1,
-      commentSelectData: []
+      commentSelectData: [],
+      commentName:'',
+      commentTitle:'',
+      commentSelect:''
     };
   },
   computed: {
@@ -342,6 +368,22 @@ export default {
             this.tableData = res.data.data.rows;
           }
         });
+    },
+    /* 获取评论列表 */
+    getCommentList(){
+      this.$axios.get(this.commentListUrl,{
+          params:{
+            title:this.commentTitle,
+            authStatus:this.commentSelect,
+            /* categoryId:1, */
+            username:this.commentName,
+            pageSize:this.comPageSize,
+            pageNumber:this.comPageNumber,
+            sessionId:this.$getUserData().sessionId,
+          }
+      }).then((res)=>{
+          console.log(res);
+      })
     },
     /* 初始化是否管理员 */
     initIsAdmin() {
@@ -460,10 +502,9 @@ export default {
       this.currentPage = val;
       this.getPublicList();
     },
-    commentSelectChange() {
+    commentSelectChange(val) {
       this.commentSelectData = val;
     },
-    handleChange() {},
     commentHandleSizeChange() {},
     commentHandleCurrentChange() {}
   },
