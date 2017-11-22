@@ -26,12 +26,6 @@
       </p>
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
-                prop="id"
-                label="ID"
-                width="70"
-                >
-            </el-table-column>
-            <el-table-column
                 label="公告标题"
                 >
                 <template scope="scope">
@@ -52,7 +46,14 @@
                    {{$commonFun.formatDate(scope.row.gmtCreate)}}
                 </template>
             </el-table-column>
-
+            <el-table-column
+                label="发布状态"
+                width="100"
+                >
+                <template scope="scope">
+                   {{scope.row.isPublished?'已发布':'未发布'}}
+                </template>
+            </el-table-column>
             <el-table-column
                 label="发布时间"
                 width="175"
@@ -62,22 +63,15 @@
                 </template>   
             </el-table-column>
             <el-table-column
-                label="发布状态"
-                width="100"
+                label="被查看次数"
+                width="120"
                 >
                 <template scope="scope">
-                   {{scope.row.isPublished?'已发布':'未发布'}}
+                    <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
+                        <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
+                    </el-tooltip>
                 </template>
             </el-table-column>
-<!--             <el-table-column
-                label="原文链接"
-                width="95"
-                >
-                <template scope="scope">
-                      <el-button type="text">查看</el-button>
-                </template>
-            </el-table-column> -->
-
             <el-table-column
                 label="操作"
                 width="120"
