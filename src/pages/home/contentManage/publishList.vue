@@ -178,6 +178,16 @@
                 >
             </el-table-column>
             <el-table-column
+                label="审核状态"
+                width="110"
+                >
+                <template scope="scope">
+                    <p v-if="scope.row.authStatus==0">待审核</p>
+                    <p v-if="scope.row.authStatus==1">已退回</p>
+                    <p v-if="scope.row.authStatus==2">已通过</p>
+                </template>
+            </el-table-column> 
+            <el-table-column
                 label="原文链接"
                 width="95"
                 >
