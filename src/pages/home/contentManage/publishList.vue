@@ -34,14 +34,22 @@
                 v-if="isAdmin"
                 >
             </el-table-column>
-            <!-- <el-table-column
-                label="发布"
-                width="80"
+            <el-table-column
+                label="创建时间"
+                width="168"
                 >
                 <template scope="scope">
-                    {{scope.row.isPublished?'已发布':'未发布'}}
+                    {{$commonFun.formatDate(scope.row.gmtCreate)}}
                 </template>
-            </el-table-column> -->
+            </el-table-column>
+            <el-table-column
+                label="审核时间"
+                width="168"
+                >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>
+            </el-table-column>
             <el-table-column
                 label="审核状态"
                 width="110"
@@ -53,16 +61,8 @@
                 </template>
             </el-table-column> 
             <el-table-column
-                label="审核时间"
-                width="168"
-                >
-                <template scope="scope">
-                    {{$commonFun.formatDate(scope.row.authDate)}}
-                </template>
-            </el-table-column>
-            <el-table-column
                 label="相关统计"
-                width="240"
+                width="190"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
@@ -122,7 +122,7 @@
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
-              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+              <a type="text" :href="'/pmpheep'+item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
         </div>
@@ -145,10 +145,10 @@
             placeholder="请选择栏目"
             @change="handleChange"> -->
           </el-cascader>
-          <span style="margin-left:10px;">内容标题：</span>
+          <span style="margin-left:10px;">文章标题：</span>
           <el-input placeholder="输入内容标题" class="input"></el-input>
-          <span style="margin-left:10px;">评论者账号：</span>
-          <el-input placeholder="输入账号" class="input"></el-input>
+          <span style="margin-left:10px;">姓名/账号：</span>
+          <el-input placeholder="输入姓名/账号" class="input"></el-input>
          <el-button type="primary" icon="search">搜索</el-button>
 
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>

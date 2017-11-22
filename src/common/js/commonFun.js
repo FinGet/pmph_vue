@@ -168,7 +168,7 @@ export function getDateTimeStamp(dateStr){
  */
 export function formatDate(nS) {
   if(!nS){
-    return "空";
+    return "";
   }
   var date=new Date(parseInt(nS));
   var year=date.getFullYear();

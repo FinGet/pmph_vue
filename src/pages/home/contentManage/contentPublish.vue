@@ -84,7 +84,7 @@ export default {
       editContentUrl:'/pmpheep/cms/content/update',    //修改文章
       editLettersUrl:'/pmpheep/cms/letters/update',  //修改信息快报
       editNoticeUrl:'/pmpheep/cms/notice/update',  //修改公告
-      examineUrl: "/pmpheep/cms/content/check", //审核内容
+      examineUrl: "/pmpheep/cms/content/update", //审核内容
       formData: {
         title: "",
         categoryId: "",
@@ -282,15 +282,13 @@ export default {
         type: "warning"
       })
         .then(() => {
+           this.formData.sessionId = this.$getUserData().sessionId;
+           this.formData.authStatus=status;
           this.$axios
             .put(
               this.examineUrl,
-              this.$commonFun.initPostData({
-                id: obj.id,
-                authStatus: status,
-                sessionId: this.$getUserData().sessionId
-              })
-            )
+              this.$commonFun.initPostData(this.formData)
+               )
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {

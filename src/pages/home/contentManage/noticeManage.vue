@@ -38,19 +38,36 @@
                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
-            <el-table-column label="作者" width="110">
-
+            <el-table-column 
+            prop="username"  
+            label="作者" 
+            width="110">
             </el-table-column>
             <el-table-column
                 prop="gmtCreate"
+                label="创建时间"
+                width="175"
+                >
+              <template scope="scope">
+                   {{$commonFun.formatDate(scope.row.gmtCreate)}}
+                </template>
+            </el-table-column>
+
+            <el-table-column
                 label="发布时间"
                 width="175"
                 >
+            <template scope="scope">
+                   {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>   
             </el-table-column>
             <el-table-column
                 label="发布状态"
                 width="100"
                 >
+                <template scope="scope">
+                   {{scope.row.isPublished?'已发布':'未发布'}}
+                </template>
             </el-table-column>
 <!--             <el-table-column
                 label="原文链接"
