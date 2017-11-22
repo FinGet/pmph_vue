@@ -473,7 +473,7 @@ export default {
         // orgTypeName:"",
         email: "",
         areaId:'',
-        isDisabled: true,
+        disabled: true,
         note: ""
       },
       // 表单校验规则
@@ -616,7 +616,7 @@ export default {
         this.form[key] = this.tableData[index][key];
       }
       // console.log(this.form.orgTypeId)
-      this.form.isDisabled = !!this.form.isDisabled;
+      this.form.disabled = this.tableData[index].isDisabled;
       this.dialogVisible = true;
     },
     /**
@@ -751,7 +751,7 @@ export default {
       var self = this;
       this.form.orgId -= 0
       this.$axios({
-        method: "PUT",
+        method: "post",
         url: "/pmpheep/users/org/updateUser",
         data: this.$initPostData(this.form)
       })
