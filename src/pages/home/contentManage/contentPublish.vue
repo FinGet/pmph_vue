@@ -1,7 +1,7 @@
 <template>
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="内容标题：" prop="title">
+      <el-form-item label="标题：" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
@@ -20,7 +20,7 @@
       <el-form-item label="显示顺序：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
-      <el-form-item label="文章内容：" required>
+      <el-form-item label="内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
       <el-form-item label="附件：">
