@@ -170,7 +170,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
@@ -709,13 +709,6 @@ export default {
           this.dataTotal = res.data.total
           // console.log(res)
           this.teachTableData = res.data.rows
-          if (this.dataTotal == 0) {
-            this.$message({
-              showClose: true,
-              message: '没有数据!',
-              type: 'warning'
-            });
-          }
         }
       }).catch((error) => {
         console.log(error.msg)
