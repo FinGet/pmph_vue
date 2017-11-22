@@ -216,233 +216,256 @@
   </div>
 </template>
 <style scoped>
-.publish_list .header_p{
-    overflow: hidden;
+.publish_list .header_p {
+  overflow: hidden;
 }
 .publish_list .header_p .input {
   width: 217px;
   margin-right: 10px;
 }
-.publish_list .table_i{
-    margin-right:10px;
+.publish_list .table_i {
+  margin-right: 10px;
 }
-.publish_list .grey_icon{
-  color:#999;
+.publish_list .grey_icon {
+  color: #999;
   cursor: pointer;
 }
-.publish_list .active_green{
- color:#13ce66;
+.publish_list .active_green {
+  color: #13ce66;
 }
-.publish_list .active_orange{
-
-   color:rgb(254,215,79);
+.publish_list .active_orange {
+  color: rgb(254, 215, 79);
 }
-.publish_list .active_blue{
-  color:#20a0ff;
+.publish_list .active_blue {
+  color: #20a0ff;
 }
-.publish_list .active_red{
-color:#ff4949;
+.publish_list .active_red {
+  color: #ff4949;
 }
-.publish_list .active_yellow{
-color:#f7ba2a;
+.publish_list .active_yellow {
+  color: #f7ba2a;
 }
-.publish_list .active_hide{
-color:#58b7ff;
+.publish_list .active_hide {
+  color: #58b7ff;
 }
-.previewTitle{
+.previewTitle {
   color: #14232e;
   font-size: 26px;
   font-weight: 500;
 }
-.publish_list .center_box{
-    float:left;
- margin-left:50%;
- transform: translateX(-50%);
+.publish_list .center_box {
+  float: left;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
- .publish_list .el-tabs--border-card {
-    border: 0;
-    box-shadow: none;
-  }
+.publish_list .el-tabs--border-card {
+  border: 0;
+  box-shadow: none;
+}
 </style>
 <script type="text/javascript">
 export default {
   data() {
     return {
-       publicListUrl:'/pmpheep/cms/contents',   //获取列表url
-       editContentUrl:'/pmpheep/cms/content/',    //修改查询url
-       deleteContentUrl:'/pmpheep/cms/content/',   //删除内容url
-       examineUrl:'/pmpheep/cms/content/check',  //审核内容
-      selectOp:[
-         {
-             value:0,
-             label:'待审核',
-         },
-         {
-             value:1,
-             label:'已退回',
-         },
-         {
-             value:2,
-             label:'已通过',
-         },
+      publicListUrl: "/pmpheep/cms/contents", //获取列表url
+      editContentUrl: "/pmpheep/cms/content/", //修改查询url
+      deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
+      examineUrl: "/pmpheep/cms/content/check", //审核内容
+      selectOp: [
+        {
+          value: 0,
+          label: "待审核"
+        },
+        {
+          value: 1,
+          label: "已退回"
+        },
+        {
+          value: 2,
+          label: "已通过"
+        }
       ],
-      showContentDetail:false,
-      contentDetailData:{
-         cmsContent:'',
-         cmsExtras:'',
-         listObj:'',
-         content:'',
+      showContentDetail: false,
+      contentDetailData: {
+        cmsContent: "",
+        cmsExtras: "",
+        listObj: "",
+        content: ""
       },
-      tableData:[],
-      isAdmin:false,
-      selectValue:'',
-      currentPage:1,
-      searchTitle:'',
-      pageTotal:100,
-      pageSize:10,
+      tableData: [],
+      isAdmin: false,
+      selectValue: "",
+      currentPage: 1,
+      searchTitle: "",
+      pageTotal: 100,
+      pageSize: 10,
       /* 评论*/
-      options:[],
-      selectedOptions:[],
-      commentTableData:[],
-      comPageSize:10,
-      comDataTotal:20,
-      comPageNumber:1,
-      commentSelectData:[],
+      options: [],
+      selectedOptions: [],
+      commentTableData: [],
+      comPageSize: 10,
+      comDataTotal: 20,
+      comPageNumber: 1,
+      commentSelectData: []
     };
   },
-  computed:{
-      isCommentSelected(){
-      if(this.commentSelectData.length>0){
-          return true ;
-      }else{
-          return false ;
+  computed: {
+    isCommentSelected() {
+      if (this.commentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
-      }
-  },
-  methods: {
-      /* 获取内容列表 */
-      getPublicList(){
-         this.$axios.get(this.publicListUrl,{
-               params:{
-                   title:this.searchTitle,
-                   status:this.selectValue,
-                   sessionId:this.$getUserData().sessionId,
-                   pageSize:this.pageSize,
-                   pageNumber:this.currentPage
-               }
-         }).then((res)=>{
-            console.log(res);
-            if (res.data.code==1) {
-                this.pageTotal=res.data.data.total;
-                this.tableData=res.data.data.rows;
-            }
-         })
-      },
-      /* 初始化是否管理员 */
-      initIsAdmin(){
-        this.isAdmin=this.$getUserData().userInfo.isAdmin;
-      },
-      /* 查看详情 */
-      contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              if(res.data.code==1){
-                this.contentDetailData=res.data.data;
-                this.contentDetailData.listObj=obj;
-                this.showContentDetail=true;
-                console.log(this.contentDetailData);
-              }
-          })
-           
-      },
-      /* 发布内容 */
-      publishContent(obj){
-           this.$axios.put('/pmpheep/cms/content/'+obj.id+'/publish').then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                  this.$message.success("文章已发布");
-                  this.getPublicList();
-              }else{
-                  this.$message.error(res.data.msg);
-              }
-           })
-      },
-      /* 修改内容 */
-      editContent(obj){
-          this.$axios.get(this.editContentUrl+obj.id+'/search',{
-          }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:1}});
-              }
-          })
-      },
-      /* 审核内容 */
-      examineContent(obj,status){
-       console.log(obj);
-       this.$axios.put(this.examineUrl,this.$commonFun.initPostData({
-            id:obj.id,
-            authStatus:status,
-            sessionId:this.$getUserData().sessionId
-       })).then((res)=>{
-           console.log(res);
-           if (res.data.code==1) {
-               this.$message.success('审核成功');
-               this.showContentDetail=false;   
-               this.getPublicList();
-           }else{
-               this.$message.error(res.data.msg);
-           }
-       })
-      },
-      /* 删除内容 */
-      deleteContent(obj){
-            this.$confirm('此操作将删除该条内容, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-         this.$axios.delete(this.deleteContentUrl+obj.id+'/delete').then((res)=>{
-             if(res.data.code==1){
-                 this.getPublicList();
-                 this.$message.success('删除操作成功');
-             }else{
-                 this.$message.error(res.data.msg.msgTrim());
-             }
-         })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-
-      },
-    handleSizeChange(val){
-     this.pageSize=val;
-     this.currentPage=1;
-     this.getPublicList();
-    },
-    handleCurrentChange(val){
-         this.currentPage=val;
-         this.getPublicList();
-    },
-    commentSelectChange(){
-       this.commentSelectData=val;
-    },
-    handleChange(){
-
-    },
-    commentHandleSizeChange(){
-
-    },
-    commentHandleCurrentChange(){
-
     }
   },
-  created(){
+  methods: {
+    /* 获取内容列表 */
+    getPublicList() {
+      this.$axios
+        .get(this.publicListUrl, {
+          params: {
+            title: this.searchTitle,
+            status: this.selectValue,
+            sessionId: this.$getUserData().sessionId,
+            pageSize: this.pageSize,
+            pageNumber: this.currentPage
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.pageTotal = res.data.data.total;
+            this.tableData = res.data.data.rows;
+          }
+        });
+    },
+    /* 初始化是否管理员 */
+    initIsAdmin() {
+      this.isAdmin = this.$getUserData().userInfo.isAdmin;
+    },
+    /* 查看详情 */
+    contentDetail(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            this.showContentDetail = true;
+            console.log(this.contentDetailData);
+          }
+        });
+    },
+    /* 发布内容 */
+    publishContent(obj) {
+      this.$axios
+        .put("/pmpheep/cms/content/" + obj.id + "/publish")
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$message.success("文章已发布");
+            this.getPublicList();
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+    },
+    /* 修改内容 */
+    editContent(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/search", {})
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$router.push({
+              name: "添加内容",
+              params: res.data.data,
+              query: { type: "edit", columnId: 1 }
+            });
+          }
+        });
+    },
+    /* 审核内容 */
+    examineContent(obj, status) {
+      console.log(obj);
+      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .put(
+              this.examineUrl,
+              this.$commonFun.initPostData({
+                id: obj.id,
+                authStatus: status,
+                sessionId: this.$getUserData().sessionId
+              })
+            )
+            .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+                this.$message.success("审核成功");
+                this.showContentDetail = false;
+                this.getPublicList();
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消操作"
+          });
+        });
+    },
+    /* 删除内容 */
+    deleteContent(obj) {
+      this.$confirm("确定删除该文章?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .delete(this.deleteContentUrl + obj.id + "/delete")
+            .then(res => {
+              if (res.data.code == 1) {
+                this.getPublicList();
+                this.$message.success("删除操作成功");
+              } else {
+                this.$message.error(res.data.msg.msgTrim());
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1;
       this.getPublicList();
-      this.initIsAdmin();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getPublicList();
+    },
+    commentSelectChange() {
+      this.commentSelectData = val;
+    },
+    handleChange() {},
+    commentHandleSizeChange() {},
+    commentHandleCurrentChange() {}
+  },
+  created() {
+    this.getPublicList();
+    this.initIsAdmin();
   }
 };
 </script>

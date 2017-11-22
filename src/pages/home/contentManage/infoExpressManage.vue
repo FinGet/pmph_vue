@@ -175,7 +175,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      totalPage:10,
+      totalPage: 10,
       options: [],
       defaultType: {
         value: "id",
@@ -257,8 +257,7 @@ export default {
           console.log(res);
           if (res.data.code == 1) {
             this.tableData = res.data.data.rows;
-            this.totalPage=res.data.data.total;
-
+            this.totalPage = res.data.data.total;
           }
         });
     },
@@ -307,26 +306,41 @@ export default {
     },
     /* 删除内容 */
     deleteContent(obj) {
-      this.$axios.delete(this.deleteInfoUrl + obj.id + "/delete").then(res => {
-        if (res.data.code == 1) {
-          this.getOutContentList();
-          this.$message.success("内容已删除");
-        } else {
-          tthis.$message.error(res.data.msg);
-        }
-      });
+      this.$confirm("确定删除该条信息快报?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .delete(this.deleteInfoUrl + obj.id + "/delete")
+            .then(res => {
+              if (res.data.code == 1) {
+                this.getOutContentList();
+                this.$message.success("内容已删除");
+              } else {
+                tthis.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     /* 栏目选项改变 */
     handleChange(value) {
       this.contentParams.categoryId = value[value.length - 1] + "";
     },
     handleSizeChange(val) {
-      this.contentParams.pageSize=val;
-      this.contentParams.pageNumber=1;
+      this.contentParams.pageSize = val;
+      this.contentParams.pageNumber = 1;
       this.getOutContentList();
     },
     handleCurrentChange(val) {
-      this.contentParams.pageNumber=val;
+      this.contentParams.pageNumber = val;
       this.getOutContentList();
     }
   },

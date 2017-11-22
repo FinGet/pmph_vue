@@ -121,11 +121,11 @@
 export default {
   data() {
     return {
-      editContentUrl:'/pmpheep/cms/content/',    //修改查询url
+      editContentUrl: "/pmpheep/cms/content/", //修改查询url
       options: [],
-      defaultProp:{
-        label: 'categoryName',
-        value: 'id'
+      defaultProp: {
+        label: "categoryName",
+        value: "id"
       },
       selectOp: [
         {
@@ -155,106 +155,127 @@ export default {
       ],
       tableData: [],
       selectedOptions: [],
-      contentSelectData:[],
-      commentSelectData:[],
+      contentSelectData: [],
+      commentSelectData: [],
       selectValue: "",
       conPageNumber: 1,
-      conPageSize:20,
-      menuId:3,
+      conPageSize: 20,
+      menuId: 3,
       comPageNumber: 1,
-      comPageSize:20,
-      title:'',
-      status:'',
+      comPageSize: 20,
+      title: "",
+      status: "",
       conDataTotal: 0,
       comDataTotal: 0,
-      showContentDetail:false,
-      contentDetailData:{
-         cmsContent:'',
-         cmsExtras:'',
-         listObj:'',
-         content:'',
-      },
+      showContentDetail: false,
+      contentDetailData: {
+        cmsContent: "",
+        cmsExtras: "",
+        listObj: "",
+        content: ""
+      }
     };
   },
   computed: {
-      isContentSelected(){
-       if(this.contentSelectData.length>0){
-           return true ;
-       }else{
-           return false;
-       }
-      },
-      isCommentSelected(){
-      if(this.commentSelectData.length>0){
-          return true ;
-      }else{
-          return false ;
+    isContentSelected() {
+      if (this.contentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
+    },
+    isCommentSelected() {
+      if (this.commentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
+    }
   },
-  mounted(){
-    this.getContentLists()
+  mounted() {
+    this.getContentLists();
   },
   methods: {
     /**
      * 初始化内容列表
      */
-    getContentLists(){
-      this.$axios.get("/pmpheep/cms/notice",{
-        params:{
-          sessionId: this.$getUserData().sessionId,
-          pageNumber: this.conPageNumber,
-          pageSize: this.conPageSize,
-          title: this.title,
-          status: this.status,
-          categoryId:this.menuId
-        }
-      }).then((response) => {
-        let res = response.data
-        this.conDataTotal = res.data.total
-        if (res.code == '1') {
-          for (let i=0; i< res.data.rows.length; i++) {
-            res.data.rows[i].gmtCreate = this.$commonFun.formatDate(res.data.rows[i].gmtCreate)
+    getContentLists() {
+      this.$axios
+        .get("/pmpheep/cms/notice", {
+          params: {
+            sessionId: this.$getUserData().sessionId,
+            pageNumber: this.conPageNumber,
+            pageSize: this.conPageSize,
+            title: this.title,
+            status: this.status,
+            categoryId: this.menuId
           }
-          this.tableData = res.data.rows;
-          // console.log(this.tableData)
-        }
-      }).catch(e=>{
-       // this.$message.error('内容列表请求失败，请重试');
-      })
+        })
+        .then(response => {
+          let res = response.data;
+          this.conDataTotal = res.data.total;
+          if (res.code == "1") {
+            for (let i = 0; i < res.data.rows.length; i++) {
+              res.data.rows[i].gmtCreate = this.$commonFun.formatDate(
+                res.data.rows[i].gmtCreate
+              );
+            }
+            this.tableData = res.data.rows;
+            // console.log(this.tableData)
+          }
+        })
+        .catch(e => {
+          // this.$message.error('内容列表请求失败，请重试');
+        });
     },
     /**
      * 删除
      */
-    deleted(id){
-      this.$axios.delete('/pmpheep/cms/notice/'+id+'/update').then(response => {
-        let res = response.data
-        if(res.code == '1') {
-          this.$message.success('删除成功');
-          this.getContentLists()
-        }else{
-          this.$message.error('删除失败');
-        }
-      }).catch(e=>{
-        this.$message.error('请求失败，请重试');
+    deleted(id) {
+      this.$confirm("确定删除该公告?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
+        .then(() => {
+          this.$axios
+            .delete("/pmpheep/cms/notice/" + id + "/update")
+            .then(response => {
+              let res = response.data;
+              if (res.code == "1") {
+                this.$message.success("删除成功");
+                this.getContentLists();
+              } else {
+                this.$message.error("删除失败");
+              }
+            })
+            .catch(e => {
+              this.$message.error("请求失败，请重试");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     /**
      * 内容页搜索
      */
-    search(){
-      this.getContentLists()
+    search() {
+      this.getContentLists();
     },
-      /* 内容table切换选项 */
-    contentSelectChange(val){
-       this.contentSelectData=val;
+    /* 内容table切换选项 */
+    contentSelectChange(val) {
+      this.contentSelectData = val;
     },
-      /* 评论table切换选项 */
-    commentSelectChange(val){
-        this.commentSelectData=val;
+    /* 评论table切换选项 */
+    commentSelectChange(val) {
+      this.commentSelectData = val;
     },
     handleChange(value) {
-      this.menuId = value[0]
+      this.menuId = value[0];
       // console.log(this.menuId)
     },
     /**
@@ -262,96 +283,97 @@ export default {
      * @param val
      */
     contentHandleSizeChange(val) {
-      this.conPageSize= val;
-      this.conPageNumber=1;
-      this.getContentLists()
+      this.conPageSize = val;
+      this.conPageNumber = 1;
+      this.getContentLists();
     },
     contentHandleCurrentChange(val) {
-      this.conPageNumber = val
-      this.getContentLists()
+      this.conPageNumber = val;
+      this.getContentLists();
     },
     /**
      * 评论页分页
      * @param val
      */
-    commentHandleSizeChange(val) {
-
+    commentHandleSizeChange(val) {},
+    commentHandleCurrentChange() {},
+    /* 查看详情 */
+    contentDetail(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            console.log(this.contentDetailData);
+          }
+        });
+      this.showContentDetail = true;
     },
-    commentHandleCurrentChange(){
-
-    },
-          /* 查看详情 */
-      contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              if(res.data.code==1){
-                this.contentDetailData=res.data.data;
-                this.contentDetailData.listObj=obj;
-                console.log(this.contentDetailData);
-              }
-          })
-           this.showContentDetail=true;
-      },
     /* 修改内容 */
-    editContent(obj){
-      this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:3}});
-              }
-          })
-    }      
-
+    editContent(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$router.push({
+              name: "添加内容",
+              params: res.data.data,
+              query: { type: "edit", columnId: 3 }
+            });
+          }
+        });
+    }
   }
-}
+};
 </script>
 <style scoped>
-  .content_exam .header_p {
-    overflow: hidden;
-  }
-  .content_exam .header_p .input {
-    width: 217px;
-    margin-right: 10px;
-  }
-  .content_exam .table_i {
-    margin-right: 10px;
-  }
-  .content_exam .grey_icon {
-    color: #999;
-    cursor: pointer;
-  }
-  .content_exam .active_green {
-    color: #13ce66;
-  }
-  .content_exam .active_orange {
-    color: rgb(254, 215, 79);
-  }
-  .content_exam .active_blue {
-    color: #20a0ff;
-  }
-  .content_exam .active_red {
-    color: #ff4949;
-  }
-  .content_exam .active_yellow {
-    color: #f7ba2a;
-  }
-  .content_exam .active_hide {
-    color: #58b7ff;
-  }
-  .content_exam .el-tabs--border-card {
-    border: 0;
-    box-shadow: none;
-  }
-  .previewTitle{
+.content_exam .header_p {
+  overflow: hidden;
+}
+.content_exam .header_p .input {
+  width: 217px;
+  margin-right: 10px;
+}
+.content_exam .table_i {
+  margin-right: 10px;
+}
+.content_exam .grey_icon {
+  color: #999;
+  cursor: pointer;
+}
+.content_exam .active_green {
+  color: #13ce66;
+}
+.content_exam .active_orange {
+  color: rgb(254, 215, 79);
+}
+.content_exam .active_blue {
+  color: #20a0ff;
+}
+.content_exam .active_red {
+  color: #ff4949;
+}
+.content_exam .active_yellow {
+  color: #f7ba2a;
+}
+.content_exam .active_hide {
+  color: #58b7ff;
+}
+.content_exam .el-tabs--border-card {
+  border: 0;
+  box-shadow: none;
+}
+.previewTitle {
   color: #14232e;
   font-size: 26px;
   font-weight: 500;
 }
-.content_exam .center_box{
-    float:left;
- margin-left:50%;
- transform: translateX(-50%);
+.content_exam .center_box {
+  float: left;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 
