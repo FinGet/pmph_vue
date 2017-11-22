@@ -1,7 +1,7 @@
 <template>
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="内容标题：" prop="title">
+      <el-form-item label="标题：" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
@@ -17,74 +17,10 @@
             @change="handleChange">
           </el-cascader>
       </el-form-item>
-      <el-form-item label="摘要：" prop="summary">
-          <el-input type="textarea" :rows="4" class="input" v-model.trim="formData.summary"></el-input>
-      </el-form-item>
-      <el-form-item label="关键字：" prop="keyword">
-          <el-input class="input" placeholder="请输入关键字" v-model.trim="formData.keyword"></el-input>
-      </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="是否推荐：">
-          <el-radio-group v-model="formData.isPromote">
-            <el-radio :label="true">是</el-radio>
-            <el-radio :label="false">否</el-radio>
-          </el-radio-group>
-      </el-form-item>
-      <el-form-item label="推荐到期时间："  v-if="formData.isPromote">
-           <el-date-picker
-               v-model="formData.deadlinePromote"
-                type="datetime"
-                placeholder="选择推荐到期时间"
-                class="date_input"
-                format="yyyy-MM-dd HH:mm:ss"
-                @change="promoteDateChange"
-                :picker-options="pickerOptions">
-         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="推荐显示排序："prop="sortPromote"  v-if="formData.isPromote">
-          <el-input placeholder="输入推荐显示排序" style="width:300px" v-model="formData.sortPromote"></el-input>
-      </el-form-item>
-      <el-form-item label="是否置顶：">
-          <el-radio-group v-model="formData.isStick">
-            <el-radio :label="true">是</el-radio>
-            <el-radio :label="false">否</el-radio>
-          </el-radio-group>
-      </el-form-item>
-      <el-form-item label="置顶到期时间：" v-if="formData.isStick">
-           <el-date-picker
-               v-model="formData.deadlineStick"
-                type="datetime"
-                placeholder="选择置顶到期时间"
-                class="date_input"
-                @change="stickDateChange"
-                :picker-options="pickerOptions">
-         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="分类显示顺序：" prop="sort"  v-if="formData.isStick">
-          <el-input placeholder="输入分类显示顺序" style="width:300px" v-model="formData.sort"></el-input>
-      </el-form-item>
-      <el-form-item label="是否热门：">
-          <el-radio-group v-model="formData.isHot">
-            <el-radio :label="true">是</el-radio>
-            <el-radio :label="false">否</el-radio>
-          </el-radio-group>
-      </el-form-item>
-      <el-form-item label="热门到期时间：" v-if="formData.isHot">
-           <el-date-picker
-               v-model="formData.deadlineHot"
-                type="datetime"
-                placeholder="选择热门到期时间"
-                class="date_input"
-                @change="hotDateChange"
-                :picker-options="pickerOptions">
-         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="热门显示顺序：" prop="sortHot"  v-if="formData.isHot">
-          <el-input placeholder="输入热门显示顺序" style="width:300px" v-model="formData.sortHot"></el-input>
-      </el-form-item> -->
-      <el-form-item label="文章内容：" required>
+      <el-form-item label="内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
       <el-form-item label="附件：">
@@ -103,27 +39,36 @@
           </el-upload>
         </div>
       </el-form-item>
-      <el-form-item label="是否发布：">
-          <el-radio-group v-model="formData.isPublished">
-            <el-radio :label="false">立即发布</el-radio>
-            <!-- <el-radio :label="true">定时发布</el-radio> -->
-          </el-radio-group>
-          <el-form-item v-if="formData.isPublished" style="display:inline-block">
-              <el-date-picker
-               v-model="formData.scheduledTime"
-                type="datetime"
-                placeholder="选择定时发布时间"
-                style="margin:0 15px 0 25px;"
-                @change="scheduledDateChange"
-                :picker-options="pickerOptions">
-         </el-date-picker>
-         <el-checkbox v-model="formData.isHide">隐藏</el-checkbox>
-          </el-form-item>
-      </el-form-item>
     </el-form>
+    <!-- 预览对话框 -->
+        <el-dialog
+     title=""
+     :visible.sync="showPreventDialog"
+     size="large">
+       <div style="padding:0 10%;">
+        <h5 class="previewTitle text-center">{{formData.title}}</h5>
+         <p class="senderInfo text-center paddingT10">
+      <span class="marginR10">{{routerName}}</span>
+      <span>{{$commonFun.getNowFormatDate()}}</span>
+       </p>
+       <el-form label-width="55px">
+         <el-form-item label="" label-width="0">
+             <p v-html="preventContent"></p>
+         </el-form-item>
+         <el-form-item label="附件：">
+              <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index">{{item.name}}</p>
+         </el-form-item>
+       </el-form>
+        </div>
+    </el-dialog>
+
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
-          <el-button type="primary" @click="ContentSubmit">确定</el-button>
+          <el-button type="primary" @click="openPreventDialog">预览</el-button>
+          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">通过</el-button>
+          <el-button type="danger" v-if="formData.categoryId==1" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+          <el-button type="primary"@click="ContentSubmit(0)" v-if="formData.categoryId!=1">暂存</el-button>
+          <el-button type="primary" @click="ContentSubmit(1)" v-if="formData.categoryId!=1">发布</el-button>
     </div>
   </div>
 </template>
@@ -139,20 +84,19 @@ export default {
       editContentUrl:'/pmpheep/cms/content/update',    //修改文章
       editLettersUrl:'/pmpheep/cms/letters/update',  //修改信息快报
       editNoticeUrl:'/pmpheep/cms/notice/update',  //修改公告
+      examineUrl: "/pmpheep/cms/content/update", //审核内容
       formData: {
         title: "",
         categoryId: "",
-        summary: "",
-        keyword: "",
         sort:'',
         content: "",
         file: [],
+        scheduledTime:'',
         isPublished: "",
-        isScheduled: false,
-        scheduledTime: "",
-        isHide: false,
         path:'0'
       },
+      showPreventDialog:false,
+      preventContent:'',
       isEditContent:false,
       fileList: [],
       formRules: {
@@ -248,7 +192,7 @@ export default {
         default:
         break;
       }
-    }
+    },
   },
   watch:{
    /* 'formData.isScheduled':function(val){
@@ -257,7 +201,7 @@ export default {
   },
   methods: {
     /* 发布新内容url */
-    ContentSubmit() {
+    ContentSubmit(num) {
       this.formData.content = this.$refs.editor.getContent();
       if (!this.formData.content) {
         this.$message.error("内容不能为空");
@@ -265,6 +209,13 @@ export default {
       }
       this.$refs["addForm"].validate(valid => {
         if (valid) {
+            /* 判断暂存还是发布 */
+            if(num==0){
+               this.formData.isStaging=true;
+            }
+            if(num==1){
+              this.formData.isPublished=true;
+            }
           this.formData.sessionId = this.$getUserData().sessionId;
           /* 判断新增还是修改 */
           if(!this.isEditContent){
@@ -273,7 +224,16 @@ export default {
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
-                this.$message.success("添加成功");
+                switch (num) {
+                  case 0:
+                    this.$message.success("暂存成功");
+                    break;
+                  case 1:
+                   this.$message.success("发布成功");
+                   break;
+                  default:
+                    break;
+                }
                 this.$router.push({ name: this.routerName });
               } else {
                 this.$message.error(res.data.msg);
@@ -283,7 +243,16 @@ export default {
             this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
-                  this.$message.success('修改成功');
+                switch (num) {
+                  case 0:
+                    this.$message.success("暂存成功");
+                    break;
+                  case 1:
+                    this.$message.success("发布成功");
+                   break;
+                  default:
+                    break;
+                }
                   this.$router.push({ name: this.routerName });
                 }else {
                 this.$message.error(res.data.msg);
@@ -297,6 +266,46 @@ export default {
           return false;
         }
       });
+    },
+    /* 预览 */
+    openPreventDialog(){
+      console.log(this.formData);
+     this.preventContent=this.$refs.editor.getContent();
+     this.showPreventDialog=true;
+    },
+    /* 审核 */
+    examineContent(obj,status){
+      console.log(obj);
+      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+           this.formData.sessionId = this.$getUserData().sessionId;
+           this.formData.authStatus=status;
+          this.$axios
+            .put(
+              this.examineUrl,
+              this.$commonFun.initPostData(this.formData)
+               )
+            .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+                this.$message.success("审核成功");
+                this.showContentDetail = false;
+                this.$router.push({name:'文章管理'})
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消操作"
+          });
+        });
     },
     /* 栏目选择改变 */
     handleChange(value) {
@@ -314,11 +323,11 @@ export default {
     },
     /* 文件上传成功回调 */
     upLoadFileSuccess(res, file, filelist) {
+       this.fileList=filelist;
       this.formData.file = [];
       if (res.code == 1) {
         filelist.forEach(item => {
           if(item.response){
-            console.log(item);
             this.formData.file.push(item.response.data);
           }
         });
@@ -327,6 +336,10 @@ export default {
     },
     /* 文件移除回调 */
     uploadFileRemove(file, flielist) {
+      this.fileList=[];
+      flielist.forEach((item)=>{
+       this.fileList.push(item);
+      })
       if(!this.isEditContent){
           this.formData.file = [];
          filelist.forEach(item => {
@@ -370,6 +383,7 @@ export default {
       }
       if (this.$router.currentRoute.query.type == "edit") {
            var editData=this.$router.currentRoute.params;
+           console.log(editData);
         if (editData.content) {
           this.isEditContent=true;
           for(var item in editData.cmsContent){
@@ -429,4 +443,18 @@ export default {
   transform: translateX(-50%);
   display: inline-block;
 }
+.previewTitle{
+  color: #14232e;
+  font-size: 26px;
+  font-weight: 500;
+}
+.content_publish .center_box{
+    float:left;
+ margin-left:50%;
+ transform: translateX(-50%);
+}
+.content_publish .el-tabs--border-card {
+    border: 0;
+    box-shadow: none;
+  }
 </style>

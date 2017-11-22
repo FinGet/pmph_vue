@@ -3,9 +3,10 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-
+           
           <el-input placeholder="输入文章标题" class="input" v-model.trim="searchTitle"></el-input>
-          <el-select v-model="selectValue" style="width:186px" class="input" placeholder="选择筛选状态">
+          <span>审核状态：</span>
+          <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -33,17 +34,25 @@
                 v-if="isAdmin"
                 >
             </el-table-column>
-            <!-- <el-table-column
-                label="发布"
-                width="80"
+            <el-table-column
+                label="创建时间"
+                width="168"
                 >
                 <template scope="scope">
-                    {{scope.row.isPublished?'已发布':'未发布'}}
+                    {{$commonFun.formatDate(scope.row.gmtCreate)}}
                 </template>
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column
-                label="审核"
-                width="80"
+                label="审核时间"
+                width="168"
+                >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                label="审核状态"
+                width="110"
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">待审核</p>
@@ -52,16 +61,8 @@
                 </template>
             </el-table-column> 
             <el-table-column
-                label="发布时间"
-                width="168"
-                >
-                <template scope="scope">
-                    {{scope.row.authDate}}
-                </template>
-            </el-table-column>
-            <el-table-column
                 label="相关统计"
-                width="240"
+                width="190"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
@@ -78,16 +79,13 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column label="显示顺序" width="110">
-
-            </el-table-column>
             <el-table-column
                 label="操作"
                 width="120"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -118,44 +116,39 @@
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="100px">
-          <el-form-item label="摘要：">
-             <p>{{contentDetailData.cmsContent.summary}}</p>
-         </el-form-item>
-         <el-form-item label="关键字：">
-             {{contentDetailData.cmsContent.keyword}}
-         </el-form-item>
-         <el-form-item label="内容：">
+       <el-form label-width="55px">
+
+         <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
-              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+              <a type="text" :href="'/pmpheep'+item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
-            <el-button type="primary" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
-            <el-button type="danger" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
-            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
+            <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
   </el-tab-pane>
   <el-tab-pane label="评论">
       <p class="header_p">
-          <el-cascader
+          <!-- <el-cascader
             :options="options"
             v-model="selectedOptions"
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
-            @change="handleChange">
+            @change="handleChange"> -->
           </el-cascader>
-          <span style="margin-left:10px;">内容标题：</span>
+          <span style="margin-left:10px;">文章标题：</span>
           <el-input placeholder="输入内容标题" class="input"></el-input>
-          <span style="margin-left:10px;">评论者账号：</span>
-          <el-input placeholder="输入账号" class="input"></el-input>
+          <span style="margin-left:10px;">姓名/账号：</span>
+          <el-input placeholder="输入姓名/账号" class="input"></el-input>
          <el-button type="primary" icon="search">搜索</el-button>
 
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
@@ -164,12 +157,6 @@
             <el-table-column
                 type="selection"
                 width="45">
-            </el-table-column>
-            <el-table-column
-                prop="id"
-                label="ID"
-                width="70"
-                >
             </el-table-column>
             <el-table-column
                 label="评论内容"
@@ -185,6 +172,16 @@
                 >
             </el-table-column>
             <el-table-column
+                label="审核状态"
+                width="110"
+                >
+                <template scope="scope">
+                    <p v-if="scope.row.authStatus==0">待审核</p>
+                    <p v-if="scope.row.authStatus==1">已退回</p>
+                    <p v-if="scope.row.authStatus==2">已通过</p>
+                </template>
+            </el-table-column> 
+            <el-table-column
                 label="原文链接"
                 width="95"
                 >
@@ -198,7 +195,7 @@
                 >
                 <template scope="scope">
                     <el-button type="text">通过</el-button>
-                    <el-button type="text">拒绝</el-button>
+                    <!-- <el-button type="text">退回</el-button> -->
                     <el-button type="text">删除</el-button>
                 </template>
             </el-table-column>
@@ -223,245 +220,256 @@
   </div>
 </template>
 <style scoped>
-.publish_list .header_p{
-    overflow: hidden;
+.publish_list .header_p {
+  overflow: hidden;
 }
 .publish_list .header_p .input {
   width: 217px;
   margin-right: 10px;
 }
-.publish_list .table_i{
-    margin-right:10px;
+.publish_list .table_i {
+  margin-right: 10px;
 }
-.publish_list .grey_icon{
-  color:#999;
+.publish_list .grey_icon {
+  color: #999;
   cursor: pointer;
 }
-.publish_list .active_green{
- color:#13ce66;
+.publish_list .active_green {
+  color: #13ce66;
 }
-.publish_list .active_orange{
-
-   color:rgb(254,215,79);
+.publish_list .active_orange {
+  color: rgb(254, 215, 79);
 }
-.publish_list .active_blue{
-  color:#20a0ff;
+.publish_list .active_blue {
+  color: #20a0ff;
 }
-.publish_list .active_red{
-color:#ff4949;
+.publish_list .active_red {
+  color: #ff4949;
 }
-.publish_list .active_yellow{
-color:#f7ba2a;
+.publish_list .active_yellow {
+  color: #f7ba2a;
 }
-.publish_list .active_hide{
-color:#58b7ff;
+.publish_list .active_hide {
+  color: #58b7ff;
 }
-.previewTitle{
+.previewTitle {
   color: #14232e;
   font-size: 26px;
   font-weight: 500;
 }
-.publish_list .center_box{
-    float:left;
- margin-left:50%;
- transform: translateX(-50%);
+.publish_list .center_box {
+  float: left;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
- .publish_list .el-tabs--border-card {
-    border: 0;
-    box-shadow: none;
-  }
+.publish_list .el-tabs--border-card {
+  border: 0;
+  box-shadow: none;
+}
 </style>
 <script type="text/javascript">
 export default {
   data() {
     return {
-       publicListUrl:'/pmpheep/cms/contents',   //获取列表url
-       editContentUrl:'/pmpheep/cms/content/',    //修改查询url
-       deleteContentUrl:'/pmpheep/cms/content/',   //删除内容url
-       examineUrl:'/pmpheep/cms/content/check',  //审核内容
-      selectOp:[
-         {
-             value:0,
-             label:'是否发布',
-         },
-         {
-             value:1,
-             label:'是否审核',
-         },
-/*          {
-             value:2,
-             label:'是否置顶',
-         },
-         {
-             value:3,
-             label:'是否热门',
-         },
-         {
-             value:4,
-             label:'是否推荐',
-         },
-         {
-             value:5,
-             label:'是否隐藏',
-         }, */
+      publicListUrl: "/pmpheep/cms/contents", //获取列表url
+      editContentUrl: "/pmpheep/cms/content/", //修改查询url
+      deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
+      examineUrl: "/pmpheep/cms/content/check", //审核内容
+      selectOp: [
+        {
+          value: 0,
+          label: "待审核"
+        },
+        {
+          value: 1,
+          label: "已退回"
+        },
+        {
+          value: 2,
+          label: "已通过"
+        }
       ],
-      showContentDetail:false,
-      contentDetailData:{
-         cmsContent:'',
-         cmsExtras:'',
-         listObj:'',
-         content:'',
+      showContentDetail: false,
+      contentDetailData: {
+        cmsContent: "",
+        cmsExtras: "",
+        listObj: "",
+        content: ""
       },
-      tableData:[],
-      isAdmin:false,
-      selectValue:'',
-      currentPage:1,
-      searchTitle:'',
-      pageTotal:100,
-      pageSize:10,
+      tableData: [],
+      isAdmin: false,
+      selectValue: "",
+      currentPage: 1,
+      searchTitle: "",
+      pageTotal: 100,
+      pageSize: 10,
       /* 评论*/
-      options:[],
-      selectedOptions:[],
-      commentTableData:[],
-      comPageSize:10,
-      comDataTotal:20,
-      comPageNumber:1,
-      commentSelectData:[],
+      options: [],
+      selectedOptions: [],
+      commentTableData: [],
+      comPageSize: 10,
+      comDataTotal: 20,
+      comPageNumber: 1,
+      commentSelectData: []
     };
   },
-  computed:{
-      isCommentSelected(){
-      if(this.commentSelectData.length>0){
-          return true ;
-      }else{
-          return false ;
+  computed: {
+    isCommentSelected() {
+      if (this.commentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
-      }
-  },
-  methods: {
-      /* 获取内容列表 */
-      getPublicList(){
-         this.$axios.get(this.publicListUrl,{
-               params:{
-                   title:this.searchTitle,
-                   status:this.selectValue,
-                   sessionId:this.$getUserData().sessionId,
-                   pageSize:this.pageSize,
-                   pageNumber:this.currentPage
-               }
-         }).then((res)=>{
-            console.log(res);
-            if (res.data.code==1) {
-                this.pageTotal=res.data.data.total;
-                this.tableData=res.data.data.rows;
-            }
-         })
-      },
-      /* 初始化是否管理员 */
-      initIsAdmin(){
-        this.isAdmin=this.$getUserData().userInfo.isAdmin;
-      },
-      /* 查看详情 */
-      contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              if(res.data.code==1){
-                this.contentDetailData=res.data.data;
-                this.contentDetailData.listObj=obj;
-                this.showContentDetail=true;
-                console.log(this.contentDetailData);
-              }
-          })
-           
-      },
-      /* 发布内容 */
-      publishContent(obj){
-           this.$axios.put('/pmpheep/cms/content/'+obj.id+'/publish').then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                  this.$message.success("文章已发布");
-                  this.getPublicList();
-              }else{
-                  this.$message.error(res.data.msg);
-              }
-           })
-      },
-      /* 修改内容 */
-      editContent(obj){
-          this.$axios.get(this.editContentUrl+obj.id+'/search',{
-          }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:1}});
-              }
-          })
-      },
-      /* 审核内容 */
-      examineContent(obj,status){
-       console.log(obj);
-       this.$axios.put(this.examineUrl,this.$commonFun.initPostData({
-            id:obj.id,
-            authStatus:status,
-            sessionId:this.$getUserData().sessionId
-       })).then((res)=>{
-           console.log(res);
-           if (res.data.code==1) {
-               this.$message.success('审核成功');
-               this.showContentDetail=false;   
-               this.getPublicList();
-           }else{
-               this.$message.error(res.data.msg);
-           }
-       })
-      },
-      /* 删除内容 */
-      deleteContent(obj){
-            this.$confirm('此操作将删除该条内容, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-         this.$axios.delete(this.deleteContentUrl+obj.id+'/delete').then((res)=>{
-             if(res.data.code==1){
-                 this.getPublicList();
-                 this.$message.success('删除操作成功');
-             }else{
-                 this.$message.error(res.data.msg.msgTrim());
-             }
-         })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-
-      },
-    handleSizeChange(val){
-     this.pageSize=val;
-     this.currentPage=1;
-     this.getPublicList();
-    },
-    handleCurrentChange(val){
-         this.currentPage=val;
-         this.getPublicList();
-    },
-    commentSelectChange(){
-       this.commentSelectData=val;
-    },
-    handleChange(){
-
-    },
-    commentHandleSizeChange(){
-
-    },
-    commentHandleCurrentChange(){
-
     }
   },
-  created(){
+  methods: {
+    /* 获取内容列表 */
+    getPublicList() {
+      this.$axios
+        .get(this.publicListUrl, {
+          params: {
+            title: this.searchTitle,
+            authStatus: this.selectValue,
+            sessionId: this.$getUserData().sessionId,
+            pageSize: this.pageSize,
+            pageNumber: this.currentPage
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.pageTotal = res.data.data.total;
+            this.tableData = res.data.data.rows;
+          }
+        });
+    },
+    /* 初始化是否管理员 */
+    initIsAdmin() {
+      this.isAdmin = this.$getUserData().userInfo.isAdmin;
+    },
+    /* 查看详情 */
+    contentDetail(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            this.showContentDetail = true;
+            console.log(this.contentDetailData);
+          }
+        });
+    },
+    /* 发布内容 */
+    publishContent(obj) {
+      this.$axios
+        .put("/pmpheep/cms/content/" + obj.id + "/publish")
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$message.success("文章已发布");
+            this.getPublicList();
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+    },
+    /* 修改内容 */
+    editContent(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/search", {})
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$router.push({
+              name: "添加内容",
+              params: res.data.data,
+              query: { type: "edit", columnId: 1 }
+            });
+          }
+        });
+    },
+    /* 审核内容 */
+    examineContent(obj, status) {
+      console.log(obj);
+      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .put(
+              this.examineUrl,
+              this.$commonFun.initPostData({
+                id: obj.id,
+                authStatus: status,
+                sessionId: this.$getUserData().sessionId
+              })
+            )
+            .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+                this.$message.success("审核成功");
+                this.showContentDetail = false;
+                this.getPublicList();
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消操作"
+          });
+        });
+    },
+    /* 删除内容 */
+    deleteContent(obj) {
+      this.$confirm("确定删除该文章?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .delete(this.deleteContentUrl + obj.id + "/delete")
+            .then(res => {
+              if (res.data.code == 1) {
+                this.getPublicList();
+                this.$message.success("删除操作成功");
+              } else {
+                this.$message.error(res.data.msg.msgTrim());
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1;
       this.getPublicList();
-      this.initIsAdmin();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getPublicList();
+    },
+    commentSelectChange() {
+      this.commentSelectData = val;
+    },
+    handleChange() {},
+    commentHandleSizeChange() {},
+    commentHandleCurrentChange() {}
+  },
+  created() {
+    this.getPublicList();
+    this.initIsAdmin();
   }
 };
 </script>

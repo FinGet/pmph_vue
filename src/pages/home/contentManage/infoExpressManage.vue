@@ -11,7 +11,8 @@
             @change="handleChange">
           </el-cascader> -->
           <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title"></el-input>
-          <!-- <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <span>发布状态：</span>
+          <el-select v-model="contentParams.isPublished" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -19,7 +20,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select> -->
+         </el-select>
          <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
@@ -36,25 +37,41 @@
                 label="作者"
                 width="90"
                 >
-            </el-table-column>            
+            </el-table-column>
+           <el-table-column
+                label="创建时间"
+                width="168"
+                >
+                <template scope="scope">
+                    {{$commonFun.formatDate(scope.row.gmtCreate)}}
+                </template>
+            </el-table-column>    
+            <el-table-column
+                label="发布状态"
+                width="100"
+                >
+                <template scope="scope">
+                   {{scope.row.isPublished?'已发布':'未发布'}}
+                </template>
+            </el-table-column>         
             <el-table-column
                 label="发布时间"
                 width="165"
                 >
                 <template scope="scope">
-                    {{scope.row.authDate}}
+                    {{$commonFun.formatDate(scope.row.authDate)}}
                 </template>
-            </el-table-column>
-            <el-table-column
+            </el-table-column> 
+            <!-- <el-table-column
                 label="被查看次数"
-                width="110"
+                width="120"
                 >
                 <template scope="scope">
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
 
             <el-table-column
                 label="操作"
@@ -91,14 +108,8 @@
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="100px">
-          <el-form-item label="摘要：">
-             <p>{{contentDetailData.cmsContent.summary}}</p>
-         </el-form-item>
-         <el-form-item label="关键字：">
-             {{contentDetailData.cmsContent.keyword}}
-         </el-form-item>
-         <el-form-item label="内容：">
+       <el-form label-width="55px">
+         <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
@@ -108,6 +119,7 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>  
             <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
@@ -167,34 +179,30 @@ export default {
   data() {
     return {
       outContentUrl: "/pmpheep/cms/letters", //内容列表url
-      // columnListUrl: "/pmpheep/cms/set", //栏目列表Url
+      publishedUrl:'/pmpheep/cms/letters/update',  //发布url
       deleteInfoUrl: "/pmpheep/cms/letters/content/", //信息快报删除url
       contentParams: {
         categoryId: "",
         title: "",
-        status: "",
+        isPublished: "",
         pageSize: 10,
         pageNumber: 1
       },
-      totalPage:10,
+      totalPage: 10,
       options: [],
       defaultType: {
         value: "id",
         label: "categoryName"
       },
       selectOp: [
-        {
-          value: 2,
-          label: "是否置顶"
-        },
-        {
-          value: 3,
-          label: "是否热门"
-        },
-        {
-          value: 4,
-          label: "是否推荐"
-        }
+      {
+        value:true,
+        label:'已发布'
+      },
+      {
+        value:false,
+        label:'未发布'
+      }
       ],
       tableData: [
         {
@@ -258,26 +266,24 @@ export default {
           console.log(res);
           if (res.data.code == 1) {
             this.tableData = res.data.data.rows;
-            this.totalPage=res.data.data.total;
-
+            this.totalPage = res.data.data.total;
           }
         });
     },
-    /* 获得栏目列表 */
-    /*     getColumnList() {
-      this.$axios
-        .get(this.columnListUrl, {
-          params: {
-            categoryName: ""
-          }
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == 1) {
-            this.options = res.data.data;
-          }
-        });
-    }, */
+    /* 发布 */
+    publishSubmit(){
+      this.contentDetailData.listObj.isPublished=true;
+      this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(this.contentDetailData.listObj)).then((res)=>{
+                console.log(res);
+                if(res.data.code==1){
+                   this.$message.success("发布成功");
+                   this.getOutContentList();
+                   this.showContentDetail=false;
+                }else {
+                this.$message.error(res.data.msg);
+              }
+            })    
+    },
     /* 查看详情 */
     contentDetail(obj) {
       this.$axios
@@ -308,26 +314,41 @@ export default {
     },
     /* 删除内容 */
     deleteContent(obj) {
-      this.$axios.delete(this.deleteInfoUrl + obj.id + "/delete").then(res => {
-        if (res.data.code == 1) {
-          this.getOutContentList();
-          this.$message.success("内容已删除");
-        } else {
-          tthis.$message.error(res.data.msg);
-        }
-      });
+      this.$confirm("确定删除该条信息快报?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .delete(this.deleteInfoUrl + obj.id + "/delete")
+            .then(res => {
+              if (res.data.code == 1) {
+                this.getOutContentList();
+                this.$message.success("内容已删除");
+              } else {
+                tthis.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     /* 栏目选项改变 */
     handleChange(value) {
       this.contentParams.categoryId = value[value.length - 1] + "";
     },
     handleSizeChange(val) {
-      this.contentParams.pageSize=val;
-      this.contentParams.pageNumber=1;
+      this.contentParams.pageSize = val;
+      this.contentParams.pageNumber = 1;
       this.getOutContentList();
     },
     handleCurrentChange(val) {
-      this.contentParams.pageNumber=val;
+      this.contentParams.pageNumber = val;
       this.getOutContentList();
     }
   },
