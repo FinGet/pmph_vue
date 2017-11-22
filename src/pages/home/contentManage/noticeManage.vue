@@ -10,7 +10,8 @@
             @change="handleChange">
           </el-cascader> -->
           <el-input placeholder="输入公告标题" v-model.trim="title" class="input"></el-input>
-          <!-- <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <span>发布状态：</span>
+          <el-select v-model="status" style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,7 +19,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select> -->
+         </el-select>
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
@@ -62,7 +63,7 @@
                    {{$commonFun.formatDate(scope.row.authDate)}}
                 </template>   
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                 label="被查看次数"
                 width="120"
                 >
@@ -71,7 +72,7 @@
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="操作"
                 width="120"
@@ -139,30 +140,14 @@ export default {
         value: "id"
       },
       selectOp: [
-        {
-          value: 0,
-          label: "是否发布"
-        },
-        {
-          value: 1,
-          label: "是否审核"
-        },
-        {
-          value: 2,
-          label: "是否置顶"
-        },
-        {
-          value: 3,
-          label: "是否热门"
-        },
-        {
-          value: 4,
-          label: "是否推荐"
-        },
-        {
-          value: 5,
-          label: "是否隐藏"
-        }
+      {
+        value:true,
+        label:'已发布'
+      },
+      {
+        value:false,
+        label:'未发布'
+      }
       ],
       tableData: [],
       selectedOptions: [],
@@ -218,7 +203,7 @@ export default {
             pageNumber: this.conPageNumber,
             pageSize: this.conPageSize,
             title: this.title,
-            status: this.status,
+            isPublished: this.status,
             categoryId: this.menuId
           }
         })
