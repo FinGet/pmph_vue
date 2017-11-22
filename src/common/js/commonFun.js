@@ -177,8 +177,9 @@ export function formatDate(nS) {
   var hours = date.getHours();
   var minu = date.getMinutes();
   var sec = date.getSeconds();
+  
 
-  return year+'-'+mon+'-'+day+' '+hours+':'+minu+':'+sec;
+  return year + '-' +(mon<10?'0'+mon:mon) + '-' +(day<10?'0'+day:day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minu < 10 ? '0' + minu : minu )+ ':' + (sec < 10 ? '0' + sec : sec);
 }
 /**
  * 获取当前的日期时间 格式“yyyy-MM-dd HH:MM:SS”

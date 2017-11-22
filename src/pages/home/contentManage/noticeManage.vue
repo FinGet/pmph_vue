@@ -9,8 +9,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入内容标题" v-model.trim="title" class="input"></el-input>
-          <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <el-input placeholder="输入公告标题" v-model.trim="title" class="input"></el-input>
+          <!-- <el-select v-model="status" style="width:186px" class="input" placeholder="选择筛选状态">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,7 +18,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select>
+         </el-select> -->
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
@@ -26,36 +26,52 @@
       </p>
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
-                prop="id"
-                label="ID"
-                width="70"
-                >
-            </el-table-column>
-            <el-table-column
-                label="内容标题"
+                label="公告标题"
                 >
                 <template scope="scope">
                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
-            <el-table-column label="作者" width="110">
-
+            <el-table-column 
+            prop="username"  
+            label="作者" 
+            width="110">
             </el-table-column>
             <el-table-column
                 prop="gmtCreate"
                 label="创建时间"
                 width="175"
                 >
+              <template scope="scope">
+                   {{$commonFun.formatDate(scope.row.gmtCreate)}}
+                </template>
             </el-table-column>
-<!--             <el-table-column
-                label="原文链接"
-                width="95"
+            <el-table-column
+                label="发布状态"
+                width="100"
                 >
                 <template scope="scope">
-                      <el-button type="text">查看</el-button>
+                   {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
-            </el-table-column> -->
-
+            </el-table-column>
+            <el-table-column
+                label="发布时间"
+                width="175"
+                >
+            <template scope="scope">
+                   {{$commonFun.formatDate(scope.row.authDate)}}
+                </template>   
+            </el-table-column>
+            <el-table-column
+                label="被查看次数"
+                width="120"
+                >
+                <template scope="scope">
+                    <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
+                        <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
             <el-table-column
                 label="操作"
                 width="120"
@@ -63,7 +79,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text">修改</el-button>
+                    <el-button type="text"  @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -91,16 +107,10 @@
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)?$commonFun.formatDate(contentDetailData.listObj.authDate):'2017-11-14 10:17:52'}}</span>
+      <span>{{contentDetailData.listObj.gmtCreate?contentDetailData.listObj.gmtCreate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="100px">
-          <el-form-item label="摘要：">
-             <p>{{contentDetailData.cmsContent.summary}}</p>
-         </el-form-item>
-         <el-form-item label="关键字：">
-             {{contentDetailData.cmsContent.keyword}}
-         </el-form-item>
-         <el-form-item label="内容：">
+       <el-form label-width="55px">
+         <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
@@ -122,11 +132,11 @@
 export default {
   data() {
     return {
-      editContentUrl:'/pmpheep/cms/content/',    //修改查询url
+      editContentUrl: "/pmpheep/cms/content/", //修改查询url
       options: [],
-      defaultProp:{
-        label: 'categoryName',
-        value: 'id'
+      defaultProp: {
+        label: "categoryName",
+        value: "id"
       },
       selectOp: [
         {
@@ -156,106 +166,127 @@ export default {
       ],
       tableData: [],
       selectedOptions: [],
-      contentSelectData:[],
-      commentSelectData:[],
+      contentSelectData: [],
+      commentSelectData: [],
       selectValue: "",
       conPageNumber: 1,
-      conPageSize:20,
-      menuId:3,
+      conPageSize: 20,
+      menuId: 3,
       comPageNumber: 1,
-      comPageSize:20,
-      title:'',
-      status:'',
+      comPageSize: 20,
+      title: "",
+      status: "",
       conDataTotal: 0,
       comDataTotal: 0,
-      showContentDetail:false,
-      contentDetailData:{
-         cmsContent:'',
-         cmsExtras:'',
-         listObj:'',
-         content:'',
-      },
+      showContentDetail: false,
+      contentDetailData: {
+        cmsContent: "",
+        cmsExtras: "",
+        listObj: "",
+        content: ""
+      }
     };
   },
   computed: {
-      isContentSelected(){
-       if(this.contentSelectData.length>0){
-           return true ;
-       }else{
-           return false;
-       }
-      },
-      isCommentSelected(){
-      if(this.commentSelectData.length>0){
-          return true ;
-      }else{
-          return false ;
+    isContentSelected() {
+      if (this.contentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
+    },
+    isCommentSelected() {
+      if (this.commentSelectData.length > 0) {
+        return true;
+      } else {
+        return false;
       }
+    }
   },
-  mounted(){
-    this.getContentLists()
+  mounted() {
+    this.getContentLists();
   },
   methods: {
     /**
      * 初始化内容列表
      */
-    getContentLists(){
-      this.$axios.get("/pmpheep/cms/notice",{
-        params:{
-          sessionId: this.$getUserData().sessionId,
-          pageNumber: this.conPageNumber,
-          pageSize: this.conPageSize,
-          title: this.title,
-          status: this.status,
-          categoryId:this.menuId
-        }
-      }).then((response) => {
-        let res = response.data
-        this.conDataTotal = res.data.total
-        if (res.code == '1') {
-         /*  for (let i=0; i< res.data.rows.length; i++) {
-            res.data.rows[i].gmtCreate = this.$commonFun.formatDate(res.data.rows[i].gmtCreate)
-          } */
-          this.tableData = res.data.rows;
-          // console.log(this.tableData)
-        }
-      }).catch(e=>{
-       // this.$message.error('内容列表请求失败，请重试');
-      })
+    getContentLists() {
+      this.$axios
+        .get("/pmpheep/cms/notice", {
+          params: {
+            sessionId: this.$getUserData().sessionId,
+            pageNumber: this.conPageNumber,
+            pageSize: this.conPageSize,
+            title: this.title,
+            status: this.status,
+            categoryId: this.menuId
+          }
+        })
+        .then(response => {
+          let res = response.data;
+          this.conDataTotal = res.data.total;
+          if (res.code == "1") {
+            for (let i = 0; i < res.data.rows.length; i++) {
+              res.data.rows[i].gmtCreate = this.$commonFun.formatDate(
+                res.data.rows[i].gmtCreate
+              );
+            }
+            this.tableData = res.data.rows;
+            // console.log(this.tableData)
+          }
+        })
+        .catch(e => {
+          // this.$message.error('内容列表请求失败，请重试');
+        });
     },
     /**
      * 删除
      */
-    deleted(id){
-      this.$axios.delete('/pmpheep/cms/notice/'+id+'/update').then(response => {
-        let res = response.data
-        if(res.code == '1') {
-          this.$message.success('删除成功');
-          this.getContentLists()
-        }else{
-          this.$message.error('删除失败');
-        }
-      }).catch(e=>{
-        this.$message.error('请求失败，请重试');
+    deleted(id) {
+      this.$confirm("确定删除该公告?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
+        .then(() => {
+          this.$axios
+            .delete("/pmpheep/cms/notice/" + id + "/update")
+            .then(response => {
+              let res = response.data;
+              if (res.code == "1") {
+                this.$message.success("删除成功");
+                this.getContentLists();
+              } else {
+                this.$message.error("删除失败");
+              }
+            })
+            .catch(e => {
+              this.$message.error("请求失败，请重试");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     /**
      * 内容页搜索
      */
-    search(){
-      this.getContentLists()
+    search() {
+      this.getContentLists();
     },
-      /* 内容table切换选项 */
-    contentSelectChange(val){
-       this.contentSelectData=val;
+    /* 内容table切换选项 */
+    contentSelectChange(val) {
+      this.contentSelectData = val;
     },
-      /* 评论table切换选项 */
-    commentSelectChange(val){
-        this.commentSelectData=val;
+    /* 评论table切换选项 */
+    commentSelectChange(val) {
+      this.commentSelectData = val;
     },
     handleChange(value) {
-      this.menuId = value[0]
+      this.menuId = value[0];
       // console.log(this.menuId)
     },
     /**
@@ -263,96 +294,97 @@ export default {
      * @param val
      */
     contentHandleSizeChange(val) {
-      this.conPageSize= val;
-      this.conPageNumber=1;
-      this.getContentLists()
+      this.conPageSize = val;
+      this.conPageNumber = 1;
+      this.getContentLists();
     },
     contentHandleCurrentChange(val) {
-      this.conPageNumber = val
-      this.getContentLists()
+      this.conPageNumber = val;
+      this.getContentLists();
     },
     /**
      * 评论页分页
      * @param val
      */
-    commentHandleSizeChange(val) {
-
+    commentHandleSizeChange(val) {},
+    commentHandleCurrentChange() {},
+    /* 查看详情 */
+    contentDetail(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            console.log(this.contentDetailData);
+          }
+        });
+      this.showContentDetail = true;
     },
-    commentHandleCurrentChange(){
-
-    },
-          /* 查看详情 */
-      contentDetail(obj){
-         this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              if(res.data.code==1){
-                this.contentDetailData=res.data.data;
-                this.contentDetailData.listObj=obj;
-                console.log(this.contentDetailData);
-              }
-          })
-           this.showContentDetail=true;
-      },
     /* 修改内容 */
-    editContent(obj){
-      this.$axios.get(this.editContentUrl+obj.id+'/detail',{
-          }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                 this.$router.push({name:'添加内容',params:res.data.data,query:{type:'edit',columnId:3}});
-              }
-          })
-    }      
-
+    editContent(obj) {
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.$router.push({
+              name: "添加内容",
+              params: res.data.data,
+              query: { type: "edit", columnId: 3 }
+            });
+          }
+        });
+    }
   }
-}
+};
 </script>
 <style scoped>
-  .content_exam .header_p {
-    overflow: hidden;
-  }
-  .content_exam .header_p .input {
-    width: 217px;
-    margin-right: 10px;
-  }
-  .content_exam .table_i {
-    margin-right: 10px;
-  }
-  .content_exam .grey_icon {
-    color: #999;
-    cursor: pointer;
-  }
-  .content_exam .active_green {
-    color: #13ce66;
-  }
-  .content_exam .active_orange {
-    color: rgb(254, 215, 79);
-  }
-  .content_exam .active_blue {
-    color: #20a0ff;
-  }
-  .content_exam .active_red {
-    color: #ff4949;
-  }
-  .content_exam .active_yellow {
-    color: #f7ba2a;
-  }
-  .content_exam .active_hide {
-    color: #58b7ff;
-  }
-  .content_exam .el-tabs--border-card {
-    border: 0;
-    box-shadow: none;
-  }
-  .previewTitle{
+.content_exam .header_p {
+  overflow: hidden;
+}
+.content_exam .header_p .input {
+  width: 217px;
+  margin-right: 10px;
+}
+.content_exam .table_i {
+  margin-right: 10px;
+}
+.content_exam .grey_icon {
+  color: #999;
+  cursor: pointer;
+}
+.content_exam .active_green {
+  color: #13ce66;
+}
+.content_exam .active_orange {
+  color: rgb(254, 215, 79);
+}
+.content_exam .active_blue {
+  color: #20a0ff;
+}
+.content_exam .active_red {
+  color: #ff4949;
+}
+.content_exam .active_yellow {
+  color: #f7ba2a;
+}
+.content_exam .active_hide {
+  color: #58b7ff;
+}
+.content_exam .el-tabs--border-card {
+  border: 0;
+  box-shadow: none;
+}
+.previewTitle {
   color: #14232e;
   font-size: 26px;
   font-weight: 500;
 }
-.content_exam .center_box{
-    float:left;
- margin-left:50%;
- transform: translateX(-50%);
+.content_exam .center_box {
+  float: left;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 
