@@ -1,26 +1,11 @@
 <template>
-  <div class="message-preview paddingT20 paddingR20 paddingL20">
-    <h5 class="previewTitle text-center">{{previewData.title}}</h5>
-    <p class="senderInfo text-center paddingT10">
-      <span class="marginR10">{{previewData.senderName}}</span>
-      <span>{{previewData.sendTime}}</span>
-    </p>
-    <div class="previewContent paddingB20" v-html="previewData.content"></div>
-    <!--附件-->
-    <el-row v-if="previewData.files.length">
-      <el-col :span="2" class="fontSize-16">
-        附件 ：
-      </el-col>
-      <el-col :span="22">
-        <div class="previewFile" title="预览界面不提供下载附件功能">
-          <a v-for="(iterm,index) in previewData.files" :href="iterm.attachment" :key="iterm.id">{{iterm.attachmentName}}</a>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="message-preview">
+    <message-detail :msgData="previewData" :fileLableKey="{name:'attachmentName',url:'attachment'}"></message-detail>
   </div>
 </template>
 
 <script>
+  import messageDetail from 'components/message-detail'
   export default{
     data(){
       return {
@@ -34,6 +19,9 @@
         }
       }
     },
+    components:{
+      messageDetail
+    },
     methods:{
       getMsgContent(){
         this.$axios.get('/pmpheep/messages/myMessageDetail',{params:{
@@ -46,16 +34,24 @@
                 this.msgIsWithdraw()
                 return;
               }
+              var tempObj = {
+                title:'',
+                content:'',
+                senderName:'',
+                sendTime:'',
+                files:[]
+              }
               res.data.messageAttachments.map(iterm=>{
                 iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1)
               });
-              this.previewData.title = res.data.title;
-              this.previewData.content = res.data.content;
-              this.previewData.senderName = res.data.senderName;
-              this.previewData.sendTime = this.$commonFun.formatDate(res.data.sendTime);
-              this.previewData.files = res.data.messageAttachments||[];
+              tempObj.title = res.data.title;
+              tempObj.content = res.data.content;
+              tempObj.senderName = res.data.senderName;
+              tempObj.sendTime = this.$commonFun.formatDate(res.data.sendTime);
+              tempObj.files = res.data.messageAttachments||[];
+              this.previewData = tempObj;
             }else{
-              this.$message.error('页面内容加载失败，请重试');
+              this.$message.error(res.msg.msgTrim());
             }
           })
           .catch(e=>{
@@ -100,8 +96,5 @@
     display: block;
     color: #337ab7;
     margin: 0 0 10px;
-  }
-  .fontSize-16{
-    font-size: 16px;
   }
 </style>

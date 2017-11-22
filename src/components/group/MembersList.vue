@@ -50,13 +50,13 @@
             <div class="searchBox-wrapper">
               <span>账号/姓名：</span>
               <div>
-                <el-input placeholder="请输入内容" v-model="writerParams.name" class="searchInputEle"></el-input>
+                <el-input placeholder="请输入内容" v-model.trim="writerParams.name" @keyup.enter.native="getWriterUserList" class="searchInputEle"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
               <span>所属院校：</span>
               <div>
-                <el-input placeholder="请输入内容" v-model="writerParams.orgName" class="searchInputEle"></el-input>
+                <el-input placeholder="请输入内容" v-model.trim="writerParams.orgName" @keyup.enter.native="getWriterUserList" class="searchInputEle"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">

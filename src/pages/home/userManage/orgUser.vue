@@ -146,7 +146,7 @@
             width="100"
             align="center">
             <template scope="scope">
-              {{scope.row.isDisabled?'禁用':'启用'}}
+              {{scope.row.disabled?'禁用':'启用'}}
             </template>
           </el-table-column>
           <el-table-column
@@ -550,7 +550,7 @@ export default {
         position:"",
         title:"",
         username:"",
-        disabled: false
+        isDisabled: false
       } // 详情数据
     };
   },
@@ -616,7 +616,10 @@ export default {
         this.form[key] = this.tableData[index][key];
       }
       // console.log(this.form.orgTypeId)
-      this.form.disabled = this.tableData[index].isDisabled;
+      delete this.form.disabled;
+      this.form.orgTypeId+='';
+      this.form.areaId+='';
+      this.form.isDisabled = this.tableData[index].disabled;
       this.dialogVisible = true;
     },
     /**
@@ -683,6 +686,7 @@ export default {
               iterm.id = iterm.id+'';
             });
             this.area = data;
+            // console.log(this.area)
           } else {
             this.$message.error(res.msg.msgTrim());
           }

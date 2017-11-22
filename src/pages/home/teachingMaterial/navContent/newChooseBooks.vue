@@ -257,26 +257,6 @@
                 <!--</el-table>-->
               </el-col>
             </el-form-item>
-            <el-form-item label="分配项目编辑权限:">
-              <el-select v-model="value5" multiple placeholder="请选择，权限不能为空" class="width800">
-                <el-option
-                  v-for="item in rolesList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="分配策划编辑权限:">
-              <el-select v-model="value6" multiple placeholder="请选择，权限不能为空" class="width800">
-                <el-option
-                  v-for="item in rolesList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
 
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
@@ -428,13 +408,15 @@
       </el-dialog>
 
       <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
-        <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
+          <user-pmph select :radio="!Multichoice">
+            <el-button  type="primary" @click="$message.info('增加按钮方法没有实现')">增加</el-button>
+          </user-pmph>
       </el-dialog>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import Departments from 'components/departments'
+  import userPmph from 'components/user-pmph'
   export default {
     data() {
       return {
@@ -446,7 +428,7 @@
         dialogVisiable: false,
         chooseVisiable: false, // 选择弹窗
         chooseTitle: '', // 选择弹出窗的title
-        Multichoice:'', // 是否可以多选，传递给Departments子组件
+        Multichoice:true, // 是否可以多选，传递给Departments子组件
         classify:'', // 分类
         contactData:[],// 联系人
         projectDirectorData:[], // 项目主任
@@ -461,30 +443,6 @@
           round: 3,
           classify: ''
         },
-        value5:[0,1,2,3,5],
-        value6:[0,1,2,5],
-        rolesList:[{
-          id:0,
-          name:'分配策划编辑'
-        },{
-          id:1,
-          name:'遴选主编副主编'
-        },{
-          id:2,
-          name:'遴选编委'
-        },{
-          id:3,
-          name:'名单确认'
-        },{
-          id:4,
-          name:'最终结果公布'
-        },{
-          id:5,
-          name:'创建小组'
-        },{
-          id:6,
-          name:'强制结束整套教材'
-        }],
         fileList:[],
         tableData:[
           {
@@ -897,7 +855,7 @@
       chooseProjectDirector() {
         this.chooseVisiable = true
         this.chooseTitle = '项目主任设置'
-        this.Multichoice = false
+        this.Multichoice = false;
         this.classify = 'director'
       },
       /**
@@ -906,7 +864,7 @@
       chooseProjectEditor() {
         this.chooseVisiable = true
         this.chooseTitle = '项目编辑设置'
-        this.Multichoice = true
+        this.Multichoice = true;
         this.classify = 'editor'
       },
       /**
@@ -946,7 +904,7 @@
       }
     },
     components:{
-      Departments
+      userPmph
     }
   }
 </script>

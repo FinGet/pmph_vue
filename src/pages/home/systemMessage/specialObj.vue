@@ -94,15 +94,15 @@
       <el-tab-pane label="机构用户" name="three">
         <div class="tabsContainer">
           <div class="searchBox-wrapper">
-            <span>学校名称/账号：</span>
+            <span>姓名/账号：</span>
             <div>
               <el-input placeholder="请输入" v-model.trim="orgUserParams.name" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper">
-            <span>管理员姓名：</span>
+            <span>机构名称：</span>
             <div>
-              <el-input placeholder="请输入" v-model.trim="orgUserParams.realname" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
+              <el-input placeholder="请输入" v-model.trim="orgUserParams.orgName" @keyup.enter.native="getOrgUserData" class="searchInputEle"></el-input>
             </div>
           </div>
           <div class="searchBtn-wrapper">
@@ -122,11 +122,11 @@
               </el-table-column>
               <el-table-column
                 prop="orgName"
-                label="学校名称">
+                label="机构名称">
               </el-table-column>
               <el-table-column
                 prop="username"
-                label="机构代码">
+                label="机构账号">
               </el-table-column>
               <el-table-column
                 prop="realname"
@@ -174,7 +174,7 @@ export default {
       writerPageTotal:0,
       orgUserParams:{
         name:'',
-        realname:'',
+        orgName:'',
         pageSize:10,
         pageNumber:1
       },
