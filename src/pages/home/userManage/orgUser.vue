@@ -825,13 +825,6 @@ export default {
             this.dataTotal = res.data.total;
             console.log(res);
             this.schoolTableData = res.data.rows;
-            if (this.dataTotal == 0) {
-              this.$message({
-                showClose: true,
-                message: "没有数据!",
-                type: "warning"
-              });
-            }
           }
         })
         .catch(error => {
