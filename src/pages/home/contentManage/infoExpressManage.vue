@@ -11,7 +11,8 @@
             @change="handleChange">
           </el-cascader> -->
           <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title"></el-input>
-          <!-- <el-select v-model="contentParams.status" style="width:186px" class="input" placeholder="选择筛选状态">
+          <span>发布状态：</span>
+          <el-select v-model="contentParams.isPublished" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -19,7 +20,7 @@
              :value="item.value"
              >
          </el-option>
-         </el-select> -->
+         </el-select>
          <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
@@ -183,7 +184,7 @@ export default {
       contentParams: {
         categoryId: "",
         title: "",
-        status: "",
+        isPublished: "",
         pageSize: 10,
         pageNumber: 1
       },
@@ -194,18 +195,14 @@ export default {
         label: "categoryName"
       },
       selectOp: [
-        {
-          value: 2,
-          label: "是否置顶"
-        },
-        {
-          value: 3,
-          label: "是否热门"
-        },
-        {
-          value: 4,
-          label: "是否推荐"
-        }
+      {
+        value:true,
+        label:'已发布'
+      },
+      {
+        value:false,
+        label:'未发布'
+      }
       ],
       tableData: [
         {
