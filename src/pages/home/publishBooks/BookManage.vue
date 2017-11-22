@@ -383,7 +383,6 @@
                 path=iterm.path;
             }
         })
-        console.log(path);
         this.$axios.get('/pmpheep/books/list',{params:{
           name:this.searchForm.name,
           path:path,
@@ -400,6 +399,7 @@
               this.totalNum = res.data.total;
               res.data.rows.map(iterm=>{
                   iterm.path = iterm.path + '-' + iterm.type;
+                  iterm.isbn = iterm.isbn?iterm.isbn.replace('ISBN ',''):'';
               });
               this.tableData = res.data.rows;
             }
