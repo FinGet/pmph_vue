@@ -39,23 +39,6 @@
           </el-upload>
         </div>
       </el-form-item>
-<!--       <el-form-item label="是否发布：">
-          <el-radio-group v-model="formData.isPublished">
-            <el-radio :label="false">立即发布</el-radio>
-            <el-radio :label="true">定时发布</el-radio>
-          </el-radio-group>
-          <el-form-item v-if="formData.isPublished" style="display:inline-block">
-              <el-date-picker
-               v-model="formData.scheduledTime"
-                type="datetime"
-                placeholder="选择定时发布时间"
-                style="margin:0 15px 0 25px;"
-                @change="scheduledDateChange"
-                :picker-options="pickerOptions">
-         </el-date-picker>
-         <el-checkbox v-model="formData.isHide">隐藏</el-checkbox>
-          </el-form-item>
-      </el-form-item> -->
     </el-form>
     <!-- 预览对话框 -->
         <el-dialog
@@ -82,8 +65,10 @@
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
-          <el-button type="primary"@click="ContentSubmit(0)">暂存</el-button>
-          <el-button type="primary" @click="ContentSubmit(1)">发布</el-button>
+          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">通过</el-button>
+          <el-button type="danger" v-if="formData.categoryId==1" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+          <el-button type="primary"@click="ContentSubmit(0)" v-if="formData.categoryId!=1">暂存</el-button>
+          <el-button type="primary" @click="ContentSubmit(1)" v-if="formData.categoryId!=1">发布</el-button>
     </div>
   </div>
 </template>
@@ -99,6 +84,7 @@ export default {
       editContentUrl:'/pmpheep/cms/content/update',    //修改文章
       editLettersUrl:'/pmpheep/cms/letters/update',  //修改信息快报
       editNoticeUrl:'/pmpheep/cms/notice/update',  //修改公告
+      examineUrl: "/pmpheep/cms/content/check", //审核内容
       formData: {
         title: "",
         categoryId: "",
@@ -286,6 +272,42 @@ export default {
       console.log(this.formData);
      this.preventContent=this.$refs.editor.getContent();
      this.showPreventDialog=true;
+    },
+    /* 审核 */
+    examineContent(obj,status){
+      console.log(obj);
+      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios
+            .put(
+              this.examineUrl,
+              this.$commonFun.initPostData({
+                id: obj.id,
+                authStatus: status,
+                sessionId: this.$getUserData().sessionId
+              })
+            )
+            .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+                this.$message.success("审核成功");
+                this.showContentDetail = false;
+                this.$router.push({name:'文章管理'})
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消操作"
+          });
+        });
     },
     /* 栏目选择改变 */
     handleChange(value) {

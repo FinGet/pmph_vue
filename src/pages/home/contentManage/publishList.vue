@@ -85,7 +85,7 @@
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -130,7 +130,7 @@
             <div class="center_box">
             <el-button type="primary" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             <el-button type="danger" v-if="contentDetailData.listObj.authStatus==0" @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
-            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
@@ -388,7 +388,7 @@ export default {
     /* 审核内容 */
     examineContent(obj, status) {
       console.log(obj);
-      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
