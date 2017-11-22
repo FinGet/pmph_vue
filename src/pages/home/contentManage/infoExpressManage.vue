@@ -62,7 +62,7 @@
                     {{$commonFun.formatDate(scope.row.authDate)}}
                 </template>
             </el-table-column> 
-            <el-table-column
+            <!-- <el-table-column
                 label="被查看次数"
                 width="120"
                 >
@@ -71,7 +71,7 @@
                         <i class="fa fa-book table_i">{{scope.row.clicks}}</i>
                     </el-tooltip>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
 
             <el-table-column
                 label="操作"
