@@ -2,7 +2,7 @@
   <div class="presview-popup">
     <!--标题-->
     <div class="presview-popup-content text-center">
-      <h5 class="previewTitle">{{presviewData.title}}</h5>
+      <h5 class="previewTitle">{{previewData.title}}</h5>
 
       <p class="">
         <span v-if="previewData.endTime">结束时间：{{previewData.endTime}}</span>
@@ -15,7 +15,7 @@
         内容：
       </div>
       <div class="presview-popup-content-min margin-none">
-        <div class="previewConten" v-html="presviewData.content"></div>
+        <div class="previewConten" v-html="previewData.content"></div>
       </div>
     </div>
 
@@ -25,7 +25,7 @@
         邮寄地址：
       </div>
       <div class="presview-popup-content-min margin-none">
-        <div class="previewConten">{{presviewData.address}}</div>
+        <div class="previewConten">{{previewData.address}}</div>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
       </div>
       <div class="presview-popup-content-min margin-none">
         <div class="previewConten">
-          <p v-for="(iterm,index) in presviewData.linkmanList" :key="index">{{iterm}}</p>
+          <p v-for="(iterm,index) in previewData.linkmanList" :key="index">{{iterm}}</p>
         </div>
       </div>
     </div>
@@ -47,22 +47,22 @@
         邮寄地址：
       </div>
       <div class="presview-popup-content-min margin-none">
-        <div class="previewConten">{{presviewData.address}}</div>
+        <div class="previewConten">{{previewData.address}}</div>
       </div>
     </div>
 
 
     <!--附件-->
-    <div class="presview-popup-content" v-if="presviewData.files.length">
+    <div class="presview-popup-content" v-if="previewData.files.length">
       <div class="presview-popup-content-title justify-align">
         附件：<span></span>
       </div>
       <div class="presview-popup-content-min">
         <div class="previewFile" title="预览界面不提供下载附件功能" v-if="readOnly">
-          <span v-for="(iterm,index) in presviewData.files">{{iterm[fileLableKey.name]}}</span>
+          <span v-for="(iterm,index) in previewData.files">{{iterm[fileLableKey.name]}}</span>
         </div>
         <div class="previewFile" v-else>
-          <a v-for="(iterm,index) in presviewData.files" :href="iterm[fileLableKey.url]" :key="iterm.id">{{iterm[fileLableKey.name]}}</a>
+          <a v-for="(iterm,index) in previewData.files" :href="iterm[fileLableKey.url]" :key="iterm.id">{{iterm[fileLableKey.name]}}</a>
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@
         type: Boolean,
         required: false
       },
-      presviewData:{//消息内容
+      previewData:{//消息内容
         type:Object,
         default:function () {
           return {
