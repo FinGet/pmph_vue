@@ -146,7 +146,7 @@
        */
       cellClick(row){
         var materialId = row.id
-        this.$axios.get('/pmpheep/message/send_object/'+materialId+'/textBook').then(response => {
+        this.$axios.get('/pmpheep/messages/message/send_object/'+materialId+'/textBook').then(response => {
           let res = response.data
           if (res.code == '1') {
             this.booksData = res.data
