@@ -100,7 +100,7 @@
                                 <i class="el-icon-caret-bottom el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="messagestate">消息状态</el-dropdown-item>
+                                <el-dropdown-item :command="{'router':'messagestate','data':scope.row}">消息状态</el-dropdown-item>
                                 <el-dropdown-item command="setBookList">设置书目录</el-dropdown-item>
                                 <el-dropdown-item command="resultCount">结果统计</el-dropdown-item>
                                 <el-dropdown-item command="set">设置选题号</el-dropdown-item>
@@ -330,7 +330,8 @@ export default {
         },
         //下拉点击
         handleClickDrop(command) {
-            switch (command){
+            console.log(arguments)
+            switch (command.router){
               case 'set':
                 this.$router.push({name:'设置选题号'});
                 break;
@@ -338,7 +339,7 @@ export default {
                 this.$router.push({ name: '设置书目录' });
                 break;
               case 'messagestate':
-                this.$router.push({ name: '消息状态' });
+                this.$router.push({ name: '消息状态', query:{msgId: command.data.bookid}});
                 break;
             }
         },
