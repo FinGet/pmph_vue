@@ -10,7 +10,7 @@
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.id"
-                :label="item.name"
+                :label="item.textbookName"
                 :value="item.id">
               </el-option>
             </el-select>
@@ -122,9 +122,9 @@
             <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择" v-if="powerSearchValue===1">
               <el-option
                 v-for="item in booksChooseOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.id"
+                :label="item.textbookName"
+                :value="item.id">
               </el-option>
             </el-select>
             <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
@@ -244,6 +244,7 @@
     data() {
       return {
         api_declaration_list:'/pmpheep/declaration/list/declaration',
+        api_book_list:'/pmpheep/textBook/list',
         powerSearch:true,
         powerSearchList:[
           {
@@ -345,7 +346,7 @@
           pageNumber:this.searchParams.pageNumber,
           pageSize:this.searchParams.pageSize,
           materialId:this.searchParams.materialId,
-          textBookids:this.searchParams.textBookids.join(','),
+          textBookids:this.searchParams.textBookids,
           realname:this.searchParams.realname,
           position:this.searchParams.position,
           title:this.searchParams.title,
@@ -370,6 +371,25 @@
           })
       },
       /**
+       * 获取当前教材下所有书籍
+       * @param val
+       */
+      getBookList(){
+        this.$axios.get(this.api_book_list,{params:{
+          materialId:this.searchParams.materialId
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.booksChooseOptions = res.data;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+
+      /**
        * 分页每页显示条数发生改变
        * @param val
        */
@@ -386,6 +406,7 @@
         this.$router.push({name:'通知列表'});
       }
       this.getTableData();
+      this.getBookList();
     },
   }
 </script>
