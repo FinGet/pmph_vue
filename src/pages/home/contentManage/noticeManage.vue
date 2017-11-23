@@ -9,7 +9,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入公告标题" v-model.trim="title" class="input"></el-input>
+          <span>标题：</span>
+          <el-input placeholder="输入公告标题" v-model.trim="title" class="input" @keyup.enter.native="search"></el-input>
           <span>发布状态：</span>
           <el-select v-model="status" style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -80,7 +81,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -121,7 +122,7 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
-            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
@@ -155,10 +156,10 @@ export default {
       commentSelectData: [],
       selectValue: "",
       conPageNumber: 1,
-      conPageSize: 20,
+      conPageSize: 30,
       menuId: 3,
       comPageNumber: 1,
-      comPageSize: 20,
+      comPageSize: 30,
       title: "",
       status: "",
       conDataTotal: 0,

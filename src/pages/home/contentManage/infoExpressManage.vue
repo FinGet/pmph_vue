@@ -10,7 +10,8 @@
             placeholder="请选择栏目"
             @change="handleChange">
           </el-cascader> -->
-          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title"></el-input>
+          <span>标题：</span>
+          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title" @keyup.enter.native="getOutContentList"></el-input>
           <span>发布状态：</span>
           <el-select v-model="contentParams.isPublished" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -78,7 +79,7 @@
                 width="120"
                 >
                 <template scope="scope">
-                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -119,8 +120,8 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>  
-            <el-button type="primary" @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
@@ -185,7 +186,7 @@ export default {
         categoryId: "",
         title: "",
         isPublished: "",
-        pageSize: 10,
+        pageSize: 30,
         pageNumber: 1
       },
       totalPage: 10,
@@ -272,8 +273,25 @@ export default {
     },
     /* 发布 */
     publishSubmit(){
-      this.contentDetailData.listObj.isPublished=true;
-      this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(this.contentDetailData.listObj)).then((res)=>{
+      /* 接口字段复制 */
+         var editData=this.contentDetailData;
+         var obj={};
+          for(var item in editData.cmsContent){
+            if(item.indexOf('gmt')!=0){
+                if(typeof editData.cmsContent[item]!='boolean'){
+                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
+            }else{
+                obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
+            }
+            }
+            
+          }
+         obj.categoryId=parseInt(obj.categoryId);
+          obj.content=editData.content.content;
+         obj.attachment=[];
+         obj.file=[];
+         obj.scheduledTime='';
+      this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
                    this.$message.success("发布成功");
