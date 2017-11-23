@@ -230,7 +230,7 @@
           <el-button @click="dialogVisible=false">取 消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
-      
+
       </el-dialog>
       <!-- 查看详情 -->
       <el-dialog
@@ -294,7 +294,7 @@
             <div class="info">{{detailData.note}}</div>
           </div>
         </div>
-      </el-dialog> 
+      </el-dialog>
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -756,7 +756,7 @@ export default {
       var self = this;
       this.form.orgId -= 0
       this.$axios({
-        method: "post",
+        method: "put",
         url: "/pmpheep/users/org/updateUser",
         data: this.$initPostData(this.form)
       })

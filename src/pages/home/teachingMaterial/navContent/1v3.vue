@@ -93,7 +93,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="遴选主编/副主编" width="230">
+          label="遴选主编/副主编" width="170">
           <template scope="scope">
             <span v-if="scope.row.state==1">李雪华，陈朝阳</span>
             <span v-else-if="scope.row.state==2">刘德华，黎明等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
@@ -111,7 +111,7 @@
         </el-table-column>
 
         <el-table-column
-          label="遴选编委" width="230">
+          label="遴选编委" width="170">
           <template scope="scope">
             <span v-if="scope.row.state==1">王家乐，王家梁</span>
             <span v-else-if="scope.row.state==2">王家乐，王家梁{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>

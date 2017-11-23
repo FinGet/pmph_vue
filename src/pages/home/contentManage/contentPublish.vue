@@ -399,11 +399,6 @@ export default {
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);
-        /*   this.formData.categoryId=this.formData.categoryId+'';
-          this.defaultCategoryId=editData.cmsContent.path.split('-');
-         for(var i in  this.defaultCategoryId){
-               this.defaultCategoryId[i]=parseInt(this.defaultCategoryId[i]);
-         } */
           /* 填充默认内容 */
           var _this=this;
           setTimeout(function() {
