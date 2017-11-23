@@ -145,6 +145,15 @@
               <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)" :disabled="!scope.row.edit||$route.query.type=='chief'"></el-checkbox>
             </template>
           </el-table-column>
+
+          <el-table-column
+            label="是否数字编委"
+            width="120"
+            align="center">
+            <template scope="scope">
+              <el-checkbox v-model="scope.row.isNumberMember"></el-checkbox>
+            </template>
+          </el-table-column>
         </el-table>
 
       </div>

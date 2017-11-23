@@ -146,7 +146,7 @@
             width="100"
             align="center">
             <template scope="scope">
-              {{scope.row.disabled?'禁用':'启用'}}
+              {{scope.row.isDisabled?'禁用':'启用'}}
             </template>
           </el-table-column>
           <el-table-column
@@ -230,7 +230,7 @@
           <el-button @click="dialogVisible=false">取 消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
-      
+
       </el-dialog>
       <!-- 查看详情 -->
       <el-dialog
@@ -285,7 +285,7 @@
           </div>
           <div class="detail-info-item">
             <div class="title">启用标识：<span></span></div>
-            <div class="info">{{detailData.disabled?'启用':'禁用'}}</div>
+            <div class="info">{{detailData.isDisabled?'禁用':'启用'}}</div>
           </div>
         </div>
         <div class="detail-info-box">
@@ -294,7 +294,7 @@
             <div class="info">{{detailData.note}}</div>
           </div>
         </div>
-      </el-dialog> 
+      </el-dialog>
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员">
@@ -473,7 +473,7 @@ export default {
         // orgTypeName:"",
         email: "",
         areaId:'',
-        disabled: true,
+        isDisabled: true,
         note: ""
       },
       // 表单校验规则
@@ -616,10 +616,11 @@ export default {
         this.form[key] = this.tableData[index][key];
       }
       // console.log(this.form.orgTypeId)
-      delete this.form.disabled;
+      // delete this.form.disabled;
       this.form.orgTypeId+='';
       this.form.areaId+='';
-      this.form.isDisabled = this.tableData[index].disabled;
+      // this.form.isDisabled = this.tableData[index].disabled;
+      // console.log(this.form.isDisabled)
       this.dialogVisible = true;
     },
     /**
@@ -755,7 +756,7 @@ export default {
       var self = this;
       this.form.orgId -= 0
       this.$axios({
-        method: "post",
+        method: "put",
         url: "/pmpheep/users/org/updateUser",
         data: this.$initPostData(this.form)
       })
@@ -966,7 +967,7 @@ export default {
         position:"",
         title:"",
         username:"",
-        disabled: false
+        isDisabled: false
       }
     }
   },
