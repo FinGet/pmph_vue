@@ -28,8 +28,7 @@
         type="file"
         ref="input"
         name="file"
-        on-change={this.handleChange}
-        accept={this.accept}>
+        on-change={this.handleChange}>
       </input>
     </div>
     </form>
@@ -39,20 +38,18 @@
 <script>
 	export default {
     props: {
-      type: String,
       data: {},
       action: {//必须参数
         type: String,
         required: true
       },
-      accept: String,
     },
 		data() {
 			return {
         file: null,
         submitting: false,
         frameName:'',
-      }
+    }
 		},
     methods:{
       /**
@@ -76,7 +73,9 @@
        * @param file
        */
       uploadFiles(file) {
-        this.$axios.post()
+        this.$axios.post(this.action,this.$initPostData({
+
+        }))
       },
     },
 	}
@@ -93,4 +92,7 @@
   color: #8391a5;
   margin-top: 7px;
 }
+  .upload-input{
+    display: none;
+  }
 </style>

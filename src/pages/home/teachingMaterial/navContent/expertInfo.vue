@@ -36,6 +36,7 @@
                   <el-radio :label="'主编'">主编</el-radio>
                   <el-radio :label="'副主编'">副主编</el-radio>
                   <el-radio :label="'编委'">编委</el-radio>
+                  <el-radio :label="'数字编委'">数字编委</el-radio>
                 </el-radio-group>
                 <div class="info-iterm-text widthAuto marginL10">
                   <div>教学大纲：<span></span></div>
