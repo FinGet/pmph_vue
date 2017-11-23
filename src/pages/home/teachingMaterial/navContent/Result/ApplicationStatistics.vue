@@ -100,6 +100,12 @@
                 align="center"
                 width="110">
               </el-table-column>
+              <el-table-column
+                prop="p6"
+                label="数字编委当选数"
+                align="center"
+                width="136">
+              </el-table-column>
             </el-table>
           </div>
           <!--分页-->
@@ -212,9 +218,9 @@
               </el-table-column>
               <el-table-column
                 prop="p6"
-                label="编委当选数"
+                label="数字编委当选数"
                 align="center"
-                width="110">
+                width="136">
               </el-table-column>
             </el-table>
           </div>

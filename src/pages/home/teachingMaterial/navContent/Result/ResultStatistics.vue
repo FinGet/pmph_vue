@@ -46,6 +46,11 @@
                 label="编委名单"
                 align="center">
               </el-table-column>
+              <el-table-column
+                prop="p3"
+                label="数字编委名单"
+                align="center">
+              </el-table-column>
             </el-table>
           </div>
           <!--分页-->
@@ -104,6 +109,11 @@
               <el-table-column
                 prop="p3"
                 label="编委名单"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="p3"
+                label="数字编委名单"
                 align="center">
               </el-table-column>
             </el-table>
