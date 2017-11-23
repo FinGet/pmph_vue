@@ -41,14 +41,14 @@
         <div class="searchBox-wrapper">
           <div class="searchName">工作单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--申报单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--申报职务搜索-->
@@ -178,83 +178,49 @@
         style="width: 100%">
         <el-table-column
           label="姓名"
-          width="100"
+          width="120"
         >
           <template scope="scope">
-            <router-link :to="{name:'专家信息',query: { userId: scope.row.code }}" class="table-link">{{scope.row.name}}</router-link>
+            <router-link :to="{name:'专家信息',query: { username: scope.row.username }}" class="table-link">{{scope.row.realname}}</router-link>
           </template>
         </el-table-column>
         <el-table-column
           label="账号"
-          width="120">
+          width="130">
           <template scope="scope">
-            {{scope.row.code}}
+            {{scope.row.username}}
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="申报单位/工作单位"
-          width="160">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
-            <el-tooltip class="item" effect="dark" content="申报单位" placement="top">
-              <p>
-                <i class="fa fa-university"></i>
-                {{scope.row.applicationOrganization}}
-              </p>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
-              <p>
-                <i class="fa fa-briefcase"></i>
-                {{scope.row.workOrganization}}
-              </p>
-            </el-tooltip>
+            <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
+            <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column
-          label="职务/职称"
-        >
+        <el-table-column label="职务/职称" min-width="190" >
           <template scope="scope">
-            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
-              <p>
-                <i class="fa fa-tags"></i>
-                {{scope.row.position}}
-              </p>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="工作单位" placement="top">
-              <p>
-                <i class="fa fa-graduation-cap"></i>
-                {{scope.row.professionalTitle}}
-              </p>
-            </el-tooltip>
+            <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
+            <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column
-          label="联系方式"
-        >
+        <el-table-column label="联系方式" width="220">
           <template scope="scope">
-            <p>
-              <i class="fa fa-phone fa-fw" v-if="scope.row.phone"></i>
-              {{scope.row.phone}}
-            </p>
-            <p>
-              <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
-              {{scope.row.email}}
-            </p>
+            <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
+            <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="chooseBookJob"
-          label="所选书籍与职务">
+        <el-table-column prop="chooseBooksAndPostions" label="所选书籍与职务">
         </el-table-column>
-        <el-table-column
-          prop="schoolCheck"
-          label="学校审核"
-        >
+        <el-table-column label="学校审核">
+          <template scope="scope">
+            <p>{{scope.row.onlineProgress==1?'待审核':'已审核'}}</p>
+          </template>
         </el-table-column>
-        <el-table-column
-          prop="pressCheck"
-          label="出版社审核"
-        >
+        <el-table-column label="出版社审核">
+          <template scope="scope">
+            <p>{{scope.row.offlineProgress==0?'未收到纸质表':'已收到纸质表'}}</p>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -263,7 +229,7 @@
         v-if="totalNum>searchParams.pageSize"
         @size-change="handleSizeChange"
         @current-change="getTableData"
-        :current-page="searchParams.pageNumber"
+        :current-page.sync="searchParams.pageNumber"
         :page-sizes="[10, 20, 30, 50]"
         :page-size="searchParams.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -407,13 +373,18 @@
        * 分页每页显示条数发生改变
        * @param val
        */
-      paginationSizeChange(val){
+      handleSizeChange(val){
         this.searchParams.pageSize=val;
         this.searchParams.pageNumber=1;
         this.getTableData();
       },
     },
     created(){
+      this.searchParams.materialId = this.$route.params.materialId;
+      //如果没有教材id则跳转到通知列表
+      if(!this.searchParams.materialId){
+        this.$router.push({name:'通知列表'});
+      }
       this.getTableData();
     },
   }

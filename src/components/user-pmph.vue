@@ -77,7 +77,7 @@ methods:
             <el-table-column
               label="角色名称">
               <template scope="scope">
-                <el-tag class="marginTag" v-for="(item,index) in scope.row.pmphRoles" :key="index" type="primary">{{item.roleName}}</el-tag>
+                <el-tag class="marginTag" v-for="(item,index) in scope.row.pmphRoles" :key="index" type="primary">{{item?item.roleName:''}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column
