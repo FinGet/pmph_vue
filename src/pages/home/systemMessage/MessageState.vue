@@ -144,7 +144,8 @@
        * 返回上一级
        */
       back() {
-        this.$router.push('messagelist')
+        // this.$router.push(this.backRouter)
+        this.$router.go(-1)
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;

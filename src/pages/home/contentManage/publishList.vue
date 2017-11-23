@@ -3,10 +3,10 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-         <span>作者：</span>
-          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername"></el-input>
           <span>文章标题：</span> 
-          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle"></el-input>
+          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="getPublicList()"></el-input>
+         <span>作者：</span>
+          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="getPublicList()"></el-input>
           <span>审核状态：</span>
           <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -131,8 +131,8 @@
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
-            <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
+            <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
         </div>
     </el-dialog>
@@ -147,7 +147,7 @@
             placeholder="请选择栏目"
             @change="handleChange"> -->
           </el-cascader>
-          <span style="margin-left:10px;">文章标题：</span>
+          <span>文章标题：</span>
           <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
           <span style="margin-left:10px;">姓名/账号：</span>
           <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
@@ -231,7 +231,7 @@
         @size-change="commentHandleSizeChange"
         @current-change="commentHandleCurrentChange"
         :current-page="comPageNumber"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10, 20, 30, 40,50]"
         :page-size="comPageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="comDataTotal">
@@ -328,7 +328,7 @@ export default {
       currentPage: 1,
       searchTitle: "",
       pageTotal: 100,
-      pageSize: 10,
+      pageSize: 30,
       /* 评论*/
       options: [],
       selectedOptions: [],
