@@ -6,10 +6,7 @@
 <template>
   <div>
     <!--卡槽-->
-    <div
-      class="upload-slot"
-      on-click="handleClick"
-    >
+    <div class="upload-slot" on-click="handleClick">
       <slot></slot>
     </div>
 
@@ -31,7 +28,6 @@
         on-change={this.handleChange}>
       </input>
     </div>
-    </form>
 	</div>
 </template>
 
@@ -92,7 +88,8 @@
   color: #8391a5;
   margin-top: 7px;
 }
-  .upload-input{
-    display: none;
-  }
+.upload-input{
+  display: none;
+}
+
 </style>

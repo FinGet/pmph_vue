@@ -9,82 +9,76 @@
             </el-form-item>
             <el-form-item label="教材分类：">
                 <span class="grey_span">{{formData.releaseText}}</span>
-                <!-- <el-form-item>
-                    <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
-                    <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
-                    <el-button type="text" class="classify_button">删除</el-button>
-                </el-form-item> -->
-                <el-form-item>
-                    <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
-                </el-form-item>
-                <el-form-item>
-                    <el-form-item>
-                        <span class="grey_span" style="float:left;">请按照模板格式上传（
-                            <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
-                        <el-upload class="upload" action="" :file-list="fileList">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                        </el-upload>
-                    </el-form-item>
-                </el-form-item>
+                <p><span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span></p>
+                <div>
+                  <span class="grey_span" style="float:left;">
+                    请按照模板格式上传（
+                    <el-button type="text" class="grey_button">模板下载.xlsx</el-button>
+                    ）：
+                  </span>
+                  <el-upload class="upload" action="" :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                  </el-upload>
+                </div>
             </el-form-item>
             <el-form-item label="书目录：">
-                <table class="extend_list">
-                    <tr>
-                        <td>书序</td>
-                        <td>书名</td>
-                        <td>版次</td>
-                        <td>
-                            <el-button type="text" @click="addExtendItem" class="add_button">新增</el-button>
-                        </td>
-                    </tr>
-                    <tr v-for="(item,index) in extendListData" :key="index">
-                        <td>
-                            <!-- <span v-if="!item.orderNumVisible">{{item.orderNum}}
-                                            <i class="el-icon-edit" @click="showInput(index,'input'+index+'_1','orderNumVisible')"></i>
-                                        </span> -->
-                            <el-input :placeholder="item.orderNum" :ref="'input'+index+'_1'" style="width:50px;"></el-input>
-                        </td>
-                        <td>
-                            <!--  <span v-if="!item.bookNameVisible">{{item.bookName}} -->
-                            <!--  <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_2','bookNameVisible')"></i> -->
-                            <!--</span>-->
-                            <el-input :placeholder="item.bookName" :ref="'input'+index+'_2'" style="width:99%;"></el-input>
-                        </td>
-                        <td>
-                            <!--  <span v-if="!item.editionVisible">{{item.edition}} -->
-                            <!-- <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_3','editionVisible')"></i> -->
-                            <!--</span>-->
-                            <el-input :placeholder="item.edition" :ref="'input'+index+'_3'" style="width:30%;"></el-input>
-                        </td>
-                        <td>
-                            <el-button type="text" @click="deleteExtendItem(index)" class="delete_button">删除</el-button>
-                        </td>
-                    </tr>
-                    <!--  <tr>
-                                             <td>
-                                                 1<i class="el-icon-edit"></i>
-                                                 <el-input style="width:100px;" size="mini"></el-input>
-                                                </td>
-                                             <td>请填写书名 <i class="el-icon-edit"></i></td>
-                                             <td>请填写版次<i class="el-icon-edit"></i></td>
-                                             <td><el-button type="text">删除</el-button></td>
-                                         </tr> -->
-                </table>
+              <!--表格-->
+              <div class="table-wrapper book-list-catalogue">
+                <div class="pull-right">
+                  <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
+                  <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
+                  <el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>
+                </div>
+                <el-table
+                  ref="multipleTable"
+                  border
+                  stripe
+                  :data="extendListData"
+                  tooltip-effect="dark"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="orderNum"
+                    label="书序"
+                    width="120">
+                    <template scope="scope">
+                      <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model.number="scope.row.sort"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="bookName"
+                    label="书籍名称"
+                    width="400">
+                    <template scope="scope">
+                      <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model.trim="scope.row.textbookName"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="edition"
+                    label="版次"
+                    width="120">
+                    <template scope="scope">
+                      <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model.number="scope.row.textbookRound"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="操作">
+                    <template scope="scope">
+                      <el-button type="text" @click="insertRow(scope.$index)">插入行</el-button>
+                      <el-button type="text" @click="deleteExtendItem(scope.$index)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+
+                <div class="out_bottom_box marginT60">
+                  <div class="bottom_box">
+                    <el-button type="primary" class="bottom_button">暂存</el-button>
+                    <el-button type="primary" class="bottom_button" @click="$router.push({name:'教材申报选择学校'})" >保存，下一步</el-button>
+                    <el-checkbox class="marginL20" v-model="formData.onlySchool">仅选中学校可见</el-checkbox>
+                  </div>
+                </div>
+              </div>
             </el-form-item>
         </el-form>
-
-        <div class="out_bottom_box">
-            <div class="bottom_box">
-                <el-button type="primary" class="bottom_button">暂存</el-button>
-                <el-button type="primary" class="bottom_button" @click="$router.push({name:'教材申报选择学校'})" >保存，下一步</el-button>
-                <el-checkbox class="marginL20" v-model="formData.onlySchool">仅选中学校可见</el-checkbox>
-            </div>
-        </div>
-        <!-- 教材分类选择弹框 -->
-        <el-dialog title="医学教材架构" :visible.sync="dialogVisible" class="checkTree_dialog">
-            <el-tree :data="treeData" :props="defaultProps" class="tree_box"></el-tree>
-
-        </el-dialog>
     </div>
 </template>
 
@@ -92,7 +86,9 @@
 export default {
     data() {
         return {
+            api_book_list:'/pmpheep/textBook/list',
             formData: {
+                materialId:'',
                 bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
                 releaseText: '学校教育>研究生教材',
                 round: 3,
@@ -100,110 +96,100 @@ export default {
                 onlySchool:false
             },
             fileList: [],
-            dialogVisible: false,
-            extendListData: [
-                {
-                    orderNum: '1',
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-                {
-                    orderNum: '3',
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-                {
-                    orderNum: '2',
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-            ],
-            treeData: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }]
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
-            }
+            extendListData: [],
         }
     },
     methods: {
-        handleNodeClick(data) {
-            this.checkedTreeData = data;
-            console.log(data);
-        },
-        getTreeNode() {
-
-        },
-        //切换输入框并自动聚焦
-        /*  showInput(index, str,name) {
-             this.extendListData[index][name] = true;
-            // console.log(index, str);
-            // console.log(this.$refs);
-             this.$nextTick(_ => {
-                 console.log(this.$refs[str]["0"].$refs);
-                 this.$refs[str]["0"].$refs.input.focus()
-             });
-         }, */
-        deleteExtendItem(index) {
+      /**
+       * 获取当前教材下所有书籍
+       * @param val
+       */
+      getBookList(){
+        this.$axios.get(this.api_book_list,{params:{
+          materialId:this.formData.materialId
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.extendListData = res.data;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+      /**
+       * 删除入行
+       * @param index
+       */
+      deleteExtendItem(index) {
+        this.$confirm("确定删除该行？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
             this.extendListData.splice(index, 1);
-        },
-        addExtendItem() {
-            this.extendListData.push({
-                orderNum: 1,
-                orderNumVisible: false,
-                bookName: '请填写书名',
-                bookNameVisible: false,
-                edition: '请填写版次',
-                editionVisible: false
-            });
-        }
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 插入行
+       * @param index
+       */
+      insertRow(index){
+        console.log(index)
+        this.extendListData.splice(index+1,0,{
+          sort: '',
+          bookName: '',
+          textbookRound: ''
+        });
+      },
+      /**
+       * 按照书序排序显示
+       */
+      sortByBookNum(){
+        this.extendListData.sort((x,y)=>{
+          return x['sort']-y['sort'];
+        })
+        this.$message.success('已排序完成！');
+      },
+      /**
+       * 按照版次排序
+       */
+      sortByPreNum(){
+        this.extendListData.sort((x,y)=>{
+          return x['textbookRound']-y['textbookRound'];
+        })
+        this.$message.success('已排序完成！');
+      },
+      /**
+       * 自动设置书序
+       */
+      autoSetBookNum(){
+        this.extendListData.forEach((iterm,index)=>{
+          iterm.sort = index+1;
+        });
+        this.$message.success('自动设置书序完成！');
+      },
+    },
+  created(){
+    this.formData.materialId = this.$route.params.materialId;
+    //如果没有教材id则跳转到通知列表
+    if(!this.formData.materialId){
+      this.$router.push({name:'通知列表'});
     }
+    this.getBookList();
+  },
 }
 
 </script>
 <style scoped>
+ .book-list-catalogue{
+   max-width: 840px;
+ }
+
+
 .new_book_release .grey_span {
     color: #9c9c9c;
 }

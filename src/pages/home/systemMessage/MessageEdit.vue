@@ -77,7 +77,7 @@ export default {
       },
       messageRules:{
        title:[
-          { required: true, message: '请输入文章标题', trigger: 'blur' },
+          { required: true, message: '请输入标题', trigger: 'blur' },
           {max:50, message: '长度不能超过50个字符', trigger: 'blur'}
        ],
        sendType:[

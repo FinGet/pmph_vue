@@ -74,13 +74,14 @@
        * @param data
        */
 	    handleReceiveMessage(data){
+        console.log('message-icon收到消息',data)
 	      var receiveData;
 	      try{
           receiveData = JSON.parse(data);
         }catch(e){
 	        console.log(e)
         }
-        if(receiveData.msgType!=0){
+        if(receiveData.msgType==3){
           return;
         }
         receiveData = receiveData||{};

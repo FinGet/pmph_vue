@@ -24,7 +24,7 @@ methods: refresh 刷新当前树状图
                lazy
                :load="_loadNode"
                node-key="id"
-               :default-expanded-keys="[92]"
+               :default-expanded-keys="default_expanded_keys"
       ></el-tree>
     </div>
 
@@ -68,7 +68,7 @@ methods: refresh 刷新当前树状图
           children: "sonDepartment",
           label: "dpName"
         },
-        default_expanded_keys:[92],//默认展开人卫社（人卫社id为92）
+        default_expanded_keys:[427],//默认展开人卫社（人卫社id为427）
         hasSelected: false,
         dialogVisible: false,
         dialogForm: {
