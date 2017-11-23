@@ -65,13 +65,13 @@
             </span>
         </el-dialog>
         <!-- 权限树弹框 -->
-        <el-dialog title="角色权限设置" :visible.sync="powerTreeVisible" size="tiny">
+        <el-dialog :title="isSeePower?'查看角色权限':'角色权限设置'" :visible.sync="powerTreeVisible" size="tiny">
           <div style="width:100%;overflow:hidden;">
             <div style="width:48%;float:left;">
-              <span style="font-weight:bold;">菜单栏可见性权限设置</span>
+              <span style="font-weight:bold;font-size:14px;">{{isSeePower?'菜单栏可见性权限':'菜单栏可见性权限设置'}}</span>
                 <transition name="fade" mode="out-in">
                 <el-tree class="tree_box" ref="powerTree"
-                 style="margin-top:10px;box-sizing:border-box;"
+                 style="margin:10px 0;box-sizing:border-box;"
                  :data="treeData"
                 show-checkbox node-key="id" :props="defaultProps"
                 v-if="powerTreeVisible"
@@ -81,10 +81,10 @@
             </div>
 
             <div style="width:48%;float:right;">
-              <span style="font-weight:bold;">教材申报权限设置</span>
+              <span style="font-weight:bold;">{{isSeePower?'教材申报权限':'教材申报权限设置'}}</span>
                 <transition name="fade" mode="out-in">
                 <el-tree class="tree_box" ref="teachTree"
-                 style="margin-top:10px;"
+                 style="margin:10px 0;"
                  :data="teachTreeData"
                 show-checkbox node-key="id" :props="defaultProps"
                 v-if="powerTreeVisible"
@@ -93,10 +93,12 @@
                 </transition>
             </div>
             </div>
+
             <span slot="footer" class="dialog-footer" v-if="!isSeePower">
                 <el-button @click="powerTreeVisible = false">取 消</el-button>
                 <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
             </span>
+            <span v-else style="color:#ff4949">tips：勾选中的即为当前角色拥有权限</span>
         </el-dialog>
     </div>
 </template>

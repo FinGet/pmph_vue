@@ -23,7 +23,7 @@
       <el-form-item label="内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
-      <el-form-item label="附件：">
+      <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <el-upload
             class="upload-demo"
@@ -55,7 +55,7 @@
          <el-form-item label="" label-width="0">
              <p v-html="preventContent"></p>
          </el-form-item>
-         <el-form-item label="附件：">
+         <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
               <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index">{{item.name}}</p>
          </el-form-item>
        </el-form>
@@ -68,7 +68,7 @@
           <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">通过</el-button>
           <el-button type="danger" v-if="formData.categoryId==1" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
           <el-button type="primary"@click="ContentSubmit(0)" >暂存</el-button>
-          <el-button type="primary" @click="ContentSubmit(1)" v-if="formData.categoryId!=1">发布</el-button>
+          <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
   </div>
 </template>
@@ -200,6 +200,24 @@ export default {
    } */
   },
   methods: {
+    publishSubmit(num){
+    if(num==0){
+      this.ContentSubmit(num);
+    }else{
+      this.$confirm('发布后将不能修改，确定发布？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ContentSubmit(num);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });          
+        });
+    }
+    },
     /* 发布新内容url */
     ContentSubmit(num) {
       this.formData.content = this.$refs.editor.getContent();
@@ -285,6 +303,7 @@ export default {
         .then(() => {
            this.formData.sessionId = this.$getUserData().sessionId;
            this.formData.authStatus=status;
+           this.formData.content=this.$refs.editor.getContent();
           this.$axios
             .put(
               this.examineUrl,
@@ -316,13 +335,23 @@ export default {
     },
     /* 文件上传大小判断 */
     beforeAvatarUpload(file){
-      const isLt100M = file.size / 1024 / 1024 < 100;
+      console.log(file);
+      const isLt100M = file.size / 1024 / 1024 <= 100;
        if (!isLt100M) {
           this.$message.error('上传文件大小不能超过 100MB!');
         }
         if(file.size==0){
            this.$message.error('请勿上传大小为0kb的空文件');
            return false;
+        }
+        /* .com .bat .exe */
+        if((file.name.indexOf('.exe')||file.name.indexOf('.bat')||file.name.indexOf('.com'))!=-1){
+           this.$message.error('请勿上传可执行文件');
+           return false;
+        }
+        if(file.name.length>80){
+          this.$message.error('附件名称长度过长');
+          return false;
         }
         return isLt100M;
     },

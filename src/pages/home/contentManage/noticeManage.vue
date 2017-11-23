@@ -123,6 +123,7 @@
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="publishSubmit">发布</el-button>
             </div>
         </div>
     </el-dialog>
@@ -135,6 +136,7 @@ export default {
   data() {
     return {
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
+      publishedUrl:'/pmpheep/cms/notice/update', //发布url
       options: [],
       defaultProp: {
         label: "categoryName",
@@ -288,12 +290,48 @@ export default {
       this.conPageNumber = val;
       this.getContentLists();
     },
-    /**
-     * 评论页分页
-     * @param val
-     */
-    commentHandleSizeChange(val) {},
-    commentHandleCurrentChange() {},
+    /* 发布 */
+    publishSubmit(){
+       this.$confirm('发布后不能修改，确定发布该公告?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+      /* 接口字段复制 */
+         var editData=this.contentDetailData;
+         var obj={};
+          for(var item in editData.cmsContent){
+            if(item.indexOf('gmt')!=0){
+                if(typeof editData.cmsContent[item]!='boolean'){
+                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item]+'';
+            }else{
+                obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
+            }
+            } 
+          }
+         obj.categoryId=parseInt(obj.categoryId);
+         obj.isPublished=true;
+          obj.content=editData.content.content;
+         obj.attachment=[];
+         obj.file=[];
+         obj.scheduledTime='';
+      this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
+                console.log(res);
+                if(res.data.code==1){
+                   this.$message.success("发布成功");
+                   this.getContentLists();
+                   this.showContentDetail=false;
+                }else {
+                this.$message.error(res.data.msg);
+              }
+            })    
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });          
+        });
+    },    
     /* 查看详情 */
     contentDetail(obj) {
       this.$axios

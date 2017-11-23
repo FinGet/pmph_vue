@@ -113,9 +113,9 @@
          <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
-         <el-form-item label="附件：">
+         <!-- <el-form-item label="附件：">
               <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
-         </el-form-item>
+         </el-form-item> -->
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden">
@@ -273,6 +273,11 @@ export default {
     },
     /* 发布 */
     publishSubmit(){
+       this.$confirm('发布后不能修改，确定发布该快报?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
       /* 接口字段复制 */
          var editData=this.contentDetailData;
          var obj={};
@@ -283,11 +288,11 @@ export default {
             }else{
                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
-            }
-            
+            } 
           }
          obj.categoryId=parseInt(obj.categoryId);
-          obj.content=editData.content.content;
+         obj.isPublished=true;
+         obj.content=editData.content.content;
          obj.attachment=[];
          obj.file=[];
          obj.scheduledTime='';
@@ -301,6 +306,12 @@ export default {
                 this.$message.error(res.data.msg);
               }
             })    
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });          
+        });
     },
     /* 查看详情 */
     contentDetail(obj) {

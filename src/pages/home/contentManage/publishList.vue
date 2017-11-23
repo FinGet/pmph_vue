@@ -168,7 +168,7 @@
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
-                width="45">
+                width="55">
             </el-table-column>
             <el-table-column
                 label="评论内容"
