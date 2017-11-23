@@ -127,14 +127,6 @@
               this.tableData[i].sendTime = this.$commonFun.formatDate(this.tableData[i].sendTime)
               this.tableData[i].reciveTime = this.$commonFun.formatDate(this.tableData[i].reciveTime)
             }
-            // console.log(this.tableData)
-            if (this.dataTotal == 0) {
-              this.$message({
-                showClose: true,
-                message: '没有这条数据!',
-                type: 'warning'
-              });
-            }
           }
         }).catch((error) => {
           console.log(error.msg)
