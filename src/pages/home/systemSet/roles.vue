@@ -26,7 +26,7 @@
                         <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
-                        <el-button type="text">查看权限</el-button>
+                        <el-button type="text" @click="openSeeDialog(scope.row)">查看权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
                     </template>
@@ -66,21 +66,38 @@
         </el-dialog>
         <!-- 权限树弹框 -->
         <el-dialog title="角色权限设置" :visible.sync="powerTreeVisible" size="tiny">
-            <div>
+          <div style="width:100%;overflow:hidden;">
+            <div style="width:48%;float:left;">
+              <span style="font-weight:bold;">菜单栏可见性权限设置</span>
                 <transition name="fade" mode="out-in">
-                <el-tree class="tree_box" ref="powerTree" :data="treeData"
+                <el-tree class="tree_box" ref="powerTree"
+                 style="margin-top:10px;box-sizing:border-box;"
+                 :data="treeData"
                 show-checkbox node-key="id" :props="defaultProps"
                 v-if="powerTreeVisible"
                 :default-checked-keys="defaultCheckedData"
                 ></el-tree>
                 </transition>
             </div>
-            <span slot="footer" class="dialog-footer">
+
+            <div style="width:48%;float:right;">
+              <span style="font-weight:bold;">教材申报权限设置</span>
+                <transition name="fade" mode="out-in">
+                <el-tree class="tree_box" ref="teachTree"
+                 style="margin-top:10px;"
+                 :data="teachTreeData"
+                show-checkbox node-key="id" :props="defaultProps"
+                v-if="powerTreeVisible"
+                :default-checked-keys="defaultTeachData"
+                ></el-tree>
+                </transition>
+            </div>
+            </div>
+            <span slot="footer" class="dialog-footer" v-if="!isSeePower">
                 <el-button @click="powerTreeVisible = false">取 消</el-button>
                 <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
             </span>
         </el-dialog>
-
     </div>
 </template>
 <script type="text/javascript">
@@ -95,6 +112,7 @@ export default {
       searchValue: "",
       rolesListData: [],
       rolesDialogVisible: false,
+      isSeePower:false,
       rolesForm: {
         id: "",
         roleName: "",
@@ -120,19 +138,11 @@ export default {
       },
       powerTreeVisible: false,
       defaultCheckedData: [1, 2],
+      defaultTeachData:[],
       revisePowerId: "", //更新角色的id
-      treeData: [
-        {
-          label: "个人中心（首页）",
-          id: 1,
-          disabled:true
-        },
-        {
-          label: "教材申报",
-          id: 2,
-          children:[
-            {
-              label:'修改教材通知（包括删除、发布和设置选题号等）',
+      teachTreeData:[
+          {
+              label:'修改教材通知',
               id:10001
             },
             {
@@ -159,7 +169,17 @@ export default {
               label:'强制结束整套教材',
               id:10007
             },
-          ]
+      ],
+      treeData: [
+        {
+          label: "个人中心（首页）",
+          id: 1,
+          disabled:true
+        },
+        {
+          label: "教材申报",
+          id: 2,
+          children:[]
         },
         {
           label: "我的小组",
@@ -335,7 +355,7 @@ export default {
         url: _this.revisePowerUrl,
         data: _this.$initPostData({
           roleId: _this.revisePowerId,
-          permissionIds: arr.join(",")
+          permissionIds: arr.join(","),
         })
       })
         .then(function(res) {
@@ -351,6 +371,13 @@ export default {
         .catch(function(err) {
           console.log(err);
         });
+    },
+    openSeeDialog(obj){
+      console.log(obj);
+      this.isSeePower=true;
+      this.defaultCheckedData = obj.pmphRolePermissionChild;
+      this.revisePowerId = obj.id;
+      this.powerTreeVisible = true;
     },
     //获取角色列表数据
     getListData() {
@@ -380,6 +407,7 @@ export default {
     //更新权限按钮
     updatePower(obj) {
       console.log(obj);
+      this.isSeePower=false;
       this.defaultCheckedData = obj.pmphRolePermissionChild;
       this.revisePowerId = obj.id;
       this.powerTreeVisible = true;
