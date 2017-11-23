@@ -63,13 +63,10 @@
               });
               this.receiveMessage=res.data.rows;
               this.totalNum = res.data.total;
-            }else{
-              this.$message.error('获取数据失败，请重试！');
             }
           })
           .catch(e=>{
             console.log(e)
-            this.$message.error('获取数据失败，请重试！');
           })
       },
       /**

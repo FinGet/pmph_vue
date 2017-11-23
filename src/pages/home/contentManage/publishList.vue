@@ -3,8 +3,10 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-           
-          <el-input placeholder="输入文章标题" class="input" v-model.trim="searchTitle"></el-input>
+         <span>作者：</span>
+          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername"></el-input>
+          <span>文章标题：</span> 
+          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle"></el-input>
           <span>审核状态：</span>
           <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -113,8 +115,8 @@
        <div style="padding:0 10%;">
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
-      <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
+      <span class="marginR10">{{contentDetailData.listObj.username}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
        <el-form label-width="55px">
 
@@ -128,9 +130,9 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
             <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
-            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
@@ -146,9 +148,19 @@
             @change="handleChange"> -->
           </el-cascader>
           <span style="margin-left:10px;">文章标题：</span>
-          <el-input placeholder="输入内容标题" class="input"></el-input>
+          <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
           <span style="margin-left:10px;">姓名/账号：</span>
-          <el-input placeholder="输入姓名/账号" class="input"></el-input>
+          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
+          <span>审核状态：</span>
+          <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
+           <el-option
+             v-for="item in selectOp"
+             :key="item.value"
+             :label="item.label"
+             :value="item.value"
+             >
+         </el-option>
+         </el-select>
          <el-button type="primary" icon="search">搜索</el-button>
 
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected">批量删除</el-button>
@@ -162,12 +174,24 @@
                 label="评论内容"
                 >
                 <template scope="scope">
-                   <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a>
+                   <!-- <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a> -->
                 </template>
             </el-table-column>
             <el-table-column
+                label="文章标题"
+                >
+                <template scope="scope">
+                   
+                </template>
+            </el-table-column>
+            <el-table-column
+              label="评论人"
+              width="100"
+            >
+            </el-table-column>
+            <el-table-column
                 prop="creatTime"
-                label="创建时间"
+                label="评论时间"
                 width="165"
                 >
             </el-table-column>
@@ -181,14 +205,14 @@
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
             </el-table-column> 
-            <el-table-column
+<!--             <el-table-column
                 label="原文链接"
                 width="95"
                 >
                 <template scope="scope">
                       <el-button type="text">查看</el-button>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 label="操作"
                 width="150"
@@ -275,6 +299,7 @@ export default {
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
+      commentListUrl:'/cms/comments',         //评论列表url
       selectOp: [
         {
           value: 0,
@@ -298,6 +323,7 @@ export default {
       },
       tableData: [],
       isAdmin: false,
+      contentUsername:'',
       selectValue: "",
       currentPage: 1,
       searchTitle: "",
@@ -310,7 +336,10 @@ export default {
       comPageSize: 10,
       comDataTotal: 20,
       comPageNumber: 1,
-      commentSelectData: []
+      commentSelectData: [],
+      commentName:'',
+      commentTitle:'',
+      commentSelect:''
     };
   },
   computed: {
@@ -329,6 +358,7 @@ export default {
         .get(this.publicListUrl, {
           params: {
             title: this.searchTitle,
+            username:this.contentUsername,
             authStatus: this.selectValue,
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
@@ -342,6 +372,22 @@ export default {
             this.tableData = res.data.data.rows;
           }
         });
+    },
+    /* 获取评论列表 */
+    getCommentList(){
+      this.$axios.get(this.commentListUrl,{
+          params:{
+            title:this.commentTitle,
+            authStatus:this.commentSelect,
+            /* categoryId:1, */
+            username:this.commentName,
+            pageSize:this.comPageSize,
+            pageNumber:this.comPageNumber,
+            sessionId:this.$getUserData().sessionId,
+          }
+      }).then((res)=>{
+          console.log(res);
+      })
     },
     /* 初始化是否管理员 */
     initIsAdmin() {
@@ -460,10 +506,9 @@ export default {
       this.currentPage = val;
       this.getPublicList();
     },
-    commentSelectChange() {
+    commentSelectChange(val) {
       this.commentSelectData = val;
     },
-    handleChange() {},
     commentHandleSizeChange() {},
     commentHandleCurrentChange() {}
   },

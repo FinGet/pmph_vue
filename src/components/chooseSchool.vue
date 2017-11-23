@@ -109,7 +109,7 @@
               v-for="(city,index) in item.schoolList"
               :label="city.id"
               :key="index"
-              v-if="city.type in select_orgType.types"><span v-html="city.name"></span></el-checkbox>
+              v-if="select_orgType.types.includes(city.type)"><span v-html="city.name"></span></el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -336,6 +336,8 @@
         let checkedCount = this.select_orgType.types.length;
         this.select_orgType.checkAll = checkedCount == this.orgTypeList.length;
         this.select_orgType.isIndeterminate = checkedCount > 0 && checkedCount < this.orgTypeList.length;
+
+        console.log(this.select_orgType.types);
       },
       /**
        * 点击全选按钮
