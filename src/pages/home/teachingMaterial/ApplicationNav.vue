@@ -65,6 +65,7 @@ export default {
       }else{
         this.title='全国高等学校五年制临床医学专业第九轮规划教材'
       }
+      console.log(this.$route)
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕

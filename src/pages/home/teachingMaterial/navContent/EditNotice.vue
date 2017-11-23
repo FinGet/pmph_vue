@@ -3,7 +3,7 @@
     <!--操作按钮-->
     <div class="clearfix marginT30">
       <div class="operation-wrapper">
-        <el-button  type="primary" size="large" class="marginR20">预览</el-button>
+        <el-button  type="primary" size="large" class="marginR20" @click="previewShow=true">预览</el-button>
         <el-button  type="primary" size="large" class="marginR20" @click="$router.push({name:'设置书目录'})">保存，下一步</el-button>
       </div>
     </div>
@@ -44,11 +44,19 @@
         </p>
       </el-form-item>
     </el-form>
+
+    <!--预览弹窗-->
+    <el-dialog
+      :visible.sync="previewShow"
+      size="large">
+      <preview-materialmsg :previewData="previewData" readOnly></preview-materialmsg>
+    </el-dialog>
 	</div>
 </template>
 
 <script>
   import Editor from 'components/Editor.vue'
+  import previewMaterialmsg from 'components/preview-materialmsg'
 	export default {
 		data() {
 			return {
@@ -71,10 +79,13 @@
             {max:50, message: '长度不能超过50个字符', trigger: 'blur'}
           ]
         },
+        previewShow:false,
+        previewData:{},
       }
 		},
     components:{
-      Editor
+      Editor,
+      previewMaterialmsg
     }
 	}
 </script>
