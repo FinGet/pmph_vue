@@ -9,8 +9,6 @@
             </p>
 
             <el-table :data="rolesListData" class="table-wrapper" border>
-                <el-table-column prop="id" label="角色代码">
-                </el-table-column>
                 <el-table-column prop="roleName" label="角色名称">
                 </el-table-column>
                 <el-table-column prop="sort" label="显示顺序">
@@ -23,11 +21,12 @@
                 </el-table-column>
                 <el-table-column prop="note" label="备注">
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="220">
                     <template scope="scope">
                         <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false" @click="updatePower(scope.row)">更新权限</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
+                        <el-button type="text">查看权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
                     </template>
@@ -130,7 +129,37 @@ export default {
         },
         {
           label: "教材申报",
-          id: 2
+          id: 2,
+          children:[
+            {
+              label:'修改教材通知（包括删除、发布和设置选题号等）',
+              id:10001
+            },
+            {
+              label:'分配策划编辑',
+              id:10002
+            },
+            {
+              label:'遴选主编副主编',
+              id:10003
+            },
+            {
+              label:'遴选编委（名单确认）',
+              id:10004
+            },
+            {
+              label:'最终结果公布',
+              id:10005
+            },
+            {
+              label:'创建小组',
+              id:10006
+            },
+            {
+              label:'强制结束整套教材',
+              id:10007
+            },
+          ]
         },
         {
           label: "我的小组",
@@ -145,20 +174,16 @@ export default {
           id: 5,
           children: [
             {
-              label: "内容发布",
+              label: "文章管理",
               id: 9
             },
             {
-              label: "社外内容管理",
+              label: "信息快报管理",
               id: 10
             },
             {
-              label: "社外内容审核",
+              label: "公告管理",
               id: 11
-            },
-            {
-              label: "栏目设置",
-              id: 12
             }
           ]
         },
