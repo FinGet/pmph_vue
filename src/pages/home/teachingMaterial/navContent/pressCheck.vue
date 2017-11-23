@@ -6,12 +6,12 @@
         <div class="searchBox-wrapper lg">
           <div class="searchName">书名：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="booksChooseValue5" multiple placeholder="请选择">
+            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择">
               <el-option
                 v-for="item in booksChooseOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
               </el-option>
             </el-select>
           </div>
@@ -20,42 +20,42 @@
         <div class="searchBox-wrapper">
           <div class="searchName">账号/姓名：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职务：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--职称搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--工作单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">工作单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--申报单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData"></el-input>
           </div>
         </div>
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报职务：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="positionValueChoose" placeholder="请选择">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -69,9 +69,9 @@
         <div class="searchBox-wrapper">
           <div class="searchName">学校审核：<span></span></div>
           <div class="searchInput">
-            <el-select placeholder="请选择">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData">
               <el-option
-                v-for="item in booksChooseOptions2"
+                v-for="item in onlineProgressList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -83,9 +83,9 @@
         <div class="searchBox-wrapper">
           <div class="searchName">纸质表：<span></span></div>
           <div class="searchInput">
-            <el-select placeholder="请选择">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData">
               <el-option
-                v-for="item in booksChooseOptions3"
+                v-for="item in offlineProgressList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -95,7 +95,7 @@
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -119,7 +119,7 @@
             </el-option>
           </el-select>
           <div class="searchInput">
-            <el-select v-model="booksChooseValue5" multiple placeholder="请选择" v-if="powerSearchValue===1">
+            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择" v-if="powerSearchValue===1">
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.value"
@@ -127,27 +127,39 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select  multiple placeholder="请选择" v-else-if="powerSearchValue===7">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
               <el-option
-                v-for="item in booksChooseOptions2"
+                v-for="item in positionValue"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select  multiple placeholder="请选择" v-else-if="powerSearchValue===8">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===7">
               <el-option
-                v-for="item in booksChooseOptions3"
+                v-for="item in onlineProgressList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="请输入" class="searchInputEle" v-else></el-input>
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===8">
+              <el-option
+                v-for="item in offlineProgressList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===0"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===2"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===3"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===4"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===5"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
         </div>
         <div class="searchBox-wrapper searchBtn">
           <el-button type="text" @click="toggleSearchType">高级搜索</el-button>
@@ -181,7 +193,8 @@
         </el-table-column>
 
         <el-table-column
-          label="申报单位/工作单位">
+          label="申报单位/工作单位"
+          width="160">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" content="申报单位" placement="top">
               <p>
@@ -247,10 +260,14 @@
     </div>
     <div class="pagination-wrapper">
       <el-pagination
-        :page-sizes="[30,50,100, 200, 300, 400]"
-        :page-size="30"
+        v-if="totalNum>searchParams.pageSize"
+        @size-change="handleSizeChange"
+        @current-change="getTableData"
+        :current-page="searchParams.pageNumber"
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="searchParams.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="totalNum">
       </el-pagination>
     </div>
   </div>
@@ -260,6 +277,7 @@
   export default {
     data() {
       return {
+        api_declaration_list:'/pmpheep/declaration/list/declaration',
         powerSearch:true,
         powerSearchList:[
           {
@@ -295,229 +313,108 @@
         ],
         powerSearchValue:2,
         positionValue:[{
-          value:1,
+          value:'',
           label:'全部'
         },{
-          value:2,
+          value:1,
           label:'主编'
         },{
-          value:3,
+          value:2,
           label:'副主编'
         },{
-          value:4,
+          value:3,
           label:'编委'
         }],
-        booksChooseOptions: [{
-          value: '选项1',
-          label: '儿科护理学'
+        booksChooseOptions: [],
+        onlineProgressList:[{
+          value: '',
+          label: '全部'
         }, {
-          value: '选项2',
-          label: '病理学与病理生理学'
-        }, {
-          value: '选项3',
-          label: '精神科护理学'
-        }, {
-          value: '选项4',
-          label: '护理伦理与法律法规'
-        }, {
-          value: '选项6',
-          label: '精神科护理伦理与法律法规'
-        }, {
-          value: '选项5',
-          label: '眼耳鼻咽喉口腔科护理学'
-        }],
-        booksChooseOptions2:[{
-          value: '选项1',
-          label: '已审核'
-        }, {
-          value: '选项2',
+          value: 1,
           label: '待审核'
-        }],
-        booksChooseOptions3:[{
-          value: '选项1',
-          label: '已收到纸质表'
         }, {
-          value: '选项2',
-          label: '未收到纸质表'
+          value: 3,
+          label: '已审核'
         }],
-        booksChooseValue5: [],
-        positionValueChoose:1,
-        tableData: [{
-          name: '王小虎',
-          code: 'wangxiaohu',
-          applicationOrganization:'四川大学',
-          workOrganization:'成都医科大学',
-          position:'无',
-          professionalTitle:'副教授',
-          chooseBookJob:'中医学-副主编',
-          schoolCheck:'已审核',
-          pressCheck:'已收到纸质表',
-          phone:'13699999999',
-          email:'13699999999@qq.com',
-          birthdate:'1988-8-8'
+        offlineProgressList:[{
+          value: '',
+          label: '全部'
+        }, {
+          value: 0,
+          label: '未收到纸质表'
+        }, {
+          value: 2,
+          label: '已收到纸质表'
+        }],
+        searchParams:{
+          pageNumber:1,
+          pageSize:30,
+          materialId:'',
+          textBookids:[],
+          realname:'',
+          position:'',
+          title:'',
+          orgName:'',
+          unitName:'',
+          positionType:'',
+          onlineProgress:'',
+          offlineProgress:'',
         },
-          {
-            name: '张小虎',
-            code: '1823333333u',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'课程负责人',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'未审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com',
-            birthdate:'1988-8-8'
-          },
-          {
-            name: '人卫社',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'教研室主任',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'未审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com',
-            birthdate:'1988-8-8'
-          },
-          {
-            name: '王小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'已审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com',
-            birthdate:'1988-8-8'
-          },
-          {
-            name: '小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'已审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            birthdate:'1988-8-8'
-          },
-          {
-            name: '王小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'未审核',
-            pressCheck:'未收到纸质表',
-            email:'13699999999@qq.com',
-            birthdate:'1988-8-8'
-          },
-          {
-            name: '大小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'待审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          },
-          {
-            name: '大小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'待审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          },
-          {
-            name: '大小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'待审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          },
-          {
-            name: '大小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'待审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          },
-          {
-            name: '王小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'待审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          },
-          {
-            name: '李小虎',
-            code: 'wangxiaohu',
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            position:'无',
-            professionalTitle:'副教授',
-            chooseBookJob:'中医学-副主编',
-            schoolCheck:'已审核',
-            pressCheck:'未收到纸质表',
-            phone:'13699999999',
-            email:'13699999999@qq.com'
-          }
-        ]
+        tableData: [],
+        totalNum:0,
       }
     },
     methods:{
-      filterSchoolCheck(value, row){
-        return row.schoolCheck === value;
-      },
-      filterPressCheck(value, row){
-        return row.pressCheck === value;
-      },
       /**
        * 此方法用于展开与收起高级搜索区域
        */
       toggleSearchType(){
         this.powerSearch=!this.powerSearch;
       },
+      /**
+       * 获取表格数据
+       */
+      getTableData(){
+        this.$axios.get(this.api_declaration_list,{params:{
+          pageNumber:this.searchParams.pageNumber,
+          pageSize:this.searchParams.pageSize,
+          materialId:this.searchParams.materialId,
+          textBookids:this.searchParams.textBookids.join(','),
+          realname:this.searchParams.realname,
+          position:this.searchParams.position,
+          title:this.searchParams.title,
+          orgName:this.searchParams.orgName,
+          unitName:this.searchParams.unitName,
+          positionType:this.searchParams.positionType,
+          onlineProgress:this.searchParams.onlineProgress,
+          offlineProgress:this.searchParams.offlineProgress,
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.totalNum = res.data.total;
+              res.data.rows.map(iterm=>{
+
+              });
+              this.tableData = res.data.rows;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchParams.pageSize=val;
+        this.searchParams.pageNumber=1;
+        this.getTableData();
+      },
+    },
+    created(){
+      this.getTableData();
     },
   }
 </script>

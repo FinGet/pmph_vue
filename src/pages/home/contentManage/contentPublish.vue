@@ -320,6 +320,10 @@ export default {
        if (!isLt100M) {
           this.$message.error('上传文件大小不能超过 100MB!');
         }
+        if(file.size==0){
+           this.$message.error('请勿上传大小为0kb的空文件');
+           return false;
+        }
         return isLt100M;
     },
     /* 文件上传成功回调 */
@@ -337,14 +341,11 @@ export default {
     },
     /* 文件移除回调 */
     uploadFileRemove(file, flielist) {
-      this.fileList=[];
-      flielist.forEach((item)=>{
-       this.fileList.push(item);
-      })
+      this.fileList=flielist;
       if(!this.isEditContent){
           this.formData.file = [];
-         filelist.forEach(item => {
-        this.formData.file.push(item.response.data);
+         flielist.forEach((i) => {
+        this.formData.file.push(i.response.data);
       });
       }else{
 
@@ -382,6 +383,7 @@ export default {
       }else{
         this.$router.push({ name: "文章管理" });
       }
+      this.isEditContent=false;
       if (this.$router.currentRoute.query.type == "edit") {
            var editData=this.$router.currentRoute.params;
            console.log(editData);
