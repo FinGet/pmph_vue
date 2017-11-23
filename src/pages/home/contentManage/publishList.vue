@@ -3,8 +3,10 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-           
-          <el-input placeholder="输入文章标题" class="input" v-model.trim="searchTitle"></el-input>
+         <span>作者：</span>
+          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername"></el-input>
+          <span>文章标题：</span> 
+          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle"></el-input>
           <span>审核状态：</span>
           <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -113,8 +115,8 @@
        <div style="padding:0 10%;">
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
-      <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
+      <span class="marginR10">{{contentDetailData.listObj.username}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
        <el-form label-width="55px">
 
@@ -128,9 +130,9 @@
         </div>
         <div style="width:100%;overflow:hidden">
             <div class="center_box">
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
             <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
-            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             </div>
         </div>
     </el-dialog>
@@ -146,7 +148,7 @@
             @change="handleChange"> -->
           </el-cascader>
           <span style="margin-left:10px;">文章标题：</span>
-          <el-input placeholder="输入内容标题" class="input" v-model="commentTitle"></el-input>
+          <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
           <span style="margin-left:10px;">姓名/账号：</span>
           <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
           <span>审核状态：</span>
@@ -321,6 +323,7 @@ export default {
       },
       tableData: [],
       isAdmin: false,
+      contentUsername:'',
       selectValue: "",
       currentPage: 1,
       searchTitle: "",
@@ -355,6 +358,7 @@ export default {
         .get(this.publicListUrl, {
           params: {
             title: this.searchTitle,
+            username:this.contentUsername,
             authStatus: this.selectValue,
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
