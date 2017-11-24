@@ -345,7 +345,8 @@ export default {
            return false;
         }
         /* .com .bat .exe */
-        if((file.name.indexOf('.exe')||file.name.indexOf('.bat')||file.name.indexOf('.com'))!=-1){
+        if((file.name.indexOf('.bat')!=-1||file.name.indexOf('.exe')!=-1||file.name.indexOf('.com'))!=-1){
+          console.log()
            this.$message.error('请勿上传可执行文件');
            return false;
         }
