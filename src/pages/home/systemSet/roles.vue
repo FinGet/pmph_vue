@@ -52,7 +52,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="显示顺序：" prop="sort">
-                        <el-input v-model.trim="rolesForm.sort" placeholder="请输入"></el-input>
+                        <el-input v-model="rolesForm.sort" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="备注：" prop="note">
                         <el-input v-model.trim="rolesForm.note" placeholder="请输入"></el-input>
@@ -131,7 +131,7 @@ export default {
             ],
         isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
         sort: [
-            /* {min:1,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" }, */
+            {type:'number',min:1,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" }, 
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[

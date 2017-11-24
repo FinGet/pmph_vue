@@ -106,10 +106,10 @@
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isNameInput">{{scope.row.realname}}
+                      <span v-if="!contactData[scope.$index].isNameInput">{{scope.row.realname}}
                         <i class="el-icon-edit" @click="test(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.realname" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.realname" :ref="'isNameInput'+scope.$index" @blur="test(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -407,6 +407,7 @@ import userPmph from "components/user-pmph";
 export default {
   data() {
     return {
+      mytest:false,
       materialTypeUrl:'/pmpheep/books/list/materialType' , //教材分类url
       labelPosition: "right",
       // bookradio:'1',
@@ -745,10 +746,13 @@ export default {
         console.log(this.ruleForm['material.materialType']);
       },
       test(num,str){
-        console.log(num,str);
         this.contactData[num][str]=!this.contactData[num][str];
-        console.log(this.contactData);
-       // obj[str]=!obj[str];
+        var arr=this.contactData;
+        this.contactData=[];
+        this.contactData=arr;  
+        if(this.contactData[num][str]){
+          //聚焦 未完成
+        }
       },
       /* 联系人选择 */
       conactPersonChange(val){
@@ -758,7 +762,7 @@ export default {
       /* 增加 联系人 */
       addCheckedConact(){
        for(var i in this.checkedConactPersonData){
-              this.contactData[i]=this.checkedConactPersonData[i];
+              this.contactData.push(this.checkedConactPersonData[i]);
               this.contactData[i].isNameInput=false;
               this.contactData[i].isPhoneInput=false;
               this.contactData[i].isEmailInput=false;
