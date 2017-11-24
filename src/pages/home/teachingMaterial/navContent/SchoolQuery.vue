@@ -91,7 +91,8 @@
       submit(){
         this.$axios.post('/pmpheep/material/extra/published',this.$initPostData({
           materialId: this.materialId,
-          orgIds: this.orgIds
+          orgIds: this.orgIds,
+          sessionId:this.$getUserData().sessionId
         })).then(response => {
           let res = response.data
           if (res.code == '1') {
