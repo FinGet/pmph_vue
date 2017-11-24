@@ -72,13 +72,13 @@
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('msgState',scope.row)">消息状态</el-button>
+                                  <el-button type="text" @click="operation('msgState',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">消息状态</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('setBookList',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">设置书目录</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('result',scope.row)">结果统计</el-button>
+                                  <el-button type="text" @click="operation('result',scope.row)" :disabled="!hasAccessAuthority(true,scope.row.isMy)">结果统计</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">设置选题号</el-button>
@@ -232,10 +232,10 @@ export default {
             this.$router.push({name:'教材申报选择学校',params:{materialId:materialData.id,type:'reEdit'}});
             break;
           case 'msg':
-            this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'}});
+            this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'},query:{msgId:materialData.msgId}});
             break;
           case 'msgState':
-            this.$router.push({name:'消息状态',query:{msgId:materialData.id}});
+            this.$router.push({name:'消息状态',query:{msgId:materialData.msgId}});
             break;
           case 'setBookList':
             this.$router.push({name:'设置书目录',params:{materialId:materialData.id}});

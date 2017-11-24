@@ -54,23 +54,23 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="bookorder"
+          prop="sort"
           label="书序"
           width="68">
         </el-table-column>
         <el-table-column
-          prop="edition"
+          prop="textbookRound"
           label="版次"
           width="68">
         </el-table-column>
         <el-table-column
           label="书名">
           <template scope="scope">
-            {{scope.row.bookname}}
+            {{scope.row.textbookName}}
           </template>
         </el-table-column>
         <el-table-column
-          prop="applyNumber"
+          prop="applyNum"
           label="申报数"
           width="80">
         </el-table-column>
@@ -88,7 +88,7 @@
               </el-tooltip>
             </p>
             <p v-else>
-              {{scope.row.planningEditor}}
+              {{scope.row.planningEditorName}}
             </p>
           </template>
         </el-table-column>
@@ -175,6 +175,15 @@
   export default{
     data(){
       return{
+        api_position_list:'/pmpheep/position/list',
+        searchForm:{
+          pageNumber:1,
+          pageSize:30,
+          materialId:'',
+          state:'',
+          textBookIds:'',
+        },
+        tableData: [],
         forceEnd:false,
         booksChooseValue5:'',
         booksChooseOptions: [{
@@ -212,190 +221,6 @@
         },{
           value:5,
           label:'强制结束'
-        }],
-        tableData: [{
-          state:0,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:[],
-        },{
-          state:1,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          subeditorHasChoose:true,
-          editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
-          editorialBoardHasChoose:true,
-        },{
-          state:2,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
-          editorialBoardHasChoose:true,
-        },{
-          state:3,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['张一山','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:4,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:5,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:6,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:7,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:8,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:false,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '眼耳鼻喉口腔科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是','','',''],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:true,
-          bookid:'123456',
-          bookorder:1,
-          bookname: '细胞生物学和医学遗传学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'张强',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['张一一','王尔尔','赵三三','一一一','二二人','三三'],
-        },{
-          state:0,
-          editing:false,
-          bookid:'223456',
-          bookorder:1,
-          bookname: '神经科学',
-          edition: 9,
-          applyNumber:188,
-          planningEditor:'人卫社',
-          chiefEditor:'张三',
-          subeditor:['张思','王五','赵六','李思是'],
-          editorialBoard:['李建国','王尔尔','赵三三','一一一','二二人','三三'],
         }],
         dialogVisible:false,
         chooseVisiable2:false,
@@ -574,7 +399,36 @@
       },
       add(){
         this.chooseVisiable2=false;
+      },
+
+      /**
+       * 获取表格数据
+       */
+      getTableData(){
+        this.$axios.get(this.api_position_list,{params:this.searchForm})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.totalNum = res.data.total;
+              res.data.rows.map(iterm=>{
+                iterm.actualDeadline = this.$commonFun.formatDate(iterm.actualDeadline).split(' ')[0];
+                iterm.deadline = this.$commonFun.formatDate(iterm.deadline).split(' ')[0];
+              });
+              this.tableData = res.data.rows;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+    },
+    created(){
+      this.searchForm.materialId = this.$route.params.materialId;
+      //如果没有教材id则跳转到通知列表
+      if(!this.searchForm.materialId){
+        this.$router.push({name:'通知列表'});
       }
+      this.getTableData();
     },
     components:{
       Departments
