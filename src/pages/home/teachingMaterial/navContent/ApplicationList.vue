@@ -64,7 +64,7 @@
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="$router.push({name:'教材申报选择学校',query:{history:'0'}})">通知发布</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="$router.push({name:'通知详情'})">通知详情</el-button>
+                        <el-button type="text" class="op_button" @click="$router.push({name:'通知详情', query:{materialId:scope.row.id}})">通知详情</el-button>
                         <el-dropdown trigger="click" @command="handleClickDrop">
                             <span class="el-dropdown-link more_button">
                                 更多
@@ -144,7 +144,7 @@ export default {
                 this.$router.push({ name: '设置书目录' });
                 break;
               case 'messagestate':
-                this.$router.push({ name: '消息状态', query:{msgId: command.data.bookid}});
+                this.$router.push({ name: '消息状态', query:{msgId: command.data.id}});
                 break;
             }
         },
