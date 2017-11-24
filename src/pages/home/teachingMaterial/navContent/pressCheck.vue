@@ -342,11 +342,12 @@
        * 获取表格数据
        */
       getTableData(){
+        console.log(this.searchParams.textBookids.toString())
         this.$axios.get(this.api_declaration_list,{params:{
           pageNumber:this.searchParams.pageNumber,
           pageSize:this.searchParams.pageSize,
           materialId:this.searchParams.materialId,
-          textBookids:this.searchParams.textBookids,
+          textBookids:'['+this.searchParams.textBookids.join(',')+']',
           realname:this.searchParams.realname,
           position:this.searchParams.position,
           title:this.searchParams.title,
