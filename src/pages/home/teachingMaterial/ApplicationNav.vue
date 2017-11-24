@@ -1,6 +1,6 @@
 <template>
 	<div class="application_nav">
-      <div class="tab_nav_outbox" v-if="!$router.currentRoute.meta.hdieTabs">
+      <div class="tab_nav_outbox" v-if="!$router.currentRoute.meta.hideTabs">
         <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
         <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
           <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
@@ -10,7 +10,7 @@
           <el-tab-pane label="结果统计" name="result"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="header_title_tips">
+      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs">
         <p >{{title}}</p>
         <div class="tips_icon"></div>
       </div>

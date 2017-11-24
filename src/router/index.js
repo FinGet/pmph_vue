@@ -94,7 +94,7 @@ export default new Router({
           children: [
             { path: 'materials', name: '通知列表', component: ApplicationList, meta: { replaceName: false } },
             {
-              path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: '申报表审核' }, children: [
+              path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: false }, children: [
                 { path: '1v1', name: '策划编辑视图', component: BooksSelect_1v1, meta: { applicationName: '1v1' } },
                 { path: '1v2', name: '项目编辑视图', component: BooksSelect_1v2, meta: { applicationName: '1v2' } },
                 { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '职位遴选' } },
