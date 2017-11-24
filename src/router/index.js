@@ -93,23 +93,22 @@ export default new Router({
           path: 'materialrouter', name: '教材申报', component: ApplicationRouter, meta: { replaceName: '通知列表', authorityId: 2 },
           children: [
             { path: 'materials', name: '通知列表', component: ApplicationList, meta: { replaceName: false } },
-
-            { path: 'notice', name: '通知详情', component: Notice },
-            { path: 'edit-notice', name: '编辑通知详情', component: EditNotice },
             {
-              path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: '申报表审核' }, children: [
+              path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: false }, children: [
                 { path: '1v1', name: '策划编辑视图', component: BooksSelect_1v1, meta: { applicationName: '1v1' } },
                 { path: '1v2', name: '项目编辑视图', component: BooksSelect_1v2, meta: { applicationName: '1v2' } },
                 { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '职位遴选' } },
                 { path: 'result', name: '结果统计', component: Result, meta: { applicationName: 'result' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { applicationName: 'presscheck', replaceName: false } },
-                { path: 'newchoosebooks', name: '新建通知', component: NewChooseBooks, meta: { isShowTags: true } },
+                { path: 'newchoosebooks', name: '新建通知', component: NewChooseBooks, meta: {  } },
                 { path: 'book-list', name: '设置书目录', component: BookList, meta: { isShowTags: true } },
                 { path: 'expertinfo', name: '专家信息', component: ExpertInfo },
                 { path: 'chief', name: '遴选主编/副主编', component: Chief, meta: { replaceName: '遴选' },},
                 { path: 'pre-select', name: '预选编委', component: preSelect },
                 { path: 'applicationschoolquery', name: '教材申报选择学校', component: ApplicationSchoolQuery, meta: { isShowTags: true } },
                 { path: 'set-topic', name: '设置选题号', component: SetTopicNum, meta: { isShowTags: true }  },
+                { path: 'notice', name: '通知详情', component: Notice , meta: { isShowTags: true,hideTabs:true},},
+                { path: 'edit-notice', name: '编辑通知详情', component: EditNotice ,meta: { isShowTags: true,hideTabs:true },},
               ]
             },
 

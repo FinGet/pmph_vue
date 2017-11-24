@@ -96,7 +96,11 @@ export default {
                 onlySchool:false
             },
             fileList: [],
-            extendListData: [],
+            extendListData: [{
+              sort: '',
+              bookName: '',
+              textbookRound: ''
+            }],
         }
     },
     methods: {
@@ -179,7 +183,9 @@ export default {
     if(!this.formData.materialId){
       this.$router.push({name:'通知列表'});
     }
-    this.getBookList();
+    if(this.formData.materialId!='new'){
+      this.getBookList();
+    }
   },
 }
 

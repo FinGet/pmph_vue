@@ -433,11 +433,11 @@ methods:
             if (res.code == 1) {
               console.log(res);
               this.dialogVisible = false;
+              this._getTableData();
               this.$message({
                 message: "恭喜你，修改成功！",
                 type: "success"
               });
-              this.getUsers();
             } else {
               this.$message.error(res.msg);
             }

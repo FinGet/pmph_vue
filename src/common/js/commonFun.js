@@ -61,11 +61,24 @@ export function authorityComparison(matchArr, userArr) {
 export function materialPower(num) {
   var userData= getSessionStorage('currentUser', 'json')||{};
   var str = userData.materialPermission;
-  if(str[num]==1){
-    return true;
-  } else{
+  //如果传的是数字
+  if(!isNaN(parseInt(num))){
+    return str[num]==1;
+  }
+  //如果是数组,只要匹配到任一一项则返回true
+  if(Object.prototype.toString.call(num)=='[object Array]'){
+    for(let i = 0, len = num.length; i < len; i++){
+      if(!isNaN(parseInt(num[i]))){//如果不是数字
+        return false;
+      }
+      if(str[num[i]]==1){//匹配到任一一项则返回true
+        return true;
+      }
+    }
     return false;
-  }   
+  }
+  //如果传的参数不是数字类型，也不是数组类型则直接返回false
+  return false;
 }
 /**=================================================================
  cookie相关

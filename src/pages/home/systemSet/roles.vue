@@ -352,10 +352,12 @@ export default {
     //更新权限弹框 确定提交按钮
     reviseSubmit() {
       /* 节点权限处理 */
-      var arr = [];
+      var arr = [1];
       var teachArr=[0,0,0,0,0,0,0,0];
       this.$refs.powerTree.getCheckedNodes().forEach(function(item) {
-        arr.push(item.id);
+        if(!arr.includes(item.id)){
+          arr.push(item.id);
+        }
       });
       this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
         teachArr[item.id]=1;
