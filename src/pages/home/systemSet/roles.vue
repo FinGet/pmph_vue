@@ -145,31 +145,35 @@ export default {
       teachTreeData:[
           {
               label:'修改教材通知',
-              id:10001
+              id:0
             },
             {
               label:'分配策划编辑',
-              id:10002
+              id:1
             },
             {
               label:'遴选主编副主编',
-              id:10003
+              id:2
             },
             {
-              label:'遴选编委（名单确认）',
-              id:10004
+              label:'遴选编委',
+              id:3
+            },
+            {
+              label:'名单确认',
+              id:4
             },
             {
               label:'最终结果公布',
-              id:10005
+              id:5
             },
             {
               label:'创建小组',
-              id:10006
+              id:6
             },
             {
               label:'强制结束整套教材',
-              id:10007
+              id:7
             },
       ],
       treeData: [
@@ -347,9 +351,15 @@ export default {
     },
     //更新权限弹框 确定提交按钮
     reviseSubmit() {
+      /* 节点权限处理 */
       var arr = [];
+      var teachArr=[0,0,0,0,0,0,0,0];
       this.$refs.powerTree.getCheckedNodes().forEach(function(item) {
         arr.push(item.id);
+      });
+      this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
+        teachArr[item.id]=1;
+        console.log(teachArr);
       });
       var _this = this;
       this.$axios({
@@ -358,6 +368,7 @@ export default {
         data: _this.$initPostData({
           roleId: _this.revisePowerId,
           permissionIds: arr.join(","),
+          materialId:teachArr.join().replace(/,/g,'')
         })
       })
         .then(function(res) {
@@ -374,12 +385,24 @@ export default {
           console.log(err);
         });
     },
+    /* 查看角色权限 */
     openSeeDialog(obj){
       console.log(obj);
       this.isSeePower=true;
       this.defaultCheckedData = obj.pmphRolePermissionChild;
+      this.initMaterialDefault(obj.materialPermission);
       this.revisePowerId = obj.id;
       this.powerTreeVisible = true;
+    },
+    /* 教材申报权限 */
+    initMaterialDefault(str){
+      this.defaultTeachData=[];
+     for (var i in  this.teachTreeData){
+       console.log('index',i,str[i]);
+       if(str[i]==1){
+         this.defaultTeachData.push(i);
+       }
+     }
     },
     //获取角色列表数据
     getListData() {
@@ -394,10 +417,10 @@ export default {
         .then(function(res) {
           console.log(res);
           if (res.data.code == 1) {
-            res.data.data.map(iterm=>{
+            /* res.data.data.map(iterm=>{
               iterm.isDisabled=!!iterm.isDisabled;
               iterm.sort=iterm.sort+'';
-            })
+            }) */
             _this.rolesListData = res.data.data;
           }
         })
@@ -411,6 +434,7 @@ export default {
       console.log(obj);
       this.isSeePower=false;
       this.defaultCheckedData = obj.pmphRolePermissionChild;
+      this.initMaterialDefault(obj.materialPermission);
       this.revisePowerId = obj.id;
       this.powerTreeVisible = true;
     },

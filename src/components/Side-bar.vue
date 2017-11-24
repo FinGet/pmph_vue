@@ -45,7 +45,7 @@
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
+          <i class="fa fa-users fa-fw"></i>
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>
