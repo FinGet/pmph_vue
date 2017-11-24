@@ -72,7 +72,8 @@ export default {
         }
     },
     mounted() {
-        this.materialId = this.$route.query.materialId
+        this.materialId = this.$route.params.materialId
+        // console.log(this.$route.params)
         this.getNotice()
     }
 }
