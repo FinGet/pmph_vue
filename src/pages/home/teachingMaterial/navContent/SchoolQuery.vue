@@ -98,6 +98,8 @@
           if (res.code == '1') {
             this.$message.success('发布成功！');
             this.$router.push({name:'通知列表'});
+          } else {
+            this.$message.error(res.msg.msgTrim());
           }
         }).catch(err => {
           this.$message.error('发布失败，请稍后再试！');
