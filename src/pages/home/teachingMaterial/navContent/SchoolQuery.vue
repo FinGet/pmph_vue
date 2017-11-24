@@ -62,6 +62,8 @@
         },
         dialogVisible:false,
         hasCheckedOrgList:[],
+        materialId: '',
+        orgIds:[]
       };
     },
     methods: {
@@ -70,6 +72,11 @@
        */
       publishBtn(){
         this.hasCheckedOrgList = this.$refs.chooseSchool.getSelectData();
+        var arr = this.$refs.chooseSchool.getSelectData()
+        arr.forEach(item=>{
+          this.orgIds.push(item.id)
+        })
+        // console.log(this.hasCheckedOrgList)
         this.dialogVisible=true;
       },
       /**
@@ -82,15 +89,26 @@
        * 确认提交表单
        */
       submit(){
-        this.$message.success('发布成功！');
-        this.$router.push({name:'通知列表'});
+        this.$axios.post('/pmpheep/material/extra/published',this.$initPostData({
+          materialId: this.materialId,
+          orgIds: this.orgIds
+        })).then(response => {
+          let res = response.data
+          if (res.code == '1') {
+            this.$message.success('发布成功！');
+            this.$router.push({name:'通知列表'});
+          }
+        }).catch(err => {
+          this.$message.error('发布失败，请稍后再试！');
+        })
       }
     },
     components:{
       chooseSchool
     },
     created(){
-
+      this.materialId = this.$route.params.materialId
+      // console.log(this.$route.params)
     },
 
   }

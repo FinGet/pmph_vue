@@ -288,7 +288,7 @@
               }
             });
             this.area_school= tempList;
-            console.log(this.area_school)
+            // console.log(this.area_school)
           }
         })
       },
