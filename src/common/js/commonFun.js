@@ -57,7 +57,16 @@ export function authorityComparison(matchArr, userArr) {
     })
     return result;
 }
-
+/* 教材申报权限判断 */
+export function materialPower(num) {
+  var userData= getSessionStorage('currentUser', 'json')||{};
+  var str = userData.materialPermission;
+  if(str[num]==1){
+    return true;
+  } else{
+    return false;
+  }   
+}
 /**=================================================================
  cookie相关
  =================================================================*/
