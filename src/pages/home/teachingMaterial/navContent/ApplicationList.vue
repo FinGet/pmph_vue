@@ -14,7 +14,7 @@
                 <el-option label="未公布" value="未公布"></el-option>
                 <el-option label="已结束" value="已结束"></el-option>
             </el-select>
-            <el-button type="primary" class="button" icon="search">搜索</el-button>
+            <el-button type="primary" class="button" icon="search" @click="getTableData">搜索</el-button>
             <el-checkbox v-model="searchForm.isMy" class="check" @change="getTableData">仅查看我的</el-checkbox>
             <router-link :to="{name:'新建通知',params:{materialId:'new'}}">
                 <el-button class="right_button" type="primary">新建通知</el-button>
@@ -26,7 +26,8 @@
             <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
-                    <p class="link" @click="operation('toProcess',scope.row)">{{scope.row.materialName}}</p>
+                    <p class="link" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row.isMy)">{{scope.row.materialName}}</p>
+                    <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="显示结束日期" width="125">
@@ -59,9 +60,9 @@
             <el-table-column label="操作" width="300">
                 <template scope="scope">
                     <p class="operation_p">
-                        <el-button type="text" class="op_button" @click="operation('edit',scope.row)">修改</el-button>
+                        <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">修改</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="operation('publish',scope.row)">通知发布</el-button>
+                        <el-button type="text" class="op_button" @click="operation('publish',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">通知发布</el-button>
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="operation('msg',scope.row)">通知详情</el-button>
                         <el-dropdown trigger="click">
@@ -74,16 +75,16 @@
                                   <el-button type="text" @click="operation('msgState',scope.row)">消息状态</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('setBookList',scope.row)">设置书目录</el-button>
+                                  <el-button type="text" @click="operation('setBookList',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">设置书目录</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('result',scope.row)">结果统计</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('setTopic',scope.row)">设置选题号</el-button>
+                                  <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">设置选题号</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('delete',scope.row)">删除</el-button>
+                                  <el-button type="text" @click="operation('delete',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">删除</el-button>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -205,7 +206,12 @@ export default {
        * * @param isMy  Boolean 是否属于当前用户
        */
       hasAccessAuthority(index,isMy){
-        var rolesAccessAuthority = this.$commonFun.materialPower(index);
+        //如果传的是boolean类型，就直接返回
+        if((typeof index).toLowerCase() == "boolean"){
+          return (isMy && index);
+        }
+
+        let rolesAccessAuthority = this.$commonFun.materialPower(index);
         return (isMy && rolesAccessAuthority);
       },
       /**
