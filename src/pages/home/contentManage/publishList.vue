@@ -154,7 +154,7 @@
           <span>审核状态：</span>
           <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
-             v-for="item in selectOp"
+             v-for="item in commentSelectOp"
              :key="item.value"
              :label="item.label"
              :value="item.value"
@@ -308,6 +308,16 @@ export default {
         {
           value: 1,
           label: "已退回"
+        },
+        {
+          value: 2,
+          label: "已通过"
+        }
+      ],
+      commentSelectOp: [
+        {
+          value: 0,
+          label: "待审核"
         },
         {
           value: 2,

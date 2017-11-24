@@ -6,20 +6,20 @@
 
             <el-form-item label="教材名称:" prop="name" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.name" class="input-217"></el-input>
+                <el-input v-model="ruleForm['material.materialName']" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="教材轮次:" prop="turn" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.turn" class="input-217"></el-input>
+                <el-input v-model="ruleForm['material.materialRound']" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="实际结束日期:" required class="pull-left">
               <el-col>
                 <el-form-item prop="endDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.endDate" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.actualDeadline']" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
@@ -27,7 +27,7 @@
             <el-form-item label="展示结束日期:" required class="pull-left">
               <el-col>
                 <el-form-item prop="playEndDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.playEndDate" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.deadline']" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
@@ -35,7 +35,7 @@
             <el-form-item label="年龄计算截止日期:" required class="pull-left">
               <el-col>
                 <el-form-item prop="ageDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.ageDate" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.ageDeadline']" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-form-item>
@@ -43,22 +43,18 @@
             <el-form-item label="教材分类:">
               <el-col>
                 <el-form-item>
-                  <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
-                  <el-button type="text" class="classify_button" @click="dialogVisiable=true">选择</el-button>
-                  <el-button type="text" class="classify_button">删除</el-button>
+                  <!-- <el-input v-model="formData['material.materialType']" class="classify_input" disabled></el-input> -->
+                   <el-cascader
+                      :options="chooseBookData"
+                      :props="defaultProps"
+                      v-model="defaultCheckedBook"
+                      change-on-select
+                      class="classify_input"
+                      @change="materialHandleChange">
+                    </el-cascader>
+                  <!-- <el-button type="text" class="classify_button" @click="dialogVisiable=true">选择</el-button>
+                  <el-button type="text" class="classify_button">删除</el-button> -->
                 </el-form-item>
-                <!--<el-form-item>-->
-                  <!--<span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                  <!--<el-form-item>-->
-                      <!--<span class="grey_span" style="float:left;">请按照模板格式上传（-->
-                          <!--<el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>-->
-                    <!--<el-upload class="upload" action="" :file-list="fileList">-->
-                      <!--<el-button size="small" type="primary">点击上传</el-button>-->
-                    <!--</el-upload>-->
-                  <!--</el-form-item>-->
-                <!--</el-form-item>-->
               </el-col>
             </el-form-item>
 
@@ -110,20 +106,20 @@
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isNameInput">{{scope.row.name}}
-                        <i class="el-icon-edit" @click="scope.row.isNameInput=!scope.row.isNameInput"></i>
+                      <span v-if="!scope.row.isNameInput">{{scope.row.realname}}
+                        <i class="el-icon-edit" @click="test(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.name" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.realname" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isPhoneInput">{{scope.row.phone}}
+                      <span v-if="!scope.row.isPhoneInput">{{scope.row.handphone}}
                         <i class="el-icon-edit" @click="scope.row.isPhoneInput=!scope.row.isPhoneInput"></i>
                       </span>
-                      <el-input v-model="scope.row.phone" @blur="scope.row.isPhoneInput=false" v-if="scope.row.isPhoneInput"></el-input>
+                      <el-input v-model="scope.row.handphone" @blur="scope.row.isPhoneInput=false" v-if="scope.row.isPhoneInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -260,18 +256,9 @@
 
             <el-form-item label="邮寄地址:" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm.address" class="input-500"></el-input>
+                <el-input v-model="ruleForm['material.mailAddress']" class="input-500"></el-input>
               </el-col>
             </el-form-item>
-
-            <!-- <el-form-item label="书籍多选:" class="pull-left">
-              <el-radio class="radio" v-model="bookradio" label="1">是</el-radio>
-              <el-radio class="radio" v-model="bookradio" label="2">否</el-radio>
-            </el-form-item>
-            <el-form-item label="职位多选:" class="pull-left">
-              <el-radio class="radio" v-model="jobradio" label="1">是</el-radio>
-              <el-radio class="radio" v-model="jobradio" label="2">否</el-radio>
-            </el-form-item> -->
             <div class="clearfix"></div>
             <el-form-item label="选项:">
               <el-col>
@@ -400,571 +387,594 @@
       </el-row>
       <!-- 教材分类选择弹框 -->
 
-      <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" top="5%" size="tiny">
+      <!-- <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" top="5%" size="tiny">
         <div style="overflow:hidden;">
           <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
           <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
         </div>
-      </el-dialog>
+      </el-dialog> -->
 
       <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
-          <user-pmph select :radio="!Multichoice">
-            <el-button  type="primary" @click="$message.info('增加按钮方法没有实现')">增加</el-button>
+          <user-pmph select :radio="!Multichoice" @selection-change="conactPersonChange">
+            <el-button  type="primary" @click="addCheckedConact()">增加</el-button>
           </user-pmph>
       </el-dialog>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import userPmph from 'components/user-pmph'
-  export default {
-    data() {
-      return {
-        labelPosition: 'right',
-        // bookradio:'1',
-        // jobradio:'1',
-        mainContent:'',
-        remark:'',
-        dialogVisiable: false,
-        chooseVisiable: false, // 选择弹窗
-        chooseTitle: '', // 选择弹出窗的title
-        Multichoice:true, // 是否可以多选，传递给Departments子组件
-        classify:'', // 分类
-        contactData:[],// 联系人
-        projectDirectorData:[], // 项目主任
-        projectEditorData:[], // 项目编辑
-        checkedTreeData:[],
-        defaultProps: { // 树结构
-          children: 'children',
-          label: 'label'
-        },
-        formData: {
-          bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
-          round: 3,
-          classify: ''
-        },
-        fileList:[],
-        tableData:[
-          {
-            name:'张三',
-            phone:'1383838438',
-            email:'1233214@qq.com'
-          },
-          {
-            name:'张三',
-            phone:'1383838438',
-            email:'1233214@qq.com'
-          }
-        ],
-        proptableData:[
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'李四',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'王二',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'赵武',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'王二',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'赵武',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          }
-        ], // 传递给Departments子组件
-        extensionData:[
-          {
-            name:'请输入名字',
-            isNameInput:false,
-            usecheck:false
-          }
-        ], // 扩展项
-        listTableData:[
-          {
-            name:'书籍多选',
-            usecheck: false,
-            show: true
-          },
-          {
-            name: '职位多选',
-            usecheck: false,
-            show: true
-          },
-          {
-            name:'主要学习经历',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'主要工作经历',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'主要教学经历',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'主要学术兼职',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'上版教材参编情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'国家级精品课程建设情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'省部级精品课程建设情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'学校精品课程建设情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'主编国家规划教材情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'教材编写情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'其他教材编写情况',
-            usecheck:false,
-            needcheck:false
-          },
-          {
-            name:'科研情况',
-            usecheck:false,
-            needcheck:false
-          }
-        ],
-        ruleForm: {
-          name: '',
-          turn: '',
-          endDate: '',
-          playEndDate: '',
-          ageDate:'',
-          address:'北京市朝阳区潘家园南里19号人卫大厦B座',
-          uploadImg:''
-        },
-        chooseBookData: [
-          {
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        },
-          {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          },
-            {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-        rules: {
-          name: [
-            { required: true, message: '请输入教材名称', trigger: 'blur' }
-          ],
-          turn: [
-            { required: true, message: '请输入教材轮次', trigger: 'change' }
-          ],
-          endDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          playEndDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          ageDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ]
-        }
-      };
-    },
-    methods: {
-      submitForm(formName) {
-        this.$message({
-          message: '保存成功，设置书目录即可发布！',
-          type: 'success'
-        });
-        this.$router.push('/applicationrouter/applicationlist');
-
-//        this.$refs[formName].validate((valid) => {
-//          if (valid) {
-//            alert('submit!');
-//          } else {
-//            console.log('error submit!!');
-//            return false;
-//          }
-//        });
+import userPmph from "components/user-pmph";
+export default {
+  data() {
+    return {
+      materialTypeUrl:'/pmpheep/books/list/materialType' , //教材分类url
+      labelPosition: "right",
+      // bookradio:'1',
+      // jobradio:'1',
+      mainContent: "",
+      remark: "",
+      dialogVisiable: false,
+      chooseVisiable: false, // 选择弹窗
+      chooseTitle: "", // 选择弹出窗的title
+      Multichoice: true, // 是否可以多选，传递给Departments子组件
+      classify: "", // 分类
+      contactData: [], // 联系人
+      projectDirectorData: [], // 项目主任
+      projectEditorData: [], // 项目编辑
+      checkedTreeData: [],   //教材分类树
+      defaultCheckedBook:[] ,   //教材默认选项
+      defaultProps: {
+        // 树结构
+        children: "childrenMaterialTypeVO",
+        label: "typeName",
+        value:'id'
       },
-      /**
+      checkedConactPersonData:[],
+      formData: {
+        bookName: "全国高等学校本科应用心理学专业第三轮规划教材",
+        round: 3,
+        classify: ""
+      },
+      fileList: [],
+      tableData: [
+        {
+          name: "张三",
+          phone: "1383838438",
+          email: "1233214@qq.com"
+        },
+        {
+          name: "张三",
+          phone: "1383838438",
+          email: "1233214@qq.com"
+        }
+      ],
+      proptableData: [
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "李四",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "王二",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "赵武",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "张三",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "王二",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        },
+        {
+          name: "赵武",
+          username: "zs",
+          isNameInput: false,
+          isPhoneInput: false,
+          isEmailInput: false,
+          email: "123@qq.com",
+          role: "主任项目编辑",
+          phone: "1383838438"
+        }
+      ], // 传递给Departments子组件
+      extensionData: [
+        {
+          name: "请输入名字",
+          isNameInput: false,
+          usecheck: false
+        }
+      ], // 扩展项
+      listTableData: [
+        {
+          name: "书籍多选",
+          key: "material.isMultiBooks",
+          usecheck: false,
+          show: true
+        },
+        {
+          name: "职位多选",
+          usecheck: false,
+          show: true
+        },
+        {
+          name: "主要学习经历",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主要工作经历",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主要教学经历",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主要学术兼职",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "上版教材参编情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "国家级精品课程建设情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "省部级精品课程建设情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "学校精品课程建设情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主编国家规划教材情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "教材编写情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "其他教材编写情况",
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "科研情况",
+          usecheck: false,
+          needcheck: false
+        }
+      ],
+      ruleForm: {
+        "material.materialName": "",
+        "material.materialRound": "",
+        "material.materialType": "",
+        "material.deadline": "",
+        "material.actualDeadline": "",
+        "material.ageDeadline": "",
+        "material.mailAddress": "",
+        "material.director": "",
+        "material.isMultiBooks": "",
+        "material.isMultiPosition": "",
+        "material.isEduExpUsed": "",
+        "material.isEduExpRequired": "",
+        "material.isWorkExpUsed": "",
+        "material.isWorkExpRequired": "",
+        "material.isTeachExpUsed": "",
+        "material.isTeachExpRequired": "",
+        endDate: "",
+        playEndDate: "",
+        ageDate: "",
+        address: "北京市朝阳区潘家园南里19号人卫大厦B座",
+        uploadImg: ""
+      },
+      chooseBookData:[],
+      rules: {
+        name: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
+        turn: [{ required: true, message: "请输入教材轮次", trigger: "change" }],
+        endDate: [
+          { type: "date", required: true, message: "请选择日期", trigger: "change" }
+        ],
+        playEndDate: [
+          { type: "date", required: true, message: "请选择日期", trigger: "change" }
+        ],
+        ageDate: [
+          { type: "date", required: true, message: "请选择日期", trigger: "change" }
+        ]
+      }
+    };
+  },
+  created() {
+    this.getBookType();
+  },
+  methods: {
+          /**
+       * 获取教材分类树数据
+       */
+      getBookType(){
+        this.$axios.get(this.materialTypeUrl)
+          .then((res)=>{
+            console.log(res);
+            if(res.data.code==1){
+               this.chooseBookData=res.data.data.childrenMaterialTypeVO;
+               console.log(this.chooseBookData);
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+      /* 选择教材分类 */
+      materialHandleChange(val){
+        this.ruleForm['material.materialType']=val[val.length-1];
+        console.log(this.ruleForm['material.materialType']);
+      },
+      test(num,str){
+        console.log(num,str);
+        this.contactData[num][str]=!this.contactData[num][str];
+        console.log(this.contactData);
+       // obj[str]=!obj[str];
+      },
+      /* 联系人选择 */
+      conactPersonChange(val){
+        this.checkedConactPersonData=val;
+        console.log(this.checkedConactPersonData);
+      },
+      /* 增加 联系人 */
+      addCheckedConact(){
+       for(var i in this.checkedConactPersonData){
+              this.contactData[i]=this.checkedConactPersonData[i];
+              this.contactData[i].isNameInput=false;
+              this.contactData[i].isPhoneInput=false;
+              this.contactData[i].isEmailInput=false;
+        }
+       console.log('12312',this.contactData);
+       this.chooseVisiable=false;
+      },
+    submitForm(formName) {
+      this.$message({
+        message: "保存成功，设置书目录即可发布！",
+        type: "success"
+      });
+      this.$router.push("/applicationrouter/applicationlist");
+
+      //        this.$refs[formName].validate((valid) => {
+      //          if (valid) {
+      //            alert('submit!');
+      //          } else {
+      //            console.log('error submit!!');
+      //            return false;
+      //          }
+      //        });
+    },
+    /**
        * 删除选中的项目主任
        */
-      handleDirectorClose(val) {
-        // console.log(val)
-        this.projectDirectorData.splice(val,1)
-        this.$message({
-          message: `删除成功！`,
-          type: 'success'
-        });
-      },
-      /**
+    handleDirectorClose(val) {
+      // console.log(val)
+      this.projectDirectorData.splice(val, 1);
+      this.$message({
+        message: `删除成功！`,
+        type: "success"
+      });
+    },
+    /**
        * 删除选中的项目编辑
        */
-      handleEditorClose(val) {
-        this.projectEditorData.splice(val,1)
-        this.$message({
-          message: `删除成功！`,
-          type: 'success'
-        });
-      },
-      /**
+    handleEditorClose(val) {
+      this.projectEditorData.splice(val, 1);
+      this.$message({
+        message: `删除成功！`,
+        type: "success"
+      });
+    },
+    /**
        * 返回上一级
        */
-      back() {
-        this.$router.push('applicationlist')
-      },
-      handleNodeClick(data) {
-        this.checkedTreeData = data;
-        console.log(data);
-      },
-      getTreeNode() {
-
-      },
-      /**
+    back() {
+      this.$router.push("applicationlist");
+    },
+    handleNodeClick(data) {
+      this.checkedTreeData = data;
+      console.log(data);
+    },
+    getTreeNode() {},
+    /**
        *
        * @param index
        * @param row
        */
-      // 删除
-      handleDelete(index, row, data) {
-        // console.log(index, row);
-        data.splice(index, 1)
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-//      showInput(index, str) {
-//        this.extendListData[index].orderNumVisible = true;
-//        console.log(index,str);
-//        console.log(this.$refs);
-//        console.log(this.$refs.input0_1) ;
-//        //this.$refs[str].$refs.input.focus();
-//      },
-      deleteExtendItem(index){
-        this.extendListData.splice(index,1);
-      },
-      addExtend(){
-        this.extensionData.push({
-          name:'请输入名字',
-          isNameInput:false,
-          needradio:'1'
-        });
-      },
-      deleteExtend(index){
-        this.extensionData.splice(index,1);
-      },
-      /**
+    // 删除
+    handleDelete(index, row, data) {
+      // console.log(index, row);
+      data.splice(index, 1);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    //      showInput(index, str) {
+    //        this.extendListData[index].orderNumVisible = true;
+    //        console.log(index,str);
+    //        console.log(this.$refs);
+    //        console.log(this.$refs.input0_1) ;
+    //        //this.$refs[str].$refs.input.focus();
+    //      },
+    deleteExtendItem(index) {
+      this.extendListData.splice(index, 1);
+    },
+    addExtend() {
+      this.extensionData.push({
+        name: "请输入名字",
+        isNameInput: false,
+        needradio: "1"
+      });
+    },
+    deleteExtend(index) {
+      this.extensionData.splice(index, 1);
+    },
+    /**
        * 选择联系人
        */
-      chooseContact() {
-        this.chooseVisiable = true
-        this.chooseTitle = '选择联系人'
-        this.Multichoice = true
-        this.classify = 'contact'
-      },
-      /**
+    chooseContact() {
+      this.chooseVisiable = true;
+      this.chooseTitle = "选择联系人";
+      this.Multichoice = true;
+      this.classify = "contact";
+    },
+    /**
        * 项目主任设置
        */
-      chooseProjectDirector() {
-        this.chooseVisiable = true
-        this.chooseTitle = '项目主任设置'
-        this.Multichoice = false;
-        this.classify = 'director'
-      },
-      /**
+    chooseProjectDirector() {
+      this.chooseVisiable = true;
+      this.chooseTitle = "项目主任设置";
+      this.Multichoice = false;
+      this.classify = "director";
+    },
+    /**
        * 项目编辑设置
        */
-      chooseProjectEditor() {
-        this.chooseVisiable = true
-        this.chooseTitle = '项目编辑设置'
-        this.Multichoice = true;
-        this.classify = 'editor'
-      },
-      /**
+    chooseProjectEditor() {
+      this.chooseVisiable = true;
+      this.chooseTitle = "项目编辑设置";
+      this.Multichoice = true;
+      this.classify = "editor";
+    },
+    /**
        * add增加 监听子组件的add方法
        */
-      add(val) {
-        if (this.classify === 'editor') {
-          // console.log(val)
-          for (var i in val) {
-            //console.log(val[i])
-            this.projectEditorData[i] = val[i]
-          }
-        } else if (this.classify === 'director') {
-          for (var i in val) {
-            //console.log(val[i])
-            this.projectDirectorData[i] = val[i]
-          }
-        } else {
-          for (var i in val) {
-            //console.log(val[i])
-            this.contactData[i] = val[i]
-          }
-          console.log(this.extendListData)
+    add(val) {
+      if (this.classify === "editor") {
+        // console.log(val)
+        for (var i in val) {
+          //console.log(val[i])
+          this.projectEditorData[i] = val[i];
         }
-        this.$message({
-          message: `添加成功！`,
-          type: 'success'
-        });
-        this.chooseVisiable = false
-      },
-      /**
+      } else if (this.classify === "director") {
+        for (var i in val) {
+          //console.log(val[i])
+          this.projectDirectorData[i] = val[i];
+        }
+      } else {
+        for (var i in val) {
+          //console.log(val[i])
+          this.contactData[i] = val[i];
+        }
+        console.log(this.extendListData);
+      }
+      this.$message({
+        message: `添加成功！`,
+        type: "success"
+      });
+      this.chooseVisiable = false;
+    },
+    /**
        * 关闭弹出层
        */
-      closeDialog() {
-        //console.log(1)
-        this.$refs.department.clear()
-      }
-    },
-    components:{
-      userPmph
+    closeDialog() {
+      //console.log(1)
+     // this.$refs.department.clear();
     }
+  },
+  components: {
+    userPmph
   }
+};
 </script>
 
 <style>
-  .upload {
-    float: left;
-  }
-  .classify_input {
-    width: 600px;
-    margin-right: 20px;
-  }
+.upload {
+  float: left;
+}
+.classify_input {
+  width: 600px;
+  margin-right: 20px;
+}
 
- .classify_button {
-    color: #1abb9c;
-  }
+.classify_button {
+  color: #1abb9c;
+}
 
-  .classify_button:hover {
-    opacity: .9;
-  }
-  .checkTree_dialog .button {
-    float: right;
-  }
-  .checkTree_dialog .tree_box {
-    box-sizing: border-box;
-    width: calc(100% - 100px);
-    height: 200px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    float: left;
-  }
-  .checkTree_dialog .tree_box::-webkit-scrollbar {
-    display: none;
-  }
+.classify_button:hover {
+  opacity: 0.9;
+}
+.checkTree_dialog .button {
+  float: right;
+}
+.checkTree_dialog .tree_box {
+  box-sizing: border-box;
+  width: calc(100% - 100px);
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  float: left;
+}
+.checkTree_dialog .tree_box::-webkit-scrollbar {
+  display: none;
+}
 
-  .checkTree_dialog .button {
-    float: right;
-  }
-  .extend_list {
-    width: 100%;
-  }
-  .extend_list .table-header{
-    background-color: #d4d9dd;
-  }
-  .extend_list tr {
-    border: 1px solid #d4d4d4;
-  }
+.checkTree_dialog .button {
+  float: right;
+}
+.extend_list {
+  width: 100%;
+}
+.extend_list .table-header {
+  background-color: #d4d9dd;
+}
+.extend_list tr {
+  border: 1px solid #d4d4d4;
+}
 
-  .extend_list tr td {
-    width: 25%;
-    color: #5e5e5e;
-    text-align: center;
-    padding:5px 0;
-  }
+.extend_list tr td {
+  width: 25%;
+  color: #5e5e5e;
+  text-align: center;
+  padding: 5px 0;
+}
 
-  .extend_list tr td i {
-    margin-left: 5px;
-    cursor: pointer;
-  }
-  .extend_list .add_button{
-    color:#1ab194;
-  }
+.extend_list tr td i {
+  margin-left: 5px;
+  cursor: pointer;
+}
+.extend_list .add_button {
+  color: #1ab194;
+}
 </style>
