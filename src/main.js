@@ -43,7 +43,7 @@ var getUserData=function () {
     token:sessionData.sessionPmphUserToken,
     sessionId:sessionData.userSessionId,
     userInfo:sessionData.sessionPmphUser,
-    permissionIds:sessionData.pmphUserPermissionIds,
+    permissionIds:sessionData.pmphUserPermissionIds
   }
 };
 Vue.prototype.$getUserData=getUserData;

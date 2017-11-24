@@ -8,7 +8,8 @@
             <el-input class="input" v-model.trim="searchForm.materialName" @keyup.enter.native="getTableData" v-if="selectValue==1"></el-input>
             <el-input class="input" v-model.trim="searchForm.contactUserName" @keyup.enter.native="getTableData" v-if="selectValue==2"></el-input>
             <span style="margin-left:25px;">状态：</span>
-            <el-select v-model="searchForm.state" class="select_input" @change="getTableData" style="float:none;" placeholder="请选择">
+            <el-select v-model="searchForm.state" class="select_input" @change="getTableData" style="float:none;" placeholder="全部">
+                <el-option label="全部" value=""></el-option>
                 <el-option label="已公布" value="已公布"></el-option>
                 <el-option label="未公布" value="未公布"></el-option>
                 <el-option label="已结束" value="已结束"></el-option>
@@ -25,14 +26,12 @@
             <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
-                    <router-link :to="{name:'申报表审核',params:{materialId:scope.row.id}}">{{scope.row.materialName}}</router-link>
+                    <p class="link" @click="operation('toProcess',scope.row)">{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="显示结束日期" width="125">
                 <template scope="scope">
-                    <p>
-                        {{scope.row.deadline}}
-                    </p>
+                    <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="实际结束日期" width="125">
@@ -48,7 +47,7 @@
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
                       <span> <i class="fa fa-phone"></i> {{scope.row.contacts[0].contactPhone}}</span>
                       <span> <i class="fa fa-envelope-o"></i> {{scope.row.contacts[0].contactEmail}}</span>
-                    <el-button type="text" v-if="scope.row.contacts.length>1">更多</el-button>
+                    <el-button type="text" v-if="scope.row.contacts.length>1" @click="showMoreContact(scope.row.contacts)">更多</el-button>
                   </div>
                 </template>
             </el-table-column>
@@ -60,22 +59,32 @@
             <el-table-column label="操作" width="300">
                 <template scope="scope">
                     <p class="operation_p">
-                        <el-button type="text" class="op_button">修改</el-button>
+                        <el-button type="text" class="op_button" @click="operation('edit',scope.row)">修改</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="$router.push({name:'教材申报选择学校',query:{history:'0'}})">通知发布</el-button>
+                        <el-button type="text" class="op_button" @click="operation('publish',scope.row)">通知发布</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="$router.push({name:'通知详情', query:{materialId:scope.row.id}})">通知详情</el-button>
-                        <el-dropdown trigger="click" @command="handleClickDrop">
+                        <el-button type="text" class="op_button" @click="operation('msg',scope.row)">通知详情</el-button>
+                        <el-dropdown trigger="click">
                             <span class="el-dropdown-link more_button">
                                 更多
                                 <i class="el-icon-caret-bottom el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item :command="{'router':'messagestate','data':scope.row}">消息状态</el-dropdown-item>
-                                <el-dropdown-item command="setBookList">设置书目录</el-dropdown-item>
-                                <el-dropdown-item command="resultCount">结果统计</el-dropdown-item>
-                                <el-dropdown-item command="set">设置选题号</el-dropdown-item>
-                                <el-dropdown-item command="delete">删除</el-dropdown-item>
+                                <el-dropdown-item>
+                                  <el-button type="text" @click="operation('msgState',scope.row)">消息状态</el-button>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                  <el-button type="text" @click="operation('setBookList',scope.row)">设置书目录</el-button>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                  <el-button type="text" @click="operation('result',scope.row)">结果统计</el-button>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                  <el-button type="text" @click="operation('setTopic',scope.row)">设置选题号</el-button>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                  <el-button type="text" @click="operation('delete',scope.row)">删除</el-button>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </p>
@@ -94,6 +103,34 @@
           :total="totalNum">
         </el-pagination>
       </div>
+
+
+      <el-dialog
+        title="更多联系人"
+        :visible.sync="dialogVisible"
+        size="tiny">
+        <div>
+          <el-table
+            :data="moreContactUserList"
+            border
+            stripe
+            style="width: 100%">
+            <el-table-column
+              prop="contactUserName"
+              label="姓名"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="contactPhone"
+              label="电话">
+            </el-table-column>
+            <el-table-column
+              prop="contactEmail"
+              label="邮箱">
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-dialog>
     </div>
 </template>
 <script type="text/javascript">
@@ -101,6 +138,7 @@ export default {
     data() {
         return {
             api_material_list:'/pmpheep/material/list',
+            api_material_del:'/pmpheep/material/delete',
             searchForm:{
               pageSize:30,
               pageNumber:1,
@@ -118,36 +156,12 @@ export default {
                 value: 2,
                 label: '联系人'
             }],
-            totalPage: 400,
-            tableData: []
+            tableData: [],
+          dialogVisible:false,
+          moreContactUserList:[],
         }
     },
     methods: {
-        //table状态过滤
-        /*   filterTag(value, row) {
-              return row.status === value;
-          }, */
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-        },
-        //下拉点击
-        handleClickDrop(command) {
-            console.log(arguments)
-            switch (command.router){
-              case 'set':
-                this.$router.push({name:'设置选题号'});
-                break;
-              case 'setBookList':
-                this.$router.push({ name: '设置书目录' });
-                break;
-              case 'messagestate':
-                this.$router.push({ name: '消息状态', query:{msgId: command.data.id}});
-                break;
-            }
-        },
       /**
        * 获取表格数据
        */
@@ -177,7 +191,92 @@ export default {
         this.searchForm.pageNumber=1;
         this.getTableData();
       },
+      /**
+       * 显示更多联系人
+       * @param list 联系人列表
+       */
+      showMoreContact(list){
+        this.moreContactUserList = list;
+        this.dialogVisible=true;
+      },
+      /**
+       * 是否有权限访问
+       * @param index 权限表下标
+       * * @param isMy  Boolean 是否属于当前用户
+       */
+      hasAccessAuthority(index,isMy){
+        var rolesAccessAuthority = this.$commonFun.materialPower(index);
+        return (isMy && rolesAccessAuthority);
+      },
+      /**
+       * 点击操作按钮，
+       * * @param type 操作类型，修改：edit, 发布：publish, 通知详情：msg, 消息状态：msgState, 设置书目录：setBookList,
+       *                        结果统计：result, 设置选题号：setTopic, 删除：delete, 遴选办理：select
+       * * @param materialData  当前教材数据
+       */
+      operation(type,materialData){
+        switch (type){
+          case 'edit':
+            this.$router.push({name:'新建通知',params:{materialId:materialData.id,type:'reEdit'}});
+            break;
+          case 'delete':
+            this.delete(materialData.id);
+            break;
+          case 'publish':
+            this.$router.push({name:'教材申报选择学校',params:{materialId:materialData.id,type:'reEdit'}});
+            break;
+          case 'msg':
+            this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'}});
+            break;
+          case 'msgState':
+            this.$router.push({name:'消息状态',query:{msgId:materialData.id}});
+            break;
+          case 'setBookList':
+            this.$router.push({name:'设置书目录',params:{materialId:materialData.id}});
+            break;
+          case 'result':
+            this.$router.push({name:'结果统计',params:{materialId:materialData.id}});
+            break;
+          case 'setTopic':
+            this.$router.push({name:'设置选题号',params:{materialId:materialData.id}});
+            break;
+          case 'toProcess':
+            this.$router.push({name:'申报表审核',params:{materialId:materialData.id}});
+            break;
+          default:
+            throw new error('没有该类型操作');
+        }
+      },
+      /**
+       * 删除通知
+       * @param id
+       */
+      delete(id){
+        this.$confirm("确定删除教材通知？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.put(this.api_material_del,this.$commonFun.initPostData({
+              id:id
+            }))
+              .then(response=>{
+                let res = response.data;
+                if(res.code==1){
+                  this.$message.success('删除成功!');
+                  this.getTableData();
+                }else{
+                  this.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+          })
+          .catch(e=>{})
 
+      }
     },
     created() {
       this.getTableData();
