@@ -120,6 +120,7 @@
             pageSize: '',
             pageNumber: '',
             orgName: '',
+            materialId: '',
             userNameOrUserCode: '',
             materialName: this.materialName
           }

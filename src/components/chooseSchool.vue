@@ -28,7 +28,7 @@
                   @close="handleHistoryTagClose(tag)"
                   :type="tag.type"
           >
-            {{tag.name}}
+            {{tag.materialName}}
           </el-tag>
         </div>
       </div>
@@ -125,21 +125,23 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="sort"
             label="序号"
             width="80">
+            <template scope="scope">
+              {{scope.$index+1}}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="materialName"
             label="通知名称">
           </el-table-column>
           <el-table-column
-            prop="total"
+            prop="orgCounts"
             label="发布机构数量"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="gmtCreate"
             label="通知创建日期"
             width="120">
           </el-table-column>
@@ -147,11 +149,21 @@
             label="操作"
             width="80">
             <template scope="scope">
-              <el-button type="text" @click="_chooseHistory(scope.$index,scope.row.orgIds)">选择</el-button>
+              <el-button type="text" @click="_chooseHistory(scope.$index,scope.row.id)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
+      <el-pagination
+        class="pull-right marginB10"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </el-dialog>
   </div>
 </template>
@@ -184,28 +196,13 @@
         area_school:[],
         dialogVisible:false,
         historyData:[],
-        tableData:[
-          {
-            orgIds:'123',
-            sort:0,
-            name:'全国高等学校健康服务与管理专业第一轮规划教材',
-            total:34,
-            date:'2017/10/1',
-          },{
-            orgIds:'123',
-            sort:1,
-            name:'全国高等学校健康服务与管理专业第一轮规划教材',
-            total:34,
-            date:'2017/10/1',
-          },{
-            orgIds:'123',
-            sort:2,
-            name:'全国高等学校健康服务与管理专业第一轮规划教材',
-            total:34,
-            date:'2017/10/1',
-          }],
+        tableData:[],
         searchName:'',
         searchResultFirstId:undefined,
+        currentPage:1,
+        pageSize:20,
+        total: 0,
+        materialId: ''
       };
     },
     computed:{
@@ -228,6 +225,27 @@
     },
     methods: {
       /**
+        加载历史教材通知
+       */
+      _getHistory(){
+        this.$axios.get('/pmpheep/material/extra/history',{
+          params:{
+            pageSize : this.pageSize,
+            pageNumber: this.currentPage
+          }
+        }).then(response=>{
+          let res = response.data
+          if (res.code =="1") {
+            this.total = res.data.total
+            this.tableData = res.data.rows
+            res.data.rows.map(item=>{
+                item.gmtCreate=this.$commonFun.formatDate(item.gmtCreate);
+            });
+            // console.log(this.tableData)
+          }
+        })
+      },
+      /**
        * 加载学校列表
        */
       _getSchools() {
@@ -239,6 +257,7 @@
             sendType: 1,
             pageSize: 20,
             pageNumber: 1,
+            materialId: '',
             userNameOrUserCode: '',
             orgName: '',
             materialName: ''
@@ -269,6 +288,38 @@
               }
             });
             this.area_school= tempList;
+            console.log(this.area_school)
+          }
+        })
+      },
+      /**
+       * 加载历史学校列表
+       */
+      _getHistorySchools() {
+        var schoolName = []
+        var schoolType = []
+        var schoolId = []
+        this.$axios.get("/pmpheep/messages/message/sendObject",{
+          params:{
+            sendType: 1,
+            pageSize: 20,
+            pageNumber: 1,
+            materialId: this.materialId,
+            userNameOrUserCode: '',
+            orgName: '',
+            materialName: ''
+          }
+        }).then((response) => {
+          let res = response.data
+          if (res.code == '1') {
+            res.data.orgVo.forEach(item=>{
+              this.area_school.forEach(item1=>{
+                if (item.areaId == item1.id) {
+                  var checkedId = item.id.split(',')
+                  item1.checkedSchools = checkedId
+                }
+              })
+            })
           }
         })
       },
@@ -279,6 +330,8 @@
       _chooseHistory(tableIndex,id){
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
+        this.materialId = id
+        this._getHistorySchools()
       },
       /**
        * 关闭已选择历史记录时触发此方法
@@ -286,6 +339,10 @@
        */
       handleHistoryTagClose(tag){
         this.historyData=[];
+        // 清空已选中学校
+        this.area_school.map(item=>{
+          item.checkedSchools = []
+        })
       },
       /**
        * 当省份复选框发生变化
@@ -421,6 +478,14 @@
        */
       getSelectData(){
         return this.hasCheckedOrgList;
+      },
+      handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        this.pageSize = val
+      },
+      handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        this.currentPage = val
       }
     },
     watch:{
@@ -430,6 +495,7 @@
     },
     created(){
       this._getSchools()
+      this._getHistory()
     },
 
   }
