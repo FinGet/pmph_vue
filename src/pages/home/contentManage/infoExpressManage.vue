@@ -89,6 +89,7 @@
       <!--分页-->
     <div class="pagination-wrapper">
       <el-pagination
+        v-if="totalPage>contentParams.pageSize"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="contentParams.pageNumber"

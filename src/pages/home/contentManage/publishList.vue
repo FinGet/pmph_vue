@@ -97,6 +97,7 @@
       <!--分页-->
     <div class="pagination-wrapper">
       <el-pagination
+        v-if="pageTotal>pageSize"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
@@ -337,7 +338,7 @@ export default {
       selectValue: "",
       currentPage: 1,
       searchTitle: "",
-      pageTotal: 100,
+      pageTotal: 30,
       pageSize: 30,
       /* 评论*/
       options: [],
