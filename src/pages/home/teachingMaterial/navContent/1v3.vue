@@ -84,7 +84,7 @@
               待分配
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
                 <el-button type="text" :disabled="!hasAccess(1) || forceEnd">
-                  <i class="fa fa-pencil fa-fw" @click="chooseVisiable2=true"></i>
+                  <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
                 </el-button>
               </el-tooltip>
             </p>
@@ -99,7 +99,7 @@
             <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'chief'}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
                 <el-button type="text" :disabled="!hasAccess(2)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -114,7 +114,7 @@
             <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'pres'}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
                 <el-button type="text" :disabled="!hasAccess(3)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -167,9 +167,9 @@
     <el-dialog title="分配策划编辑" :visible.sync="chooseVisiable2" size="large" top="5%">
       <!-- <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
        -->
-       <user-pmph @selection-change="clubUserSelectChange" select >
+       <user-pmph @selection-change="selectChange" ref="userPmph" select radio>
          <div class="operation-wrapper">
-           <el-button type="primary">确认</el-button>  
+           <el-button type="primary" @click="updateEditor">确认</el-button>  
          </div>
        </user-pmph>
     </el-dialog>
@@ -217,7 +217,9 @@
         totalNum: 0,
         selectedIds:'',
         method:'',
-        currentId: ''
+        currentId: '',
+        planningEditor: '',
+        selectedBookId:''
       }
     },
     computed:{
@@ -337,6 +339,26 @@
       pass(ids){
         this.putApi('/pmpheep/position/updateTextbook',ids)        
       },
+      showEditor(data){
+        this.chooseVisiable2 = true
+        this.selectedBookId = data.textBookId
+      },
+      /**
+       * 分配策划编辑
+       */
+      updateEditor(){
+        this.$axios.put('/pmpheep/position/updateEditor',this.$initPostData({
+          id: this.selectedBookId,
+          planningEditor: this.planningEditor
+        })).then(response => {
+          let res = response.data
+          if (res.code == 1) {
+            this.$message.success('操作成功')
+          }
+        }).catch(err => {
+          this.$message.error('操作失败，请稍后再试')
+        })
+      },
       /**
        * 最终结果公布
       */
@@ -375,8 +397,10 @@
         return this.$commonFun.materialPower(index);
       },
       /* 选中社内用户*/
-      clubUserSelectChange(arr){
-        
+      selectChange(val){
+        console.log(val)
+        this.planningEditor = val[0].id
+        console.log(this.planningEditor)
       },
     },
     created(){
