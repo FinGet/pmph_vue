@@ -174,6 +174,16 @@
   export default {
     data() {
       return {
+        api_list:'/declaration/list/editor/selection',
+        searchParams:{
+          textbookId:'',
+          realName:'',
+          presetPosition:'',
+        },
+        formData:{
+          materialId:'',
+          textbookId:'',
+        },
         dialogVisible:false,
         level:undefined,
         input:'',
@@ -309,6 +319,19 @@
       }
     },
     created(){
+      this.formData.materialId = this.$route.params.materialId;
+      this.formData.textbookId = this.$route.query.bookid;
+      this.searchParams.textbookId = this.formData.textbookId;
+      //如果没有教材id则跳转到通知列表
+      if(!this.formData.materialId){
+        this.$router.push({name:'通知列表'});
+      }
+      //如果没有书籍id则跳转到遴选列表页面
+      if(!this.formData.materialId){
+        this.$router.push({path: '1v3'});
+      }
+
+
       this.level = this.$route.query.level;
       this.level = this.level?parseInt(this.level):1;
 
@@ -338,8 +361,30 @@
       handleSelectionChange(val) {
         this.multipleSelection = val
       },
-      // 搜索
-      Search(){
+      //获取table数据
+      getTableData(){
+        this.$axios.get(this.api_list,{params:{
+          materialId:this.formData.materialId
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.formData.materialName = res.data.materialName;
+              this.formData.materialType = res.data.materialType;
+              this.formData.materialRound = res.data.materialRound;
+              this.formData.isPublic = !!res.data.isPublic;
+              res.data.textbooks = JSON.parse(res.data.textbooks);
+              res.data.textbooks.map(iterm=>{
+                iterm.sortIsOk = true;
+                iterm.nameIsOk = true;
+                iterm.roundIsOk = true;
+              });
+              this.extendListData = res.data.textbooks;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
       },
       // 展示历史记录
       showHistory() {

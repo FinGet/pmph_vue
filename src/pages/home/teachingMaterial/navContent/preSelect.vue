@@ -12,30 +12,8 @@
             <el-col :span="4" class="search-10">
               <el-input v-model="input" placeholder="请输入姓名"></el-input>
             </el-col>
-            <!--<div class="search-title">申报职位:</div>-->
-            <!--<el-col :span="4" class="search-10">-->
-              <!--<el-select v-model="value" placeholder="请选择">-->
-                <!--<el-option-->
-                  <!--v-for="item in options"-->
-                  <!--:key="item.value"-->
-                  <!--:label="item.label"-->
-                  <!--:value="item.value">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-            <!--</el-col>-->
             <el-button class="btn" type="primary"  icon="search">搜索</el-button>
-            <el-popover
-              ref="popover"
-              placement="top"
-              width="160"
-              v-model="visible">
-              <p>是否确认提交？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
-              </div>
-            </el-popover>
-            <el-button v-if="edit" class="btn pull-right" type="primary" v-popover:popover>提交</el-button>
+            <el-button v-if="edit" class="btn pull-right" type="primary">提交</el-button>
             <el-button v-if="!edit" class="btn pull-right" type="primary">确认</el-button>
             <el-button v-if="edit" class="btn pull-right" type="warning">重置</el-button>
           </el-col>
@@ -165,6 +143,16 @@
   export default {
     data() {
       return {
+        api_list:'/declaration/list/editor/selection',
+        searchParams:{
+          textbookId:'',
+          realName:'',
+          presetPosition:'',
+        },
+        formData:{
+          materialId:'',
+          textbookId:'',
+        },
         input:'',
         visible:false,
 //        options: [{
@@ -248,19 +236,46 @@
       }
     },
     created(){
-      // console.log(this.edit)
-      if(this.$route.query.edit===1) {
-        this.edit=true
-      }else {
-        this.edit=false
+      this.formData.materialId = this.$route.params.materialId;
+      this.formData.textbookId = this.$route.query.bookid;
+      this.searchParams.textbookId = this.formData.textbookId;
+      //如果没有教材id则跳转到通知列表
+      if(!this.formData.materialId){
+        this.$router.push({name:'通知列表'});
+      }
+      //如果没有书籍id则跳转到遴选列表页面
+      if(!this.formData.materialId){
+        this.$router.push({path: '1v3'});
       }
     },
     methods:{
       handleSelectionChange() {
 
       },
-      // 搜索
-      Search(){
+      //获取table数据
+      getTableData(){
+        this.$axios.get(this.api_list,{params:{
+          materialId:this.formData.materialId
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.formData.materialName = res.data.materialName;
+              this.formData.materialType = res.data.materialType;
+              this.formData.materialRound = res.data.materialRound;
+              this.formData.isPublic = !!res.data.isPublic;
+              res.data.textbooks = JSON.parse(res.data.textbooks);
+              res.data.textbooks.map(iterm=>{
+                iterm.sortIsOk = true;
+                iterm.nameIsOk = true;
+                iterm.roundIsOk = true;
+              });
+              this.extendListData = res.data.textbooks;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
       },
     }
   }

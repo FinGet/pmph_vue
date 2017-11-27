@@ -341,7 +341,9 @@ methods:
         }else{
           this.selectData = val;
         }
-        this.$emit('selection-change', this.selectData);
+        if(this.selectData){
+          this.$emit('selection-change', this.selectData);
+        }
       },
       /**
        * 当点击全选时
