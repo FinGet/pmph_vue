@@ -336,6 +336,7 @@ export default {
     /* 文件上传大小判断 */
     beforeAvatarUpload(file){
       console.log(file);
+      console.log(typeof file);
       const isLt100M = file.size / 1024 / 1024 <= 100;
        if (!isLt100M) {
           this.$message.error('上传文件大小不能超过 100MB!');

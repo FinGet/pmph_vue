@@ -200,6 +200,10 @@ methods:
       radio:{
         type: Boolean,
         required: false
+      },
+      clearTableSelect:{
+        type: Boolean,
+        required: false
       }
     },
     data() {
@@ -264,6 +268,16 @@ methods:
         loading: false,
         DepartmentNameList:[],
       }
+    },
+    computed: {
+      clearTable(){
+        return this.clearTableSelect;
+      }
+    },
+    watch:{
+    clearTable(val){
+      this.$refs.table.clearSelection();
+    }
     },
     methods:{
       /**
@@ -456,6 +470,7 @@ methods:
     components:{
       pmphTree
     },
+    
     created(){
       this._getTableData();
       this._getRoleName();
