@@ -355,6 +355,7 @@ export let Browser = (function () {
 //false
 //大家可以根据需要扩展
 export function checkType (str, type) {
+  str=str?str.toString():'';
   switch (type) {
     case 'email':
       return /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(str);
@@ -363,7 +364,7 @@ export function checkType (str, type) {
     case 'tel':
       return /^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/.test(str);
     case 'number':
-      return /^[0-9]$/.test(str);
+      return /^\+?[1-9][0-9]*$/.test(str);
     case 'english':
       return /^[a-zA-Z]+$/.test(str);
     case 'chinese':

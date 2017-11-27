@@ -88,7 +88,9 @@
             linkmanList:[],
             address:'',
             note:'',
-            files:[]
+            imageUrl:'',
+            files:[],
+            materialExtra:{},
           }
         }
       },

@@ -152,10 +152,10 @@
     background: url('../common/images/back_to_top.png')no-repeat 100%;
     background-position: 0px 0px;
     z-index: 999;
-    transition: all .3s;
+    cursor: pointer;
   }
   .app-main .back_to_top:hover{
-    background-position: 0px -46px;
+    background-position: 0px -47px;
   }
   .app-main-inner{
     min-height: 100%;

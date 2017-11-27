@@ -10,6 +10,8 @@ img{border:0;vertical-align:middle}
 table{border-collapse:collapse;border-spacing:0}
 p{word-wrap:break-word}
 
+
+
 /*主题色 rgb(42, 63, 84)*/
 
 /*=================================================================
@@ -56,6 +58,7 @@ p{word-wrap:break-word}
 .blue{color: #337ab7;}
 .orange{color:#fe955e;}
 .green{color: #1ab194;}
+.error{color: #f5596e;}
 
 .bg-yellow{background-color: yellow;}
 .bg-none{background: none !important;}
@@ -213,6 +216,7 @@ p{word-wrap:break-word}
 .marginL40 { margin-left: 40px; }
 .marginL50 { margin-left: 50px; }
 .marginL60 { margin-left: 60px; }
+.marginL80 { margin-left: 80px; }
 .marginL100 { margin-left: 80px; }
 .marginL100 { margin-left: 100px; }
 .marginL110 { margin-left: 110px; }
@@ -247,8 +251,14 @@ p{word-wrap:break-word}
   border-bottom: 1px dashed #ccc;
 }
 
+.border-red{border:1px solid #f5596e !important;}
+
 .no-border{
   border: none !important;
+}
+
+.border-radius-4{
+  border-radius: 4px;
 }
 
 /*=================================================================

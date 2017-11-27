@@ -200,6 +200,10 @@ methods:
       radio:{
         type: Boolean,
         required: false
+      },
+      clearTableSelect:{
+        type: Boolean,
+        required: false
       }
     },
     data() {
@@ -264,6 +268,16 @@ methods:
         loading: false,
         DepartmentNameList:[],
       }
+    },
+    computed: {
+      clearTable(){
+        return this.clearTableSelect;
+      }
+    },
+    watch:{
+    clearTable(val){
+      this.$refs.table.clearSelection();
+    }
     },
     methods:{
       /**
@@ -341,7 +355,9 @@ methods:
         }else{
           this.selectData = val;
         }
-        this.$emit('selection-change', this.selectData);
+        if(this.selectData){
+          this.$emit('selection-change', this.selectData);
+        }
       },
       /**
        * 当点击全选时
@@ -456,6 +472,7 @@ methods:
     components:{
       pmphTree
     },
+    
     created(){
       this._getTableData();
       this._getRoleName();

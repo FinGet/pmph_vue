@@ -90,7 +90,7 @@
       <!--分页-->
     <div class="pagination-wrapper">
       <el-pagination
-        v-if="conDataTotal>20"
+        v-if="conDataTotal>conPageSize"
         @size-change="contentHandleSizeChange"
         @current-change="contentHandleCurrentChange"
         :current-page="conPageNumber"

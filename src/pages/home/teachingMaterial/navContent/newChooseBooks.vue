@@ -4,19 +4,19 @@
         <el-col>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
 
-            <el-form-item label="教材名称:" prop="name" class="pull-left">
+            <el-form-item label="教材名称：" prop="'material.materialName'" class="pull-left">
               <el-col>
                 <el-input v-model="ruleForm['material.materialName']" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="教材轮次:" prop="turn" class="pull-left">
+            <el-form-item label="教材轮次：" prop="turn" class="pull-left">
               <el-col>
                 <el-input v-model="ruleForm['material.materialRound']" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="实际结束日期:" required class="pull-left">
+            <el-form-item label="实际结束日期：" required class="pull-left">
               <el-col>
                 <el-form-item prop="endDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.actualDeadline']" style="width: 100%;"></el-date-picker>
@@ -24,7 +24,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="展示结束日期:" required class="pull-left">
+            <el-form-item label="展示结束日期：" required class="pull-left">
               <el-col>
                 <el-form-item prop="playEndDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.deadline']" style="width: 100%;"></el-date-picker>
@@ -32,7 +32,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="年龄计算截止日期:" required class="pull-left">
+            <el-form-item label="年龄计算截止日期：" required class="pull-left">
               <el-col>
                 <el-form-item prop="ageDate">
                   <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.ageDeadline']" style="width: 100%;"></el-date-picker>
@@ -40,7 +40,7 @@
               </el-col>
             </el-form-item>
             <div class="clearfix"></div>
-            <el-form-item label="教材分类:">
+            <el-form-item label="教材分类：">
               <el-col>
                 <el-form-item>
                   <!-- <el-input v-model="formData['material.materialType']" class="classify_input" disabled></el-input> -->
@@ -60,76 +60,43 @@
 
             <div class="clearfix"></div>
 
-            <!--<el-form-item label="联系人:">-->
-              <!--<table class="extend_list">-->
-                <!--<tr class="table-header">-->
-                  <!--<th>姓名</th>-->
-                  <!--<th>电话</th>-->
-                  <!--<th>邮箱</th>-->
-                  <!--<th>-->
-                    <!--<el-button type="text"  class="add_button" @click="chooseContact">选择联系人</el-button>-->
-                  <!--</th>-->
-                <!--</tr>-->
-                <!--<tr v-for="(item,index) in extendListData" :key="index">-->
-                  <!--<td>-->
-                    <!--{{item.name}}-->
-                  <!--</td>-->
-                  <!--<td>-->
-                    <!--<span v-if="!item.phoneVisible">{{item.phone}}-->
-                        <!--<i class="el-icon-edit" @click="item.phoneVisible=true"></i>-->
-                    <!--</span>-->
-                    <!--<el-input v-model="item.phone" :ref="'input'+index+'_2'" v-if="item.phoneVisible" @blur="item.phoneVisible=false"  style="width:80%;"></el-input>-->
-                  <!--</td>-->
-                  <!--<td>-->
-                    <!--<span v-if="!item.editionVisible">{{item.email}}-->
-                        <!--<i class="el-icon-edit" @click="item.editionVisible=true"></i>-->
-                    <!--</span>-->
-                    <!--<el-input v-model="item.email" :ref="'input'+index+'_3'" v-if="item.editionVisible" @blur="item.editionVisible=false"  style="width:80%;"></el-input>-->
-                  <!--</td>-->
-                  <!--<td><el-button type="danger" size="small" @click="deleteExtendItem(index)">删除</el-button></td>-->
-                <!--</tr>-->
-                <!--<tr v-show="extendListData.length===0">-->
-                  <!--<td colspan="4">暂无数据</td>-->
-                <!--</tr>-->
-              <!--</table>-->
-            <!--</el-form-item>-->
 
-            <el-form-item label="联系人:">
+            <el-form-item label="联系人：">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseContact">选择联系人</el-button>
                 <br>
                 <el-table
-                  :data="contactData"
+                  :data="ruleForm.materialContacts"
                   border
                   style="width: 100%">
                   <el-table-column
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isNameInput">{{scope.row.realname}}
-                        <i class="el-icon-edit" @click="test(scope.$index,'isNameInput')"></i>
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.realname}}
+                        <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.realname" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.realname" :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isPhoneInput">{{scope.row.handphone}}
-                        <i class="el-icon-edit" @click="scope.row.isPhoneInput=!scope.row.isPhoneInput"></i>
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.handphone}}
+                        <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isPhoneInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.handphone" @blur="scope.row.isPhoneInput=false" v-if="scope.row.isPhoneInput"></el-input>
+                      <el-input v-model="scope.row.handphone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isEmailInput">{{scope.row.email}}
-                        <i class="el-icon-edit" @click="scope.row.isEmailInput=!scope.row.isEmailInput"></i>
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.email}}
+                        <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isEmailInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.email" @blur="scope.row.isEmailInput=false" v-if="scope.row.isEmailInput"></el-input>
+                      <el-input v-model="scope.row.email" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作">
@@ -137,130 +104,54 @@
                       <el-button
                         size="small"
                         type="danger"
-                        @click="handleDelete(scope.$index, scope.row, contactData)">删除</el-button>
+                        @click="handleDelete(scope.$index,ruleForm.materialContacts)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="主任:">
+            <el-form-item label="主任：">
               <el-col :span="24">
-                <el-button type="primary"  size="small" @click="chooseProjectDirector">选择</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectDirector" style="margin-right:10px;">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
                 <el-tag
                   v-for="tag in projectDirectorData"
-                  :key="tag.name"
+                  :key="tag.id"
                   :closable="true"
                   type="info"
                   @close="handleDirectorClose(tag)"
                 >
-                  {{tag.name}}
+                  {{tag.realname}}
                 </el-tag>
                 <br>
-                <!--<el-table-->
-                  <!--:data="projectDirectorData"-->
-                  <!--border-->
-                  <!--style="width: 100%">-->
-                  <!--<el-table-column-->
-                    <!--label="名称"-->
-                    <!--prop="name"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="账号"-->
-                    <!--prop="username"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="角色名称"-->
-                    <!--prop="role"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="手机号"-->
-                    <!--prop="phone"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="邮箱"-->
-                    <!--prop="email"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column label="操作">-->
-                    <!--<template scope="scope">-->
-                      <!--<el-button-->
-                        <!--size="small"-->
-                        <!--type="danger"-->
-                        <!--@click="handleDelete(scope.$index, scope.row, projectDirectorData)">删除</el-button>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
-                <!--</el-table>-->
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目编辑:">
+            <el-form-item label="项目编辑：">
               <el-col :span="24">
-                <el-button type="primary"  size="small" @click="chooseProjectEditor">选择</el-button>
+                <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
                   class="marginR10"
-                  v-for="tag in projectEditorData"
-                  :key="tag.name"
+                  v-for="tag in ruleForm.materialProjectEditors"
+                  :key="tag.id"
                   :closable="true"
                   type="info"
                   @close="handleEditorClose(tag)"
                 >
-                  {{tag.name}}
+                  {{tag.realname}}
                 </el-tag>
                 <br>
-                <!--<el-table-->
-                  <!--:data="projectEditorData"-->
-                  <!--border-->
-                  <!--style="width: 100%">-->
-                  <!--<el-table-column-->
-                    <!--label="名称"-->
-                    <!--prop="name"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="账号"-->
-                    <!--prop="username"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="角色名称"-->
-                    <!--prop="role"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="手机号"-->
-                    <!--prop="phone"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column-->
-                    <!--label="邮箱"-->
-                    <!--prop="email"-->
-                  <!--&gt;-->
-                  <!--</el-table-column>-->
-                  <!--<el-table-column label="操作">-->
-                    <!--<template scope="scope">-->
-                      <!--<el-button-->
-                        <!--size="small"-->
-                        <!--type="danger"-->
-                        <!--@click="handleDelete(scope.$index, scope.row, projectEditorData)">删除</el-button>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
-                <!--</el-table>-->
               </el-col>
             </el-form-item>
 
-            <el-form-item label="邮寄地址:" class="pull-left">
+            <el-form-item label="邮寄地址：" class="pull-left">
               <el-col>
                 <el-input v-model="ruleForm['material.mailAddress']" class="input-500"></el-input>
               </el-col>
             </el-form-item>
             <div class="clearfix"></div>
-            <el-form-item label="选项:">
+            <el-form-item label="选项：">
               <el-col>
                 <el-table
                   :data="listTableData"
@@ -292,22 +183,22 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="扩展项:">
+            <el-form-item label="扩展项：">
               <el-col :span="12">
                 <el-button type="primary"  size="small" @click="addExtend">新增扩展项</el-button>
                 <br>
                 <el-table
-                  :data="extensionData"
+                  :data.sync="ruleForm.materialExtensions"
                   border
                   style="width: 100%">
                   <el-table-column
                     label="名称"
                   >
                     <template scope="scope">
-                      <span v-if="!scope.row.isNameInput">{{scope.row.name}}
-                        <i class="el-icon-edit" @click="scope.row.isNameInput=!scope.row.isNameInput"></i>
+                      <span v-if="!ruleForm.materialExtensions[scope.$index].extendIsNameInput">{{scope.row.extensionName}}
+                        <i class="el-icon-edit" @click="extendShowInput(scope.$index,'extendIsNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.name" @blur="scope.row.isNameInput=false" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -315,7 +206,7 @@
                     align="center"
                     width="150">
                     <template scope="scope">
-                      <el-checkbox v-model="scope.row.usecheck"></el-checkbox>
+                      <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -326,20 +217,20 @@
                       <el-button
                         size="small"
                         type="danger"
-                        @click="deleteExtend(scope.$index, scope.row)">删除</el-button>
+                        @click="handleDelete(scope.$index, ruleForm.materialExtensions)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="申报通知扫描图片及通知主要内容:" prop="uploadImg">
+            <el-form-item label="申报通知扫描图片及通知主要内容：" prop="uploadImg">
               <el-col :span="24">
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="mainContent">
+                  v-model="ruleForm['materialExtra.notice']">
                 </el-input>
               </el-col>
             </el-form-item>
@@ -347,30 +238,30 @@
               <el-upload
                 class="upload"
                 action="#"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
+                :auto-upload="false"
+                :on-change="imgUploadChange"
                 :file-list="fileList">
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
-            <el-form-item label="备注:">
+            <el-form-item label="备注：">
               <el-col :span="24">
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="remark">
+                  v-model="ruleForm['materialExtra.note']">
                 </el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="附件:" prop="uploadFile">
+            <el-form-item label="附件：" prop="uploadFile">
               <el-col :span="12">
                 <el-upload
                   class="upload"
                   action="#"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
+                  :auto-upload="false"
+                  :on-change="fileUploadChange"
                   :file-list="fileList">
                   <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
@@ -379,23 +270,15 @@
 
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
-              <el-button type="primary" @click="$router.push({ name: '编辑通知详情' })">下一步</el-button>
+              <el-button type="primary" @click="submitForm">下一步</el-button>
             </el-form-item>
 
           </el-form>
         </el-col>
       </el-row>
-      <!-- 教材分类选择弹框 -->
-
-      <!-- <el-dialog class="checkTree_dialog" title="医学教材架构" :visible.sync="dialogVisiable" top="5%" size="tiny">
-        <div style="overflow:hidden;">
-          <el-tree :data="chooseBookData" :props="defaultProps" ref="bookTree" class="tree_box" :highlight-current="true" @node-click="handleNodeClick"></el-tree>
-          <el-button type="primary" @click="getTreeNode" class="button">选择节点</el-button>
-        </div>
-      </el-dialog> -->
 
       <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
-          <user-pmph select :radio="!Multichoice" @selection-change="conactPersonChange">
+          <user-pmph select :radio="!Multichoice" :clearTableSelect.sync="clearTableSelect"  @selection-change="conactPersonChange">
             <el-button  type="primary" @click="addCheckedConact()">增加</el-button>
           </user-pmph>
       </el-dialog>
@@ -407,6 +290,7 @@ import userPmph from "components/user-pmph";
 export default {
   data() {
     return {
+      mytest:false,
       materialTypeUrl:'/pmpheep/books/list/materialType' , //教材分类url
       labelPosition: "right",
       // bookradio:'1',
@@ -418,9 +302,7 @@ export default {
       chooseTitle: "", // 选择弹出窗的title
       Multichoice: true, // 是否可以多选，传递给Departments子组件
       classify: "", // 分类
-      contactData: [], // 联系人
       projectDirectorData: [], // 项目主任
-      projectEditorData: [], // 项目编辑
       checkedTreeData: [],   //教材分类树
       defaultCheckedBook:[] ,   //教材默认选项
       defaultProps: {
@@ -430,183 +312,13 @@ export default {
         value:'id'
       },
       checkedConactPersonData:[],
+      clearTableSelect:false,
       formData: {
         bookName: "全国高等学校本科应用心理学专业第三轮规划教材",
         round: 3,
         classify: ""
       },
       fileList: [],
-      tableData: [
-        {
-          name: "张三",
-          phone: "1383838438",
-          email: "1233214@qq.com"
-        },
-        {
-          name: "张三",
-          phone: "1383838438",
-          email: "1233214@qq.com"
-        }
-      ],
-      proptableData: [
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "李四",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "王二",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "赵武",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "张三",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "王二",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        },
-        {
-          name: "赵武",
-          username: "zs",
-          isNameInput: false,
-          isPhoneInput: false,
-          isEmailInput: false,
-          email: "123@qq.com",
-          role: "主任项目编辑",
-          phone: "1383838438"
-        }
-      ], // 传递给Departments子组件
-      extensionData: [
-        {
-          name: "请输入名字",
-          isNameInput: false,
-          usecheck: false
-        }
-      ], // 扩展项
       listTableData: [
         {
           name: "书籍多选",
@@ -616,66 +328,84 @@ export default {
         },
         {
           name: "职位多选",
+          key:'material.isMultiPosition',
           usecheck: false,
           show: true
         },
         {
           name: "主要学习经历",
+          key:'material.isEduExpUsed',
+          requiredKey:'material.isEduExpRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "主要工作经历",
+          key:'material.isWorkExpUsed',
+          requiredKey:'material.isWorkExpRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "主要教学经历",
+          key:'material.isTeachExpUsed',
+          requiredKey:'material.isTeachExpRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "主要学术兼职",
+          key:'material.isAcadeUsed',
+          requiredKey:'material.isAcadeRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "上版教材参编情况",
+          key:'material.isLastPositionUsed',
+          requiredKey:'material.isLastPositionRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "国家级精品课程建设情况",
+          key:'material.isNationalCourseUsed',
+          requiredKey:'material.isNationalCourseRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "省部级精品课程建设情况",
+          key:'material.isProvincialCourseUsed',
+          requiredKey:'material.isProvincialCourseRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "学校精品课程建设情况",
+          key:'material.isSchoolCourseUsed',
+          requiredKey:'material.isSchoolCourseRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "主编国家规划教材情况",
+          key:'material.isNationalPlanUsed',
+          requiredKey:'material.isNationalPlanRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "教材编写情况",
-          usecheck: false,
-          needcheck: false
-        },
-        {
-          name: "其他教材编写情况",
+          key:'material.isTextbookWriterUsed',
+          requiredKey:'material.isTextbookWriterRequired',
           usecheck: false,
           needcheck: false
         },
         {
           name: "科研情况",
+          key:'material.isResearchUsed',
+          requiredKey:'material.isResearchRequired',
           usecheck: false,
           needcheck: false
         }
@@ -688,34 +418,32 @@ export default {
         "material.actualDeadline": "",
         "material.ageDeadline": "",
         "material.mailAddress": "",
-        "material.director": "",
-        "material.isMultiBooks": "",
+         materialContacts:[],     //联系人
+        "material.director": "",   //主任
+         materialProjectEditors:[], //项目编辑
+         materialExtensions:[{
+           extensionName:'请填写名称',
+           isRequired:false,
+           extendIsNameInput:''
+         }],   //扩展项
+         "materialExtra.notice":'',
+         "materialExtra.note":'',
+          noticeFiles:'',
+          noteFiles:'',
+        /* "material.isMultiBooks": "",
         "material.isMultiPosition": "",
         "material.isEduExpUsed": "",
         "material.isEduExpRequired": "",
         "material.isWorkExpUsed": "",
         "material.isWorkExpRequired": "",
         "material.isTeachExpUsed": "",
-        "material.isTeachExpRequired": "",
-        endDate: "",
-        playEndDate: "",
-        ageDate: "",
-        address: "北京市朝阳区潘家园南里19号人卫大厦B座",
-        uploadImg: ""
+        "material.isTeachExpRequired": "", */
+
       },
       chooseBookData:[],
       rules: {
         name: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
-        turn: [{ required: true, message: "请输入教材轮次", trigger: "change" }],
-        endDate: [
-          { type: "date", required: true, message: "请选择日期", trigger: "change" }
-        ],
-        playEndDate: [
-          { type: "date", required: true, message: "请选择日期", trigger: "change" }
-        ],
-        ageDate: [
-          { type: "date", required: true, message: "请选择日期", trigger: "change" }
-        ]
+        turn: [{ required: true, message: "请输入教材轮次", trigger: "change" }]
       }
     };
   },
@@ -744,43 +472,111 @@ export default {
         this.ruleForm['material.materialType']=val[val.length-1];
         console.log(this.ruleForm['material.materialType']);
       },
-      test(num,str){
-        console.log(num,str);
-        this.contactData[num][str]=!this.contactData[num][str];
-        console.log(this.contactData);
-       // obj[str]=!obj[str];
+      /* 联系人点击切换输入编辑框 */
+      isShowEditInput(num,str){
+        this.ruleForm.materialContacts[num][str]=!this.ruleForm.materialContacts[num][str];
+        var arr=this.ruleForm.materialContacts;
+        this.ruleForm.materialContacts=[];
+        this.ruleForm.materialContacts=arr;  
+        if(this.ruleForm.materialContacts[num][str]){
+          //聚焦 
+          this.$nextTick(_ => {
+                this.$refs[str+num].$refs.input.focus()
+          })
+          
+        }
       },
       /* 联系人选择 */
       conactPersonChange(val){
         this.checkedConactPersonData=val;
         console.log(this.checkedConactPersonData);
       },
-      /* 增加 联系人 */
+      /* 增加 */
       addCheckedConact(){
-       for(var i in this.checkedConactPersonData){
-              this.contactData[i]=this.checkedConactPersonData[i];
-              this.contactData[i].isNameInput=false;
-              this.contactData[i].isPhoneInput=false;
-              this.contactData[i].isEmailInput=false;
-        }
-       console.log('12312',this.contactData);
-       this.chooseVisiable=false;
-      },
-    submitForm(formName) {
-      this.$message({
-        message: "保存成功，设置书目录即可发布！",
+        if(this.classify == "contact"){
+          for(var i in this.checkedConactPersonData){
+               /* 去重 */
+              if(this.removeRepeat(this.ruleForm.materialContacts,this.checkedConactPersonData[i])){
+                  this.ruleForm.materialContacts.push(this.checkedConactPersonData[i]);
+                  this.ruleForm.materialContacts[i].isNameInput=false;
+                  this.ruleForm.materialContacts[i].isPhoneInput=false;
+                  this.ruleForm.materialContacts[i].isEmailInput=false;
+               }
+           }
+           
+          console.log('12312',this.ruleForm.materialContacts);          
+         }
+         else if(this.classify == "director"){
+                 this.projectDirectorData=[];
+                 this.projectDirectorData.push(this.checkedConactPersonData[0]);
+                 this.ruleForm['material.director']=this.projectDirectorData[0].id;
+           console.log('主任',this.projectDirectorData)              
+         }
+         else if(this.classify == 'editor'){
+          for(var i in this.checkedConactPersonData){
+               /* 去重 */
+              if(this.removeRepeat(this.ruleForm.materialProjectEditors,this.checkedConactPersonData[i])){
+                  this.ruleForm.materialProjectEditors.push(this.checkedConactPersonData[i]);
+               }
+           }
+           console.log('项目编辑',this.ruleForm.materialProjectEditors);           
+         }
+       this.$message({
+        message: `添加成功！`,
         type: "success"
       });
-      this.$router.push("/applicationrouter/applicationlist");
+       this.chooseVisiable=false;
+      },
+      /* 数组去重 */
+    removeRepeat(arr,obj){
+      for(var i in arr){
+        if(arr[i].id==obj.id){
+          return false;
+        }
+      }
+      return true;
+    },
+    /* 选项合并到ruleForm中 */
+    optionMerge(){
+     for(var i in this.listTableData){
+          this.ruleForm[this.listTableData[i].key]=this.listTableData[i].usecheck;
+        if(this.listTableData[i].needcheck){
+          this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;   
+        }
+     }
+    },
+    /* 扩展项切换输入框 */
+    extendShowInput(num,str){
+      this.ruleForm.materialExtensions[num][str]=!this.ruleForm.materialExtensions[num][str];
+      var arr=this.ruleForm.materialExtensions;
+      this.ruleForm.materialExtensions=[];
+      this.ruleForm.materialExtensions=arr;
+      if(this.ruleForm.materialExtensions[num][str]){
+        this.$nextTick(_ => {
+                this.$refs[str+num].$refs.input.focus()
+          })
+      }
 
-      //        this.$refs[formName].validate((valid) => {
-      //          if (valid) {
-      //            alert('submit!');
-      //          } else {
-      //            console.log('error submit!!');
-      //            return false;
-      //          }
-      //        });
+    },
+    /* 文件上传改变 */
+    /* 图片 */
+    imgUploadChange(file,filelist){
+     console.log(file,filelist);
+     /* 验证 */
+     
+      this.ruleForm.noticeFiles=[];
+     for(var i in filelist){
+      this.ruleForm.noticeFiles.push(filelist[i].raw);
+     }
+    },
+    /* 文件 */
+    fileUploadChange(file,filelist){
+     console.log(file,filelist);
+
+     this.ruleForm.noteFiles=[];
+     for(var i in filelist){
+      this.ruleForm.noteFiles.push(filelist[i].raw);
+     }
     },
     /**
        * 删除选中的项目主任
@@ -788,20 +584,15 @@ export default {
     handleDirectorClose(val) {
       // console.log(val)
       this.projectDirectorData.splice(val, 1);
-      this.$message({
-        message: `删除成功！`,
-        type: "success"
-      });
+      this.ruleForm['material.director']=[];
+
     },
     /**
        * 删除选中的项目编辑
        */
     handleEditorClose(val) {
-      this.projectEditorData.splice(val, 1);
-      this.$message({
-        message: `删除成功！`,
-        type: "success"
-      });
+      this.ruleForm.materialProjectEditors.splice(val, 1);
+
     },
     /**
        * 返回上一级
@@ -813,42 +604,31 @@ export default {
       this.checkedTreeData = data;
       console.log(data);
     },
-    getTreeNode() {},
+
     /**
        *
        * @param index
        * @param row
        */
-    // 删除
-    handleDelete(index, row, data) {
-      // console.log(index, row);
+    // 删除数据
+    handleDelete(index, data) {
       data.splice(index, 1);
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
-    },
-    //      showInput(index, str) {
-    //        this.extendListData[index].orderNumVisible = true;
-    //        console.log(index,str);
-    //        console.log(this.$refs);
-    //        console.log(this.$refs.input0_1) ;
-    //        //this.$refs[str].$refs.input.focus();
-    //      },
-    deleteExtendItem(index) {
-      this.extendListData.splice(index, 1);
+      console.log(typeof file.raw);
     },
     addExtend() {
-      this.extensionData.push({
-        name: "请输入名字",
+      this.ruleForm.materialExtensions.push({
+        extensionName: "请输入名字",
         isNameInput: false,
-        needradio: "1"
+        isRequired: false
       });
     },
     deleteExtend(index) {
-      this.extensionData.splice(index, 1);
+      this.ruleForm.materialExtensions.splice(index, 1);
     },
     /**
        * 选择联系人
@@ -878,39 +658,15 @@ export default {
       this.classify = "editor";
     },
     /**
-       * add增加 监听子组件的add方法
-       */
-    add(val) {
-      if (this.classify === "editor") {
-        // console.log(val)
-        for (var i in val) {
-          //console.log(val[i])
-          this.projectEditorData[i] = val[i];
-        }
-      } else if (this.classify === "director") {
-        for (var i in val) {
-          //console.log(val[i])
-          this.projectDirectorData[i] = val[i];
-        }
-      } else {
-        for (var i in val) {
-          //console.log(val[i])
-          this.contactData[i] = val[i];
-        }
-        console.log(this.extendListData);
-      }
-      this.$message({
-        message: `添加成功！`,
-        type: "success"
-      });
-      this.chooseVisiable = false;
-    },
-    /**
        * 关闭弹出层
        */
     closeDialog() {
-      //console.log(1)
-     // this.$refs.department.clear();
+      this.clearTableSelect=!this.clearTableSelect;
+    },
+    /* 提交表单 */
+    submitForm(){
+       this.optionMerge();
+       console.log(this.ruleForm)
     }
   },
   components: {
