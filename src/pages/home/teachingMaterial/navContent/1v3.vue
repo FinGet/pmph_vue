@@ -35,9 +35,9 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected" @click="showDialog(1)">批量通过</el-button>
-        <el-button type="primary" :disabled="isSelected" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="!hasAccess(6)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(1)">批量通过</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary">批量导出Excel</el-button>
       </div>
     </div>
@@ -80,10 +80,10 @@
           label="策划编辑"
           width="106">
           <template scope="scope">
-            <p v-if="scope.row.state==0">
+            <p v-if="!scope.row.planningEditorName">
               待分配
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
-                <el-button type="text" :disabled="forceEnd">
+                <el-button type="text" :disabled="!hasAccess(1) || forceEnd">
                   <i class="fa fa-pencil fa-fw" @click="chooseVisiable2=true"></i>
                 </el-button>
               </el-tooltip>
@@ -96,14 +96,11 @@
         <el-table-column
           label="遴选主编/副主编" width="170">
           <template scope="scope">
-            <span v-if="scope.row.state==1">李雪华，陈朝阳</span>
-            <span v-else-if="scope.row.state==2">刘德华，黎明等{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
-            <span v-else-if="scope.row.state==3">傅松滨</span>
-            <span v-else-if="scope.row.state==4">陈朝阳</span>
+            <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'chief'}}">
-                <el-button type="text" :disabled="forceEnd">
+                <el-button type="text" :disabled="!hasAccess(2)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -114,14 +111,11 @@
         <el-table-column
           label="遴选编委" width="170">
           <template scope="scope">
-            <span v-if="scope.row.state==1">王家乐，王家梁</span>
-            <span v-else-if="scope.row.state==2">王家乐，王家梁{{scope.row.subeditor.length+scope.row.editorialBoard.length}}人</span>
-            <span v-else-if="scope.row.state==3">王家乐</span>
-            <span v-else-if="scope.row.state==4">王家梁</span>
+            <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'pres'}}">
-                <el-button type="text" :disabled="forceEnd">
+                <el-button type="text" :disabled="!hasAccess(3)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -134,15 +128,15 @@
           label="操作">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked"  @click="showDialog(1,scope.row)">名单确认</el-button>
+            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3)"  @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row. isPublished">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row. isPublished || !hasAccess(4)">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state>4">创建小组</el-button>
-            <el-button type="text" :disabled="forceEnd" v-else>创建小组</el-button>
+            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" >创建小组</el-button>
+            <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -171,12 +165,19 @@
     </el-dialog>
 
     <el-dialog title="分配策划编辑" :visible.sync="chooseVisiable2" size="large" top="5%">
-      <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
+      <!-- <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
+       -->
+       <user-pmph @selection-change="clubUserSelectChange" select >
+         <div class="operation-wrapper">
+           <el-button type="primary">确认</el-button>  
+         </div>
+       </user-pmph>
     </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
-  import Departments from 'components/departments'
+  // import Departments from 'components/departments'
+  import userPmph from 'components/user-pmph'
   export default{
     data(){
       return{
@@ -213,158 +214,6 @@
         chooseVisiable2:false,
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
-        proptableData:[
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'李四',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'王二',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'赵武',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'张三',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'王二',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          },
-          {
-            name:'赵武',
-            username:'zs',
-            isNameInput:false,
-            isPhoneInput:false,
-            isEmailInput:false,
-            email:'123@qq.com',
-            role:'主任项目编辑',
-            phone:'1383838438'
-          }
-        ],
         totalNum: 0,
         selectedIds:'',
         method:'',
@@ -427,6 +276,8 @@
               this.tableData = res.data.rows;
               this.booksChooseOptions = res.data.rows
               this.forceEnd = this.tableData[0].forceEnd
+            } else if (res.code == 2) {
+              this.$message.error(res.msg.msgTrim())
             }
           })
           .catch(e=>{
@@ -516,7 +367,17 @@
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
         })
-      }
+      },
+      /**@augments index
+       * 权限判断
+       */
+      hasAccess(index){
+        return this.$commonFun.materialPower(index);
+      },
+      /* 选中社内用户*/
+      clubUserSelectChange(arr){
+        
+      },
     },
     created(){
       this.searchForm.materialId = this.$route.params.materialId;
@@ -527,7 +388,7 @@
       this.getTableData();
     },
     components:{
-      Departments
+      userPmph
     }
   }
 </script>
