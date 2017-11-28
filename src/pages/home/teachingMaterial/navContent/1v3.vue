@@ -347,13 +347,14 @@
        * 分配策划编辑
        */
       updateEditor(){
-        this.$axios.put('/pmpheep/position/updateEditor',this.$initPostData({
+        this.$axios.put('/pmpheep/textBook/updateEditor',this.$initPostData({
           id: this.selectedBookId,
           planningEditor: this.planningEditor
         })).then(response => {
           let res = response.data
           if (res.code == 1) {
             this.$message.success('操作成功')
+            this.chooseVisiable2 = false
           }
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
