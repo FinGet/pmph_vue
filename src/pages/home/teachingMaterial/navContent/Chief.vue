@@ -3,32 +3,6 @@
       <p class="bookTitle">医学心理学与精神病学（第4版）</p>
 
       <div class="teachingMaterial-search clearfix">
-        <!--姓名搜索-->
-        <div class="searchBox-wrapper">
-          <div class="searchName">姓名：<span></span></div>
-          <div class="searchInput">
-            <el-input v-model="input" placeholder="请输入姓名"></el-input>
-          </div>
-        </div>
-        <!--申报职位搜索-->
-        <div class="searchBox-wrapper">
-          <div class="searchName">申报职位：<span></span></div>
-          <div class="searchInput">
-            <el-select v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-        <!--搜索-->
-        <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search">搜索</el-button>
-        </div>
-
         <div class="operation-wrapper">
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
           <el-button type="primary">确认</el-button>
@@ -174,7 +148,7 @@
   export default {
     data() {
       return {
-        api_list:'/declaration/list/editor/selection',
+        api_list:'/pmpheep/declaration/list/editor/selection',
         searchParams:{
           textbookId:'',
           realName:'',
@@ -331,31 +305,7 @@
         this.$router.push({path: '1v3'});
       }
 
-
-      this.level = this.$route.query.level;
-      this.level = this.level?parseInt(this.level):1;
-
-      let type = this.$route.query.type;
-
-      if(type=='pres'){
-        this.tableData.map(iterm=>{
-          if(iterm.isChiefEditor||iterm.isSubeditor){
-            iterm.edit=false;
-          }else{
-            iterm.edit=true;
-          }
-        })
-      }
-      if(type=='chief'){
-        this.tableData.map(iterm=>{
-          if(iterm.isMember){
-            iterm.edit=false;
-          }else{
-            iterm.edit=true;
-          }
-        })
-      }
-
+      this.getTableData();
     },
     methods:{
       handleSelectionChange(val) {
@@ -364,7 +314,9 @@
       //获取table数据
       getTableData(){
         this.$axios.get(this.api_list,{params:{
-          materialId:this.formData.materialId
+          textbookId:this.formData.textbookId,
+          realName:'',
+          presetPosition:'',
         }})
           .then(response=>{
             var res = response.data;
@@ -421,7 +373,7 @@
 
 <style>
   .bookTitle{
-    margin: 10px 0 20px;
+    margin: 10px 0 0px;
     font-size: 16px;
     height:36px;
     line-height: 36px;
