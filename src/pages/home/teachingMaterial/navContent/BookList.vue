@@ -127,9 +127,9 @@
 export default {
     data() {
         return {
-            api_book_list:'/pmpheep/textBook/list/textbook',
+            api_book_list:'/pmpheep/textBook/list/textbooks',
             api_save:'/pmpheep/textBook/add/textbook',
-            api_upload:'/pmpheep/textBook/import/textbook',
+            api_upload:'/pmpheep/textBook/import/excel',
             formData: {
               materialId:'',
               materialName: '',
@@ -412,18 +412,29 @@ export default {
         this.$axios.post(this.api_upload,formdata,config)
           .then((response) => {
             let res = response.data;
-            console.log(res)
             if (res.code == '1') {
-
+              this.extendListData=[];
+              res.data.forEach(iterm=>{
+                this.extendListData.push({
+                  id:'',
+                  sort: iterm.sort,
+                  textbookName: iterm.textbookName,
+                  textbookRound: iterm.textbookRound,
+                  sortIsOk : true,
+                  nameIsOk : true,
+                  roundIsOk : true,
+                })
+              })
             }else{
               this.$message.error(res.msg.msgTrim());
             }
 
-//            this.uploadLoading = false;
+            this.uploadLoading = false;
           })
           .catch((error) => {
+          console.log(error);
             this.$message.error('上传文件失败，请重试');
-//            this.uploadLoading = false;
+            this.uploadLoading = false;
           });
       },
     },

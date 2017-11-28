@@ -27,7 +27,8 @@
                       <el-option
                         v-for="(item,index) in bookList"
                         :key="index"
-                        :value="item">
+                        :label="item.textbookName"
+                        :value="item.id">
                       </el-option>
                     </el-select>
                   </div>
@@ -45,8 +46,7 @@
                       class="upload"
                       action="https://jsonplaceholder.typicode.com/posts/"
                       :on-change="uploadFile"
-                      :show-file-list="false"
-                      multipl="true">
+                      :show-file-list="false">
                       <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                   </div>
@@ -315,6 +315,21 @@
     export default{
         data(){
             return{
+              api_info:'/pmpheep/declaration/list/declaration/exportExcel',
+              api_book_list:'/pmpheep/textBook/list',
+              searchFormData:{
+                declarationId:'',
+                materialId:'',
+              },
+              bookPositionList:[{
+                bookId:'',
+                isNew:false,
+                textbookId:'',
+                textbookName:'基础化学',
+                position:'编委',
+                filename:'基础化学大纲.jpg',
+                hasComplete:true
+              }],
               tableData: [{
                 startdate: '2016-05-02',
                 enddate:'2017-12-03',
@@ -373,8 +388,10 @@
                   remark:''
                 }
               ],
-              bookList:['基础化学','病理生理学','精神病学','临床流行病学与循证医学','皮肤性病学'],
+              bookList:[],
+              positionList:['主编','副主编','编委','数字编委'],
               addBookList:[{
+                isNew:false,
                 bookname:'基础化学',
                 position:'编委',
                 filename:'基础化学大纲.jpg',
@@ -444,8 +461,61 @@
          */
         uploadFile(file, fileList){
           console.log(file.name);
+        },
+        /**
+         * 获取专家信息数据
+         */
+        getTableData(){
+          this.$axios.get(this.api_info,{params:{
+            declarationId:this.searchFormData.declarationId
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+
+              }else{
+                this.$message.error(res.msg.msgTrim())
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+            })
+        },
+        /**
+         * 获取教材所有书籍
+         */
+          getBookList(){
+          // console.log(this.searchForm)
+          this.$axios.get(this.api_book_list,{params:{
+            materialId:this.searchFormData.materialId
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.bookList = res.data
+              }else{
+                this.$message.error(res.msg.msgTrim())
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+            })
+          },
+      },
+      created(){
+        this.searchFormData.declarationId = this.$route.query.declarationId;
+        this.searchFormData.materialId = this.$route.params.materialId;
+        //如果没有教材id则跳转到通知列表
+        if(!this.searchFormData.materialId){
+          this.$router.push({name:'通知列表'});
         }
-      }
+        //如果没有用户id则跳转到申报审核列表
+        if(!this.searchFormData.materialId){
+          this.$router.push({name:'申报表审核'});
+        }
+        this.getTableData();
+        this.getBookList();
+      },
     }
 </script>
 <style scoped>
