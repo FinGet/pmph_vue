@@ -103,7 +103,7 @@
             <span v-html="item.province"></span>
           </el-checkbox>
         </div>
-        <div>
+        <div class="choose-school-list">
           <el-checkbox-group v-model="item.checkedSchools"  @change="_handleCheckedSchoolChange(item)">
             <el-checkbox
               v-for="(city,index) in item.schoolList"
@@ -544,5 +544,14 @@
   }
   .searchBox-wrapper{
     float: none;
+  }
+
+  .choose-school-list{
+    line-height: 36px;
+  }
+  .choose-school-list .el-checkbox{
+    width: 280px;
+    margin-right: 10px;
+    margin-left: 0 !important;
   }
 </style>
