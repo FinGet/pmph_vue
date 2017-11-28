@@ -2,48 +2,30 @@
     <div class="newChoose">
       <el-row>
         <el-col>
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
+          <el-form :model="material" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
 
-            <el-form-item label="教材名称：" prop="'material.materialName'" class="pull-left">
+            <el-form-item label="教材名称：" prop="materialName" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm['material.materialName']" class="input-217"></el-input>
+                <el-input v-model="material.materialName" class="input-217"></el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="教材轮次：" prop="turn" class="pull-left">
+            <el-form-item label="教材轮次：" prop="materialRound" class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm['material.materialRound']" class="input-217"></el-input>
+                <el-input v-model="material.materialRound" class="input-217"></el-input>
               </el-col>
             </el-form-item>
-
-            <el-form-item label="实际结束日期：" required class="pull-left">
-              <el-col>
-                <el-form-item prop="endDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.actualDeadline']" style="width: 100%;"></el-date-picker>
+                <el-form-item label="实际结束日期：" prop="actualDeadline" class="pull-left">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="material.actualDeadline" @change="actDatePickGetTime" :picker-options="pickOptionsAct" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+                </el-form-item>     
+                <el-form-item label="展示结束日期：" class="pull-left" prop="deadline">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="material.deadline" @change="showDatePickGetTime"  :picker-options="pickOptionsShow" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                 </el-form-item>
-              </el-col>
-            </el-form-item>
-
-            <el-form-item label="展示结束日期：" required class="pull-left">
-              <el-col>
-                <el-form-item prop="playEndDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.deadline']" style="width: 100%;"></el-date-picker>
+                <el-form-item prop="ageDeadline" label="年龄计算截止日期："  class="pull-left">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="material.ageDeadline" @change="ageDatePickGetTime" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                 </el-form-item>
-              </el-col>
-            </el-form-item>
-
-            <el-form-item label="年龄计算截止日期：" required class="pull-left">
-              <el-col>
-                <el-form-item prop="ageDate">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm['material.ageDeadline']" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-              </el-col>
-            </el-form-item>
             <div class="clearfix"></div>
-            <el-form-item label="教材分类：">
-              <el-col>
-                <el-form-item>
-                  <!-- <el-input v-model="formData['material.materialType']" class="classify_input" disabled></el-input> -->
+                <el-form-item label="教材分类："  prop="materialType">
                    <el-cascader
                       :options="chooseBookData"
                       :props="defaultProps"
@@ -52,12 +34,7 @@
                       class="classify_input"
                       @change="materialHandleChange">
                     </el-cascader>
-                  <!-- <el-button type="text" class="classify_button" @click="dialogVisiable=true">选择</el-button>
-                  <el-button type="text" class="classify_button">删除</el-button> -->
                 </el-form-item>
-              </el-col>
-            </el-form-item>
-
             <div class="clearfix"></div>
 
 
@@ -111,7 +88,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="主任：">
+            <el-form-item label="主任："  prop="director">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectDirector" style="margin-right:10px;">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
@@ -128,7 +105,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目编辑：">
+            <el-form-item label="项目编辑："required prop="materialProjectEditors">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
@@ -145,9 +122,9 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="邮寄地址：" class="pull-left">
+            <el-form-item label="邮寄地址：" prop="mailAddress"  class="pull-left">
               <el-col>
-                <el-input v-model="ruleForm['material.mailAddress']" class="input-500"></el-input>
+                <el-input v-model="material.mailAddress" class="input-500"></el-input>
               </el-col>
             </el-form-item>
             <div class="clearfix"></div>
@@ -224,38 +201,38 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="申报通知扫描图片及通知主要内容：" prop="uploadImg">
+            <el-form-item label="申报通知扫描图片及通知主要内容：" prop="notice">
               <el-col :span="24">
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="ruleForm['materialExtra.notice']">
+                  v-model="material.notice">
                 </el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="上传图片:" prop="uploadImg">
+            <el-form-item label="上传图片：" prop="noticeFiles">
               <el-upload
                 class="upload"
-                action="#"
                 :auto-upload="false"
+                action="#"
                 :on-change="imgUploadChange"
                 :file-list="fileList">
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
-            <el-form-item label="备注：">
+            <el-form-item label="备注：" prop="note">
               <el-col :span="24">
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="ruleForm['materialExtra.note']">
+                  v-model="material.note">
                 </el-input>
               </el-col>
             </el-form-item>
 
-            <el-form-item label="附件：" prop="uploadFile">
+            <el-form-item label="附件：" prop="noteFiles">
               <el-col :span="12">
                 <el-upload
                   class="upload"
@@ -313,11 +290,6 @@ export default {
       },
       checkedConactPersonData:[],
       clearTableSelect:false,
-      formData: {
-        bookName: "全国高等学校本科应用心理学专业第三轮规划教材",
-        round: 3,
-        classify: ""
-      },
       fileList: [],
       listTableData: [
         {
@@ -410,6 +382,21 @@ export default {
           needcheck: false
         }
       ],
+      material:{
+         materialName:'',
+         materialRound:'',
+         deadline:''  ,
+         actualDeadline:'',
+         ageDeadline:'',
+         materialType:'',
+         director:'',
+         materialProjectEditors:[],
+         mailAddress:'',
+         noticeFiles:[],
+         noteFiles:[],
+         notice:'',
+         note:'',
+      },
       ruleForm: {
         "material.materialName": "",
         "material.materialRound": "",
@@ -428,23 +415,39 @@ export default {
          }],   //扩展项
          "materialExtra.notice":'',
          "materialExtra.note":'',
-          noticeFiles:'',
-          noteFiles:'',
-        /* "material.isMultiBooks": "",
-        "material.isMultiPosition": "",
-        "material.isEduExpUsed": "",
-        "material.isEduExpRequired": "",
-        "material.isWorkExpUsed": "",
-        "material.isWorkExpRequired": "",
-        "material.isTeachExpUsed": "",
-        "material.isTeachExpRequired": "", */
+          noticeFiles:[],
+          noteFiles:[],
 
       },
       chooseBookData:[],
       rules: {
-        name: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
-        turn: [{ required: true, message: "请输入教材轮次", trigger: "change" }]
-      }
+        materialName: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
+        materialRound: [{ required: true, message: "请输入教材轮次", trigger: "blur" }],
+        actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
+        deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
+        ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
+        materialType:[{type:'number', required: true, message: "请选择教材分类", trigger: "change" }],
+        director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
+        materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
+        mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
+        noticeFiles:[{type:'array', required: true, message: "至少上传一张图片", trigger: "change" }],
+        noteFiles:[{type:'array', required: true, message: "至少选择一个文件", trigger: "change" }],
+        notice:[{required: true, message: "请填写主要内容", trigger: "blur" }],
+        note:[{required: true, message: "请填写备注", trigger: "blur" }]
+
+      },
+      pickOptionsAct:{
+         disabledDate(time) {
+          
+           //console.log(material.deadline);
+           return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
+      pickOptionsShow:{
+         disabledDate(time) {
+           return time.getTime() < Date.now() - 8.64e7;
+        }
+      },      
     };
   },
   created() {
@@ -469,7 +472,8 @@ export default {
       },
       /* 选择教材分类 */
       materialHandleChange(val){
-        this.ruleForm['material.materialType']=val[val.length-1];
+        this.material.materialType=val[val.length-1];
+        //this.ruleForm['material.materialType']=val[val.length-1];
         console.log(this.ruleForm['material.materialType']);
       },
       /* 联系人点击切换输入编辑框 */
@@ -509,16 +513,20 @@ export default {
          else if(this.classify == "director"){
                  this.projectDirectorData=[];
                  this.projectDirectorData.push(this.checkedConactPersonData[0]);
-                 this.ruleForm['material.director']=this.projectDirectorData[0].id;
-           console.log('主任',this.projectDirectorData)              
+                // this.ruleForm['material.director']=this.projectDirectorData[0].id;
+                 this.material.director=this.projectDirectorData[0].id;
+                 this.$refs.ruleForm.validateField('director');
+           console.log('主任',this.projectDirectorData,this.material.director)              
          }
          else if(this.classify == 'editor'){
           for(var i in this.checkedConactPersonData){
                /* 去重 */
               if(this.removeRepeat(this.ruleForm.materialProjectEditors,this.checkedConactPersonData[i])){
                   this.ruleForm.materialProjectEditors.push(this.checkedConactPersonData[i]);
+                  this.material.materialProjectEditors.push(this.checkedConactPersonData[i]);
                }
            }
+           this.$refs.ruleForm.validateField('materialProjectEditors');
            console.log('项目编辑',this.ruleForm.materialProjectEditors);           
          }
        this.$message({
@@ -567,7 +575,9 @@ export default {
       this.ruleForm.noticeFiles=[];
      for(var i in filelist){
       this.ruleForm.noticeFiles.push(filelist[i].raw);
+      this.material.noticeFiles.push(filelist[i].raw);
      }
+     this.$refs.ruleForm.validateField('noticeFiles');
     },
     /* 文件 */
     fileUploadChange(file,filelist){
@@ -576,7 +586,9 @@ export default {
      this.ruleForm.noteFiles=[];
      for(var i in filelist){
       this.ruleForm.noteFiles.push(filelist[i].raw);
+      this.material.noteFiles.push(filelist[i].raw);
      }
+     this.$refs.ruleForm.validateField('noteFiles');
     },
     /**
        * 删除选中的项目主任
@@ -584,15 +596,16 @@ export default {
     handleDirectorClose(val) {
       // console.log(val)
       this.projectDirectorData.splice(val, 1);
-      this.ruleForm['material.director']=[];
-
+      this.material.director='';
+      this.$refs.ruleForm.validateField('director');
     },
     /**
        * 删除选中的项目编辑
        */
     handleEditorClose(val) {
       this.ruleForm.materialProjectEditors.splice(val, 1);
-
+      this.material.materialProjectEditors.splice(val, 1);
+      this.$refs.ruleForm.validateField('materialProjectEditors');
     },
     /**
        * 返回上一级
@@ -663,10 +676,59 @@ export default {
     closeDialog() {
       this.clearTableSelect=!this.clearTableSelect;
     },
+    /* 日期检查 */
+    dateOptionsChecked(){
+     console.log(this.material.actualDeadline,this.material.deadline)
+     var actTime=new Date(this.material.actualDeadline);
+     var showTime=new Date(this.material.deadline);
+     if(actTime.getTime()>=showTime.getTime()){
+       return true;
+     }else{
+       return false;
+     }
+    },
+    /* 日期选择框格式化 */
+    actDatePickGetTime(date){
+     console.log(date);
+     this.ruleForm['material.actualDeadline']=date;
+    },
+    showDatePickGetTime(date){
+     console.log(date);
+     this.ruleForm['material.deadline']=date;
+    },
+    ageDatePickGetTime(date){
+     console.log(date);
+     this.ruleForm['material.ageDeadline']=date;
+    },
+    /* 合并material  ruleForm */
+    mergeForms(){
+      for(var i in this.material){
+        if(i=='notice'||i=='note'){
+          this.ruleForm['materialExtra.'+i]=this.material[i];
+        }else if(i=='materialProjectEditors'||i=='noticeFiles'||i=='noteFiles'||i=='actualDeadline'||i=='deadline'||i=='ageDeadline'){
+          continue ;
+        }else{
+         this.ruleForm['material.'+i]=this.material[i];
+        }
+      }
+      console.log(this.ruleForm);
+    },
     /* 提交表单 */
     submitForm(){
-       this.optionMerge();
-       console.log(this.ruleForm)
+       if(!this.dateOptionsChecked()){
+            this.$message.error('实际结束日期应大于展示结束日期');
+            return false;
+       }
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            this.optionMerge();  //选项合并
+            this.mergeForms();   //表单合并
+            
+          } else {
+            
+            return false;
+          }
+        });       
     }
   },
   components: {
@@ -680,7 +742,7 @@ export default {
   float: left;
 }
 .classify_input {
-  width: 600px;
+  width: 585px;
   margin-right: 20px;
 }
 

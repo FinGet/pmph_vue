@@ -192,7 +192,7 @@ export function formatDate(nS) {
   if(!nS){
     return "";
   }
-  var date=new Date(parseInt(nS));
+  var date=new Date(nS);
   var year=date.getFullYear();
   var mon = date.getMonth()+1;
   var day = date.getDate();
