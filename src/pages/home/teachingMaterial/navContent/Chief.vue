@@ -5,8 +5,8 @@
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
-          <el-button type="primary">确认</el-button>
-          <el-button type="warning">重置</el-button>
+          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])">确认</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
         </div>
       </div>
 
@@ -18,118 +18,92 @@
           stripe
           tooltip-effect="dark"
           max-height="750"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            label="姓名"
-            prop="name"
-          >
-          </el-table-column>
-          <el-table-column
-            label="性别"
-          >
+          style="width: 100%">
+          <el-table-column label="姓名">
             <template scope="scope">
-              <p>{{scope.row.sex === 0? '男' : '女'}}</p>
-            </template>
-          </el-table-column>
-            <el-table-column
-              label="申报单位"
-            >
-              <template scope="scope">
-                <p><i class="fa fa-university fa-fw"></i> {{scope.row.applicationOrganization}}</p>
-              </template>
-            </el-table-column>
-          <el-table-column
-            label="工作单位"
-          >
-            <template scope="scope">
-              <p><i class="fa fa-briefcase fa-fw"></i> {{scope.row.workOrganization}}</p>
-            </template>
-          </el-table-column>
-            <el-table-column label="申请职位"
-              prop="jobApplication"
-            >
-            </el-table-column>
-            <el-table-column
-              label="学校审核"
-              width="100"
-              align="center"
-            >
-              <template scope="scope">
-                <el-tooltip :content="'状态:'+scope.row.schoolSaudit" placement="top-start">
-                  <el-tag :type="scope.row.schoolSaudit==='未审核'?'danger':'success'">{{ scope.row.schoolSaudit }}</el-tag>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-          <el-table-column
-            label="出版社审核"
-            width="130"
-            align="center"
-          >
-            <template scope="scope">
-              <el-tooltip :content="'状态:'+scope.row.pressAudit" placement="top-start">
-                <el-tag :type="scope.row.pressAudit==='未收到纸质表'?'danger':'success'">{{ scope.row.pressAudit }}</el-tag>
-              </el-tooltip>
+              <router-link :to="{name:'专家信息',query: { username: scope.row.username }}" class="table-link">{{scope.row.realname}}</router-link>
             </template>
           </el-table-column>
 
-          <el-table-column
-            label="是否主编"
-            width="100"
-            align="center"
-          >
+          <el-table-column label="申报单位"  prop="reportName"></el-table-column>
+
+          <el-table-column label="工作单位" prop="orgName"></el-table-column>
+          <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
+          <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
+          <el-table-column label="出版社审核" width="110" prop="offlineProgress"></el-table-column>
+
+          <el-table-column label="是否主编" width="100" align="center" >
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isChiefEditor"  @change="changeChiefEditor(scope.$index)"
-                           :disabled="!scope.row.edit||$route.query.type=='pres'"
+              <el-checkbox
+                v-model="scope.row.isZhubian"
+                @change="checkboxChange(1,scope.row)"
+                :disabled="!hasPermission(2)"
               ></el-checkbox>
             </template>
           </el-table-column>
 
-          <el-table-column label="排位"
-                           width="80"
-                           align="center">
+          <el-table-column label="排位" width="90" align="center">
             <template scope="scope">
-              <el-input v-model="scope.row.chiefEditorNo" :disabled="!scope.row.isChiefEditor||!scope.row.edit||$route.query.type=='pres'" size="mini"></el-input>
+              <div class="paddingB15 paddingT10 relative">
+                <el-input
+                  class="border-radius-4"
+                  :class="{'border-red':scope.row.isZhubian&&!scope.row.zhubianSortIsOk}"
+                  v-model.trim="scope.row.zhubianSort"
+                  :disabled="!hasPermission(2)||!scope.row.isZhubian"
+                  @blur="sortChange(1,scope.row)"
+                  @change="sortChange(1,scope.row)"
+                  size="mini"
+                ></el-input>
+                <span class="error fontsize-sm table-input-tips" v-if="scope.row.isZhubian&&!scope.row.zhubianSortIsOk">{{scope.row.zhubianSort?'排序错误':'请输入'}}</span>
+              </div>
             </template>
           </el-table-column>
           <el-table-column
             label="是否副主编"
-            width="120"
+            width="110"
             align="center">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isSubeditor"  @change="changeSubeditor(scope.$index)"
-                           :disabled="!scope.row.edit||$route.query.type=='pres'"></el-checkbox>
+              <el-checkbox
+                v-model="scope.row.isFuzhubian"
+                @change="checkboxChange(2,scope.row)"
+                :disabled="!hasPermission(2)"
+              ></el-checkbox>
             </template>
           </el-table-column>
 
-          <el-table-column label="排位"
-                           width="80"
-                           align="center">
+          <el-table-column label="排位" width="90" align="center">
             <template scope="scope">
-              <el-input v-model="scope.row.subeditorNo" :disabled="!scope.row.isSubeditor||!scope.row.edit||$route.query.type=='pres'" size="mini"></el-input>
+              <div class="paddingB15 paddingT10 relative">
+                <el-input
+                  class="border-radius-4"
+                  :class="{'border-red':!scope.row.fuzhubianSortIsOk}"
+                  v-model.trim="scope.row.fuzhubianSort"
+                  :disabled="!hasPermission(2)||!scope.row.isFuzhubian"
+                  @blur="sortChange(2,scope.row)"
+                  @change="sortChange(2,scope.row)"
+                  size="mini"
+                ></el-input>
+                <span class="error fontsize-sm table-input-tips" v-if="scope.row.isFuzhubian&&!scope.row.fuzhubianSortIsOk">{{scope.row.fuzhubianSort?'排序错误':'请输入'}}</span>
+              </div>
             </template>
           </el-table-column>
 
-          <el-table-column
-            v-if="level<2"
-            label="是否编委"
-            width="120"
-            align="center">
+          <el-table-column label="是否编委" width="100" align="center">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isMember" @change="changeMember(scope.$index)" :disabled="!scope.row.edit||$route.query.type=='chief'"></el-checkbox>
+              <el-checkbox
+                v-model="scope.row.isBianwei"
+                @change="checkboxChange(3,scope.row)"
+                :disabled="!hasPermission(3)"
+              ></el-checkbox>
             </template>
           </el-table-column>
 
-          <el-table-column
-            label="是否数字编委"
-            width="120"
-            align="center">
+          <el-table-column label="是否数字编委" width="120" align="center">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isNumberMember"></el-checkbox>
+              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>
-
       </div>
 
       <el-dialog
@@ -149,6 +123,7 @@
     data() {
       return {
         api_list:'/pmpheep/declaration/list/editor/selection',
+        api_submit:'/pmpheep/declaration/editor/selection/update',
         searchParams:{
           textbookId:'',
           realName:'',
@@ -159,138 +134,13 @@
           textbookId:'',
         },
         dialogVisible:false,
-        level:undefined,
-        input:'',
-        input1:'',
-        showhistory: false,
-        multipleSelection: [],
-        options: [{
-          value: '选项1',
-          label: '全部'
-        }, {
-          value: '选项2',
-          label: '主编'
-        }, {
-          value: '选项3',
-          label: '副主编'
-        },{
-          value: '选项4',
-          label: '编委'
-        }],
-        value: '全部',
-        tableData:[
-          {
-            name: '张三',
-            sex:0,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'已审核',
-            pressAudit:'已收到纸质表',
-            isChiefEditor:false,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:false
-
-          },
-          {
-            name: '李四',
-            sex:1,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'已审核',
-            pressAudit:'未收到纸质表',
-            isChiefEditor:false,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:false
-          },
-          {
-            name: '王二',
-            sex:0,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'未审核',
-            pressAudit:'已收到纸质表',
-            isChiefEditor:true,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:false
-          },
-          {
-            name: '张三',
-            sex:0,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'已审核',
-            pressAudit:'已收到纸质表',
-            isChiefEditor:false,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:true
-          },
-          {
-            name: '李四',
-            sex:1,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'已审核',
-            pressAudit:'未收到纸质表',
-            isChiefEditor:false,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:false
-          },
-          {
-            name: '王二',
-            sex:0,
-            applicationOrganization:'四川大学',
-            workOrganization:'成都医科大学',
-            duty: '无',
-            jobTitle: '教授',
-            jobApplication:'主编',
-            schoolSaudit:'未审核',
-            pressAudit:'已收到纸质表',
-            isChiefEditor:true,
-            chiefEditorNo:'',
-            isSubeditor:false,
-            subeditorNo:'',
-            isMember:false
-          }
-        ]
+        tableData:[],
+        zhubianSelectSortNumber:[],
+        fuzhubianSelectSortNumber:[],
       }
     },
     computed:{
-      /**
-       * 判断当前是否有选中项来设置删除按钮是否可以点击
-       * @returns {boolean}
-       */
-      isSelected() {
-        if (this.multipleSelection.length > 0) {
-          return false
-        } else {
-          return true
-        }
-      }
+
     },
     created(){
       this.formData.materialId = this.$route.params.materialId;
@@ -308,9 +158,6 @@
       this.getTableData();
     },
     methods:{
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-      },
       //获取table数据
       getTableData(){
         this.$axios.get(this.api_list,{params:{
@@ -321,51 +168,167 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              this.formData.materialName = res.data.materialName;
-              this.formData.materialType = res.data.materialType;
-              this.formData.materialRound = res.data.materialRound;
-              this.formData.isPublic = !!res.data.isPublic;
-              res.data.textbooks = JSON.parse(res.data.textbooks);
-              res.data.textbooks.map(iterm=>{
-                iterm.sortIsOk = true;
-                iterm.nameIsOk = true;
-                iterm.roundIsOk = true;
+              var onlineProgress = ['未提交','已提交','被退回','通过'];
+              var offlineProgress = ['未收到','被退回','已收到'];
+              res.data.map(iterm=>{
+                iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
+                iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
+
+                iterm.isZhubian = iterm.chosenPosition==1;
+                iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
+                iterm.zhubianSortIsOk = true;
+                iterm.isFuzhubian = iterm.chosenPosition==2;
+                iterm.fuzhubianSort = iterm.isFuzhubian?iterm.rank:'';
+                iterm.fuzhubianSortIsOk = true;
+                iterm.isBianwei = iterm.chosenPosition==3;
               });
-              this.extendListData = res.data.textbooks;
+              this.tableData = res.data;
             }
           })
           .catch(e=>{
             console.log(e);
           })
       },
-      // 展示历史记录
-      showHistory() {
-        if(!this.showhistory){
-          this.$refs.history.style.right = 0
-          this.showhistory = !this.showhistory
-        }else{
-          this.$refs.history.style.right = `-500px`
-          this.showhistory = !this.showhistory
+      /**
+       * checkbox实现单选功能
+       * @param type 类型
+       * @param row 数据
+       */
+      checkboxChange(type,row) {
+        if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
+          row.isZhubian = false;
+          row.isFuzhubian = false;
+          row.isBianwei = false;
+          row.zhubianSort = '';
+          row.fuzhubianSort = '';
+          row.zhubianSortIsOk = true;
+          row.fuzhubianSortIsOk = true;
+          return;
+        }
+        row.chosenPosition = type;
+        row.isZhubian = type==1;
+        row.isFuzhubian = type==2;
+        row.isBianwei = type==3;
+        row.zhubianSort = '';
+        row.fuzhubianSort = '';
+        row.zhubianSortIsOk = true;
+        row.fuzhubianSortIsOk = true;
+      },
+      /**
+       * 提交遴选结果
+       */
+      submit(){
+
+        if(!this.checkSortIsOk()){
+          return;
+        }
+
+        this.$confirm("确认提交？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            let jsonDecPosition = [];
+            for(let i = 0, len = this.tableData.length; i < len; i++){
+              let tempObj = {
+                id:this.tableData[i].id,
+                textbookId:this.searchParams.textbookId,
+                chosenPosition:this.tableData[i].chosenPosition,
+                rank:this.tableData[i].chosenPosition==1?this.tableData[i].zhubianSort:(this.tableData[i].chosenPosition==2?this.tableData[i].fuzhubianSort:''),
+                isDigitalEditor:this.tableData[i].isDigitalEditor,
+              };
+              if(this.tableData[i].isZhubian||this.tableData[i].isFuzhubian||this.tableData[i].isBianwei||this.tableData[i].isDigitalEditor){
+                jsonDecPosition.push(tempObj);
+              }
+            }
+            //提交
+            this.$axios.put(this.api_submit,this.$commonFun.initPostData({
+              jsonDecPosition:JSON.stringify(jsonDecPosition)
+            }))
+              .then(response=>{
+                var res = response.data;
+                if(res.code==1){
+                  this.getTableData();
+                }else{
+                  this.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 点击重置按钮
+       */
+      reset(){
+        this.$confirm("放弃当前修改，重置数据？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.getTableData();
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 当排序码发生变化时检测是否合法
+       * @param type 类型 1：主编，2:副主编
+       * @param row 表格当前列数据
+       */
+      sortChange(type,row){
+        if(type==1){
+          if(row.isZhubian&&!(row.zhubianSort&&this.$commonFun.checkType(row.zhubianSort,'number')&&parseInt(row.zhubianSort)<999)){
+            row.zhubianSortIsOk=false;
+          }else{
+            row.zhubianSortIsOk=true;
+          }
+        }
+
+
+        if(type==2){
+          if(row.isFuzhubian&&!(row.fuzhubianSort&&this.$commonFun.checkType(row.fuzhubianSort,'number')&&parseInt(row.fuzhubianSort)<999)){
+            row.fuzhubianSortIsOk=false;
+          }else{
+            row.fuzhubianSortIsOk=true;
+          }
         }
       },
-      // checkbox实现单选功能
-      changeSubeditor(index) {
-        if (this.tableData[index].isSubeditor){
-          this.tableData[index].isChiefEditor = false
-          this.tableData[index].isMember = false
+      checkSortIsOk(){
+        var zhubianSortList = [];
+        var fuzhubianSortList = [];
+        var zhubianData = [];
+        var fuzhubianData =[];
+
+        this.tableData.forEach(iterm=>{
+          if(iterm.isZhubian){
+            zhubianSortList.push(iterm.zhubianSort);
+            zhubianData.push(iterm);
+          }
+          if(iterm.isFuzhubian){
+            fuzhubianSortList.push(iterm.fuzhubianSort);
+            fuzhubianData.push(iterm);
+          }
+        })
+        zhubianSortList = zhubianSortList.sort();
+        fuzhubianSortList = fuzhubianSortList.sort();
+
+        let zhubianSortIsOk = zhubianSortList[0]==1 && zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false;
+        let fuzhubianSortIsOk =fuzhubianSortList[0]==1 && fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false;
+
+        if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
+          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的连续整数');
         }
+
+        return zhubianSortIsOk&&fuzhubianSortIsOk
+
       },
-      changeChiefEditor(index) {
-        if (this.tableData[index].isChiefEditor){
-          this.tableData[index].isSubeditor = false
-          this.tableData[index].isMember = false
-        }
-      },
-      changeMember(index) {
-        if (this.tableData[index].isMember){
-          this.tableData[index].isSubeditor = false
-          this.tableData[index].isChiefEditor = false
-        }
+      hasPermission(index){
+        return this.$commonFun.materialPower(index);
       }
     }
   }
@@ -380,5 +343,11 @@
   }
   .history-box{
     min-height: 400px;
+  }
+  .table-input-tips{
+    position: absolute;
+    bottom: 7px;
+    height: 12px;
+    left: 0;
   }
 </style>
