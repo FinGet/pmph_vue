@@ -131,7 +131,7 @@ export default {
             ],
         isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
         sort: [
-            {type:'number',min:1,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" }, 
+            {min:0,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" }, 
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[

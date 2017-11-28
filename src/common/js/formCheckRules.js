@@ -1,5 +1,15 @@
 
 var formCheckedRules={
+    //无文本框不为空验证
+    requiredChecked:function(rule, value, callback){
+      console.log(value)
+      if(value.length!=0){
+        callback();
+      }else{
+        callback('不能为空');
+      }
+      
+    },
     //整数验证
     numberChecked: function(rule, value, callback){
         var reg = '^[0-9]*$';   //阿拉伯数字验证正则
