@@ -29,16 +29,16 @@
         tooltip-effect="dark"
         style="width: 100%">
         <el-table-column
-          prop="orderNum"
           label="书序"
+          prop="sort"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="bookName"
+          prop="textbookName"
           label="书籍名称">
         </el-table-column>
         <el-table-column
-          prop="edition"
+          prop="textbookRound"
           label="版次"
           width="180">
         </el-table-column>
@@ -46,7 +46,7 @@
           label="选题号">
           <template scope="scope">
             <div class="width200">
-              <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNum"></el-input>
+              <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNumber"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -59,88 +59,86 @@
 	export default {
 		data() {
 			return {
-        tableData:[{
-            orderNum: '1',
-            bookName: '细胞生物学和医学遗传学',
-            edition: '2',
-            topicNum:'1002',
-          },{
-            orderNum: '2',
-            bookName: '眼耳鼻喉口腔科学',
-            edition: '2',
-            topicNum:'1003',
-          },{
-            orderNum: '3',
-            bookName: '神经科学',
-            edition: '2',
-            topicNum:'',
-          },{
-            orderNum: '4',
-            bookName: '传染病学',
-            edition: '2',
-            topicNum:'',
-          },{
-            orderNum: '5',
-            bookName: '五官科疾病概要',
-            edition: '2',
-            topicNum:'',
-        },{
-          orderNum: '6',
-          bookName: '眼耳鼻喉口腔科学',
-          edition: '2',
-          topicNum:'1007',
-        },{
-          orderNum: '7',
-          bookName: '神经科学',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '8',
-          bookName: '传染病学',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '9',
-          bookName: '五官科疾病概要',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '10',
-          bookName: '眼耳鼻喉口腔科学',
-          edition: '2',
-          topicNum:'1004',
-        },{
-          orderNum: '11',
-          bookName: '神经科学',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '12',
-          bookName: '传染病学',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '13',
-          bookName: '五官科疾病概要',
-          edition: '2',
-          topicNum:'',
-        },{
-          orderNum: '14',
-          bookName: '五官科疾病概要',
-          edition: '2',
-          topicNum:'',
-        },],
+        tableData:[],
+        materialId:'',// 教材ID
+        book:{
+          id: '', // 书籍id
+          materialId: '' ,//教材
+          textbookName: '', // 书籍名称
+          textbookRound: '', //书籍轮次
+          sort: '', // 图书序号
+          isPublished: false, // 是否发布
+          topicNumber: '', // 选题号
+        },
+        topicTextbooks:[]
       }
 		},
+    created(){
+      this.materialId = this.$route.params.materialId
+      // console.log(this.materialId)
+    },
+    mounted(){
+      this.getTableList()
+    },
     methods:{
+      /**
+        获取初始化教材数据
+       */
+      getTableList(){
+        this.$axios.get('/pmpheep/textBook/list/topics',{
+          params:{
+            materialId: this.materialId
+          }
+        }).then(response => {
+          let res = response.data
+          if (res.code == 1) {
+            this.tableData = res.data
+            console.log(this.tableData)
+          }
+        }).catch(err => {
+          this.$message.error(err.msgTrim())
+        })
+      },
       submit(){
+        // console.log(this.tableData)
+        var re = /^[0-9]+[0-9]*]*$/ 
+        for (var i = 0; i < this.tableData.length; i++) {
+          for (var key in this.book) {
+            this.book[key] = this.tableData[i][key]
+          }
+          if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
+            this.$message.error('选题号只能为数字')
+            return 
+          }
+          // console.log(this.book)
+          this.topicTextbooks.push(this.book)
+          this.book={
+            id: '', // 书籍id
+            materialId: '' ,//教材
+            textbookName: '', // 书籍名称
+            textbookRound: '', //书籍轮次
+            sort: '', // 图书序号
+            isPublished: false, // 是否发布
+            topicNumber: '', // 选题号
+          }
+        }
+        // console.log(this.topicTextbooks)
         this.$confirm('确认提交选题号！', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message.success('设置成功!');
-          this.$router.go(-1)
+          this.$axios.post('/pmpheep/textBook/add/topic',this.$initPostData({
+            topicTextbooks: JSON.stringify(this.topicTextbooks)
+          })).then(response => {
+            let res = response.data
+            if (res.code == 1) {
+              this.$message.success('设置成功!');
+              this.$router.go(-1)
+            }
+          }).catch(err => {
+            this.$message.error(err.msgTrim())
+          })
         }).catch(() => {});
       }
     }
