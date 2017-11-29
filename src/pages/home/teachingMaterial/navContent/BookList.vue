@@ -9,7 +9,7 @@
             </el-form-item>
             <el-form-item label="教材分类：">
                 <span class="grey_span">{{formData.materialType.join(' > ')}}</span>
-                <p><span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span></p>
+                <p><span class="red_span">（*若教材数量较多，可按照下载的模板格式上传，模板中书序、书籍名称、版次不能为空，书序和版次只能填写数字）</span></p>
                 <div>
                   <span class="grey_span" style="float:left;">
                     请按照模板格式上传（
@@ -45,11 +45,11 @@
                   <el-table-column
                     prop="orderNum"
                     label="书序"
-                    width="120">
+                    width="160">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
-                          placeholder="请输入选题号"
+                          placeholder="请输入"
                           class="searchInputEle border-radius-4"
                           :class="{'border-red':!scope.row.sortIsOk}"
                           icon="edit"
@@ -65,9 +65,9 @@
                   <el-table-column
                     prop="bookName"
                     label="书籍名称"
-                    width="400">
+                    width="420">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
                           placeholder="请输入书籍名称"
                           class="searchInputEle border-radius-4"
@@ -84,11 +84,11 @@
                   <el-table-column
                     prop="edition"
                     label="版次"
-                    width="120">
+                    width="160">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
-                          placeholder="请输入选题号"
+                          placeholder="请输入"
                           class="searchInputEle border-radius-4"
                           :class="{'border-red':!scope.row.roundIsOk}"
                           icon="edit"
@@ -105,7 +105,7 @@
                     label="操作">
                     <template scope="scope">
                       <el-button type="text" @click="insertRow(scope.$index)">插入行</el-button>
-                      <el-button type="text" @click="deleteExtendItem(scope.$index)">删除</el-button>
+                      <el-button type="text" @click="deleteExtendItem(scope.$index)">删除行</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -184,15 +184,7 @@ export default {
        * @param index
        */
       deleteExtendItem(index) {
-        this.$confirm("确定删除该行？", "提示",{
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(()=>{
-            this.extendListData.splice(index, 1);
-          })
-          .catch(e=>{})
+        this.extendListData.splice(index, 1);
       },
       /**
        * 插入行
@@ -232,11 +224,21 @@ export default {
        * 自动设置书序
        */
       autoSetBookNum(){
-        this.extendListData.forEach((iterm,index)=>{
-          iterm.sort = index+1;
-          iterm.sortIsOk=true;
-        });
-        this.$message.success('自动设置书序完成！');
+        //提交
+        this.$confirm("确定清除当前书序，重新设置书序吗？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.extendListData.forEach((iterm,index)=>{
+              iterm.sort = index+1;
+              iterm.sortIsOk=true;
+            });
+            this.$message.success('自动设置书序完成！');
+          })
+          .catch(e=>{})
+
       },
       /**
        * 判断输入是否合法
@@ -381,8 +383,8 @@ export default {
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
-        if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+        if(!(ext=='xls'||ext=='xlsx')){
+          this.$message.error("请按照模板格式的文档上传文件");
           return;
         }
         //文件名不超过40个字符
@@ -432,7 +434,7 @@ export default {
             this.uploadLoading = false;
           })
           .catch((error) => {
-          console.log(error);
+            console.log(error);
             this.$message.error('上传文件失败，请重试');
             this.uploadLoading = false;
           });
@@ -453,7 +455,7 @@ export default {
 </script>
 <style scoped>
  .book-list-catalogue{
-   max-width: 840px;
+   max-width: 900px;
  }
 
 
@@ -552,5 +554,6 @@ export default {
     position: absolute;
     bottom: 7px;
     height: 12px;
+    left: 0;
   }
 </style>

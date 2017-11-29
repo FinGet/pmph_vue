@@ -76,6 +76,9 @@ import CommentManage from 'pages/home/publishBooks/CommentManage'
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
 import PersonalSetting from 'pages/home/personal/Setting'
 
+/**系统日志 */
+import SystemLog from 'pages/home/systemLog/systemLog'
+
 Vue.use(Router)
 
 export default new Router({
@@ -180,6 +183,10 @@ export default new Router({
           path: 'personal', name: '个人资料', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
           { path: 'setting', name: '个人信息', component: PersonalSetting },
         ]
+        },
+        /*用户主页(个人设置)*/
+        {
+          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 1}
         },
       ]
     },

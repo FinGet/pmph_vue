@@ -62,6 +62,10 @@
         <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item> -->
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
+      <el-menu-item index="/systemlog" v-if="isShowSide(1)">
+        <i class="fa fa-edit fa-fw"></i>
+        <span slot="title">系统日志</span>
+      </el-menu-item>
     </el-menu>
 
 	</div>
