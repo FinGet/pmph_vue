@@ -2,7 +2,7 @@
     <div class="system_log">
         <el-row>
             <el-col :span="12">
-                <div class="search-title">用户账号:</div>
+                <div class="search-title">操作用户:</div>
                 <el-col :span="8" class="search-10">
                 <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
                 </el-col>
@@ -12,30 +12,31 @@
         <el-row>
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
-                    <el-table-column prop="userName" label="登录人" width="180">
+                    <el-table-column prop="userName" label="操作用户" width="180">
                     </el-table-column>
-                    <el-table-column prop="ip" label="客户端ip" width="180">
+                    <el-table-column prop="clientIp" label="操作人ip" width="180">
                     </el-table-column>
-                    <el-table-column prop="loginDate" label="访问时间">
+                    <el-table-column prop="operateDate" label="访问时间">
                     </el-table-column>
-                    <el-table-column prop="reqMethond" label="请求方法">
+                    <el-table-column prop="operateText" label="请求方法">
                     </el-table-column>
-                    <el-table-column prop="userInfo" label="客户端信息">
+                    <el-table-column prop="businessType" label="业务类型">
                     </el-table-column>
-                    <el-table-column prop="note" label="备注">
+                    <el-table-column prop="deviceType" label="访问设备">
                     </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
         <el-pagination
+        v-if="total>20"
         class="pull-right marginT10"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="pageNumber"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="total">
         </el-pagination>
     </div>
 </template>
@@ -45,65 +46,47 @@ export default {
       return {
         title: '',
         currentPage: 1, // 当前页
-        tableData: [{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        },{
-          userName: 'admin',
-          ip: '125.70.77.111',
-          loginDate: '2017-11-29 10:25:40',
-          reqMethond: '/boot/logManagerAction!query.action',
-          userInfo: 'Mozilla/5.0(Window NT 10.0;WOW64)AppleWebKit/537.46(KHTML,like Gecko)',
-          note: '操作异常！'
-        }]
+        pageSize: 20,
+        pageNumber: 1,
+        total:0,
+        tableData: []
       }
     },
+    created(){
+        this.getLogs()
+    },
     methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      }
+        getLogs(){
+            this.$axios.get('/pmpheep/sys/operation/operations',{
+                params:{
+                    pageSize: this.pageSize,
+                    pageNumber: this.pageNumber,
+                    userName: this.title
+                }
+            }).then(response =>{
+                let res = response.data
+                if (res.code == 1) {
+                    this.tableData = res.data.rows
+                    this.total = res.data.total
+                    this.tableData.forEach(item => {
+                        item.operateDate = this.$commonFun.formatDate(item.operateDate)
+                    })
+                }
+            })
+        },
+        search(){
+            this.getLogs()
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.pageSize = val 
+            this.getLogs()
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.pageNumber = val
+            this.getLogs()
+        }
     }
 }
 </script>
