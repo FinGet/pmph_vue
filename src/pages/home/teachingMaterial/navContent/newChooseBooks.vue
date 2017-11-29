@@ -268,7 +268,8 @@ export default {
   data() {
     return {
       mytest:false,
-      materialTypeUrl:'/pmpheep/books/list/materialType' , //教材分类url
+      materialTypeUrl:'/pmpheep/books/list/materialType',//教材分类url
+      addNewmaterialUrl:'/pmpheep/material/add' , 
       labelPosition: "right",
       // bookradio:'1',
       // jobradio:'1',
@@ -408,11 +409,7 @@ export default {
          materialContacts:[],     //联系人
         "material.director": "",   //主任
          materialProjectEditors:[], //项目编辑
-         materialExtensions:[{
-           extensionName:'请填写名称',
-           isRequired:false,
-           extendIsNameInput:''
-         }],   //扩展项
+         materialExtensions:[],   //扩展项
          "materialExtra.notice":'',
          "materialExtra.note":'',
           noticeFiles:[],
@@ -527,7 +524,7 @@ export default {
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
-           console.log('项目编辑',this.ruleForm.materialProjectEditors);           
+           console.log('项目编辑',typeof(this.material.materialProjectEditors));           
          }
        this.$message({
         message: `添加成功！`,
@@ -587,7 +584,9 @@ export default {
      for(var i in filelist){
       this.ruleForm.noteFiles.push(filelist[i].raw);
       this.material.noteFiles.push(filelist[i].raw);
+      console.log(typeof(filelist[i].raw));
      }
+     
      this.$refs.ruleForm.validateField('noteFiles');
     },
     /**
@@ -713,17 +712,44 @@ export default {
       }
       console.log(this.ruleForm);
     },
+    /* 表单处理 */
+    uploadFormMerge(){
+      var formdata=new FormData();
+         for(var i in this.ruleForm){
+           if(i=='noticeFiles'||i=='noteFiles'){
+               this.ruleForm[i].forEach((item)=>{
+                   formdata.append(i,item);
+               })
+           }
+            else if(typeof(this.ruleForm[i])=='object'){
+             var arr=[];
+                 for(var j in this.ruleForm[i]){
+                  arr.push(JSON.stringify(this.ruleForm[i][j]));
+                 }
+                 formdata.append(i,arr.join());
+           }else{
+               formdata.append(i,this.ruleForm[i])
+           }
+           
+         }
+         return formdata;
+    },
     /* 提交表单 */
     submitForm(){
-       if(!this.dateOptionsChecked()){
-            this.$message.error('实际结束日期应大于展示结束日期');
-            return false;
-       }
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
+            if(!this.dateOptionsChecked()){
+              this.$message.error('实际结束日期应大于展示结束日期');
+               return false;
+                }
             this.optionMerge();  //选项合并
             this.mergeForms();   //表单合并
-            
+            let config = {
+                headers:{'Content-Type':'multipart/form-data'}
+              };  //添加请求头
+            this.$axios.post(this.addNewmaterialUrl,this.uploadFormMerge(),config).then((res)=>{
+              console.log(res);
+            })  
           } else {
             
             return false;

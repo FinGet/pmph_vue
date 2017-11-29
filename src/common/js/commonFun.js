@@ -35,7 +35,18 @@ export function initPostData(obj, keyArr) {
 
     if (!keyArr) {
         for (var item in obj) {
+          if ((typeof obj[item])=='object'){
+            if ((typeof obj[item][0]) == 'object'){
+              for (var i in obj[item]){
+                paramdata.append(item, JSON.stringify(obj[item][i]));
+              }
+            }else{
+              paramdata.append(item, JSON.stringify(obj[item]));
+            }
+          }else{
             paramdata.append(item, obj[item]);
+          }
+            
             console.log(item);
         }
     }else{
@@ -62,13 +73,13 @@ export function materialPower(num) {
   var userData= getSessionStorage('currentUser', 'json')||{};
   var str = userData.materialPermission;
   //如果传的是数字
-  if(!isNaN(parseInt(num))){
+  if((typeof num).toLowerCase() == "number"){
     return str[num]==1;
   }
   //如果是数组,只要匹配到任一一项则返回true
   if(Object.prototype.toString.call(num)=='[object Array]'){
     for(let i = 0, len = num.length; i < len; i++){
-      if(!isNaN(parseInt(num[i]))){//如果不是数字
+      if(!((typeof num[i]).toLowerCase() == "number")){//如果不是数字
         return false;
       }
       if(str[num[i]]==1){//匹配到任一一项则返回true
