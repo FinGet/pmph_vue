@@ -50,30 +50,30 @@
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.realname}}
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.contactUserName}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.realname" :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.contactUserName" :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.handphone}}
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.contactPhone}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isPhoneInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.handphone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input>
+                      <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.email}}
+                      <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.contactEmail}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isEmailInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.email" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input>
+                      <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作">
@@ -247,7 +247,7 @@
 
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
-              <el-button type="primary" @click="submitForm">下一步</el-button>
+              <el-button type="primary" @click="submitForm" :loading="isloading">下一步</el-button>
             </el-form-item>
 
           </el-form>
@@ -269,10 +269,12 @@ export default {
     return {
       mytest:false,
       materialTypeUrl:'/pmpheep/books/list/materialType',//教材分类url
-      addNewmaterialUrl:'/pmpheep/material/add' , 
+      addNewmaterialUrl:'/pmpheep/material/add' ,   //新增教材url
+      editMaterialUrl:'/pmpheep/material/get',     //请求教材详细信息URL
       labelPosition: "right",
       mainContent: "",
       remark: "",
+      isloading:false,
       dialogVisiable: false,
       chooseVisiable: false, // 选择弹窗
       chooseTitle: "", // 选择弹出窗的title
@@ -422,6 +424,7 @@ export default {
           ],
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
+          {min:0,max:10,message:'轮次长度过长',trigger:'blur'},
           {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
@@ -458,6 +461,7 @@ export default {
     };
   },
   created() {
+    this.initEditData();
     this.getBookType();
   },
   methods: {
@@ -467,15 +471,25 @@ export default {
       getBookType(){
         this.$axios.get(this.materialTypeUrl)
           .then((res)=>{
-            console.log(res);
             if(res.data.code==1){
                this.chooseBookData=res.data.data.childrenMaterialTypeVO;
-               console.log(this.chooseBookData);
             }
           })
           .catch(e=>{
             console.log(e);
           })
+      },
+      initEditData(){
+        if(this.$router.currentRoute.params.materialId!='new'){
+          console.log('修改');
+           this.$axios.get(this.editMaterialUrl,{
+             params:{
+               id:this.$router.currentRoute.params.materialId
+             }
+           }).then((res)=>{
+             console.log(res);
+           })
+        }
       },
       /* 选择教材分类 */
       materialHandleChange(val){
@@ -508,10 +522,18 @@ export default {
           for(var i in this.checkedConactPersonData){
                /* 去重 */
               if(this.removeRepeat(this.ruleForm.materialContacts,this.checkedConactPersonData[i])){
-                  this.ruleForm.materialContacts.push(this.checkedConactPersonData[i]);
-                  this.ruleForm.materialContacts[i].isNameInput=false;
-                  this.ruleForm.materialContacts[i].isPhoneInput=false;
-                  this.ruleForm.materialContacts[i].isEmailInput=false;
+                  this.ruleForm.materialContacts.push(
+                    {
+                      isNameInput:false,
+                      isPhoneInput:false,
+                      isEmailInput:false,
+                      contactUserId:this.checkedConactPersonData[i].id,
+                      contactUserName:this.checkedConactPersonData[i].realname,
+                      contactPhone:this.checkedConactPersonData[i].handphone,
+                      contactEmail:this.checkedConactPersonData[i].email,
+                      sort:this.checkedConactPersonData[i].sort
+                    }
+                  );
                }
            }
            
@@ -529,8 +551,8 @@ export default {
           for(var i in this.checkedConactPersonData){
                /* 去重 */
               if(this.removeRepeat(this.ruleForm.materialProjectEditors,this.checkedConactPersonData[i])){
-                  this.ruleForm.materialProjectEditors.push(this.checkedConactPersonData[i]);
-                  this.material.materialProjectEditors.push(this.checkedConactPersonData[i]);
+                  this.ruleForm.materialProjectEditors.push({editorId:this.checkedConactPersonData[i].id,realname:this.checkedConactPersonData[i].realname});
+                  this.material.materialProjectEditors.push({editorId:this.checkedConactPersonData[i].id,realname:this.checkedConactPersonData[i].realname});
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -545,7 +567,7 @@ export default {
       /* 数组去重 */
     removeRepeat(arr,obj){
       for(var i in arr){
-        if(arr[i].id==obj.id){
+        if(arr[i].contactUserId==obj.id||arr[i].editorId==obj.id){
           return false;
         }
       }
@@ -736,7 +758,7 @@ export default {
                  for(var j in obj[i]){
                   arr.push(JSON.stringify(obj[i][j]));
                  }
-                 formdata.append(i,arr.join());
+                 formdata.append(i,'['+arr.join()+']');
            }else{
                formdata.append(i,obj[i])
            }
@@ -757,9 +779,15 @@ export default {
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
               };  //添加请求头
+              this.isloading=true;
             this.$axios.post(this.addNewmaterialUrl,
               this.uploadFormMerge(this.ruleForm),config).then((res)=>{
               console.log(res);
+              if(res.data.code==1){
+                this.isloading=false;
+                this.$message.success('新建成功');
+                this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+              }
             })  
           } else {
             
