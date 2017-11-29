@@ -47,7 +47,7 @@
                     label="书序"
                     width="160">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
                           placeholder="请输入"
                           class="searchInputEle border-radius-4"
@@ -67,7 +67,7 @@
                     label="书籍名称"
                     width="420">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
                           placeholder="请输入书籍名称"
                           class="searchInputEle border-radius-4"
@@ -86,7 +86,7 @@
                     label="版次"
                     width="160">
                     <template scope="scope">
-                      <div class="paddingB15 paddingT10">
+                      <div class="paddingB15 paddingT10 relative">
                         <el-input
                           placeholder="请输入"
                           class="searchInputEle border-radius-4"
@@ -224,11 +224,21 @@ export default {
        * 自动设置书序
        */
       autoSetBookNum(){
-        this.extendListData.forEach((iterm,index)=>{
-          iterm.sort = index+1;
-          iterm.sortIsOk=true;
-        });
-        this.$message.success('自动设置书序完成！');
+        //提交
+        this.$confirm("确定清除当前书序，重新设置书序吗？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.extendListData.forEach((iterm,index)=>{
+              iterm.sort = index+1;
+              iterm.sortIsOk=true;
+            });
+            this.$message.success('自动设置书序完成！');
+          })
+          .catch(e=>{})
+
       },
       /**
        * 判断输入是否合法
@@ -374,7 +384,7 @@ export default {
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
-          this.$message.error("只允许上传Excel文件");
+          this.$message.error("请按照模板格式的文档上传文件");
           return;
         }
         //文件名不超过40个字符
@@ -424,7 +434,7 @@ export default {
             this.uploadLoading = false;
           })
           .catch((error) => {
-          console.log(error);
+            console.log(error);
             this.$message.error('上传文件失败，请重试');
             this.uploadLoading = false;
           });
@@ -544,5 +554,6 @@ export default {
     position: absolute;
     bottom: 7px;
     height: 12px;
+    left: 0;
   }
 </style>
