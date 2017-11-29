@@ -6,13 +6,13 @@
 
             <el-form-item label="教材名称：" prop="materialName" class="pull-left">
               <el-col>
-                <el-input v-model="material.materialName" class="input-217"></el-input>
+                <el-input v-model="material.materialName" style="width:317px"></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="教材轮次：" prop="materialRound" class="pull-left">
               <el-col>
-                <el-input v-model="material.materialRound" class="input-217"></el-input>
+                <el-input v-model="material.materialRound" style="width:117px"></el-input>
               </el-col>
             </el-form-item>
                 <el-form-item label="实际结束日期：" prop="actualDeadline" class="pull-left">
@@ -50,30 +50,46 @@
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.contactUserName}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.contactUserName}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.contactUserName" :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.contactUserName"   :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactUserName'+scope.$index" :rules="rules" style="margin:18px 0;" >
+                        <el-form-item prop="contactUserName" >
+                          <el-input v-model="scope.row.contactUserName"   ></el-input>
+                        </el-form-item>
+                      </el-form> 
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.contactPhone}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.contactPhone}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isPhoneInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input>
+                      <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactPhone'+scope.$index" :rules="rules" style="margin:18px 0;">
+                       <el-form-item prop="contactPhone" style="margin:18px 0;">
+                          <el-input v-model="scope.row.contactPhone"   ></el-input>
+                        </el-form-item>
+                       </el-form> 
+                      
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.contactEmail}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.contactEmail}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isEmailInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input>
+                      <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactEmail'+scope.$index" :rules="rules" style="margin:18px 0;">
+                        <el-form-item prop="contactEmail"   style="margin:18px 0;">
+                          <el-input v-model="scope.row.contactEmail"   ></el-input>
+                        </el-form-item>
+                      </el-form>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作">
@@ -172,10 +188,15 @@
                     label="名称"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialExtensions[scope.$index].extendIsNameInput">{{scope.row.extensionName}}
+                      <!-- <span v-if="!ruleForm.materialExtensions[scope.$index].extendIsNameInput">{{scope.row.extensionName}}
                         <i class="el-icon-edit" @click="extendShowInput(scope.$index,'extendIsNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input>
+                      <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'extensionName'+scope.$index" :rules="rules" style="margin:18px 0;">
+                       <el-form-item prop="extensionName" style="margin:18px 0;">
+                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" ></el-input> 
+                       </el-form-item>
+                      </el-form>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -423,8 +444,8 @@ export default {
           {min:1,max:40,message:'教材名称过长',trigger:'change,blur'}
           ],
         materialRound: [
-          { required: true, message: "请输入教材轮次", trigger: "blur" },
-          {min:0,max:10,message:'轮次长度过长',trigger:'blur'},
+          {type:'number', required: true, message: "请输入教材轮次", trigger: "blur" },
+          {type:'number',min:0,max:10,message:'轮次长度过长',trigger:'blur'},
           {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
@@ -434,14 +455,27 @@ export default {
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
         materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
         mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
-        noticeFiles:[{type:'array', required: true, message: "至少上传一张图片", trigger: "change" }],
-        noteFiles:[{type:'array', required: true, message: "至少选择一个文件", trigger: "change" }],
+        contactUserName:[
+         {required: true, message: "请填写姓名", trigger: "blur" },
+         {min:1,max:20,message:'姓名长度过长',trigger:'change,blur'}
+        ],
+        contactPhone:[
+         {required: true, message: "请填写手机号码", trigger: "blur" }, 
+
+        ],
+        contactEmail:[
+          {required: true, message: "请填写邮箱", trigger: "blur" },
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+        ],
+        extensionName:[
+          {required: true, message: "请填写姓名", trigger: "blur" },
+        ],
         notice:[
           {required: true, message: "请填写主要内容", trigger: "blur" },
           {min:1,max:2000,message:'内容超长',trigger:'blur'}
           ],
         note:[
-          {required: true, message: "请填写备注", trigger: "blur" },
           {min:1,max:2000,message:'备注超长',trigger:'blur'}
           ]
 
@@ -450,12 +484,12 @@ export default {
          disabledDate(time) {
           
            //console.log(material.deadline);
-           return time.getTime() < Date.now() - 8.64e7;
+          // return time.getTime() < Date.now() - 8.64e7;
         }
       },
       pickOptionsShow:{
          disabledDate(time) {
-           return time.getTime() < Date.now() - 8.64e7;
+         //  return time.getTime() < Date.now() - 8.64e7;
         }
       },      
     };
@@ -479,6 +513,7 @@ export default {
             console.log(e);
           })
       },
+      //修改教材初始化
       initEditData(){
         if(this.$router.currentRoute.params.materialId!='new'){
           console.log('修改');
@@ -488,6 +523,28 @@ export default {
              }
            }).then((res)=>{
              console.log(res);
+             if(res.data.code==1){
+               //选项赋值
+               for(var i in this.listTableData){
+                    this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
+                  if(this.listTableData[i].requiredKey){
+                    this.listTableData[i].needcheck=res.data.data.material[this.listTableData[i].requiredKey.split('.')[1]];   
+                  } 
+               }   
+             //material对象赋值
+               for(var m in this.material){
+                 if(res.data.data.material[m]){
+                   if(m=='actualDeadline'||m=='ageDeadline'||m=='deadline'){
+                     this.material[m]=new Date(res.data.data.material[m]);
+                     this.ruleForm[m]=new Date(res.data.data.material[m]); 
+                   }else{
+                     this.material[m]=res.data.data.material[m];
+                   }
+                 }
+               }
+
+
+             }
            })
         }
       },
@@ -666,7 +723,7 @@ export default {
     },
     addExtend() {
       this.ruleForm.materialExtensions.push({
-        extensionName: "请输入名字",
+        extensionName: "",
         isNameInput: false,
         isRequired: false
       });
@@ -766,8 +823,40 @@ export default {
          }
          return formdata;
     },
+    /* 表单内表格验证 */
+    formTableChecked(){
+      /* 联系人验证 */
+      var checked=true;
+      for(var i in this.ruleForm.materialContacts){
+        this.$refs['contactUserName'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })  
+        this.$refs['contactPhone'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+        this.$refs['contactEmail'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+      }
+      for(var j in this.ruleForm.materialExtensions){
+        this.$refs['extensionName'+j].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+      }
+
+      return checked;
+    },
     /* 提交表单 */
     submitForm(){
+     console.log(this.formTableChecked()) ;
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
             if(!this.dateOptionsChecked()){
@@ -780,15 +869,21 @@ export default {
                 headers:{'Content-Type':'multipart/form-data'}
               };  //添加请求头
               this.isloading=true;
-            this.$axios.post(this.addNewmaterialUrl,
-              this.uploadFormMerge(this.ruleForm),config).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                this.isloading=false;
-                this.$message.success('新建成功');
-                this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+               //新增
+              if(this.$router.currentRoute.params.materialId=='new'){
+                  this.$axios.post(this.addNewmaterialUrl,
+                    this.uploadFormMerge(this.ruleForm),config).then((res)=>{
+                    console.log(res);
+                    if(res.data.code==1){
+                      this.isloading=false;
+                      this.$message.success('新建成功');
+                      this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+                    }
+                  })  
+              }else{   //修改
+
               }
-            })  
+
           } else {
             
             return false;
