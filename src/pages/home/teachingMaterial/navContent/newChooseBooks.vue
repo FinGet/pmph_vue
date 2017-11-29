@@ -271,8 +271,6 @@ export default {
       materialTypeUrl:'/pmpheep/books/list/materialType',//教材分类url
       addNewmaterialUrl:'/pmpheep/material/add' , 
       labelPosition: "right",
-      // bookradio:'1',
-      // jobradio:'1',
       mainContent: "",
       remark: "",
       dialogVisiable: false,
@@ -402,9 +400,9 @@ export default {
         "material.materialName": "",
         "material.materialRound": "",
         "material.materialType": "",
-        "material.deadline": "",
-        "material.actualDeadline": "",
-        "material.ageDeadline": "",
+        deadline: "",
+        actualDeadline: "",
+        ageDeadline: "", 
         "material.mailAddress": "",
          materialContacts:[],     //联系人
         "material.director": "",   //主任
@@ -418,8 +416,14 @@ export default {
       },
       chooseBookData:[],
       rules: {
-        materialName: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
-        materialRound: [{ required: true, message: "请输入教材轮次", trigger: "blur" }],
+        materialName: [
+          { required: true, message: "请输入教材名称", trigger: "blur" },
+          {min:1,max:40,message:'教材名称过长',trigger:'change,blur'}
+          ],
+        materialRound: [
+          { required: true, message: "请输入教材轮次", trigger: "blur" },
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+          ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
         ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
@@ -429,8 +433,14 @@ export default {
         mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
         noticeFiles:[{type:'array', required: true, message: "至少上传一张图片", trigger: "change" }],
         noteFiles:[{type:'array', required: true, message: "至少选择一个文件", trigger: "change" }],
-        notice:[{required: true, message: "请填写主要内容", trigger: "blur" }],
-        note:[{required: true, message: "请填写备注", trigger: "blur" }]
+        notice:[
+          {required: true, message: "请填写主要内容", trigger: "blur" },
+          {min:1,max:2000,message:'内容超长',trigger:'blur'}
+          ],
+        note:[
+          {required: true, message: "请填写备注", trigger: "blur" },
+          {min:1,max:2000,message:'备注超长',trigger:'blur'}
+          ]
 
       },
       pickOptionsAct:{
@@ -689,15 +699,15 @@ export default {
     /* 日期选择框格式化 */
     actDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.actualDeadline']=date;
+     this.ruleForm.actualDeadline=date;
     },
     showDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.deadline']=date;
+     this.ruleForm.deadline=date;
     },
     ageDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.ageDeadline']=date;
+     this.ruleForm.ageDeadline=date;
     },
     /* 合并material  ruleForm */
     mergeForms(){
@@ -713,22 +723,22 @@ export default {
       console.log(this.ruleForm);
     },
     /* 表单处理 */
-    uploadFormMerge(){
+    uploadFormMerge(obj){
       var formdata=new FormData();
-         for(var i in this.ruleForm){
+         for(var i in obj){
            if(i=='noticeFiles'||i=='noteFiles'){
-               this.ruleForm[i].forEach((item)=>{
+               obj[i].forEach((item)=>{
                    formdata.append(i,item);
                })
            }
-            else if(typeof(this.ruleForm[i])=='object'){
+            else if(typeof(obj[i])=='object'){
              var arr=[];
-                 for(var j in this.ruleForm[i]){
-                  arr.push(JSON.stringify(this.ruleForm[i][j]));
+                 for(var j in obj[i]){
+                  arr.push(JSON.stringify(obj[i][j]));
                  }
                  formdata.append(i,arr.join());
            }else{
-               formdata.append(i,this.ruleForm[i])
+               formdata.append(i,obj[i])
            }
            
          }
@@ -747,7 +757,8 @@ export default {
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
               };  //添加请求头
-            this.$axios.post(this.addNewmaterialUrl,this.uploadFormMerge(),config).then((res)=>{
+            this.$axios.post(this.addNewmaterialUrl,
+              this.uploadFormMerge(this.ruleForm),config).then((res)=>{
               console.log(res);
             })  
           } else {
