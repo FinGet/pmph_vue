@@ -35,7 +35,18 @@ export function initPostData(obj, keyArr) {
 
     if (!keyArr) {
         for (var item in obj) {
+          if ((typeof obj[item])=='object'){
+            if ((typeof obj[item][0]) == 'object'){
+              for (var i in obj[item]){
+                paramdata.append(item, JSON.stringify(obj[item][i]));
+              }
+            }else{
+              paramdata.append(item, JSON.stringify(obj[item]));
+            }
+          }else{
             paramdata.append(item, obj[item]);
+          }
+            
             console.log(item);
         }
     }else{
