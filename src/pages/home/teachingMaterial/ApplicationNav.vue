@@ -10,7 +10,7 @@
           <el-tab-pane label="结果统计" name="result"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs">
+      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&title">
         <p >{{title}}</p>
         <div class="tips_icon"></div>
       </div>
@@ -27,12 +27,14 @@
 export default {
 	data() {
 		return {
+		  api_material_detail:'/pmpheep/material/materialName',
+      materialId:'',
       activeTagName:'presscheck',
       activeFirst:false,
       activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'全国高等学校五年制临床医学专业第九轮规划教材',
+      title:'',
 		}
 	},
 	methods: {
@@ -49,7 +51,21 @@ export default {
      else if(val=='1v1'){
       this.activeLast=true;
      }
-    }
+    },
+    getMaterialData(){
+      this.$axios.get(this.api_material_detail,{params:{
+        id:this.materialId
+      }})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.title = res.data
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+    },
   },
   watch:{
     activeTagName(newval,old){
@@ -60,10 +76,13 @@ export default {
       // console.log(this.$router);
       this.initActiveTag(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
+
+      this.materialId = this.$route.params.materialId;
+
       if(this.$router.currentRoute.name=='新建通知'){
         this.title='新建通知'
       }else{
-        this.title='全国高等学校五年制临床医学专业第九轮规划教材'
+        this.getMaterialData();
       }
       console.log(this.$route)
     },

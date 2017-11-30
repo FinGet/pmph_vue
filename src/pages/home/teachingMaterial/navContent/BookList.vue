@@ -32,7 +32,7 @@
               <div class="table-wrapper book-list-catalogue">
                 <div class="pull-right">
                   <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
-                  <el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>
+                  <!--<el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>-->
                   <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
                 </div>
                 <el-table
@@ -172,7 +172,9 @@ export default {
                 iterm.nameIsOk = true;
                 iterm.roundIsOk = true;
               });
-              this.extendListData = res.data.textbooks;
+              if(res.data.textbooks.length>0){
+                this.extendListData = res.data.textbooks;
+              }
             }
           })
           .catch(e=>{
@@ -185,6 +187,9 @@ export default {
        */
       deleteExtendItem(index) {
         this.extendListData.splice(index, 1);
+        if(this.extendListData.length==0){
+          this.insertRow(-1);
+        }
       },
       /**
        * 插入行
@@ -361,9 +366,10 @@ export default {
                 let res = response.data;
                 console.log(res)
                 if (res.code == '1') {
-                  this.$message.success('暂存成功！');
                   if(next){
                     this.$router.push({name:'教材申报选择学校'});
+                  }else{
+                    this.$message.success('保存成功！');
                   }
                 }else{
                   this.$message.error(res.msg.msgTrim());

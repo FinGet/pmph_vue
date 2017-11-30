@@ -253,7 +253,7 @@
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate=this.$commonFun.formatDate(iterm.gmtCreate);
                 iterm.gmtCreate=iterm.gmtCreate;
-                iterm.downloadUrl = this.$config.BASE_URL+'groupfile/download/'+iterm.fileId+'?groupId='+this.currentGroupId;
+                iterm.downloadUrl = iterm.fileId+'?groupId='+this.currentGroupId;
               });
               this.isManage=false;
               this.tableData=res.data.rows;
