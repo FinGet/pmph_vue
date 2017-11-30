@@ -494,7 +494,7 @@
         <div>
           <div class="info-iterm-text">
             <div>申报单位：<span></span></div>
-            <div>哈尔滨医科大学</div>
+            <div>{{expertInfoData.orgNameOne}}</div>
           </div>
         </div>
       </div>
