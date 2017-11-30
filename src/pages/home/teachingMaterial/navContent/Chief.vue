@@ -27,7 +27,7 @@
 
           <el-table-column label="申报单位"  prop="reportName"></el-table-column>
 
-          <el-table-column label="工作单位" prop="orgName"></el-table-column>
+          <!--<el-table-column label="工作单位" prop="orgName"></el-table-column>-->
           <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
           <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
           <el-table-column label="出版社审核" width="110" prop="offlineProgress"></el-table-column>
@@ -181,9 +181,11 @@
             if(res.code==1){
               var onlineProgress = ['未提交','已提交','被退回','通过'];
               var offlineProgress = ['未收到','被退回','已收到'];
+              var positionList = ['','主编','副主编','编委'];
               res.data.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
                 iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
+                iterm.presetPosition = positionList[iterm.presetPosition];
 
                 iterm.isZhubian = iterm.chosenPosition==1;
                 iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
@@ -277,6 +279,7 @@
                 var res = response.data;
                 if(res.code==1){
                   this.getTableData();
+                  this.$message.success('提交成功！');
                 }else{
                   this.$message.error(res.msg.msgTrim());
                 }

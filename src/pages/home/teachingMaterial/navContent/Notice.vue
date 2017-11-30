@@ -102,4 +102,8 @@ export default {
     color: #bdbdbd;
     padding-top: 10px;
   }
+  .material-notice p{
+    margin: 5px 0;
+    min-height: 19px;
+  }
 </style>

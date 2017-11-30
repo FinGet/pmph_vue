@@ -236,6 +236,25 @@ p{word-wrap:break-word}
 .marginB60 { margin-bottom: 60px; }
 
 /*=================================================================
+  z-index-100
+  =================================================================*/
+.z-index-10{z-index: 10;}
+.z-index-20{z-index: 20;}
+.z-index-30{z-index: 30;}
+.z-index-40{z-index: 40;}
+.z-index-50{z-index: 50;}
+.z-index-60{z-index: 60;}
+.z-index-70{z-index: 70;}
+.z-index-80{z-index: 80;}
+.z-index-100{z-index: 100;}
+.z-index-200{z-index: 200;}
+.z-index-300{z-index: 300;}
+.z-index-600{z-index: 600;}
+.z-index-800{z-index: 800;}
+.z-index-1000{z-index: 1000;}
+
+
+/*=================================================================
   border
   =================================================================*/
 .border-T{
@@ -505,6 +524,13 @@ a.table-link:hover{
 .timeLine ul li p {padding-left:28px;font-size:14px;line-height:25px;}/*这里利用段落标签p做文字介绍*/
 
 
+.material-notice p,.message-detail-content p{
+  margin: 5px 0;
+  min-height: 19px;
+}
 
-/*重置editor样式*/
+
+/*媒体查询样式*/
 @import "responsive.css";
+/*打印样式*/
+@import "print.css";
