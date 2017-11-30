@@ -6,13 +6,13 @@
 
             <el-form-item label="教材名称：" prop="materialName" class="pull-left">
               <el-col>
-                <el-input v-model="material.materialName" class="input-217"></el-input>
+                <el-input v-model="material.materialName" style="width:317px"></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item label="教材轮次：" prop="materialRound" class="pull-left">
               <el-col>
-                <el-input v-model="material.materialRound" class="input-217"></el-input>
+                <el-input v-model="material.materialRound" style="width:117px"></el-input>
               </el-col>
             </el-form-item>
                 <el-form-item label="实际结束日期：" prop="actualDeadline" class="pull-left">
@@ -50,30 +50,46 @@
                     label="姓名"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.realname}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isNameInput">{{scope.row.contactUserName}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.realname" :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input>
+                      <el-input v-model="scope.row.contactUserName"   :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactUserName'+scope.$index" :rules="rules" style="margin:18px 0;" >
+                        <el-form-item prop="contactUserName" >
+                          <el-input v-model="scope.row.contactUserName"   ></el-input>
+                        </el-form-item>
+                      </el-form> 
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="手机号"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.handphone}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isPhoneInput">{{scope.row.contactPhone}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isPhoneInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.handphone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input>
+                      <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactPhone'+scope.$index" :rules="rules" style="margin:18px 0;">
+                       <el-form-item prop="contactPhone" style="margin:18px 0;">
+                          <el-input v-model="scope.row.contactPhone"   ></el-input>
+                        </el-form-item>
+                       </el-form> 
+                      
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="邮箱"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.email}}
+                      <!-- <span v-if="!ruleForm.materialContacts[scope.$index].isEmailInput">{{scope.row.contactEmail}}
                         <i class="el-icon-edit" @click="isShowEditInput(scope.$index,'isEmailInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.email" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input>
+                      <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'contactEmail'+scope.$index" :rules="rules" style="margin:18px 0;">
+                        <el-form-item prop="contactEmail"   style="margin:18px 0;">
+                          <el-input v-model="scope.row.contactEmail"   ></el-input>
+                        </el-form-item>
+                      </el-form>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作">
@@ -172,10 +188,15 @@
                     label="名称"
                   >
                     <template scope="scope">
-                      <span v-if="!ruleForm.materialExtensions[scope.$index].extendIsNameInput">{{scope.row.extensionName}}
+                      <!-- <span v-if="!ruleForm.materialExtensions[scope.$index].extendIsNameInput">{{scope.row.extensionName}}
                         <i class="el-icon-edit" @click="extendShowInput(scope.$index,'extendIsNameInput')"></i>
                       </span>
-                      <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input>
+                      <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input> -->
+                      <el-form :model="scope.row" :ref="'extensionName'+scope.$index" :rules="rules" style="margin:18px 0;">
+                       <el-form-item prop="extensionName" style="margin:18px 0;">
+                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" ></el-input> 
+                       </el-form-item>
+                      </el-form>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -247,7 +268,7 @@
 
             <el-form-item class="text-center">
               <el-button icon="arrow-left" type="primary" @click="back()">返回</el-button>
-              <el-button type="primary" @click="submitForm">下一步</el-button>
+              <el-button type="primary" @click="submitForm" :loading="isloading">下一步</el-button>
             </el-form-item>
 
           </el-form>
@@ -269,12 +290,12 @@ export default {
     return {
       mytest:false,
       materialTypeUrl:'/pmpheep/books/list/materialType',//教材分类url
-      addNewmaterialUrl:'/pmpheep/material/add' , 
+      addNewmaterialUrl:'/pmpheep/material/add' ,   //新增教材url
+      editMaterialUrl:'/pmpheep/material/get',     //请求教材详细信息URL
       labelPosition: "right",
-      // bookradio:'1',
-      // jobradio:'1',
       mainContent: "",
       remark: "",
+      isloading:false,
       dialogVisiable: false,
       chooseVisiable: false, // 选择弹窗
       chooseTitle: "", // 选择弹出窗的title
@@ -402,9 +423,9 @@ export default {
         "material.materialName": "",
         "material.materialRound": "",
         "material.materialType": "",
-        "material.deadline": "",
-        "material.actualDeadline": "",
-        "material.ageDeadline": "",
+        deadline: "",
+        actualDeadline: "",
+        ageDeadline: "", 
         "material.mailAddress": "",
          materialContacts:[],     //联系人
         "material.director": "",   //主任
@@ -418,8 +439,15 @@ export default {
       },
       chooseBookData:[],
       rules: {
-        materialName: [{ required: true, message: "请输入教材名称", trigger: "blur" }],
-        materialRound: [{ required: true, message: "请输入教材轮次", trigger: "blur" }],
+        materialName: [
+          { required: true, message: "请输入教材名称", trigger: "blur" },
+          {min:1,max:40,message:'教材名称过长',trigger:'change,blur'}
+          ],
+        materialRound: [
+          {type:'number', required: true, message: "请输入教材轮次", trigger: "blur" },
+          {type:'number',min:0,max:10,message:'轮次长度过长',trigger:'blur'},
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+          ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
         ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
@@ -427,27 +455,47 @@ export default {
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
         materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
         mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
-        noticeFiles:[{type:'array', required: true, message: "至少上传一张图片", trigger: "change" }],
-        noteFiles:[{type:'array', required: true, message: "至少选择一个文件", trigger: "change" }],
-        notice:[{required: true, message: "请填写主要内容", trigger: "blur" }],
-        note:[{required: true, message: "请填写备注", trigger: "blur" }]
+        contactUserName:[
+         {required: true, message: "请填写姓名", trigger: "blur" },
+         {min:1,max:20,message:'姓名长度过长',trigger:'change,blur'}
+        ],
+        contactPhone:[
+         {required: true, message: "请填写手机号码", trigger: "blur" }, 
+
+        ],
+        contactEmail:[
+          {required: true, message: "请填写邮箱", trigger: "blur" },
+          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+        ],
+        extensionName:[
+          {required: true, message: "请填写姓名", trigger: "blur" },
+        ],
+        notice:[
+          {required: true, message: "请填写主要内容", trigger: "blur" },
+          {min:1,max:2000,message:'内容超长',trigger:'blur'}
+          ],
+        note:[
+          {min:1,max:2000,message:'备注超长',trigger:'blur'}
+          ]
 
       },
       pickOptionsAct:{
          disabledDate(time) {
           
            //console.log(material.deadline);
-           return time.getTime() < Date.now() - 8.64e7;
+          // return time.getTime() < Date.now() - 8.64e7;
         }
       },
       pickOptionsShow:{
          disabledDate(time) {
-           return time.getTime() < Date.now() - 8.64e7;
+         //  return time.getTime() < Date.now() - 8.64e7;
         }
       },      
     };
   },
   created() {
+    this.initEditData();
     this.getBookType();
   },
   methods: {
@@ -457,15 +505,48 @@ export default {
       getBookType(){
         this.$axios.get(this.materialTypeUrl)
           .then((res)=>{
-            console.log(res);
             if(res.data.code==1){
                this.chooseBookData=res.data.data.childrenMaterialTypeVO;
-               console.log(this.chooseBookData);
             }
           })
           .catch(e=>{
             console.log(e);
           })
+      },
+      //修改教材初始化
+      initEditData(){
+        if(this.$router.currentRoute.params.materialId!='new'){
+          console.log('修改');
+           this.$axios.get(this.editMaterialUrl,{
+             params:{
+               id:this.$router.currentRoute.params.materialId
+             }
+           }).then((res)=>{
+             console.log(res);
+             if(res.data.code==1){
+               //选项赋值
+               for(var i in this.listTableData){
+                    this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
+                  if(this.listTableData[i].requiredKey){
+                    this.listTableData[i].needcheck=res.data.data.material[this.listTableData[i].requiredKey.split('.')[1]];   
+                  } 
+               }   
+             //material对象赋值
+               for(var m in this.material){
+                 if(res.data.data.material[m]){
+                   if(m=='actualDeadline'||m=='ageDeadline'||m=='deadline'){
+                     this.material[m]=new Date(res.data.data.material[m]);
+                     this.ruleForm[m]=new Date(res.data.data.material[m]); 
+                   }else{
+                     this.material[m]=res.data.data.material[m];
+                   }
+                 }
+               }
+
+
+             }
+           })
+        }
       },
       /* 选择教材分类 */
       materialHandleChange(val){
@@ -498,10 +579,18 @@ export default {
           for(var i in this.checkedConactPersonData){
                /* 去重 */
               if(this.removeRepeat(this.ruleForm.materialContacts,this.checkedConactPersonData[i])){
-                  this.ruleForm.materialContacts.push(this.checkedConactPersonData[i]);
-                  this.ruleForm.materialContacts[i].isNameInput=false;
-                  this.ruleForm.materialContacts[i].isPhoneInput=false;
-                  this.ruleForm.materialContacts[i].isEmailInput=false;
+                  this.ruleForm.materialContacts.push(
+                    {
+                      isNameInput:false,
+                      isPhoneInput:false,
+                      isEmailInput:false,
+                      contactUserId:this.checkedConactPersonData[i].id,
+                      contactUserName:this.checkedConactPersonData[i].realname,
+                      contactPhone:this.checkedConactPersonData[i].handphone,
+                      contactEmail:this.checkedConactPersonData[i].email,
+                      sort:this.checkedConactPersonData[i].sort
+                    }
+                  );
                }
            }
            
@@ -519,8 +608,8 @@ export default {
           for(var i in this.checkedConactPersonData){
                /* 去重 */
               if(this.removeRepeat(this.ruleForm.materialProjectEditors,this.checkedConactPersonData[i])){
-                  this.ruleForm.materialProjectEditors.push(this.checkedConactPersonData[i]);
-                  this.material.materialProjectEditors.push(this.checkedConactPersonData[i]);
+                  this.ruleForm.materialProjectEditors.push({editorId:this.checkedConactPersonData[i].id,realname:this.checkedConactPersonData[i].realname});
+                  this.material.materialProjectEditors.push({editorId:this.checkedConactPersonData[i].id,realname:this.checkedConactPersonData[i].realname});
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -535,7 +624,7 @@ export default {
       /* 数组去重 */
     removeRepeat(arr,obj){
       for(var i in arr){
-        if(arr[i].id==obj.id){
+        if(arr[i].contactUserId==obj.id||arr[i].editorId==obj.id){
           return false;
         }
       }
@@ -634,7 +723,7 @@ export default {
     },
     addExtend() {
       this.ruleForm.materialExtensions.push({
-        extensionName: "请输入名字",
+        extensionName: "",
         isNameInput: false,
         isRequired: false
       });
@@ -689,15 +778,15 @@ export default {
     /* 日期选择框格式化 */
     actDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.actualDeadline']=date;
+     this.ruleForm.actualDeadline=date;
     },
     showDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.deadline']=date;
+     this.ruleForm.deadline=date;
     },
     ageDatePickGetTime(date){
      console.log(date);
-     this.ruleForm['material.ageDeadline']=date;
+     this.ruleForm.ageDeadline=date;
     },
     /* 合并material  ruleForm */
     mergeForms(){
@@ -713,29 +802,61 @@ export default {
       console.log(this.ruleForm);
     },
     /* 表单处理 */
-    uploadFormMerge(){
+    uploadFormMerge(obj){
       var formdata=new FormData();
-         for(var i in this.ruleForm){
+         for(var i in obj){
            if(i=='noticeFiles'||i=='noteFiles'){
-               this.ruleForm[i].forEach((item)=>{
+               obj[i].forEach((item)=>{
                    formdata.append(i,item);
                })
            }
-            else if(typeof(this.ruleForm[i])=='object'){
+            else if(typeof(obj[i])=='object'){
              var arr=[];
-                 for(var j in this.ruleForm[i]){
-                  arr.push(JSON.stringify(this.ruleForm[i][j]));
+                 for(var j in obj[i]){
+                  arr.push(JSON.stringify(obj[i][j]));
                  }
-                 formdata.append(i,arr.join());
+                 formdata.append(i,'['+arr.join()+']');
            }else{
-               formdata.append(i,this.ruleForm[i])
+               formdata.append(i,obj[i])
            }
            
          }
          return formdata;
     },
+    /* 表单内表格验证 */
+    formTableChecked(){
+      /* 联系人验证 */
+      var checked=true;
+      for(var i in this.ruleForm.materialContacts){
+        this.$refs['contactUserName'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })  
+        this.$refs['contactPhone'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+        this.$refs['contactEmail'+i].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+      }
+      for(var j in this.ruleForm.materialExtensions){
+        this.$refs['extensionName'+j].validate((valid)=>{
+          if(!valid){
+             checked=false;
+          }
+        })
+      }
+
+      return checked;
+    },
     /* 提交表单 */
     submitForm(){
+     console.log(this.formTableChecked()) ;
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
             if(!this.dateOptionsChecked()){
@@ -747,9 +868,22 @@ export default {
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
               };  //添加请求头
-            this.$axios.post(this.addNewmaterialUrl,this.uploadFormMerge(),config).then((res)=>{
-              console.log(res);
-            })  
+              this.isloading=true;
+               //新增
+              if(this.$router.currentRoute.params.materialId=='new'){
+                  this.$axios.post(this.addNewmaterialUrl,
+                    this.uploadFormMerge(this.ruleForm),config).then((res)=>{
+                    console.log(res);
+                    if(res.data.code==1){
+                      this.isloading=false;
+                      this.$message.success('新建成功');
+                      this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+                    }
+                  })  
+              }else{   //修改
+
+              }
+
           } else {
             
             return false;

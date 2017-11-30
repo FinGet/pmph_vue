@@ -35,18 +35,7 @@ export function initPostData(obj, keyArr) {
 
     if (!keyArr) {
         for (var item in obj) {
-          if ((typeof obj[item])=='object'){
-            if ((typeof obj[item][0]) == 'object'){
-              for (var i in obj[item]){
-                paramdata.append(item, JSON.stringify(obj[item][i]));
-              }
-            }else{
-              paramdata.append(item, JSON.stringify(obj[item]));
-            }
-          }else{
-            paramdata.append(item, obj[item]);
-          }
-            
+          paramdata.append(item, obj[item]);
             console.log(item);
         }
     }else{
@@ -199,7 +188,7 @@ export function getDateTimeStamp(dateStr){
  * @param {any} type 格式化时间类型，默认  Y-M-D H:I:S
  * @returns {string} formatTime 格式化后的时间 例如： 2017-05-05 12:09:22
  */
-export function formatDate(nS) {
+export function formatDate(nS,str) {
   if(!nS){
     return "";
   }
@@ -211,8 +200,12 @@ export function formatDate(nS) {
   var minu = date.getMinutes();
   var sec = date.getSeconds();
 
+ if(str=='yyyy-MM-dd'){
+   return year + '-' + (mon < 10 ? '0' + mon : mon) + '-' + (day < 10 ? '0' + day : day);
+ }else{
+   return year + '-' + (mon < 10 ? '0' + mon : mon) + '-' + (day < 10 ? '0' + day : day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minu < 10 ? '0' + minu : minu) + ':' + (sec < 10 ? '0' + sec : sec);
+ }
 
-  return year + '-' +(mon<10?'0'+mon:mon) + '-' +(day<10?'0'+day:day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minu < 10 ? '0' + minu : minu )+ ':' + (sec < 10 ? '0' + sec : sec);
 }
 /**
  * 获取当前的日期时间 格式“yyyy-MM-dd HH:MM:SS”

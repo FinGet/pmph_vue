@@ -10,8 +10,8 @@
             <span style="margin-left:25px;">状态：</span>
             <el-select v-model="searchForm.state" class="select_input" @change="getTableData" style="float:none;" placeholder="全部">
                 <el-option label="全部" value=""></el-option>
-                <el-option label="已公布" value="已公布"></el-option>
-                <el-option label="未公布" value="未公布"></el-option>
+                <el-option label="已发布" value="已发布"></el-option>
+                <el-option label="已发布" value="已发布"></el-option>
                 <el-option label="已结束" value="已结束"></el-option>
             </el-select>
             <el-button type="primary" class="button" icon="search" @click="getTableData">搜索</el-button>

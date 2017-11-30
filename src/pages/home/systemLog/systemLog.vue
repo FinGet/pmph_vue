@@ -1,11 +1,101 @@
 <template>
-   <div class="system_log">
-     系统日志
-   </div>
+    <div class="system_log">
+        <el-row>
+            <el-col :span="12">
+                <div class="search-title">操作用户:</div>
+                <el-col :span="8" class="search-10">
+                <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
+                </el-col>
+                <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col>
+                <el-table :data="tableData" stripe border style="width: 100%">
+                    <el-table-column prop="userName" label="操作用户" width="180">
+                    </el-table-column>
+                    <el-table-column prop="clientIp" label="操作人ip" width="180">
+                    </el-table-column>
+                    <el-table-column prop="operateDate" label="访问时间">
+                    </el-table-column>
+                    <el-table-column prop="operateText" label="请求方法">
+                    </el-table-column>
+                    <el-table-column prop="businessType" label="业务类型">
+                    </el-table-column>
+                    <el-table-column prop="deviceType" label="访问设备">
+                    </el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+        <el-pagination
+        v-if="total>20"
+        class="pull-right marginT10"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNumber"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+        </el-pagination>
+    </div>
 </template>
 <script type="text/javascript">
-    
-</script>           
+export default {
+    data() {
+      return {
+        title: '',
+        currentPage: 1, // 当前页
+        pageSize: 20,
+        pageNumber: 1,
+        total:0,
+        tableData: []
+      }
+    },
+    created(){
+        this.getLogs()
+    },
+    methods: {
+        getLogs(){
+            this.$axios.get('/pmpheep/sys/operation/operations',{
+                params:{
+                    pageSize: this.pageSize,
+                    pageNumber: this.pageNumber,
+                    userName: this.title
+                }
+            }).then(response =>{
+                let res = response.data
+                if (res.code == 1) {
+                    this.tableData = res.data.rows
+                    this.total = res.data.total
+                    this.tableData.forEach(item => {
+                        item.operateDate = this.$commonFun.formatDate(item.operateDate)
+                    })
+                }
+            })
+        },
+        search(){
+            this.getLogs()
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.pageSize = val 
+            this.getLogs()
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.pageNumber = val
+            this.getLogs()
+        }
+    }
+}
+</script>
 <style>
-
+.search-title{
+    margin: 10px 0 0 10px;
+    font-size: 16px;
+    float: left;
+    height:36px;
+    line-height: 36px;
+  }
 </style>
