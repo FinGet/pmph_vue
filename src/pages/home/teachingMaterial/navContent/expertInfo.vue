@@ -3,12 +3,12 @@
     <div class="info-wrapper">
 
       <!--操作按钮-->
-      <div class="paddingB10 text-right">
+      <div class="paddingB10 text-right print-none">
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
         <el-button type="primary" @click="confirmPaperList">确认收到纸质表</el-button>
         <el-button type="warning">退回</el-button>
         <el-button type="primary">通过</el-button>
-        <el-button type="primary">打印</el-button>
+        <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
 
@@ -55,7 +55,7 @@
                     <span class="link" :title="iterm.fileName" v-if="iterm.fileName">{{iterm.fileName}}</span>
                   </div>
                 </div>
-                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -73,7 +73,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="" type="danger" size="small" icon="delete" @click="deleteNew(index,true)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true)">删除</el-button>
               </div>
             </div>
             <!--已有书籍-->
@@ -101,7 +101,7 @@
               </div>
             </div>
           </div>
-          <div class="expert_info-buttonWrapper">
+          <div class="expert_info-buttonWrapper print-none">
             <el-button type="primary" @click="addNewBook">添加图书</el-button>
             <el-button type="primary" @click="saveBook" v-if="hasNewAddbook||hasBookListChanged">保存图书</el-button>
           </div>
@@ -278,8 +278,10 @@
               label="兼职学术组织">
             </el-table-column>
             <el-table-column
-              prop="rank"
               label="级别">
+              <template scope="scope">
+                {{scope.row.rank&&scope.row.rank<5?rankList[scope.row.rank]:''}}
+              </template>
             </el-table-column>
             <el-table-column
               prop="position"
@@ -305,8 +307,8 @@
               label="教材名称">
             </el-table-column>
             <el-table-column
-              prop="position"
               label="职务">
+              <template scope="scope">{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}</template>
             </el-table-column>
             <el-table-column
               prop="note"
@@ -401,8 +403,10 @@
               label="标准书号">
             </el-table-column>
             <el-table-column
-              prop="rank"
               label="教材级别">
+              <template scope="scope">
+                {{scope.row.rank&&scope.row.rank<4?national_plan_rankList[scope.row.rank]:''}}
+              </template>
             </el-table-column>
             <el-table-column
               prop="note"
@@ -424,12 +428,16 @@
               label="教材名称">
             </el-table-column>
             <el-table-column
-              prop="rank"
               label="级别">
+              <template scope="scope">
+                {{scope.row.rank&&scope.row.rank<6?textbook_rankList[scope.row.rank]:''}}
+              </template>
             </el-table-column>
             <el-table-column
-              prop="position"
               label="职务">
+              <template scope="scope">
+                {{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}
+              </template>
             </el-table-column>
             <el-table-column
               prop="publisher"
@@ -438,6 +446,9 @@
             <el-table-column
               prop="publishDate"
               label="出版时间">
+              <template scope="scope">
+                {{scope.row.publishDate?$commonFun.formatDate(scope.row.publishDate).split(' ')[0]:''}}
+              </template>
             </el-table-column>
             <el-table-column
               prop="isbn"
@@ -460,7 +471,8 @@
                     style="width: 100%">
             <el-table-column
               prop="researchName"
-              label="课题名称（包括项目编号）">
+              label="课题名称（包括项目编号）"
+              width="600">
             </el-table-column>
             <el-table-column
               prop="approvalUnit"
@@ -494,7 +506,7 @@
         <div>
           <div class="info-iterm-text">
             <div>申报单位：<span></span></div>
-            <div>哈尔滨医科大学</div>
+            <div>{{expertInfoData.orgNameOne}}</div>
           </div>
         </div>
       </div>
@@ -568,6 +580,9 @@
               hasBookListChanged:false,
               showSendMsg:false,
               inputMsg:'',
+              rankList:['','国际','国家','省部','其他'],
+              national_plan_rankList:['','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
+              textbook_rankList:['','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
             }
         },
         computed:{
@@ -828,6 +843,13 @@
         sendmsg(){
 
         },
+        /**
+         * 打印
+         */
+        print(){
+          console.log(this);
+          window.print();
+        }
       },
       created(){
         this.searchFormData.declarationId = this.$route.query.declarationId;
@@ -916,4 +938,5 @@
   .info-iterm-text a:hover{
     color: #23527c;
   }
+
 </style>

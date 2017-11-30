@@ -2,9 +2,15 @@
 img {
   max-width: 100%; /*图片自适应宽度*/
 }
-body {
-  overflow-y: scroll !important;
+body{
+  font-family: "Microsoft YaHei","微软雅黑",Arial,sans-serif,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB";
+  font-size:14px;
+  line-height: 1.4;
+  background:#f7f7f7;
+  -webkit-text-size-adjust:100%;
+  color: rgb(31, 43, 61);
 }
+p{word-wrap:break-word}
 .view {
   word-break: break-all;
 }

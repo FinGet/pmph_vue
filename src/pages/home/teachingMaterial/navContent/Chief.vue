@@ -1,5 +1,5 @@
 <template>
-    <div class="teachMaterial">
+    <div class="teachMaterial chief">
       <p class="bookTitle">医学心理学与精神病学（第4版）</p>
 
       <div class="teachingMaterial-search clearfix">
@@ -21,13 +21,13 @@
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
-              <router-link :to="{name:'专家信息',query: { username: scope.row.username }}" class="table-link">{{scope.row.realname}}</router-link>
+              <router-link :to="{name:'专家信息',query: { declarationId: scope.row.declarationId }}" class="table-link">{{scope.row.realname}}</router-link>
             </template>
           </el-table-column>
 
           <el-table-column label="申报单位"  prop="reportName"></el-table-column>
 
-          <el-table-column label="工作单位" prop="orgName"></el-table-column>
+          <!--<el-table-column label="工作单位" prop="orgName"></el-table-column>-->
           <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
           <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
           <el-table-column label="出版社审核" width="110" prop="offlineProgress"></el-table-column>
@@ -109,7 +109,15 @@
       <el-dialog
         title="修改记录"
         :visible.sync="dialogVisible">
-        <div class="history-box"></div>
+        <div class="history-box timeLine">
+          <ul v-if="historyLog.length>0">
+            <li v-for="(iterm,index) in historyLog">
+              <b></b>
+              <p>{{iterm.detail}}</p>
+            </li>
+          </ul>
+          <p v-else>暂无历史消息</p>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -124,6 +132,7 @@
       return {
         api_list:'/pmpheep/declaration/list/editor/selection',
         api_submit:'/pmpheep/declaration/editor/selection/update',
+        api_log:'/pmpheep/textBookLog/list',
         searchParams:{
           textbookId:'',
           realName:'',
@@ -137,6 +146,7 @@
         tableData:[],
         zhubianSelectSortNumber:[],
         fuzhubianSelectSortNumber:[],
+        historyLog:[],
       }
     },
     computed:{
@@ -167,12 +177,15 @@
         }})
           .then(response=>{
             var res = response.data;
+            this.getHistoryLog();
             if(res.code==1){
               var onlineProgress = ['未提交','已提交','被退回','通过'];
               var offlineProgress = ['未收到','被退回','已收到'];
+              var positionList = ['','主编','副主编','编委'];
               res.data.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
                 iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
+                iterm.presetPosition = positionList[iterm.presetPosition];
 
                 iterm.isZhubian = iterm.chosenPosition==1;
                 iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
@@ -183,6 +196,22 @@
                 iterm.isBianwei = iterm.chosenPosition==3;
               });
               this.tableData = res.data;
+            }
+          })
+          .catch(e=>{
+            this.getHistoryLog();
+            console.log(e);
+          })
+      },
+      //获取历史记录
+      getHistoryLog(){
+        this.$axios.get(this.api_log,{params:{
+          textbookId:this.formData.textbookId,
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.historyLog = res.data.rows;
             }
           })
           .catch(e=>{
@@ -250,6 +279,7 @@
                 var res = response.data;
                 if(res.code==1){
                   this.getTableData();
+                  this.$message.success('提交成功！');
                 }else{
                   this.$message.error(res.msg.msgTrim());
                 }

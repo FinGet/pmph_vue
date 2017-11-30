@@ -5,7 +5,7 @@ props:
         (2) show_isDisabled 是否显示表格启用列，默认为false
         (3) show_nameShowMore 可点击用户名显示更多信息，默认为false
         (4) select 是否显示复选框 默认false
-        (5) radio 是否多选 默认true
+        (5) radio 是否单选 默认false
 events:
         (1) selection-change 当前表格选中项发生变化时 参数 val 当前选中项列表
 methods:
@@ -472,7 +472,7 @@ methods:
     components:{
       pmphTree
     },
-    
+
     created(){
       this._getTableData();
       this._getRoleName();

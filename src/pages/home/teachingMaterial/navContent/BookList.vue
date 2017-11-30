@@ -1,13 +1,13 @@
 <template>
     <div class="new_book_release">
         <el-form ref="form" :model="formData" class="release_form" label-width="110px">
-            <el-form-item label="教材名称：">
+            <el-form-item label="教材名称：" class="marginB10">
                 <span class="grey_span">{{formData.materialName}}</span>
             </el-form-item>
-            <el-form-item label="教材轮次：">
+            <el-form-item label="教材轮次：" class="marginB10">
                 <span class="grey_span">第{{formData.materialRound}}轮</span>
             </el-form-item>
-            <el-form-item label="教材分类：">
+            <el-form-item label="教材分类：" class="marginB10">
                 <span class="grey_span">{{formData.materialType.join(' > ')}}</span>
                 <p><span class="red_span">（*若教材数量较多，可按照下载的模板格式上传，模板中书序、书籍名称、版次不能为空，书序和版次只能填写数字）</span></p>
                 <div>
@@ -338,7 +338,7 @@ export default {
         }
         this.extendListData.map(iterm=>{
           let tempObj = {
-            id:iterm.id,
+            id:iterm.id?iterm.id:null,
             materialId:this.formData.materialId,
             textbookName:iterm.textbookName,
             textbookRound:iterm.textbookRound,
