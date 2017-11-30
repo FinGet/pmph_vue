@@ -393,8 +393,8 @@ export default {
         },
         {
           name: "教材编写情况",
-          key:'material.isTextbookWriterUsed',
-          requiredKey:'material.isTextbookWriterRequired',
+          key:'material.isTextbookUsed',
+          requiredKey:'material.isTextbookRequired',
           usecheck: false,
           needcheck: false
         },
@@ -487,6 +487,7 @@ export default {
           {min:1,max:2000,message:'内容不能超过2000个字符',trigger:'blur'}
           ],
         note:[
+           {required: true, message: "请填写备注", trigger: "blur" },
           {min:1,max:2000,message:'备注不能超过2000个字符',trigger:'blur'}
           ]
 
