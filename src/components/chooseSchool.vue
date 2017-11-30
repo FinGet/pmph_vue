@@ -19,12 +19,12 @@
       <!--选择区域-->
       <div class="clearfix">
         <div class="justify-align">
-          文件导入：&nbsp;&nbsp;<span></span>
+          学校导入：&nbsp;&nbsp;<span></span>
         </div>
         <div>
         <span class="grey_span lineheight-36">
           请按照模板格式上传（
-          <a class="grey_button link" href="/static/设置书目录模板.xls">模板下载.xls</a>
+          <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
         </span>
           <el-upload
@@ -629,6 +629,7 @@
     text-align: left;
     word-break: break-all;
     float: left;
+    margin-top: 9px;
   }
   .area-list>div:last-child{
     margin-left: 130px;
