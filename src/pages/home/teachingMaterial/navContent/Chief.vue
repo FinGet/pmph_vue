@@ -1,5 +1,5 @@
 <template>
-    <div class="teachMaterial">
+    <div class="teachMaterial chief">
       <p class="bookTitle">医学心理学与精神病学（第4版）</p>
 
       <div class="teachingMaterial-search clearfix">
@@ -21,7 +21,7 @@
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
-              <router-link :to="{name:'专家信息',query: { username: scope.row.username }}" class="table-link">{{scope.row.realname}}</router-link>
+              <router-link :to="{name:'专家信息',query: { declarationId: scope.row.declarationId }}" class="table-link">{{scope.row.realname}}</router-link>
             </template>
           </el-table-column>
 
@@ -109,7 +109,15 @@
       <el-dialog
         title="修改记录"
         :visible.sync="dialogVisible">
-        <div class="history-box"></div>
+        <div class="history-box timeLine">
+          <ul v-if="historyLog.length>0">
+            <li v-for="(iterm,index) in historyLog">
+              <b></b>
+              <p>{{iterm.detail}}</p>
+            </li>
+          </ul>
+          <p v-else>暂无历史消息</p>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -124,6 +132,7 @@
       return {
         api_list:'/pmpheep/declaration/list/editor/selection',
         api_submit:'/pmpheep/declaration/editor/selection/update',
+        api_log:'/pmpheep/textBookLog/list',
         searchParams:{
           textbookId:'',
           realName:'',
@@ -137,6 +146,7 @@
         tableData:[],
         zhubianSelectSortNumber:[],
         fuzhubianSelectSortNumber:[],
+        historyLog:[],
       }
     },
     computed:{
@@ -167,6 +177,7 @@
         }})
           .then(response=>{
             var res = response.data;
+            this.getHistoryLog();
             if(res.code==1){
               var onlineProgress = ['未提交','已提交','被退回','通过'];
               var offlineProgress = ['未收到','被退回','已收到'];
@@ -183,6 +194,22 @@
                 iterm.isBianwei = iterm.chosenPosition==3;
               });
               this.tableData = res.data;
+            }
+          })
+          .catch(e=>{
+            this.getHistoryLog();
+            console.log(e);
+          })
+      },
+      //获取历史记录
+      getHistoryLog(){
+        this.$axios.get(this.api_log,{params:{
+          textbookId:this.formData.textbookId,
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.historyLog = res.data.rows;
             }
           })
           .catch(e=>{
@@ -306,19 +333,19 @@
 
         this.tableData.forEach(iterm=>{
           if(iterm.isZhubian){
-            zhubianSortList.push(iterm.zhubianSort);
+            zhubianSortList.push(parseInt(iterm.zhubianSort));
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
-            fuzhubianSortList.push(iterm.fuzhubianSort);
+            fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
             fuzhubianData.push(iterm);
           }
         })
         zhubianSortList = zhubianSortList.sort();
         fuzhubianSortList = fuzhubianSortList.sort();
 
-        let zhubianSortIsOk = zhubianSortList[0]==1 && zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false;
-        let fuzhubianSortIsOk =fuzhubianSortList[0]==1 && fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false;
+        let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
+        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
 
         if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
           this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的连续整数');

@@ -1,13 +1,13 @@
 <template>
     <div class="new_book_release">
         <el-form ref="form" :model="formData" class="release_form" label-width="110px">
-            <el-form-item label="教材名称：">
+            <el-form-item label="教材名称：" class="marginB10">
                 <span class="grey_span">{{formData.materialName}}</span>
             </el-form-item>
-            <el-form-item label="教材轮次：">
+            <el-form-item label="教材轮次：" class="marginB10">
                 <span class="grey_span">第{{formData.materialRound}}轮</span>
             </el-form-item>
-            <el-form-item label="教材分类：">
+            <el-form-item label="教材分类：" class="marginB10">
                 <span class="grey_span">{{formData.materialType.join(' > ')}}</span>
                 <p><span class="red_span">（*若教材数量较多，可按照下载的模板格式上传，模板中书序、书籍名称、版次不能为空，书序和版次只能填写数字）</span></p>
                 <div>
@@ -32,7 +32,7 @@
               <div class="table-wrapper book-list-catalogue">
                 <div class="pull-right">
                   <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
-                  <el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>
+                  <!--<el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>-->
                   <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
                 </div>
                 <el-table
@@ -172,7 +172,9 @@ export default {
                 iterm.nameIsOk = true;
                 iterm.roundIsOk = true;
               });
-              this.extendListData = res.data.textbooks;
+              if(res.data.textbooks.length>0){
+                this.extendListData = res.data.textbooks;
+              }
             }
           })
           .catch(e=>{
@@ -185,6 +187,9 @@ export default {
        */
       deleteExtendItem(index) {
         this.extendListData.splice(index, 1);
+        if(this.extendListData.length==0){
+          this.insertRow(-1);
+        }
       },
       /**
        * 插入行
@@ -333,7 +338,7 @@ export default {
         }
         this.extendListData.map(iterm=>{
           let tempObj = {
-            id:iterm.id,
+            id:iterm.id?iterm.id:null,
             materialId:this.formData.materialId,
             textbookName:iterm.textbookName,
             textbookRound:iterm.textbookRound,
@@ -361,9 +366,10 @@ export default {
                 let res = response.data;
                 console.log(res)
                 if (res.code == '1') {
-                  this.$message.success('暂存成功！');
                   if(next){
                     this.$router.push({name:'教材申报选择学校'});
+                  }else{
+                    this.$message.success('保存成功！');
                   }
                 }else{
                   this.$message.error(res.msg.msgTrim());

@@ -495,5 +495,16 @@ a.table-link:hover{
   min-width: inherit;
 }
 
+
+/*时间线*/
+.timeLine  {display:block;margin:15px 0;}/*首先，我们要创建一个容器class*/
+.timeLine ul {margin-left:25px;border-left:2px solid #ddd;}/*利用ul标签的特性，设置外边框左移25px，左边边框是2px粗的实心线，颜色一般要浅一点*/
+.timeLine ul li {min-height: 30px;margin-bottom:30px;width:100%;margin-left:-12px;line-height:20px;font-weight:normal;}/*一般情况，通过li标签控制圆点回到时间线上，然后控制要出现的文字大小和是否粗体*/
+.timeLine ul li b {width:8px;height:8px;background:#fff;border:2px solid #555;margin:5px;border-radius:6px;-webkit-border-radius:6px;-moz-border-radius:6px;overflow:hidden;display:inline-block;float:left;}/*利用处理加粗以外没有其它特别属性b标签做时间轴的圆点。*/
+.timeLine ul li:hover b {border:2px solid #ff6600;}/*注意这一行，前面的li标签后面加了一个:hover伪属性，意思是鼠标移上来，激活后面的属性，这样可以设置鼠标移动到整个时间范围的时候，时间点和时间显示会变色*/
+.timeLine ul li p {padding-left:28px;font-size:14px;line-height:25px;}/*这里利用段落标签p做文字介绍*/
+
+
+
 /*重置editor样式*/
 @import "responsive.css";

@@ -181,7 +181,7 @@
           width="120"
         >
           <template scope="scope">
-            <router-link :to="{name:'专家信息',query: { username: scope.row.username }}" class="table-link">{{scope.row.realname}}</router-link>
+            <router-link :to="{name:'专家信息',query: { declarationId: scope.row.id }}" class="table-link">{{scope.row.realname}}</router-link>
           </template>
         </el-table-column>
         <el-table-column
