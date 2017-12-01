@@ -697,11 +697,13 @@ export default {
     optionMerge(){
      for(var i in this.listTableData){
           this.ruleForm[this.listTableData[i].key]=this.listTableData[i].usecheck;
-        if(this.listTableData[i].needcheck){
+        if(this.listTableData[i].requiredKey){
           this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;   
+         /*  console.log(this.listTableData[i].needcheck) */
         }
      }
-     console.log('11111',this.ruleForm);
+    /*  console.log('11111',this.ruleForm);
+     return true; */
     },
     /* 扩展项切换输入框 */
     extendShowInput(num,str){
@@ -938,7 +940,7 @@ export default {
     },
     /* 提交表单 */
     submitForm(){
-        this.optionMerge();  //选项合并
+        this.optionMerge()  //选项合并
         this.mergeForms();   //表单合并
         this.$refs.ruleForm.validate((valid) => {
           if (valid&&this.formTableChecked()) {
