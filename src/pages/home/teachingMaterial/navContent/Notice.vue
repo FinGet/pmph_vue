@@ -107,4 +107,9 @@ export default {
     margin: 5px 0;
     min-height: 19px;
   }
+  .material-notice-image{
+    padding: 20px 0;
+    width: 80%;
+    margin: 0 auto;
+  }
 </style>
