@@ -39,7 +39,7 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="!hasAccess(6)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(1)">批量通过</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary">批量导出Excel</el-button>
       </div>
@@ -447,6 +447,7 @@
           if(res.code == 1){
             this.dialogVisible = false
             this.$message.success('操作成功')
+            this.getTableData()
           } else if(res.code == 3){
             this.$message.success(res.msg.msgTrim())
           }
@@ -496,7 +497,7 @@
       submitGroup(){
         this.$axios.post('/pmpheep/group/addEditorGroup',this.$initPostData({
           textbookId: this.currentId,
-          pmphGroupMembers: this.groupData,
+          pmphGroupMembers: JSON.stringify(this.groupData),
           sessionId: this.$getUserData().sessionId
         })).then(response => {
           let res = response.data
