@@ -229,10 +229,16 @@ export default {
             this.delete(materialData.id);
             break;
           case 'publish':
-            this.$router.push({name:'教材申报选择学校',params:{materialId:materialData.id,type:'reEdit'}});
+            if(materialData.materialStep=="编辑通知详情"){
+              this.$router.push({name:'编辑通知详情',params:{materialId:materialData.id}});
+            }else if(materialData.materialStep=="设置书目录"){
+              this.$router.push({name:'设置书目录',params:{materialId:materialData.id}});
+            }else{
+              this.$router.push({name:'教材申报选择学校',params:{materialId:materialData.id,type:'reEdit'}});
+            }
             break;
           case 'msg':
-            this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'},query:{msgId:materialData.msgId}});
+            this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'}});
             break;
           case 'msgState':
             this.$router.push({name:'消息状态',query:{msgId:materialData.msgId}});

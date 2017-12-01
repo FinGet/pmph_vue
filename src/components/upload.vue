@@ -32,13 +32,50 @@
 </template>
 
 <script>
+  function noFn() {}
 	export default {
     props: {
-      data: {},
+      data: {},//上传文件附带参数，非必填
       action: {//必须参数
         type: String,
         required: true
       },
+      accept: String,//文件类型，非必填
+      onRemove: {
+        type: Function,
+        default: noop
+      },
+      onChange: {
+        type: Function,
+        default: noop
+      },
+      onPreview: {
+        type: Function
+      },
+      onSuccess: {
+        type: Function,
+        default: noop
+      },
+      onProgress: {
+        type: Function,
+        default: noop
+      },
+      onError: {
+        type: Function,
+        default: noop
+      },
+      fileList: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
+      autoUpload: {
+        type: Boolean,
+        default: true
+      },
+      disabled: Boolean
+
     },
 		data() {
 			return {
