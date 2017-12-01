@@ -370,6 +370,12 @@ methods:
         }
       },
       /**
+        清空选中项
+       */
+       clear(){
+         this.$refs.table.clearSelection();
+       },
+      /**
        * 远程搜索
        */
       _openUpdateDialog(index){
