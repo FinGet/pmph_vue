@@ -135,7 +135,7 @@
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" >创建小组</el-button>
+            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.id)">创建小组</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
@@ -173,6 +173,33 @@
          </div>
        </user-pmph>
     </el-dialog>
+
+    <!-- 小组名单确认 -->
+    <el-dialog title="确认小组名单" :visible.sync="groupVisiable" top="5%">
+      <el-table
+        :data="groupData"
+        stripe
+        style="width: 100%">
+        <el-table-column
+          prop="date"
+          label="日期"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="地址">
+        </el-table-column>
+      </el-table>
+      <div class="pull-right marginT10 marginB10">
+        <el-button @click="groupVisiable=false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </div>  
+    </el-dialog>  
   </div>
 </template>
 <script type="text/javascript">
@@ -212,6 +239,7 @@
         }],
         dialogVisible:false,
         chooseVisiable2:false,
+        groupVisiable: false, // 小组名单
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
         totalNum: 0,
@@ -219,7 +247,8 @@
         method:'',
         currentId: '',
         planningEditor: '',
-        selectedBookId:''
+        selectedBookId:'',
+        groupData: [] // 小组名单
       }
     },
     computed:{
@@ -355,6 +384,7 @@
           if (res.code == 1) {
             this.$message.success('操作成功')
             this.chooseVisiable2 = false
+            this.getTableData()
           }
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
@@ -403,6 +433,40 @@
         this.planningEditor = val[0].id
         console.log(this.planningEditor)
       },
+      /**显示小组名单 */
+      showGroup(id){
+        this.groupVisiable = true
+        this.$axios.get('/pmpheep/position/editorList',{
+          params:{
+            textbookId: id,
+            pageSize: 20,
+            pageNumber: 1
+          }
+        }).then(response => {
+          let res = response.data
+          if (res.code == 1) {
+            
+          }
+        }).catch(err => {
+          this.$message.error('操作失败，请稍后再试')
+        })
+      },
+      /**提交小组名单 */
+      submitGroup(){
+        this.$axios.get('',{
+          params:{
+            
+          }
+        }).then(response => {
+          let res = response.data
+          if (res.code == 1) {
+            this.groupVisiable = false
+            this.$router.push({name: '小组管理'})
+          }
+        }).catch(err => {
+          this.$message.error('操作失败，请稍后再试')
+        })
+      }
     },
     created(){
       this.searchForm.materialId = this.$route.params.materialId;
