@@ -15,6 +15,12 @@ import axios from 'axios'
 import * as config from 'common/config';
 import * as commonFun from './common/js/commonFun.js'
 import {formCheckedRules,formRules} from './common/js/formCheckRules.js'
+
+/*全局组件引用*/
+import myUpload from 'components/my-upload'
+
+
+/*全局方法和配置挂载*/
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
@@ -106,6 +112,12 @@ axios.interceptors.response.use(function (response) {
   //对返回的错误进行一些处理
   return Promise.reject(error);
 });
+
+
+/**
+ * 挂载全局组件
+ */
+Vue.use(myUpload);
 
 
 /**
