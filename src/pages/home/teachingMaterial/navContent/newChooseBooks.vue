@@ -3,27 +3,31 @@
       <el-row>
         <el-col>
           <el-form :model="material" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
-
-            <el-form-item label="教材名称：" prop="materialName" class="pull-left">
-              <el-col>
-                <el-input v-model="material.materialName" style="width:317px"></el-input>
-              </el-col>
+            <el-col :span="18">
+            <el-form-item label="教材名称：" prop="materialName" >
+                <el-input v-model="material.materialName" ></el-input>
             </el-form-item>
-
-            <el-form-item label="教材轮次：" prop="materialRound" class="pull-left">
-              <el-col>
-                <el-input v-model="material.materialRound" style="width:117px"></el-input>
-              </el-col>
+            </el-col>
+            <el-col :span="6">
+            <el-form-item label="教材轮次：" prop="materialRound" >
+                <el-input v-model="material.materialRound" ></el-input>
             </el-form-item>
-                <el-form-item label="实际结束日期：" prop="actualDeadline" class="pull-left">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="material.actualDeadline" @change="actDatePickGetTime" :picker-options="pickOptionsAct" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-                </el-form-item>     
-                <el-form-item label="展示结束日期：" class="pull-left" prop="deadline">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="material.deadline" @change="showDatePickGetTime"  :picker-options="pickOptionsShow" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-                <el-form-item prop="ageDeadline" label="年龄计算截止日期："  class="pull-left">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="material.ageDeadline" @change="ageDatePickGetTime" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+            <el-form-item label="实际结束日期：" prop="actualDeadline" class="pull-left">
+              <el-date-picker type="date" placeholder="选择日期" v-model="material.actualDeadline" @change="actDatePickGetTime" :picker-options="pickOptionsAct" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            </el-col>
+            <el-col :span="8">     
+            <el-form-item label="展示结束日期：" class="pull-left" prop="deadline">
+              <el-date-picker type="date" placeholder="选择日期" v-model="material.deadline" @change="showDatePickGetTime"  :picker-options="pickOptionsShow" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            </el-col>
+            <el-col :span="8">
+            <el-form-item prop="ageDeadline" label="年龄计算截止日期："  class="pull-left">
+              <el-date-picker type="date" placeholder="选择日期" v-model="material.ageDeadline" @change="ageDatePickGetTime" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            </el-col>
             <div class="clearfix"></div>
                 <el-form-item label="教材分类："  prop="materialType">
                    <el-cascader
@@ -487,7 +491,7 @@ export default {
           {min:1,max:2000,message:'内容不能超过2000个字符',trigger:'blur'}
           ],
         note:[
-           {required: true, message: "请填写备注", trigger: "blur" },
+           /* {required: true, message: "请填写备注", trigger: "blur" }, */
           {min:1,max:2000,message:'备注不能超过2000个字符',trigger:'blur'}
           ]
 
@@ -722,14 +726,36 @@ export default {
     /* 图片 */
     imgUploadChange(file,filelist){
      console.log(file,filelist);
-     /* 验证 */
+      this.noticeFiles=filelist;
+      /* 验证 */
+      var exStr=file.name.split('.').pop().toLowerCase();
+      var exSize=file.size?file.size:1;
+      if(exSize/ 1024 / 1024 > 20){
+        this.$message.error('图片的大小不能超过20MB！');
+        this.noticeFiles.pop();
+        return false;
+      }
+      if(exSize==0){
+        this.$message.error('请勿上传空文件！');
+        this.noticeFiles.pop();
+        return false;
+      }
+      if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+        this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+        this.noticeFiles.pop();
+        return false;
+      }
+      if(file.name.length>80){
+        this.$message.error('图片名称不能超过80个字符！');
+        this.noticeFiles.pop();
+        return false;
+      }   
       this.material.noticeFiles=filelist;
       this.ruleForm.noticeFiles=[];
       this.ruleForm.materialNoticeAttachments=[];
      for(var i in filelist){
-       if(filelist[i].status=='ready'){
+       if(filelist[i].raw){
          this.ruleForm.noticeFiles.push(filelist[i].raw);
-        // this.material.noticeFiles.push(filelist[i].raw);
        }else{
          var obj={
              id:filelist[i].id,
@@ -737,7 +763,6 @@ export default {
              url:filelist[i].url
          }
          this.ruleForm.materialNoticeAttachments.push(obj);
-        // this.material.noticeFiles.push(obj) ;
        }
      }
      this.$refs.ruleForm.validateField('noticeFiles');
@@ -745,12 +770,35 @@ export default {
     /* 文件 */
     fileUploadChange(file,filelist){
      console.log(file,filelist);
-
+     this.noteFiles=filelist; 
+     /* 验证 */
+     var exStr=file.name.split('.').pop().toLowerCase();
+     var exSize=file.size?file.size:1;
+     if(exSize/1024/1024>100){
+        this.$message.error('附件大小不能超过100MB！');
+        this.noteFiles.pop();
+        return false;
+     }
+     if(exSize==0){
+        this.$message.error('请勿上传空文件！');
+        this.noteFiles.pop();
+        return false;
+     }
+     if(exStr=='bat'||exStr=='com'||exStr=='exe'){
+        this.$message.error('请勿上传可执行文件');
+        this.noteFiles.pop();
+        return false;
+     }
+     if(file.name.length>80){
+        this.$message.error('附件名称不能超过80个字符');
+        this.noteFiles.pop();
+        return false;
+     }
      this.material.noteFiles=filelist;
      this.ruleForm.noteFiles=[];
      this.ruleForm.materialNoteAttachments=[];
      for(var i in filelist){
-      if(filelist[i].status=='ready'){
+      if(filelist[i].raw){
         this.ruleForm.noteFiles.push(filelist[i].raw);
         //this.material.noteFiles.push(filelist[i].raw);        
       } else{

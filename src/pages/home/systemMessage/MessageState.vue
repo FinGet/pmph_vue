@@ -99,7 +99,7 @@
       //console.log(this.$route.query.id)
       // 获取当前消息id
       this.msgId = this.$route.query.msgId
-      console.log(this.msgId)
+      console.log(this.$route,this.msgId)
       this.getMessageState()
     },
     methods:{
