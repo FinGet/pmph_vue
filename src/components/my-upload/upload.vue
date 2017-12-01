@@ -45,7 +45,6 @@
 </template>
 
 <script>
-  var FormData = require('formdata-polyfill')
   function noFn() {}
 	export default {
     props: {
@@ -164,7 +163,7 @@
         if(!file || !file.raw) return;
         file.status='uploading';
 
-        let formdata = new fomedataPoll();
+        let formdata = new FormData();
         formdata.append('file',file.raw);
         //导入附加参数
         for(let key in this.data){
