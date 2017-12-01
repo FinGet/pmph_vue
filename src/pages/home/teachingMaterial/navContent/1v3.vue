@@ -5,14 +5,17 @@
       <div class="searchBox-wrapper lg">
         <div class="searchName">书名：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="booksChooseValue5" multiple placeholder="全部">
+          <!-- <el-select v-model="booksChooseValue5" multiple filterable loading-text="正在搜索..."
+            remote
+            :remote-method="getBooks" :loading="loading" placeholder="全部">
             <el-option
               v-for="item in booksChooseOptions"
               :key="item.textBookId"
               :label="item.textbookName"
               :value="item.textBookId">
             </el-option>
-          </el-select>
+          </el-select> -->
+          <el-input placeholder="请输入" v-model="searchForm.bookName" @keyup.enter.native="search"></el-input>
         </div>
       </div>
       <!--进度搜索-->
@@ -80,16 +83,16 @@
           label="策划编辑"
           width="106">
           <template scope="scope">
-            <p v-if="!scope.row.planningEditorName">
-              待分配
+            <p>
+              <span v-if="!scope.row.planningEditorName">待分配</span>
+              <span v-else>
+                {{scope.row.planningEditorName}}
+              </span>    
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
                 <el-button type="text" :disabled="!hasAccess(1) || forceEnd">
                   <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
                 </el-button>
               </el-tooltip>
-            </p>
-            <p v-else>
-              {{scope.row.planningEditorName}}
             </p>
           </template>
         </el-table-column>
@@ -130,12 +133,12 @@
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3)"  @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row. isPublished || !hasAccess(4)">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4)">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.id)">创建小组</el-button>
+            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.textBookId)">创建小组</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
@@ -164,7 +167,7 @@
         </span>
     </el-dialog>
 
-    <el-dialog title="分配策划编辑" :visible.sync="chooseVisiable2" size="large" top="5%">
+    <el-dialog title="分配策划编辑" :visible.sync="chooseVisiable2" @close="cleartable" size="large" top="5%">
       <!-- <Departments ref="department" @add="add" :tableData="proptableData,Multichoice"></Departments>
        -->
        <user-pmph @selection-change="selectChange" ref="userPmph" select radio>
@@ -181,23 +184,46 @@
         stripe
         style="width: 100%">
         <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="name"
+          prop="realname"
           label="姓名"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="orgName"
+          label="工作单位">
+        </el-table-column>
+        <el-table-column
+          prop="presetPosition"
+          label="申报职位">
+          <template scope="scope">
+            <p></p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="presetPosition"
+          label="遴选职位">
+          <template scope="scope">
+            <p>{{scope.row.presetPosition==1?'主编':scope.row.presetPosition==2?'副主编':'编委'}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="presetPosition"
+          label="是否数字编委">
+          <template scope="scope">
+            <p>{{scope.row.isDigitalEditor?'是':'否'}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop=""
+          label="操作">
+          <template scope="scope">
+            <el-button type="danger" size="mini" icon="delete" @click="deleteMember(scope.$index,groupData)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <div class="pull-right marginT10 marginB10">
         <el-button @click="groupVisiable=false">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="submitGroup">确定</el-button>
       </div>  
     </el-dialog>  
   </div>
@@ -215,6 +241,7 @@
           materialId:'',
           state:'',
           textBookIds: '',
+          bookName:''
         },
         tableData: [],
         forceEnd:false,
@@ -305,7 +332,6 @@
                 iterm.deadline = this.$commonFun.formatDate(iterm.deadline).split(' ')[0];
               });
               this.tableData = res.data.rows;
-              this.booksChooseOptions = res.data.rows
               this.forceEnd = this.tableData[0].forceEnd
             } else if (res.code == 2) {
               this.$message.error(res.msg.msgTrim())
@@ -319,12 +345,6 @@
        * 搜索
        */
       search(){
-        let arr = []
-        for (var item of this.booksChooseValue5) {
-          arr.push(item)
-        }
-        this.searchForm.textBookIds = '['+arr.toString()+']'
-        this.searchForm.state = this.currentState
         this.getTableData()
       },
       handleSizeChange(val) {
@@ -339,21 +359,34 @@
       },
       /**强制结束 */
       isForceEnd(){
-        this.forceEnd=!this.forceEnd
-        this.$axios.put('/pmpheep/position/updateMaterial',this.$initPostData({
-          id: this.searchForm.materialId,
-          isForceEnd: this.forceEnd
-        })).then(response => {
-          let res = response.data
-          if(res.code == 1){
-            if(this.forceEnd) {
-              this.$message.success('已强制结束')
-            } else {
-              this.$message.success('已恢复')
+        var title = ''
+        if (!this.forceEnd) {
+          title =  '确定结束本教材的遴选？'
+        } else {
+          title = '确定恢复本教材的遴选'
+        }
+        this.$confirm(title,"提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.forceEnd=!this.forceEnd
+          this.$axios.put('/pmpheep/position/updateMaterial',this.$initPostData({
+            id: this.searchForm.materialId,
+            isForceEnd: this.forceEnd
+          })).then(response => {
+            let res = response.data
+            if(res.code == 1){
+              if(this.forceEnd) {
+                this.$message.success('已强制结束')
+              } else {
+                this.$message.success('已恢复')
+              }
+              this.getTableData()
             }
-            this.getTableData()
-          }
+          })
         })
+        
       },
       handleSelectionChange(val){
         let arr = []
@@ -430,12 +463,20 @@
       /* 选中社内用户*/
       selectChange(val){
         console.log(val)
-        this.planningEditor = val[0].id
+        if (val[0]) {
+          this.planningEditor = val[0].id
+        }
         console.log(this.planningEditor)
+      },
+      /** 清空 选中项 */
+      cleartable(){
+        this.$refs.userPmph.clear()
       },
       /**显示小组名单 */
       showGroup(id){
+        this.currentId = id
         this.groupVisiable = true
+        // console.log(id)
         this.$axios.get('/pmpheep/position/editorList',{
           params:{
             textbookId: id,
@@ -445,7 +486,7 @@
         }).then(response => {
           let res = response.data
           if (res.code == 1) {
-            
+            this.groupData = res.data.rows
           }
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
@@ -453,11 +494,11 @@
       },
       /**提交小组名单 */
       submitGroup(){
-        this.$axios.get('',{
-          params:{
-            
-          }
-        }).then(response => {
+        this.$axios.post('/pmpheep/group/addEditorGroup',this.$initPostData({
+          textbookId: this.currentId,
+          pmphGroupMembers: this.groupData,
+          sessionId: this.$getUserData().sessionId
+        })).then(response => {
           let res = response.data
           if (res.code == 1) {
             this.groupVisiable = false
@@ -466,6 +507,10 @@
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
         })
+      },
+      /**删除成员 */
+      deleteMember(index, rows){
+        rows.splice(index, 1);
       }
     },
     created(){
