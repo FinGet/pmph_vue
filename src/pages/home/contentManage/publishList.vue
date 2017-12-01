@@ -152,7 +152,7 @@
           <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
           <span style="margin-left:10px;">姓名/账号：</span>
           <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
-          <span>审核状态：</span>
+          <span>筛选状态：</span>
           <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
              v-for="item in commentSelectOp"
@@ -172,32 +172,36 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                label="评论内容"
-                >
-                <template scope="scope">
-                   <!-- <a href="">[{{scope.row.name}}]在[{{scope.row.title}}]下的评论</a> -->
-                </template>
-            </el-table-column>
-            <el-table-column
                 label="文章标题"
+                prop="title"
                 >
                 <template scope="scope">
-                   
+                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
             <el-table-column
-              label="评论人"
+                label="所属栏目"
+                prop="title"
+                >
+                <template scope="scope">
+                  <p v-if="scope.row.categoryName=='0'">文章</p>
+                  <p v-if="scope.row.categoryName=='1'">信息快报</p>
+                  <p v-if="scope.row.categoryName=='2'">公告管理</p>
+                </template>
+            </el-table-column>
+            <el-table-column
+              label="作者"
+              prop="username"
               width="100"
             >
             </el-table-column>
             <el-table-column
-                prop="creatTime"
-                label="评论时间"
-                width="165"
+                prop="gmtCreate"
+                label="发布时间"
                 >
             </el-table-column>
             <el-table-column
-                label="审核状态"
+                label="审核"
                 width="110"
                 >
                 <template scope="scope">
@@ -206,22 +210,13 @@
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
             </el-table-column> 
-<!--             <el-table-column
-                label="原文链接"
-                width="95"
-                >
-                <template scope="scope">
-                      <el-button type="text">查看</el-button>
-                </template>
-            </el-table-column> -->
             <el-table-column
                 label="操作"
                 width="150"
                 >
                 <template scope="scope">
                     <el-button type="text">通过</el-button>
-                    <!-- <el-button type="text">退回</el-button> -->
-                    <el-button type="text">删除</el-button>
+                    <el-button type="text">拒绝</el-button>
                 </template>
             </el-table-column>
 
@@ -300,7 +295,7 @@ export default {
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
-      commentListUrl:'/cms/comments',         //评论列表url
+      commentListUrl:'/pmpheep/cms/comments',         //评论列表url
       selectOp: [
         {
           value: 0,
@@ -318,11 +313,11 @@ export default {
       commentSelectOp: [
         {
           value: 0,
-          label: "待审核"
+          label: "已通过"
         },
         {
           value: 2,
-          label: "已通过"
+          label: "已退回"
         }
       ],
       showContentDetail: false,
@@ -345,7 +340,7 @@ export default {
       selectedOptions: [],
       commentTableData: [],
       comPageSize: 10,
-      comDataTotal: 20,
+      comDataTotal: 21,
       comPageNumber: 1,
       commentSelectData: [],
       commentName:'',
@@ -390,14 +385,24 @@ export default {
           params:{
             title:this.commentTitle,
             authStatus:this.commentSelect,
-            /* categoryId:1, */
+            categoryId:1,
             username:this.commentName,
             pageSize:this.comPageSize,
             pageNumber:this.comPageNumber,
             sessionId:this.$getUserData().sessionId,
           }
-      }).then((res)=>{
-          console.log(res);
+      }).then((response)=>{
+          // console.log(res);
+          let res = response.data
+          if (res.code == 1 ) {
+            this.comDataTotal = res.data.total
+            // this.commentTableData.gmtCreate = 
+            res.data.rows.map(item=>{
+                item.gmtCreate=this.$commonFun.formatDate(item.gmtCreate);
+            });
+            this.commentTableData = res.data.rows
+            console.log(this.commentTableData )
+          }
       })
     },
     /* 初始化是否管理员 */
@@ -526,6 +531,7 @@ export default {
   created() {
     this.getPublicList();
     this.initIsAdmin();
+    this.getCommentList();
   }
 };
 </script>
