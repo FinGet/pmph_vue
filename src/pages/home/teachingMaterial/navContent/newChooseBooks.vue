@@ -701,6 +701,7 @@ export default {
           this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;   
         }
      }
+     console.log('11111',this.ruleForm);
     },
     /* 扩展项切换输入框 */
     extendShowInput(num,str){
@@ -937,15 +938,15 @@ export default {
     },
     /* 提交表单 */
     submitForm(){
-     
+        this.optionMerge();  //选项合并
+        this.mergeForms();   //表单合并
         this.$refs.ruleForm.validate((valid) => {
           if (valid&&this.formTableChecked()) {
             if(!this.dateOptionsChecked()){
               this.$message.error('实际结束日期应大于展示结束日期');
                return false;
                 }
-            this.optionMerge();  //选项合并
-            this.mergeForms();   //表单合并
+            
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
               };  //添加请求头
