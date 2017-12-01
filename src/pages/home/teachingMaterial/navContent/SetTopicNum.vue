@@ -93,10 +93,13 @@
           let res = response.data
           if (res.code == 1) {
             this.tableData = res.data
-            console.log(this.tableData)
+            // console.log(this.tableData)
+            this.tableData.sort(function(a,b){
+              return a.sort - b.sort
+            })
           }
         }).catch(err => {
-          this.$message.error(err.msgTrim())
+          this.$message.error(err)
         })
       },
       submit(){
@@ -137,7 +140,7 @@
               this.$router.go(-1)
             }
           }).catch(err => {
-            this.$message.error(err.msgTrim())
+            this.$message.error(err)
           })
         }).catch(() => {});
       }
@@ -146,5 +149,7 @@
 </script>
 
 <style scoped>
-
+.searchInputEle {
+  padding: 3px 0;
+}
 </style>

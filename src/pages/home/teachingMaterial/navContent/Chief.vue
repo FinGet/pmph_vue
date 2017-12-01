@@ -5,7 +5,7 @@
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
-          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])">确认</el-button>
+          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
         </div>
       </div>
@@ -111,7 +111,7 @@
         :visible.sync="dialogVisible">
         <div class="history-box timeLine">
           <ul v-if="historyLog.length>0">
-            <li v-for="(iterm,index) in historyLog">
+            <li v-for="(iterm,index) in historyLog" :key="iterm.id">
               <b></b>
               <p>{{iterm.detail}}</p>
             </li>
