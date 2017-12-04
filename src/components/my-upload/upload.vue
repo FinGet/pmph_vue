@@ -51,7 +51,7 @@
             {{iterm.name}}
           </a>
           <span class="my-upload-list__item-btn">
-            <i class="fa fa-check-circle success" v-if="iterm.status=='success'"></i>
+            <i class="fa fa-check-circle success" v-if="iterm.status=='success'||iterm.status=='complete'"></i>
             <i class="fa fa-spinner fa-pulse loading" v-if="iterm.status=='uploading'"></i>
             <i class="fa fa-remove close" v-if="iterm.status!='uploading'" @click="handleRemove(iterm)"></i>
           </span>
@@ -78,6 +78,12 @@
   function noFn() {}
   function isHTML5(){
     return !!(window.FormData && File);
+  }
+  function getFileSize_ie9(target) {
+    var filePath = target.value;
+    var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+    var file = fileSystem.GetFile (filePath);
+    return file.Size;
   }
 	export default {
     props: {
@@ -215,11 +221,10 @@
           fileObject = true
         }
         file.fileObject = fileObject;
-
         this.uploadFiles.push(file);
         //触发on-change
         this.onChange(file, this.uploadFiles);
-
+        console.log('change',file)
         //清空input值
         this.$refs.input.value = null;
         //beforUpload
