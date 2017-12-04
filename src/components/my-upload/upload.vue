@@ -33,19 +33,27 @@
 
     <!--隐藏的input-->
     <div class="upload-input">
-      <input
-        class="el-upload__input"
-        type="file"
-        ref="input"
-        name="file"
-        @change="handleChange">
-      </input>
+      <form ref="form" action={this.action} target={frameName} enctype="multipart/form-data" method="POST">
+        <input
+          class="el-upload__input"
+          type="file"
+          ref="input"
+          name="file"
+          @change="handleChange"
+          accept="accept">
+        </input>
+        <span ref="data"></span>
+      </form>
+      <iframe on-load="frameOnload" ref="iframe" name="frameName" ></iframe>
     </div>
 	</div>
 </template>
 
 <script>
   function noFn() {}
+  function isHTML5(){
+    return !!(window.FormData && File);
+  }
 	export default {
     props: {
       data: {},//上传文件附带参数，非必填
@@ -98,6 +106,8 @@
 			return {
         tempIndex: 1,
         uploadFiles: [],
+        frameName:'',
+        currentUploadFile:null,
       }
 		},
     methods:{
@@ -106,42 +116,49 @@
        */
       handleClick(){
         this.$refs.input.click();
-        console.log(12221)
       },
       /**
        * 当input输入框发生变化时触发
        * @param ev 事件对象
        */
       handleChange(ev) {
-        const files = ev.target.files?ev.target.files:ev.target;
-        let postFiles = files;
-        console.log(ev)
-        if (postFiles.length === 0) { return; }
-
-        this.onStart(postFiles[0]?postFiles[0]:postFiles);
-
+        console.log(ev);
+        const files = false&&isHTML5()?ev.target.files:ev.target;
+        this.onStart(files[0]?files[0]:files);
       },
       /**
        * 处理接收到的文件类型
        * @param rawFile
        */
       onStart(rawFile){
-        rawFile.uid = Date.now() + this.tempIndex++;
+        if(!isHTML5()&&!rawFile.value){return;}
         let file = {
           status: 'ready',
-          name: rawFile.name,
+          el:this.$refs.input,
+          name: false&&isHTML5()?rawFile.name:rawFile.value.replace(/^.*?([^\/\\\r\n]+)$/, '$1'),
           size: rawFile.size,
           percentage: 0,
-          uid: rawFile.uid,
+          uid: Date.now() + this.tempIndex++,
           raw: rawFile,
-          _uploadProgress:undefined,
+          _uploadProgress:0,
         };
+        let fileObject = false
+        if (file.fileObject === false) {
+          // false
+        } else if (file.fileObject) {
+          fileObject = true
+        } else if (typeof Element !== 'undefined' && file.el instanceof Element) {
+          fileObject = true
+        } else if (typeof Blob !== 'undefined' && file.raw instanceof Blob) {
+          fileObject = true
+        }
+        file.fileObject = fileObject;
 
         this.uploadFiles.push(file);
         //触发on-change
         this.onChange(file, this.uploadFiles);
 
-        this.$refs.input.value = null;
+//        this.$refs.input.value = null;
         //自动上传
         if (this.autoUpload) this.upload(file);
       },
@@ -155,13 +172,20 @@
         this.onRemove(file, fileList);
       },
       /**
-       * 上传文件
+       * 上传文件 适用于支持FormData的现代浏览器
        * @param rowfile
        */
       upload(rowfile) {
         let file = this.getFile(rowfile);
         if(!file || !file.raw) return;
         file.status='uploading';
+
+        if(true || !isHTML5()){//如果不支持FormData则用表单提交方式
+          this.uploadHtml4(file);
+          return;
+        }
+
+
 
         let formdata = new FormData();
         formdata.append('file',file.raw);
@@ -193,6 +217,177 @@
             console.log('上传组件上传失败日志信息',e);
             this.handleUploadError(e,file);
           })
+      },
+      /**
+       * 上传文件 不支持FormData的浏览器用iframe模拟，iframe模拟提交无法获取文件上传进度
+       * @param _file
+       */
+      uploadHtml4(_file) {
+        let file = _file
+        let onKeydown = function (e) {
+          if (e.keyCode === 27) {
+            e.preventDefault()
+          }
+        }
+
+        let iframe = document.createElement('iframe')
+        iframe.id = 'upload-iframe-' + file.uid
+        iframe.name = 'upload-iframe-' + file.uid
+        iframe.src = 'about:blank'
+        iframe.setAttribute('style', 'width:1px;height:1px;top:-999em;position:absolute; margin-top:-999em;')
+
+
+        let form = document.createElement('form')
+
+        form.action = this.action
+
+        form.name = 'upload-form-' + file.uid
+
+
+        form.setAttribute('method', 'POST')
+        form.setAttribute('target', 'upload-iframe-' + file.uid)
+        form.setAttribute('enctype', 'multipart/form-data')
+
+        let value
+        let input
+        for (let key in this.data) {
+          value = file.data[key]
+          if (value && typeof value === 'object' && typeof value.toString !== 'function') {
+            value = JSON.stringify(value)
+          }
+          if (value !== null && value !== undefined) {
+            input = document.createElement('input')
+            input.type = 'hidden'
+            input.name = key
+            input.value = value
+            form.appendChild(input)
+          }
+        }
+        form.appendChild(file.el)
+
+        document.body.appendChild(iframe).appendChild(form)
+
+
+
+
+        let getResponseData = function () {
+          let doc
+          try {
+            if (iframe.contentWindow) {
+              doc = iframe.contentWindow.document
+            }
+          } catch (err) {
+          }
+          if (!doc) {
+            try {
+              doc = iframe.contentDocument ? iframe.contentDocument : iframe.document
+            } catch (err) {
+              doc = iframe.document
+            }
+          }
+          console.log(123456,doc);
+          if (doc && doc.body) {
+            return doc.body.innerHTML
+          }
+          return null
+        }
+
+
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            // 不存在
+            if (!file) {
+              return reject('not_exists')
+            }
+
+            let complete
+            let fn = (e) => {
+              // 已经处理过了
+              if (complete) {
+                return
+              }
+              complete = true
+
+              // 关闭 esc 事件
+              document.body.removeEventListener('keydown', onKeydown)
+
+              file = this.getFile(file);
+
+              // 不存在直接响应
+              if (!file) {
+                return reject('not_exists')
+              }
+
+              // 不是文件对象
+              if (!file.fileObject) {
+                return reject('file_object')
+              }
+
+              // 有错误自动响应
+              if (file.status=='error') {
+                return reject(file.error)
+              }
+
+              // 已完成 直接相应
+              if (file.status=='complete') {
+                return resolve(file)
+              }
+
+              let response = getResponseData()
+              let data = {}
+              if(e.type=='bort'||e.type=='error'){
+                file.status = 'error';
+              }else{
+                file.status = 'uploading';
+              }
+
+              if (response !== null) {
+                if (response && response.substr(0, 1) === '{' && response.substr(response.length - 1, 1) === '}') {
+                  try {
+                    response = JSON.parse(response)
+                  } catch (err) {
+                  }
+                }
+                data.response = response;
+                if(response.code==1){
+                  file.status = 'complete';
+                  file.response=response;
+                }else{
+                  file.status = 'error';
+                  file.response=response;
+                }
+              }
+              console.log(123,data);
+              if (file.status == 'error') {
+                return reject(file.error)
+              }
+
+              // 响应
+              return resolve(file)
+            }
+
+
+            // 添加事件
+            iframe.onload = fn
+            iframe.onerror = fn
+            iframe.onabort = fn
+
+
+            // 禁止 esc 键
+            document.body.addEventListener('keydown', onKeydown)
+
+            // 提交
+            form.submit()
+          }, 50)
+        }).then(function (res) {
+          console.log('resolve',res);
+          iframe.parentNode && iframe.parentNode.removeChild(iframe)
+          return res
+        }).catch(function (res) {
+          console.log('reject',res);
+          iframe.parentNode && iframe.parentNode.removeChild(iframe)
+          return res
+        })
       },
       /**
        * 上传进度处理
@@ -231,6 +426,12 @@
         });
         return target;
       },
+      getFormNode() {
+        return this.$refs.form;
+      },
+      getFormDataNode() {
+        return this.$refs.data;
+      }
     },
     watch: {
       fileList: {
@@ -247,7 +448,11 @@
     created(){
       this.fileList.forEach(iterm=>{
         this.uploadFiles.push(iterm);
-      })
+      });
+      this.frameName = 'frame-' + Date.now();
+    },
+    mounted(){
+
     },
 	}
 </script>
