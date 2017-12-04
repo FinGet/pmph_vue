@@ -34,7 +34,7 @@
       </el-form-item>
     <el-form-item label="附件：" prop="fileList">
         <div class="col-content file-upload-wrapper" style="padding-left:0;" >
-          <el-upload
+          <my-upload
             class="upload-demo"
             :action="fileUploadUrl"
             :on-success="upLoadFileSuccess"
@@ -44,7 +44,7 @@
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
             <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
-          </el-upload>
+          </my-upload>
         </div>
     </el-form-item>
     </el-form>
