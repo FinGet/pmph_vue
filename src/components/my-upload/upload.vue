@@ -1,7 +1,22 @@
 /**
   Created by huang on 2017/11/22.
 
-  上传组件，兼容ie9+   to-do:待封装
+  上传组件，支持FormData的浏览器用FormData上传，不支持的浏览器用iframe模拟，兼容ie9+  参考element上传组件参数
+  备注: ie9上无法读取文件size值
+  参数：
+  props:(1) action 必选参数, 上传的地址
+        (2) data 可选参数, 上传时附带的额外参数
+        (3) accept 可选参数, 接受上传的文件类型
+        (4) on-change 可选参数, 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用 function(file, fileList)
+        (5) on-success 可选参数, 文件上传成功时的钩子 function(response, file, fileList)
+        (6) on-remove 可选参数, 文件列表移除文件时的钩子 function(file, fileList)
+        (7) on-error 可选参数, 文件上传失败时的钩子 function(err, file, fileList)
+        (8) on-progress 可选参数, 文件上传时的钩子 function(event, file, fileList) 【备注：ie9中无效】
+        (9) before-upload 可选参数, 上传文件之前的钩子，参数为上传的文件，若返回 false 或者返回 Promise 且被 reject，则停止上传。 function(file)
+        (10) auto-upload	是否在选取文件后立即进行上传	boolean 默认为true
+        (11) file-list 数组 上传的文件列表, 例如: [{name: 'food.jpeg', url: 'http://xx/xx.jpeg'}]
+
+  methods: (1) clearFiles 清空文件列表
 */
 <template>
   <div class="my-upload-components">
@@ -22,7 +37,7 @@
             {{iterm.name}}
           </a>
           <span class="my-upload-list__item-btn">
-            <i class="fa fa-check-circle success" v-if="iterm.status=='complete'"></i>
+            <i class="fa fa-check-circle success" v-if="iterm.status=='success'"></i>
             <i class="fa fa-spinner fa-pulse loading" v-if="iterm.status=='uploading'"></i>
             <i class="fa fa-remove close" v-if="iterm.status!='uploading'" @click="handleRemove(iterm)"></i>
           </span>
@@ -70,9 +85,7 @@
         type: Function,
         default: noFn
       },
-      onPreview: {
-        type: Function
-      },
+      beforeUpload: Function,
       onSuccess: {
         type: Function,
         default: noFn
@@ -118,12 +131,52 @@
         this.$refs.input.click();
       },
       /**
+       * 删除
+       * @param rawFile
+       */
+      handleRemove(file) {
+        let fileList = this.uploadFiles;
+        fileList.splice(fileList.indexOf(file), 1);
+        this.onRemove(file, fileList);
+        //触发on-change
+        this.onChange(file, fileList);
+      },
+      /**
+       * 上传失败
+       */
+      handleUploadError(res,rawFile){
+        const file = this.getFile(rawFile);
+        const fileList = this.uploadFiles;
+
+        file.status = 'fail';
+
+        fileList.splice(fileList.indexOf(file), 1);
+        this.onError(res,file,this.uploadFiles);
+        this.onChange(file, this.uploadFiles);
+      },
+      /**
+       * 上传成功
+       */
+      handleUplaodSuccess(res,rowfile){
+        const file = this.getFile(rowfile);
+        if (file) {
+          file.status = 'success';
+          file.response = res;
+
+          this.onSuccess(res, file, this.uploadFiles);
+          this.onChange(file, this.uploadFiles);
+        }
+      },
+      /**
        * 当input输入框发生变化时触发
        * @param ev 事件对象
        */
       handleChange(ev) {
         console.log(ev);
-        const files = false&&isHTML5()?ev.target.files:ev.target;
+        const files = isHTML5()?ev.target.files:ev.target;
+        if(!files[0]&&!files.value){
+          return;
+        }
         this.onStart(files[0]?files[0]:files);
       },
       /**
@@ -135,7 +188,7 @@
         let file = {
           status: 'ready',
           el:this.$refs.input,
-          name: false&&isHTML5()?rawFile.name:rawFile.value.replace(/^.*?([^\/\\\r\n]+)$/, '$1'),
+          name: isHTML5()?rawFile.name:rawFile.value.replace(/^.*?([^\/\\\r\n]+)$/, '$1'),
           size: rawFile.size,
           percentage: 0,
           uid: Date.now() + this.tempIndex++,
@@ -158,29 +211,51 @@
         //触发on-change
         this.onChange(file, this.uploadFiles);
 
-//        this.$refs.input.value = null;
-        //自动上传
-        if (this.autoUpload) this.upload(file);
+        //清空input值
+        this.$refs.input.value = null;
+        //beforUpload
+        if (!this.beforeUpload) {
+          //自动上传
+          if (this.autoUpload) this.upload(file);
+          return;
+        }
+
+        const before = this.beforeUpload(rawFile);
+        if (before && before.then) {
+          before.then(processedFile => {
+            if (Object.prototype.toString.call(processedFile) === '[object File]') {
+              if (this.autoUpload) this.upload(processedFile);
+            } else {
+              //自动上传
+              if (this.autoUpload) this.upload(file);
+            }
+          }, () => {
+            this.handleRemove(file);
+          });
+        } else if (before !== false) {
+          //自动上传
+          if (this.autoUpload) this.upload(file);
+        } else {
+          this.handleRemove(file);
+        }
+
+
+
+
+
       },
-      /**
-       * 删除
-       * @param rawFile
-       */
-      handleRemove(file) {
-        let fileList = this.uploadFiles;
-        fileList.splice(fileList.indexOf(file), 1);
-        this.onRemove(file, fileList);
-      },
+
       /**
        * 上传文件 适用于支持FormData的现代浏览器
        * @param rowfile
        */
       upload(rowfile) {
+        this.$refs.input.value = null;
         let file = this.getFile(rowfile);
         if(!file || !file.raw) return;
         file.status='uploading';
 
-        if(true || !isHTML5()){//如果不支持FormData则用表单提交方式
+        if(!isHTML5()){//如果不支持FormData则用表单提交方式
           this.uploadHtml4(file);
           return;
         }
@@ -223,6 +298,7 @@
        * @param _file
        */
       uploadHtml4(_file) {
+        console.log('upload by iframe');
         let file = _file
         let onKeydown = function (e) {
           if (e.keyCode === 27) {
@@ -285,16 +361,16 @@
               doc = iframe.document
             }
           }
-          console.log(123456,doc);
           if (doc && doc.body) {
             return doc.body.innerHTML
           }
           return null
         }
 
+        var timer = null;
 
         return new Promise((resolve, reject) => {
-          setTimeout(() => {
+          timer = setTimeout(() => {
             // 不存在
             if (!file) {
               return reject('not_exists')
@@ -334,13 +410,14 @@
               }
 
               let response = getResponseData()
-              let data = {}
+
               if(e.type=='bort'||e.type=='error'){
                 file.status = 'error';
               }else{
                 file.status = 'uploading';
               }
-
+              window.response = response;
+              console.log(response);
               if (response !== null) {
                 if (response && response.substr(0, 1) === '{' && response.substr(response.length - 1, 1) === '}') {
                   try {
@@ -348,22 +425,34 @@
                   } catch (err) {
                   }
                 }
-                data.response = response;
+                if (response && (typeof response).toLowerCase() == 'string' &&response.substr(0, 1) === '<' && response.substr(response.length - 1, 1) === '>') {
+                  try {
+                    response = response.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+                    response = response.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+                    response = JSON.parse(response)
+                  } catch (err) {
+                  }
+                }
+
                 if(response.code==1){
-                  file.status = 'complete';
+                  file.status = 'success';
                   file.response=response;
+                  this.handleUplaodSuccess(response,file);
                 }else{
                   file.status = 'error';
                   file.response=response;
+                  this.handleUploadError(response,file);
                 }
               }
-              console.log(123,data);
+
+
               if (file.status == 'error') {
-                return reject(file.error)
+                return reject(file,response)
+                this.handleUploadError(response,file);
               }
 
               // 响应
-              return resolve(file)
+              return resolve(file,response)
             }
 
 
@@ -379,13 +468,13 @@
             // 提交
             form.submit()
           }, 50)
-        }).then(function (res) {
-          console.log('resolve',res);
-          iframe.parentNode && iframe.parentNode.removeChild(iframe)
+        }).then((res,file)=>{
+          iframe.parentNode && iframe.parentNode.removeChild(iframe);
+          timer && clearTimeout(timer);
           return res
-        }).catch(function (res) {
-          console.log('reject',res);
-          iframe.parentNode && iframe.parentNode.removeChild(iframe)
+        }).catch((res,file)=>{
+          iframe.parentNode && iframe.parentNode.removeChild(iframe);
+          timer && clearTimeout(timer);
           return res
         })
       },
@@ -400,20 +489,8 @@
         this.onProgress(progressEvent,file,this.uploadFiles);
       },
       /**
-       * 上传失败
+       * 清除文件列表
        */
-      handleUploadError(res,file){
-        this.handleRemove(file);
-        this.onError(res,file,this.uploadFiles);
-      },
-      /**
-       * 上传成功
-       */
-      handleUplaodSuccess(res,file){
-        file.status = 'complete';
-        file.response = res;
-        this.onSuccess(res,file,this.uploadFiles);
-      },
       clearFiles() {
         this.uploadFiles = [];
       },
