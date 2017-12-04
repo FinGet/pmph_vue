@@ -237,7 +237,7 @@
               </el-col>
             </el-form-item>
             <el-form-item label="上传图片：" prop="noticeFiles">
-              <el-upload
+              <my-upload
                 class="upload"
                 :auto-upload="false"
                 action="#"
@@ -245,7 +245,7 @@
                 :on-remove="imgUploadChange"
                 :file-list="noticeFiles">
                 <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
+              </my-upload>
             </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
@@ -260,7 +260,7 @@
 
             <el-form-item label="附件：" prop="noteFiles">
               <el-col :span="12">
-                <el-upload
+                <my-upload
                   class="upload"
                   action="#"
                   :auto-upload="false"
@@ -268,7 +268,7 @@
                   :on-remove="fileUploadChange"
                   :file-list="noteFiles">
                   <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
+                </my-upload>
               </el-col>
             </el-form-item>
 

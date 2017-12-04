@@ -7,31 +7,31 @@
           <div class="total-chart paddingT30 paddingB30">
             <div class="num-chart-iterm">
               <div>
-                <span>588</span>
+                <span>{{situationCount.schoolDeclarationCount}}</span>
               </div>
               <p>院校申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>140</span>
+                <span>{{situationCount.schoolDeclarationAverage}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>120</span>
+                <span>{{situationCount.editorCount}}</span>
               </div>
               <p>主编申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>420</span>
+                <span>{{situationCount.subEditorCount}}</span>
               </div>
               <p>副主编申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>210</span>
+                <span>{{situationCount.editorialCount}}</span>
               </div>
               <p>编委申报总数</p>
             </div>
@@ -128,31 +128,31 @@
           <div class="total-chart paddingT30 paddingB30">
             <div class="num-chart-iterm">
               <div>
-                <span>588</span>
+                <span>{{situationCount.schoolDeclarationCount}}</span>
               </div>
               <p>院校申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>140</span>
+                <span>{{situationCount.schoolDeclarationAverage}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>120</span>
+                <span>{{situationCount.editorCount}}</span>
               </div>
               <p>主编申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>420</span>
+                <span>{{situationCount.subEditorCount}}</span>
               </div>
               <p>副主编申报总数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>210</span>
+                <span>{{situationCount.editorialCount}}</span>
               </div>
               <p>编委申报总数</p>
             </div>
@@ -253,6 +253,13 @@ export default {
       materialId:'',
       searchParams: {
         bookName: ""
+      },
+      situationCount:{
+            schoolDeclarationCount:0, //院校申报总数
+            schoolDeclarationAverage:0, //院校申报平均数
+            editorCount:0,          //主编申报总数
+            subEditorCount:0,      //副主编申报总数
+            editorialCount:0      //编委申报总数
       },
       tableData2: [
         {
@@ -454,6 +461,9 @@ export default {
         }
       }).then((res)=>{
         console.log(res);
+        if(res.data.code==1){
+          this.situationCount=res.data.data;
+        }
       })
     },
     /**
