@@ -114,7 +114,6 @@
               v-if="1"
               :page-sizes="[30,50,100, 200, 300, 400]"
               :page-size="30"
-              :current-page="s1"
               layout="total, sizes, prev, pager, next, jumper"
               :total="300">
             </el-pagination>
@@ -230,7 +229,6 @@
               v-if="1"
               :page-sizes="[30,50,100, 200, 300, 400]"
               :page-size="30"
-              :current-page="s1"
               layout="total, sizes, prev, pager, next, jumper"
               :total="300">
             </el-pagination>
@@ -246,385 +244,567 @@
 </template>
 
 <script>
-  import echarts from '../../../../../../static/echarts/echarts.common.min'
-	export default {
-		data() {
-			return {
-        activeName:'school',
-        searchParams:{
-          bookName:'',
+import echarts from "../../../../../../static/echarts/echarts.common.min";
+export default {
+  data() {
+    return {
+      activeName: "school",
+      totalChartUrl:'/pmpheep/decPosition/result/count',    //申报情况url
+      materialId:'',
+      searchParams: {
+        bookName: ""
+      },
+      tableData2: [
+        {
+          xuhao: 1,
+          bookName: "三峡大学医学院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
         },
-        tableData2:[{
-          xuhao:1,
-          bookName:'三峡大学医学院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:2,
-          bookName:'上海交通大学医学院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:3,
-          bookName:'上海健康医学院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:4,
-          bookName:'上海理工大学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:5,
-          bookName:'东南大学医学院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:6,
-          bookName:'中南大学湘雅医学院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:7,
-          bookName:'中国人民解放军总医院',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:8,
-          bookName:'中国医科大学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:9,
-          bookName:'中国康复研究中心',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        }],
-        tableData:[{
-          xuhao:1,
-          bookName:'医用高等数学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:2,
-          bookName:'医学物理学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:3,
-          bookName:'基础化学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:4,
-          bookName:'系统解剖学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:5,
-          bookName:'组织学与胚胎学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:6,
-          bookName:'生物化学与分子生物学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:7,
-          bookName:'生理学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:8,
-          bookName:'医用高等数学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        },{
-          xuhao:9,
-          bookName:'医用高等数学',
-          p1:67,
-          p2:108,
-          p3:19,
-          p4:21,
-          p5:3,
-          p6:12
-        }],
-      }
-		},
-    methods:{
-      /**
+        {
+          xuhao: 2,
+          bookName: "上海交通大学医学院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 3,
+          bookName: "上海健康医学院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 4,
+          bookName: "上海理工大学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 5,
+          bookName: "东南大学医学院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 6,
+          bookName: "中南大学湘雅医学院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 7,
+          bookName: "中国人民解放军总医院",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 8,
+          bookName: "中国医科大学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 9,
+          bookName: "中国康复研究中心",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        }
+      ],
+      tableData: [
+        {
+          xuhao: 1,
+          bookName: "医用高等数学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 2,
+          bookName: "医学物理学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 3,
+          bookName: "基础化学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 4,
+          bookName: "系统解剖学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 5,
+          bookName: "组织学与胚胎学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 6,
+          bookName: "生物化学与分子生物学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 7,
+          bookName: "生理学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 8,
+          bookName: "医用高等数学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        },
+        {
+          xuhao: 9,
+          bookName: "医用高等数学",
+          p1: 67,
+          p2: 108,
+          p3: 19,
+          p4: 21,
+          p5: 3,
+          p6: 12
+        }
+      ]
+    };
+  },
+  created(){
+  console.log(this.$route)
+  this.materialId=this.$route.params.materialId;
+  this.getTotalChartData();
+  },
+  methods: {
+    /* 获取申报情况统计total */
+    getTotalChartData(){
+      this.$axios.get(this.totalChartUrl,{
+        params:{
+          materialId:this.materialId
+        }
+      }).then((res)=>{
+        console.log(res);
+      })
+    },
+    /**
        * 获取表格数据
        */
-      getTableData(){
-
-      },
-      /**
+    getTableData() {},
+    /**
        * 点击tabs切换
        */
-      handleTabsClick(tab, event){
-
-
+    handleTabsClick(tab, event) {}
+  },
+  mounted() {
+    var echartWidth =
+      (document.documentElement.clientWidth || document.body.clientWeight) -
+      300;
+    this.$refs.echarts1.style.width = echartWidth + "px";
+    this.$refs.echarts2.style.width = echartWidth + "px";
+    var myChart = echarts.init(this.$refs.echarts1);
+    var myChart2 = echarts.init(this.$refs.echarts2);
+    console.log(echartWidth);
+    // 指定图表的配置项和数据
+    var option2 = {
+      title: {
+        show: "true",
+        text: "申报人数统计图表"
       },
-    },
-    mounted(){
-      var echartWidth = (document.documentElement.clientWidth || document.body.clientWeight)-300;
-      this.$refs.echarts1.style.width = echartWidth+'px';
-      this.$refs.echarts2.style.width = echartWidth+'px';
-      var myChart = echarts.init(this.$refs.echarts1);
-      var myChart2 = echarts.init(this.$refs.echarts2);
-      console.log(echartWidth);
-      // 指定图表的配置项和数据
-      var option2 = {
-        title: {
-          show:"true",
-          text: '申报人数统计图表'
-        },
-        tooltip: {
-          show: true,
-          trigger: 'axis',
+      tooltip: {
+        show: true,
+        trigger: "axis",
+        axisPointer: {
+          type: "cross",
+          crossStyle: {
+            color: "#999"
+          }
+        }
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ["line", "bar"] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      legend: {
+        data: ["申报人数", "当选人数"]
+      },
+      xAxis: [
+        {
+          name: "书籍名称",
+          type: "category",
+          data: [
+            "医用高等数学",
+            "医学物理学",
+            "基础化学",
+            "系统解剖学",
+            "组织学与胚胎学",
+            "生物化学与分子生物学",
+            "生理学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医学物理学",
+            "基础化学",
+            "系统解剖学",
+            "组织学与胚胎学",
+            "生物化学与分子生物学",
+            "生理学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学",
+            "医用高等数学"
+          ],
           axisPointer: {
-            type: 'cross',
-            crossStyle: {
-              color: '#999'
-            }
-          }
-        },
-        toolbox: {
-          feature: {
-            dataView: {show: true, readOnly: false},
-            magicType: {show: true, type: ['line', 'bar']},
-            restore: {show: true},
-            saveAsImage: {show: true}
-          }
-        },
-        legend: {
-          data:['申报人数','当选人数']
-        },
-        xAxis: [
-          {
-            name:'书籍名称',
-            type: 'category',
-            data: ['医用高等数学','医学物理学','基础化学','系统解剖学','组织学与胚胎学','生物化学与分子生物学','生理学','医用高等数学','医用高等数学','医用高等数学','医用高等数学','医用高等数学','医用高等数学','医学物理学','基础化学','系统解剖学','组织学与胚胎学','生物化学与分子生物学','生理学','医用高等数学','医用高等数学','医用高等数学','医用高等数学','医用高等数学'],
-            axisPointer: {
-              type: 'shadow'
-            },
-            axisLabel: {
-              interval: 0,
-              boundaryGap: [0, 0.01],
-              formatter:function(value)
-              {
-                return value.split("").join("\n");
-              }
-            },
-          }
-        ],
-        grid: {
-          left: '10%',
-          bottom:'35%'
-        },
-        yAxis: [
-          {
-            type: 'value',
-            name: '申报人数',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: '{value} 人'
-            }
+            type: "shadow"
           },
-          {
-            type: 'value',
-            name: '当选人数',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: '{value} 人'
+          axisLabel: {
+            interval: 0,
+            boundaryGap: [0, 0.01],
+            formatter: function(value) {
+              return value.split("").join("\n");
             }
           }
-        ],
-        series: [
-          {
-            name:'申报人数',
-            type:'bar',
-            data:[200, 160, 70, 232, 205, 76, 135, 162, 26, 200, 64, 33,200, 160, 70, 232, 205, 76, 135, 162, 26, 200, 64, 33]
-          },
-          {
-            name:'当选人数',
-            type:'line',
-            yAxisIndex: 1,
-            data:[28, 16, 20, 33, 55, 33, 44, 66, 45, 45, 6, 9,28, 16, 20, 33, 55, 33, 44, 66, 45, 45, 6, 9]
+        }
+      ],
+      grid: {
+        left: "10%",
+        bottom: "35%"
+      },
+      yAxis: [
+        {
+          type: "value",
+          name: "申报人数",
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLabel: {
+            formatter: "{value} 人"
           }
-        ]
-      };
-      // 指定图表的配置项和数据
-      var option3 = {
-        title: {
-          show:"true",
-          text: '申报人数统计图表'
         },
-        tooltip: {
-          show: true,
-          trigger: 'axis',
+        {
+          type: "value",
+          name: "当选人数",
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLabel: {
+            formatter: "{value} 人"
+          }
+        }
+      ],
+      series: [
+        {
+          name: "申报人数",
+          type: "bar",
+          data: [
+            200,
+            160,
+            70,
+            232,
+            205,
+            76,
+            135,
+            162,
+            26,
+            200,
+            64,
+            33,
+            200,
+            160,
+            70,
+            232,
+            205,
+            76,
+            135,
+            162,
+            26,
+            200,
+            64,
+            33
+          ]
+        },
+        {
+          name: "当选人数",
+          type: "line",
+          yAxisIndex: 1,
+          data: [
+            28,
+            16,
+            20,
+            33,
+            55,
+            33,
+            44,
+            66,
+            45,
+            45,
+            6,
+            9,
+            28,
+            16,
+            20,
+            33,
+            55,
+            33,
+            44,
+            66,
+            45,
+            45,
+            6,
+            9
+          ]
+        }
+      ]
+    };
+    // 指定图表的配置项和数据
+    var option3 = {
+      title: {
+        show: "true",
+        text: "申报人数统计图表"
+      },
+      tooltip: {
+        show: true,
+        trigger: "axis",
+        axisPointer: {
+          type: "cross",
+          crossStyle: {
+            color: "#999"
+          }
+        }
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ["line", "bar"] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      legend: {
+        data: ["申报人数", "当选人数"]
+      },
+      xAxis: [
+        {
+          name: "书籍名称",
+          type: "category",
+          data: [
+            "三峡大学医学院",
+            "上海交通大学医学院",
+            "上海健康医学院",
+            "上海理工大学",
+            "东南大学医学院",
+            "中南大学湘雅医学院",
+            "中国人民解放军总医院",
+            "中国医科大学",
+            "中国康复研究中心",
+            "中国康复研究中心",
+            "中国康复研究中心",
+            "中国康复研究中心",
+            "三峡大学医学院",
+            "上海交通大学医学院",
+            "上海健康医学院",
+            "上海理工大学",
+            "东南大学医学院",
+            "中南大学湘雅医学院",
+            "中国人民解放军总医院",
+            "中国医科大学",
+            "中国康复研究中心",
+            "中国康复研究中心",
+            "中国康复研究中心",
+            "中国康复研究中心"
+          ],
           axisPointer: {
-            type: 'cross',
-            crossStyle: {
-              color: '#999'
-            }
-          }
-        },
-        toolbox: {
-          feature: {
-            dataView: {show: true, readOnly: false},
-            magicType: {show: true, type: ['line', 'bar']},
-            restore: {show: true},
-            saveAsImage: {show: true}
-          }
-        },
-        legend: {
-          data:['申报人数','当选人数']
-        },
-        xAxis: [
-          {
-            name:'书籍名称',
-            type: 'category',
-            data: ['三峡大学医学院','上海交通大学医学院','上海健康医学院','上海理工大学','东南大学医学院','中南大学湘雅医学院','中国人民解放军总医院','中国医科大学','中国康复研究中心','中国康复研究中心','中国康复研究中心','中国康复研究中心','三峡大学医学院','上海交通大学医学院','上海健康医学院','上海理工大学','东南大学医学院','中南大学湘雅医学院','中国人民解放军总医院','中国医科大学','中国康复研究中心','中国康复研究中心','中国康复研究中心','中国康复研究中心'],
-            axisPointer: {
-              type: 'shadow'
-            },
-            axisLabel: {
-              interval: 0,
-              boundaryGap: [0, 0.01],
-              formatter:function(value)
-              {
-                return value.split("").join("\n");
-              }
-            },
-          }
-        ],
-        grid: {
-          left: '10%',
-          bottom:'35%'
-        },
-        yAxis: [
-          {
-            type: 'value',
-            name: '申报人数',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: '{value} 人'
-            }
+            type: "shadow"
           },
-          {
-            type: 'value',
-            name: '当选人数',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-              formatter: '{value} 人'
+          axisLabel: {
+            interval: 0,
+            boundaryGap: [0, 0.01],
+            formatter: function(value) {
+              return value.split("").join("\n");
             }
           }
-        ],
-        series: [
-          {
-            name:'申报人数',
-            type:'bar',
-            data:[200, 160, 70, 232, 205, 76, 135, 162, 26, 200, 64, 33,200, 160, 70, 232, 205, 76, 135, 162, 26, 200, 64, 33]
-          },
-          {
-            name:'当选人数',
-            type:'line',
-            yAxisIndex: 1,
-            data:[28, 16, 20, 33, 55, 33, 44, 66, 45, 45, 6, 9,28, 16, 20, 33, 55, 33, 44, 66, 45, 45, 6, 9]
+        }
+      ],
+      grid: {
+        left: "10%",
+        bottom: "35%"
+      },
+      yAxis: [
+        {
+          type: "value",
+          name: "申报人数",
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLabel: {
+            formatter: "{value} 人"
           }
-        ]
-      };
-      // 使用刚指定的配置项和数据显示图表。
-     myChart.setOption(option2);
-     myChart2.setOption(option3);
-    },
-	}
+        },
+        {
+          type: "value",
+          name: "当选人数",
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLabel: {
+            formatter: "{value} 人"
+          }
+        }
+      ],
+      series: [
+        {
+          name: "申报人数",
+          type: "bar",
+          data: [
+            200,
+            160,
+            70,
+            232,
+            205,
+            76,
+            135,
+            162,
+            26,
+            200,
+            64,
+            33,
+            200,
+            160,
+            70,
+            232,
+            205,
+            76,
+            135,
+            162,
+            26,
+            200,
+            64,
+            33
+          ]
+        },
+        {
+          name: "当选人数",
+          type: "line",
+          yAxisIndex: 1,
+          data: [
+            28,
+            16,
+            20,
+            33,
+            55,
+            33,
+            44,
+            66,
+            45,
+            45,
+            6,
+            9,
+            28,
+            16,
+            20,
+            33,
+            55,
+            33,
+            44,
+            66,
+            45,
+            45,
+            6,
+            9
+          ]
+        }
+      ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option2);
+    myChart2.setOption(option3);
+  }
+};
 </script>
 
 <style scoped>
-.num-chart-iterm{
+.num-chart-iterm {
   display: inline-block;
   width: 180px;
 }
-.num-chart-iterm>div{
+.num-chart-iterm > div {
   margin: 0 auto;
   width: 104px;
   height: 54px;
@@ -633,16 +813,16 @@
   text-align: center;
   line-height: 70px;
 }
-.num-chart-iterm>div>span{
+.num-chart-iterm > div > span {
   font-size: 22px;
   font-weight: bold;
 }
-.num-chart-iterm>div>span.small{
+.num-chart-iterm > div > span.small {
   font-size: 18px;
 }
-.num-chart-iterm>p{
+.num-chart-iterm > p {
   background: #fff;
-  border:1px solid #ccc;
+  border: 1px solid #ccc;
   height: 20px;
   line-height: 20px;
   border-radius: 10px;
@@ -650,31 +830,31 @@
   margin: 0 auto;
   text-align: center;
 }
-.num-chart-iterm:nth-of-type(6n+1)>div{
-  border:8px solid #c24fb7;
-  color:#c24fb7;
+.num-chart-iterm:nth-of-type(6n + 1) > div {
+  border: 8px solid #c24fb7;
+  color: #c24fb7;
 }
-.num-chart-iterm:nth-of-type(6n+2)>div{
-  border:8px solid #ff9f40;
-  color:#ff9f40;
+.num-chart-iterm:nth-of-type(6n + 2) > div {
+  border: 8px solid #ff9f40;
+  color: #ff9f40;
 }
-.num-chart-iterm:nth-of-type(6n+3)>div{
-  border:8px solid #ff685f;
-  color:#ff685f;
+.num-chart-iterm:nth-of-type(6n + 3) > div {
+  border: 8px solid #ff685f;
+  color: #ff685f;
 }
-.num-chart-iterm:nth-of-type(6n+4)>div{
-  border:8px solid #25a3de;
-  color:#25a3de;
+.num-chart-iterm:nth-of-type(6n + 4) > div {
+  border: 8px solid #25a3de;
+  color: #25a3de;
 }
-.num-chart-iterm:nth-of-type(6n+5)>div{
-  border:8px solid #2dc183;
-  color:#2dc183;
+.num-chart-iterm:nth-of-type(6n + 5) > div {
+  border: 8px solid #2dc183;
+  color: #2dc183;
 }
-.num-chart-iterm:nth-of-type(6n+6)>div{
-  border:8px solid #357ab3;
-  color:#357ab3;
+.num-chart-iterm:nth-of-type(6n + 6) > div {
+  border: 8px solid #357ab3;
+  color: #357ab3;
 }
-.echart-wrapper{
+.echart-wrapper {
   padding: 60px 0 0;
 }
 </style>
