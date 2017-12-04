@@ -11,8 +11,6 @@ import NoFind from 'pages/404.vue';
 /* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
 const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
-import BooksSelect_1v1 from '../pages/home/teachingMaterial/navContent/1v1'
-import BooksSelect_1v2 from '../pages/home/teachingMaterial/navContent/1v2'
 import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
@@ -98,8 +96,6 @@ export default new Router({
             { path: 'materials', name: '通知列表', component: ApplicationList, meta: { replaceName: false } },
             {
               path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: false }, children: [
-                { path: '1v1', name: '策划编辑视图', component: BooksSelect_1v1, meta: { applicationName: '1v1' } },
-                { path: '1v2', name: '项目编辑视图', component: BooksSelect_1v2, meta: { applicationName: '1v2' } },
                 { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '职位遴选' } },
                 { path: 'result', name: '结果统计', component: Result, meta: { applicationName: 'result' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { applicationName: 'presscheck', replaceName: false } },
