@@ -17,6 +17,20 @@
         (11) file-list 数组 上传的文件列表, 例如: [{name: 'food.jpeg', url: 'http://xx/xx.jpeg'}]
 
   methods: (1) clearFiles 清空文件列表
+
+  重要对象说明：
+
+  file对象file = {
+              status: 'ready',                          //状态 ready添加新文件 success上传完成 error上传失败
+              el:this.$refs.input,                      //当前inpuet Element
+              name: '',                                 //文件名
+              size: rawFile.size,                       // 文件大小  ie9无法读取准确值
+              uid: Date.now() + this.tempIndex++,       //文件的唯一标示
+              raw: rawFile,                             //文件File对象 ie9上是inpuet Element对象
+              upload:undefined,                         // upload上传文件方法，设置了自动上传添加文件完成会自动触发一下这个方法
+              _uploadProgress:0,                        //文件上传进度 ie9下无进度
+              response:undefined                        //上传完文件的返回数据
+          };
 */
 <template>
   <div class="my-upload-components">
@@ -48,18 +62,14 @@
 
     <!--隐藏的input-->
     <div class="upload-input">
-      <form ref="form" action={this.action} target={frameName} enctype="multipart/form-data" method="POST">
-        <input
-          class="el-upload__input"
-          type="file"
-          ref="input"
-          name="file"
-          @change="handleChange"
-          accept="accept">
-        </input>
-        <span ref="data"></span>
-      </form>
-      <iframe on-load="frameOnload" ref="iframe" name="frameName" ></iframe>
+      <input
+        class="el-upload__input"
+        type="file"
+        ref="input"
+        name="file"
+        @change="handleChange"
+        accept="accept">
+      </input>
     </div>
 	</div>
 </template>
@@ -135,22 +145,18 @@
        * @param rawFile
        */
       handleRemove(file) {
-        let fileList = this.uploadFiles;
-        fileList.splice(fileList.indexOf(file), 1);
-        this.onRemove(file, fileList);
+        this.uploadFiles.splice(this.uploadFiles.indexOf(file), 1);
+        this.onRemove(file, this.uploadFiles);
         //触发on-change
-        this.onChange(file, fileList);
+        this.onChange(file, this.uploadFiles);
       },
       /**
        * 上传失败
        */
       handleUploadError(res,rawFile){
         const file = this.getFile(rawFile);
-        const fileList = this.uploadFiles;
-
         file.status = 'fail';
-
-        fileList.splice(fileList.indexOf(file), 1);
+        this.uploadFiles.splice(this.uploadFiles.indexOf(file), 1);
         this.onError(res,file,this.uploadFiles);
         this.onChange(file, this.uploadFiles);
       },
@@ -190,10 +196,13 @@
           el:this.$refs.input,
           name: isHTML5()?rawFile.name:rawFile.value.replace(/^.*?([^\/\\\r\n]+)$/, '$1'),
           size: rawFile.size,
-          percentage: 0,
           uid: Date.now() + this.tempIndex++,
           raw: rawFile,
+          upload:undefined,
           _uploadProgress:0,
+        };
+        file.upload = ()=>{
+          this.upload(file);
         };
         let fileObject = false
         if (file.fileObject === false) {
@@ -219,7 +228,6 @@
           if (this.autoUpload) this.upload(file);
           return;
         }
-
         const before = this.beforeUpload(rawFile);
         if (before && before.then) {
           before.then(processedFile => {
@@ -240,9 +248,6 @@
         }
 
 
-
-
-
       },
 
       /**
@@ -250,7 +255,6 @@
        * @param rowfile
        */
       upload(rowfile) {
-        this.$refs.input.value = null;
         let file = this.getFile(rowfile);
         if(!file || !file.raw) return;
         file.status='uploading';
@@ -503,12 +507,6 @@
         });
         return target;
       },
-      getFormNode() {
-        return this.$refs.form;
-      },
-      getFormDataNode() {
-        return this.$refs.data;
-      }
     },
     watch: {
       fileList: {
