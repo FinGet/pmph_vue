@@ -2,17 +2,19 @@
 	<div class="material-result">
     <div class="material-result-title clearfix  marginB20">
       <div class="pull-left paddingL100 result-title-tab">
-        <span class="active">申报情况统计</span>
-        <span>申报结果统计</span>
+        <span :class="{'active':isResultTotal}" @click="isResultTotal=true">申报情况统计</span>
+        <span :class="{'active':!isResultTotal}" @click="isResultTotal=false">申报结果统计</span>
       </div>
-      <div class="pull-right  result-title-tab paddingR20">
+      <!-- <div class="pull-right  result-title-tab paddingR20">
         <el-button type="text">
           <i class="fa fa-cloud-upload" aria-hidden="true"></i>
           导出
         </el-button>
-      </div>
+      </div> -->
     </div>
-    <div class="material-result-content" id="result-admin1">
+
+    <transition name="fade" mode="out-in">
+    <div class="material-result-content" v-if="isResultTotal" id="result-admin1">
       <div class="result-content-head clearfix marginB20">
         <p>申报情况统计</p>
         <div class="pull-right paddingR20">
@@ -24,7 +26,9 @@
       </div>
       <application-statistics></application-statistics>
     </div>
-    <div class="material-result-content" id="result-admin2">
+   </transition>
+    <transition name="fade" mode="out-in">
+    <div class="material-result-content" v-if="!isResultTotal" id="result-admin2">
       <div class="result-content-head clearfix marginB20">
         <p>申报结果统计</p>
         <div class="pull-right paddingR20">
@@ -36,7 +40,7 @@
       </div>
       <result-statistics></result-statistics>
     </div>
-
+    </transition>
 	</div>
 </template>
 
@@ -45,7 +49,9 @@
   import resultStatistics from './ResultStatistics.vue'
 	export default {
 		data() {
-			return {}
+			return {
+        isResultTotal:true
+      }
 		},
     components:{
       applicationStatistics,
