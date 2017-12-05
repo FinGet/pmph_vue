@@ -5,12 +5,12 @@
         <span :class="{'active':isResultTotal}" @click="isResultTotal=true">申报情况统计</span>
         <span :class="{'active':!isResultTotal}" @click="isResultTotal=false">申报结果统计</span>
       </div>
-      <div class="pull-right  result-title-tab paddingR20">
+      <!-- <div class="pull-right  result-title-tab paddingR20">
         <el-button type="text">
           <i class="fa fa-cloud-upload" aria-hidden="true"></i>
           导出
         </el-button>
-      </div>
+      </div> -->
     </div>
 
     <transition name="fade" mode="out-in">
