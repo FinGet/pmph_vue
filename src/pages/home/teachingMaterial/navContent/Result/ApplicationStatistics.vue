@@ -40,21 +40,21 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="searchParams.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model="bookParmas.bookName"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
             </div>
           </div>
           <!--表格-->
           <div class="table-wrapper">
             <el-table
-              :data="tableData"
+              :data="bookTableData"
               border
               style="width: 100%">
               <el-table-column
-                prop="xuhao"
+                prop="row"
                 label="序号"
                 align="center"
                 width="68">
@@ -64,43 +64,43 @@
                 label="书名">
               </el-table-column>
               <el-table-column
-                prop="p1"
+                prop="presetPositionEditor"
                 label="主编申报数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p2"
+                prop="presetPositionSubeditor"
                 label="副主编申报数"
                 align="center"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="p3"
+                prop="presetPositionEditorial"
                 label="编委申报数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p4"
+                prop="chosenPositionEditor"
                 label="主编当选数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p5"
+                prop="chosenPositionSubeditor"
                 label="副主编当选数"
                 align="center"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="p6"
+                prop="chosenPositionEditorial"
                 label="编委当选数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p6"
+                prop="isDigitalEditor"
                 label="数字编委当选数"
                 align="center"
                 width="136">
@@ -110,11 +110,14 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="1"
-              :page-sizes="[30,50,100, 200, 300, 400]"
-              :page-size="30"
+              v-if="bookTotal>bookParmas.pageSize"
+              @size-change="bookSizeChange"
+              @current-change="bookCurrentChange"
+              :page-sizes="[10,20,30, 50, 100]"
+              :page-size="bookParmas.pageSize"
+              :current-page="bookParmas.pageNumber"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="300">
+              :total="bookTotal">
             </el-pagination>
           </div>
           <div class="echart-wrapper" ref="echart_wrapper">
@@ -129,61 +132,68 @@
             <div class="searchBox-wrapper">
               <div class="searchName">学  校  名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="searchParams.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model="schoolParams.schoolName"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right"  @click="sortType=!sortType">{{!sortType?'按当选数排序':'按申报数排序'}}</el-button>
           </div>
           <!--表格-->
           <div class="table-wrapper">
             <el-table
-              :data="tableData2"
+              :data="schoolTableData"
               border
               style="width: 100%">
               <el-table-column
-                prop="xuhao"
+                prop="row"
                 label="序号"
                 align="center"
                 width="68">
               </el-table-column>
               <el-table-column
-                prop="bookName"
+                prop="schoolName"
                 label="申报学校">
               </el-table-column>
               <el-table-column
-                prop="p1"
+                prop="presetPositionEditor"
                 label="主编申报数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p2"
+                prop="presetPositionSubeditor"
                 label="副主编申报数"
                 align="center"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="p3"
+                prop="presetPositionEditorial"
                 label="编委申报数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p4"
+                prop="chosenPositionEditor"
                 label="主编当选数"
                 align="center"
                 width="110">
               </el-table-column>
               <el-table-column
-                prop="p5"
+                prop="chosenPositionSubeditor"
                 label="副主编当选数"
                 align="center"
                 width="120">
               </el-table-column>
               <el-table-column
-                prop="p6"
+                prop="chosenPositionEditorial"
+                label="编委当选数"
+                align="center"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="isDigitalEditor"
                 label="数字编委当选数"
                 align="center"
                 width="136">
@@ -193,11 +203,14 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="1"
-              :page-sizes="[30,50,100, 200, 300, 400]"
-              :page-size="30"
+              v-if="schoolTotal>schoolParams.pageSize"
+              @size-change="schoolSizeChange"
+              @current-change="schoolCurrentChange"
+              :page-sizes="[10,20,30, 50,100]"
+              :page-size="schoolParams.pageSize"
+              :current-page="schoolParams.pageNumber"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="300">
+              :total="schoolTotal">
             </el-pagination>
           </div>
           <div class="echart-wrapper">
@@ -215,12 +228,28 @@ import echarts from "../../../../../../static/echarts/echarts.common.min";
 export default {
   data() {
     return {
-      activeName: "school",
+      activeName: "bookName",
       totalChartUrl:'/pmpheep/decPosition/result/count',    //申报情况url
+      schoolSituationUrl:'/pmpheep/decPosition/list'   ,  //学校统计URL
+      bookSituationUrl:'/pmpheep/decPosition/list/bookResults',   //书名统计URL
       materialId:'',
-      searchParams: {
-        bookName: ""
+      sortType:true,   //排序方式 true 按当选数排序  false 按申报数排序
+      schoolParams:{
+        pageNumber:1,
+        pageSize:10,
+        materialId:'',
+        schoolName:''
       },
+      schoolTotal:1,
+      schoolTableData:[],
+      bookParmas:{
+        pageNumber:1,
+        pageSize:10,
+        materialId:'',
+        bookName:''
+      },
+      bookTotal:1,
+      bookTableData:[],
       situationCount:{
             schoolDeclarationCount:0, //院校申报总数
             schoolDeclarationAverage:0, //院校申报平均数
@@ -228,6 +257,7 @@ export default {
             subEditorCount:0,      //副主编申报总数
             editorialCount:0      //编委申报总数
       },
+
       tableData2: [
         {
           xuhao: 1,
@@ -415,9 +445,15 @@ export default {
     };
   },
   created(){
-  console.log(this.$route)
-  this.materialId=this.$route.params.materialId;
+  this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
   this.getTotalChartData();
+
+  this.getSchoolTableData();
+  },
+  watch:{
+     sortType(){
+       this.getSchoolTableData();
+     }
   },
   methods: {
     /* 获取申报情况统计total */
@@ -427,11 +463,54 @@ export default {
           materialId:this.materialId
         }
       }).then((res)=>{
-        console.log(res);
+        //console.log(res);
         if(res.data.code==1){
           this.situationCount=res.data.data;
         }
       })
+    },
+    /* 获取学校申报情况统计数据 */
+    getSchoolTableData(){
+     this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
+       params:this.schoolParams
+     }).then((res)=>{
+       console.log(res);
+       if(res.data.code==1){
+         this.schoolTotal=res.data.data.total;
+           this.schoolTableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 获取按书名统计申报情况 */
+    getBookTableData(){
+     this.$axios.get(this.bookSituationUrl,{
+       params:this.bookParmas
+     }).then((res)=>{
+       console.log(res)
+       if(res.data.code==1){
+         this.bookTotal=res.data.data.total;
+         this.bookTableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 分页切换 */
+    schoolSizeChange(val){
+     this.schoolParams.pageSize=val;
+     this.schoolParams.pageNumber=1;
+     this.getSchoolTableData();
+    },
+    schoolCurrentChange(val){
+      this.schoolParams.pageNumber=val;
+      this.getSchoolTableData();
+    },
+    bookSizeChange(val){
+      this.bookParmas.pageSize=val;
+      this.bookParmas.pageNumber=1;
+      this.getBookTableData();
+    },
+    bookCurrentChange(val){
+      this.bookParmas.pageNumber=val;
+      this.getBookTableData();
     },
     /**
        * 获取表格数据

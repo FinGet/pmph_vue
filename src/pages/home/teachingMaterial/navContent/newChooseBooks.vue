@@ -333,6 +333,12 @@ export default {
           show: true
         },
         {
+          name: "数字编委遴选",
+          key:'material.isMultiPosition',
+          usecheck: false,
+          show: true
+        },
+        {
           name: "主要学习经历",
           key:'material.isEduExpUsed',
           requiredKey:'material.isEduExpRequired',
