@@ -115,16 +115,17 @@
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-upload
+        <my-upload
           ref="upload"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-change="filechange"
-          :show-file-list="false"
-          :auto-upload="false">
+          action="/pmpheep/group/add/pmphGroupFile"
+          :data="filePostData"
+          :before-upload="beforeUploadFile"
+          :on-success="uploadFileSuceess"
+          :show-file-list="false">
           <el-button type="primary" :disabled="groupSelection.length==0" class="relative">
             上传文件
           </el-button>
-        </el-upload>
+        </my-upload>
 
       </span>
     </el-dialog>
@@ -199,6 +200,12 @@
         console.log(list);
         return list;
       },
+      filePostData(){
+        let obj = {};
+        obj.ids = this.uploadFileData.ids;
+        obj.sessionId = this.uploadFileData.sessionId;
+        return obj;
+      }
     },
     methods: {
       /**
@@ -334,53 +341,49 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(file){
+      beforeUploadFile(file){
+        let flag = true;
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         if(!filedata||!ext){
-          return;
+          flag = false;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
-          return;
+          flag = false;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
           self.newGroupData.filename=undefined;
-          return;
+          flag = false;
         }
-        var formdata = new FormData();
-        formdata.append('file',filedata);
-        formdata.append('ids',this.uploadFileData.ids);
-        formdata.append('sessionId',this.uploadFileData.sessionId);
-        let config = {
-          headers:{'Content-Type':'multipart/form-data'}
-        };  //添加请求头
-        this.$axios.post('/pmpheep/group/add/pmphGroupFile',formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              this.getFilelistData();
-              this.dialogChooseGroup=false;
-            }else{
-              this.$message.error(res.msg.msgTrim());
-            }
-          })
-          .catch((error) => {
-            this.$message.error('上传文件失败，请重试');
-          });
+        return flag;
+      },
+      /**
+       * 上传文件成功钩子函数
+       * @param response
+       * @param file
+       * @param fileList
+       */
+      uploadFileSuceess(response, file, fileList){
+        if (response.code == '1') {
+          this.getFilelistData();
+          this.dialogChooseGroup=false;
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
       },
       /**
        * 分页每页显示条数发生改变

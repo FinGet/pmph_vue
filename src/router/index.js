@@ -14,11 +14,11 @@ import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
 import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
+import PressCheck_pmph from '../pages/home/teachingMaterial/navContent/pressCheck-pmph'
 import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
 import BookList from '../pages/home/teachingMaterial/navContent/BookList'
 import Notice from '../pages/home/teachingMaterial/navContent/Notice'
 import Chief from '../pages/home/teachingMaterial/navContent/Chief'
-import preSelect from '../pages/home/teachingMaterial/navContent/preSelect'
 import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
 import ApplicationSchoolQuery from 'pages/home/teachingMaterial/navContent/SchoolQuery'
 import Result from 'pages/home/teachingMaterial/navContent/Result/index'
@@ -99,11 +99,11 @@ export default new Router({
                 { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '职位遴选' } },
                 { path: 'result', name: '结果统计', component: Result, meta: { applicationName: 'result' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { applicationName: 'presscheck', replaceName: false } },
+                { path: 'presscheck-pmph', name: '申报出版社的单位', component: PressCheck_pmph, meta: { applicationName: 'presscheck-pmph' } },
                 { path: 'newchoosebooks', name: '新建通知', component: NewChooseBooks, meta: {  } },
                 { path: 'book-list', name: '设置书目录', component: BookList, meta: { isShowTags: true } },
                 { path: 'expertinfo', name: '专家信息', component: ExpertInfo },
                 { path: 'chief', name: '遴选主编/副主编', component: Chief, meta: { replaceName: '遴选' },},
-                { path: 'pre-select', name: '预选编委', component: preSelect },
                 { path: 'applicationschoolquery', name: '教材申报选择学校', component: ApplicationSchoolQuery, meta: { isShowTags: true } },
                 { path: 'set-topic', name: '设置选题号', component: SetTopicNum, meta: { isShowTags: true }  },
                 { path: 'notice', name: '通知详情', component: Notice , meta: { isShowTags: true,hideTabs:true},},

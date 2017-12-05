@@ -6,7 +6,7 @@
       <div class="paddingB10 text-right print-none">
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
         <el-button type="primary" @click="confirmPaperList">确认收到纸质表</el-button>
-        <el-button type="warning">退回</el-button>
+        <el-button type="warning">退回给个人</el-button>
         <el-button type="primary">通过</el-button>
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
@@ -18,7 +18,7 @@
         <div>
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
-            <div  v-if="!iterm.chosenPosition&&!iterm.isDigitalEditor">
+            <div  v-if="iterm.newCreated || (!iterm.chosenPosition&&!iterm.isDigitalEditor)">
               <div v-if="iterm.isNew">
                 <div class="searchBox-wrapper marginR20">
                   <div class="searchName">图书：<span></span></div>
@@ -42,17 +42,19 @@
                 <div class="info-iterm-text widthAuto marginL10">
                   <div>教学大纲：<span></span></div>
                   <div class="ellipsis">
-                    <el-upload
-                      v-if="!iterm.fileName"
+                    <my-upload
+                      v-if="!iterm.syllabusName||iterm.fileUploading"
                       class="upload"
                       ref="upload"
-                      action="https://jsonplaceholder.typicode.com/posts/"
-                      :on-change="uploadFile"
-                      :show-file-list="false"
-                      :auto-upload="false">
-                      <el-button size="small" type="primary" @click="uploadBtnClick(index)">点击上传</el-button>
-                    </el-upload>
-                    <span class="link" :title="iterm.fileName" v-if="iterm.fileName">{{iterm.fileName}}</span>
+                      :action="api_file_uploadurl"
+                      :file-list="iterm.fileList"
+                      :on-change="uploadChange"
+                      :before-upload="beforeUpload"
+                      :on-success="uploadSuccess"
+                      :show-file-list="false">
+                      <el-button size="small" type="primary" @click="uploadBtnClick(index)" :loading="iterm.fileUploading">点击上传</el-button>
+                    </my-upload>
+                    <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
                 <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
@@ -541,6 +543,7 @@
               api_book_list:'/pmpheep/textBook/list',
               api_update_book:'/pmpheep/declaration/list/declaration/saveBooks',
               api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
+              api_file_uploadurl:'/pmpheep/messages/message/file',
               searchFormData:{
                 declarationId:'',
                 materialId:'',
@@ -615,6 +618,7 @@
           var initObj = {
             id:'',
             isNew:true,
+            newCreated:true,
             declarationId:'',
             textbookId:'',
             textbookName:'',
@@ -622,6 +626,8 @@
             presetPosition_temp:3,
             isDigitalEditor:false,
             fileName:'',
+            syllabusName:'',
+            fileUploading:false,
             file:undefined
           }
           this.addBookList.push(initObj);
@@ -659,20 +665,25 @@
           }
 
           //准备上传数据
-          let formData = new FormData();
+          let formData = {};
           this.addBookList.forEach((iterm,index)=>{
-            let isDigitalEditor = iterm.presetPosition_temp==4;
-            formData.append('list['+index+'].'+'id',iterm.id);
-            formData.append('list['+index+'].'+'declarationId',this.searchFormData.declarationId);
-            formData.append('list['+index+'].'+'textbookId',iterm.textbookId);
-            formData.append('list['+index+'].'+'presetPosition',iterm.presetPosition);
-            formData.append('list['+index+'].'+'isDigitalEditor',!!iterm.isDigitalEditor);
-            formData.append('list['+index+'].'+'file',iterm.file?iterm.file:'');
+            if(iterm.newCreated){
+              if(iterm.presetPosition_temp==4){
+                iterm.presetPosition = 0;
+                iterm.isDigitalEditor = true;
+              }else{
+                iterm.isDigitalEditor = false;
+                iterm.presetPosition =iterm.presetPosition_temp;
+              }
+            }
+            formData['list['+index+'].'+'id']=iterm.id;
+            formData['list['+index+'].'+'declarationId']=this.searchFormData.declarationId;
+            formData['list['+index+'].'+'textbookId']=iterm.textbookId;
+            formData['list['+index+'].'+'presetPosition']=iterm.presetPosition;
+            formData['list['+index+'].'+'isDigitalEditor']=iterm.isDigitalEditor;
+            formData['list['+index+'].'+'file']=iterm.filePath?iterm.filePath:'';
           });
-          let config = {
-            headers:{'Content-Type':'multipart/form-data'}
-          };
-          this.$axios.post(this.api_update_book,formData,config)
+          this.$axios.post(this.api_update_book,this.$commonFun.initPostData(formData))
             .then(response=>{
               var res = response.data;
               if(res.code==1){
@@ -693,9 +704,13 @@
          * @param file
          * @param fileList
          */
-        uploadFile(file){
+        uploadChange(file,fileList){
           var filedata = file.raw;
           var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+
+          if(this.addBookList[this.currentUploadFileBookIndex].hasHandleFileUid){
+            return;
+          }
           if(!filedata||!ext){
             return;
           }
@@ -717,12 +732,52 @@
           // 判断文件大小是否符合 文件不大于100M
           if(file.size/1024/1024 > 100){
             this.$message.error("文件大小不能超过100M！");
-            self.newGroupData.filename=undefined;
+            self.newGroupData.syllabusName=undefined;
             return;
           }
           //赋值
           this.addBookList[this.currentUploadFileBookIndex].file = filedata;
-          this.addBookList[this.currentUploadFileBookIndex].fileName = file.name;
+          this.addBookList[this.currentUploadFileBookIndex].syllabusName = file.name;
+          this.addBookList[this.currentUploadFileBookIndex].hasHandleFileUid = file.uid;
+          this.addBookList[this.currentUploadFileBookIndex].fileUploading = true;
+          console.log(this.addBookList[this.currentUploadFileBookIndex])
+        },
+        beforeUpload(file){
+          const ext = file.name.substring(file.name.lastIndexOf('.')+1);
+          console.log(file)
+          const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
+          const nameLen = file.name.length <= 40;
+          //文件名不超过40个字符
+          if(file.name.length>40){
+            this.$message.error("文件名不能超过40个字符");
+            return false;
+          }
+          if (file.size / 1024 / 1024==0) {
+            this.$message.error('上传文件大小不能小于 0kb!');
+            return false;
+          }
+          if (file.size / 1024 / 1024>100) {
+            this.$message.error('文件大小不能超过100M！');
+            return false;
+          }
+          if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
+            this.$message.error('上传文件不能是可执行文件!');
+            return false;
+          }
+          if (!nameLen) {
+            this.$message.error('上传文件名字长度不能超过80个字符!');
+            return false;
+          }
+          return isLt0M&&nameLen&&!(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif')
+        },
+        uploadSuccess(response, file, fileList){
+          this.addBookList.forEach(iterm=>{
+            if(iterm.hasHandleFileUid == file.uid){
+              iterm.fileUploading=false;
+              iterm.filePath = response.data;
+              console.log('file',iterm)
+            }
+          })
         },
         /**
          * 点击上传按钮就把当前index 赋值给currentUploadFileBookIndex

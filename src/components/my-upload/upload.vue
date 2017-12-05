@@ -137,6 +137,7 @@
         uploadFiles: [],
         frameName:'',
         currentUploadFile:null,
+        postData:{},
       }
 		},
     methods:{
@@ -233,7 +234,7 @@
           if (this.autoUpload) this.upload(file);
           return;
         }
-        const before = this.beforeUpload(rawFile);
+        const before = this.beforeUpload(file);
         if (before && before.then) {
           before.then(processedFile => {
             if (Object.prototype.toString.call(processedFile) === '[object File]') {
@@ -270,12 +271,11 @@
         }
 
 
-
         let formdata = new FormData();
         formdata.append('file',file.raw);
         //导入附加参数
-        for(let key in this.data){
-          formdata.append(key,this.data[key]);
+        for(let key in this.postData){
+          formdata.append(key,this.postData[key]);
         }
 
         this.$axios({
@@ -335,8 +335,8 @@
 
         let value
         let input
-        for (let key in this.data) {
-          value = file.data[key]
+        for (let key in this.postData) {
+          value = this.postData[key]
           if (value && typeof value === 'object' && typeof value.toString !== 'function') {
             value = JSON.stringify(value)
           }
@@ -523,13 +523,23 @@
             return item;
           });
         }
-      }
+      },
+      data:{
+        immediate: true,
+        handler(data) {
+          for(var key in data){
+            this.postData[key] = data[key]
+          }
+        }
+      },
     },
     created(){
       this.fileList.forEach(iterm=>{
         this.uploadFiles.push(iterm);
       });
-      this.frameName = 'frame-' + Date.now();
+      for(var key in this.data){
+        this.postData[key] = this.data[key]
+      }
     },
     mounted(){
 

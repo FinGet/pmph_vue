@@ -9,15 +9,18 @@
             </el-tooltip>
             <!--上传文件按钮-->
             <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
-            <el-upload
+            <my-upload
               class="fileInput"
               ref="upload"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="/pmpheep/group/update/pmphGroupDetail"
+              :data="groupPostData"
               :on-change="filechange"
+              :on-success="upLoadFileSuccess"
+              :on-error="uploadError"
               :show-file-list="false"
               :auto-upload="false">
               <el-button class="fileInput">上传</el-button>
-            </el-upload>
+            </my-upload>
             <div ref="headImageWrapper" v-show="groupData.filename">
               <img :src="DEFAULT_USER_IMAGE" class="avatar">
             </div>
@@ -53,6 +56,7 @@
           filename:undefined,
           groupName:null,
           groupImage:null,
+          currentFile:undefined
         },
         rules:{
           groupName:[
@@ -66,6 +70,13 @@
       currentGroupId(){
         return this.currentGroup.id;
       },
+      groupPostData(){
+        let obj = {};
+        obj.id = this.currentGroupId;
+        obj.groupName = this.groupData.groupName;
+        obj.sessionId = this.$getUserData().sessionId;
+        return obj
+      }
     },
     methods: {
       /**
@@ -102,12 +113,18 @@
           return;
         }
 
-        var reader = new FileReader();
-        reader.onload = function(evt) {
-          self.groupData.filename=file.raw;
-          prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+        self.groupData.currentFile = file;
+        if(window.FileReader){
+          let reader = new FileReader();
+          reader.onload = function(evt) {
+            self.groupData.filename=file.name;
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+          }
+          reader.readAsDataURL(file.raw);
+        }else{
+          self.groupData.filename=file.name;
+          prevDiv.innerHTML='<div class="avatar" style="height:100px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\)\';"></div>';
         }
-        reader.readAsDataURL(file.raw);
       },
       /**
        * 修改小组
@@ -125,33 +142,51 @@
               return false;
             }
             let self= this;
-            var filedata = this.groupData.filename?this.groupData.filename:'';
-            var formdata = new FormData();
-            formdata.append('file',filedata);
-            formdata.append('id',this.currentGroup.id);
-            formdata.append('groupName',this.groupData.groupName);
-            formdata.append('sessionId',this.$getUserData().sessionId);
+            if(this.groupData.currentFile){
+              this.groupData.currentFile.upload();
+            }else{
+              this.$axios.post('/pmpheep/group/update/pmphGroupDetail',this.$commonFun.initPostData({
+                file:'',
+                id:this.currentGroup.id,
+                groupName:this.groupData.groupName,
+                sessionId:this.$getUserData().sessionId
+              }))
+                .then((response) => {
+                  let res = response.data;
+                  if (res.code == '1') {
+                    self.$message.success('修改小组成功');
+                    //修改成功通过vue bus派发一个事件
+                    bus.$emit('group:info-change')
+                  }else{
+                    self.$message.error(res.msg.msgTrim());
+                  }
+                })
+                .catch((error) => {
+                  self.$message.error('修改小组失败，请重试');
+                });
+            }
 
-            let config = {
-              headers:{'Content-Type':'multipart/form-data'}
-            };  //添加请求头
-            this.$axios.post('/pmpheep/group/update/pmphGroupDetail',formdata,config)
-              .then((response) => {
-                let res = response.data;
-                if (res.code == '1') {
-                  self.$message.success('修改小组成功');
-                  //修改成功通过vue bus派发一个事件
-                  bus.$emit('group:info-change')
-                }else{
-                  self.$message.error(res.msg.msgTrim());
-                }
-              })
-              .catch((error) => {
-                self.$message.error('修改小组失败，请重试');
-              });
           })
           .catch(e=>{})
 
+      },
+      /**
+       * 创建小组请求成功的回调
+       */
+      upLoadFileSuccess(response, file, fileList){
+        if (response.code == '1') {
+          this.$message.success('修改小组成功');
+          //修改成功通过vue bus派发一个事件
+          bus.$emit('group:info-change')
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
+      },
+      /**
+       * 创建小组请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        this.$message.error('修改小组失败，请重试');
       },
       /**
        * 解散小组

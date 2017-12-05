@@ -58,15 +58,18 @@
                 <!--上传文件按钮-->
                 <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
 
-                <el-upload
+                <my-upload
                   class="fileInput"
                   ref="upload"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                  action="/pmpheep/group/add"
+                  :data="creadGroupPostData"
                   :on-change="filechange"
+                  :on-success="upLoadFileSuccess"
+                  :on-error="uploadError"
                   :show-file-list="false"
                   :auto-upload="false">
                   <el-button class="fileInput">上传</el-button>
-                </el-upload>
+                </my-upload>
                 <div ref="headImageWrapper" v-show="newGroupData.filename">
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
@@ -76,7 +79,7 @@
               </div>
             </el-form-item>
             <el-form-item label="小组名称：" prop="name">
-              <el-input v-model="newGroupData.name" placeholder="请输入小组名称" @keyup.enter.native="createNewGroup"></el-input>
+              <el-input v-model.trim="newGroupData.name" placeholder="请输入小组名称" @keyup.enter.native="createNewGroup"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -103,12 +106,20 @@
          groupListData:[],
          newGroupData:{
            filename:undefined,
-           name:null
+           name:'',
+           currentFile:undefined
          },
          rules:{
            name:[this.$formRules.required('小组名不能为空','blur'),this.$formRules.name()]
          },
        }
+    },
+    computed:{
+      creadGroupPostData(){
+        let obj = {};
+        obj.groupName = this.newGroupData.name?this.newGroupData.name:'';
+        return obj
+      }
     },
     components:{
       beautyScroll
@@ -195,12 +206,37 @@
           self.newGroupData.filename=undefined;
           return;
         }
-        var reader = new FileReader();
-        reader.onload = function(evt) {
-          self.newGroupData.filename=file.raw;
-          prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+        self.newGroupData.currentFile = file;
+        if(window.FileReader){
+          let reader = new FileReader();
+          reader.onload = function(evt) {
+            self.newGroupData.filename=file.name;
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+          }
+          reader.readAsDataURL(file.raw);
+        }else{
+          self.newGroupData.filename=file.name;
+          prevDiv.innerHTML='<div class="avatar" style="height:100px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\)\';"></div>';
         }
-        reader.readAsDataURL(file.raw);
+
+      },
+      /**
+       * 创建小组请求成功的回调
+       */
+      upLoadFileSuccess(response, file, fileList){
+        if (response.code == '1') {
+          this.$message.success('创建小组成功');
+          this.getGroupData();
+          this.dialogVisible=false;
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
+      },
+      /**
+       * 创建小组请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        self.$message.error('创建小组失败');
       },
       /**
        * 创建小组
@@ -212,31 +248,29 @@
           return false;
         }
         let self= this;
-        var filedata = this.newGroupData.filename?this.newGroupData.filename:'';
-        var formdata = new FormData();
-        console.log(filedata);
-        formdata.append('file',filedata);
-        formdata.append('groupName',this.newGroupData.name);
-
-        let config = {
-          headers:{'Content-Type':'multipart/form-data'}
-        };  //添加请求头
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            this.$axios.post('/pmpheep/group/add',formdata,config)
-              .then((response) => {
-                let res = response.data;
-                if (res.code == '1') {
-                  self.$message.success('创建小组成功');
-                  self.getGroupData();
-                  self.dialogVisible=false;
-                }else{
-                  self.$message.error(res.msg.msgTrim());
-                }
-              })
-              .catch((error) => {
-                self.$message.error('创建小组失败');
-              });
+            if(this.newGroupData.currentFile) {
+              this.newGroupData.currentFile.upload();
+            }else{
+              this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
+                file:'',
+                groupName:this.newGroupData.name
+              }))
+                .then((response) => {
+                  let res = response.data;
+                  if (res.code == '1') {
+                    self.$message.success('创建小组成功');
+                    self.getGroupData();
+                    self.dialogVisible=false;
+                  }else{
+                    self.$message.error(res.msg.msgTrim());
+                  }
+                })
+                .catch((error) => {
+                  self.$message.error('创建小组失败');
+                });
+            }
           } else {
             self.$message.error('请完善表单后再添加！');
             return false;

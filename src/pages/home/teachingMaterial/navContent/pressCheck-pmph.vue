@@ -45,12 +45,12 @@
           </div>
         </div>
         <!--申报单位搜索-->
-        <div class="searchBox-wrapper">
-          <div class="searchName">申报单位：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>
-          </div>
-        </div>
+        <!--<div class="searchBox-wrapper">-->
+          <!--<div class="searchName">申报单位：<span></span></div>-->
+          <!--<div class="searchInput">-->
+            <!--<el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>-->
+          <!--</div>-->
+        <!--</div>-->
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报职务：<span></span></div>
@@ -192,13 +192,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" width="160">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" width="160" >
+        <el-table-column label="职务/职称" min-width="190" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
@@ -211,9 +211,9 @@
           </template>
         </el-table-column>
         <el-table-column label="所选书籍与职务">
-          <template scope="scope">
-            <p v-html="scope.row.chooseBooksAndPostions"></p>
-          </template>
+            <template scope="scope">
+              <p v-html="scope.row.chooseBooksAndPostions"></p>
+            </template>
         </el-table-column>
         <el-table-column label="学校审核">
           <template scope="scope">
@@ -257,9 +257,9 @@
           {
             value:1,
             label:'书名'
-          },{
-            value:2,
-            label:'申报单位'
+//          },{
+//            value:2,
+//            label:'申报单位'
           },{
             value:3,
             label:'职务'
@@ -281,7 +281,7 @@
           },
 
         ],
-        powerSearchValue:2,
+        powerSearchValue:0,
         positionValue:[{
           value:'',
           label:'全部'
@@ -325,7 +325,7 @@
           position:'',
           title:'',
           orgName:'',
-          unitName:'',
+          unitName:'人民卫生出版社',
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
