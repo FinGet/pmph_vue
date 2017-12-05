@@ -64,7 +64,7 @@ import messageDetail from 'components/message-detail'
 export default {
   data: function() {
     return {
-      fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
+      fileUploadUrl:'/pmpheep/messages/message/file',
       currentMessageType:'add',
       currentMessageId:undefined,
       messageForm:{

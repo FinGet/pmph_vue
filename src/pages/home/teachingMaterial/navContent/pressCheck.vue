@@ -192,13 +192,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="160">
+        <el-table-column label="申报单位/工作单位" width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" min-width="190" >
+        <el-table-column label="职务/职称" width="160" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
@@ -210,7 +210,10 @@
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column prop="chooseBooksAndPostions" label="所选书籍与职务">
+        <el-table-column label="所选书籍与职务">
+          <template scope="scope">
+            <p v-html="scope.row.chooseBooksAndPostions"></p>
+          </template>
         </el-table-column>
         <el-table-column label="学校审核">
           <template scope="scope">

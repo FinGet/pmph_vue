@@ -33,15 +33,18 @@
     <div class="ChatInput" :class="{active:textAreaIsFocus}">
       <div class="ChatInputTool">
         <div>
-          <el-upload
+          <my-upload
+            v-if="!fileUploading"
             class="ChatInputFileBtn"
             ref="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-change="uploadFile"
-            :show-file-list="false"
-            :auto-upload="false">
+            :data="filePostData"
+            action="/pmpheep/group/add/pmphGroupFile"
+            :before-upload="beforeUploadFile"
+            :on-success="uploadFileSuceess"
+            :show-file-list="false">
             <i class="fa fa-paperclip fa-lg"></i>
-          </el-upload>
+          </my-upload>
+          <i class="fa fa-spinner fa-pulse" v-else></i>
         </div>
         <div class="pull-right"></div>
       </div>
@@ -82,6 +85,7 @@
           pageNumber:1,
           createTime:+(new Date()),
         },
+        fileUploading:false,
       }
 		},
     computed:{
@@ -90,6 +94,12 @@
       },
       groupId(){
           return this.currentGroup.id;
+      },
+      filePostData(){
+        let obj = {};
+        obj.ids = this.currentGroup.id;
+        obj.sessionId = this.$getUserData().sessionId;
+        return obj;
       }
     },
     methods:{
@@ -127,54 +137,50 @@
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
        */
-      uploadFile(file){
+      beforeUploadFile(file){
+        let flag = true;
         let self= this;
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         if(!filedata||!ext){
-          return;
+          flag = false;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
           this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
-          return;
+          flag = false;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
-          return;
+          flag = false;
         }
-        var formdata = new FormData();
-        formdata.append('file',filedata);
-        formdata.append('ids',this.currentGroup.id);
-        formdata.append('sessionId',this.$getUserData().sessionId);
-        let config = {
-          headers:{'Content-Type':'multipart/form-data'}
-        };  //添加请求头
-        this.$axios.post('/pmpheep/group/add/pmphGroupFile',formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-
-            }else{
-              self.$message.error(res.msg.msgTrim());
-              file.value='';
-            }
-          })
-          .catch((error) => {
-            self.$message.error('上传文件失败，请重试');
-            file.value='';
-          });
+        console.log(flag)
+        this.fileUploading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件成功钩子函数
+       * @param response
+       * @param file
+       * @param fileList
+       */
+      uploadFileSuceess(response, file, fileList){
+        if (response.code == '1') {
+          this.fileUploading=false;
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
       },
       /**
        * 获取小组聊天历史消息
