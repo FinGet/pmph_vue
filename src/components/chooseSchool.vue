@@ -19,7 +19,7 @@
       <!--选择区域-->
       <div class="clearfix">
         <div class="justify-align">
-          学校导入：&nbsp;&nbsp;<span></span>
+          学校导入：&nbsp;&nbsp;
         </div>
         <div>
         <span class="grey_span lineheight-36">
@@ -27,21 +27,22 @@
           <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
         </span>
-          <el-upload
+          <my-upload
             class="ChatInputFileBtn lineheight-36 inline-block"
             ref="upload"
-            action="/pmpheep/textBook/import/textbook"
-            :on-change="_uploadFile"
-            :show-file-list="false"
-            :auto-upload="false">
+            :action="api_upload"
+            :before-upload="beforeUploadFile"
+            :on-success="upLoadFileSuccess"
+            :on-error="uploadError"
+            :show-file-list="false">
             <el-button size="small" type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击上传'}}</el-button>
-          </el-upload>
+          </my-upload>
         </div>
       </div>
 
       <div class="clearfix">
         <div class="justify-align">
-          快速选择：&nbsp;&nbsp;<span></span>
+          快速选择：&nbsp;&nbsp;
         </div>
         <div>
           <el-button type="default" size="small" @click="dialogVisible=true" icon="plus" v-if="historyData.length==0">历史教材通知</el-button>
@@ -60,7 +61,7 @@
       <!--选择区域-->
       <div class="clearfix">
         <div class="justify-align">
-          区域：&nbsp;&nbsp;<span></span>
+          区 域：&nbsp;&nbsp;
         </div>
         <div>
           <el-select v-model="select_provinces" multiple  placeholder="全部" class="select_provinces">
@@ -76,7 +77,7 @@
       <!--选择机构类型-->
       <div class="clearfix marginB20">
         <div class="justify-align">
-          机构类型：&nbsp;&nbsp;<span></span>
+          机构类型：&nbsp;&nbsp;
         </div>
         <div>
           <el-checkbox class="marginR30"
@@ -519,67 +520,65 @@
        * @param file
        * @private
        */
-      _uploadFile(file){
+      beforeUploadFile(file){
+        let flag = true;
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
           this.$message.error("请按照模板格式的文档上传文件");
-          return;
+          flag = false;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
-          return;
+          flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
           this.$message.error("文件大小不能超过100M！");
-          return;
+          flag = false;
         }
 
-        var formdata = new FormData();
-        formdata.append('file',filedata);
-        let config = {//添加请求头
-          headers:{'Content-Type':'multipart/form-data'}
-        };
-
-        //开启loading
-        this.uploadLoading = true;
-        this.$axios.post(this.api_upload,formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              //将匹配到的学校选中
-              res.data.forEach(iterm=>{
-                this.area_school.forEach(item1=>{
-                  item1.schoolList.forEach(iterm2=>{
-                    if(iterm2.name==iterm.orgName){
-                      if(!item1.checkedSchools.includes(iterm2.id)){
-                        item1.checkedSchools.push(iterm2.id);
-                        item1.checkAll = item1.checkedSchools.length === item1.schoolList.length;
-                        item1.isIndeterminate = item1.checkedSchools.length > 0 && item1.checkedSchools.length < item1.schoolList.length;
-                      }
-                    }
-                  })
-                })
-              });
-            }else{
-              this.$message.error(res.msg.msgTrim());
-            }
-
-            this.uploadLoading = false;
-          })
-          .catch((error) => {
-            console.log(error);
-            this.$message.error('上传文件失败，请重试');
-            this.uploadLoading = false;
+        this.uploadLoading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件请求成功的回调
+       */
+      upLoadFileSuccess(res, file, fileList){
+        if (res.code == '1') {
+          //将匹配到的学校选中
+          res.data.forEach(iterm=>{
+            this.area_school.forEach(item1=>{
+              item1.schoolList.forEach(iterm2=>{
+                if(iterm2.name==iterm.orgName){
+                  if(!item1.checkedSchools.includes(iterm2.id)){
+                    item1.checkedSchools.push(iterm2.id);
+                    item1.checkAll = item1.checkedSchools.length === item1.schoolList.length;
+                    item1.isIndeterminate = item1.checkedSchools.length > 0 && item1.checkedSchools.length < item1.schoolList.length;
+                  }
+                }
+              })
+            })
           });
+        }else{
+          this.$message.error(res.msg.msgTrim());
+        }
+        console.log(12312312);
+        this.uploadLoading = false;
+      },
+      /**
+       * 上传文件请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        this.$message.error('上传文件失败，请重试');
+        this.uploadLoading = false;
       },
     },
     watch:{
