@@ -1,10 +1,6 @@
 <template>
 	<div class="applicationStatistics">
-    <el-tabs v-model="activeName" @tab-click="handleTabsClick">
-      <el-tab-pane label="按书名统计" name="bookName">
-        <div class="applicationStatistics-byBookName">
-
-          <div class="total-chart paddingT30 paddingB30">
+    <div class="total-chart paddingT30 paddingB30">
             <div class="num-chart-iterm">
               <div>
                 <span>{{situationCount.schoolDeclarationCount}}</span>
@@ -36,6 +32,9 @@
               <p>编委申报总数</p>
             </div>
           </div>
+    <el-tabs v-model="activeName" @tab-click="handleTabsClick">
+      <el-tab-pane label="按书名统计" name="bookName">
+        <div class="applicationStatistics-byBookName">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
@@ -125,38 +124,6 @@
       </el-tab-pane>
       <el-tab-pane label="按学校统计" name="school">
         <div class="applicationStatistics-bySchool">
-          <div class="total-chart paddingT30 paddingB30">
-            <div class="num-chart-iterm">
-              <div>
-                <span>{{situationCount.schoolDeclarationCount}}</span>
-              </div>
-              <p>院校申报总数</p>
-            </div>
-            <div class="num-chart-iterm">
-              <div>
-                <span>{{situationCount.schoolDeclarationAverage}}</span>
-              </div>
-              <p>院校申报平均数</p>
-            </div>
-            <div class="num-chart-iterm">
-              <div>
-                <span>{{situationCount.editorCount}}</span>
-              </div>
-              <p>主编申报总数</p>
-            </div>
-            <div class="num-chart-iterm">
-              <div>
-                <span>{{situationCount.subEditorCount}}</span>
-              </div>
-              <p>副主编申报总数</p>
-            </div>
-            <div class="num-chart-iterm">
-              <div>
-                <span>{{situationCount.editorialCount}}</span>
-              </div>
-              <p>编委申报总数</p>
-            </div>
-          </div>
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
