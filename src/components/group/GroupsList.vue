@@ -185,7 +185,7 @@
         if(!ext){return;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
           self.newGroupData.filename=undefined;
           return;
         }
