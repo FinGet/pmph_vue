@@ -16,6 +16,8 @@
         (10) auto-upload	是否在选取文件后立即进行上传	boolean 默认为true
         (11) file-list 数组 上传的文件列表, 例如: [{name: 'food.jpeg', url: 'http://xx/xx.jpeg'}]
 
+        (12) name  name	可选参数, 上传的文件字段名 默认:file
+
   methods: (1) clearFiles 清空文件列表
 
   重要对象说明：
@@ -66,7 +68,7 @@
         class="el-upload__input"
         type="file"
         ref="input"
-        name="file"
+        name="name"
         @change="handleChange"
         accept="accept">
       </input>
@@ -96,6 +98,10 @@
       onRemove: {
         type: Function,
         default: noFn
+      },
+      name:{
+        type: String,
+        default:'file'
       },
       onChange: {
         type: Function,
@@ -272,7 +278,7 @@
 
 
         let formdata = new FormData();
-        formdata.append('file',file.raw);
+        formdata.append(this.name,file.raw);
         //导入附加参数
         for(let key in this.postData){
           formdata.append(key,this.postData[key]);
