@@ -38,9 +38,9 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!hasAccess(6)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="!hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary">批量导出Excel</el-button>
       </div>
     </div>
@@ -89,7 +89,7 @@
                 {{scope.row.planningEditorName}}
               </span>    
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
-                <el-button type="text" :disabled="!hasAccess(1) || forceEnd">
+                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd">
                   <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
                 </el-button>
               </el-tooltip>
@@ -103,7 +103,7 @@
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
-                <el-button type="text" :disabled="!hasAccess(2)||forceEnd">
+                <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -118,7 +118,7 @@
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
-                <el-button type="text" :disabled="!hasAccess(3)||forceEnd">
+                <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -131,14 +131,14 @@
           label="操作">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3)"  @click="showDialog(1,scope.row)">名单确认</el-button>
+            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3,scope.row.myPower)"  @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4)">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower)">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.textBookId)">创建小组</el-button>
+            <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
@@ -275,7 +275,8 @@
         currentId: '',
         planningEditor: '',
         selectedBookId:'',
-        groupData: [] // 小组名单
+        groupData: [], // 小组名单
+        myPower:'' // 权限码
       }
     },
     computed:{
@@ -333,6 +334,7 @@
               });
               this.tableData = res.data.rows;
               this.forceEnd = this.tableData[0].forceEnd
+              this.myPower = this.tableData[0].myPower
             } else if (res.code == 2) {
               this.$message.error(res.msg.msgTrim())
             }
@@ -458,8 +460,8 @@
       /**@augments index
        * 权限判断
        */
-      hasAccess(index){
-        return this.$commonFun.materialPower(index);
+      hasAccess(index,list){
+        return this.$commonFun.materialPower(index,list);
       },
       /* 选中社内用户*/
       selectChange(val){

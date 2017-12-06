@@ -1,13 +1,16 @@
 <template>
-  <div class="teachingMaterial expert_info">
+  <div class="teachingMaterial expert_info" id="printArea">
     <div class="info-wrapper">
 
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
-        <el-button type="primary" @click="confirmPaperList">确认收到纸质表</el-button>
-        <el-button type="warning">退回给个人</el-button>
-        <el-button type="primary">通过</el-button>
+        <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
+          <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
+        <!--</el-button>-->
+        <el-button type="primary" :disabled="expertInfoData.onlineProgress!=1" @click="onlineCheckPass">
+          {{'通过'}}
+        </el-button>
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
@@ -33,13 +36,19 @@
                     </el-select>
                   </div>
                 </div>
-                <el-radio-group v-model="iterm.presetPosition_temp" class="">
-                  <el-radio :label="1">主编</el-radio>
-                  <el-radio :label="2">副主编</el-radio>
-                  <el-radio :label="3">编委</el-radio>
-                  <el-radio :label="4">数字编委</el-radio>
+                <el-radio-group v-model="iterm.presetPosition_temp" class=""  v-if="expertInfoData.isMultiPosition">
+                  <el-radio :label="1" :key="1">主编</el-radio>
+                  <el-radio :label="2" :key="2">副主编</el-radio>
+                  <el-radio :label="3" :key="3">编委</el-radio>
+                  <el-radio :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-radio>
                 </el-radio-group>
-                <div class="info-iterm-text widthAuto marginL10">
+                <el-checkbox-group v-model="iterm.presetPosition_temp_multi" :min="1" class="inline-block" v-else>
+                  <el-checkbox :label="1" :key="1">主编</el-checkbox>
+                  <el-checkbox :label="2" :key="2">副主编</el-checkbox>
+                  <el-checkbox :label="3" :key="3">编委</el-checkbox>
+                  <el-checkbox :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-checkbox>
+                </el-checkbox-group>
+                <div class="info-iterm-text widthAuto marginL20">
                   <div>教学大纲：<span></span></div>
                   <div class="ellipsis">
                     <my-upload
@@ -104,13 +113,13 @@
             </div>
           </div>
           <div class="expert_info-buttonWrapper print-none">
-            <el-button type="primary" @click="addNewBook">添加图书</el-button>
+            <el-button type="primary" @click="addNewBook" v-if="addBookList.length==0||expertInfoData.isMultiBooks">添加图书</el-button>
             <el-button type="primary" @click="saveBook" v-if="(hasNewAddbook||hasBookListChanged)&&addBookList.length">保存图书</el-button>
           </div>
         </div>
       </div>
 
-      <div class="expert-info-box">
+      <div class="expert-info-box user-info-wrapper">
         <p class="info-box-title">专家信息</p>
         <div>
           <div class="info-iterm-text">
@@ -550,6 +559,7 @@
               api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
               api_file_uploadurl:'/pmpheep/messages/message/file',
               api_send_msg:'/pmpheep/messages/newOneMessage',
+              api_online_check:'/pmpheep/declaration/list/declaration/onlineProgress',
               searchFormData:{
                 declarationId:'',
                 materialId:'',
@@ -570,6 +580,10 @@
                 idcard:'',
                 experience:'',
                 offlineProgress:'',
+                onlineProgress:'',
+                isMultiBooks: false,
+                isMultiPosition: false,
+                selectDigitalEditor:false,
               },
               learnExperience: [],
               workExperience: [],
@@ -592,6 +606,7 @@
               rankList:['','国际','国家','省部','其他'],
               national_plan_rankList:['','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
+              onlineProgressBtn:[],
             }
         },
         computed:{
@@ -630,11 +645,12 @@
             textbookName:'',
             presetPosition:3,
             presetPosition_temp:3,
+            presetPosition_temp_multi:[3],
             isDigitalEditor:false,
             fileName:'',
             syllabusName:'',
             fileUploading:false,
-            file:undefined
+            file:undefined,
           }
           this.addBookList.push(initObj);
         },
@@ -953,9 +969,32 @@
          * 打印
          */
         print(){
-          console.log(this);
           window.print();
+        },
+        /**
+         * 点击审核通过
+         */
+        onlineCheckPass(){
+          this.$axios.get(this.api_online_check,{params:{
+            id:this.searchFormData.declarationId,
+            onlineProgress:3,
+            materialId:this.searchFormData.materialId
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.expertInfoData.onlineProgress=3;
+                this.$message.success('已通过！')
+              }else{
+                this.$message.error(res.msg.msgTrim())
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+              this.$message.error('请求失败，请重试！');
+            })
         }
+
       },
       created(){
         this.searchFormData.declarationId = this.$route.query.declarationId;
@@ -1005,6 +1044,8 @@
     max-width: 410px;
     line-height: 36px;
     vertical-align: middle;
+  }
+  .user-info-wrapper .info-iterm-text{
     padding-bottom: 8px;
   }
   .info-iterm-text>div:nth-of-type(1){

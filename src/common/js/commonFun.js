@@ -58,9 +58,9 @@ export function authorityComparison(matchArr, userArr) {
     return result;
 }
 /* 教材申报权限判断 */
-export function materialPower(num) {
+export function materialPower(num,powerList) {
   var userData= getSessionStorage('currentUser', 'json')||{};
-  var str = userData.materialPermission;
+  var str = powerList?powerList:userData.materialPermission;
   //如果传的是数字
   if((typeof num).toLowerCase() == "number"){
     return str[num]==1;

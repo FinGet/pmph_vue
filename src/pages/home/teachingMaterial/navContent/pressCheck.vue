@@ -178,7 +178,7 @@
         style="width: 100%">
         <el-table-column
           label="姓名"
-          width="120"
+          min-width="100"
         >
           <template scope="scope">
             <router-link :to="{name:'专家信息',query: { declarationId: scope.row.id }}" class="table-link">{{scope.row.realname}}</router-link>
@@ -186,31 +186,31 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          width="130">
+          min-width="120">
           <template scope="scope">
             {{scope.row.username}}
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" width="160">
+        <el-table-column label="申报单位/工作单位" min-width="120">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" width="160" >
+        <el-table-column label="职务/职称" min-width="120" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" width="220">
+        <el-table-column label="联系方式" min-width="160">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职务">
+        <el-table-column label="所选书籍与职务" min-width="220">
           <template scope="scope">
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
@@ -222,7 +222,10 @@
         </el-table-column>
         <el-table-column label="出版社审核">
           <template scope="scope">
-            <p>{{scope.row.offlineProgress==0?'未收到纸质表':'已收到纸质表'}}</p>
+            <p type="text" v-if="scope.row.offlineProgress==0" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
+
+            <p v-else>{{scope.row.offlineProgress==1?'已退回纸质表':'已收到纸质表'}}</p>
+
           </template>
         </el-table-column>
       </el-table>
@@ -246,6 +249,7 @@
   export default {
     data() {
       return {
+        api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
         api_declaration_list:'/pmpheep/declaration/list/declaration',
         api_book_list:'/pmpheep/textBook/list',
         powerSearch:true,
@@ -401,6 +405,38 @@
         this.searchParams.pageSize=val;
         this.searchParams.pageNumber=1;
         this.getTableData();
+      },
+
+      /**
+       * 确认收到纸质表
+       */
+      confirmPaperList(row){
+        console.log(row)
+        this.$confirm("确定收到纸质表？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.get(this.api_confirm_paper,{params:{
+              id:row.id,
+              offlineProgress:2,
+              materialId:this.searchParams.materialId,
+            }})
+              .then(response=>{
+                var res = response.data;
+                if(res.code==1){
+                  this.$message.success('已确认！')
+                  row.offlineProgress=2;
+                }else{
+                  this.$message.error(res.msg.msgTrim())
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+          })
+          .catch(e=>{})
       },
     },
     created(){
