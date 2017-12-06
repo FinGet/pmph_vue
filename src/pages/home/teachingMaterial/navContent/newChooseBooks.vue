@@ -141,10 +141,30 @@
                 <br>
               </el-col>
             </el-form-item>
-
+            <el-form-item label="项目编辑权限：" prop="projectEditorPowers">
+              <el-select v-model="material.projectEditorPowers" multiple @change="projectSelectChange" placeholder="请选择" style="width:600px">
+                <el-option
+                  v-for="item in powerOptions"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                  >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="策划编辑权限：" prop="cehuaPowers">
+              <el-select v-model="material.cehuaPowers" multiple @change="cehuaSelectChange" placeholder="请选择" style="width:600px">
+                <el-option
+                  v-for="item in powerOptions"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="邮寄地址：" prop="mailAddress"  class="pull-left">
               <el-col>
-                <el-input v-model="material.mailAddress" class="input-500"></el-input>
+                <el-input v-model="material.mailAddress" style="width:600px"></el-input>
               </el-col>
             </el-form-item>
             <div class="clearfix"></div>
@@ -239,10 +259,9 @@
             <el-form-item label="上传图片：" prop="noticeFiles">
               <my-upload
                 class="upload"
-                :auto-upload="false"
-                action="#"
-                :on-change="imgUploadChange"
-                :on-remove="imgUploadChange"
+                :auto-upload="true"
+                action="/pmpheep/material/upTempFile"
+                :on-success="imgUploadSuccess"
                 :file-list="noticeFiles">
                 <el-button size="small" type="primary">点击上传</el-button>
               </my-upload>
@@ -262,10 +281,9 @@
               <el-col :span="12">
                 <my-upload
                   class="upload"
-                  action="#"
-                  :auto-upload="false"
-                  :on-change="fileUploadChange"
-                  :on-remove="fileUploadChange"
+                  action="/pmpheep/material/upTempFile"
+                  :auto-upload="true"
+                  :on-success="fileUploadSuccess"
                   :file-list="noteFiles">
                   <el-button size="small" type="primary">点击上传</el-button>
                 </my-upload>
@@ -318,7 +336,40 @@ export default {
       },
       checkedConactPersonData:[],
       clearTableSelect:false,
-      fileList: [],
+      powerOptions:[
+        {
+              label:'修改教材通知',
+              id:0
+            },
+            {
+              label:'分配策划编辑',
+              id:1
+            },
+            {
+              label:'遴选主编副主编',
+              id:2
+            },
+            {
+              label:'遴选编委',
+              id:3
+            },
+            {
+              label:'名单确认',
+              id:4
+            },
+            {
+              label:'最终结果公布',
+              id:5
+            },
+            {
+              label:'创建小组',
+              id:6
+            },
+            {
+              label:'强制结束整套教材',
+              id:7
+            },
+      ],
       listTableData: [
         {
           name: "书籍多选",
@@ -334,7 +385,7 @@ export default {
         },
         {
           name: "数字编委遴选",
-          key:'material.isMultiPosition',
+          key:'',
           usecheck: false,
           show: true
         },
@@ -425,6 +476,8 @@ export default {
          materialType:[],
          director:'',
          materialProjectEditors:[],
+         projectEditorPowers:[],
+         cehuaPowers :[],
          mailAddress:'',
          noticeFiles:[],
          noteFiles:[],
@@ -469,6 +522,8 @@ export default {
         materialType:[{type:'array', required: true, message: "请选择教材分类", trigger: "change" }],
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
         materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
+        projectEditorPowers:[{type:'array', required: true,message:'请指定至少一个项目编辑权限' ,trigger: "change" }],
+        cehuaPowers:[{type:'array', required: true,message:'请指定至少一个策划编辑权限' ,trigger: "change" }],
         mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
         contactUserName:[
          {required: true, message: "请填写姓名", trigger: "blur" },
@@ -515,6 +570,26 @@ export default {
         }
       },      
     };
+  },
+  computed:{
+   isCkeckNumEdiotr(){
+     return this.listTableData[2].usecheck;
+   },
+   isCheckJob(){
+     return this.listTableData[1].usecheck;
+   }
+  },
+  watch:{
+   isCkeckNumEdiotr(val){
+     if(val){
+       this.listTableData[1].usecheck=val;
+     }
+   },
+   isCheckJob(val){
+     if(this.isCkeckNumEdiotr){
+       this.listTableData[1].usecheck=true;
+     }
+   }
   },
   created() {
     this.initEditData();
@@ -649,6 +724,21 @@ export default {
         this.checkedConactPersonData=val;
         console.log(this.checkedConactPersonData);
       },
+      /* 权限选择改变 */
+      projectSelectChange(val){
+          var arr=[0,0,0,0,0,0,0,0];
+          for(var j in val){
+            arr[val[j]]=1;
+          }
+          this.ruleForm.projectEditorPowers=arr.join().replace(/,/g,'');
+      },
+      cehuaSelectChange(val){
+          var arr=[0,0,0,0,0,0,0,0];
+          for(var j in val){
+            arr[val[j]]=1;
+          }
+          this.ruleForm.cehuaPowers=arr.join().replace(/,/g,'');        
+      },
       /* 增加 */
       addCheckedConact(){
         if(this.classify == "contact"){
@@ -773,6 +863,9 @@ export default {
      }
      this.$refs.ruleForm.validateField('noticeFiles');
     },
+    imgUploadSuccess(res,file,filelist){
+      console.log(res,file,filelist);   
+    },
     /* 文件 */
     fileUploadChange(file,filelist){
      console.log(file,filelist);
@@ -820,6 +913,9 @@ export default {
      }
      
      this.$refs.ruleForm.validateField('noteFiles');
+    },
+    fileUploadSuccess(res,file,filelist){
+
     },
     /**
        * 删除选中的项目主任
@@ -930,7 +1026,7 @@ export default {
       for(var i in this.material){
         if(i=='notice'||i=='note'){
           this.ruleForm['materialExtra.'+i]=this.material[i];
-        }else if(i=='materialProjectEditors'||i=='noticeFiles'||i=='noteFiles'||i=='actualDeadline'||i=='deadline'||i=='ageDeadline'||i=='materialType'){
+        }else if(i=='materialProjectEditors'||i=='noticeFiles'||i=='noteFiles'||i=='actualDeadline'||i=='deadline'||i=='ageDeadline'||i=='materialType'||i=='projectEditorPowers'||i=='cehuaPowers'){
           continue ;
         }else{
          this.ruleForm['material.'+i]=this.material[i];
