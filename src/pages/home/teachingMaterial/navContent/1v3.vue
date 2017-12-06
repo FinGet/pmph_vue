@@ -138,7 +138,7 @@
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.textBookId)">创建小组</el-button>
+            <el-button type="text" :disabled="!hasAccess(5) || forceEnd" @click="showGroup(scope.row.textBookId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
