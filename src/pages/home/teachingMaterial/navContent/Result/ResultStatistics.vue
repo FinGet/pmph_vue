@@ -143,7 +143,7 @@ export default {
     return {
       activeName: "school",
       schoolResultUrl:'/pmpheep/decPosition/list',  //学校结果统计URL
-      bookResultUrl: '/pmpheep/decPosition/list/schoolResults', // 书籍结果统计url
+      bookResultUrl: '/pmpheep/decPosition/list/bookList', // 书籍结果统计url
       sortType:true,   //排序方式 true 按当选数排序  false 按申报数排序
       bookParams: {
         bookName: "",
