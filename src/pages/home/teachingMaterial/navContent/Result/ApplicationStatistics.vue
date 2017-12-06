@@ -234,6 +234,15 @@ export default {
       bookSituationUrl:'/pmpheep/decPosition/list/bookResults',   //书名统计URL
       materialId:'',
       sortType:true,   //排序方式 true 按当选数排序  false 按申报数排序
+
+      stBooks:[], // 申报情况统计 - 按书名统计 - 书籍
+      stPresetPersons:[], // 申报情况统计 - 按书名统计 - 申报人数
+      stChosenPersons:[], // 申报情况统计 - 按书名统计 - 当选人数
+
+      stSchools:[], // 申报情况统计 - 按学校统计 - 学校
+      stSchoolPresetPersons:[], // 申报情况统计 - 按学校统计 - 申报人数
+      stSchoolChosenPersons:[], // 申报情况统计 - 按学校统计 - 当选人数
+
       schoolParams:{
         pageNumber:1,
         pageSize:10,
@@ -256,192 +265,7 @@ export default {
             editorCount:0,          //主编申报总数
             subEditorCount:0,      //副主编申报总数
             editorialCount:0      //编委申报总数
-      },
-
-      tableData2: [
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 2,
-          bookName: "上海交通大学医学院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 3,
-          bookName: "上海健康医学院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 4,
-          bookName: "上海理工大学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 5,
-          bookName: "东南大学医学院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 6,
-          bookName: "中南大学湘雅医学院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 7,
-          bookName: "中国人民解放军总医院",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 8,
-          bookName: "中国医科大学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 9,
-          bookName: "中国康复研究中心",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        }
-      ],
-      tableData: [
-        {
-          xuhao: 1,
-          bookName: "医用高等数学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 2,
-          bookName: "医学物理学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 3,
-          bookName: "基础化学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 4,
-          bookName: "系统解剖学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 5,
-          bookName: "组织学与胚胎学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 6,
-          bookName: "生物化学与分子生物学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 7,
-          bookName: "生理学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 8,
-          bookName: "医用高等数学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        },
-        {
-          xuhao: 9,
-          bookName: "医用高等数学",
-          p1: 67,
-          p2: 108,
-          p3: 19,
-          p4: 21,
-          p5: 3,
-          p6: 12
-        }
-      ]
+      }
     };
   },
   created(){
@@ -476,8 +300,14 @@ export default {
      }).then((res)=>{
        console.log(res);
        if(res.data.code==1){
-         this.schoolTotal=res.data.data.total;
-           this.schoolTableData=res.data.data.rows;
+          var resData = res.data.data;
+          this.schoolTotal=resData.total;
+          this.schoolTableData=resData.rows;
+          resData.rows.forEach(item => {
+            this.stSchools.push(item.schoolName)
+            this.stSchoolPresetPersons.push(item.presetPersons)
+            this.stSchoolChosenPersons.push(item.chosenPersons)
+          })
        }
      })
     },
@@ -490,6 +320,11 @@ export default {
        if(res.data.code==1){
          this.bookTotal=res.data.data.total;
          this.bookTableData=res.data.data.rows;
+         res.data.data.rows.forEach(item => {
+           this.stBooks.push(item.bookName); // 书籍
+           this.stPresetPersons.push(item.presetPersons); // 申报人数
+           this.stChosenPersons.push(item.chosenPersons); // 当选人数
+         })
        }
      })
     },
@@ -561,32 +396,7 @@ export default {
         {
           name: "书籍名称",
           type: "category",
-          data: [
-            "医用高等数学",
-            "医学物理学",
-            "基础化学",
-            "系统解剖学",
-            "组织学与胚胎学",
-            "生物化学与分子生物学",
-            "生理学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医学物理学",
-            "基础化学",
-            "系统解剖学",
-            "组织学与胚胎学",
-            "生物化学与分子生物学",
-            "生理学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学",
-            "医用高等数学"
-          ],
+          data: this.stBooks,
           axisPointer: {
             type: "shadow"
           },
@@ -629,63 +439,13 @@ export default {
         {
           name: "申报人数",
           type: "bar",
-          data: [
-            200,
-            160,
-            70,
-            232,
-            205,
-            76,
-            135,
-            162,
-            26,
-            200,
-            64,
-            33,
-            200,
-            160,
-            70,
-            232,
-            205,
-            76,
-            135,
-            162,
-            26,
-            200,
-            64,
-            33
-          ]
+          data: this.stPresetPersons
         },
         {
           name: "当选人数",
           type: "line",
           yAxisIndex: 1,
-          data: [
-            28,
-            16,
-            20,
-            33,
-            55,
-            33,
-            44,
-            66,
-            45,
-            45,
-            6,
-            9,
-            28,
-            16,
-            20,
-            33,
-            55,
-            33,
-            44,
-            66,
-            45,
-            45,
-            6,
-            9
-          ]
+          data: this.stChosenPersons
         }
       ]
     };
@@ -720,32 +480,7 @@ export default {
         {
           name: "书籍名称",
           type: "category",
-          data: [
-            "三峡大学医学院",
-            "上海交通大学医学院",
-            "上海健康医学院",
-            "上海理工大学",
-            "东南大学医学院",
-            "中南大学湘雅医学院",
-            "中国人民解放军总医院",
-            "中国医科大学",
-            "中国康复研究中心",
-            "中国康复研究中心",
-            "中国康复研究中心",
-            "中国康复研究中心",
-            "三峡大学医学院",
-            "上海交通大学医学院",
-            "上海健康医学院",
-            "上海理工大学",
-            "东南大学医学院",
-            "中南大学湘雅医学院",
-            "中国人民解放军总医院",
-            "中国医科大学",
-            "中国康复研究中心",
-            "中国康复研究中心",
-            "中国康复研究中心",
-            "中国康复研究中心"
-          ],
+          data: this.stBooks,
           axisPointer: {
             type: "shadow"
           },
@@ -788,63 +523,13 @@ export default {
         {
           name: "申报人数",
           type: "bar",
-          data: [
-            200,
-            160,
-            70,
-            232,
-            205,
-            76,
-            135,
-            162,
-            26,
-            200,
-            64,
-            33,
-            200,
-            160,
-            70,
-            232,
-            205,
-            76,
-            135,
-            162,
-            26,
-            200,
-            64,
-            33
-          ]
+          data: this.stSchoolPresetPersons
         },
         {
           name: "当选人数",
           type: "line",
           yAxisIndex: 1,
-          data: [
-            28,
-            16,
-            20,
-            33,
-            55,
-            33,
-            44,
-            66,
-            45,
-            45,
-            6,
-            9,
-            28,
-            16,
-            20,
-            33,
-            55,
-            33,
-            44,
-            66,
-            45,
-            45,
-            6,
-            9
-          ]
+          data: this.stSchoolChosenPersons
         }
       ]
     };
