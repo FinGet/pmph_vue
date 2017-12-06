@@ -62,7 +62,7 @@
               <div v-else>
                 <div class="info-iterm-text">
                   <div>图书：<span></span></div>
-                  <div>{{iterm.textbookName}}</div>
+                  <div class="lineheight-normal paddingT10">{{iterm.textbookName}}</div>
                 </div>
                 <div class="info-iterm-text">
                   <div>职位：<span></span></div>
@@ -82,7 +82,7 @@
             <div v-else>
               <div class="info-iterm-text">
                 <div>图书：<span></span></div>
-                <div>{{iterm.textbookName}}</div>
+                <div class="lineheight-normal paddingT10">{{iterm.textbookName}}</div>
               </div>
               <div class="info-iterm-text">
                 <div>职位：<span></span></div>
@@ -105,7 +105,7 @@
           </div>
           <div class="expert_info-buttonWrapper print-none">
             <el-button type="primary" @click="addNewBook">添加图书</el-button>
-            <el-button type="primary" @click="saveBook" v-if="hasNewAddbook||hasBookListChanged">保存图书</el-button>
+            <el-button type="primary" @click="saveBook" v-if="(hasNewAddbook||hasBookListChanged)&&addBookList.length">保存图书</el-button>
           </div>
         </div>
       </div>
@@ -143,7 +143,7 @@
           </div>
           <div class="info-iterm-text">
             <div>地址：<span></span></div>
-            <div class="ellipsis" :title="expertInfoData.address">{{expertInfoData.address}}</div>
+            <div class="lineheight-normal paddingT10">{{expertInfoData.address}}</div>
           </div>
           <div class="info-iterm-text">
             <div>Email：<span></span></div>
@@ -424,7 +424,7 @@
         <div class="no-padding">
           <el-table border
                     :data="textbook"
-                    style="width: 100%">
+                    style="width: 100%;table-layout:fixed;">
             <el-table-column
               prop="materialName"
               label="教材名称">
@@ -519,17 +519,22 @@
     <el-dialog
       title="发送私信"
       :visible.sync="showSendMsg"
+      :before-close="clearInputMsg"
       size="tiny">
-      <div>
+      <div class="relative">
         <el-input
+          autofocus
           type="textarea"
           :rows="6"
           placeholder="请输入内容"
+          @input.native="changeTextarea"
+          @keyup.native.enter="sendmsg"
           v-model="inputMsg">
         </el-input>
+        <p class="tip-text" v-if="250-inputMsg.length<20">还可输入{{250-inputMsg.length}}个字符</p>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showSendMsg = false">取 消</el-button>
+        <el-button @click="closeInputMsg">取 消</el-button>
         <el-button type="primary" @click="sendmsg">发 送</el-button>
       </span>
     </el-dialog>
@@ -544,6 +549,7 @@
               api_update_book:'/pmpheep/declaration/list/declaration/saveBooks',
               api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
               api_file_uploadurl:'/pmpheep/messages/message/file',
+              api_send_msg:'/pmpheep/messages/newOneMessage',
               searchFormData:{
                 declarationId:'',
                 materialId:'',
@@ -651,6 +657,9 @@
           if(hasChange){
             this.hasBookListChanged=true;
           }
+          if(this.addBookList.length==0){
+            this.$message.error('至少要有一本书！');
+          }
         },
         /**
          * 保存图书，保存成功后就将图书isNew状态改为false
@@ -690,6 +699,7 @@
                 this.addBookList.forEach(iterm=>{
                   iterm.isNew = false;
                 })
+                this.$message.success('保存成功！');
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
@@ -896,7 +906,48 @@
          * 发送消息
          */
         sendmsg(){
-
+          if(!this.inputMsg){
+            this.$message.error('发送内容不能为空！');
+            return;
+          }
+          this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
+            content:this.inputMsg,
+            sessionId:this.$getUserData().userInfo.id,
+            receiverId:this.searchFormData.declarationId
+          }))
+            .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.$message.success('已发送！')
+              }else{
+                this.$message.error(res.msg.msgTrim())
+              }
+              this.closeInputMsg();
+            })
+            .catch(e=>{
+              console.log(e);
+              this.$message.error('发送失败，请重试！');
+              this.closeInputMsg();
+            })
+        },
+        /**
+         * 当聊天输入框发生变化
+         */
+        changeTextarea(){
+          if(this.inputMsg.length>250){
+            this.inputMsg=this.inputMsg.substring(0,250);
+          }
+        },
+        /**
+         * 清除已输入文字
+         */
+        clearInputMsg(done){
+          this.inputMsg='';
+          done();
+        },
+        closeInputMsg(){
+          this.inputMsg='';
+          this.showSendMsg=false;
         },
         /**
          * 打印
@@ -954,6 +1005,7 @@
     max-width: 410px;
     line-height: 36px;
     vertical-align: middle;
+    padding-bottom: 8px;
   }
   .info-iterm-text>div:nth-of-type(1){
     display: inline-block;
@@ -965,6 +1017,7 @@
   .info-iterm-text>div:nth-of-type(1) > span { display: inline-block /* Opera */; padding-left: 100%; }
   .info-iterm-text>div:nth-of-type(2){
     margin-left: 88px;
+    padding-right: 10px;
   }
   .expert_info-buttonWrapper{
     margin-top: 30px;
@@ -993,5 +1046,11 @@
   .info-iterm-text a:hover{
     color: #23527c;
   }
-
+  .tip-text{
+    color: #ccc;
+    text-align: right;
+    position: absolute;
+    right: 0;
+    bottom: -20px;
+  }
 </style>

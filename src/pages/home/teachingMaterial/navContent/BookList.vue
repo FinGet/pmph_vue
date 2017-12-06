@@ -16,15 +16,16 @@
                     <a class="grey_button" href="/static/设置书目录模板.xls">模板下载.xls</a>
                     ）：
                   </span>
-                  <el-upload
+                  <my-upload
                     class="ChatInputFileBtn"
                     ref="upload"
-                    action="/pmpheep/textBook/import/textbook"
-                    :on-change="uploadFile"
-                    :show-file-list="false"
-                    :auto-upload="false">
+                    :action="api_upload"
+                    :before-upload="beforeUploadFile"
+                    :on-success="upLoadFileSuccess"
+                    :on-error="uploadError"
+                    :show-file-list="false">
                     <el-button size="small" type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击上传'}}</el-button>
-                  </el-upload>
+                  </my-upload>
                 </div>
             </el-form-item>
             <el-form-item label="书目录：">
@@ -385,7 +386,9 @@ export default {
        * 当上传按钮添加excel
        * @param file
        */
-      uploadFile(file){
+      beforeUploadFile(file){
+        let flag = true;
+
         var filedata = file.raw;
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
@@ -409,41 +412,39 @@ export default {
           return;
         }
 
-        var formdata = new FormData();
-        formdata.append('file',filedata);
-        let config = {//添加请求头
-          headers:{'Content-Type':'multipart/form-data'}
-        };
-
-        //开启loading
-        this.uploadLoading = true;
-        this.$axios.post(this.api_upload,formdata,config)
-          .then((response) => {
-            let res = response.data;
-            if (res.code == '1') {
-              this.extendListData=[];
-              res.data.forEach(iterm=>{
-                this.extendListData.push({
-                  id:'',
-                  sort: iterm.sort,
-                  textbookName: iterm.textbookName,
-                  textbookRound: iterm.textbookRound,
-                  sortIsOk : true,
-                  nameIsOk : true,
-                  roundIsOk : true,
-                })
-              })
-            }else{
-              this.$message.error(res.msg.msgTrim());
-            }
-
-            this.uploadLoading = false;
+        this.uploadLoading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件请求成功的回调
+       */
+      upLoadFileSuccess(res, file, fileList){
+        if (res.code == '1') {
+          this.extendListData=[];
+          res.data.forEach(iterm=>{
+            this.extendListData.push({
+              id:'',
+              sort: iterm.sort,
+              textbookName: iterm.textbookName,
+              textbookRound: iterm.textbookRound,
+              sortIsOk : true,
+              nameIsOk : true,
+              roundIsOk : true,
+            })
           })
-          .catch((error) => {
-            console.log(error);
-            this.$message.error('上传文件失败，请重试');
-            this.uploadLoading = false;
-          });
+        }else{
+          this.$message.error(res.msg.msgTrim());
+        }
+
+        this.uploadLoading = false;
+      },
+      /**
+       * 上传文件请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        console.log(err);
+        this.$message.error('上传文件失败，请重试');
+        this.uploadLoading = false;
       },
     },
   created(){

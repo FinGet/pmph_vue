@@ -236,7 +236,7 @@
        * 创建小组请求失败的回调
        */
       uploadError(err, file, fileList){
-        self.$message.error('创建小组失败');
+        this.$message.error('创建小组失败');
       },
       /**
        * 创建小组
