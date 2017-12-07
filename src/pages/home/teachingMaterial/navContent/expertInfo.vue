@@ -43,13 +43,13 @@
                   <el-radio label="主编" :key="1">主编</el-radio>
                   <el-radio label="副主编" :key="2">副主编</el-radio>
                   <el-radio label="编委" :key="3">编委</el-radio>
-                  <el-radio label="数字编委" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-radio>
+                  <el-radio label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="iterm.presetPosition_temp_multi" :min="1" class="inline-block" v-else>
                   <el-checkbox label="主编" :key="1">主编</el-checkbox>
                   <el-checkbox label="副主编" :key="2">副主编</el-checkbox>
                   <el-checkbox label="编委" :key="3">编委</el-checkbox>
-                  <el-checkbox label="数字编委" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-checkbox>
+                  <el-checkbox label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-checkbox>
                 </el-checkbox-group>
                 <div class="info-iterm-text widthAuto marginL20">
                   <div>教学大纲：<span></span></div>
@@ -586,6 +586,7 @@
                 onlineProgress:'',
                 isMultiBooks: false,
                 isMultiPosition: false,
+                isDigitalEditorOptional:false,
                 selectDigitalEditor:false,
               },
               learnExperience: [],
@@ -696,7 +697,12 @@
           let formData = {};
           this.addBookList.forEach((iterm,index)=>{
             if(iterm.newCreated){
+              iterm.presetPosition_temp_multi.sort((x,y)=>{
+                let list = ['主编','副主编','编委','数字编委'];
+                return list.indexOf(x)-list.indexOf(y);
+              });
               iterm.showPosition = this.expertInfoData.isMultiPosition?iterm.presetPosition_temp_multi.join(','):iterm.presetPosition_temp;
+
             }
             formData['list['+index+'].'+'id']=iterm.id;
             formData['list['+index+'].'+'declarationId']=this.searchFormData.declarationId;
