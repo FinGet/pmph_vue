@@ -216,9 +216,21 @@
           reader.readAsDataURL(file.raw);
         }else{
           self.newGroupData.filename=file.name;
-          prevDiv.innerHTML='<div class="avatar" style="height:100px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\)\';"></div>';
+          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
+          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
         }
 
+      },
+      PreviewImg(imgFile){
+        var newPreview = this.$refs.headImageWrapper;
+        var imgDiv = document.createElement("div");
+
+        console.log(imgDiv)
+        imgDiv.style.width = "100px";     imgDiv.style.height = "100px";
+        imgDiv.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod = scale)";
+        imgDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgFile.value;
+        newPreview.appendChild(imgDiv);
       },
       /**
        * 创建小组请求成功的回调
