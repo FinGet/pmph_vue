@@ -67,7 +67,7 @@
         <!-- 权限树弹框 -->
         <el-dialog :title="isSeePower?'查看角色权限':'角色权限设置'" :visible.sync="powerTreeVisible" size="tiny">
           <div style="width:100%;overflow:hidden;">
-            <div style="width:48%;float:left;">
+            <div style="width:100%;float:left;">
               <span style="font-weight:bold;font-size:14px;">{{isSeePower?'菜单栏可见性权限':'菜单栏可见性权限设置'}}</span>
                 <transition name="fade" mode="out-in">
                 <el-tree class="tree_box" ref="powerTree"
@@ -80,7 +80,7 @@
                 </transition>
             </div>
 
-            <div style="width:48%;float:right;">
+            <!-- <div style="width:48%;float:right;">
               <span style="font-weight:bold;">{{isSeePower?'教材申报权限':'教材申报权限设置'}}</span>
                 <transition name="fade" mode="out-in">
                 <el-tree class="tree_box" ref="teachTree"
@@ -91,7 +91,7 @@
                 :default-checked-keys="defaultTeachData"
                 ></el-tree>
                 </transition>
-            </div>
+            </div> -->
             </div>
 
             <span slot="footer" class="dialog-footer" v-if="!isSeePower">

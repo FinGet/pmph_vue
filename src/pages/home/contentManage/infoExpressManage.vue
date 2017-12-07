@@ -331,14 +331,20 @@ export default {
     editContent(obj) {
       this.$axios
         .get(this.outContentUrl + "/content/" + obj.id + "/detail", {})
-        .then(res => {
+        .then(response => {
           console.log(res);
-          if (res.data.code == 1) {
-            this.$router.push({
-              name: "添加内容",
-              params: res.data.data,
-              query: { type: "edit", columnId: 2 }
-            });
+          let res = response.data
+          if (res.code == 1) {
+            if(res.data.content == null) {
+              this.$message.error('此快报内容为空，错误数据，不能调转！');
+              return;
+            } else {
+              this.$router.push({
+                name: "添加内容",
+                params: res.data,
+                query: { type: "edit", columnId: 2 }
+              });
+            }
           }
         });
     },

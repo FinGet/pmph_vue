@@ -102,7 +102,7 @@
             <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb'}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb',q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -117,7 +117,7 @@
             <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw'}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
