@@ -87,7 +87,7 @@
               <span v-if="!scope.row.planningEditorName">待分配</span>
               <span v-else>
                 {{scope.row.planningEditorName}}
-              </span>    
+              </span>
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
                 <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd">
                   <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
@@ -102,7 +102,7 @@
             <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb',q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -117,7 +117,7 @@
             <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -172,7 +172,7 @@
        -->
        <user-pmph @selection-change="selectChange" ref="userPmph" select radio>
          <div class="operation-wrapper">
-           <el-button type="primary" @click="updateEditor">确认</el-button>  
+           <el-button type="primary" @click="updateEditor">确认</el-button>
          </div>
        </user-pmph>
     </el-dialog>
@@ -224,8 +224,8 @@
       <div class="pull-right marginT10 marginB10">
         <el-button @click="groupVisiable=false">取消</el-button>
         <el-button type="primary" @click="submitGroup">确定</el-button>
-      </div>  
-    </el-dialog>  
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -388,7 +388,7 @@
             }
           })
         })
-        
+
       },
       handleSelectionChange(val){
         let arr = []
@@ -401,7 +401,7 @@
        * 批量通过
        */
       pass(ids){
-        this.putApi('/pmpheep/position/updateTextbook',ids)        
+        this.putApi('/pmpheep/position/updateTextbook',ids)
       },
       showEditor(data){
         this.chooseVisiable2 = true
