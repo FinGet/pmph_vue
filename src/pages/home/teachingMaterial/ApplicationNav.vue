@@ -33,7 +33,7 @@ export default {
       activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'',
+      title:'新建通知',
 		}
 	},
 	methods: {
@@ -78,7 +78,7 @@ export default {
 
       this.materialId = this.$route.params.materialId;
 
-      if(this.$router.currentRoute.name=='新建通知'){
+      if(this.$router.currentRoute.params.materialId=='new'){
         this.title='新建通知'
       }else{
         this.getMaterialData();
@@ -166,7 +166,11 @@ export default {
     float:left;
     background-color: #12806b;
     font-size:16px;
-    padding:2px 40px 2px 15px;
+    padding:2px 20px 2px 15px;
+    max-width:545px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .application_nav .header_title_tips .tips_icon{
     border:4px solid #475669;
