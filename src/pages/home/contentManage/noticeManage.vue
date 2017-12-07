@@ -111,7 +111,7 @@
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{contentDetailData.listObj.gmtCreate?contentDetailData.listObj.gmtCreate:'2017-11-14 10:17:52'}}</span>
        </p>
-       <el-form label-width="55px">
+       <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
@@ -120,7 +120,7 @@
          </el-form-item>
        </el-form>
         </div>
-        <div style="width:100%;overflow:hidden">
+        <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="publishSubmit">发布</el-button>

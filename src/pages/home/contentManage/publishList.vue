@@ -119,17 +119,16 @@
       <span class="marginR10">{{contentDetailData.listObj.username}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
-       <el-form label-width="55px">
-
+       <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
-              <a type="text" :href="'/pmpheep'+item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
+              <a type="text" :href="item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
         </div>
-        <div style="width:100%;overflow:hidden">
+        <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
