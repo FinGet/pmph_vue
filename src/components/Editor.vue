@@ -68,7 +68,7 @@
       },
     },
     destroyed(){
-      if(this.editor){
+      if(this.editorHasReady&&this.editor){
         this.editor.destroy();
       }
     }
