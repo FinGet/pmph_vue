@@ -497,6 +497,9 @@
       },
       /**提交小组名单 */
       submitGroup(){
+        this.groupData.forEach(item => {
+          item.isWriter = true
+        })
         this.$axios.post('/pmpheep/group/addEditorGroup',this.$initPostData({
           textbookId: this.currentId,
           pmphGroupMembers: JSON.stringify(this.groupData),
