@@ -4,8 +4,8 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])||tableData.length==0">发布</el-button>
-          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
+          <el-button type="primary" @click="submit(2)" :disabled="!hasPermission([2,3])||tableData.length==0">发布</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
@@ -38,7 +38,7 @@
               <el-checkbox
                 v-model="scope.row.isZhubian"
                 @change="checkboxChange(1,scope.row)"
-                :disabled="!hasPermission(2)"
+                :disabled="scope.row.disabled_zb||!hasPermission(2)"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -50,7 +50,7 @@
                   class="border-radius-4"
                   :class="{'border-red':scope.row.isZhubian&&!scope.row.zhubianSortIsOk}"
                   v-model.trim="scope.row.zhubianSort"
-                  :disabled="!hasPermission(2)||!scope.row.isZhubian"
+                  :disabled="scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian"
                   @blur="sortChange(1,scope.row)"
                   @change="sortChange(1,scope.row)"
                   size="mini"
@@ -67,7 +67,7 @@
               <el-checkbox
                 v-model="scope.row.isFuzhubian"
                 @change="checkboxChange(2,scope.row)"
-                :disabled="!hasPermission(2)"
+                :disabled="scope.row.disabled_zb||!hasPermission(2)"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -79,7 +79,7 @@
                   class="border-radius-4"
                   :class="{'border-red':!scope.row.fuzhubianSortIsOk}"
                   v-model.trim="scope.row.fuzhubianSort"
-                  :disabled="!hasPermission(2)||!scope.row.isFuzhubian"
+                  :disabled="scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian"
                   @blur="sortChange(2,scope.row)"
                   @change="sortChange(2,scope.row)"
                   size="mini"
@@ -94,7 +94,7 @@
               <el-checkbox
                 v-model="scope.row.isBianwei"
                 @change="checkboxChange(3,scope.row)"
-                :disabled="!hasPermission(3)"
+                :disabled="scope.row.disabled_bw||!hasPermission(3)"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -131,6 +131,7 @@
   export default {
     data() {
       return {
+        type:'zb',
         api_list:'/pmpheep/declaration/list/editor/selection',
         api_submit:'/pmpheep/declaration/editor/selection/update',
         api_log:'/pmpheep/textBookLog/list',
@@ -157,6 +158,7 @@
       this.formData.materialId = this.$route.params.materialId;
       this.formData.textbookId = this.$route.query.bookid;
       this.searchParams.textbookId = this.formData.textbookId;
+      this.type = this.$route.query.type;
       //如果没有教材id则跳转到通知列表
       if(!this.formData.materialId){
         this.$router.push({name:'通知列表'});
@@ -195,6 +197,10 @@
                 iterm.fuzhubianSort = iterm.isFuzhubian?iterm.rank:'';
                 iterm.fuzhubianSortIsOk = true;
                 iterm.isBianwei = iterm.chosenPosition==3;
+
+                iterm.disabled_zb = this.type=='bw'||iterm.isBianwei;
+                iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
+
               });
               this.tableData = res.data;
             }
@@ -247,7 +253,7 @@
       /**
        * 提交遴选结果
        */
-      submit(){
+      submit(type){
 
         if(!this.checkSortIsOk()){
           return;
@@ -274,7 +280,8 @@
             }
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
-              jsonDecPosition:JSON.stringify(jsonDecPosition)
+              jsonDecPosition:JSON.stringify(jsonDecPosition),
+              selectionType:type?type:1
             }))
               .then(response=>{
                 var res = response.data;
