@@ -30,9 +30,9 @@
               .then(response=>{
                 let res = response.data
                 if(res.code==1){
-                  res.data.MessageAttachment.map(iterm=>{
-                    iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1)
-                  })
+                  // res.data.MessageAttachment.map(iterm=>{
+                  //   iterm.attachment = iterm.attachment;
+                  // })
                   this.previewData.title = res.data.title;
                   this.previewData.content = res.data.content;
                   this.previewData.senderName = res.data.senderName;
