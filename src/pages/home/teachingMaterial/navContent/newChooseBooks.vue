@@ -665,7 +665,7 @@ export default {
                   for(var k in typeArr){
                     typeArr[k]=parseInt(typeArr[k]);
                   }
-                 this.material.materialType=typeArr;;
+                 this.material.materialType=typeArr;
                  this.ruleForm.materialType= typeArr;
              //主任赋值
               this.projectDirectorData=[{id:this.material.director,realname:res.data.data.directorName}];
@@ -701,7 +701,22 @@ export default {
               }
               this.material.noteFiles=this.ruleForm.materialNoteAttachments;
               this.noteFiles=this.ruleForm.materialNoteAttachments;
-
+              //编辑权限赋值
+              this.ruleForm.cehuaPowers=res.data.data.cehuaPowers;
+              this.ruleForm.projectEditorPowers=res.data.data.projectEditorPowers;
+               var cehuaArr=res.data.data.cehuaPowers.split('');
+               var projectArr=res.data.data.projectEditorPowers.split('');
+               for(var i in cehuaArr){
+                  if(cehuaArr[i]==1){
+                    this.material.cehuaPowers.push(parseInt(i));
+                  }
+               }
+               console.log(this.material.cehuaPowers)
+               for(var i in projectArr){
+                  if(projectArr[i]==1){
+                    this.material.projectEditorPowers.push(parseInt(i));
+                  }
+               } 
              }
            })
         }
@@ -886,7 +901,7 @@ export default {
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
       })
     },
     /* 文件 */
@@ -942,7 +957,7 @@ export default {
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
       })
     },
     /**
