@@ -177,6 +177,7 @@
           textbookId:this.formData.textbookId,
           realName:'',
           presetPosition:'',
+          materialId:this.formData.materialId,
         }})
           .then(response=>{
             var res = response.data;

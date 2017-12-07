@@ -40,10 +40,7 @@
                 senderName:'',
                 sendTime:'',
                 files:[]
-              }
-              res.data.messageAttachments.map(iterm=>{
-                iterm.attachment = this.$config.BASE_URL + iterm.attachment.substring(1)
-              });
+              };
               tempObj.title = res.data.title;
               tempObj.content = res.data.content;
               tempObj.senderName = res.data.senderName;

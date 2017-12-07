@@ -47,7 +47,7 @@ export default {
      if(val=='presscheck'){
        this.activeFirst=true;
      }
-     else if(val=='1v1'){
+     else if(val=='result'){
       this.activeLast=true;
      }
     },
@@ -69,6 +69,9 @@ export default {
   watch:{
     activeTagName(newval,old){
          this.initActiveTag(newval);
+    },
+    $route () {
+      this.activeTagName = this.$router.currentRoute.meta.applicationName;
     }
   },
   created() {
