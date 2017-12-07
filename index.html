@@ -6,6 +6,15 @@
   <title>人卫出版社</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+//    当浏览器版本过低时，跳转到提示页面
+    var ua = navigator.userAgent.toLowerCase(),s;
+    var Ie = (s = ua.match(/(msie\s|trident.*rv:)([\d.]+)/))? parseInt(s[2]):false;
+    if(Ie&&Ie<9){
+      window.location.href="/static/no-support/index.html";
+    }
+  </script>
 </head>
 
 <body>
