@@ -257,15 +257,17 @@
               </el-col>
             </el-form-item>
             <el-form-item label="上传图片：" prop="noticeFiles">
-              <el-upload
+              <my-upload
                 class="upload"
                 :auto-upload="true"
                 name="files"
                 action="/pmpheep/material/upTempFile"
+                :on-change="imgUploadChange"
                 :on-success="imgUploadSuccess"
+                :before-upload="imgBeforeUpload"
                 :file-list="material.noticeFiles">
                 <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
+              </my-upload>
             </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
@@ -280,15 +282,17 @@
 
             <el-form-item label="附件：" prop="noteFiles">
               <el-col :span="12">
-                <el-upload
+                <my-upload
                   class="upload"
                   action="/pmpheep/material/upTempFile"
                   name="files"
                   :auto-upload="true"
+                  :on-change="fileUploadChange"
+                  :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
                   :file-list="material.noteFiles">
                   <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
+                </my-upload>
               </el-col>
             </el-form-item>
 
@@ -665,7 +669,7 @@ export default {
                   for(var k in typeArr){
                     typeArr[k]=parseInt(typeArr[k]);
                   }
-                 this.material.materialType=typeArr;;
+                 this.material.materialType=typeArr;
                  this.ruleForm.materialType= typeArr;
              //主任赋值
               this.projectDirectorData=[{id:this.material.director,realname:res.data.data.directorName}];
@@ -701,7 +705,21 @@ export default {
               }
               this.material.noteFiles=this.ruleForm.materialNoteAttachments;
               this.noteFiles=this.ruleForm.materialNoteAttachments;
-
+              //编辑权限赋值
+              this.ruleForm.cehuaPowers=res.data.data.cehuaPowers;
+              this.ruleForm.projectEditorPowers=res.data.data.projectEditorPowers;
+               var cehuaArr=res.data.data.cehuaPowers.split('');
+               var projectArr=res.data.data.projectEditorPowers.split('');
+               for(var i in cehuaArr){
+                  if(cehuaArr[i]==1){
+                    this.material.cehuaPowers.push(parseInt(i));
+                  }
+               }
+               for(var i in projectArr){
+                  if(projectArr[i]==1){
+                    this.material.projectEditorPowers.push(parseInt(i));
+                  }
+               } 
              }
            })
         }
@@ -839,9 +857,11 @@ export default {
     /* 文件上传改变 */
     /* 图片 */
     imgUploadChange(file,filelist){
+     this.material.noticeFiles=filelist;
      console.log(file,filelist);
-      this.noticeFiles=filelist;
-      /* 验证 */
+     this.$refs.ruleForm.validateField('noticeFiles');
+    },
+    imgBeforeUpload(file){
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
@@ -863,37 +883,22 @@ export default {
         this.$message.error('图片名称不能超过80个字符！');
         this.noticeFiles.pop();
         return false;
-      }   
-      this.material.noticeFiles=filelist;
-      this.ruleForm.noticeFiles=[];
-      this.ruleForm.materialNoticeAttachments=[];
-     for(var i in filelist){
-       if(filelist[i].raw){
-         this.ruleForm.noticeFiles.push(filelist[i].raw);
-       }else{
-         var obj={
-             id:filelist[i].id,
-             name:filelist[i].name,
-             url:filelist[i].url
-         }
-         this.ruleForm.materialNoticeAttachments.push(obj);
-       }
-     }
-     this.$refs.ruleForm.validateField('noticeFiles');
+      }  
     },
     imgUploadSuccess(res,file,filelist){
       console.log(res,file,filelist); 
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
       })
     },
     /* 文件 */
     fileUploadChange(file,filelist){
-     console.log(file,filelist);
-     this.noteFiles=filelist; 
-     /* 验证 */
+     this.material.noteFiles=filelist;
+     this.$refs.ruleForm.validateField('noteFiles');
+    },
+    fileBeforeUpload(file){
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
@@ -916,33 +921,13 @@ export default {
         this.noteFiles.pop();
         return false;
      }
-     this.material.noteFiles=filelist;
-     this.ruleForm.noteFiles=[];
-     this.ruleForm.materialNoteAttachments=[];
-     for(var i in filelist){
-      if(filelist[i].raw){
-        this.ruleForm.noteFiles.push(filelist[i].raw);
-        //this.material.noteFiles.push(filelist[i].raw);        
-      } else{
-        var obj={
-             id:filelist[i].id,
-             name:filelist[i].name,
-             url:filelist[i].url
-         }
-         this.ruleForm.materialNoteAttachments.push(obj);
-        // this.material.noteFiles.push(obj);
-      }
-
-     }
-     
-     this.$refs.ruleForm.validateField('noteFiles');
     },
     fileUploadSuccess(res,file,filelist){
      console.log(res,file,filelist); 
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
       })
     },
     /**
@@ -1124,10 +1109,7 @@ export default {
                return false;
                 }
             
-           /*  let config = {
-                headers:{'Content-Type':'multipart/form-data'}
-              };  //添加请求头 */
-             // this.isloading=true;
+              this.isloading=true;
                //提交
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
                     this.uploadFormMerge(this.ruleForm)).then((res)=>{
@@ -1141,7 +1123,7 @@ export default {
 
 
           } else {
-            
+            this.$message.error('表单验证未通过');
             return false;
           }
         });       
