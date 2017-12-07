@@ -12,17 +12,17 @@
         <el-row>
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
-                    <el-table-column prop="userName" label="操作用户" width="180">
+                    <el-table-column prop="userName" label="操作用户" width="150">
                     </el-table-column>
-                    <el-table-column prop="clientIp" label="操作人ip" width="180">
+                    <el-table-column prop="clientIp" label="操作人ip" width="130">
                     </el-table-column>
-                    <el-table-column prop="operateDate" label="访问时间">
+                    <el-table-column prop="operateDate" label="访问时间" width="185">
                     </el-table-column>
                     <el-table-column prop="operateText" label="请求方法">
                     </el-table-column>
-                    <el-table-column prop="businessType" label="业务类型">
+                    <el-table-column prop="businessType" label="业务类型" width="150" align="center">
                     </el-table-column>
-                    <el-table-column prop="deviceType" label="访问设备">
+                    <el-table-column prop="deviceType" label="访问设备" width="95" align="center">
                     </el-table-column>
                 </el-table>
             </el-col>
