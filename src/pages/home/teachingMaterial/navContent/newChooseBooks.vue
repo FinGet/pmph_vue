@@ -257,14 +257,15 @@
               </el-col>
             </el-form-item>
             <el-form-item label="上传图片：" prop="noticeFiles">
-              <my-upload
+              <el-upload
                 class="upload"
                 :auto-upload="true"
+                name="files"
                 action="/pmpheep/material/upTempFile"
                 :on-success="imgUploadSuccess"
-                :file-list="noticeFiles">
+                :file-list="material.noticeFiles">
                 <el-button size="small" type="primary">点击上传</el-button>
-              </my-upload>
+              </el-upload>
             </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
@@ -279,14 +280,15 @@
 
             <el-form-item label="附件：" prop="noteFiles">
               <el-col :span="12">
-                <my-upload
+                <el-upload
                   class="upload"
                   action="/pmpheep/material/upTempFile"
+                  name="files"
                   :auto-upload="true"
                   :on-success="fileUploadSuccess"
-                  :file-list="noteFiles">
+                  :file-list="material.noteFiles">
                   <el-button size="small" type="primary">点击上传</el-button>
-                </my-upload>
+                </el-upload>
               </el-col>
             </el-form-item>
 
@@ -308,6 +310,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import 'url-search-params-polyfill';
 import userPmph from "components/user-pmph";
 export default {
   data() {
@@ -385,7 +388,7 @@ export default {
         },
         {
           name: "数字编委遴选",
-          key:'',
+          key:'material.isDigitaleditorOptional',
           usecheck: false,
           show: true
         },
@@ -411,6 +414,13 @@ export default {
           needcheck: false
         },
         {
+          name: "个人成就",
+          key:'material.isAchievementUsed',
+          requiredKey:'material.isAchievementRequired',
+          usecheck: false,
+          needcheck: false
+        },        
+        {
           name: "主要学术兼职",
           key:'material.isAcadeUsed',
           requiredKey:'material.isAcadeRequired',
@@ -425,6 +435,13 @@ export default {
           needcheck: false
         },
         {
+          name: "精品课程建设情况",
+          key:'material.isCourseUsed',
+          requiredKey:'material.isCourseRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        /* {
           name: "国家级精品课程建设情况",
           key:'material.isNationalCourseUsed',
           requiredKey:'material.isNationalCourseRequired',
@@ -444,7 +461,7 @@ export default {
           requiredKey:'material.isSchoolCourseRequired',
           usecheck: false,
           needcheck: false
-        },
+        }, */
         {
           name: "主编国家规划教材情况",
           key:'material.isNationalPlanUsed',
@@ -465,7 +482,8 @@ export default {
           requiredKey:'material.isResearchRequired',
           usecheck: false,
           needcheck: false
-        }
+        },
+
       ],
       material:{
          materialName:'',
@@ -497,14 +515,14 @@ export default {
          materialExtensions:[],   //扩展项
          "materialExtra.notice":'',
          "materialExtra.note":'',
-          noticeFiles:[],
-          noteFiles:[],
+          /* noticeFiles:[],
+          noteFiles:[], */
           materialNoticeAttachments:[],
           materialNoteAttachments:[]
 
       },
-      noticeFiles:[],
-      noteFiles:[],
+      /* noticeFiles:[],
+      noteFiles:[], */
       chooseBookData:[],
       rules: {
         materialName: [
@@ -864,7 +882,12 @@ export default {
      this.$refs.ruleForm.validateField('noticeFiles');
     },
     imgUploadSuccess(res,file,filelist){
-      console.log(res,file,filelist);   
+      console.log(res,file,filelist); 
+      this.material.noticeFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoticeAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+      })
     },
     /* 文件 */
     fileUploadChange(file,filelist){
@@ -915,7 +938,12 @@ export default {
      this.$refs.ruleForm.validateField('noteFiles');
     },
     fileUploadSuccess(res,file,filelist){
-
+     console.log(res,file,filelist); 
+     this.material.noteFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoteAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response.data[0]});
+      })
     },
     /**
        * 删除选中的项目主任
@@ -1036,25 +1064,22 @@ export default {
     },
     /* 表单处理 */
     uploadFormMerge(obj){
-      var formdata=new FormData();
+      var paramdata = new URLSearchParams();
+      //var formdata=new FormData();
          for(var i in obj){
-           if(i=='noticeFiles'||i=='noteFiles'){
-               obj[i].forEach((item)=>{
-                   formdata.append(i,item);
-               })
-           }
-            else if(typeof(obj[i])=='object'){
+            if(typeof(obj[i])=='object'){
              var arr=[];
                  for(var j in obj[i]){
                   arr.push(typeof(obj[i][j])=='object'?JSON.stringify(obj[i][j]):obj[i][j]);
                  }
-                 formdata.append(i,'['+arr.join()+']');
+                 paramdata.append(i,'['+arr.join()+']');
            }else{
-               formdata.append(i,obj[i])
+               paramdata.append(i,obj[i])
            }
            
          }
-         return formdata;
+         console.log(paramdata);
+         return paramdata;
     },
     /* 表单内表格验证 */
     formTableChecked(){
@@ -1099,13 +1124,13 @@ export default {
                return false;
                 }
             
-            let config = {
+           /*  let config = {
                 headers:{'Content-Type':'multipart/form-data'}
-              };  //添加请求头
-              this.isloading=true;
+              };  //添加请求头 */
+             // this.isloading=true;
                //提交
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
-                    this.uploadFormMerge(this.ruleForm),config).then((res)=>{
+                    this.uploadFormMerge(this.ruleForm)).then((res)=>{
                     console.log(res);
                     if(res.data.code==1){
                       this.isloading=false;
