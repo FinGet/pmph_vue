@@ -3,7 +3,7 @@
       <div class="tab_nav_outbox" v-if="!$router.currentRoute.meta.hideTabs">
         <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
         <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
-          <el-tab-pane label="申报出版社的单位" name="presscheck-pmph"></el-tab-pane>
+          <el-tab-pane label="提交到出版社" name="presscheck-pmph"></el-tab-pane>
           <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
           <el-tab-pane label="职位遴选" name="1v3"></el-tab-pane>
           <el-tab-pane label="结果统计" name="result"></el-tab-pane>

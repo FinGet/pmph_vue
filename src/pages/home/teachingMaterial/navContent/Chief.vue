@@ -4,9 +4,10 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
+          <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])||tableData.length==0">发布</el-button>
           <el-button type="primary" @click="submit" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
+          <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
 

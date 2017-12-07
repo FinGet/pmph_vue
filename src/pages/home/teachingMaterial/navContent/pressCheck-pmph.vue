@@ -166,7 +166,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">导出World</el-button>
+          <el-button type="primary">导出Word</el-button>
           <el-button type="primary">导出Excel</el-button>
         </div>
       </div>
