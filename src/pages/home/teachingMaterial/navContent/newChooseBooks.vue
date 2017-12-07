@@ -260,9 +260,12 @@
               <my-upload
                 class="upload"
                 :auto-upload="true"
+                name="files"
                 action="/pmpheep/material/upTempFile"
+                :on-change="imgUploadChange"
                 :on-success="imgUploadSuccess"
-                :file-list="noticeFiles">
+                :before-upload="imgBeforeUpload"
+                :file-list="material.noticeFiles">
                 <el-button size="small" type="primary">点击上传</el-button>
               </my-upload>
             </el-form-item>
@@ -282,9 +285,12 @@
                 <my-upload
                   class="upload"
                   action="/pmpheep/material/upTempFile"
+                  name="files"
                   :auto-upload="true"
+                  :on-change="fileUploadChange"
+                  :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
-                  :file-list="noteFiles">
+                  :file-list="material.noteFiles">
                   <el-button size="small" type="primary">点击上传</el-button>
                 </my-upload>
               </el-col>
@@ -308,6 +314,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import 'url-search-params-polyfill';
 import userPmph from "components/user-pmph";
 export default {
   data() {
@@ -385,7 +392,7 @@ export default {
         },
         {
           name: "数字编委遴选",
-          key:'',
+          key:'material.isDigitaleditorOptional',
           usecheck: false,
           show: true
         },
@@ -411,6 +418,13 @@ export default {
           needcheck: false
         },
         {
+          name: "个人成就",
+          key:'material.isAchievementUsed',
+          requiredKey:'material.isAchievementRequired',
+          usecheck: false,
+          needcheck: false
+        },        
+        {
           name: "主要学术兼职",
           key:'material.isAcadeUsed',
           requiredKey:'material.isAcadeRequired',
@@ -425,6 +439,13 @@ export default {
           needcheck: false
         },
         {
+          name: "精品课程建设情况",
+          key:'material.isCourseUsed',
+          requiredKey:'material.isCourseRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        /* {
           name: "国家级精品课程建设情况",
           key:'material.isNationalCourseUsed',
           requiredKey:'material.isNationalCourseRequired',
@@ -444,7 +465,7 @@ export default {
           requiredKey:'material.isSchoolCourseRequired',
           usecheck: false,
           needcheck: false
-        },
+        }, */
         {
           name: "主编国家规划教材情况",
           key:'material.isNationalPlanUsed',
@@ -465,7 +486,8 @@ export default {
           requiredKey:'material.isResearchRequired',
           usecheck: false,
           needcheck: false
-        }
+        },
+
       ],
       material:{
          materialName:'',
@@ -497,14 +519,14 @@ export default {
          materialExtensions:[],   //扩展项
          "materialExtra.notice":'',
          "materialExtra.note":'',
-          noticeFiles:[],
-          noteFiles:[],
+          /* noticeFiles:[],
+          noteFiles:[], */
           materialNoticeAttachments:[],
           materialNoteAttachments:[]
 
       },
-      noticeFiles:[],
-      noteFiles:[],
+      /* noticeFiles:[],
+      noteFiles:[], */
       chooseBookData:[],
       rules: {
         materialName: [
@@ -647,7 +669,7 @@ export default {
                   for(var k in typeArr){
                     typeArr[k]=parseInt(typeArr[k]);
                   }
-                 this.material.materialType=typeArr;;
+                 this.material.materialType=typeArr;
                  this.ruleForm.materialType= typeArr;
              //主任赋值
               this.projectDirectorData=[{id:this.material.director,realname:res.data.data.directorName}];
@@ -683,7 +705,21 @@ export default {
               }
               this.material.noteFiles=this.ruleForm.materialNoteAttachments;
               this.noteFiles=this.ruleForm.materialNoteAttachments;
-
+              //编辑权限赋值
+              this.ruleForm.cehuaPowers=res.data.data.cehuaPowers;
+              this.ruleForm.projectEditorPowers=res.data.data.projectEditorPowers;
+               var cehuaArr=res.data.data.cehuaPowers.split('');
+               var projectArr=res.data.data.projectEditorPowers.split('');
+               for(var i in cehuaArr){
+                  if(cehuaArr[i]==1){
+                    this.material.cehuaPowers.push(parseInt(i));
+                  }
+               }
+               for(var i in projectArr){
+                  if(projectArr[i]==1){
+                    this.material.projectEditorPowers.push(parseInt(i));
+                  }
+               } 
              }
            })
         }
@@ -821,9 +857,11 @@ export default {
     /* 文件上传改变 */
     /* 图片 */
     imgUploadChange(file,filelist){
+     this.material.noticeFiles=filelist;
      console.log(file,filelist);
-      this.noticeFiles=filelist;
-      /* 验证 */
+     this.$refs.ruleForm.validateField('noticeFiles');
+    },
+    imgBeforeUpload(file){
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
@@ -845,32 +883,22 @@ export default {
         this.$message.error('图片名称不能超过80个字符！');
         this.noticeFiles.pop();
         return false;
-      }   
-      this.material.noticeFiles=filelist;
-      this.ruleForm.noticeFiles=[];
-      this.ruleForm.materialNoticeAttachments=[];
-     for(var i in filelist){
-       if(filelist[i].raw){
-         this.ruleForm.noticeFiles.push(filelist[i].raw);
-       }else{
-         var obj={
-             id:filelist[i].id,
-             name:filelist[i].name,
-             url:filelist[i].url
-         }
-         this.ruleForm.materialNoticeAttachments.push(obj);
-       }
-     }
-     this.$refs.ruleForm.validateField('noticeFiles');
+      }  
     },
     imgUploadSuccess(res,file,filelist){
-      console.log(res,file,filelist);   
+      console.log(res,file,filelist); 
+      this.material.noticeFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoticeAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+      })
     },
     /* 文件 */
     fileUploadChange(file,filelist){
-     console.log(file,filelist);
-     this.noteFiles=filelist; 
-     /* 验证 */
+     this.material.noteFiles=filelist;
+     this.$refs.ruleForm.validateField('noteFiles');
+    },
+    fileBeforeUpload(file){
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
@@ -893,29 +921,14 @@ export default {
         this.noteFiles.pop();
         return false;
      }
-     this.material.noteFiles=filelist;
-     this.ruleForm.noteFiles=[];
-     this.ruleForm.materialNoteAttachments=[];
-     for(var i in filelist){
-      if(filelist[i].raw){
-        this.ruleForm.noteFiles.push(filelist[i].raw);
-        //this.material.noteFiles.push(filelist[i].raw);        
-      } else{
-        var obj={
-             id:filelist[i].id,
-             name:filelist[i].name,
-             url:filelist[i].url
-         }
-         this.ruleForm.materialNoteAttachments.push(obj);
-        // this.material.noteFiles.push(obj);
-      }
-
-     }
-     
-     this.$refs.ruleForm.validateField('noteFiles');
     },
     fileUploadSuccess(res,file,filelist){
-
+     console.log(res,file,filelist); 
+     this.material.noteFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoteAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+      })
     },
     /**
        * 删除选中的项目主任
@@ -1036,25 +1049,22 @@ export default {
     },
     /* 表单处理 */
     uploadFormMerge(obj){
-      var formdata=new FormData();
+      var paramdata = new URLSearchParams();
+      //var formdata=new FormData();
          for(var i in obj){
-           if(i=='noticeFiles'||i=='noteFiles'){
-               obj[i].forEach((item)=>{
-                   formdata.append(i,item);
-               })
-           }
-            else if(typeof(obj[i])=='object'){
+            if(typeof(obj[i])=='object'){
              var arr=[];
                  for(var j in obj[i]){
                   arr.push(typeof(obj[i][j])=='object'?JSON.stringify(obj[i][j]):obj[i][j]);
                  }
-                 formdata.append(i,'['+arr.join()+']');
+                 paramdata.append(i,'['+arr.join()+']');
            }else{
-               formdata.append(i,obj[i])
+               paramdata.append(i,obj[i])
            }
            
          }
-         return formdata;
+         console.log(paramdata);
+         return paramdata;
     },
     /* 表单内表格验证 */
     formTableChecked(){
@@ -1099,13 +1109,10 @@ export default {
                return false;
                 }
             
-            let config = {
-                headers:{'Content-Type':'multipart/form-data'}
-              };  //添加请求头
               this.isloading=true;
                //提交
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
-                    this.uploadFormMerge(this.ruleForm),config).then((res)=>{
+                    this.uploadFormMerge(this.ruleForm)).then((res)=>{
                     console.log(res);
                     if(res.data.code==1){
                       this.isloading=false;
@@ -1116,7 +1123,7 @@ export default {
 
 
           } else {
-            
+            this.$message.error('表单验证未通过');
             return false;
           }
         });       

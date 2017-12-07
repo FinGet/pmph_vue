@@ -23,7 +23,7 @@
           <el-tabs v-model="activeName">
             <el-tab-pane label="修改个人信息" name="setting">
               <div class="setting-iterm">
-                <el-form :model="formSetting"  ref="formRules" :rules="formRules"  label-width="80px">
+                <el-form :model="formSetting"  ref="ruleForm" :rules="formRules"  label-width="80px">
                   <el-form-item label="头像:">
                     <div class="headImageWrapper">
                       <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
@@ -71,7 +71,7 @@
                   </el-form-item>
                 </el-form>
                 <div class="text-right paddingT30">
-                  <el-button type="primary">确认修改</el-button>
+                  <el-button type="primary" @click="updateUserInfoBtn">确认修改</el-button>
                 </div>
               </div>
             </el-tab-pane>
@@ -107,6 +107,7 @@
 			  api_update_userInfo:'/pmpheep/users/pmph/updatePersonalData',
         activeName:'setting',
         formSetting:{
+          id: '',
           username:'',
           realname:'',
           sex:1,
@@ -145,21 +146,27 @@
           sex:0,
           address:'',
         },
-        postData:{},
+        postData:{
+          id:'',
+          realname:'',
+          avatar:'',
+          handphone: '',
+          email:'',
+        },
         formRules: {
           realname:[
             { required: true, message: "用户名称不能为空", trigger: "change,blur" },
             { max: 20, message: "名称长度过长", trigger: "change,blur" }
           ],
-          handphone:[
-            this.$formRules.phone()
-          ],
-          email: [
-            this.$formRules.email()
-          ],
-          address: [
-            { max: 250, message: "名称长度过长", trigger: "change,blur" }
-          ],
+//          handphone:[
+//            this.$formRules.phone()
+//          ],
+//          email: [
+//            this.$formRules.email()
+//          ],
+//          address: [
+//            { max: 250, message: "名称长度过长", trigger: "change,blur" }
+//          ],
         }
       }
 		},
@@ -206,7 +213,9 @@
           reader.readAsDataURL(file.raw);
         }else{
           self.userHeadImage.filename=file.name;
-          prevDiv.innerHTML='<div class="avatar" style="height:100px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\)\';"></div>';
+          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
+          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
         }
 
       },
@@ -215,9 +224,7 @@
        */
       upLoadFileSuccess(response, file, fileList){
         if (response.code == '1') {
-          this.$message.success('创建小组成功');
-          this.getGroupData();
-          this.dialogVisible=false;
+          this.$message.success('修改成功');
         }else{
           this.$message.error(response.msg.msgTrim());
         }
@@ -229,16 +236,54 @@
         this.$message.error('创建小组失败');
       },
       /**
-       * 修改个人信息
+       * 点击修改按钮
        */
-      updateUserInfo(){
+      updateUserInfoBtn(){
         //将post参数赋值给this.postData
-        for(let key in this.formSetting){
+        for(let key in this.postData){
           this.postData[key] = this.formSetting[key];
         }
 
+        this.$refs.ruleForm.validate(valid => {
+          if (valid) {
+            this.updateUserInfo();
+          } else {
+            this.$message.error('请完善表单！');
+            return false;
+          }
+        });
 
       },
+      /**
+       * 修改个人信息
+       */
+      updateUserInfo() {
+        if (this.userHeadImage.filename) {
+          this.userHeadImage.currentFile.upload();
+          return;
+        }
+        this.$axios.put(this.api_update_userInfo, this.$commonFun.initPostData({
+          id: this.formSetting.id,
+          realname: this.formSetting.realname,
+          avatar: this.userInfo.avatar,
+          handphone: this.formSetting.handphone,
+          email: this.formSetting.email,
+          file: ''
+        }))
+          .then(function (response) {
+            let res = response.data;
+            //修改成功
+            if (res.code === 1) {
+              this.$message.success('修改成功!');
+            } else {
+              self.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            this.$message.error('请求失败，请重试!');
+          });
+      }
     },
     created(){
       this.activeName=this.$route.query.type||'setting';

@@ -84,6 +84,9 @@
                                   <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">设置选题号</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
+                                  <el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">导出学校(Excel)</el-button>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
                                   <el-button type="text" @click="operation('delete',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">删除</el-button>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -255,6 +258,9 @@ export default {
           case 'toProcess':
             this.$router.push({name:'申报表审核',params:{materialId:materialData.id}});
             break;
+          case 'exportExcel':
+            this.exportExcel(materialData.id);
+            break;
           default:
             throw new error('没有该类型操作');
         }
@@ -288,6 +294,14 @@ export default {
           })
           .catch(e=>{})
 
+      },
+      /**
+       * 导出学校列表
+       * @param id 教材id
+       */
+      exportExcel(id){
+        //todo 导出功能
+        this.$message.info('功能尚未实现！');
       }
     },
     created() {
