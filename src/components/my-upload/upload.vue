@@ -68,7 +68,7 @@
         class="el-upload__input"
         type="file"
         ref="input"
-        name="name"
+        :name="name"
         @change="handleChange"
         accept="accept">
       </input>
