@@ -1,17 +1,17 @@
 <template>
 	<div class="application_nav">
-        <div class="tab_nav_outbox">
-          <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回</el-button>
-          <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
-            <el-tab-pane label="申报表审核" name="presscheck"></el-tab-pane>
-            <el-tab-pane label="主任视图" name="1v3"></el-tab-pane>
-            <el-tab-pane label="项目编辑视图" name="1v2"></el-tab-pane>
-            <el-tab-pane label="策划编辑视图" name="1v1"></el-tab-pane>
-          </el-tabs>
-        </div>
-        <div class="header_title_tips">
-          <p >{{title}}</p>
-          <div class="tips_icon"></div>
+      <div class="tab_nav_outbox" v-if="!$router.currentRoute.meta.hideTabs">
+        <el-button type="text"  class="back_button" icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
+        <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
+          <el-tab-pane label="提交到出版社" name="presscheck-pmph"></el-tab-pane>
+          <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
+          <el-tab-pane label="职位遴选" name="1v3"></el-tab-pane>
+          <el-tab-pane label="结果统计" name="result"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&title">
+        <p >{{title}}</p>
+        <div class="tips_icon"></div>
       </div>
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
@@ -26,10 +26,14 @@
 export default {
 	data() {
 		return {
-			activeTagName:'presscheck',
+		  api_material_detail:'/pmpheep/material/materialName',
+      materialId:'',
+      activeTagName:'presscheck',
+      activeFirst:false,
+      activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'全国高等职业教育临床医学院',
+      title:'新建通知',
 		}
 	},
 	methods: {
@@ -37,18 +41,52 @@ export default {
       this.$router.push(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
     },
+    initActiveTag(val){
+     this.activeFirst=false;
+     this.activeLast=false;
+     if(val=='presscheck'){
+       this.activeFirst=true;
+     }
+     else if(val=='result'){
+      this.activeLast=true;
+     }
+    },
+    getMaterialData(){
+      this.$axios.get(this.api_material_detail,{params:{
+        id:this.materialId
+      }})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.title = res.data
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+    },
   },
   watch:{
-
+    activeTagName(newval,old){
+         this.initActiveTag(newval);
+    },
+    $route () {
+      this.activeTagName = this.$router.currentRoute.meta.applicationName;
+    }
   },
   created() {
       // console.log(this.$router);
+      this.initActiveTag(this.activeTagName);
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
-      if(this.$router.currentRoute.name=='新建遴选教材'){
-        this.title='新建教材申报'
+
+      this.materialId = this.$route.params.materialId;
+
+      if(this.$router.currentRoute.params.materialId=='new'){
+        this.title='新建通知'
       }else{
-        this.title='全国高等职业教育临床医学院'
+        this.getMaterialData();
       }
+      console.log(this.$route)
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
@@ -88,6 +126,16 @@ export default {
     box-sizing: border-box;
 
 }
+.application_nav .tab_nav .el-tabs__nav{
+  border-right:1px solid rgb(238, 241, 246);
+   border-left:1px solid rgb(238, 241, 246);
+}
+.application_nav .tab_active_first .el-tabs__nav{
+ border-left: 1px solid rgb(209, 217, 229);
+}
+.application_nav .tab_active_last .el-tabs__nav{
+ border-right: 1px solid rgb(209, 217, 229);
+}
 .application_nav .tab_nav  .el-tabs__header{
     border-bottom:0 ;
 }
@@ -121,7 +169,11 @@ export default {
     float:left;
     background-color: #12806b;
     font-size:16px;
-    padding:2px 40px 2px 15px;
+    padding:2px 20px 2px 15px;
+    max-width:545px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .application_nav .header_title_tips .tips_icon{
     border:4px solid #475669;

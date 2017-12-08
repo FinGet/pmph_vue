@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <transition name="fade" mode="out-in">
       <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -11,11 +13,6 @@
     data: function (){
       return {
         active:true
-      }
-    },
-    computed:{
-      user:function () {
-        return this.$store.getters.getUserData;
       }
     },
     created(){

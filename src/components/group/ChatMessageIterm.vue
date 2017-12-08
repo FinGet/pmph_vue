@@ -2,17 +2,18 @@
 *  小组聊天单条消息组件
 */
 <template>
-    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId}" v-if="message.type=='message'">
+    <div class="messageIterm clearfix" :class="{'my-message':currentUserId===message.userId&&currentUserType==message.userType}" v-if="message && message.userId && message.type=='message'">
       <div class="messageIterm-inner">
         <div class="messageUserHead text-center">
           <div>
             <img :src="message.header" alt="">
           </div>
-          <transition name="el-fade-in-linear">
-            <span v-if="currentUserId===message.userId">
-              <i class="fa fa-trash-o fa-lg"></i>
-            </span>
-          </transition>
+          <!--删除消息-->
+          <!--<transition name="el-fade-in-linear">-->
+            <!--<span v-if="currentUserId===message.userId">-->
+              <!--<i class="fa fa-trash-o fa-lg"></i>-->
+            <!--</span>-->
+          <!--</transition>-->
         </div>
         <div class="messageContainer">
           <p class="messageHeader">
@@ -24,45 +25,34 @@
             <span class="messageState"  v-if="state!==defaultState.completed">
               <i class="" v-if="state===defaultState.complete"></i>
               <i class="fa fa-spinner fa-spin" v-else-if="state===defaultState.loading"></i>
-              <i class="fa fa-exclamation-circle color-error" v-else-if="state===defaultState.error"></i>
+              <i class="fa fa-exclamation-circle color-error cursor-pointer" v-else-if="state===defaultState.error" @click="sendMessage"></i>
             </span>
             <span class="messageTime" v-else>{{message.time}}</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="messageIterm clearfix messageIterm-text" v-else>
-      <p><span class="username">{{message.username}} </span> 上传了 {{message.messageData}} 文件 {{message.time}}</p>
+    <div class="messageIterm clearfix messageIterm-text"  v-else-if="message && message.type=='file'">
+      <p>{{message.messageData}}</p>
     </div>
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js'
     export default{
         props:{
           groupId:{
-            type:String
+            type:Number,
           },
           currentUserId:{
-            type:String,
-            default:'123456'
+          },
+          currentUserType:{
           },
           isNew:{
             type:Boolean,
             default:false
           },
           message:{
-            type:Object,
-            default:()=>{
-                return{
-                  type:'messgae',
-                  userId:'123456',
-                  header:DEFAULT_USER_IMAGE,
-                  username:'人卫社001号',
-                  messageData:'这是个测试数据，01234，测试测试',
-                  time:'2012-12-12 12:12:00'
-                }
-            }
+            type:Object
           }
         },
         data(){
@@ -78,20 +68,38 @@
         computed:{
 
         },
+        methods:{
+          sendMessage(){
+            let self = this;
+            //state状态改为loading
+            this.state = this.defaultState.loading;
+            //ajax请求
+            this.$axios.post('/pmpheep/group/add/groupMessage',this.$initPostData({
+              msgConrent:this.message.messageData,
+              groupId:this.groupId,
+              sessionId:this.$getUserData().sessionId
+            }))
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.state = self.defaultState.completed;
+                }else{
+                  self.state = self.defaultState.error;
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                self.state = self.defaultState.error;
+                self.$message.error('发送消息失败，请重试');
+              });
+          },
+        },
         created(){
           //当组件创建完毕判断消息类型，如果是新增消息，则开始ajax请求
           if(!this.isNew){
             return;
           }
-          let self = this;
-          //state状态改为loading
-          this.state = this.defaultState.loading;
-          console.log(111);
-          //ajax请求 （先模拟异步）
-          setTimeout(function () {
-            self.state = self.defaultState.completed;
-          },2500);
-
+          this.sendMessage();
         },
     }
 </script>
@@ -107,6 +115,7 @@
     max-width: 600px;
     position: relative;
     padding: 0 30px 0 50px;
+    word-wrap:break-word;
   }
   .messageUserHead{
     position: absolute;
@@ -124,6 +133,7 @@
 .messageUserHead>div>img{
   display: block;
   width: 100%;
+  height: 100%;
 }
 .messageUserHead>span{
   display: none;
@@ -183,8 +193,8 @@
 }
 .messageTime{
   position: absolute;
-  width: 130px;
-  right: -140px;
+  width: 140px;
+  right: -148px;
   bottom: 0;
   color:#c8c8c8;
 }
@@ -224,7 +234,7 @@
   left: -20px;
 }
 .messageIterm.my-message .messageTime{
-  left: -140px;
+  left: -148px;
 }
 .messageIterm-text{
   text-align: center;

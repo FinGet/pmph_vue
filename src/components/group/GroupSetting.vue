@@ -1,129 +1,308 @@
 <template>
 	<div class="groupsetting">
-    <el-row>
-      <el-col>
-        <div class="pull-left marginR30">
-          <img class="avatar" :src="group.image?data.image:defaultImage" alt="小组头像">
-        </div>
-        <el-col :span="8">
-          <span class="name">小组名称:</span><el-input v-model="name"></el-input>
-          <br>
-        </el-col>
-      </el-col>
-      <el-col>
-        <el-upload
-          class="marginT10 marginL10"
-          action="#"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <el-button size="small" type="primary">上传头像</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-      </el-col>
-      <el-col>
-        <div class="cutLine-dashed clearfix"></div>
-        <div class="pull-right">
-          <el-popover
-            ref="popover"
-            placement="top"
-            width="160"
-            v-model="visible">
-            <p>确认解散小组吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="dismiss">确定</el-button>
+    <div class="addNewPopup paddingB30">
+      <el-form label-width="120px" :model="groupData" :rules="rules" ref="ruleForm">
+        <el-form-item label="小组头像：">
+          <div class="headImageWrapper">
+            <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+              <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
+            </el-tooltip>
+            <!--上传文件按钮-->
+            <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
+            <my-upload
+              class="fileInput"
+              ref="upload"
+              action="/pmpheep/group/update/pmphGroupDetail"
+              :data="groupPostData"
+              :on-change="filechange"
+              :on-success="upLoadFileSuccess"
+              :on-error="uploadError"
+              :show-file-list="false"
+              :auto-upload="false">
+              <el-button class="fileInput">上传</el-button>
+            </my-upload>
+            <div ref="headImageWrapper" v-show="groupData.filename">
+              <img :src="DEFAULT_USER_IMAGE" class="avatar">
             </div>
-          </el-popover>
-          <el-button class="pull-left" type="danger" v-popover:popover>解散小组</el-button>
-          <el-popover
-            ref="popover1"
-            placement="top"
-            width="160"
-            v-model="visible1">
-            <p>确认修改小组吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="change">确定</el-button>
+            <div v-show="!groupData.filename">
+              <img :src="groupData.groupImage" class="avatar">
             </div>
-          </el-popover>
-          <el-button class="pull-left marginL10" type="primary" v-popover:popover1>确认修改</el-button>
-        </div>
-      </el-col>
-    </el-row>
+          </div>
+        </el-form-item>
+        <el-form-item label="小组名称：" prop="groupName">
+          <el-input v-model="groupData.groupName" @keyup.enter.native="updateGroup" placeholder="请输入小组名称"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="cutLine-dashed clearfix"></div>
+    <div class="paddingT10 text-right">
+      <el-button  type="danger" @click="deleteGroup">解散小组</el-button>
+      <el-button class="marginL10" type="primary"  @click="updateGroup">确认修改</el-button>
+    </div>
 	</div>
 </template>
 
 <script>
+  import bus from 'common/eventBus/bus.js'
 	export default {
-    props:{
-      group:{
-        type:Object,
-        default: () => {
-          return {}
-        }
-      },
-      name:{
-        type:String,
-        default:'人卫社小组'
-      }
-    },
+    props:['currentGroup'],
     data() {
       return {
         visible:false,
         visible1:false,
-        defaultImage:'http://119.254.226.115/pmph_imesp/upload/sys_userext_avatar/1706/20170623191553876.png'
+        DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
+        groupData:{
+          filename:undefined,
+          groupName:null,
+          groupImage:null,
+          currentFile:undefined
+        },
+        rules:{
+          groupName:[
+            { required: true, message: '请输入小组名称', trigger: 'blur' },
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          ]
+        },
       };
     },
-    methods: {
-      // 头像上传成功
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+    computed:{
+      currentGroupId(){
+        return this.currentGroup.id;
       },
-      // 限制用户上传头像类型与大小
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG/png 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-      // 确认修改
-      change() {
-        this.visible1 = false
-        this.$message({
-          message: '恭喜你，修改成功！',
-          type: 'success'
-        });
-      },
-      // 解散小组
-      dismiss() {
-        this.visible = false
-        this.$message({
-          message: '恭喜你，解散成功！',
-          type: 'success'
-        });
+      groupPostData(){
+        let obj = {};
+        obj.id = this.currentGroupId;
+        obj.groupName = this.groupData.groupName;
+        obj.sessionId = this.$getUserData().sessionId;
+        return obj
       }
-    }
+    },
+    methods: {
+      /**
+       * 上传头像input发生改变时触发
+       * @param e input内置事件对象
+       */
+      filechange(file){
+        var self=this;
+        let prevDiv = this.$refs.headImageWrapper;
+        let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+
+        if(!ext){return;}
+        // gif在IE浏览器暂时无法显示
+        if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
+          self.groupData.filename=undefined;
+          return;
+        }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size==0){
+          this.$message.error("图片大小不能小于1bt");
+          self.groupData.filename=undefined;
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于10M
+        if(file.size/1024/1024 > 10){
+          this.$message.error("图片大小不能大于10M");
+          self.groupData.filename=undefined;
+          return;
+        }
+
+        self.groupData.currentFile = file;
+        if(window.FileReader){
+          let reader = new FileReader();
+          reader.onload = function(evt) {
+            self.groupData.filename=file.name;
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+          }
+          reader.readAsDataURL(file.raw);
+        }else{
+          self.groupData.filename=file.name;
+          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
+          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
+        }
+      },
+      /**
+       * 修改小组
+       */
+      updateGroup(){
+        this.$confirm("确定修改该小组信息?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            //小组名称不能为空
+            if(!this.groupData.groupName||this.groupData.groupName.length>20){
+              this.$message.error('请输入正确的小组名称');
+              return false;
+            }
+            let self= this;
+            if(this.groupData.currentFile){
+              this.groupData.currentFile.upload();
+            }else{
+              this.$axios.post('/pmpheep/group/update/pmphGroupDetail',this.$commonFun.initPostData({
+                file:'',
+                id:this.currentGroup.id,
+                groupName:this.groupData.groupName,
+                sessionId:this.$getUserData().sessionId
+              }))
+                .then((response) => {
+                  let res = response.data;
+                  if (res.code == '1') {
+                    self.$message.success('修改小组成功');
+                    //修改成功通过vue bus派发一个事件
+                    bus.$emit('group:info-change')
+                  }else{
+                    self.$message.error(res.msg.msgTrim());
+                  }
+                })
+                .catch((error) => {
+                  self.$message.error('修改小组失败，请重试');
+                });
+            }
+
+          })
+          .catch(e=>{})
+
+      },
+      /**
+       * 创建小组请求成功的回调
+       */
+      upLoadFileSuccess(response, file, fileList){
+        if (response.code == '1') {
+          this.$message.success('修改小组成功');
+          //修改成功通过vue bus派发一个事件
+          bus.$emit('group:info-change')
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
+      },
+      /**
+       * 创建小组请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        this.$message.error('修改小组失败，请重试');
+      },
+      /**
+       * 解散小组
+       */
+      deleteGroup(){
+        this.$confirm("确定解散该小组?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete('/pmpheep/group/delete/group',{params:{
+              id:this.currentGroup.id,
+              sessionId:this.$getUserData().sessionId
+            }})
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  this.$message.success('删除小组成功');
+                  //修改成功通过vue bus派发一个事件
+                  bus.$emit('group:info-change')
+                }else{
+                  this.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                this.$message.error('删除小组失败，请重试');
+              });
+          })
+          .catch(e=>{})
+
+      }
+    },
+    mounted(){
+      this.groupData.groupName=this.currentGroup.groupName;
+      this.groupData.groupImage=this.currentGroup.groupImage;
+    },
+    watch:{
+      currentGroupId(){
+        this.groupData.groupName=this.currentGroup.groupName;
+        this.groupData.groupImage=this.currentGroup.groupImage;
+      }
+    },
 	}
 </script>
 
 <style scoped>
   .groupsetting{
-    padding: 10px 30px;
+    padding: 60px 30px 0;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
   }
-  .name{
-    color:rgb(131, 143, 165);
-    padding-bottom: 5px;
-    display: inline-block;
+  .lineHeight-100{line-height: 100px;}
+  .addNewPopup{
+    max-width: 470px;
+    line-height: 36px;
   }
-  .avatar{
+  .addNewPopup .headImageWrapper{
     width: 100px;
-    height:100px;
+    height: 100px;
+    position: relative;
+  }
+  .headImageWrapper-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.7);
+    opacity: 0;
+  }
+  .headImageWrapper-bg>i{opacity: 1;}
+  .headImageWrapper:hover .headImageWrapper-bg{
+    opacity: 0.75;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  .fileInput{
+    display: block;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:10;
+  }
+  .headImageWrapper>div>img{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .headImageWrapper>div{
+    width: 100%;
+    height:100%;
   }
 </style>

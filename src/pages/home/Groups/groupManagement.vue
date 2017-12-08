@@ -2,30 +2,44 @@
   <div class="groupmanage" ref="groupmanage" :style="{height:wrapperHeight+'px'}">
     <el-row class="groupmanage-row">
       <el-col :span="grouplistColDefaultWidth" class="border-right-1 groupmanage-col">
-        <Groups-list @clickItem="setGroupName"></Groups-list>
+        <Groups-list @clickItem="setGroupName" @getGroupList="getGroupList"></Groups-list>
       </el-col>
-      <el-col :span="chartColDefaultWidth" class="groupmanage-col">
+      <el-col :span="chartColDefaultWidth" class="groupmanage-col" v-if="currentGroupId">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>{{currentGroup.name?currentGroup.name:'人卫社小组'}}</p>
+            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
           </div>
-          <ul class="tab clearfix">
-            <li v-for="(tab,index) in tabs" @click="changeTab(index,tab.view)" :class="{active:currentActive===index}">
+          <ul class="grouptab clearfix">
+            <li v-for="(tab,index) in tabs"
+                @click="changeTab(index,tab.view)"
+                :key="tab.type"
+                :class="{active:currentActive===index}"
+                v-show="tab.view=='GroupChat'||tab.view=='GroupFile'||(tab.view=='GroupSetting'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder))||(tab.view=='GroupMembers'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin))"
+            >
               {{tab.type}}
             </li>
+
           </ul>
         </div>
         <div
           class="groupmanageMainContainer"
           ref="groupmanageMainContainer"
-          :style="{height:wrapperHeight-93+'px'}"
+          :style="{height:wrapperHeight-80+'px'}"
         >
-          <component :is="currentView"></component>
+        <transition name="fade" mode="out-in">
+          <component :is="currentView" :currentGroup="currentGroup" :currentGroupList="currentGroupList" :crurrentMemberInfo="crurrentMemberInfo" :groupId.sync="currentGroupId" @refeshMember="refreshMember" :isrefreshMange='isrefreshMange'></component>
+        </transition>
         </div>
         <!--<button @click="fold"></button>-->
       </el-col>
-      <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap">
-        <MembersList @addNewMember="addNewMember"></MembersList>
+      <el-col :span="memberColDefaultWidth" class="groupmanage-col  groupmanageMembershap" v-if="currentGroupId">
+        <MembersList
+          @refreshMange="refreshMange"
+          :refreshMember.sync="isrefreshMember"
+          @getGroupMemberList="getGroupMemberList"
+          :groupId.sync="currentGroupId"
+          :crurrentMemberInfo="crurrentMemberInfo"
+        ></MembersList>
       </el-col>
     </el-row>
   </div>
@@ -41,6 +55,7 @@
   export default {
     data() {
       return {
+        currentGroupId:'',
         wrapperHeight:600,
         foldRightCol:false,
         grouplistColDefaultWidth:5,
@@ -48,17 +63,53 @@
         memberColDefaultWidth:4,
         currentActive: 0, // 当前tab
         currentView: 'GroupChat',
-        currentGroup:{name:''},
+        currentGroup:{
+          groupImage: "",
+          groupName:"",
+          textbook:'',
+          id:null
+        },
+        currentGroupList:[],
+        crurrentMemberList:[],
+        isrefreshMember:false,
+        isrefreshMange:false,
         tabs:[
           {type:'互动交流',view:'GroupChat'},
           {type:'文件共享',view:'GroupFile'},
+          {type:'成员管理',view:'GroupMembers'},
           {type:'小组设置',view:'GroupSetting'},
-          {type:'成员管理',view:'GroupMembers'}
         ]
       }
     },
     computed:{
-
+      crurrentMemberInfo(){
+        let userId= this.$getUserData().userInfo.id;
+        let loginType= this.$getUserData().userInfo.loginType;
+        let info = {
+            id: undefined,
+            groupId: undefined,
+            userId: userId,
+            userType: loginType,
+            avatar: undefined,
+            isWriter: true,
+            isFounder: false,
+            isAdmin: false,
+            isSystemAdmin:!!this.$getUserData().userInfo.isAdmin,
+            displayName: undefined
+          };
+        this.crurrentMemberList.forEach(function(item){
+          if(item.userId==userId&&item.userType==loginType){
+            info.id = item.id;
+            info.groupId = item.groupId;
+            info.avatar = item.avatar;
+            info.isWriter = item.isWriter;
+            info.isFounder = item.isFounder;
+            info.isAdmin = item.isAdmin;
+            info.displayName = item.displayName;
+          }
+        });
+        return info;
+      },
     },
     created(){
       //组件创建后，初始化三列展示区的宽度
@@ -99,14 +150,44 @@
         this.currentActive = index
         this.currentView = view
       },
+      refreshMember(){
+        this.isrefreshMember=!this.isrefreshMember;
+      },
       setting(){//点击成员列表下的setting图标按钮
 
       },
       setGroupName(group) {
-        this.currentGroup.name = group.name
+        this.currentGroupId =group.id;
+        for(let key in this.currentGroup){
+          this.currentGroup[key] = group[key]
+        }
       },
-      addNewMember(){
-
+      refreshMange(){
+       this.isrefreshMange=!this.isrefreshMange;
+      },
+      /**
+       * 获取小组列表
+       * @param groupList
+       */
+      getGroupList(groupList){
+        this.currentGroupList=groupList;
+        this.currentGroupId=this.currentGroupList[0].id;
+      },
+      /**
+       * 获取当前小组成员列表
+       * @param memberList
+       */
+      getGroupMemberList(memberList){
+        this.crurrentMemberList=memberList;
+      },
+    },
+    watch:{
+      /**
+       * 当切换小组时，默认跳转到聊天窗口
+       */
+      currentGroupId(){
+        this.currentActive = 0;
+        this.currentView = 'GroupChat';
       },
     },
     components:{
@@ -124,9 +205,9 @@
 
   .groupmanage{
     height: 100%;
-    box-shadow: 0 0 8px rgba(0,0,0,.3);
     border-radius: 4px;
     overflow: hidden;
+    border: 1px solid rgba(0,0,0,.1);
   }
   .border-right-1{
     border-right: 1px solid #e6e7e8;
@@ -146,7 +227,7 @@
   }
   .currentGroupName{
     font-size: 16px;
-    padding-bottom: 16px;
+    padding-bottom: 9px;
   }
   .groupmanageMembershap .groupmanageHead{
     padding: 36px 10px;
@@ -155,10 +236,12 @@
   .groupmanageMainContainer{
     border-right: 1px solid #e6e7e8;
   }
-  .tab{
+  .groupmanage .grouptab{
     width: 100%;
+    background: none !important;
+    border: none !important;
   }
-  .tab li {
+  .grouptab li {
     float: left;
     text-align: left;
     cursor: pointer;
@@ -166,7 +249,7 @@
     margin-right: 30px;
     padding-bottom: 8px;
   }
-  .tab .active{
+  .grouptab .active{
     border-bottom: 3px solid #1abb9c;
     margin-bottom: -2px;
     border-radius: 2px;

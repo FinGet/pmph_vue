@@ -1,89 +1,126 @@
 <template>
     <div class="new_book_release">
         <el-form ref="form" :model="formData" class="release_form" label-width="110px">
-            <el-form-item label="教材名称：">
-                <span class="grey_span">{{formData.bookName}}</span>
+            <el-form-item label="教材名称：" class="marginB10">
+                <span class="grey_span">{{formData.materialName}}</span>
             </el-form-item>
-            <el-form-item label="教材轮次：">
-                <span class="grey_span">第{{formData.round}}轮</span>
+            <el-form-item label="教材轮次：" class="marginB10">
+                <span class="grey_span">第{{formData.materialRound}}轮</span>
             </el-form-item>
-            <el-form-item label="教材分类：">
-                <span class="grey_span">{{formData.releaseText}}</span>
-                <!-- <el-form-item>
-                    <el-input v-model="formData.classify" class="classify_input" disabled></el-input>
-                    <el-button type="text" class="classify_button" @click="dialogVisible=true">选择</el-button>
-                    <el-button type="text" class="classify_button">删除</el-button>
-                </el-form-item> -->
-                <el-form-item>
-                    <span class="red_span">（*若教材数量较多，可按照模板即第一列为书名第二列为版次的格式导入Excel文档批量添加）</span>
-                </el-form-item>
-                <el-form-item>
-                    <el-form-item>
-                        <span class="grey_span" style="float:left;">请按照模板格式上传（
-                            <el-button type="text" class="grey_button">模板下载.xlsx</el-button>）：</span>
-                        <el-upload class="upload" action="" :file-list="fileList">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                        </el-upload>
-                    </el-form-item>
-                </el-form-item>
+            <el-form-item label="教材分类：" class="marginB10">
+                <span class="grey_span">{{formData.materialType.join(' > ')}}</span>
+                <p><span class="red_span">（*若教材数量较多，可按照下载的模板格式上传，模板中书序、书籍名称、版次不能为空，书序和版次只能填写数字）</span></p>
+                <div>
+                  <span class="grey_span" style="float:left;">
+                    请按照模板格式上传（
+                    <a class="grey_button" href="/static/设置书目录模板.xls">模板下载.xls</a>
+                    ）：
+                  </span>
+                  <my-upload
+                    class="ChatInputFileBtn"
+                    ref="upload"
+                    :action="api_upload"
+                    :before-upload="beforeUploadFile"
+                    :on-success="upLoadFileSuccess"
+                    :on-error="uploadError"
+                    :show-file-list="false">
+                    <el-button size="small" type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击上传'}}</el-button>
+                  </my-upload>
+                </div>
             </el-form-item>
-            <el-form-item label="扩展项：">
-                <table class="extend_list">
-                    <tr>
-                        <td>序号</td>
-                        <td>书名</td>
-                        <td>版次</td>
-                        <td>
-                            <el-button type="text" @click="addExtendItem" class="add_button">新增</el-button>
-                        </td>
-                    </tr>
-                    <tr v-for="(item,index) in extendListData" :key="index">
-                        <td>
-                            <!-- <span v-if="!item.orderNumVisible">{{item.orderNum}}
-                                            <i class="el-icon-edit" @click="showInput(index,'input'+index+'_1','orderNumVisible')"></i>
-                                        </span> -->
-                            <el-input :placeholder="item.orderNum" :ref="'input'+index+'_1'" style="width:50px;"></el-input>
-                        </td>
-                        <td>
-                            <!--  <span v-if="!item.bookNameVisible">{{item.bookName}} -->
-                            <!--  <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_2','bookNameVisible')"></i> -->
-                            <!--</span>-->
-                            <el-input :placeholder="item.bookName" :ref="'input'+index+'_2'" style="width:99%;"></el-input>
-                        </td>
-                        <td>
-                            <!--  <span v-if="!item.editionVisible">{{item.edition}} -->
-                            <!-- <i class="el-icon-edit"  @click="showInput(index,'input'+index+'_3','editionVisible')"></i> -->
-                            <!--</span>-->
-                            <el-input :placeholder="item.edition" :ref="'input'+index+'_3'" style="width:30%;"></el-input>
-                        </td>
-                        <td>
-                            <el-button type="text" @click="deleteExtendItem(index)" class="delete_button">删除</el-button>
-                        </td>
-                    </tr>
-                    <!--  <tr>
-                                             <td>
-                                                 1<i class="el-icon-edit"></i>
-                                                 <el-input style="width:100px;" size="mini"></el-input>
-                                                </td>
-                                             <td>请填写书名 <i class="el-icon-edit"></i></td>
-                                             <td>请填写版次<i class="el-icon-edit"></i></td>
-                                             <td><el-button type="text">删除</el-button></td>
-                                         </tr> -->
-                </table>
+            <el-form-item label="书目录：">
+              <!--表格-->
+              <div class="table-wrapper book-list-catalogue">
+                <div class="pull-right">
+                  <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
+                  <!--<el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>-->
+                  <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
+                </div>
+                <el-table
+                  ref="multipleTable"
+                  border
+                  stripe
+                  :data="extendListData"
+                  tooltip-effect="dark"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="orderNum"
+                    label="书序"
+                    width="160">
+                    <template scope="scope">
+                      <div class="paddingB15 paddingT10 relative">
+                        <el-input
+                          placeholder="请输入"
+                          class="searchInputEle border-radius-4"
+                          :class="{'border-red':!scope.row.sortIsOk}"
+                          icon="edit"
+                          v-model.trim="scope.row.sort"
+                          @blur="sortChange(scope.row)"
+                          @change="sortChange(scope.row)"
+                          :key="Math.random()"
+                        ></el-input>
+                        <span class="error fontsize-sm table-input-tips" v-if="!scope.row.sortIsOk">请输入正确数字</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="bookName"
+                    label="书籍名称"
+                    width="420">
+                    <template scope="scope">
+                      <div class="paddingB15 paddingT10 relative">
+                        <el-input
+                          placeholder="请输入书籍名称"
+                          class="searchInputEle border-radius-4"
+                          :class="{'border-red':!scope.row.nameIsOk}"
+                          icon="edit"
+                          v-model.trim="scope.row.textbookName"
+                          @blur="nameChange(scope.row)"
+                          @change="nameChange(scope.row)"
+                        ></el-input>
+                        <span class="error fontsize-sm table-input-tips" v-if="!scope.row.nameIsOk">请输入1~25个字符</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="edition"
+                    label="版次"
+                    width="160">
+                    <template scope="scope">
+                      <div class="paddingB15 paddingT10 relative">
+                        <el-input
+                          placeholder="请输入"
+                          class="searchInputEle border-radius-4"
+                          :class="{'border-red':!scope.row.roundIsOk}"
+                          icon="edit"
+                          v-model.trim="scope.row.textbookRound"
+                          @blur="roundChange(scope.row)"
+                          @change="roundChange(scope.row)"
+                        ></el-input>
+                        <span class="error fontsize-sm table-input-tips" v-if="!scope.row.roundIsOk">请输入正确数字</span>
+                      </div>
+
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="操作">
+                    <template scope="scope">
+                      <el-button type="text" @click="insertRow(scope.$index)">插入行</el-button>
+                      <el-button type="text" @click="deleteExtendItem(scope.$index)">删除行</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+
+                <div class="out_bottom_box marginT60">
+                  <div class="bottom_box">
+                    <el-button type="primary" class="bottom_button" @click="save()">暂存</el-button>
+                    <el-button type="primary" class="bottom_button" @click="save(true)" >保存，下一步</el-button>
+                    <el-checkbox class="marginL20" v-model="formData.isPublic">仅选中学校可见</el-checkbox>
+                  </div>
+                </div>
+              </div>
             </el-form-item>
         </el-form>
-
-        <div class="out_bottom_box">
-            <div class="bottom_box">
-                <el-button type="primary" class="bottom_button" @click="$router.go(-2)" >保存但不发布</el-button>
-                <el-button type="primary" class="bottom_button">保存并发布</el-button>
-            </div>
-        </div>
-        <!-- 教材分类选择弹框 -->
-        <el-dialog title="医学教材架构" :visible.sync="dialogVisible" class="checkTree_dialog">
-            <el-tree :data="treeData" :props="defaultProps" class="tree_box"></el-tree>
-
-        </el-dialog>
     </div>
 </template>
 
@@ -91,117 +128,344 @@
 export default {
     data() {
         return {
+            api_book_list:'/pmpheep/textBook/list/textbooks',
+            api_save:'/pmpheep/textBook/add/textbook',
+            api_upload:'/pmpheep/textBook/import/excel',
             formData: {
-                bookName: '全国高等学校本科应用心理学专业第三轮规划教材',
-                releaseText: '学校教育>研究生教材',
-                round: 3,
-                classify: ''
+              materialId:'',
+              materialName: '',
+              materialType: [],
+              materialRound: undefined,
+              isPublic:false
             },
-            fileList: [],
-            dialogVisible: false,
-            extendListData: [
-                {
-                    orderNum: 1,
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-                {
-                    orderNum: 3,
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-                {
-                    orderNum: 2,
-                    orderNumVisible: false,
-                    bookName: '请填写书名',
-                    bookNameVisible: false,
-                    edition: '请填写版次',
-                    editionVisible: false
-                },
-            ],
-            treeData: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }]
+            uploadLoading:false,
+            extendListData: [{
+              id:'',
+              sort: '',
+              textbookName: '',
+              textbookRound: '',
+              sortIsOk : true,
+              nameIsOk : true,
+              roundIsOk : true,
             }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
-            }
+            currentUserId:this.$getUserData().userInfo.id,
         }
     },
     methods: {
-        handleNodeClick(data) {
-            this.checkedTreeData = data;
-            console.log(data);
-        },
-        getTreeNode() {
-
-        },
-        //切换输入框并自动聚焦
-        /*  showInput(index, str,name) {
-             this.extendListData[index][name] = true;
-            // console.log(index, str);
-            // console.log(this.$refs);
-             this.$nextTick(_ => {
-                 console.log(this.$refs[str]["0"].$refs);
-                 this.$refs[str]["0"].$refs.input.focus()
-             });
-         }, */
-        deleteExtendItem(index) {
-            this.extendListData.splice(index, 1);
-        },
-        addExtendItem() {
-            this.extendListData.push({
-                orderNum: 1,
-                orderNumVisible: false,
-                bookName: '请填写书名',
-                bookNameVisible: false,
-                edition: '请填写版次',
-                editionVisible: false
-            });
+      /**
+       * 获取当前教材下所有书籍
+       * @param val
+       */
+      getBookList(){
+        this.$axios.get(this.api_book_list,{params:{
+          materialId:this.formData.materialId
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.formData.materialName = res.data.materialName;
+              this.formData.materialType = res.data.materialType;
+              this.formData.materialRound = res.data.materialRound;
+              this.formData.isPublic = !!res.data.isPublic;
+              res.data.textbooks = JSON.parse(res.data.textbooks);
+              res.data.textbooks.map(iterm=>{
+                iterm.sortIsOk = true;
+                iterm.nameIsOk = true;
+                iterm.roundIsOk = true;
+              });
+              if(res.data.textbooks.length>0){
+                this.extendListData = res.data.textbooks;
+              }
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+      /**
+       * 删除入行
+       * @param index
+       */
+      deleteExtendItem(index) {
+        this.extendListData.splice(index, 1);
+        if(this.extendListData.length==0){
+          this.insertRow(-1);
         }
+      },
+      /**
+       * 插入行
+       * @param index
+       */
+      insertRow(index){
+        console.log(index)
+        this.extendListData.splice(index+1,0,{
+          id:'',
+          sort: '',
+          textbookName: '',
+          textbookRound: '',
+          sortIsOk : true,
+          nameIsOk : true,
+          roundIsOk : true,
+        });
+      },
+      /**
+       * 按照书序排序显示
+       */
+      sortByBookNum(){
+        this.extendListData.sort((x,y)=>{
+          return x['sort']-y['sort'];
+        });
+        this.$message.success('已排序完成！');
+      },
+      /**
+       * 按照版次排序
+       */
+      sortByPreNum(){
+        this.extendListData.sort((x,y)=>{
+          return x['textbookRound']-y['textbookRound'];
+        })
+        this.$message.success('已排序完成！');
+      },
+      /**
+       * 自动设置书序
+       */
+      autoSetBookNum(){
+        //提交
+        this.$confirm("确定清除当前书序，重新设置书序吗？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.extendListData.forEach((iterm,index)=>{
+              iterm.sort = index+1;
+              iterm.sortIsOk=true;
+            });
+            this.$message.success('自动设置书序完成！');
+          })
+          .catch(e=>{})
+
+      },
+      /**
+       * 判断输入是否合法
+       */
+      sortChange(row){
+        var temp = true;
+        if(row.textbookName==''&&row.textbookRound==''){
+          if(row.sort!=''){
+            temp = this.$commonFun.checkType(row.sort,'number');
+          }
+        }else{
+          temp = this.$commonFun.checkType(row.sort,'number');
+        }
+        row.sortIsOk=temp;
+        if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
+          row.nameIsOk=true;
+          row.roundIsOk=true;
+          row.sortIsOk=true;
+        }
+      },
+      /**
+       * 判断输入是否合法
+       */
+      nameChange(row){
+        var temp = true;
+        if(row.sort!=''||row.textbookRound!=''){
+          if(!row.textbookName){
+            temp=false;
+          }
+        }
+        if(row.textbookName.length>25){
+          temp=false;
+        }
+        row.nameIsOk = temp;
+        if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
+          row.nameIsOk=true;
+          row.roundIsOk=true;
+          row.sortIsOk=true;
+        }
+      },
+      /**
+       * 判断输入是否合法
+       */
+      roundChange(row){
+        var temp = true;
+        if(row.textbookName==''&&row.sort==''){
+          if(row.textbookRound!=''){
+            temp = this.$commonFun.checkType(row.textbookRound,'number');
+          }
+        }else{
+          temp = this.$commonFun.checkType(row.textbookRound,'number');
+        }
+        row.roundIsOk=temp;
+        if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
+          row.nameIsOk=true;
+          row.roundIsOk=true;
+          row.sortIsOk=true;
+        }
+      },
+      /**
+       * 检查表格中书籍数据输入是否合法
+       */
+      checkDataIsOk(){
+        var flag = true;
+        this.extendListData.map(iterm=>{
+          if(iterm.textbookName==''&&iterm.textbookRound==''&&iterm.sort==''){
+
+          }else{
+            if(!iterm.textbookRound || !this.$commonFun.checkType(iterm.textbookRound,'number')){
+              iterm.roundIsOk=false;
+              flag = false;
+            }
+            if(!iterm.sort || !this.$commonFun.checkType(iterm.sort,'number')){
+              iterm.sortIsOk=false;
+              flag = false;
+            }
+            if(!iterm.textbookName||iterm.textbookName.length>25){
+              iterm.nameIsOk=false;
+              flag = false;
+            }
+          }
+        });
+        return flag;
+      },
+      /**
+       * 保存书籍目录
+       */
+      save(next){
+        var bookList = [];
+        if(!this.checkDataIsOk()){
+          this.$message.error('请正确填写每本书籍数据');
+        }
+        this.extendListData.map(iterm=>{
+          let tempObj = {
+            id:iterm.id?iterm.id:null,
+            materialId:this.formData.materialId,
+            textbookName:iterm.textbookName,
+            textbookRound:iterm.textbookRound,
+            sort:iterm.sort,
+            founderId:this.currentUserId
+          }
+          bookList.push(tempObj);
+        })
+        //提交
+        this.$confirm("确认保存修改？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.post(this.api_save,this.$commonFun.initPostData({
+              materialId:this.formData.materialId,
+              materialName:this.formData.materialName,
+              materialRound:this.formData.materialRound,
+              materialType:this.formData.materialType,
+              isPublic:this.formData.isPublic,
+              textbooks:JSON.stringify(bookList),
+            }))
+              .then((response) => {
+                let res = response.data;
+                console.log(res)
+                if (res.code == '1') {
+                  if(next){
+                    this.$router.push({name:'教材申报选择学校'});
+                  }else{
+                    this.$message.success('保存成功！');
+                  }
+                }else{
+                  this.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                this.$message.error('保存失败，请重试');
+              });
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 当上传按钮添加excel
+       * @param file
+       */
+      beforeUploadFile(file){
+        let flag = true;
+
+        var filedata = file.raw;
+        var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+        // 类型判断
+        if(!(ext=='xls'||ext=='xlsx')){
+          this.$message.error("请按照模板格式的文档上传文件");
+          return;
+        }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size<1){
+          this.$message.error("文件大小不能小于1bt");
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于100M
+        if(file.size/1024/1024 > 100){
+          this.$message.error("文件大小不能超过100M！");
+          return;
+        }
+
+        this.uploadLoading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件请求成功的回调
+       */
+      upLoadFileSuccess(res, file, fileList){
+        if (res.code == '1') {
+          this.extendListData=[];
+          res.data.forEach(iterm=>{
+            this.extendListData.push({
+              id:'',
+              sort: iterm.sort,
+              textbookName: iterm.textbookName,
+              textbookRound: iterm.textbookRound,
+              sortIsOk : true,
+              nameIsOk : true,
+              roundIsOk : true,
+            })
+          })
+        }else{
+          this.$message.error(res.msg.msgTrim());
+        }
+
+        this.uploadLoading = false;
+      },
+      /**
+       * 上传文件请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        console.log(err);
+        this.$message.error('上传文件失败，请重试');
+        this.uploadLoading = false;
+      },
+    },
+  created(){
+    this.formData.materialId = this.$route.params.materialId;
+    //如果没有教材id则跳转到通知列表
+    if(!this.formData.materialId){
+      this.$router.push({name:'通知列表'});
     }
+    if(this.formData.materialId!='new'){
+      this.getBookList();
+    }
+  },
 }
 
 </script>
 <style scoped>
+ .book-list-catalogue{
+   max-width: 900px;
+ }
+
+
 .new_book_release .grey_span {
     color: #9c9c9c;
 }
@@ -266,7 +530,7 @@ export default {
 .extend_list tr td {
     width: 25%;
     color: #5e5e5e;
-    /*text-align: center;*/
+    text-align: center;
     padding: 5px 0;
 }
 
@@ -293,4 +557,10 @@ export default {
     margin-left: 50%;
     transform: translateX(-50%);
 }
+  .table-input-tips{
+    position: absolute;
+    bottom: 7px;
+    height: 12px;
+    left: 0;
+  }
 </style>

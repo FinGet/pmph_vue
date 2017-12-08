@@ -9,14 +9,14 @@
     <div class="nav-top">
       <div class="nav-top-user">
         <Message-icon></Message-icon>
-        <User></User>
+        <User :userData="userData"></User>
       </div>
       <div class="breadcrumb-wrapper">
         <Breadcrumb></Breadcrumb>
       </div>
     </div>
     <div class="app-main" ref="main">
-      <div class="app-main-inner"  :class="{'app_main_border':isShowBorder}">
+      <div class="app-main-inner"  :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
 
         <transition name="fade" mode="out-in">
           <router-view></router-view>
@@ -30,29 +30,33 @@
 <script>
   import SideBar from 'components/Side-bar'
   import MessageIcon from 'components/Message-icon'
-  import User from 'components/User';
-  import {mapGetters} from 'vuex'
+  import User from 'components/User-headIcon';
   import Breadcrumb from 'components/Breadcrumb'
-
+  import createWebsocket from 'common/mixins/createWebsocket'
+  import bus from 'common/eventBus/bus'
   export default {
+    mixins:[createWebsocket],
     data() {
       return {
         isShowBackTop:false,
-        isShowBorder:true
+        isShowBorder:true,
+        isPadding:false,
+        sidebarFlod:true,
       }
     },
     computed:{
-      ...mapGetters([
-        'sidebarFlod'
-      ])
+      userData(){
+        return this.$getUserData().userInfo;
+      },
     },
     methods: {
       toggleSideBarBtnFold(){
-        this.$store.commit("TOGGLE_SILDBAR");
+        this.sidebarFlod=!this.sidebarFlod;
+        bus.$emit('side-bar:flod_unflod');
       },
       sidebarWrapperClick(){
         if(!this.sidebarFlod){
-          this.$store.commit("TOGGLE_SILDBAR");
+          bus.$emit('side-bar:flod_unflod');
         }
       },
       backToTop(){
@@ -76,12 +80,17 @@
        // console.log(this.$router.currentRoute);
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
-        if(str=='materialrouter'||str=='groupmanage'){
+            this.isPadding=false;
+        if(str=='materialrouter'||str=='groupmanage'||str=='auth'){
           this.isShowBorder=false;
+        }
+        if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'){
+          this.isPadding=true;
         }
         if(this.$router.currentRoute.name=="通知列表"){
           this.isShowBorder=true;
         }
+
       }
     },
     components:{
@@ -143,10 +152,10 @@
     background: url('../common/images/back_to_top.png')no-repeat 100%;
     background-position: 0px 0px;
     z-index: 999;
-    transition: all .3s;
+    cursor: pointer;
   }
   .app-main .back_to_top:hover{
-    background-position: 0px -46px;
+    background-position: 0px -47px;
   }
   .app-main-inner{
     min-height: 100%;
@@ -159,6 +168,9 @@
       padding:15px 20px;
       background: #fff;
       min-height: 100%;
+  }
+  .app_main_padding{
+         padding:0;
   }
   .nav-top{
     height:38px;
@@ -174,7 +186,7 @@
   }
   .nav-top-user{
     float: right;
-    margin-right: 18px;
+    margin-right: 38px;
   }
   .breadcrumb-wrapper{
     display: inline-block;

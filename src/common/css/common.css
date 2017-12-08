@@ -1,14 +1,16 @@
 /*css初始化*/
 body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,input,textarea,select{margin:0;padding:0}
-body{font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  font-size:14px;background:#f7f7f7;-webkit-text-size-adjust:100%;color: rgb(31, 43, 61);}
+body{font-family: "Microsoft YaHei","微软雅黑",Arial,sans-serif,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB";
+  font-size:14px;line-height: 1.4;background:#f7f7f7;-webkit-text-size-adjust:100%;color: rgb(31, 43, 61);}
 a{text-decoration:none; color: #333;}
-a:hover{text-decoration:underline}
+a:hover{text-decoration:none}
 em{font-style:normal}
 li{list-style:none}
 img{border:0;vertical-align:middle}
 table{border-collapse:collapse;border-spacing:0}
 p{word-wrap:break-word}
+
+
 
 /*主题色 rgb(42, 63, 84)*/
 
@@ -34,18 +36,129 @@ p{word-wrap:break-word}
   white-space: nowrap;
 }
 
-/*color相关*/
+/*字体相关*/
+.lineheight-1{line-height: 1;}
+.lineheight-16{line-height: 16px;}
+.lineheight-18{line-height: 18px;}
+.lineheight-24{line-height: 24px;}
+.lineheight-28{line-height: 28px;}
+.lineheight-36{line-height: 36px;}
+
+.lineheight-normal{line-height:1.4;}
+.word-wrap{word-wrap:break-word}
+
+.page-title{
+  padding: 10px 0 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/*=================================================================
+  color相关
+  =================================================================*/
 .color-error{color: #ff4949;}
 .gray{color:#c8c8c8;}
 .blue{color: #337ab7;}
 .orange{color:#fe955e;}
-/*字体相关*/
-.lineheight-36{line-height: 36px;}
+.green{color: #1ab194;}
+.error{color: #f5596e;}
 
-.page-title{
-  font-size: 16px;
-  font-weight: bold;
+.bg-yellow{background-color: yellow;}
+.bg-none{background: none !important;}
+.bg-none *{background: none !important;}
+
+.link{color: #337ab7;cursor: pointer}
+/*=================================================================
+  布局相关
+  =================================================================*/
+.none{
+  display: none;
 }
+.inline-block{
+  display: inline-block;
+}
+.block{
+  display: block;
+}
+/*=================================================================
+  float等宽列表
+  使用示例：
+    <div class="inline_box">
+      <div class="inline_2"></div>
+      <div class="inline_2"></div>
+    </div>
+  =================================================================*/
+.inline_box{}
+.inline_box:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.inline_2, .inline_3, .inline_4, .inline_5, .inline_6{float:left;}
+.inline_2{width:50%; *width:49.9%;}
+.inline_3{width:33.33333%; *width:33.3%;}
+.inline_4{width:25%; *width:24.9%;}
+.inline_5{width:20%; *width:19.9%;}
+.inline_6{width:16.66666%; *width:16.6%;}
+
+/*清除浮动*/
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+/*搜索框*/
+.search-10{
+  margin: 10px;
+}
+
+/*左浮动，右浮动*/
+.pull-left{
+  float: left;
+}
+.pull-right{
+  float: right;
+}
+
+.absolute{
+  position: absolute;
+}
+.relative{
+  position: relative;
+}
+.fixed{
+  position: fixed;
+}
+/*=================================================================
+  width && height
+  =================================================================*/
+
+.width20{width: 20px;}
+.width40{width: 40px;}
+.width60{width: 60px;}
+.width80{width: 80px;}
+.width100{width: 100px;}
+.width150{width: 150px;}
+.width200{width: 200px;}
+.width250{width: 250px;}
+.width300{width: 300px;}
+.width350{width: 350px;}
+.width400{width: 400px;}
+.width500{width: 500px;}
+.width600{width: 600px;}
+.width800{width: 800px;}
+.width1000{width: 1000px;}
+
+.height10{height: 10px;}
+.height20{height: 20px;}
+.height30{height: 30px;}
+.height40{height: 40px;}
+.height50{height: 50px;}
+.height60{height: 60px;}
+.height70{height: 70px;}
+.height80{height: 80px;}
+.height100{height: 100px;}
+.height120{height: 120px;}
+.height160{height: 160px;}
+.height180{height: 180px;}
+.height200{height: 200px;}
+.height300{height: 300px;}
+.height400{height: 400px;}
+.height500{height: 500px;}
+
+
 
 /*=================================================================
   padding
@@ -74,6 +187,8 @@ p{word-wrap:break-word}
 .paddingL15 { padding-left: 15px; }
 .paddingL20 { padding-left: 20px; }
 .paddingL30 { padding-left: 30px; }
+.paddingL100 { padding-left: 100px; }
+.paddingL110 { padding-left: 100px; }
 
 .paddingR0 { padding-right: 0; }
 .paddingR5  { padding-right: 5px; }
@@ -104,6 +219,10 @@ p{word-wrap:break-word}
 .marginL40 { margin-left: 40px; }
 .marginL50 { margin-left: 50px; }
 .marginL60 { margin-left: 60px; }
+.marginL80 { margin-left: 80px; }
+.marginL100 { margin-left: 80px; }
+.marginL100 { margin-left: 100px; }
+.marginL110 { margin-left: 110px; }
 
 .marginR10 { margin-right: 10px; }
 .marginR20 { margin-right: 20px; }
@@ -118,6 +237,25 @@ p{word-wrap:break-word}
 .marginB40 { margin-bottom: 40px; }
 .marginB50 { margin-bottom: 50px; }
 .marginB60 { margin-bottom: 60px; }
+
+/*=================================================================
+  z-index-100
+  =================================================================*/
+.z-index-10{z-index: 10;}
+.z-index-20{z-index: 20;}
+.z-index-30{z-index: 30;}
+.z-index-40{z-index: 40;}
+.z-index-50{z-index: 50;}
+.z-index-60{z-index: 60;}
+.z-index-70{z-index: 70;}
+.z-index-80{z-index: 80;}
+.z-index-100{z-index: 100;}
+.z-index-200{z-index: 200;}
+.z-index-300{z-index: 300;}
+.z-index-600{z-index: 600;}
+.z-index-800{z-index: 800;}
+.z-index-1000{z-index: 1000;}
+
 
 /*=================================================================
   border
@@ -135,24 +273,21 @@ p{word-wrap:break-word}
   border-bottom: 1px dashed #ccc;
 }
 
+.border-red{border:1px solid #f5596e !important;}
+
 .no-border{
   border: none !important;
 }
 
-
-/*清除浮动*/
-.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-/*搜索框*/
-.search-10{
-  margin: 10px;
+.border-radius-4{
+  border-radius: 4px;
 }
 
-/*左浮动，右浮动*/
-.pull-left{
-  float: left;
-}
-.pull-right{
-  float: right;
+/*=================================================================
+  鼠标样式
+  =================================================================*/
+.cursor-pointer{
+  cursor: pointer;
 }
 
 /*重置默认样式*/
@@ -190,6 +325,14 @@ button a,button a:hover,button a:active{
   width:500px;
 }
 
+/*=================================================================
+  图片
+  =================================================================*/
+img{
+  max-width: 100%;
+}
+
+
 /*按钮*/
 .btn{
   margin: 10px;
@@ -215,7 +358,7 @@ button a,button a:hover,button a:active{
 }
 
 /*必填项 * 图标*/
-.required-fields:after{
+.required-fields:before{
   content: ' *';
   color: red;
   font-size: 120%;
@@ -283,6 +426,11 @@ button a,button a:hover,button a:active{
   max-width: 800px;
 
 }
+.searchBox-wrapper.max{
+  width: 80%;
+  max-width: 800px;
+
+}
 .searchBox-wrapper.searchBtn{
   width: 100px;
   line-height: 36px;
@@ -296,6 +444,9 @@ button a,button a:hover,button a:active{
   float: right;
 }
 .table-wrapper{
+  margin: 10px 0;
+}
+.echart-wrapper{
   margin: 10px 0;
 }
 /*高级搜索样式*/
@@ -359,8 +510,30 @@ a.table-link:hover{
   opacity: 0;
 }
 
+.el-button{
+  min-width: 80px;
+}
+.el-button--text{
+  min-width: inherit;
+}
 
 
-/*重置editor样式*/
-@import "./resetEditor.css";
+/*时间线*/
+.timeLine  {display:block;margin:15px 0;}/*首先，我们要创建一个容器class*/
+.timeLine ul {margin-left:25px;border-left:2px solid #ddd;}/*利用ul标签的特性，设置外边框左移25px，左边边框是2px粗的实心线，颜色一般要浅一点*/
+.timeLine ul li {min-height: 30px;margin-bottom:30px;width:100%;margin-left:-12px;line-height:20px;font-weight:normal;}/*一般情况，通过li标签控制圆点回到时间线上，然后控制要出现的文字大小和是否粗体*/
+.timeLine ul li b {width:8px;height:8px;background:#fff;border:2px solid #555;margin:5px;border-radius:6px;-webkit-border-radius:6px;-moz-border-radius:6px;overflow:hidden;display:inline-block;float:left;}/*利用处理加粗以外没有其它特别属性b标签做时间轴的圆点。*/
+.timeLine ul li:hover b {border:2px solid #ff6600;}/*注意这一行，前面的li标签后面加了一个:hover伪属性，意思是鼠标移上来，激活后面的属性，这样可以设置鼠标移动到整个时间范围的时候，时间点和时间显示会变色*/
+.timeLine ul li p {padding-left:28px;font-size:14px;line-height:25px;}/*这里利用段落标签p做文字介绍*/
+
+
+.material-notice p,.message-detail-content p{
+  margin: 5px 0;
+  min-height: 19px;
+}
+
+
+/*媒体查询样式*/
 @import "responsive.css";
+/*打印样式*/
+@import "print.css";

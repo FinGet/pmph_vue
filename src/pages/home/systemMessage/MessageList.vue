@@ -2,26 +2,15 @@
   <div class="message-list">
     <el-row>
       <el-col :span="12">
-        <div class="search-title">消息标题:</div>
-        <el-col :span="6" class="search-10">
-          <el-input v-model="input" placeholder="请输入搜索内容"></el-input>
+        <div class="search-title">标题:</div>
+        <el-col :span="8" class="search-10">
+          <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
         </el-col>
-        <el-button class="btn" type="primary"  icon="search">搜索</el-button>
+        <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
      <div class="pull-right">
-       <el-popover
-         ref="popover"
-         placement="top"
-         width="160"
-         v-model="visible">
-         <p>选中的文件确定删除吗？</p>
-         <div style="text-align: right; margin: 0">
-           <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-           <el-button type="primary" size="mini" @click="visible = false,delet()">确定</el-button>
-         </div>
-       </el-popover>
-       <el-button class="btn" type="danger" icon="delete"  :disabled="isSelected" v-popover:popover>批量删除</el-button>
-       <router-link :to="{ name: '编辑消息'}">
+       <el-button class="btn" type="danger" icon="delete" :disabled="isSelected"  @click="delet">批量删除</el-button>
+       <router-link :to="{ name: '编辑消息',query:{type:'add'}}">
        <el-button class="btn" type="primary" icon="edit">
          发送新消息
        </el-button>
@@ -29,159 +18,128 @@
      </div>
     </el-row>
     <div class="cutLine-dashed"></div>
-    <el-row>
-      <el-col :span="24">
-        <el-table
-      ref="multipleTable"
-      :data="tableData"
-      border
-      stripe
-      empty-text="暂无数据"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-      @cell-click="preview"
+    <div class="table-wrapper">
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        border
+        stripe
+        empty-text="暂无数据"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="标题"
+          show-overflow-tooltip>
+          <template scope="scope">
+            <el-button type="text" @click="preview(scope.$index,scope.row)">{{scope.row.title}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="sendName"
+          label="发送者">
+        </el-table-column>
+        <el-table-column
+          prop="sendTime"
+          label="发送时间"
+          width="200"
         >
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        label="信息标题"
-        width="400"
-        show-overflow-tooltip>
-        <template scope="scope">
-          <a href="javascript:;">{{scope.row.title}}</a>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="发送者"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="date"
-        label="发送时间"
+        </el-table-column>
+        <el-table-column
+          prop="isWithdraw"
+          label="状态"
+          width="80"
         >
-      </el-table-column>
-      <el-table-column label="操作">
-        <template scope="scope">
-          <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-          <el-button
-            size="small"
-            @click="handleReissue(scope.$index, scope.row)">补发</el-button>
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleState(scope.$index, scope.row)">消息状态</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-      </el-col>
-    </el-row>
-    <el-pagination class="pull-right" v-show="tableData.length > 0"
+          <template scope="scope">
+            {{scope.row.isWithdraw?'已撤回':'已发送'}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作"
+        width="300">
+          <template scope="scope">
+            <el-button
+              size="small"
+              type="text"
+              @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button
+              size="small"
+              type="text"
+              @click="handleReissue(scope.$index, scope.row)">补发</el-button>
+            <el-button
+              size="small"
+              type="text"
+              :disabled="scope.row.isWithdraw"
+              @click="handleRecall(scope.$index, scope.row)">撤回</el-button>
+            <el-button
+              size="small"
+              type="text"
+              :disabled="scope.row.isWithdraw"
+              @click="handleState(scope.row.msgId, scope.row)">消息状态</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <el-pagination class="pull-right"
+                   v-if="dataTotal>pageSize"
      @size-change="handleSizeChange"
      @current-change="handleCurrentChange"
-     :current-page="currentPage"
+     :current-page="pageNumber"
      :page-sizes="[10, 20, 30, 40]"
-     :page-size="100"
+     :page-size="pageSize"
      layout="total, sizes, prev, pager, next, jumper"
-     :total="400">
+     :total="dataTotal">
     </el-pagination>
-    <!--预览弹窗-->
-    <Preview-popup :close.sync="previewShow"></Preview-popup>
+
+    <el-dialog
+      title="请选择发送对象"
+      :visible.sync="dialogVisible"
+      size="tiny">
+      <div>
+        <!--输入标题-->
+        <el-form :model="reissueForm" ref="messageForm" label-width="110px">
+          <el-form-item label="发送对象：">
+            <el-radio-group v-model="reissueForm.reissueSendType">
+              <el-radio :label="1">学校管理员</el-radio>
+              <el-radio :label="2">所有人</el-radio>
+              <el-radio :label="3">特定对象</el-radio>
+              <el-radio :label="4">教材报名者</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reissue">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import PreviewPopup from 'components/PreviewPopup'
   export default {
     data() {
       return {
-        previewShow:false,
-        input:'',
+        popVisible:false,
+        dialogVisible:false,
+        reissueForm:{
+          title:'',
+          reissueMsgId:undefined,
+          reissueSendType:1,
+          senderId: ''
+        },
         visible: false,
-        currentPage: 4, // 分页当前页
-        tableData: [{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }, {
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        },{
-          title: '国家卫生和计划生育委员会住院医师',
-          name: '测试人员',
-          date: '2017-09-06 00:43:30'
-        }],
-        multipleSelection: []
+        tableData: [],
+        multipleSelection: [],
+        pageNumber: 1,
+        pageSize: 20,
+        title: '',
+        dataTotal: 0,
       }
     },
     computed:{
@@ -197,56 +155,177 @@
         }
       }
     },
+    mounted() {
+       this.getMessageList()
+    },
     methods: {
-//      toggleSelection(rows) {
-//        if (rows) {
-//          rows.forEach(row => {
-//            this.$refs.multipleTable.toggleRowSelection(row);
-//          });
-//        } else {
-//          this.$refs.multipleTable.clearSelection();
-//        }
-//      },
+      /**
+       * 加载消息列表
+       */
+      getMessageList() {
+        this.$axios.get("/pmpheep/messages/list/message", {
+          params: {
+            sessionId: this.$getUserData().sessionId,
+            title: this.title,
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize
+          }
+        }).then((response) => {
+          let res = response.data
+          this.dataTotal = res.data.total
+          if (res.code == '1') {
+            // 将时间戳转为标准格式
+            for (let i=0; i< res.data.rows.length; i++) {
+              res.data.rows[i].sendTime = this.$commonFun.formatDate(res.data.rows[i].sendTime)
+            }
+
+            this.tableData=res.data.rows;
+          }
+        }).catch((error) => {
+          console.log(error.msg)
+        })
+      },
+      /**
+       * 搜索
+       */
+      search() {
+        this.getMessageList()
+      },
+      /**
+       * 选择每页有多少条数据
+       */
+      handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.getMessageList()
+      },
+      /**
+       * 选择当前第几页
+       */
+      handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        this.pageNumber = val
+        this.getMessageList()
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      // 点击修改
+       /**
+        * 点击修改
+        */
       handleEdit(index, row) {
-        console.log(index, row);
+        this.$router.push({ name: '编辑消息',query:{type:'edit',messageId:row.msgId,id:row.id}});
       },
-      // 点击补发
+      /**
+       * 撤回
+       */
+      handleRecall(index, row) {
+        this.$confirm("确定撤回此条消息?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$axios.put('/pmpheep/messages/withdraw',this.$initPostData({
+            msgId:row.msgId
+          }))
+          .then(response=>{
+            let res = response.data;
+            if(res.code==1){
+                this.$message.success('成功撤销此消息');
+                row.isWithdraw=true;
+            }else{
+                this.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(e=>{
+            this.$message.error('撤销失败，请重试');
+          })
+        })
+      },
+      /**
+       * 点击补发
+       * 根据消息发送类型跳转到相应的页面
+       *  @to-do 这里先假设sendType
+       */
       handleReissue(index, row) {
-        console.log(index, row);
-        this.$router.push({name:'选择学校',query:{history:'1'}})
+        this.reissueForm.title = row.title;
+        this.reissueForm.reissueMsgId = row.msgId;
+        this.reissueForm.senderId = row.senderId
+        this.dialogVisible=true;
       },
-      // 点击消息状态
-      handleState(index, row) {
-        this.$router.push('messagestate')  //将你的跳转写在这里。
-      },
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-      preview(row, event, column){
-        if(event.label==='信息标题'){
-          this.previewShow=true;
+      /**
+       * 跳转到补发选择人员页面
+       */
+      reissue(){
+        switch (this.reissueForm.reissueSendType){
+          case 1 :
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId},query:{type:'reissue'}});
+            break;
+          case 2:
+            this.$router.push({name:'选择学校',params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId},query:{type:'reissue'}});
+            break;
+          case 3:
+            this.$router.push({name:'特定对象',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId}});
+            break;
+          case 4:
+            this.$router.push({name:'教材报名者',query:{type:'reissue'},params:{msgId:this.reissueForm.reissueMsgId,sendType:this.reissueForm.reissueSendType,title:this.reissueForm.title,senderId:this.reissueForm.senderId}});
+            break;
+            dafault:
+              this.$message({
+                type: 'error',
+                message: '补发出错'
+              });
         }
       },
-      // 删除消息
+      /**
+       * 点击消息状态
+       * @param id
+       * @param row
+       */
+      handleState(id, row) {
+        this.$router.push({path:'messagestate', query: {msgId: row.msgId}})  //将你的跳转写在这里。
+      },
+      /**
+       * 点击消息标题进入消息详情页面
+       */
+      preview(index, row){
+        this.$router.push({name:'系统消息详情', query: {msgId:row.id}})
+      },
+      /**
+       * 批量删除
+       */
       delet() {
         // console.log(1)
-        this.tableData.splice(this.multipleSelection,this.multipleSelection.length)
-        this.$refs.multipleTable.clearSelection()
-        this.$message({
-          message: '恭喜你，删除成功！',
-          type: 'success'
-        });
+        // console.log(this.multipleSelection)
+        this.$confirm('确认删除选中的消息？',"提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            var len = this.multipleSelection.length
+            var arr = []
+            for (var i = 0; i< len; i++) {
+              arr.push(this.multipleSelection[i].msgId)
+            }
+            this.$axios.put("/pmpheep/messages/deleteMessage",this.$initPostData({
+              msgIds:arr.join(',')
+            })).then((response) => {
+              let res = response.data
+              console.log(res)
+              if (res.code == '1') {
+                this.getMessageList();
+                this.$message({
+                  message: '恭喜你，删除成功！',
+                  type: 'success'
+                });
+              }
+            }).catch((error) => {
+              console.log(error.msg)
+            })
+          })
+          .catch(e=>{})
       }
-    },
-    components: {
-      PreviewPopup
     }
   }
 </script>

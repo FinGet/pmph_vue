@@ -46,7 +46,7 @@
                 <li v-for="(iterm,index) in data1" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
@@ -61,7 +61,7 @@
                 <li v-for="(iterm,index) in data1_option.state0" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
@@ -76,7 +76,7 @@
                 <li v-for="(iterm,index) in data1_option.state1" :key="index">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
                   <router-link :to="{name:'通知列表'}">
@@ -102,7 +102,7 @@
             >
               <div class="groupHead-inner">
                 <span class="groupHeadImg">
-                  <img :src="item.image?item.image:DEFAULT_USER_IMAGE" alt="小组头像">
+                  <img :src="item.avatar" alt="小组头像">
                 </span>
                 <div class="groupHeadName">
                   <span>{{item.name}}</span>
@@ -131,7 +131,7 @@
                 <li v-for="(iterm,index) in data2" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1.length>limit_size">
                   <router-link to="/404">
@@ -146,7 +146,7 @@
                 <li v-for="(iterm,index) in data2_option.state0" :key="index" v-if="index<limit_size">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
                   <router-link to="/404">
@@ -161,7 +161,7 @@
                 <li v-for="(iterm,index) in data2_option.state1" :key="index">
                   <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
                   <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
                   <router-link to="/404">
@@ -180,7 +180,7 @@
             <el-tab-pane label="文章审核" name="first">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in data3" :key="index" v-if="index<limit_size">
-                  <router-link :to="{name:'申报表审核'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data3.length>limit_size">
                   <router-link to="/404">
@@ -193,7 +193,7 @@
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.errorMes}}</router-link>
+                  <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.errorMes}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data4.length>limit_size">
                   <router-link to="/404">
@@ -206,7 +206,7 @@
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.comment}}</router-link>
+                  <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.comment}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data4.length>limit_size">
                   <router-link to="/404">
@@ -219,7 +219,7 @@
             <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'申报表审核'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
+                  <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="data4.length>limit_size">
                   <router-link to="/404">
@@ -236,12 +236,11 @@
   </div>
 </template>
 <script type="text/javascript">
-  import {DEFAULT_USER_IMAGE} from 'common/config.js';
     export default{
       data() {
         return {
           limit_size:6,
-          DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
+          DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
           activeName1:'first',
           activeName2: 'first',
           activeName3:'first',
@@ -357,10 +356,10 @@
             state:0
           }],
           groupListData:[
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9},
-            {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10},
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9},
-            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8}],
+            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
+            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8,avatar:this.$config.DEFAULT_USER_IMAGE}],
         };
       },
       computed:{
@@ -394,6 +393,9 @@
       mounted(){
         //将四个面板设为等高
       },
+      created(){
+        console.log(this.$router);
+      }
     }
 </script>
 <style scoped>

@@ -7,8 +7,10 @@
           id="groupListSearch"
           placeholder="小组搜索"
           icon="search"
-          v-model="inputSearchGroup"
-          :on-icon-click="handleIconClick">
+          v-model.trim="inputSearchGroup"
+          :on-icon-click="getGroupData"
+          @keyup.enter.native="getGroupData"
+          >
         </el-input>
       </div>
       <div class="memberShape">
@@ -18,16 +20,18 @@
                v-for="(item,index) in groupListData"
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
-               @click="clickGroup(item.id,item)"
+               @click="clickGroup(item)"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
-              <img :src="item.image?item.image:DEFAULT_USER_IMAGE" alt="小组头像">
+              <!-- <img :src="item.groupImage?item.groupImage:DEFAULT_USER_IMAGE" alt="小组头像"> -->
+              <img :src="item.groupImage" alt="小组头像">
             </span>
               <div class="groupHeadName">
-                <span>{{item.name}}</span>
+                <span>{{item.groupName}}</span>
+                <span class="textbook">{{item.textbook}}</span>
               </div>
-              <span class="lastMessageTime">{{item.lastMesTime}}</span>
+              <span class="lastMessageTime" v-if="item.gmtLastMessage">{{changeDateType(item.gmtLastMessage)}}</span>
             </div>
           </div>
         </beauty-scroll>
@@ -42,113 +46,301 @@
     <el-dialog
       title="新增小组"
       :visible.sync="dialogVisible"
+      @close="handleClose"
       size="tiny">
         <div class="addNewPopup">
-          <el-row class="marginB30">
-            <el-col :span="6">
-              <p class="lineHeight-100">小组头像：</p>
-            </el-col>
-            <el-col :span="18">
+          <el-form label-width="120px" :model="newGroupData" :rules="rules" ref="ruleForm">
+            <el-form-item label="小组头像：">
               <div class="headImageWrapper">
+                <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+                  <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
+                </el-tooltip>
                 <!--上传文件按钮-->
-                <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
+
+                <my-upload
+                  class="fileInput"
+                  ref="upload"
+                  action="/pmpheep/group/add"
+                  :data="creadGroupPostData"
+                  :on-change="filechange"
+                  :on-success="upLoadFileSuccess"
+                  :on-error="uploadError"
                   :show-file-list="false"
-                  :on-success="handleAvatarSuccess">
-                  <img v-if="newGroupData.headImage" :src="newGroupData.headImage" class="avatar">
-                  <img v-else :src="DEFAULT_USER_IMAGE" class="avatar">
-                  <i class="el-icon-plus avatar-uploader-icon headImageUploadBtn"></i>
-                </el-upload>
+                  :auto-upload="false">
+                  <el-button class="fileInput">上传</el-button>
+                </my-upload>
+                <div ref="headImageWrapper" v-show="newGroupData.filename">
+                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
+                </div>
+                <div v-show="!newGroupData.filename">
+                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
+                </div>
               </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <p>小组名称：</p>
-            </el-col>
-            <el-col :span="18">
-              <el-input v-model="newGroupData.name" placeholder="请输入小组名称"></el-input>
-            </el-col>
-          </el-row>
+            </el-form-item>
+            <el-form-item label="小组名称：" prop="name">
+              <el-input v-model.trim="newGroupData.name" placeholder="请输入小组名称" @keyup.enter.native="createNewGroup"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="createNewGroup">确 定</el-button>
         </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {DEFAULT_USER_IMAGE} from 'common/config.js';
-  import beautyScroll from '@/base/beautyScroll.vue';
-  import {mapGetters} from 'vuex'
+  import beautyScroll from 'components/beautyScroll.vue';
+  import bus from 'common/eventBus/bus.js'
   export default{
     data(){
+      var _this = this;
        return {
+         groupListUrl:'/pmpheep/group/list/pmphGroup',
          dialogVisible:false,
-         DEFAULT_USER_IMAGE:DEFAULT_USER_IMAGE,
-         currentActiveGroupId:1237,
+         DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
+         currentActiveGroupId:undefined,
          inputSearchGroup:'',
-         groupListData:[
-           {name:'人卫社小组',id:1231,lastMesTime:'昨天'},
-           {name:'成都医科大学内部',lastMesTime:"7-28"},
-           {name:'个人小组',id:1232,lastMesTime:"8-28"},
-           {name:'个人小组',id:1233,lastMesTime:"8-28"},
-           {name:'个人小组',id:1234,lastMesTime:"8-28"},
-           {name:'个人小组',id:1235,lastMesTime:"8-28"},
-           {name:'个人小组',id:1236,lastMesTime:"8-28"},
-           {name:'个人小组',id:1237,lastMesTime:"8-28"},
-           {name:'个人小组',id:1238,lastMesTime:"8-28"},
-           {name:'个人小组',id:1239,lastMesTime:"8-28"},
-           {name:'个人小组',id:1230,lastMesTime:"8-28"},
-           {name:'个人小组',id:12311,lastMesTime:"8-28"},
-           {name:'个人小组',id:12322,lastMesTime:"8-28"},
-           {name:'个人小组',id:12333,lastMesTime:"8-28"},
-           {name:'个人小组',id:12344,lastMesTime:"8-28"},
-           {name:'个人小组',id:12355,lastMesTime:"8-28"},
-           {name:'个人小组',id:12366,lastMesTime:"8-28"},
-           {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年"}],
-            filelist:[],
-            newGroupData : {
-              headImage:null,
-              name:null
-            },
+         groupListData:[],
+         newGroupData:{
+           filename:undefined,
+           name:'',
+           currentFile:undefined
+         },
+         rules:{
+           name:[this.$formRules.required('小组名不能为空','blur'),this.$formRules.name()]
+         },
        }
     },
     computed:{
-      ...mapGetters([
-        'sidebarFlod'
-      ])
+      creadGroupPostData(){
+        let obj = {};
+        obj.groupName = this.newGroupData.name?this.newGroupData.name:'';
+        return obj
+      }
     },
     components:{
       beautyScroll
     },
     methods:{
-      handleIconClick(ev) {
-        console.log(ev);
-      },
-      clickGroup(groupid,group){
-        this.currentActiveGroupId = groupid;
+      clickGroup(group){
+        this.currentActiveGroupId = group.id;
         this.$emit('clickItem',group)
+      },
+      changeDateType(num){
+         return  this.$commonFun.getDateDiff(num);
       },
       /*点击新建小组按钮*/
       addNew(){
         this.dialogVisible = !this.dialogVisible
       },
-      /*小组头像上传成功后的回调*/
-      handleAvatarSuccess(response, file, fileList){
-        this.newGroupData.headImage = URL.createObjectURL(file.raw);
+      /* 初始化小组列表 */
+      getGroupData(){
+        var _this=this;
+        this.$axios.get(this.groupListUrl,{
+          params:{
+            groupName:this.inputSearchGroup,
+            sessionId:this.$getUserData().sessionId
+          },
+        }).then(function(res){
+          if(res.data.code==1){
+            res.data.data.map(iterm=>{
+              iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
+            });
+            _this.groupListData=res.data.data;
+            if(res.data.data.length){
+              var hasCurrentGroup = false;
+              res.data.data.forEach(iterm=>{
+                if(iterm.id == _this.currentActiveGroupId){
+                  hasCurrentGroup=true;
+                }
+              });
+              //保持当前小组选中
+
+                _this.currentActiveGroupId=res.data.data[0].id;
+
+              res.data.data.forEach(iterm=>{
+                if(iterm.id==_this.currentActiveGroupId){
+                  _this.$emit('clickItem',iterm);
+                }
+              });
+              //当前小组列表传递给父组件，以备其他组件用
+              _this.$emit('getGroupList',res.data.data);
+            }
+          }
+        }).catch(function(err){
+          console.log(err);
+        })
       },
-    },
-    watch:{
       /**
-       * 当左侧导航栏收起或展开式要重新刷新beautyScroll
+       * 上传头像input发生改变时触发
+       * @param e input内置事件对象
        */
-      sidebarFlod(){
-        this.$refs.beautyScroll.refresh(280);
+      filechange(file){
+        let self=this;
+        let prevDiv = this.$refs.headImageWrapper;
+        let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+        if(!ext){return;}
+        // gif在IE浏览器暂时无法显示
+        if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          self.newGroupData.filename=undefined;
+          return;
+        }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size==0){
+          this.$message.error("图片大小不能小于1bt");
+          self.newGroupData.filename=undefined;
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于10M
+        if(file.size/1024/1024 > 10){
+          this.$message.error("图片大小不能大于10M");
+          self.newGroupData.filename=undefined;
+          return;
+        }
+        self.newGroupData.currentFile = file;
+        if(window.FileReader){
+          let reader = new FileReader();
+          reader.onload = function(evt) {
+            self.newGroupData.filename=file.name;
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
+          }
+          reader.readAsDataURL(file.raw);
+        }else{
+          self.newGroupData.filename=file.name;
+          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
+          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
+        }
 
       },
+      PreviewImg(imgFile){
+        var newPreview = this.$refs.headImageWrapper;
+        var imgDiv = document.createElement("div");
+
+        console.log(imgDiv)
+        imgDiv.style.width = "100px";     imgDiv.style.height = "100px";
+        imgDiv.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod = scale)";
+        imgDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgFile.value;
+        newPreview.appendChild(imgDiv);
+      },
+      /**
+       * 创建小组请求成功的回调
+       */
+      upLoadFileSuccess(response, file, fileList){
+        if (response.code == '1') {
+          this.$message.success('创建小组成功');
+          this.getGroupData();
+          this.dialogVisible=false;
+        }else{
+          this.$message.error(response.msg.msgTrim());
+        }
+      },
+      /**
+       * 创建小组请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        this.$message.error('创建小组失败');
+      },
+      /**
+       * 创建小组
+       */
+      createNewGroup(){
+        //小组名称不能为空
+        if(!this.newGroupData.name){
+          this.$message.error('请输入小组名称');
+          return false;
+        }
+        let self= this;
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            if(this.newGroupData.currentFile) {
+              this.newGroupData.currentFile.upload();
+            }else{
+              this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
+                file:'',
+                groupName:this.newGroupData.name
+              }))
+                .then((response) => {
+                  let res = response.data;
+                  if (res.code == '1') {
+                    self.$message.success('创建小组成功');
+                    self.getGroupData();
+                    self.dialogVisible=false;
+                  }else{
+                    self.$message.error(res.msg.msgTrim());
+                  }
+                })
+                .catch((error) => {
+                  self.$message.error('创建小组失败');
+                });
+            }
+          } else {
+            self.$message.error('请完善表单后再添加！');
+            return false;
+          }
+        });
+      },
+      /**
+       * 处理接收到的消息事件
+       * 将小组最后收到消息时间改为当前时间
+       */
+      handlerReceiveMessage(data){
+        let message={};
+        data=JSON.parse(data);
+        if(data.msgType==3){
+          this.groupListData.forEach(iterm=>{
+            if(iterm.id == data.groupId){
+              iterm.gmtLastMessage = +(new Date())
+            }
+          });
+        }
+      },
+      /**
+       * 开始监听webSocket推送的消息事件
+       */
+      startListenMessage(){
+        bus.$on('ws:message',this.handlerReceiveMessage)
+      },
+      /**
+       *  取消监听
+       */
+      removeListenMessage(){
+        bus.$off('ws:message',this.handlerReceiveMessage)
+      },
+      /**
+       *  当页面左侧导航区域展开和收起时执行此方法
+       */
+      handleSideBarFlod(){
+        this.$refs.beautyScroll.refresh(280);
+      },
+      /**
+       * 关闭新增小组弹窗时
+       */
+      handleClose(){
+        this.newGroupData.filename=undefined;
+        this.newGroupData.name=null;
+      },
+    },
+    created(){
+       this.getGroupData();
+    },
+    mounted(){
+      this.$refs.beautyScroll.refresh(300);
+      this.startListenMessage();
+      bus.$on('group:info-change',this.getGroupData);
+      bus.$on('side-bar:flod_unflod',this.handleSideBarFlod)
+    },
+    beforeDestroy(){
+      this.removeListenMessage();
     }
   }
 </script>
@@ -156,11 +348,10 @@
 <style scoped>
   /*小组列表*/
   .groupList{
-    background-color: #687887;
     height: 100%;
-    color:#fff;
     overflow: hidden;
     position: relative;
+    background-color: #eff1ef;
   }
   .groupList-inner{
     box-sizing: border-box;
@@ -169,10 +360,15 @@
     position: relative;
   }
   .searchBox{
-    padding: 0 10px;
+    padding: 0 10px 24px 10px ;
     position: absolute;
     top: 10px;
     left: 0;
+    width:100%;
+    box-sizing: border-box;
+    border-bottom:1px solid rgba(0,0,0,.1);
+    z-index: 100;
+    /* border-bottom:1px solid rgba(0,0,0,0.1); */
   }
   .memberShape{
     height: 100%;
@@ -185,13 +381,21 @@
     height: 40px;
     line-height: 40px;
     width: 100%;
-    color:#fff;
     border-top: 1px solid rgba(0,0,0,.1);
     z-index: 10;
     cursor: pointer;
   }
   .addGroupWrapper .button{
-    color:#fff;
+  }
+
+  .textbook{
+    display: block;
+    line-height: 14px;
+    color: #fff243;
+    width: 170px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .groupHead{
@@ -200,17 +404,17 @@
     cursor: pointer;
   }
   .groupHead:hover{
-    background: rgba(255,255,255,.15);
+    background: #dcdfdc;
   }
   .groupHead.active{
-    background: rgba(255,255,255,.2);
+    background: #e6e7e6;
   }
   .groupHead.firstIterm{
     /*background: rgba(255,255,255,.1);*/
   }
   .groupHead-inner{
     position: relative;
-    padding: 10px 32px 10px 68px;
+    padding: 10px 50px 10px 68px;
   }
   .groupHeadImg{
     position: absolute;
@@ -224,15 +428,17 @@
   .groupHeadImg>img{
     display: block;
     width: 100%;
+    height: 100%;
   }
   .lastMessageTime{
     position: absolute;
     right: 4px;
     top:20px;
-    width: 30px;
+    width: 50px;
     height: 14px;
     font-size: 12px;
-    color: rgba(255,255,255,.5);
+    color: rgba(0,0,0,.5);
+
   }
   .groupHeadName{
     font-size: 14px;
@@ -244,6 +450,7 @@
   /*新增小组弹窗*/
   .lineHeight-100{line-height: 100px;}
   .addNewPopup{
+    min-width: 280px;
     line-height: 36px;
     padding: 0 20px;
   }
@@ -252,8 +459,18 @@
     height: 100px;
     position: relative;
   }
-  .headImageWrapper:hover .inputFileBtn{
-    opacity: 0.5;
+  .headImageWrapper-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.7);
+    opacity: 0;
+  }
+  .headImageWrapper-bg>i{opacity: 1;}
+  .headImageWrapper:hover .headImageWrapper-bg{
+    opacity: 0.75;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
@@ -304,4 +521,23 @@
   .headImageWrapper:hover .headImageUploadBtn{
     opacity: 1;
   }
+
+  .fileInput{
+    display: block;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:10;
+  }
+  .headImageWrapper>div>img{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .headImageWrapper>div{
+    width: 100%;
+    height:100%;
+  }
+
 </style>
