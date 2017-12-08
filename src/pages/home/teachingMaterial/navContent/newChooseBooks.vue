@@ -689,22 +689,30 @@ export default {
               for(var i in noticeArr){
                   this.ruleForm.materialNoticeAttachments.push({
                     id:noticeArr[i].id,
+                    attachment:noticeArr[i].attachment,
+                  })
+                  this.material.noticeFiles.push({
+                    id:noticeArr[i].id,
                     name:noticeArr[i].attachmentName,
-                    url:noticeArr[i].attachment,
+                    url:noticeArr[i].attachment
                   })
               }
-              this.material.noticeFiles=this.ruleForm.materialNoticeAttachments;
-              this.noticeFiles=this.ruleForm.materialNoticeAttachments;
+             // this.material.noticeFiles=this.ruleForm.materialNoticeAttachments;
+              //this.noticeFiles=this.ruleForm.materialNoticeAttachments;
               var noteArr=this.stringToArray(res.data.data.materialNoteAttachments);
               for(var i in noteArr){
                   this.ruleForm.materialNoteAttachments.push({
                     id:noteArr[i].id,
-                    name:noteArr[i].attachmentName,
-                    url:noteArr[i].attachment,
+                    attachment:noteArr[i].attachment,
                   })
+                 this.material.noteFiles.push({
+                   id:noticeArr[i].id,
+                    name:noticeArr[i].attachmentName,
+                    url:noticeArr[i].attachment
+                 })  
               }
-              this.material.noteFiles=this.ruleForm.materialNoteAttachments;
-              this.noteFiles=this.ruleForm.materialNoteAttachments;
+              //this.material.noteFiles=this.ruleForm.materialNoteAttachments;
+              //this.noteFiles=this.ruleForm.materialNoteAttachments;
               //编辑权限赋值
               this.ruleForm.cehuaPowers=res.data.data.cehuaPowers;
               this.ruleForm.projectEditorPowers=res.data.data.projectEditorPowers;
