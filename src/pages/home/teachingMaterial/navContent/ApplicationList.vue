@@ -86,7 +86,7 @@
                     {{scope.row.status}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="260">
+            <el-table-column label="操作" width="250">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button">修改</el-button>
