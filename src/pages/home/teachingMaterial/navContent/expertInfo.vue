@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress==1">
+        <el-button type="primary" :disabled="[0,1,2].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(2)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress!=1" @click="onlineCheckPass">
+        <el-button type="primary" :disabled="[0,2,3].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
@@ -39,17 +39,17 @@
                     </el-select>
                   </div>
                 </div>
-                <el-radio-group v-model="iterm.presetPosition_temp" class=""  v-if="expertInfoData.isMultiPosition">
-                  <el-radio :label="1" :key="1">主编</el-radio>
-                  <el-radio :label="2" :key="2">副主编</el-radio>
-                  <el-radio :label="3" :key="3">编委</el-radio>
-                  <el-radio :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-radio>
+                <el-radio-group v-model="iterm.presetPosition_temp" class=""  v-if="!expertInfoData.isMultiPosition">
+                  <el-radio label="主编" :key="1">主编</el-radio>
+                  <el-radio label="副主编" :key="2">副主编</el-radio>
+                  <el-radio label="编委" :key="3">编委</el-radio>
+                  <el-radio label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="iterm.presetPosition_temp_multi" :min="1" class="inline-block" v-else>
-                  <el-checkbox :label="1" :key="1">主编</el-checkbox>
-                  <el-checkbox :label="2" :key="2">副主编</el-checkbox>
-                  <el-checkbox :label="3" :key="3">编委</el-checkbox>
-                  <el-checkbox :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-checkbox>
+                  <el-checkbox label="主编" :key="1">主编</el-checkbox>
+                  <el-checkbox label="副主编" :key="2">副主编</el-checkbox>
+                  <el-checkbox label="编委" :key="3">编委</el-checkbox>
+                  <el-checkbox label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-checkbox>
                 </el-checkbox-group>
                 <div class="info-iterm-text widthAuto marginL20">
                   <div>教学大纲：<span></span></div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="info-iterm-text">
                   <div>职位：<span></span></div>
-                  <div>{{positionList[iterm.presetPosition]}}</div>
+                  <div>{{iterm.showPosition}}</div>
                 </div>
                 <div class="info-iterm-text">
                   <div>教学大纲：<span></span></div>
@@ -98,7 +98,7 @@
               </div>
               <div class="info-iterm-text">
                 <div>职位：<span></span></div>
-                <div>{{positionList[iterm.presetPosition]}}</div>
+                <div>{{iterm.showPosition}}</div>
               </div>
               <div class="info-iterm-text">
                 <div>教学大纲：<span></span></div>
@@ -586,6 +586,7 @@
                 onlineProgress:'',
                 isMultiBooks: false,
                 isMultiPosition: false,
+                isDigitalEditorOptional:false,
                 selectDigitalEditor:false,
               },
               learnExperience: [],
@@ -647,8 +648,8 @@
             textbookId:'',
             textbookName:'',
             presetPosition:3,
-            presetPosition_temp:3,
-            presetPosition_temp_multi:[3],
+            presetPosition_temp:'编委',
+            presetPosition_temp_multi:['编委'],
             isDigitalEditor:false,
             fileName:'',
             syllabusName:'',
@@ -696,19 +697,17 @@
           let formData = {};
           this.addBookList.forEach((iterm,index)=>{
             if(iterm.newCreated){
-              if(iterm.presetPosition_temp==4){
-                iterm.presetPosition = 0;
-                iterm.isDigitalEditor = true;
-              }else{
-                iterm.isDigitalEditor = false;
-                iterm.presetPosition =iterm.presetPosition_temp;
-              }
+              iterm.presetPosition_temp_multi.sort((x,y)=>{
+                let list = ['主编','副主编','编委','数字编委'];
+                return list.indexOf(x)-list.indexOf(y);
+              });
+              iterm.showPosition = this.expertInfoData.isMultiPosition?iterm.presetPosition_temp_multi.join(','):iterm.presetPosition_temp;
+
             }
             formData['list['+index+'].'+'id']=iterm.id;
             formData['list['+index+'].'+'declarationId']=this.searchFormData.declarationId;
             formData['list['+index+'].'+'textbookId']=iterm.textbookId;
-            formData['list['+index+'].'+'presetPosition']=iterm.presetPosition;
-            formData['list['+index+'].'+'isDigitalEditor']=iterm.isDigitalEditor;
+            formData['list['+index+'].'+'showPosition']=iterm.showPosition;
             formData['list['+index+'].'+'file']=iterm.filePath?iterm.filePath:'';
           });
           this.$axios.post(this.api_update_book,this.$commonFun.initPostData(formData))
@@ -976,8 +975,9 @@
         },
         /**
          * 点击审核通过
+         *  type 2 标示退回给个人 3 标示通过
          */
-        onlineCheckPass(){
+        onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
             onlineProgress:3,
@@ -986,8 +986,8 @@
             .then(response=>{
               var res = response.data;
               if(res.code==1){
-                this.expertInfoData.onlineProgress=3;
-                this.$message.success('已通过！')
+                this.expertInfoData.onlineProgress=type;
+                this.$message.success(type==3?'已通过！':'已退回！')
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
