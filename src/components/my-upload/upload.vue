@@ -37,8 +37,19 @@
 <template>
   <div class="my-upload-components">
     <!--卡槽-->
-    <div class="upload-slot" @click="handleClick">
+    <div class="upload-slot">
       <slot></slot>
+      <!--隐藏的input-->
+      <div class="upload-input">
+        <input
+          class="el-upload__input"
+          type="file"
+          ref="input"
+          :name="name"
+          @change="handleChange"
+          accept="accept">
+        </input>
+      </div>
     </div>
 
     <!--文件格式大小提示-->
@@ -62,17 +73,7 @@
       </ul>
     </div>
 
-    <!--隐藏的input-->
-    <div class="upload-input">
-      <input
-        class="el-upload__input"
-        type="file"
-        ref="input"
-        :name="name"
-        @change="handleChange"
-        accept="accept">
-      </input>
-    </div>
+
 	</div>
 </template>
 
@@ -328,7 +329,7 @@
         iframe.setAttribute('style', 'width:1px;height:1px;top:-999em;position:absolute; margin-top:-999em;')
 
 
-        let form = document.createElement('form')
+        var form = document.createElement('form')
 
         form.action = this.action
 
@@ -562,6 +563,7 @@
   display: inline-block;
   text-align: center;
   cursor: pointer;
+  position: relative;
 }
 .upload-tips{
   font-size: 12px;
@@ -570,7 +572,24 @@
 }
 
 .upload-input{
-  display: none;
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+}
+.upload-input .el-upload__input{
+  display: block;
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  opacity: 0;
+  cursor: pointer;
 }
 /*文字超出显示省略号*/
 .ellipsis{

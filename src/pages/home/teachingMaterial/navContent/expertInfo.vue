@@ -34,7 +34,8 @@
                         v-for="(item,i) in bookList"
                         :key="i"
                         :label="item.textbookName"
-                        :value="item.id">
+                        :value="item.id"
+                        :disabled="allRightSelectedBookList.includes(item.id)">
                       </el-option>
                     </el-select>
                   </div>
@@ -628,6 +629,15 @@
                 flag = true;
                 break;
               };
+            }
+            return flag;
+          },
+          allRightSelectedBookList(){
+            let flag = [];
+            for(let iterm of this.addBookList){
+              if(iterm.textbookId){
+                flag.push(iterm.textbookId);
+              }
             }
             return flag;
           }
