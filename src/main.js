@@ -8,7 +8,9 @@ import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
+require('es6-promise').polyfill();//解决axios ie9不兼容问题
 import axios from 'axios'
+
 
 
 /*全局方法和配置挂载*/
