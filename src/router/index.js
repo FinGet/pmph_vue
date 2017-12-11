@@ -14,7 +14,7 @@ import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
 const BooksSelect_1v3 = () => import('../pages/home/teachingMaterial/navContent/1v3')
 const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList')
 const PressCheck = () => import('../pages/home/teachingMaterial/navContent/pressCheck')
-const PressCheck_pmph = () => import('../pages/home/teachingMaterial/navContent/pressCheck_pmph')
+const PressCheck_pmph = () => import('../pages/home/teachingMaterial/navContent/pressCheck-pmph')
 const ExpertInfo = () => import('../pages/home/teachingMaterial/navContent/expertInfo')
 const BookList = () => import('../pages/home/teachingMaterial/navContent/BookList')
 const Notice = () => import('../pages/home/teachingMaterial/navContent/Notice')
