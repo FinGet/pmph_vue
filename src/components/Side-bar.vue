@@ -26,7 +26,7 @@
 
       <el-submenu index="/content" v-if="isShowSide(5)||isShowSide(9)||isShowSide(10)||isShowSide(11)||isShowSide(12)">
         <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
+          <i class="fa  fa-file-text fa-fw"></i>
           <span slot="title">内容管理</span>
         </template>
         <el-menu-item index="/content/list" v-if="isShowSide(9)">文章管理</el-menu-item>
@@ -36,7 +36,7 @@
       </el-submenu>
       <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(13)||isShowSide(14)">
         <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
+          <i class="fa fa-align-justify fa-fw"></i>
           <span slot="title">商品管理</span>
         </template>
         <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
@@ -45,7 +45,7 @@
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
-          <i class="fa fa-users fa-fw"></i>
+          <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>

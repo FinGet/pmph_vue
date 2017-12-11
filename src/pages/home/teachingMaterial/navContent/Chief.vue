@@ -99,7 +99,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="是否数字编委" width="120" align="center">
+          <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional">
             <template scope="scope">
               <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])"></el-checkbox>
             </template>
@@ -149,6 +149,7 @@
         zhubianSelectSortNumber:[],
         fuzhubianSelectSortNumber:[],
         historyLog:[],
+        IsDigitalEditorOptional:false,
       }
     },
     computed:{
@@ -177,6 +178,7 @@
           textbookId:this.formData.textbookId,
           realName:'',
           presetPosition:'',
+          materialId:this.formData.materialId,
         }})
           .then(response=>{
             var res = response.data;
@@ -185,7 +187,7 @@
               var onlineProgress = ['未提交','已提交','被退回','通过'];
               var offlineProgress = ['未收到','被退回','已收到'];
               var positionList = ['','主编','副主编','编委'];
-              res.data.map(iterm=>{
+              res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
                 iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
                 iterm.presetPosition = positionList[iterm.presetPosition];
@@ -202,7 +204,8 @@
                 iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
 
               });
-              this.tableData = res.data;
+              this.tableData = res.data.DecPositionEditorSelectionVO;
+              this.IsDigitalEditorOptional = res.data.IsDigitalEditorOptional;
             }
           })
           .catch(e=>{

@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress==1">
+        <el-button type="primary" :disabled="[0,1,2].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(2)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress!=1" @click="onlineCheckPass">
+        <el-button type="primary" :disabled="[0,2,3].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
@@ -34,26 +34,27 @@
                         v-for="(item,i) in bookList"
                         :key="i"
                         :label="item.textbookName"
-                        :value="item.id">
+                        :value="item.id"
+                        :disabled="allRightSelectedBookList.includes(item.id)">
                       </el-option>
                     </el-select>
                   </div>
                 </div>
-                <el-radio-group v-model="iterm.presetPosition_temp" class=""  v-if="expertInfoData.isMultiPosition">
-                  <el-radio :label="1" :key="1">主编</el-radio>
-                  <el-radio :label="2" :key="2">副主编</el-radio>
-                  <el-radio :label="3" :key="3">编委</el-radio>
-                  <el-radio :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-radio>
+                <el-radio-group v-model="iterm.presetPosition_temp" class=""  v-if="!expertInfoData.isMultiPosition">
+                  <el-radio label="主编" :key="1">主编</el-radio>
+                  <el-radio label="副主编" :key="2">副主编</el-radio>
+                  <el-radio label="编委" :key="3">编委</el-radio>
+                  <el-radio label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="iterm.presetPosition_temp_multi" :min="1" class="inline-block" v-else>
-                  <el-checkbox :label="1" :key="1">主编</el-checkbox>
-                  <el-checkbox :label="2" :key="2">副主编</el-checkbox>
-                  <el-checkbox :label="3" :key="3">编委</el-checkbox>
-                  <el-checkbox :label="4" :key="4" v-if="expertInfoData.selectDigitalEditor">数字编委</el-checkbox>
+                  <el-checkbox label="主编" :key="1">主编</el-checkbox>
+                  <el-checkbox label="副主编" :key="2">副主编</el-checkbox>
+                  <el-checkbox label="编委" :key="3">编委</el-checkbox>
+                  <el-checkbox label="数字编委" :key="4" v-if="expertInfoData.isDigitalEditorOptional">数字编委</el-checkbox>
                 </el-checkbox-group>
                 <div class="info-iterm-text widthAuto marginL20">
                   <div>教学大纲：<span></span></div>
-                  <div class="ellipsis">
+                  <div class="ellipsis"  @click="uploadBtnClick(index)">
                     <my-upload
                       v-if="!iterm.syllabusName||iterm.fileUploading"
                       class="upload"
@@ -64,7 +65,7 @@
                       :before-upload="beforeUpload"
                       :on-success="uploadSuccess"
                       :show-file-list="false">
-                      <el-button size="small" type="primary" @click="uploadBtnClick(index)" :loading="iterm.fileUploading">点击上传</el-button>
+                      <el-button size="small" type="primary" :loading="iterm.fileUploading">点击上传</el-button>
                     </my-upload>
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
@@ -78,7 +79,7 @@
                 </div>
                 <div class="info-iterm-text">
                   <div>职位：<span></span></div>
-                  <div>{{positionList[iterm.presetPosition]}}</div>
+                  <div>{{iterm.showPosition}}</div>
                 </div>
                 <div class="info-iterm-text">
                   <div>教学大纲：<span></span></div>
@@ -98,7 +99,7 @@
               </div>
               <div class="info-iterm-text">
                 <div>职位：<span></span></div>
-                <div>{{positionList[iterm.presetPosition]}}</div>
+                <div>{{iterm.showPosition}}</div>
               </div>
               <div class="info-iterm-text">
                 <div>教学大纲：<span></span></div>
@@ -192,317 +193,294 @@
       <div class="expert-info-box">
         <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
-          <el-table
-            border
-            :data="learnExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="schoolName"
-              label="学校名称">
-            </el-table-column>
-            <el-table-column
-              prop="major"
-              label="专业">
-            </el-table-column>
-            <el-table-column
-              prop="degree"
-              label="学历">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
+          <!--<el-table-->
+            <!--class="learnExperience"-->
+            <!--border-->
+            <!--:data="learnExperience"-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--label="起止时间">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="schoolName"-->
+              <!--label="学校名称">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="major"-->
+              <!--label="专业">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="degree"-->
+              <!--label="学历">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+
+
+          <table class="learnExperience" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>学校名称</div></th>
+              <th><div>专业</div></th>
+              <th><div>学历</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in learnExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.schoolName}}</div></td>
+              <td><div>{{iterm.major}}</div></td>
+              <td><div>{{iterm.degree}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
         </div>
       </div>
 
-      <!--主要工作经历-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主要工作经历</p>
-        <div class="no-padding">
-          <el-table border
-            :data="workExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="orgName"
-              label="工作单位">
-            </el-table-column>
-            <el-table-column
-              prop="position"
-              label="职位">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
 
-      <!--主要教学经历-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主要教学经历</p>
-        <div class="no-padding">
-          <el-table border
-            :data="teachExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="schoolName"
-              label="学校名称">
-            </el-table-column>
-            <el-table-column
-              prop="subject"
-              label="教学科目">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
 
-      <!--主要学术兼职-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主要学术兼职</p>
-        <div class="no-padding">
-          <el-table border
-            :data="academicExperience"
-            style="width: 100%">
-            <el-table-column
-              prop="orgName"
-              label="兼职学术组织">
-            </el-table-column>
-            <el-table-column
-              label="级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<5?rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="position"
-              label="职务">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
 
-      <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
-      <div class="expert-info-box">
-        <p class="info-box-title">上版教材参编情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="lastPositionList"
-                    style="width: 100%">
-            <el-table-column
-              prop="materialName"
-              label="教材名称">
-            </el-table-column>
-            <el-table-column
-              label="职务">
-              <template scope="scope">{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}</template>
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;主要工作经历&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">主要工作经历</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+            <!--:data="workExperience"-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--label="起止时间">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="orgName"-->
+              <!--label="工作单位">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="position"-->
+              <!--label="职位">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
-      <!--国家精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">国家精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="nationalCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;主要教学经历&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">主要教学经历</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+            <!--:data="teachExperience"-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--label="起止时间">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="schoolName"-->
+              <!--label="学校名称">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="subject"-->
+              <!--label="教学科目">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
-      <!--省部级精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">省部级精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="provinceCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;主要学术兼职&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">主要学术兼职</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+            <!--:data="academicExperience"-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--prop="orgName"-->
+              <!--label="兼职学术组织">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--label="级别">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.rank&&scope.row.rank<5?rankList[scope.row.rank]:''}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="position"-->
+              <!--label="职务">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
-      <!--学校精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">学校精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="schoolCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;上版教材参编情况（未参编请在教材名称栏填无)(必填)&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">上版教材参编情况</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+                    <!--:data="lastPositionList"-->
+                    <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--prop="materialName"-->
+              <!--label="教材名称">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--label="职务">-->
+              <!--<template scope="scope">{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
-      <!--主编国家级规划教材情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主编国家级规划教材情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="nationalPlan"
-                    style="width: 100%">
-            <el-table-column
-              prop="materialName"
-              label="规划教材名">
-            </el-table-column>
-            <el-table-column
-              prop="isbn"
-              label="标准书号">
-            </el-table-column>
-            <el-table-column
-              label="教材级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<4?national_plan_rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;国家精品课程建设情况&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">精品课程建设情况</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+                    <!--:data="decCourseConstruction"-->
+                    <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--prop="courseName"-->
+              <!--label="课程名称">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="classHour"-->
+              <!--label="该课程全年课时数">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
-      <!--教材编写情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">教材编写情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="textbook"
-                    style="width: 100%;table-layout:fixed;">
-            <el-table-column
-              prop="materialName"
-              label="教材名称">
-            </el-table-column>
-            <el-table-column
-              label="级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<6?textbook_rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="职务">
-              <template scope="scope">
-                {{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="publisher"
-              label="出版社">
-            </el-table-column>
-            <el-table-column
-              prop="publishDate"
-              label="出版时间">
-              <template scope="scope">
-                {{scope.row.publishDate?$commonFun.formatDate(scope.row.publishDate).split(' ')[0]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="isbn"
-              label="标准书号">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
 
-      <!--科研情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">科研情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="researchData"
-                    style="width: 100%">
-            <el-table-column
-              prop="researchName"
-              label="课题名称（包括项目编号）"
-              width="600">
-            </el-table-column>
-            <el-table-column
-              prop="approvalUnit"
-              label="审批单位">
-            </el-table-column>
-            <el-table-column
-              prop="award"
-              label="获奖情况">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+      <!--&lt;!&ndash;主编国家级规划教材情况&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">主编国家级规划教材情况</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+                    <!--:data="nationalPlan"-->
+                    <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--prop="materialName"-->
+              <!--label="规划教材名">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="isbn"-->
+              <!--label="标准书号">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--label="教材级别">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.rank&&scope.row.rank<4?national_plan_rankList[scope.row.rank]:''}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!--&lt;!&ndash;教材编写情况&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">教材编写情况</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+                    <!--:data="textbook"-->
+                    <!--style="width: 100%;table-layout:fixed;">-->
+            <!--<el-table-column-->
+              <!--prop="materialName"-->
+              <!--label="教材名称">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--label="级别">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.rank&&scope.row.rank<6?textbook_rankList[scope.row.rank]:''}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--label="职务">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="publisher"-->
+              <!--label="出版社">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="publishDate"-->
+              <!--label="出版时间">-->
+              <!--<template scope="scope">-->
+                <!--{{scope.row.publishDate?$commonFun.formatDate(scope.row.publishDate).split(' ')[0]:''}}-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="isbn"-->
+              <!--label="标准书号">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!--&lt;!&ndash;科研情况&ndash;&gt;-->
+      <!--<div class="expert-info-box">-->
+        <!--<p class="info-box-title">科研情况</p>-->
+        <!--<div class="no-padding">-->
+          <!--<el-table border-->
+                    <!--:data="researchData"-->
+                    <!--style="width: 100%">-->
+            <!--<el-table-column-->
+              <!--prop="researchName"-->
+              <!--label="课题名称（包括项目编号）"-->
+              <!--width="600">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="approvalUnit"-->
+              <!--label="审批单位">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="award"-->
+              <!--label="获奖情况">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+              <!--prop="note"-->
+              <!--label="备注">-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        <!--</div>-->
+      <!--</div>-->
 
       <!--个人成就-->
       <div class="expert-info-box">
@@ -586,6 +564,7 @@
                 onlineProgress:'',
                 isMultiBooks: false,
                 isMultiPosition: false,
+                isDigitalEditorOptional:false,
                 selectDigitalEditor:false,
               },
               learnExperience: [],
@@ -593,9 +572,7 @@
               teachExperience:[],
               academicExperience:[],
               lastPositionList:[],
-              nationalCourseConstruction:[],
-              provinceCourseConstruction:[],
-              schoolCourseConstruction:[],
+              decCourseConstruction:[],
               nationalPlan:[],
               textbook:[],
               researchData:[],
@@ -629,6 +606,15 @@
               };
             }
             return flag;
+          },
+          allRightSelectedBookList(){
+            let flag = [];
+            for(let iterm of this.addBookList){
+              if(iterm.textbookId){
+                flag.push(iterm.textbookId);
+              }
+            }
+            return flag;
           }
         },
         created(){
@@ -647,8 +633,8 @@
             textbookId:'',
             textbookName:'',
             presetPosition:3,
-            presetPosition_temp:3,
-            presetPosition_temp_multi:[3],
+            presetPosition_temp:'编委',
+            presetPosition_temp_multi:['编委'],
             isDigitalEditor:false,
             fileName:'',
             syllabusName:'',
@@ -696,19 +682,17 @@
           let formData = {};
           this.addBookList.forEach((iterm,index)=>{
             if(iterm.newCreated){
-              if(iterm.presetPosition_temp==4){
-                iterm.presetPosition = 0;
-                iterm.isDigitalEditor = true;
-              }else{
-                iterm.isDigitalEditor = false;
-                iterm.presetPosition =iterm.presetPosition_temp;
-              }
+              iterm.presetPosition_temp_multi.sort((x,y)=>{
+                let list = ['主编','副主编','编委','数字编委'];
+                return list.indexOf(x)-list.indexOf(y);
+              });
+              iterm.showPosition = this.expertInfoData.isMultiPosition?iterm.presetPosition_temp_multi.join(','):iterm.presetPosition_temp;
+
             }
             formData['list['+index+'].'+'id']=iterm.id;
             formData['list['+index+'].'+'declarationId']=this.searchFormData.declarationId;
             formData['list['+index+'].'+'textbookId']=iterm.textbookId;
-            formData['list['+index+'].'+'presetPosition']=iterm.presetPosition;
-            formData['list['+index+'].'+'isDigitalEditor']=iterm.isDigitalEditor;
+            formData['list['+index+'].'+'showPosition']=iterm.showPosition;
             formData['list['+index+'].'+'file']=iterm.filePath?iterm.filePath:'';
           });
           this.$axios.post(this.api_update_book,this.$commonFun.initPostData(formData))
@@ -813,6 +797,7 @@
          * 用于当文件上传成功后通过currentUploadFileBookIndex找到正在操作哪本书
          */
         uploadBtnClick(index){
+          console.log('index',index);
           this.currentUploadFileBookIndex = index;
         },
         /**
@@ -851,12 +836,10 @@
 
                 //上版教材参编情况
                 this.lastPositionList = res.data.decLastPositionList;
-                //国家级精品课程建设情况
-                this.nationalCourseConstruction = res.data.decNationalCourseConstructionList;
-                //省部级精品课程建设情况
-                this.provinceCourseConstruction = res.data.decProvinceCourseConstructionList;
-                //学校精品课程建设情况
-                this.schoolCourseConstruction = res.data.decSchoolCourseConstructionList;
+
+                //精品课程建设情况
+                this.decCourseConstruction = res.data.decCourseConstruction
+
                 //作家主编国家级规划教材情况表
                 this.nationalPlan = res.data.decNationalPlanList;
                 //作家教材编写情况表
@@ -973,11 +956,13 @@
          */
         print(){
           window.print();
+          return false;
         },
         /**
          * 点击审核通过
+         *  type 2 标示退回给个人 3 标示通过
          */
-        onlineCheckPass(){
+        onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
             onlineProgress:3,
@@ -986,8 +971,8 @@
             .then(response=>{
               var res = response.data;
               if(res.code==1){
-                this.expertInfoData.onlineProgress=3;
-                this.$message.success('已通过！')
+                this.expertInfoData.onlineProgress=type;
+                this.$message.success(type==3?'已通过！':'已退回！')
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
@@ -1017,6 +1002,7 @@
 </script>
 <style scoped>
   .info-wrapper{
+    /*width: 1100px;*/
   }
   .expert-info-box{
 
@@ -1096,5 +1082,24 @@
     position: absolute;
     right: 0;
     bottom: -20px;
+  }
+
+  .info-wrapper table{
+    width: 100%;
+    text-align: left;
+    border-color: rgb(223, 229, 236);
+  }
+  .info-wrapper table tr th{
+    background-color: #d4d9dd;
+  }
+  .info-wrapper table tr th>div,.info-wrapper table tr td>div{
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 24px;
+    padding-left: 18px;
+    padding-right: 18px;
   }
 </style>
