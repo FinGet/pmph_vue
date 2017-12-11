@@ -126,9 +126,9 @@
       },
       intervalFetchMsgList(){
         this.intervalTimer = setInterval(()=>{
-          if(this.intervalFlag==0) return;
-          this.getMessageList();
           this.intervalFlag+=1;
+          if(this.intervalFlag==1) return;
+          this.getMessageList();
         },180000)
       },
     },
