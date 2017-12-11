@@ -1,5 +1,6 @@
 <template>
   <div class="applicationStatistics">
+    
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="按书名统计" name="bookName">
         <div class="applicationStatistics-byBookName">
