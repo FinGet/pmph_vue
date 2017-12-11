@@ -46,6 +46,7 @@
         },
         totalNum:0,
         timer:undefined,
+        intervalFlag:0,
       }
 		},
     methods:{
@@ -122,7 +123,14 @@
         this.receiveMessage.splice(this.receiveMessage.indexOf(command),1);
         this.totalNum--;
         this.$router.push({name:'我的消息详情',query:{msgId:msgId}})
-      }
+      },
+      intervalFetchMsgList(){
+        this.intervalTimer = setInterval(()=>{
+          if(this.intervalFlag==0) return;
+          this.getMessageList();
+          this.intervalFlag+=1;
+        },180000)
+      },
     },
     watch:{
       $route () {
@@ -133,12 +141,14 @@
               clearTimeout(this.timer)
             }
           },1000)
+          this.intervalFlag=0;
         }
       }
     },
     created(){
-      if (window.WebSocket){
-		    this.getMessageList();
+      this.getMessageList();
+      if (!window.WebSocket){
+        this.intervalFetchMsgList()
       }
       bus.$on('mymessage:stateChange',this.getMessageList);
       bus.$on('ws:message',this.handleReceiveMessage);
