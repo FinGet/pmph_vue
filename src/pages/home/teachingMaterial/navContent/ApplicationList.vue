@@ -244,7 +244,7 @@ export default {
             this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'}});
             break;
           case 'msgState':
-            this.$router.push({name:'消息状态',query:{msgId:materialData.msgId}});
+            this.$router.push({name:'消息状态',query:{materialId:materialData.id}});
             break;
           case 'setBookList':
             this.$router.push({name:'设置书目录',params:{materialId:materialData.id}});
