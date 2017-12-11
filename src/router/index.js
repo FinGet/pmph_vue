@@ -3,36 +3,37 @@ import Router from 'vue-router';
 
 
 import Login from 'pages/Login.vue'
-const Home = () => import('pages/Home.vue');
+import Home from 'pages/Home.vue'
 const Index = () => import('../pages/Index');
 const NoFind = () => import('pages/404.vue');
 
 /* 教材申报 */
-const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
-import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
-import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
-import PressCheck_pmph from '../pages/home/teachingMaterial/navContent/pressCheck-pmph'
-import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
-import BookList from '../pages/home/teachingMaterial/navContent/BookList'
-import Notice from '../pages/home/teachingMaterial/navContent/Notice'
-import Chief from '../pages/home/teachingMaterial/navContent/Chief'
-import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
-import ApplicationSchoolQuery from 'pages/home/teachingMaterial/navContent/SchoolQuery'
-import Result from 'pages/home/teachingMaterial/navContent/Result/index'
-import EditNotice from 'pages/home/teachingMaterial/navContent/EditNotice'
-import SetTopicNum from 'pages/home/teachingMaterial/navContent/SetTopicNum'
+
+const BooksSelect_1v3 = () => import('../pages/home/teachingMaterial/navContent/1v3')
+const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList')
+const PressCheck = () => import('../pages/home/teachingMaterial/navContent/pressCheck')
+const PressCheck_pmph = () => import('../pages/home/teachingMaterial/navContent/expertInfo')
+const ExpertInfo = () => import('../pages/home/teachingMaterial/navContent/BookList')
+const BookList = () => import('../pages/home/userManage/orgUser')
+const Notice = () => import('../pages/home/teachingMaterial/navContent/Notice')
+const Chief = () => import('../pages/home/teachingMaterial/navContent/Chief')
+const NewChooseBooks = () => import('pages/home/teachingMaterial/navContent/newChooseBooks')
+const ApplicationSchoolQuery = () => import('pages/home/teachingMaterial/navContent/SchoolQuery')
+const Result = () => import('pages/home/teachingMaterial/navContent/Result/index')
+const EditNotice = () => import('pages/home/teachingMaterial/navContent/EditNotice')
+const SetTopicNum = () => import('pages/home/teachingMaterial/navContent/SetTopicNum')
 
 /* 小组 */
 const GroupManage = () => import('pages/home/Groups/groupManagement');
 /* 用户信息管理 */
-const UserRouter = () => import('../pages/home/userManage/userRouter');
+import UserRouter from '../pages/home/userManage/userRouter'
 const pmphUser = () => import('../pages/home/userManage/pmphUser')
 const writerUser = () => import('../pages/home/userManage/writerUser')
 const orgUser = () => import('../pages/home/userManage/orgUser')
 /* 系统消息 */
-const MessageRouter = () => import('pages/home/systemMessage/MessageRouter')
+import MessageRouter from 'pages/home/systemMessage/MessageRouter'
 const MessageList = () => import('pages/home/systemMessage/MessageList')
 const MessageState = () => import('pages/home/systemMessage/MessageState')
 const MessageEdit = () => import('pages/home/systemMessage/MessageEdit')
@@ -41,34 +42,34 @@ const SchoolQuery = () => import('pages/home/systemMessage/SchoolQuery')
 const SpecialObj = () => import('pages/home/systemMessage/specialObj')
 const TeachApplicant = () => import('pages/home/systemMessage/TeachApplicant')
 /* 系统设置 */
-const systemRouter = () => import('../pages/home/systemSet/systemRouter')
+import systemRouter from '../pages/home/systemSet/systemRouter'
 const Roles = () => import('../pages/home/systemSet/roles')
 const Departments = () => import('pages/home/systemSet/departments')
 const Orgs = () => import('pages/home/systemSet/departments')
 const Area = () => import('pages/home/systemSet/area')
 /*学校/ 教师审核 */
-const SchoolRouter = () => import('pages/home/school/schoolRouter')
+import SchoolRouter from 'pages/home/school/schoolRouter'
 const TeacherCheck = () => import('pages/home/school/teacherCheck')
 const SchoolAdminCheck = () => import('pages/home/school/schoolAdminCheck')
 
 /* 我的消息 */
-const MyMessageRouter = () => import('pages/home/myMessage/MessageRouter')
+import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
 const MyMessageList = () => import('pages/home/myMessage/MessageList')
 const MyMessageDetails = () => import('pages/home/myMessage/MessageDetails')
 /* 内容管理 */
-const ContentRouter = () => import('../pages/home/contentManage/contentRouter');
+import ContentRouter from '../pages/home/contentManage/contentRouter'
 const ContentPublish = () => import('../pages/home/contentManage/contentPublish');
 const PublishList = () => import('../pages/home/contentManage/publishList');
 const noticeManage = () => import('../pages/home/contentManage/noticeManage');
 const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
 
 /* 出版图书 */
-const BookRouter = () => import('pages/home/publishBooks/BookRouter');
+import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
 const CommentManage = () => import('pages/home/publishBooks/CommentManage');
 
 /*用户主页(个人设置)*/
-const PersonalRouter = () => import('pages/home/personal/PersonalRouter');
+import PersonalRouter from 'pages/home/personal/PersonalRouter'
 const PersonalSetting = () => import('pages/home/personal/Setting');
 
 /**系统日志 */
