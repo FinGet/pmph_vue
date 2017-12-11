@@ -193,37 +193,7 @@
       <div class="expert-info-box">
         <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
-          <!--<el-table-->
-            <!--class="learnExperience"-->
-            <!--border-->
-            <!--:data="learnExperience"-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--label="起止时间">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="schoolName"-->
-              <!--label="学校名称">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="major"-->
-              <!--label="专业">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="degree"-->
-              <!--label="学历">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-
-
-          <table class="learnExperience" border="1">
+          <table class="expert-info-table" border="1">
             <tr>
               <th><div>起止时间</div></th>
               <th><div>学校名称</div></th>
@@ -245,242 +215,175 @@
 
 
 
-      <!--&lt;!&ndash;主要工作经历&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">主要工作经历</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-            <!--:data="workExperience"-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--label="起止时间">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="orgName"-->
-              <!--label="工作单位">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="position"-->
-              <!--label="职位">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--主要工作经历-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主要工作经历</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>工作单位</div></th>
+              <th><div>职位</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in workExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;主要教学经历&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">主要教学经历</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-            <!--:data="teachExperience"-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--label="起止时间">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="schoolName"-->
-              <!--label="学校名称">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="subject"-->
-              <!--label="教学科目">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--主要教学经历-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主要教学经历</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>学校名称</div></th>
+              <th><div>教学科目</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in teachExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.schoolName}}</div></td>
+              <td><div>{{iterm.subject}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;主要学术兼职&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">主要学术兼职</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-            <!--:data="academicExperience"-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--prop="orgName"-->
-              <!--label="兼职学术组织">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--label="级别">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.rank&&scope.row.rank<5?rankList[scope.row.rank]:''}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="position"-->
-              <!--label="职务">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--主要学术兼职-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主要学术兼职</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>兼职学术组织</div></th>
+              <th><div>级别</div></th>
+              <th><div>职务</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in academicExperience">
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;上版教材参编情况（未参编请在教材名称栏填无)(必填)&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">上版教材参编情况</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-                    <!--:data="lastPositionList"-->
-                    <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--prop="materialName"-->
-              <!--label="教材名称">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--label="职务">-->
-              <!--<template scope="scope">{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
+      <div class="expert-info-box">
+        <p class="info-box-title">上版教材参编情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>职务</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;国家精品课程建设情况&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">精品课程建设情况</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-                    <!--:data="decCourseConstruction"-->
-                    <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--prop="courseName"-->
-              <!--label="课程名称">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="classHour"-->
-              <!--label="该课程全年课时数">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--国家精品课程建设情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">精品课程建设情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>课程名称</div></th>
+              <th><div>该课程全年课时数</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.courseName}}</div></td>
+              <td><div>{{iterm.classHour}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
 
-      <!--&lt;!&ndash;主编国家级规划教材情况&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">主编国家级规划教材情况</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-                    <!--:data="nationalPlan"-->
-                    <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--prop="materialName"-->
-              <!--label="规划教材名">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="isbn"-->
-              <!--label="标准书号">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--label="教材级别">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.rank&&scope.row.rank<4?national_plan_rankList[scope.row.rank]:''}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--主编国家级规划教材情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主编国家级规划教材情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>规划教材名</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>教材级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;教材编写情况&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">教材编写情况</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-                    <!--:data="textbook"-->
-                    <!--style="width: 100%;table-layout:fixed;">-->
-            <!--<el-table-column-->
-              <!--prop="materialName"-->
-              <!--label="教材名称">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--label="级别">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.rank&&scope.row.rank<6?textbook_rankList[scope.row.rank]:''}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--label="职务">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="publisher"-->
-              <!--label="出版社">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="publishDate"-->
-              <!--label="出版时间">-->
-              <!--<template scope="scope">-->
-                <!--{{scope.row.publishDate?$commonFun.formatDate(scope.row.publishDate).split(' ')[0]:''}}-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="isbn"-->
-              <!--label="标准书号">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--教材编写情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">教材编写情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>级别</div></th>
+              <th><div>职务</div></th>
+              <th><div>出版社</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div> {{iterm.rank&&iterm.rank<6?textbook_rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-      <!--&lt;!&ndash;科研情况&ndash;&gt;-->
-      <!--<div class="expert-info-box">-->
-        <!--<p class="info-box-title">科研情况</p>-->
-        <!--<div class="no-padding">-->
-          <!--<el-table border-->
-                    <!--:data="researchData"-->
-                    <!--style="width: 100%">-->
-            <!--<el-table-column-->
-              <!--prop="researchName"-->
-              <!--label="课题名称（包括项目编号）"-->
-              <!--width="600">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="approvalUnit"-->
-              <!--label="审批单位">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="award"-->
-              <!--label="获奖情况">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-              <!--prop="note"-->
-              <!--label="备注">-->
-            <!--</el-table-column>-->
-          <!--</el-table>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--科研情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">科研情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>课题名称（包括项目编号）</div></th>
+              <th><div>审批单位</div></th>
+              <th><div>获奖情况</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.researchName}}</div></td>
+              <td><div>{{iterm.approvalUnit}}</div></td>
+              <td><div>{{iterm.award}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
       <!--个人成就-->
       <div class="expert-info-box">
@@ -1088,18 +991,32 @@
     width: 100%;
     text-align: left;
     border-color: rgb(223, 229, 236);
+    border: none;
+  }
+  .info-wrapper table tr:nth-of-type(2n+1){
+    background: #fafafa;
   }
   .info-wrapper table tr th{
     background-color: #d4d9dd;
+    color: #5b6877;
+    height: 40px;
+  }
+  .info-wrapper table tr td{
+    height: 40px;
   }
   .info-wrapper table tr th>div,.info-wrapper table tr td>div{
     box-sizing: border-box;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: normal;
     word-break: break-all;
     line-height: 24px;
     padding-left: 18px;
     padding-right: 18px;
+    text-overflow: ellipsis;
+    position: relative;
+    word-wrap: normal;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
   }
 </style>
