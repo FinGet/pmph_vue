@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Login from 'pages/Login.vue';
-import Home from 'pages/Home.vue';
-const Index = () => import(/* webpackChunkName: "group-foo" */ '../pages/Index');
-/* import Index from '../pages/Index'; */
-import NoFind from 'pages/404.vue';
+
+import Login from 'pages/Login.vue'
+const Home = () => import('pages/Home.vue');
+const Index = () => import('../pages/Index');
+const NoFind = () => import('pages/404.vue');
 
 /* 教材申报 */
-/* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
 const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
 import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
@@ -26,56 +25,54 @@ import EditNotice from 'pages/home/teachingMaterial/navContent/EditNotice'
 import SetTopicNum from 'pages/home/teachingMaterial/navContent/SetTopicNum'
 
 /* 小组 */
-import GroupManage from 'pages/home/Groups/groupManagement'
+const GroupManage = () => import('pages/home/Groups/groupManagement');
 /* 用户信息管理 */
-import UserRouter from '../pages/home/userManage/userRouter'
-import pmphUser from '../pages/home/userManage/pmphUser'
-import writerUser from '../pages/home/userManage/writerUser'
-import orgUser from '../pages/home/userManage/orgUser'
+const UserRouter = () => import('../pages/home/userManage/userRouter');
+const pmphUser = () => import('../pages/home/userManage/pmphUser')
+const writerUser = () => import('../pages/home/userManage/writerUser')
+const orgUser = () => import('../pages/home/userManage/orgUser')
 /* 系统消息 */
-import MessageRouter from 'pages/home/systemMessage/MessageRouter'
-import MessageList from 'pages/home/systemMessage/MessageList'
-import MessageState from 'pages/home/systemMessage/MessageState'
-import MessageEdit from 'pages/home/systemMessage/MessageEdit'
-import MessageDetails from 'pages/home/systemMessage/MessageDetails'
-import SchoolQuery from 'pages/home/systemMessage/SchoolQuery'
-import SpecialObj from 'pages/home/systemMessage/specialObj'
-import TeachApplicant from 'pages/home/systemMessage/TeachApplicant'
+const MessageRouter = () => import('pages/home/systemMessage/MessageRouter')
+const MessageList = () => import('pages/home/systemMessage/MessageList')
+const MessageState = () => import('pages/home/systemMessage/MessageState')
+const MessageEdit = () => import('pages/home/systemMessage/MessageEdit')
+const MessageDetails = () => import('pages/home/systemMessage/MessageDetails')
+const SchoolQuery = () => import('pages/home/systemMessage/SchoolQuery')
+const SpecialObj = () => import('pages/home/systemMessage/specialObj')
+const TeachApplicant = () => import('pages/home/systemMessage/TeachApplicant')
 /* 系统设置 */
-import systemRouter from '../pages/home/systemSet/systemRouter'
-import Roles from '../pages/home/systemSet/roles'
-/* import Authority from '../pages/home/systemSet/authority' */
-import Departments from 'pages/home/systemSet/departments'
-import Orgs from 'pages/home/systemSet/orgs'
-import Area from 'pages/home/systemSet/area'
+const systemRouter = () => import('../pages/home/systemSet/systemRouter')
+const Roles = () => import('../pages/home/systemSet/roles')
+const Departments = () => import('pages/home/systemSet/departments')
+const Orgs = () => import('pages/home/systemSet/departments')
+const Area = () => import('pages/home/systemSet/area')
 /*学校/ 教师审核 */
-import SchoolRouter from 'pages/home/school/schoolRouter'
-import TeacherCheck from 'pages/home/school/teacherCheck'
-import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
+const SchoolRouter = () => import('pages/home/school/schoolRouter')
+const TeacherCheck = () => import('pages/home/school/teacherCheck')
+const SchoolAdminCheck = () => import('pages/home/school/schoolAdminCheck')
 
 /* 我的消息 */
-import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
-import MyMessageList from 'pages/home/myMessage/MessageList';
-import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
+const MyMessageRouter = () => import('pages/home/myMessage/MessageRouter')
+const MyMessageList = () => import('pages/home/myMessage/MessageList')
+const MyMessageDetails = () => import('pages/home/myMessage/MessageDetails')
 /* 内容管理 */
-import ContentRouter from '../pages/home/contentManage/contentRouter'
-import ContentPublish from '../pages/home/contentManage/contentPublish'
-import PublishList from '../pages/home/contentManage/publishList'
-import noticeManage from '../pages/home/contentManage/noticeManage'
-import infoExpertInfo from '../pages/home/contentManage/infoExpressManage'
-import ColumnSet from '../pages/home/contentManage/columnSet'
+const ContentRouter = () => import('../pages/home/contentManage/contentRouter');
+const ContentPublish = () => import('../pages/home/contentManage/contentPublish');
+const PublishList = () => import('../pages/home/contentManage/publishList');
+const noticeManage = () => import('../pages/home/contentManage/noticeManage');
+const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
 
 /* 出版图书 */
-import BookRouter from 'pages/home/publishBooks/BookRouter'
-import BookManage from 'pages/home/publishBooks/BookManage'
-import CommentManage from 'pages/home/publishBooks/CommentManage'
+const BookRouter = () => import('pages/home/publishBooks/BookRouter');
+const BookManage = () => import('pages/home/publishBooks/BookManage');
+const CommentManage = () => import('pages/home/publishBooks/CommentManage');
 
 /*用户主页(个人设置)*/
-import PersonalRouter from 'pages/home/personal/PersonalRouter'
-import PersonalSetting from 'pages/home/personal/Setting'
+const PersonalRouter = () => import('pages/home/personal/PersonalRouter');
+const PersonalSetting = () => import('pages/home/personal/Setting');
 
 /**系统日志 */
-import SystemLog from 'pages/home/systemLog/systemLog'
+const SystemLog = () => import('pages/home/systemLog/systemLog');
 
 Vue.use(Router)
 

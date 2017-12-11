@@ -23,11 +23,15 @@
 
 
   /*重置表格样式*/
-  .el-table__header{
-    width: 100% !important;
+  .el-table__header{width:1000px;}
+  .expert_info table tr th,.expert_info table tr td{
+    width: 100px;
   }
-  .el-table__header colgroup col{
-    width: auto !important;
+
+
+  /* 专家信息页面 */
+  .expert_info .printTable{
+    /*width: 800px;*/
   }
 }
 
