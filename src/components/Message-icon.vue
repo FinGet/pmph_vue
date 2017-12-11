@@ -45,6 +45,7 @@
           pageSize:5,
         },
         totalNum:0,
+        timer:undefined,
       }
 		},
     methods:{
@@ -123,14 +124,27 @@
         this.$router.push({name:'我的消息详情',query:{msgId:msgId}})
       }
     },
+    watch:{
+      $route () {
+        var timer = setTimeout(()=>{
+          this.getMessageList();
+          if(this.timer){
+            clearTimeout(this.timer)
+          }
+        },1000)
+      }
+    },
     created(){
-		  this.getMessageList();
+//		  this.getMessageList();
       bus.$on('mymessage:stateChange',this.getMessageList);
       bus.$on('ws:message',this.handleReceiveMessage);
     },
     beforeDestroy(){
       bus.$off('ws:message',this.handleReceiveMessage);
       bus.$off('mymessage:stateChange',this.getMessageList);
+      if(this.timer){
+        clearTimeout(this.timer)
+      }
     }
 	}
 </script>

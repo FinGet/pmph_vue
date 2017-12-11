@@ -4,7 +4,7 @@
     <div class="operation-wrapper">
       <span class="green inline-block marginR10">已选中<span>{{hasSelect.length}}</span>个人</span>
       <el-button type="primary" @click="back" v-if="type=='new'">返回编辑</el-button>
-      <el-button type="primary" @click="send" :disabled="clubSelectData.length==0&&writerSelectData.length==0&&orgSelectData.length==0">发送</el-button>
+      <el-button type="primary" @click="send" :disabled="clubSelectData.length==0&&writerSelectData.length==0&&orgSelectData.length==0" :loading="submiting">发送</el-button>
     </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="社内用户" name="first">
@@ -221,6 +221,7 @@ export default {
         bookIds:'',
         senderId:''
       },
+      submiting:false,
     };
   },
   methods: {
@@ -245,19 +246,24 @@ export default {
       data.userIds=userList.join(',');
       data['sessionId']=this.$getUserData().sessionId;
       // console.log(this.formdata)
+      this.submiting=true;
       this.$axios.post(url,this.$initPostData(data))
         .then(function (response) {
           let res = response.data;
           if(res.code===1){
             self.$message.success('发布成功！');
             self.$router.push({name: '消息列表'});
+          }else{
+            self.$message.error(res.msg.msgTrim());
           }
+          this.submiting=false;
         })
         .catch(function (error) {
           self.$message({
             type:'error',
             message:'发布失败，请重试'
           });
+          self.submiting=false;
         });
     },
 

@@ -111,7 +111,9 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success">已被选为{{iterm.chosenPosition?positionList[iterm.chosenPosition]:iterm.isDigitalEditor?'数字编委':''}}</el-tag>
+                  <el-tag type="success" v-if="iterm.chosenPosition||iterm.isDigitalEditor">
+                    已被选为{{iterm.showPosition}}
+                  </el-tag>
                 </div>
               </div>
             </div>
@@ -209,6 +211,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!learnExperience.length">暂无数据</div>
         </div>
       </div>
 
@@ -233,6 +236,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!workExperience.length">暂无数据</div>
         </div>
       </div>
 
@@ -254,6 +258,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!teachExperience.length">暂无数据</div>
         </div>
       </div>
 
@@ -275,6 +280,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>
         </div>
       </div>
 
@@ -294,10 +300,11 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
         </div>
       </div>
 
-      <!--国家精品课程建设情况-->
+      <!--精品课程建设情况-->
       <div class="expert-info-box">
         <p class="info-box-title">精品课程建设情况</p>
         <div class="no-padding">
@@ -307,12 +314,13 @@
               <th><div>该课程全年课时数</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in lastPositionList">
+            <tr v-for="(iterm,index) in decCourseConstruction">
               <td><div>{{iterm.courseName}}</div></td>
               <td><div>{{iterm.classHour}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!decCourseConstruction.length">暂无数据</div>
         </div>
       </div>
 
@@ -335,6 +343,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
         </div>
       </div>
 
@@ -352,7 +361,7 @@
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in lastPositionList">
+            <tr v-for="(iterm,index) in textbook">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div> {{iterm.rank&&iterm.rank<6?textbook_rankList[iterm.rank]:''}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
@@ -361,6 +370,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
         </div>
       </div>
 
@@ -375,13 +385,15 @@
               <th><div>获奖情况</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in lastPositionList">
+            <tr v-for="(iterm,index) in researchData">
               <td><div>{{iterm.researchName}}</div></td>
               <td><div>{{iterm.approvalUnit}}</div></td>
               <td><div>{{iterm.award}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
       </div>
 
@@ -482,6 +494,7 @@
               personalAchievements:'',
               bookList:[],
               positionList:['','主编','副主编','编委'],
+              positionList_2:['','编委,数字编委','副主编','副主编,数字编委','副主编,编委','副主编,编委,数字编委'],
               addBookList:[],
               hasBookListChanged:false,
               showSendMsg:false,
@@ -735,7 +748,7 @@
                 this.academicExperience = res.data.decAcadeList;
 
                 //个人成就
-                this.personalAchievements = res.data.decExtensionList.length==0?'':res.data.decExtensionList[0].content;
+                this.personalAchievements = res.data.decAchievementList.length==0?'':res.data.decAchievementList[0].content;
 
                 //上版教材参编情况
                 this.lastPositionList = res.data.decLastPositionList;
@@ -1018,5 +1031,8 @@
     display: inline-block;
     vertical-align: middle;
     width: 100%;
+  }
+  .achievements{
+    min-height: 80px;
   }
 </style>
