@@ -18,6 +18,10 @@
                     </el-table-column>
                     <el-table-column prop="operateDate" label="访问时间" width="185">
                     </el-table-column>
+                    <el-table-column prop="startTime" label="开始时间" width="185">
+                    </el-table-column>
+                    <el-table-column prop="endTime" label="结束时间" width="185">
+                    </el-table-column>
                     <el-table-column prop="operateText" label="请求方法">
                     </el-table-column>
                     <el-table-column prop="businessType" label="业务类型" width="150" align="center">
@@ -69,7 +73,9 @@ export default {
                     this.tableData = res.data.rows
                     this.total = res.data.total
                     this.tableData.forEach(item => {
-                        item.operateDate = this.$commonFun.formatDate(item.operateDate)
+                        item.operateDate = this.$commonFun.formatDate(item.operateDate);
+                        item.startTime = this.$commonFun.formatDate(item.startTime);
+                        item.endTime = this.$commonFun.formatDate(item.endTime);                        
                     })
                 }
             })
