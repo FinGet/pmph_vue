@@ -45,6 +45,8 @@
           pageSize:5,
         },
         totalNum:0,
+        timer:undefined,
+        intervalFlag:0,
       }
 		},
     methods:{
@@ -121,16 +123,42 @@
         this.receiveMessage.splice(this.receiveMessage.indexOf(command),1);
         this.totalNum--;
         this.$router.push({name:'我的消息详情',query:{msgId:msgId}})
+      },
+      intervalFetchMsgList(){
+        this.intervalTimer = setInterval(()=>{
+          this.intervalFlag+=1;
+          if(this.intervalFlag==1) return;
+          this.getMessageList();
+        },180000)
+      },
+    },
+    watch:{
+      $route () {
+        if (!window.WebSocket){
+          var timer = setTimeout(()=>{
+            this.getMessageList();
+            if(this.timer){
+              clearTimeout(this.timer)
+            }
+          },1000)
+          this.intervalFlag=0;
+        }
       }
     },
     created(){
-		  this.getMessageList();
+      this.getMessageList();
+      if (!window.WebSocket){
+        this.intervalFetchMsgList()
+      }
       bus.$on('mymessage:stateChange',this.getMessageList);
       bus.$on('ws:message',this.handleReceiveMessage);
     },
     beforeDestroy(){
       bus.$off('ws:message',this.handleReceiveMessage);
       bus.$off('mymessage:stateChange',this.getMessageList);
+      if(this.timer){
+        clearTimeout(this.timer)
+      }
     }
 	}
 </script>

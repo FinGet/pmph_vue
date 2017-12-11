@@ -48,10 +48,10 @@
 <script>
   import GroupsList from 'components/group/GroupsList'
   import GroupChat from 'components/group/GroupChat'
-  import GroupFile from 'components/group/GroupFile'
-  import GroupSetting from 'components/group/GroupSetting'
   import MembersList from 'components/group/MembersList'
-  import GroupMembers from 'components/group/GroupMembers'
+  const GroupFile = () => import('components/group/GroupFile');
+  const GroupSetting = () => import('components/group/GroupSetting');
+  const GroupMembers = () => import('components/group/GroupMembers');
   export default {
     data() {
       return {

@@ -105,6 +105,7 @@
 		data() {
 			return {
 			  api_update_userInfo:'/pmpheep/users/pmph/updatePersonalData',
+        api_get_userInfo:'/pmpheep/users/pmph/getInfo',
         activeName:'setting',
         formSetting:{
           id: '',
@@ -275,6 +276,7 @@
             //修改成功
             if (res.code === 1) {
               this.$message.success('修改成功!');
+              this.getUserInfo();
             } else {
               self.$message.error(res.msg.msgTrim());
             }
@@ -283,7 +285,22 @@
             console.log(error);
             this.$message.error('请求失败，请重试!');
           });
-      }
+      },
+      /**
+       * 获取当前用户信息
+       */
+      getUserInfo(){
+        this.$axios.get(this.api_get_userInfo,{params:{
+          id:this.userInfo.id
+        }})
+          .then(response=>{
+            let res = response.data;
+            if (res.code === 1) {
+              this.userInfo = res.data;
+            }
+          })
+          .catch(function (error) {});
+      },
     },
     created(){
       this.activeName=this.$route.query.type||'setting';
@@ -292,6 +309,7 @@
       for(let key in this.formSetting){
         this.formSetting[key] = this.userInfo[key];
       }
+      this.getUserInfo();
     },
 	}
 </script>

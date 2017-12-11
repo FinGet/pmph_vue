@@ -42,7 +42,7 @@
         <!--操作按钮-->
         <div class="text-right paddingT20">
           <el-button type="primary"  @click="back" v-if="type=='new'">返回编辑</el-button>
-          <el-button type="primary" :disabled="selections.length==0" @click="send">发送</el-button>
+          <el-button type="primary" :disabled="selections.length==0" @click="send" :loading="submiting">发送</el-button>
         </div>
         <!--表格-->
         <div class="table-wrapper">
@@ -107,6 +107,7 @@
           userIds:'',
           bookIds:'',
         },
+        submiting:false,
       }
     },
     methods:{
@@ -183,19 +184,24 @@
         // data.orgIds=this.queryData.join(',');
         data['sessionId']=this.$getUserData().sessionId;
         // console.log(this.formdata)
+        this.submiting=true;
         this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {
             let res = response.data;
             if(res.code===1){
               self.$message.success('发布成功！');
               self.$router.push({name: '消息列表'});
+            }else{
+              self.$message.error(res.msg.msgTrim());
             }
+            this.submiting=false;
           })
           .catch(function (error) {
             self.$message({
               type:'error',
               message:'发布失败，请重试'
             });
+            self.submiting=false;
           });
       },
       /**
