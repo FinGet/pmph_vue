@@ -1,13 +1,35 @@
 <template>
     <div class="system_log">
         <el-row>
-            <el-col :span="12">
-                <div class="search-title">操作用户:</div>
-                <el-col :span="8" class="search-10">
-                <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
-                </el-col>
-                <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
-            </el-col>
+            <div class="searchBox-wrapper">
+                <div class="searchName">操作用户:<span></span></div>
+                <div class="searchInput">
+                    <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
+                </div>
+            </div>
+            <div class="searchBox-wrapper">
+                <div class="searchName">开始时间:<span></span></div>
+                <div class="searchInput">
+                    <el-date-picker
+                    v-model="startTime"
+                    type="date"
+                    placeholder="选择日期">
+                    </el-date-picker>  
+                </div>
+            </div>
+            <div class="searchBox-wrapper">
+                <div class="searchName">结束时间:<span></span></div>
+                <div class="searchInput">
+                    <el-date-picker
+                    v-model="endTime"
+                    type="date"
+                    placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div class="searchBox-wrapper searchBtn">
+                <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
+            </div>
         </el-row>
         <el-row>
             <el-col>
@@ -17,10 +39,6 @@
                     <el-table-column prop="clientIp" label="操作人ip" width="130">
                     </el-table-column>
                     <el-table-column prop="operateDate" label="访问时间" width="185">
-                    </el-table-column>
-                    <el-table-column prop="startTime" label="开始时间" width="185">
-                    </el-table-column>
-                    <el-table-column prop="endTime" label="结束时间" width="185">
                     </el-table-column>
                     <el-table-column prop="operateText" label="请求方法">
                     </el-table-column>
@@ -53,7 +71,9 @@ export default {
         pageSize: 20,
         pageNumber: 1,
         total:0,
-        tableData: []
+        tableData: [],
+        startTime:'', // 开始时间
+        endTime:'' // 结束时间
       }
     },
     created(){
@@ -65,6 +85,8 @@ export default {
                 params:{
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber,
+                    startTime: this.startTime,
+                    endTime: this.endTime,
                     userName: this.title
                 }
             }).then(response =>{
@@ -73,9 +95,7 @@ export default {
                     this.tableData = res.data.rows
                     this.total = res.data.total
                     this.tableData.forEach(item => {
-                        item.operateDate = this.$commonFun.formatDate(item.operateDate);
-                        item.startTime = this.$commonFun.formatDate(item.startTime);
-                        item.endTime = this.$commonFun.formatDate(item.endTime);                        
+                        item.operateDate = this.$commonFun.formatDate(item.operateDate);                    
                     })
                 }
             })
