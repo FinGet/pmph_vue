@@ -86,6 +86,9 @@
           createTime:+(new Date()),
         },
         fileUploading:false,
+        supportWebsocket:true,
+        startIntervalFetchMessagesList:true,
+        timer:undefined,
       }
 		},
     computed:{
@@ -126,7 +129,7 @@
         this.messagesList.push(message);
         //发送完消息清空textarea
         this.editingTextarea = '';
-
+        this.startIntervalFetchMessagesList=true;//发送完成就ie9下打开模拟websocket
       },
       /**
        * 点击发送按钮，当消息为空时触发此方法
@@ -184,13 +187,14 @@
       },
       /**
        * 获取小组聊天历史消息
-       * @param pageSize
-       * @param pageNumber
-       * @param callback
+       * @param  Boolean reset
        */
-      getHistoryMessage(){
+      getHistoryMessage(reset){
         var self = this;
         this.messageLoading=true;
+        if(reset){
+          this.getHistoryMesListForm.createTime = +(new Date());
+        }
         this.$axios.get('/pmpheep/group/list/message',{params:{
           groupId:this.currentGroup.id,
           pageSize:this.getHistoryMesListForm.pageSize,
@@ -215,6 +219,9 @@
                 };
                 tempList.unshift(message)
               });
+              if(reset){
+                self.messagesList=[];
+              }
               tempList.forEach(iterm=>{
                 self.messagesList.unshift(iterm);
               });
@@ -230,9 +237,10 @@
        * 点击加载更多历史消息按钮，先将获取的页码参数加1，再执行getHistoryMessage方法
        */
       getMoreHistoryMessage(){
-          this.isClickLoadingMore=true;
-          this.getHistoryMesListForm.pageNumber++;
-          this.getHistoryMessage();
+        this.startIntervalFetchMessagesList=false;//当在查看历史消息的时候，先停止ie9模拟请求
+        this.isClickLoadingMore=true;
+        this.getHistoryMesListForm.pageNumber++;
+        this.getHistoryMessage();
       },
       /**
        * 处理接收到的消息事件
@@ -276,6 +284,15 @@
       removeListenMessage(){
         bus.$off('ws:message',this.handlerReceiveMessage)
       },
+      /**
+       * 模拟websocket定时请求消息列表
+       */
+      intervalFetchMessagesList(){
+        if(this.startIntervalFetchMessagesList){
+          this.getHistoryMesListForm.pageNumber=1;
+          this.getHistoryMessage(true);
+        }
+      }
 
     },
     components:{
@@ -288,6 +305,12 @@
     },
     mounted(){
       this.startListenMessage();
+      this.supportWebsocket = window.WebSocket;
+      if(!this.supportWebsocket){
+        this.timer = setInterval(()=>{
+          this.intervalFetchMessagesList();
+        },30000)
+      }
     },
     watch:{
       messagesList(){
@@ -310,6 +333,7 @@
     },
     beforeDestroy(){
       this.removeListenMessage();
+      clearInterval(this.timer);
     }
 	}
 </script>

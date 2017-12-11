@@ -126,16 +126,20 @@
     },
     watch:{
       $route () {
-        var timer = setTimeout(()=>{
-          this.getMessageList();
-          if(this.timer){
-            clearTimeout(this.timer)
-          }
-        },1000)
+        if (!window.WebSocket){
+          var timer = setTimeout(()=>{
+            this.getMessageList();
+            if(this.timer){
+              clearTimeout(this.timer)
+            }
+          },1000)
+        }
       }
     },
     created(){
-//		  this.getMessageList();
+      if (window.WebSocket){
+		    this.getMessageList();
+      }
       bus.$on('mymessage:stateChange',this.getMessageList);
       bus.$on('ws:message',this.handleReceiveMessage);
     },
