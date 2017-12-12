@@ -259,11 +259,12 @@ export default {
           this.submiting=false;
         })
         .catch(function (error) {
-          self.$message({
+          // console.log(error);
+          this.$message({
             type:'error',
             message:'发布失败，请重试'
           });
-          self.submiting=false;
+          this.submiting=false;
         });
     },
 
