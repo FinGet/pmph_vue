@@ -77,19 +77,19 @@
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="password">
               <div class="setting-iterm">
-                <el-form :model="formPassword" ref="formPassword" label-width="140px">
-                  <el-form-item label="旧密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                <el-form :model="formPassword" :rules="rules2" ref="formPassword" label-width="140px">
+                  <el-form-item label="旧密码" prop="oldPass">
+                    <el-input type="password" v-model="formPassword.oldPass"></el-input>
                   </el-form-item>
-                  <el-form-item label="新密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                  <el-form-item label="新密码" prop="pass">
+                    <el-input type="password" v-model="formPassword.newPass"></el-input>
                   </el-form-item>
-                  <el-form-item label="再次输入新密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                  <el-form-item label="再次输入新密码" prop="checkPass">
+                    <el-input type="password" v-model="formPassword.reEnterNewpass"></el-input>
                   </el-form-item>
                 </el-form>
                 <div class="text-right paddingT30">
-                  <el-button type="primary">确认修改</el-button>
+                  <el-button type="primary" @click="updatePassword">确认修改</el-button>
                 </div>
               </div>
             </el-tab-pane>
@@ -103,9 +103,39 @@
 <script>
 	export default {
 		data() {
+      var validateOldPass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.formPassword.oldPass !== '') {
+            this.$refs.formPassword.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass = (rule, value, callback) => {
+        if (this.formPassword.newPass === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.formPassword.newPass !== '') {
+            this.$refs.formPassword.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (this.formPassword.reEnterNewpass === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (this.formPassword.reEnterNewpass !== this.formPassword.newPass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
 			return {
 			  api_update_userInfo:'/pmpheep/users/pmph/updatePersonalData',
         api_get_userInfo:'/pmpheep/users/pmph/getInfo',
+        api_update_password:'/pmpheep/users/pmph/updatePassword',
         activeName:'setting',
         formSetting:{
           id: '',
@@ -168,6 +198,17 @@
 //          address: [
 //            { max: 250, message: "名称长度过长", trigger: "change,blur" }
 //          ],
+        },
+        rules2: {
+          oldPass:[
+            { validator: validateOldPass, trigger: 'change,blur' }
+          ],
+          pass: [
+            { validator: validatePass, trigger: 'change,blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'change,blur' }
+          ]
         }
       }
 		},
@@ -300,6 +341,37 @@
             }
           })
           .catch(function (error) {});
+      },
+      /**
+       * 修改密码
+       */
+      updatePassword(){
+        var self= this;
+        this.$refs['formPassword'].validate((valid) => {
+          if (valid) {
+            this.$axios.put(this.api_update_password, this.$commonFun.initPostData({
+              id: this.formSetting.id,
+              oldPassword:this.formPassword.oldPass,
+              newPassword:this.formPassword.reEnterNewpass
+            }))
+              .then(function (response) {
+                let res = response.data;
+                //修改成功
+                if (res.code === 1) {
+                  self.$message.success('修改成功!');
+                } else {
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+                self.$message.error('请求失败，请重试!');
+              });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
     },
     created(){

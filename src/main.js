@@ -47,6 +47,7 @@ Vue.prototype.$formRules = formRules;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
+  //console.log(sessionData)
   return {
     token:sessionData.sessionPmphUserToken,
     sessionId:sessionData.userSessionId,
