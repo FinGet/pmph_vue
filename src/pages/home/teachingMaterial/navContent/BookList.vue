@@ -57,7 +57,6 @@
                           v-model.trim="scope.row.sort"
                           @blur="sortChange(scope.row)"
                           @change="sortChange(scope.row)"
-                          :key="Math.random()"
                         ></el-input>
                         <span class="error fontsize-sm table-input-tips" v-if="!scope.row.sortIsOk">请输入正确数字</span>
                       </div>

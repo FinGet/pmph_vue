@@ -104,7 +104,7 @@
         <!--操作按钮-->
         <div class="operation-wrapper">
           <el-button type="primary">导出Word</el-button>
-          <el-button type="primary">导出Excel</el-button>
+          <el-button type="primary" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
       <!--高级搜索-->
@@ -167,7 +167,7 @@
         <!--操作按钮-->
         <div class="operation-wrapper">
           <el-button type="primary">导出Word</el-button>
-          <el-button type="primary">导出Excel</el-button>
+          <el-button type="primary" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
     </div>
@@ -252,6 +252,7 @@
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
         api_declaration_list:'/pmpheep/declaration/list/declaration',
         api_book_list:'/pmpheep/textBook/list',
+        api_export_excel:'/pmpheep/excel/declaration',
         powerSearch:true,
         powerSearchList:[
           {
@@ -437,6 +438,51 @@
               })
           })
           .catch(e=>{})
+      },
+      /**
+       * 导出excel
+       */
+      exportExcel(){
+//        var excelUrl = this.api_export_excel;
+//        var params = {
+//          materialId:this.searchParams.materialId,
+//            textBookids:this.searchParams.textBookids.join(','),
+//          realname:this.searchParams.realname,
+//          position:this.searchParams.position,
+//          title:this.searchParams.title,
+//          orgName:this.searchParams.orgName,
+//          unitName:this.searchParams.unitName,
+//          positionType:this.searchParams.positionType,
+//          onlineProgress:this.searchParams.onlineProgress,
+//          offlineProgress:this.searchParams.offlineProgress,
+//        };
+//        for(let key in params){
+//          if(this.api_export_excel.includes('?')){
+//            this.api_export_excel+=('&'+key+'='+params[key])
+//          }
+//        }
+
+        this.$axios.get(this.api_export_excel,{params:{
+          materialId:this.searchParams.materialId,
+          textBookids:this.searchParams.textBookids.join(','),
+          realname:this.searchParams.realname,
+          position:this.searchParams.position,
+          title:this.searchParams.title,
+          orgName:this.searchParams.orgName,
+          unitName:this.searchParams.unitName,
+          positionType:this.searchParams.positionType,
+          onlineProgress:this.searchParams.onlineProgress,
+          offlineProgress:this.searchParams.offlineProgress,
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
       },
     },
     created(){

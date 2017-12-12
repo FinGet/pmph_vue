@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="[0,1,2].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(2)">
+        <el-button type="primary" :disabled="expertInfoData.onlineProgress in [0,1,2]" @click="onlineCheckPass(2)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="[0,2,3].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(3)">
+        <el-button type="primary" :disabled="expertInfoData.onlineProgress in [0,2,3]" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
@@ -35,7 +35,7 @@
                         :key="i"
                         :label="item.textbookName"
                         :value="item.id"
-                        :disabled="allRightSelectedBookList.includes(item.id)">
+                        :disabled="item.id in allRightSelectedBookList">
                       </el-option>
                     </el-select>
                   </div>
@@ -262,6 +262,17 @@
         </div>
       </div>
 
+
+      <!--个人成就-->
+      <div class="expert-info-box">
+        <p class="info-box-title">个人成就</p>
+        <div>
+          <p class="achievements">
+            {{personalAchievements}}
+          </p>
+        </div>
+      </div>
+
       <!--主要学术兼职-->
       <div class="expert-info-box">
         <p class="info-box-title">主要学术兼职</p>
@@ -397,13 +408,16 @@
         </div>
       </div>
 
-      <!--个人成就-->
-      <div class="expert-info-box">
-        <p class="info-box-title">个人成就</p>
-        <div>
-          <p class="achievements">
-            {{personalAchievements}}
-          </p>
+
+      <div>
+        <!--扩展项-->
+        <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
+          <p class="info-box-title">{{iterm.name?iterm.name:'更多信息'}}</p>
+          <div>
+            <p class="achievements">
+              {{iterm.content}}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -491,6 +505,7 @@
               nationalPlan:[],
               textbook:[],
               researchData:[],
+              decExtensionList:[],
               personalAchievements:'',
               bookList:[],
               positionList:['','主编','副主编','编委'],
@@ -748,7 +763,7 @@
                 this.academicExperience = res.data.decAcadeList;
 
                 //个人成就
-                this.personalAchievements = res.data.decAchievementList.length==0?'':res.data.decAchievementList[0].content;
+                this.personalAchievements =  (!!!res.data.decAchievement)?'':res.data.decAchievement.content;
 
                 //上版教材参编情况
                 this.lastPositionList = res.data.decLastPositionList;
@@ -762,6 +777,8 @@
                 this.textbook = res.data.decTextbookList;
                 //作家科研情况表
                 this.researchData = res.data.decResearchList;
+                //扩展项
+                this.decExtensionList = res.data.decExtensionList;
 
               }else{
                 this.$message.error(res.msg.msgTrim())
