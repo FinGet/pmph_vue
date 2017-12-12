@@ -339,12 +339,39 @@
         totalNum:0,
       }
     },
+    watch:{
+     powerSearchValue(val){
+       this.cleanSearchInput();
+     }
+    },
     methods:{
       /**
        * 此方法用于展开与收起高级搜索区域
        */
       toggleSearchType(){
         this.powerSearch=!this.powerSearch;
+        this.cleanSearchInput();
+      },
+      /* 清空搜索框 */
+      cleanSearchInput(){
+        var pageNumber=this.searchParams.pageNumber;
+        var pageSize=this.searchParams.pageSize;
+        var materialId=this.searchParams.materialId;
+       this.searchParams={
+          pageNumber:pageNumber,
+          pageSize:pageSize,
+          materialId:materialId,
+          textBookids:[],
+          realname:'',
+          position:'',
+          title:'',
+          orgName:'',
+          unitName:'',
+          positionType:'',
+          onlineProgress:'',
+          offlineProgress:'',
+        }
+
       },
       /**
        * 获取表格数据
