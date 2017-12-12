@@ -222,7 +222,7 @@
       :visible.sync="dialogVisible"
       size="tiny">
       <div>
-        <el-form ref="form" :model="form" label-width="120px" class="form">
+        <el-form ref="form" :model="form" label-width="140px" class="form">
           <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
