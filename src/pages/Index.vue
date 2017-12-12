@@ -236,292 +236,350 @@
   </div>
 </template>
 <script type="text/javascript">
-    export default{
-      data() {
-        return {
-          limit_size:6,
-          DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
-          activeName1:'first',
-          activeName2: 'first',
-          activeName3:'first',
-          data1:[{
-              title:'全国高等学校五年制临床医学专业第九轮规划教材',
-              state:0
-            },{
-              title:'第四轮全国高等学校医药学成人学历教育临床医学专业',
-              state:0
-            },{
-              title:'全国高等学校五年制临床医学专业第九轮规划教材',
-              state:1
-            },{
-              title:'第四轮全国高等学校医药学成人学历教育临床医学专业',
-              state:1
-            },{
-              title:'全国高等学校五年制临床医学专业第九轮规划教材',
-              state:1
-            },{
-              title:'全国高等学校五年制临床医学专业第九轮规划教材',
-              state:0
-            },{
-              title:'全国高等学校五年制临床医学专业第九轮规划教材',
-              state:0
-            }],
-          data2:[
-            {
-              title:'疼痛的眼动脱敏治疗：实用指南',
-              state:0
-            },{
-              title:'大学生（青年）身心健康自我关注与管理',
-              state:0
-            },{
-              title:'生命孕育感知及漫谈',
-              state:1
-            },{
-              title:'免疫与病原生物学',
-              state:1
-            },{
-              title:'老年健康服务与管理',
-              state:1
-            },{
-              title:'美国职业医师考试临床知识指导',
-              state:0
-            },{
-              title:'健康经济与政策',
-              state:0
-            }
-          ],
-          data3:[{
-            title:'疼痛的眼动脱敏治疗：实用指南',
-            state:0
-          },{
-            title:'大学生（青年）身心健康自我关注与管理',
-            state:0
-          },{
-            title:'生命孕育感知及漫谈',
-            state:1
-          },{
-            title:'免疫与病原生物学',
-            state:1
-          },{
-            title:'老年健康服务与管理',
-            state:1
-          },{
-            title:'美国职业医师考试临床知识指导',
-            state:0
-          },{
-            title:'健康经济与政策',
-            state:0
-          }],
-          data4:[{
-            title:'口腔组织病理学（第7版本科口腔含实验教程附光盘）',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:0
-          },{
-            title:'美容心理学',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:0
-          },{
-            title:'美容临床心理学',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:1
-          },{
-            title:'介入放射学（第4版）',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:1
-          },{
-            title:'2017全国护士执业资格考试 习题精选与答案解析',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:1
-          },{
-            title:'2017全国护士执业资格考试 习题精选与答案解析',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:0
-          },{
-            title:'介入放射学（第4版）',
-            errorMes:'残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。',
-            comment:'这本书不错，虽然我一页都没看过',
-            file:'教学大纲.pdf',
-            state:0
-          }],
-          groupListData:[
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
-            {name:'人卫社小组',id:1231,lastMesTime:'昨天',num:10,avatar:this.$config.DEFAULT_USER_IMAGE},
-            {name:'成都医科大学内部',lastMesTime:"7-28",num:9,avatar:this.$config.DEFAULT_USER_IMAGE},
-            {name:'第九轮教材申报讨论组123',id:12377,lastMesTime:"去年",num:8,avatar:this.$config.DEFAULT_USER_IMAGE}],
-        };
-      },
-      computed:{
-        data1_option(){
-          var data = {
-            state0:[],
-            state1:[]
-          };
-
-          this.data1.forEach(function (iterm,index) {
-            iterm.state==0 && data.state0.push(iterm);
-            iterm.state==1 && data.state1.push(iterm);
-          });
-
-          return data;
+export default {
+  data() {
+    return {
+      groupListUrl:'/pmpheep/group/list/pmphGroup',  //小组列表url
+      limit_size: 6,
+      DEFAULT_USER_IMAGE: this.$config.DEFAULT_USER_IMAGE,
+      activeName1: "first",
+      activeName2: "first",
+      activeName3: "first",
+      data1: [
+        {
+          title: "全国高等学校五年制临床医学专业第九轮规划教材",
+          state: 0
         },
-        data2_option(){
-          var data = {
-            state0:[],
-            state1:[]
-          };
-
-          this.data2.forEach(function (iterm,index) {
-            iterm.state==0 && data.state0.push(iterm);
-            iterm.state==1 && data.state1.push(iterm);
-          });
-
-          return data;
+        {
+          title: "第四轮全国高等学校医药学成人学历教育临床医学专业",
+          state: 0
+        },
+        {
+          title: "全国高等学校五年制临床医学专业第九轮规划教材",
+          state: 1
+        },
+        {
+          title: "第四轮全国高等学校医药学成人学历教育临床医学专业",
+          state: 1
+        },
+        {
+          title: "全国高等学校五年制临床医学专业第九轮规划教材",
+          state: 1
+        },
+        {
+          title: "全国高等学校五年制临床医学专业第九轮规划教材",
+          state: 0
+        },
+        {
+          title: "全国高等学校五年制临床医学专业第九轮规划教材",
+          state: 0
         }
-      },
-      mounted(){
-        //将四个面板设为等高
-      },
-      created(){
-        console.log(this.$router);
-      }
+      ],
+      data2: [
+        {
+          title: "疼痛的眼动脱敏治疗：实用指南",
+          state: 0
+        },
+        {
+          title: "大学生（青年）身心健康自我关注与管理",
+          state: 0
+        },
+        {
+          title: "生命孕育感知及漫谈",
+          state: 1
+        },
+        {
+          title: "免疫与病原生物学",
+          state: 1
+        },
+        {
+          title: "老年健康服务与管理",
+          state: 1
+        },
+        {
+          title: "美国职业医师考试临床知识指导",
+          state: 0
+        },
+        {
+          title: "健康经济与政策",
+          state: 0
+        }
+      ],
+      data3: [
+        {
+          title: "疼痛的眼动脱敏治疗：实用指南",
+          state: 0
+        },
+        {
+          title: "大学生（青年）身心健康自我关注与管理",
+          state: 0
+        },
+        {
+          title: "生命孕育感知及漫谈",
+          state: 1
+        },
+        {
+          title: "免疫与病原生物学",
+          state: 1
+        },
+        {
+          title: "老年健康服务与管理",
+          state: 1
+        },
+        {
+          title: "美国职业医师考试临床知识指导",
+          state: 0
+        },
+        {
+          title: "健康经济与政策",
+          state: 0
+        }
+      ],
+      data4: [
+        {
+          title: "口腔组织病理学（第7版本科口腔含实验教程附光盘）",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 0
+        },
+        {
+          title: "美容心理学",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 0
+        },
+        {
+          title: "美容临床心理学",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 1
+        },
+        {
+          title: "介入放射学（第4版）",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 1
+        },
+        {
+          title: "2017全国护士执业资格考试 习题精选与答案解析",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 1
+        },
+        {
+          title: "2017全国护士执业资格考试 习题精选与答案解析",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 0
+        },
+        {
+          title: "介入放射学（第4版）",
+          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
+          comment: "这本书不错，虽然我一页都没看过",
+          file: "教学大纲.pdf",
+          state: 0
+        }
+      ],
+      groupListData: [
+        {
+          name: "成都医科大学内部",
+          lastMesTime: "7-28",
+          num: 9,
+          avatar: this.$config.DEFAULT_USER_IMAGE
+        },
+        {
+          name: "人卫社小组",
+          id: 1231,
+          lastMesTime: "昨天",
+          num: 10,
+          avatar: this.$config.DEFAULT_USER_IMAGE
+        },
+        {
+          name: "成都医科大学内部",
+          lastMesTime: "7-28",
+          num: 9,
+          avatar: this.$config.DEFAULT_USER_IMAGE
+        },
+        {
+          name: "第九轮教材申报讨论组123",
+          id: 12377,
+          lastMesTime: "去年",
+          num: 8,
+          avatar: this.$config.DEFAULT_USER_IMAGE
+        }
+      ]
+    };
+  },
+  computed: {
+    data1_option() {
+      var data = {
+        state0: [],
+        state1: []
+      };
+
+      this.data1.forEach(function(iterm, index) {
+        iterm.state == 0 && data.state0.push(iterm);
+        iterm.state == 1 && data.state1.push(iterm);
+      });
+
+      return data;
+    },
+    data2_option() {
+      var data = {
+        state0: [],
+        state1: []
+      };
+
+      this.data2.forEach(function(iterm, index) {
+        iterm.state == 0 && data.state0.push(iterm);
+        iterm.state == 1 && data.state1.push(iterm);
+      });
+
+      return data;
     }
+  },
+  methods:{
+   /* 获取小组数据 */
+   getGroupListData(){
+
+   },
+  },
+  mounted() {
+    //将四个面板设为等高
+  },
+  created() {
+    console.log(this.$getUserData());
+  }
+};
 </script>
 <style scoped>
-  /*待办事项*/
-.backlogList>li{
+/*待办事项*/
+.backlogList > li {
   float: left;
 }
-.backlogList>li+li{
+.backlogList > li + li {
   margin-left: 20px;
 }
-.backlogList>li>span:nth-of-type(1) {
+.backlogList > li > span:nth-of-type(1) {
   display: inline-block;
   width: 20px;
   height: 20px;
   line-height: 18px;
   text-align: center;
-  background: #1ABB9C;
+  background: #1abb9c;
   color: #fff;
   border-radius: 50%;
-
 }
 
-
 /*面板*/
-.panel-box{
+.panel-box {
   /*max-width: 1200px;*/
   /*margin: 0 auto;*/
   overflow: hidden;
 }
-.panel-box>li{
+.panel-box > li {
   float: left;
   width: 50%;
-  padding-bottom:2000px;
-  margin-bottom:-2000px;
+  padding-bottom: 2000px;
+  margin-bottom: -2000px;
   line-height: 24px;
 }
-.panel-box>li:nth-of-type(2n+1)>div{
+.panel-box > li:nth-of-type(2n + 1) > div {
   margin: 10px 30px 10px 0;
 }
-.panel-box>li:nth-of-type(2n)>div{
+.panel-box > li:nth-of-type(2n) > div {
   margin: 10px 0 10px 30px;
 }
-.panel-box>li>div{
+.panel-box > li > div {
   min-height: 200px;
   padding: 4px 0 0;
   border-top: 4px solid #e7eaec;
 }
-.panel-box>li>div>p{
+.panel-box > li > div > p {
   line-height: 40px;
 }
-  .panel-iterm{
-    border-top: 1px solid rgb(209, 217, 229);
-  }
+.panel-iterm {
+  border-top: 1px solid rgb(209, 217, 229);
+}
 
-  .panel-min-list>li{
-    margin: 4px 0;
-    padding: 5px;
-  }
-  .panel-min-list>li:nth-of-type(2n+1){
-    background: #f7f7f7;
-  }
-  .panel-min-list>li:hover{
-    background: #f1f1f1;
-  }
-  .panel-more-btn{
-    text-align: center;
-  }
-  .panel-more-btn>a{
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 1.42;
-    color: #5A738E;
-    display: block;
-    padding: 4px 8px;
-    margin: 8px 0;
-  }
-  /*小组*/
-  .groupHead{
-    height: 68px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .groupHead:hover{
-    background: rgba(255,255,255,.15);
-  }
-  .groupHead.active{
-    background: rgba(255,255,255,.2);
-  }
-  .groupHead.firstIterm{
-    /*background: rgba(255,255,255,.1);*/
-  }
-  .groupHead-inner{
-    position: relative;
-    padding: 10px 32px 10px 68px;
-  }
-  .groupHeadImg{
-    position: absolute;
-    left: 10px;
-    top: 8px;
-    width: 50px;
-    height:50px;
-    overflow: hidden;
-    border-radius: 50%;
-  }
-  .groupHeadImg>img{
-    display: block;
-    width: 100%;
-  }
-  .lastMessageTime{
-    position: absolute;
-    right: 4px;
-    top:20px;
-    width: 30px;
-    height: 14px;
-    font-size: 12px;
-    color: rgba(255,255,255,.5);
-  }
-  .groupHeadName{
-    font-size: 14px;
-    line-height: 40px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow:ellipsis;
-  }
+.panel-min-list > li {
+  margin: 4px 0;
+  padding: 5px;
+}
+.panel-min-list > li:nth-of-type(2n + 1) {
+  background: #f7f7f7;
+}
+.panel-min-list > li:hover {
+  background: #f1f1f1;
+}
+.panel-more-btn {
+  text-align: center;
+}
+.panel-more-btn > a {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.42;
+  color: #5a738e;
+  display: block;
+  padding: 4px 8px;
+  margin: 8px 0;
+}
+/*小组*/
+.groupHead {
+  height: 68px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.groupHead:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.groupHead.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+.groupHead.firstIterm {
+  /*background: rgba(255,255,255,.1);*/
+}
+.groupHead-inner {
+  position: relative;
+  padding: 10px 32px 10px 68px;
+}
+.groupHeadImg {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.groupHeadImg > img {
+  display: block;
+  width: 100%;
+}
+.lastMessageTime {
+  position: absolute;
+  right: 4px;
+  top: 20px;
+  width: 30px;
+  height: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.groupHeadName {
+  font-size: 14px;
+  line-height: 40px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
-  .ellipsis{
-    height: 25px;
-  }
+.ellipsis {
+  height: 25px;
+}
 </style>
