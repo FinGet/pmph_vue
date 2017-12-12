@@ -127,7 +127,7 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
