@@ -27,11 +27,11 @@ methods:
           <div class="searchBox-wrapper">
             <div class="searchName">姓名/账号：<span></span></div>
             <div class="searchInput">
-              <el-input placeholder="请输入" class="searchInputEle"  @keyup.native.enter="_getTableData" v-model.trim="searchForm.name"></el-input>
+              <el-input placeholder="请输入" class="searchInputEle"  @keyup.native.enter="_search" v-model.trim="searchForm.name"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper searchBtn">
-            <el-button  type="primary" icon="search" @click="_getTableData">搜索</el-button>
+            <el-button  type="primary" icon="search" @click="_search">搜索</el-button>
           </div>
 
           <!--操作按钮-->
@@ -434,6 +434,14 @@ methods:
             self.loading = false;
             console.error(error);
           });
+      },
+      /**搜索
+      
+       */
+      _search(){
+        this.searchForm.pageSize = 30;
+        this.searchForm.pageNumber = 1;
+        this._getTableData()
       },
       /**
        * 修改用户信息

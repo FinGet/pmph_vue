@@ -344,6 +344,8 @@
        * 搜索
        */
       search(){
+        this.searchForm.pageSize = 30;
+        this.searchForm.pageNumber = 1;
         this.getTableData()
       },
       handleSizeChange(val) {

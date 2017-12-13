@@ -264,6 +264,8 @@ export default {
      * 内容页搜索
      */
     search() {
+      this.conPageNumber = 1;
+      this.conPageSize = 30;
       this.getContentLists();
     },
     /* 内容table切换选项 */

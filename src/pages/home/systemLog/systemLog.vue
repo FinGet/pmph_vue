@@ -103,6 +103,8 @@ export default {
             })
         },
         search(){
+            this.pageSize = 20;
+            this.pageNumber = 1;
             this.getLogs()
         },
         handleSizeChange(val) {
