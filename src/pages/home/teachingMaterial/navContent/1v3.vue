@@ -186,38 +186,43 @@
         <el-table-column
           prop="realname"
           label="姓名"
-          width="180">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="orgName"
           label="工作单位">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="presetPosition"
           label="申报职位">
           <template scope="scope">
             <p></p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="presetPosition"
           label="遴选职位">
           <template scope="scope">
-            <p>{{scope.row.presetPosition==1?'主编':scope.row.presetPosition==2?'副主编':'编委'}}</p>
+            <p>
+              <span>{{scope.row.presetPosition==1?'主编':scope.row.presetPosition==2?'副主编':'编委'}}</span>
+              <span v-if="scope.row.isDigitalEditor">| 数字编委</span>
+              </p>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="presetPosition"
           label="是否数字编委">
           <template scope="scope">
             <p>{{scope.row.isDigitalEditor?'是':'否'}}</p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop=""
+          width="80"
+          align="center"
           label="操作">
           <template scope="scope">
-            <el-button type="danger" size="mini" icon="delete" @click="deleteMember(scope.$index,groupData)">删除</el-button>
+            <el-button type="text"  class="delete"  @click="deleteMember(scope.$index,groupData)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -546,5 +551,8 @@
   .scopeSpan3{
     display: inline-block;
     vertical-align: middle;
+  }
+  .delete{
+    color:red;
   }
 </style>
