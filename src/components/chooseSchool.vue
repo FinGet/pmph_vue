@@ -494,12 +494,12 @@ props: default-history-id 默认选中的历史记录
         this.searchResultFirstId=undefined;
         this.area_school.forEach((iterm,i)=>{
           iterm.schoolList.forEach((t,j)=>{
-            this.area_school[i].schoolList[j].name=this.$commonFun.getHTMLText(this.area_school[i].schoolList[j].name);
-            if(t.name.indexOf(this.searchName)>-1){
+            t.name=this.$commonFun.getHTMLText(t.name);
+            if(t.name.includes(this.searchName)){
               if(!this.searchResultFirstId){
                 this.searchResultFirstId=iterm.id;
               }
-              this.area_school[i].schoolList[j].name=this.area_school[i].schoolList[j].name.replace(this.searchName,highLightHtml);
+              t.name=t.name.replace(this.searchName,highLightHtml);
             }
           })
         });
@@ -508,7 +508,7 @@ props: default-history-id 默认选中的历史记录
        * ，定位到第一个匹配项处
        */
       _goToSearchPosition(){
-        console.log(this.searchResultFirstId);
+        if(!this.searchResultFirstId) return;
         var dom = document.getElementsByClassName('area'+this.searchResultFirstId);
         var top = dom[0].getBoundingClientRect().top;
         document.getElementsByClassName('app-main')[0].scrollTop=top-300;//通过scrollTop设置滚动到指定
