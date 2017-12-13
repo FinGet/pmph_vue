@@ -260,9 +260,6 @@
         },{
           value:3,
           label:'结果已公布'
-        },{
-          value:4,
-          label:'强制结束'
         }],
         dialogVisible:false,
         chooseVisiable2:false,
