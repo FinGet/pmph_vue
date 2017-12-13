@@ -47,8 +47,8 @@
 
 <script>
   import GroupsList from 'components/group/GroupsList'
-  import GroupChat from 'components/group/GroupChat'
-  import MembersList from 'components/group/MembersList'
+  const GroupChat = () => import('components/group/GroupChat');
+  const MembersList = () => import('components/group/MembersList');
   const GroupFile = () => import('components/group/GroupFile');
   const GroupSetting = () => import('components/group/GroupSetting');
   const GroupMembers = () => import('components/group/GroupMembers');
