@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="refreshTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
         </div>
         <!--操作按钮-->
         <div class="pull-right">
@@ -840,7 +840,14 @@ export default {
      * 搜索
      */
     search() {
+      this.pageSize = 10;
+      this.pageNumber = 1;
       this.getOrgsList();
+    },
+    searchOrg(){
+      this.params.pageSize = 10;
+      this.params.pageNumber = 1;
+      this.refreshTableData()
     },
     /**
 		 *审核

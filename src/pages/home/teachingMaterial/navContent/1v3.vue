@@ -97,7 +97,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="遴选主编/副主编" width="170">
+          label="遴选主编/副主编" min-width="170">
           <template scope="scope">
             <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
@@ -112,7 +112,7 @@
         </el-table-column>
 
         <el-table-column
-          label="遴选编委" width="170">
+          label="遴选编委" min-width="170">
           <template scope="scope">
             <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
@@ -128,7 +128,7 @@
         <!--主任 end-->
 
         <el-table-column
-          label="操作">
+          label="操作" min-width="170">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3,scope.row.myPower)"  @click="showDialog(1,scope.row)">名单确认</el-button>
@@ -260,9 +260,6 @@
         },{
           value:3,
           label:'结果已公布'
-        },{
-          value:4,
-          label:'强制结束'
         }],
         dialogVisible:false,
         chooseVisiable2:false,
@@ -347,6 +344,8 @@
        * 搜索
        */
       search(){
+        this.searchForm.pageSize = 30;
+        this.searchForm.pageNumber = 1;
         this.getTableData()
       },
       handleSizeChange(val) {

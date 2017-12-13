@@ -292,7 +292,6 @@
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           // `onUploadProgress` 允许为上传处理进度事件
           onUploadProgress: progressEvent => {
-            console.log(progressEvent)
             this.handleUploadProgress(progressEvent,file)
           },
         })
@@ -342,7 +341,6 @@
 
         let value
         let input
-        console.log('upload by iframe append data');
         for (var key in this.postData) {
           value = this.postData[key]
           if (value && typeof value === 'object' && typeof value.toString !== 'function') {
@@ -361,8 +359,6 @@
         document.body.appendChild(iframe).appendChild(form)
 
 
-
-        console.log('upload by iframe append data end');
         let getResponseData = function () {
           let doc
           try {
@@ -385,7 +381,6 @@
         }
 
         var timer = null;
-        console.log('upload start');
         return new Promise((resolve, reject) => {
           timer = setTimeout(() => {
             // 不存在
@@ -433,7 +428,6 @@
               }else{
                 file.status = 'uploading';
               }
-              console.log(response);
               if (response !== null) {
                 if (response && response.substr(0, 1) === '{' && response.substr(response.length - 1, 1) === '}') {
                   try {
@@ -564,6 +558,8 @@
   text-align: center;
   cursor: pointer;
   position: relative;
+  width: 100%;
+  height:100%;
 }
 .upload-tips{
   font-size: 12px;
