@@ -178,7 +178,7 @@
         style="width: 100%">
         <el-table-column
           label="姓名"
-          min-width="100"
+          min-width="80"
         >
           <template scope="scope">
             <router-link :to="{name:'专家信息',query: { declarationId: scope.row.id }}" class="table-link">{{scope.row.realname}}</router-link>
@@ -186,7 +186,7 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          min-width="120">
+          min-width="110">
           <template scope="scope">
             {{scope.row.username}}
           </template>
@@ -339,7 +339,7 @@
         }],
         searchParams:{
           pageNumber:1,
-          pageSize:30,
+          pageSize:20,
           materialId:'',
           textBookids:[],
           realname:'',
@@ -490,9 +490,11 @@
       exportExcel(){
         this.exportDialog=true;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
-        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,4000,(val)=>{
+        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,6000,(val)=>{
           this.exportLoading = val;
-          this.exportDialog=!(this.exportLoading==100);
+          if(this.exportLoading==100){
+            this.exportDialog=false;
+          }
         });
 
         let params = {

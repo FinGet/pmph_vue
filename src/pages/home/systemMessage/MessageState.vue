@@ -86,7 +86,7 @@
       return {
         input: '',
         isRead: 0,
-        currentPage: 4, // 分页当前页
+        currentPage: 1, // 分页当前页
         tableData: [],
         materialId: '',
         msgId:'',
@@ -157,6 +157,7 @@
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
         this.pageSize = val
+        this.pageNumber=1
         this.getMessageState()
       },
       /**

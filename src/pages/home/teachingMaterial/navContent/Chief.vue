@@ -203,10 +203,6 @@
                 iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
 
               });
-
-              for(let i=0;i<200;i++){
-                res.data.DecPositionEditorSelectionVO.push(res.data.DecPositionEditorSelectionVO[0]);
-              }
               this.tableData = res.data.DecPositionEditorSelectionVO;
               this.IsDigitalEditorOptional = res.data.IsDigitalEditorOptional;
             }
