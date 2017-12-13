@@ -370,7 +370,7 @@ export default {
         data: _this.$initPostData({
           roleId: _this.revisePowerId,
           permissionIds: arr.join(","),
-          materialId:teachArr.join().replace(/,/g,'')
+         // materialId:teachArr.join().replace(/,/g,'')
         })
       })
         .then(function(res) {
