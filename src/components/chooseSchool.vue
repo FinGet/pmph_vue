@@ -199,7 +199,6 @@ props: default-history-id 默认选中的历史记录
   export default {
     props:{
       defaultHistoryId:{
-        type: Number,
         required: false
       },
     },
@@ -355,6 +354,9 @@ props: default-history-id 默认选中的历史记录
                 if (item.areaId == item1.id) {
                   var checkedId = item.id.split(',')
                   item1.checkedSchools = checkedId
+                  //设置地区省份选中状态
+                  item1.checkAll = item1.checkedSchools.length === item1.schoolList.length;
+                  item1.isIndeterminate = item1.checkedSchools.length > 0 && item1.checkedSchools.length < item1.schoolList.length;
                 }
               })
             })
