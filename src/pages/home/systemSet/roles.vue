@@ -359,10 +359,10 @@ export default {
           arr.push(item.id);
         }
       });
-      this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
+      /* this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
         teachArr[item.id]=1;
         console.log(teachArr);
-      });
+      }); */
       var _this = this;
       this.$axios({
         method: "POST",
