@@ -8,7 +8,7 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
     <div class="searchBox-wrapper" >
@@ -16,7 +16,7 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
           <div class="searchBox-wrapper">
@@ -25,14 +25,14 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData" clearable>
+        <el-select v-model="params.rank" placeholder="全部" @change="searchWriter" clearable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </div>
     </div>
     <div class="searchBox-wrapper searchBtn">
-      <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
+      <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
     </div>
             <!--操作按钮-->
     <!-- <div class="pull-right" style="margin-right:10px;">
@@ -764,7 +764,14 @@ export default {
      * 搜索
      */
     search() {
+      this.pageSize = 10;
+      this.pageNumber = 1;
       this.getWritersList()
+    },
+    searchWriter(){
+      this.params.pageSize = 10;
+      this.params.pageNumber = 1;
+      this.refreshTableData();
     },
 		/**@argument val 当选中项 */
 		handleSelectionChange(val) {
