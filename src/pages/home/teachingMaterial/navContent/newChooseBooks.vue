@@ -42,7 +42,7 @@
             <div class="clearfix"></div>
 
 
-            <el-form-item label="联系人：">
+            <el-form-item label="联系人：" prop="materialContacts">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseContact">选择联系人</el-button>
                 <br>
@@ -496,6 +496,7 @@ export default {
          actualDeadline:'',
          ageDeadline:'',
          materialType:[],
+         materialContacts:[],
          director:'',
          materialProjectEditors:[],
          projectEditorPowers:[],
@@ -542,6 +543,7 @@ export default {
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
         ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         materialType:[{type:'array', required: true, message: "请选择教材分类", trigger: "change" }],
+        materialContacts:[{type:'array', required: true,message:'至少选择一个联系人' ,trigger: "change" }],
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
         materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
         projectEditorPowers:[{type:'array', required: true,message:'请指定至少一个项目编辑权限' ,trigger: "change" }],
@@ -574,7 +576,7 @@ export default {
           {min:1,max:2000,message:'内容不能超过2000个字符',trigger:'blur'}
           ],
         note:[
-           /* {required: true, message: "请填写备注", trigger: "blur" }, */
+           {required: true, message: "请填写备注", trigger: "blur" },
           {min:1,max:2000,message:'备注不能超过2000个字符',trigger:'blur'}
           ]
 

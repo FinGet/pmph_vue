@@ -501,6 +501,10 @@
       },
       /**提交小组名单 */
       submitGroup(){
+        if(this.groupData.length==0){
+          this.$message.error('小组名单不能为空');
+          return ;
+        }
         this.groupData.forEach(item => {
           item.isWriter = true
         })
