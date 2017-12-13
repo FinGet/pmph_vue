@@ -103,8 +103,8 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">导出Word</el-button>
-          <el-button type="primary" @click="exportExcel">导出Excel</el-button>
+          <el-button type="primary" :disabled="!tableData.length">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
       <!--高级搜索-->
@@ -127,7 +127,7 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -166,8 +166,8 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">导出Word</el-button>
-          <el-button type="primary" @click="exportExcel">导出Excel</el-button>
+          <el-button type="primary" :disabled="!tableData.length">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
     </div>
@@ -241,6 +241,22 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalNum">
       </el-pagination>
+    </div>
+
+    <div>
+      <el-dialog
+        title="正在导出..."
+        :visible.sync="exportDialog"
+        size="tiny"
+        :before-close="handleExportDialogClose">
+        <div class="paddingT50 paddingB50">
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="exportLoading" status="success"></el-progress>
+        </div>
+        <!--<span slot="footer" class="dialog-footer">-->
+          <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
+          <!--<el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+        <!--</span>-->
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -337,6 +353,9 @@
         },
         tableData: [],
         totalNum:0,
+        exportDialog:false,
+        exportLoading:0,
+        exportLoadingTimerHandle:undefined,
       }
     },
     methods:{
@@ -350,7 +369,6 @@
        * 获取表格数据
        */
       getTableData(){
-        console.log(this.searchParams.textBookids.toString())
         this.$axios.get(this.api_declaration_list,{params:{
           pageNumber:this.searchParams.pageNumber,
           pageSize:this.searchParams.pageSize,
@@ -443,26 +461,14 @@
        * 导出excel
        */
       exportExcel(){
-//        var excelUrl = this.api_export_excel;
-//        var params = {
-//          materialId:this.searchParams.materialId,
-//            textBookids:this.searchParams.textBookids.join(','),
-//          realname:this.searchParams.realname,
-//          position:this.searchParams.position,
-//          title:this.searchParams.title,
-//          orgName:this.searchParams.orgName,
-//          unitName:this.searchParams.unitName,
-//          positionType:this.searchParams.positionType,
-//          onlineProgress:this.searchParams.onlineProgress,
-//          offlineProgress:this.searchParams.offlineProgress,
-//        };
-//        for(let key in params){
-//          if(this.api_export_excel.includes('?')){
-//            this.api_export_excel+=('&'+key+'='+params[key])
-//          }
-//        }
+        this.exportDialog=true;
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,4000,(val)=>{
+          this.exportLoading = val;
+          this.exportDialog=!(this.exportLoading==100);
+        });
 
-        this.$axios.get(this.api_export_excel,{params:{
+        let params = {
           materialId:this.searchParams.materialId,
           textBookids:this.searchParams.textBookids.join(','),
           realname:this.searchParams.realname,
@@ -473,16 +479,18 @@
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
-        }})
-          .then(response=>{
-            var res = response.data;
-            if(res.code==1){
-
-            }
-          })
-          .catch(e=>{
-            console.log(e);
-          })
+        };
+        let excelUrl = this.api_export_excel;
+        for(let key in params){
+          excelUrl+=((excelUrl.includes('?')?'&':'?')+key+'='+params[key]);
+        }
+        this.$commonFun.downloadFile(excelUrl);
+      },
+      /**
+       * 导出进度条关闭前
+       */
+      handleExportDialogClose(done){
+        done();
       },
     },
     created(){
@@ -495,6 +503,7 @@
       this.getBookList();
     },
   }
+
 </script>
 
 <style scoped>

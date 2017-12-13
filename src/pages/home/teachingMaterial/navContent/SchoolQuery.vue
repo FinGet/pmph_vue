@@ -1,6 +1,6 @@
 <template>
   <div class="school-query">
-    <choose-school ref="chooseSchool" @selectChange="selectChange">
+    <choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="materialId">
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>

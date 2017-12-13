@@ -4,7 +4,7 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="!hasPermission([2,3])||tableData.length==0">发布</el-button>
+          <el-button type="primary" @click="submit(2)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='zb'">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
@@ -18,7 +18,6 @@
           border
           stripe
           tooltip-effect="dark"
-          max-height="750"
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
@@ -204,6 +203,10 @@
                 iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
 
               });
+
+              for(let i=0;i<200;i++){
+                res.data.DecPositionEditorSelectionVO.push(res.data.DecPositionEditorSelectionVO[0]);
+              }
               this.tableData = res.data.DecPositionEditorSelectionVO;
               this.IsDigitalEditorOptional = res.data.IsDigitalEditorOptional;
             }

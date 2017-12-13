@@ -1,6 +1,7 @@
 /**
 封装选择学校组件，提供操作按钮卡槽slot，和获取选中学校方法getSelectData,
 卡槽：操作按钮区域
+props: default-history-id 默认选中的历史记录
 方法：getSelectData 获取选中学校
 事件：selectChange 当所选学校发生变化  参数 function(list){} 参数形式[{},{}]
 */
@@ -196,6 +197,12 @@
 
 <script type="text/ecmascript-6">
   export default {
+    props:{
+      defaultHistoryId:{
+        type: Number,
+        required: false
+      },
+    },
     data() {
       return {
         api_upload:'/pmpheep/orgs/orgExport',
@@ -316,14 +323,17 @@
               }
             });
             this.area_school= tempList;
-            // console.log(this.area_school)
+            //如果有设置默认选中的历史记录id则执行查询选中
+            if(this.defaultHistoryId){
+              this._getHistorySchools(this.defaultHistoryId);
+            }
           }
         })
       },
       /**
        * 加载历史学校列表
        */
-      _getHistorySchools() {
+      _getHistorySchools(id) {
         var schoolName = []
         var schoolType = []
         var schoolId = []
@@ -332,7 +342,7 @@
             sendType: 1,
             pageSize: 20,
             pageNumber: 1,
-            materialId: this.materialId,
+            materialId: id?id:this.materialId,
             userNameOrUserCode: '',
             orgName: '',
             materialName: ''
@@ -358,7 +368,7 @@
       _chooseHistory(tableIndex,id){
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
-        this.materialId = id
+        this.materialId = id;
         this._getHistorySchools()
       },
       /**
