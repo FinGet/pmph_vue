@@ -11,7 +11,7 @@
             @change="handleChange">
           </el-cascader> -->
           <span>标题：</span>
-          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title" @keyup.enter.native="getOutContentList"></el-input>
+          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title" @keyup.enter.native="searchOutContent"></el-input>
           <span>发布状态：</span>
           <el-select v-model="contentParams.isPublished" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -22,7 +22,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
+         <el-button type="primary" icon="search" @click="searchOutContent">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -271,6 +271,11 @@ export default {
             this.totalPage = res.data.data.total;
           }
         });
+    },
+    searchOutContent(){
+      this.contentParams.pageSize = 30;
+      this.contentParams.pageNumber = 1;
+      this.getOutContentList();
     },
     /* 发布 */
     publishSubmit(){

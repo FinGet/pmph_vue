@@ -189,6 +189,8 @@
        * 搜索
        */
       search() {
+        this.pageNumber = 1;
+        this.pageSize = 20;
         this.getMessageList()
       },
       /**

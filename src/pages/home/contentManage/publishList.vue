@@ -4,9 +4,9 @@
   <el-tab-pane label="内容">
       <p class="header_p">
           <span>文章标题：</span> 
-          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="getPublicList()"></el-input>
+          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
          <span>作者：</span>
-          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="getPublicList()"></el-input>
+          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
           <span>审核状态：</span>
           <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -17,7 +17,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
+         <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -148,9 +148,9 @@
             @change="handleChange"> -->
           </el-cascader>
           <span>文章标题：</span>
-          <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
+          <el-input placeholder="请输入" class="input" v-model="commentTitle" @keyup.enter.native="searchComment"></el-input>
           <span style="margin-left:10px;">评论人：</span>
-          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
+          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName" @keyup.enter.native="searchComment"></el-input>
           <span>审核状态：</span>
           <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -161,7 +161,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getCommentList()">搜索</el-button>
+         <el-button type="primary" icon="search" @click="searchComment">搜索</el-button>
 
             <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment">批量删除</el-button>
       </p>
@@ -363,6 +363,11 @@ export default {
           }
         });
     },
+    searchPublic(){
+      this.pageSize = 30;
+      this.currentPage = 1;
+      this.getPublicList()
+    },
     /* 获取评论列表 */
     getCommentList(){
       this.$axios.get(this.commentListUrl,{
@@ -389,6 +394,11 @@ export default {
             console.log(this.commentTableData )
           }
       })
+    },
+    searchComment(){
+      this.comPageSize = 20;
+      this.comPageNumber = 1;
+      this.getCommentList();
     },
     /**评论审核 */
     commentModeration(id, status){
