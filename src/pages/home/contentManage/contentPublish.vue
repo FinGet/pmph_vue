@@ -412,7 +412,7 @@ export default {
                 this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
                 this.formData.categoryId=this.$router.currentRoute.query.columnId;
       }else{
-        this.$router.push({ name: "文章管理" });
+           this.$router.push({ name: "文章管理" });
       }
       this.isEditContent=false;
       if (this.$router.currentRoute.query.type == "edit") {
@@ -447,7 +447,12 @@ export default {
          })
          this.formData.attachment=[];
         } else {
-          this.$router.go(-1);
+          var _this=this;
+          _this.$message.error('文章内容为空');
+        setTimeout(function() {
+             _this.$router.go(-1);
+        }, 1000);
+          
         }
       }
     }

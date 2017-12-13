@@ -335,14 +335,15 @@ export default {
         var bookList = [];
         if(!this.checkDataIsOk()){
           this.$message.error('请正确填写每本书籍数据');
+          return;
         }
         this.extendListData.map(iterm=>{
           let tempObj = {
             id:iterm.id?iterm.id:null,
             materialId:this.formData.materialId,
-            textbookName:iterm.textbookName,
-            textbookRound:iterm.textbookRound,
-            sort:iterm.sort,
+            textbookName:iterm.textbookName?iterm.textbookName:null,
+            textbookRound:iterm.textbookRound?iterm.textbookRound:null,
+            sort:iterm.sort?iterm.sort:null,
             founderId:this.currentUserId
           }
           bookList.push(tempObj);

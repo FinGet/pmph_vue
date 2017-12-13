@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress in [0,1,2]" @click="onlineCheckPass(2)">
+        <el-button type="primary" :disabled="onlineProgressBtn_Back" @click="onlineCheckPass(2)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="expertInfoData.onlineProgress in [0,2,3]" @click="onlineCheckPass(3)">
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
@@ -412,7 +412,7 @@
       <div>
         <!--扩展项-->
         <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
-          <p class="info-box-title">{{iterm.name?iterm.name:'更多信息'}}</p>
+          <p class="info-box-title">{{iterm.extensionName?iterm.extensionName:'更多信息'}}</p>
           <div>
             <p class="achievements">
               {{iterm.content}}
@@ -546,6 +546,14 @@
               }
             }
             return flag;
+          },
+          onlineProgressBtn_Back(){
+            var l = [0,1,2];
+            return (l.includes(this.expertInfoData.onlineProgress))
+          },
+          onlineProgressBtn_Pass(){
+            var l = [0,2,3];
+            return (l.includes(this.expertInfoData.onlineProgress))
           }
         },
         created(){
@@ -589,13 +597,14 @@
          * @param index
          */
         deleteNew(index,hasChange){
+          if(this.addBookList.length==1&&!this.addBookList[0].isNew){
+            this.$message.error('至少要有一本书！');
+          }
           this.addBookList.splice(index, 1);
           if(hasChange){
             this.hasBookListChanged=true;
           }
-          if(this.addBookList.length==0){
-            this.$message.error('至少要有一本书！');
-          }
+
         },
         /**
          * 保存图书，保存成功后就将图书isNew状态改为false
@@ -898,7 +907,7 @@
         onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
-            onlineProgress:3,
+            onlineProgress:type,
             materialId:this.searchFormData.materialId
           }})
             .then(response=>{
@@ -1050,6 +1059,6 @@
     width: 100%;
   }
   .achievements{
-    min-height: 80px;
+    min-height: 60px;
   }
 </style>

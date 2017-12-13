@@ -295,6 +295,7 @@ export function setCursorPosition(textarea, rangeData) {
  *获取HTML中的纯文本信息
  */
 export function getHTMLText(str) {
+  str=str?str:'';
   str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
   str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
   //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
@@ -380,4 +381,53 @@ export function checkType (str, type) {
     default :
       return true;
   }
+}
+
+/**
+ * 封装一个缓动函数
+ * @param start 初始值
+ * @param end 最终值
+ * @param time 运动时间
+ * @param callback 回调函数
+ */
+export function perfectAnimate(start,end,time,callback){
+  var t = 0;
+  var unm = time/40;
+  var timer;
+  var easeOut = function(t, b, c, d) {
+    return -c * ((t = t/d - 1) * t * t*t - 1) + b;
+  };
+
+  timer = setInterval(()=>{
+    let m = Math.ceil(easeOut(t,start,end-start,unm))
+    t++;
+    if(t<unm){
+      callback&&callback(m);
+    }else{
+      callback&&callback(end);
+      clearInterval(timer);
+    }
+  },40);
+
+  return {
+    bort:function () {
+      timer&&clearInterval(timer);
+    },
+    end:function () {
+      callback&&callback(end);
+      timer&&clearInterval(timer);
+    }
+  }
+}
+
+/**
+ * 下载文件
+ * @param url
+ */
+export function downloadFile(url) {
+  var iframe = document.createElement("iframe");
+  iframe.name = 'iframe-' + (+new Date())
+  iframe.style.display = "none";
+  iframe.src = url;
+  document.body.appendChild(iframe);
 }
