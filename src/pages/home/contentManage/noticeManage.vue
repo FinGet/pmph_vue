@@ -45,7 +45,7 @@
                 width="175"
                 >
               <template scope="scope">
-                   {{$commonFun.formatDate(scope.row.gmtCreate)}}
+                   {{scope.row.gmtCreate}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -211,6 +211,7 @@ export default {
           }
         })
         .then(response => {
+          console.log(response);
           let res = response.data;
           this.conDataTotal = res.data.total;
           if (res.code == "1") {
