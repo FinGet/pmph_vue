@@ -29,7 +29,7 @@
                 width="68">
               </el-table-column>
               <el-table-column
-                prop="schoolName"
+                prop="bookName"
                 label="书名">
               </el-table-column>
               <el-table-column
@@ -231,10 +231,11 @@ export default {
         params: this.bookParams
       }).then(response => {
         let res = response.data
-        if(res.data.code==1){
-          var resData = res.data.data;
+        if(res.code==1){
+          var resData = res.data.rows;
+          console.log(resData)
           this.booksTotal=resData.total;
-          this.bookTableData=resData.rows;
+          this.bookTableData=resData;
        }
       })
     },
