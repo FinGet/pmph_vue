@@ -142,7 +142,7 @@ import echarts from "../../../../../../static/echarts/echarts.common.min";
 export default {
   data() {
     return {
-      activeName: "school",
+      activeName: "bookName",
       schoolResultUrl:'/pmpheep/decPosition/list',  //学校结果统计URL
       bookResultUrl: '/pmpheep/decPosition/list/bookList', // 书籍结果统计url
       sortType:true,   //排序方式 true 按当选数排序  false 按申报数排序
