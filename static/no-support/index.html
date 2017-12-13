@@ -136,6 +136,15 @@
       margin:0 4px 0 0;
     }
   </style>
+
+  <script>
+    //    当浏览器版支持vue.js时跳转到主页
+    var ua = navigator.userAgent.toLowerCase(),s;
+    var Ie = (s = ua.match(/(msie\s|trident.*rv:)([\d.]+)/))? parseInt(s[2]):false;
+    if(!Ie || Ie>=9){
+      window.location.href="/";
+    }
+  </script>
 </head>
 
 <body>
@@ -146,11 +155,11 @@
   <P></P>
   <div class=browser>
     <ul>
-      <li><a class=chrome href="https://www.baidu.com/link?url=9Otxa5RHv5mr_tWtDCgdx4f4VafMiTGkeBQnFHnGD0rzB2gBqd_kOP7Emi-oapkXhUS9go5fRv45mraBpEu24yyAhmlQUywJl0BJIkr8F43&wd=&eqid=d37e4c7f000414480000000358185df6" target=_blank></a></li>
-      <li><a class=firefox href="https://www.baidu.com/link?url=EOojT_SNZdZrTBOHk9nP68voHr9N7D-TuBgQh-aPZvqpqsQh2ouy79lDisrExV8s3VjDe3Ji7gu4Y4sZlWz6VFXH7irecT-7hJkcWkok32K&wd=&eqid=e8b8af58000443720000000358185e0e" target=_blank></a></li>
-      <li><a class=ie11 href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie/" target=_blank></a></li>
-      <li><a class=safari href="https://www.baidu.com/link?url=EOojT_SNZdZrTBOHk9nP68voHr9N7D-TuBgQh-aPZvqpqsQh2ouy79lDisrExV8s3VjDe3Ji7gu4Y4sZlWz6VFXH7irecT-7hJkcWkok32K&wd=&eqid=e8b8af58000443720000000358185e0e" target=_blank></a></li>
-      <li><a class=opera href="https://www.baidu.com/link?url=EOojT_SNZdZrTBOHk9nP68voHr9N7D-TuBgQh-aPZvqpqsQh2ouy79lDisrExV8s3VjDe3Ji7gu4Y4sZlWz6VFXH7irecT-7hJkcWkok32K&wd=&eqid=e8b8af58000443720000000358185e0e" target=_blank></a></li>
+      <li><a class=chrome href="https://www.baidu.com/link?url=PtF_LxX4T6Zu4X74s0EDQ2YF51bJRIpSnBnyYL0Nn_WmStLNr5AH09kRAoUU4I6YcbcU0nqy1NS1LwNg7qhWYmfI5CGRz8q3anhucurX-o7&wd=&eqid=ddec1c330003a66a000000055a30c8d1" target=_blank></a></li>
+      <li><a class=firefox href="http://download.firefox.com.cn/releases-sha2/stub/official/zh-CN/Firefox-latest.exe" target=_blank></a></li>
+      <li><a class=ie11 href="https://www.baidu.com/link?url=SMT0k9ml_ksCOwmAPD1Loqt7_mBuBvJrJrdTpzPQaROFA9BgxFJI3p-ixPqDiYAWM6nqmMkWmpv-drfmlFK5aVBmEsaQj4yo2TKeKfTDsnC&wd=&eqid=b71e97f100046775000000055a30c9ed" target=_blank></a></li>
+      <li><a class=safari href="https://www.baidu.com/link?url=rJ0fwnjk2LL2Q7nw87aDsLnOQsK-3nA_6PBKC6KiU2vDZhbMd68DxSqBHmwksmM7Fn6DOGj4PnYwYOrePa-ByJTnxGAq_g5Lnv-XTayM0Vu&wd=&eqid=e008c7750004b32f000000055a30c9c9" target=_blank></a></li>
+      <li><a class=opera href="https://www.baidu.com/link?url=bCJMlgUwRIMMM6tr-IZ3w9GpGYiu78CDjEYOrt44MpaNlGc0GH_1_IfXpzv_Lxx17aMQEyupRpHj9XfmMW5etjox8D8LkQ_6OOV0kDzxT_W&wd=&eqid=eca1b08000048c6a000000055a30ca06" target=_blank></a></li>
       <ul></ul></ul></div></div>
 </body>
 </html>

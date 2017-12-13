@@ -8,7 +8,7 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="onlineProgressBtn_Back" @click="onlineCheckPass(2)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)">
           退回给个人
         </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'" @click="onlineCheckPass(3)">
@@ -548,8 +548,17 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            var l = [0,1,2];
-            return (l.includes(this.expertInfoData.onlineProgress))
+            if(this.addBookList.length==0){
+              return true;
+            }
+            let flag = true;
+            for(let iterm of this.addBookList){
+              if(iterm.isDigitalEditor||iterm.chosenPosition){
+                flag = false;
+                break;
+              };
+            }
+            return flag;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3];

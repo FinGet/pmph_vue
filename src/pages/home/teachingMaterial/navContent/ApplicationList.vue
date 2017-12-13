@@ -143,6 +143,7 @@ export default {
         return {
             api_material_list:'/pmpheep/material/list',
             api_material_del:'/pmpheep/material/delete',
+            api_export_excel:'/pmpheep/excel/published/org',
             searchForm:{
               pageSize:30,
               pageNumber:1,
@@ -300,8 +301,8 @@ export default {
        * @param id 教材id
        */
       exportExcel(id){
-        //todo 导出功能
-        this.$message.info('功能尚未实现！');
+        let url = this.api_export_excel+"?materialId="+id
+        this.$commonFun.downloadFile(url);
       }
     },
     created() {
