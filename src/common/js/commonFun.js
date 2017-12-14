@@ -59,10 +59,12 @@ export function authorityComparison(matchArr, userArr) {
 }
 /* 教材申报权限判断 */
 export function materialPower(num,powerList) {
-  var userData= getSessionStorage('currentUser', 'json')||{};
-  var str = powerList?powerList:userData.materialPermission;
+  if(!powerList||!(Object.prototype.toString.call(powerList)=='[object Array]'||(typeof powerList).toLowerCase()=='string')){
+    return false;
+  }
+  var str = ((typeof powerList).toLowerCase()=='string')?powerList.split(''):powerList;
   //如果传的是数字
-  if((typeof num).toLowerCase() == "number"){
+  if((typeof num).toLowerCase() == "number"||(typeof num).toLowerCase() == "string"){
     return str[num]==1;
   }
   //如果是数组,只要匹配到任一一项则返回true

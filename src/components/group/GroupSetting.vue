@@ -181,6 +181,7 @@
           //修改成功通过vue bus派发一个事件
           bus.$emit('group:info-change')
         }else{
+          this.groupData.filename=undefined;
           this.$message.error(response.msg.msgTrim());
         }
       },
@@ -188,6 +189,7 @@
        * 创建小组请求失败的回调
        */
       uploadError(err, file, fileList){
+        this.groupData.filename=undefined;
         this.$message.error('修改小组失败，请重试');
       },
       /**

@@ -271,10 +271,13 @@ export default {
   created(){
     this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
     this.getTotalChartData();
+    this.getSchoolTableData();
+    this.getBookTableData();
   },
   watch:{
      sortType(){
        this.getSchoolTableData();
+      //  this.getSchoolEchart();
      }
   },
   methods: {
@@ -293,20 +296,36 @@ export default {
     },
     /* 获取学校申报情况统计数据 */
     getSchoolTableData(){
-      var myChart2 = echarts.init(this.$refs.echarts2);
      this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
        params:this.schoolParams
      }).then((res)=>{
-       console.log(res);
        if(res.data.code==1){
           var resData = res.data.data;
           this.schoolTotal=resData.total;
           this.schoolTableData=resData.rows;
+       }
+     })
+    },
+    /* 获取学校申报情况统计数据图表 */
+    getSchoolEchart(){
+      var myChart2 = echarts.init(this.$refs.echarts2);
+     this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
+       params:{
+          pageNumber:1,
+          pageSize:20,
+          materialId:this.schoolParams.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
+          var resData = res.data.data;
           resData.rows.forEach(item => {
             this.stSchools.push(item.schoolName)
             this.stSchoolPresetPersons.push(item.presetPersons)
             this.stSchoolChosenPersons.push(item.chosenPersons)
           })
+          console.log(myChart2);
+          myChart2.clear();
           myChart2.setOption({
             title: {
               show: "true",
@@ -359,8 +378,8 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
-                max: 250,
-                interval: 50,
+                max: 100,
+                interval: 10,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -369,8 +388,8 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: 250,
-                interval: 50,
+                max: 100,
+                interval: 10,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -396,7 +415,6 @@ export default {
     },
     /* 获取按书名统计申报情况 */
     getBookTableData(){
-      var myChart = echarts.init(this.$refs.echarts1);
      this.$axios.get(this.bookSituationUrl,{
        params:this.bookParmas
      }).then((res)=>{
@@ -405,6 +423,21 @@ export default {
        if(res.data.code==1){
          this.bookTotal=res.data.data.total;
          this.bookTableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 获取按书名统计申报情况图表 */
+    getBookEchart(){
+      var myChart = echarts.init(this.$refs.echarts1);
+     this.$axios.get(this.bookSituationUrl,{
+       params:{
+         pageNumber:1,
+          pageSize:20,
+          materialId:this.bookParmas.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
          res.data.data.rows.forEach(item => {
            this.stBooks.push(item.bookName); // 书籍
            this.stPresetPersons.push(item.presetPersons); // 申报人数
@@ -462,8 +495,8 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
-                max: 250,
-                interval: 50,
+                max: 100,
+                interval: 10,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -472,8 +505,8 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: 250,
-                interval: 50,
+                max: 100,
+                interval: 10,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -532,8 +565,8 @@ export default {
     this.$refs.echarts2.style.width = echartWidth + "px";
     console.log(echartWidth);
     // 指定图表的配置项和数据
-    this.getBookTableData();
-    this.getSchoolTableData();
+    this.getBookEchart();
+    this.getSchoolEchart();
   }
 };
 </script>

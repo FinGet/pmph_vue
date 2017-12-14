@@ -112,7 +112,7 @@
                 <div>遴选状态：<span></span></div>
                 <div>
                   <el-tag type="success" v-if="iterm.chosenPosition||iterm.isDigitalEditor">
-                    已被选为{{iterm.showPosition}}
+                    已被选为{{positionList[iterm.chosenPosition]}}{{iterm.chosenPosition&&iterm.isDigitalEditor?',':''}}{{iterm.isDigitalEditor?'数字编委':''}}
                   </el-tag>
                 </div>
               </div>
@@ -461,6 +461,7 @@
 </template>
 <script type="text/javascript">
     export default{
+        props:['materialInfo'],
         data(){
             return{
               api_info:'/pmpheep/declaration/list/declaration/exportExcel',
@@ -548,8 +549,9 @@
             return flag;
           },
           onlineProgressBtn_Back(){
+            let l = [0,1,3].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
-              return true;
+              return true&&l;
             }
             let flag = true;
             for(let iterm of this.addBookList){
@@ -558,7 +560,7 @@
                 break;
               };
             }
-            return flag;
+            return flag&&l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3];
@@ -948,6 +950,8 @@
         }
         this.getTableData();
         this.getBookList();
+        console.log(this.materialInfo);
+        console.log(this.materialInfo.hasPermission([1,2]))
       },
     }
 </script>
