@@ -30,12 +30,12 @@
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="125">
+            <el-table-column label="显示结束日期" width="122">
                 <template scope="scope">
                     <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="125">
+            <el-table-column label="实际结束日期" width="122">
                 <template scope="scope">
                     <p>
                         {{scope.row.actualDeadline}}
@@ -52,12 +52,12 @@
                   </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="85">
+            <el-table-column prop="status" label="状态" width="80">
                 <template scope="scope">
                     {{scope.row.state}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="278">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy)">修改</el-button>
@@ -145,7 +145,7 @@ export default {
             api_material_del:'/pmpheep/material/delete',
             api_export_excel:'/pmpheep/excel/published/org',
             searchForm:{
-              pageSize:30,
+              pageSize:20,
               pageNumber:1,
               isMy:false,
               state:'',

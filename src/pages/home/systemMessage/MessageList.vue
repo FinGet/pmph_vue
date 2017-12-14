@@ -199,6 +199,7 @@
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
         this.pageSize = val
+        this.pageNumber=1;
         this.getMessageList()
       },
       /**

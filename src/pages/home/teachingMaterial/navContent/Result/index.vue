@@ -18,7 +18,7 @@
       <div class="result-content-head clearfix marginB20">
         <p>申报情况统计</p>
         <div class="pull-right paddingR20 export">
-          <el-button type="text">
+          <el-button type="primary" size="small">
             <i class="fa fa-cloud-upload" aria-hidden="true"></i>
             导出
           </el-button>
@@ -32,7 +32,7 @@
       <div class="result-content-head clearfix marginB20">
         <p>申报结果统计</p>
         <div class="pull-right paddingR20 export1">
-          <el-button type="text">
+          <el-button type="primary" size="small">
             <i class="fa fa-cloud-upload" aria-hidden="true"></i>
             导出
           </el-button>
@@ -109,12 +109,14 @@
 }
 .export{
     position: absolute;
-    right: 20px;
-    top: 350px;
+    right: 0px;
+    top: 344px;
+    cursor: pointer;
 }
 .export1{
     position: absolute;
-    right: 20px;
-    top: 205px;
+    right: 0px;
+    top: 200px;
+    cursor: pointer;    
 }
 </style>

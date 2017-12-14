@@ -269,14 +269,15 @@ export default {
     };
   },
   created(){
-  this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
-  this.getTotalChartData();
-
-  this.getSchoolTableData();
+    this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
+    this.getTotalChartData();
+    this.getSchoolTableData();
+    this.getBookTableData();
   },
   watch:{
      sortType(){
        this.getSchoolTableData();
+      //  this.getSchoolEchart();
      }
   },
   methods: {
@@ -298,16 +299,117 @@ export default {
      this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
        params:this.schoolParams
      }).then((res)=>{
-       console.log(res);
        if(res.data.code==1){
           var resData = res.data.data;
           this.schoolTotal=resData.total;
           this.schoolTableData=resData.rows;
+       }
+     })
+    },
+    /* 获取学校申报情况统计数据图表 */
+    getSchoolEchart(){
+      var myChart2 = echarts.init(this.$refs.echarts2);
+     this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
+       params:{
+          pageNumber:1,
+          pageSize:20,
+          materialId:this.schoolParams.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
+          var resData = res.data.data;
           resData.rows.forEach(item => {
             this.stSchools.push(item.schoolName)
             this.stSchoolPresetPersons.push(item.presetPersons)
             this.stSchoolChosenPersons.push(item.chosenPersons)
           })
+          console.log(myChart2);
+          myChart2.clear();
+          myChart2.setOption({
+            title: {
+              show: "true",
+              text: "申报人数统计图表"
+            },
+            tooltip: {
+              show: true,
+              trigger: "axis",
+              axisPointer: {
+                type: "cross",
+                crossStyle: {
+                  color: "#999"
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ["line", "bar"] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+              }
+            },
+            legend: {
+              data: ["申报人数", "当选人数"]
+            },
+            xAxis: [
+              {
+                name: "学校名称",
+                type: "category",
+                data: this.stSchools,
+                axisPointer: {
+                  type: "shadow"
+                },
+                axisLabel: {
+                  interval: 0,
+                  boundaryGap: [0, 0.01],
+                  formatter: function(value) {
+                    return value.split("").join("\n");
+                  }
+                }
+              }
+            ],
+            grid: {
+              left: "10%",
+              bottom: "35%"
+            },
+            yAxis: [
+              {
+                type: "value",
+                name: "申报人数",
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              },
+              {
+                type: "value",
+                name: "当选人数",
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              }
+            ],
+            series: [
+              {
+                name: "申报人数",
+                type: "bar",
+                data: this.stSchoolPresetPersons
+              },
+              {
+                name: "当选人数",
+                type: "line",
+                yAxisIndex: 1,
+                data: this.stSchoolChosenPersons
+              }
+            ]
+          })
+          // console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
        }
      })
     },
@@ -317,14 +419,113 @@ export default {
        params:this.bookParmas
      }).then((res)=>{
        console.log(res)
+       console.log(this.bookTableData)
        if(res.data.code==1){
          this.bookTotal=res.data.data.total;
          this.bookTableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 获取按书名统计申报情况图表 */
+    getBookEchart(){
+      var myChart = echarts.init(this.$refs.echarts1);
+     this.$axios.get(this.bookSituationUrl,{
+       params:{
+         pageNumber:1,
+          pageSize:20,
+          materialId:this.bookParmas.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
          res.data.data.rows.forEach(item => {
            this.stBooks.push(item.bookName); // 书籍
            this.stPresetPersons.push(item.presetPersons); // 申报人数
            this.stChosenPersons.push(item.chosenPersons); // 当选人数
          })
+         myChart.setOption({
+            title: {
+              show: "true",
+              text: "申报人数统计图表"
+            },
+            tooltip: {
+              show: true,
+              trigger: "axis",
+              axisPointer: {
+                type: "cross",
+                crossStyle: {
+                  color: "#999"
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ["line", "bar"] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+              }
+            },
+            legend: {
+              data: ["申报人数", "当选人数"]
+            },
+            xAxis: [
+              {
+                name: "书籍名称",
+                type: "category",
+                data: this.stBooks,
+                axisPointer: {
+                  type: "shadow"
+                },
+                axisLabel: {
+                  interval: 0,
+                  boundaryGap: [0, 0.01],
+                  formatter: function(value) {
+                    return value.split("").join("\n");
+                  }
+                }
+              }
+            ],
+            grid: {
+              left: "10%",
+              bottom: "35%"
+            },
+            yAxis: [
+              {
+                type: "value",
+                name: "申报人数",
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              },
+              {
+                type: "value",
+                name: "当选人数",
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              }
+            ],
+            series: [
+              {
+                name: "申报人数",
+                type: "bar",
+                data: this.stPresetPersons
+              },
+              {
+                name: "当选人数",
+                type: "line",
+                yAxisIndex: 1,
+                data: this.stChosenPersons
+              }
+            ]
+          })
        }
      })
     },
@@ -362,180 +563,10 @@ export default {
       300;
     this.$refs.echarts1.style.width = echartWidth + "px";
     this.$refs.echarts2.style.width = echartWidth + "px";
-    var myChart = echarts.init(this.$refs.echarts1);
-    var myChart2 = echarts.init(this.$refs.echarts2);
     console.log(echartWidth);
     // 指定图表的配置项和数据
-    var option2 = {
-      title: {
-        show: "true",
-        text: "申报人数统计图表"
-      },
-      tooltip: {
-        show: true,
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          crossStyle: {
-            color: "#999"
-          }
-        }
-      },
-      toolbox: {
-        feature: {
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ["line", "bar"] },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      legend: {
-        data: ["申报人数", "当选人数"]
-      },
-      xAxis: [
-        {
-          name: "书籍名称",
-          type: "category",
-          data: this.stBooks,
-          axisPointer: {
-            type: "shadow"
-          },
-          axisLabel: {
-            interval: 0,
-            boundaryGap: [0, 0.01],
-            formatter: function(value) {
-              return value.split("").join("\n");
-            }
-          }
-        }
-      ],
-      grid: {
-        left: "10%",
-        bottom: "35%"
-      },
-      yAxis: [
-        {
-          type: "value",
-          name: "申报人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        },
-        {
-          type: "value",
-          name: "当选人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        }
-      ],
-      series: [
-        {
-          name: "申报人数",
-          type: "bar",
-          data: this.stPresetPersons
-        },
-        {
-          name: "当选人数",
-          type: "line",
-          yAxisIndex: 1,
-          data: this.stChosenPersons
-        }
-      ]
-    };
-    // 指定图表的配置项和数据
-    var option3 = {
-      title: {
-        show: "true",
-        text: "申报人数统计图表"
-      },
-      tooltip: {
-        show: true,
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          crossStyle: {
-            color: "#999"
-          }
-        }
-      },
-      toolbox: {
-        feature: {
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ["line", "bar"] },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      legend: {
-        data: ["申报人数", "当选人数"]
-      },
-      xAxis: [
-        {
-          name: "书籍名称",
-          type: "category",
-          data: this.stBooks,
-          axisPointer: {
-            type: "shadow"
-          },
-          axisLabel: {
-            interval: 0,
-            boundaryGap: [0, 0.01],
-            formatter: function(value) {
-              return value.split("").join("\n");
-            }
-          }
-        }
-      ],
-      grid: {
-        left: "10%",
-        bottom: "35%"
-      },
-      yAxis: [
-        {
-          type: "value",
-          name: "申报人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        },
-        {
-          type: "value",
-          name: "当选人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        }
-      ],
-      series: [
-        {
-          name: "申报人数",
-          type: "bar",
-          data: this.stSchoolPresetPersons
-        },
-        {
-          name: "当选人数",
-          type: "line",
-          yAxisIndex: 1,
-          data: this.stSchoolChosenPersons
-        }
-      ]
-    };
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option2);
-    myChart2.setOption(option3);
+    this.getBookEchart();
+    this.getSchoolEchart();
   }
 };
 </script>
