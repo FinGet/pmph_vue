@@ -800,6 +800,15 @@ export default {
                       sort:this.checkedConactPersonData[i].sort
                     }
                   );
+                  this.material.materialContacts.push(
+                    {
+                      contactUserId:this.checkedConactPersonData[i].id,
+                      contactUserName:this.checkedConactPersonData[i].realname,
+                      contactPhone:this.checkedConactPersonData[i].handphone,
+                      contactEmail:this.checkedConactPersonData[i].email,
+                      sort:this.checkedConactPersonData[i].sort
+                    }
+                  );
                }
            }
            
