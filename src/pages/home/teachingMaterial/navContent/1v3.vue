@@ -89,7 +89,7 @@
                 {{scope.row.planningEditorName}}
               </span>
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
-                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd">
+                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished">
                   <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
                 </el-button>
               </el-tooltip>
@@ -103,7 +103,7 @@
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb',q:scope.row.myPower}}">
-                <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd">
+                <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -118,7 +118,7 @@
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
               <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',q:scope.row.myPower}}">
-                <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd">
+                <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -131,12 +131,12 @@
           label="操作" min-width="170">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || scope.row.isPublished || !hasAccess(3,scope.row.myPower)"  @click="showDialog(1,scope.row)">名单确认</el-button>
+            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || scope.row.isPublished || !hasAccess(3,scope.row.myPower) || scope.row.allTextbookPublished"  @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower)">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || !scope.row.isLocked || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
-            <el-button type="text">导出Excel</el-button>
+            <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出Excel</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
@@ -149,7 +149,7 @@
         v-if="totalNum>30"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-sizes="[10,20,30,40]"
         :page-size="searchForm.pageSize"
         :current-page="searchForm.pageNumber"
         layout="total, sizes, prev, pager, next, jumper"
@@ -272,9 +272,10 @@
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
         totalNum: 0,
-        selectedIds:'',
+        selectedIds:'', // 选择项的ids
+        selected:'', // 选中项
         method:'',
-        currentId: '',
+        currentId: '', // 当前id
         planningEditor: '',
         selectedBookId:'',
         groupData: [], // 小组名单
@@ -287,11 +288,24 @@
        * @returns {boolean}
        */
       isSelected() {
-        if (this.selectedIds.length > 0) {
-          return false
+        let arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isPublished);
+            arr.push(item.isPublished);
+          });
+          return arr.some(x=>{
+            return x == true;
+          })
         } else {
-          return true
+          console.log(3);
+          return true;
         }
+        // if (this.selectedIds.length > 0) {
+        //   return false
+        // } else {
+        //   return true
+        // }
       }
     },
     methods:{
@@ -351,17 +365,18 @@
       search(){
         this.searchForm.pageSize = 30;
         this.searchForm.pageNumber = 1;
-        this.getTableData()
+        this.getTableData();
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        this.searchForm.pageSize = val
-        this.search()
+        this.searchForm.pageSize = val;
+        console.log(this.searchForm.pageSize);
+        this.getTableData();
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
-        this.search()
+        this.getTableData();
       },
       /**强制结束 */
       isForceEnd(){
@@ -400,6 +415,7 @@
           arr.push(item.textBookId)
         })
         this.selectedIds = arr.toString()
+        this.selected = val;
       },
       /**
        * 批量通过
@@ -537,6 +553,19 @@
           let res = response.data;
           if (res.code == 1) {
             this.$message.success('更新成功！');
+          }
+        })
+      },
+      /** 导出Excel */
+      exportExcel(id){
+        this.$axios.get('/pmpheep/position/exportExcel',{
+          params:{
+            textBookId : id
+          }
+        }).then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+
           }
         })
       },

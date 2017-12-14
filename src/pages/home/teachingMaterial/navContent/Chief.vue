@@ -271,6 +271,7 @@
           .then(()=>{
             let jsonDecPosition = [];
             for(let i = 0, len = this.tableData.length; i < len; i++){
+              this.tableData[i].chosenPosition = this.tableData[i].isBianwei?3:this.tableData[i].isZhubian?1:this.tableData[i].isFuzhubian?2:0
               let tempObj = {
                 id:this.tableData[i].id,
                 textbookId:this.searchParams.textbookId,
