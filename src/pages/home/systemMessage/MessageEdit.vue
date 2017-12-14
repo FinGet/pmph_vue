@@ -78,7 +78,7 @@ export default {
       messageRules:{
        title:[
           { required: true, message: '请输入标题', trigger: 'blur' },
-          {max:50, message: '长度不能超过50个字符', trigger: 'blur'}
+          {max:50, message: '长度不能超过50个字符', trigger: 'change,blur'}
        ],
        sendType:[
           {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
@@ -251,7 +251,9 @@ export default {
      * 点击修改进入编辑消息后保存
      */
     editSave(){
-      console.log(this.messageForm);
+      this.$refs['messageForm'].validate((valid)=>{
+          if(valid){
+            console.log(this.messageForm);
       let filePath = [];
       this.messageForm.filePathList.forEach(iterm=>{
         filePath.push(iterm.path);
@@ -277,6 +279,9 @@ export default {
           console.log(e);
           this.$message.error('提交失败，请重试！');
         })
+          }
+      })
+      
     },
     /**
      * 由选择发送对象页面返回编辑页面，需要将原有内容插入编辑器中，供再次编辑
