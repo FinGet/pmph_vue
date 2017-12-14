@@ -392,10 +392,11 @@ export function checkType (str, type) {
  * @param time 运动时间
  * @param callback 回调函数
  */
-export function perfectAnimate(start,end,time,callback){
+export function perfectAnimate(start,end,time,callback,noEnd){
   var t = 0;
   var unm = time/40;
   var timer;
+  var state=start;
   var easeOut = function(t, b, c, d) {
     return -c * ((t = t/d - 1) * t * t*t - 1) + b;
   };
@@ -404,9 +405,14 @@ export function perfectAnimate(start,end,time,callback){
     let m = Math.ceil(easeOut(t,start,end-start,unm))
     t++;
     if(t<unm){
-      callback&&callback(m);
+      state = m;
+      callback&&callback(state);
+      if(noEnd&&(end-m)<=1){
+        clearInterval(timer);
+      }
     }else{
-      callback&&callback(end);
+      state = end;
+      callback&&callback(state);
       clearInterval(timer);
     }
   },40);
@@ -416,8 +422,17 @@ export function perfectAnimate(start,end,time,callback){
       timer&&clearInterval(timer);
     },
     end:function () {
-      callback&&callback(end);
       timer&&clearInterval(timer);
+      let endState = state;
+      var endTime = setInterval(()=>{
+        endState++;
+        if(endState<end){
+          callback&&callback(endState);
+        }else{
+          callback&&callback(end);
+          clearInterval(endTime);
+        }
+      },20);
     }
   }
 }

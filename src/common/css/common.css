@@ -164,6 +164,7 @@ p{word-wrap:break-word}
   padding
   =================================================================*/
 .paddingT0 { padding-top: 0; }
+.paddingT1{ padding-top: 1px; }
 .paddingT5  { padding-top: 5px; }
 .paddingT10 { padding-top: 10px; }
 .paddingT15 { padding-top: 15px; }

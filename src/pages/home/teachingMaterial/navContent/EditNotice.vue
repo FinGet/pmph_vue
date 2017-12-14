@@ -50,7 +50,7 @@
         </div>
         <div class="clearfix" v-if="formData.files.length">
           <p class="width40 paddingR20 pull-left text-right">附件 : </p>
-          <div class="marginL60">
+          <div class="marginL60 paddingT1">
             <p  v-for="(iterm,index) in formData.files" :key="index">
               <i class="fa fa-paperclip"></i>
               <a :href="iterm.attachment" class="link">{{iterm.attachmentName}}</a>

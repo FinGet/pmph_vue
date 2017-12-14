@@ -89,11 +89,10 @@ export default {
       this.materialId = this.$route.params.materialId;
 
       if(this.$router.currentRoute.params.materialId=='new'){
-        this.title='新建通知'
+        this.materialInfo.materialName='新建通知'
       }else{
         this.getMaterialData();
       }
-      console.log(this.$route)
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
