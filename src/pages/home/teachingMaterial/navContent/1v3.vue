@@ -272,9 +272,10 @@
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
         totalNum: 0,
-        selectedIds:'',
+        selectedIds:'', // 选择项的ids
+        selected:'', // 选中项
         method:'',
-        currentId: '',
+        currentId: '', // 当前id
         planningEditor: '',
         selectedBookId:'',
         groupData: [], // 小组名单
@@ -287,11 +288,27 @@
        * @returns {boolean}
        */
       isSelected() {
-        if (this.selectedIds.length > 0) {
-          return false
+        var arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isPublished);
+            if (item.isPublished) {
+              console.log(1);
+              return true;
+            } else  {
+              console.log(2);
+              return false;
+            } 
+          });
         } else {
-          return true
+          console.log(3);
+          return true;
         }
+        // if (this.selectedIds.length > 0) {
+        //   return false
+        // } else {
+        //   return true
+        // }
       }
     },
     methods:{
@@ -400,6 +417,7 @@
           arr.push(item.textBookId)
         })
         this.selectedIds = arr.toString()
+        this.selected = val;
       },
       /**
        * 批量通过
