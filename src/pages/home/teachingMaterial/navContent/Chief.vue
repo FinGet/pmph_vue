@@ -184,7 +184,7 @@
             this.getHistoryLog();
             if(res.code==1){
               var onlineProgress = ['未提交','已提交','被退回','通过'];
-              var offlineProgress = ['未收到','被退回','已收到'];
+              var offlineProgress = ['未收到纸质表','未收到纸质表','已收到纸质表'];
               var positionList = ['','主编','副主编','编委'];
               res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
