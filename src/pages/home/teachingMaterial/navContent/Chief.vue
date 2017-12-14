@@ -30,7 +30,7 @@
           <!--<el-table-column label="工作单位" prop="orgName"></el-table-column>-->
           <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
           <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
-          <el-table-column label="出版社审核" width="110" prop="offlineProgress"></el-table-column>
+          <el-table-column label="出版社审核" width="120" prop="offlineProgress"></el-table-column>
 
           <el-table-column label="是否主编" width="100" align="center" >
             <template scope="scope">
@@ -149,6 +149,7 @@
         fuzhubianSelectSortNumber:[],
         historyLog:[],
         IsDigitalEditorOptional:false,
+        myPower:'00000000'
       }
     },
     computed:{
@@ -159,6 +160,7 @@
       this.formData.textbookId = this.$route.query.bookid;
       this.searchParams.textbookId = this.formData.textbookId;
       this.type = this.$route.query.type;
+      this.myPower = this.$route.query.q;
       //如果没有教材id则跳转到通知列表
       if(!this.formData.materialId){
         this.$router.push({name:'通知列表'});
@@ -188,7 +190,7 @@
               var positionList = ['','主编','副主编','编委'];
               res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
-                iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
+                iterm.offlineProgress = offlineProgress[iterm.offlineProgress];
                 iterm.presetPosition = positionList[iterm.presetPosition];
 
                 iterm.isZhubian = iterm.chosenPosition==1;
@@ -283,7 +285,8 @@
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
-              selectionType:type?type:1
+              selectionType:type?type:1,
+              editorOrEditorialPanel:this.type=='zb'?1:2,
             }))
               .then(response=>{
                 var res = response.data;
@@ -368,7 +371,7 @@
 
       },
       hasPermission(index){
-        return this.$commonFun.materialPower(index);
+        return this.$commonFun.materialPower(index,this.myPower);
       }
     }
   }

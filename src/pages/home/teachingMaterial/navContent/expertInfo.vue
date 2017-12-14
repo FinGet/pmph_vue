@@ -950,8 +950,6 @@
         }
         this.getTableData();
         this.getBookList();
-        console.log(this.materialInfo);
-        console.log(this.materialInfo.hasPermission([1,2]))
       },
     }
 </script>
