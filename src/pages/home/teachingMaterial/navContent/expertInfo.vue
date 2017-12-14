@@ -20,7 +20,7 @@
 
       <!--图书选择-->
       <div class="expert-info-box expert-operation-wrapper">
-        <p class="info-box-title operation">图书选择（书籍可以多选，一本书职位可以多选）</p>
+        <p class="info-box-title operation">图书选择（{{expertInfoData.isMultiBooks?'可以选择多本书籍':'只能选择一本书籍'}}，{{expertInfoData.isMultiPosition?'书籍职位可以多选':'书籍职位只能单选'}}）</p>
         <div>
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
