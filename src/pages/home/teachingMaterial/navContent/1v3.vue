@@ -133,7 +133,7 @@
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || scope.row.isPublished || !hasAccess(3,scope.row.myPower) || scope.row.allTextbookPublished"  @click="showDialog(1,scope.row)">名单确认</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || !scope.row.isLocked || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text">导出Excel</el-button>
