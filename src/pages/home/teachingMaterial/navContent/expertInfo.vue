@@ -20,7 +20,7 @@
 
       <!--图书选择-->
       <div class="expert-info-box expert-operation-wrapper">
-        <p class="info-box-title operation">图书选择（书籍可以多选，一本书职位可以多选）</p>
+        <p class="info-box-title operation">图书选择（{{expertInfoData.isMultiBooks?'可以选择多本书籍':'只能选择一本书籍'}}，{{expertInfoData.isMultiPosition?'书籍职位可以多选':'书籍职位只能单选'}}）</p>
         <div>
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
@@ -112,7 +112,7 @@
                 <div>遴选状态：<span></span></div>
                 <div>
                   <el-tag type="success" v-if="iterm.chosenPosition||iterm.isDigitalEditor">
-                    已被选为{{iterm.showPosition}}
+                    已被选为{{positionList[iterm.chosenPosition]}}{{iterm.chosenPosition&&iterm.isDigitalEditor?',':''}}{{iterm.isDigitalEditor?'数字编委':''}}
                   </el-tag>
                 </div>
               </div>
@@ -461,6 +461,7 @@
 </template>
 <script type="text/javascript">
     export default{
+        props:['materialInfo'],
         data(){
             return{
               api_info:'/pmpheep/declaration/list/declaration/exportExcel',
@@ -548,8 +549,9 @@
             return flag;
           },
           onlineProgressBtn_Back(){
+            let l = [0,1,3].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
-              return true;
+              return true&&l;
             }
             let flag = true;
             for(let iterm of this.addBookList){
@@ -558,7 +560,7 @@
                 break;
               };
             }
-            return flag;
+            return flag&&l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3];

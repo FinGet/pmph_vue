@@ -9,14 +9,14 @@
           <el-tab-pane label="结果统计" name="result"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&title">
-        <p >{{title}}</p>
+      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&materialInfo.materialName">
+        <p >{{materialInfo.materialName}}</p>
         <div class="tips_icon"></div>
       </div>
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
-        <router-view></router-view>
+        <router-view :materialInfo="materialInfo"></router-view>
       </transition>
 		</div>
 	</div>
@@ -26,14 +26,17 @@
 export default {
 	data() {
 		return {
-		  api_material_detail:'/pmpheep/material/materialName',
+		  api_material_name:'/pmpheep/material/materialName',
+      api_material_info:'/pmpheep/material/getMaterialMainInfoById',
       materialId:'',
       activeTagName:'presscheck',
       activeFirst:false,
       activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'新建通知',
+      materialInfo:{
+        materialName:'新建通知',
+      }
 		}
 	},
 	methods: {
@@ -52,19 +55,23 @@ export default {
      }
     },
     getMaterialData(){
-      this.$axios.get(this.api_material_detail,{params:{
+      this.$axios.get(this.api_material_info,{params:{
         id:this.materialId
       }})
         .then(response=>{
           var res = response.data;
           if(res.code==1){
-            this.title = res.data
+            res.data.hasPermission=(num)=>{
+              return this.$commonFun.materialPower(num,res.data.myPower);
+            };
+            this.materialInfo = res.data
           }
         })
         .catch(e=>{
           console.log(e);
         })
     },
+
   },
   watch:{
     activeTagName(newval,old){

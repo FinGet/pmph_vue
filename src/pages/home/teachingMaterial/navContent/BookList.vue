@@ -32,9 +32,9 @@
               <!--表格-->
               <div class="table-wrapper book-list-catalogue">
                 <div class="pull-right">
-                  <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
+                  <el-button type="primary" size="small" @click="sortByBookNum" :disabled="extendListData.length<2">按书序排序</el-button>
                   <!--<el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>-->
-                  <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
+                  <el-button type="primary" size="small" @click="autoSetBookNum" :disabled="extendListData.length<2">自动设置书序</el-button>
                 </div>
                 <el-table
                   ref="multipleTable"
@@ -443,7 +443,7 @@ export default {
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error('上传文件失败，请重试');
+        this.$message.error(err.msg.msgTrim());
         this.uploadLoading = false;
       },
     },

@@ -677,6 +677,7 @@ export default {
               this.projectDirectorData=[{id:this.material.director,realname:res.data.data.directorName}];
              //联系人赋值
               this.ruleForm.materialContacts=this.stringToArray(res.data.data.materialContacts);
+              this.material.materialContacts=this.stringToArray(res.data.data.materialContacts);
               console.log(this.ruleForm.materialContacts)
                //项目编辑赋值
               this.ruleForm.materialProjectEditors=this.stringToArray(res.data.data.materialProjectEditors);
@@ -885,22 +886,22 @@ export default {
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
         this.$message.error('图片的大小不能超过20MB！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(exSize==0){
         this.$message.error('请勿上传空文件！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
         this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(file.name.length>80){
         this.$message.error('图片名称不能超过80个字符！');
-        this.noticeFiles.pop();
+        //this.material.noticeFiles.pop();
         return false;
       }  
     },
@@ -922,22 +923,22 @@ export default {
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
         this.$message.error('附件大小不能超过100MB！');
-        this.noteFiles.pop();
+       // this.material.noteFiles.pop();
         return false;
      }
      if(exSize==0){
         this.$message.error('请勿上传空文件！');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
      if(exStr=='bat'||exStr=='com'||exStr=='exe'){
         this.$message.error('请勿上传可执行文件');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
      if(file.name.length>80){
         this.$message.error('附件名称不能超过80个字符');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
     },
