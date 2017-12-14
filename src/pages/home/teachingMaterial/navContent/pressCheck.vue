@@ -103,7 +103,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -166,7 +166,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -222,9 +222,9 @@
         </el-table-column>
         <el-table-column label="出版社审核">
           <template scope="scope">
-            <p type="text" v-if="scope.row.offlineProgress==0" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!materialInfo.isForceEnd" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
 
-            <p v-else>{{scope.row.offlineProgress==1?'已退回纸质表':'已收到纸质表'}}</p>
+            <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p>
 
           </template>
         </el-table-column>
@@ -263,12 +263,17 @@
 
 <script>
   export default {
+    props:['materialInfo'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
         api_declaration_list:'/pmpheep/declaration/list/declaration',
         api_book_list:'/pmpheep/textBook/list',
         api_export_excel:'/pmpheep/excel/declaration',
+        api_export_word_getid:'/pmpheep/word/identification',
+        api_export_word_start:'/pmpheep/word/declaration',
+        api_export_word_progress:'/pmpheep/word/progress',
+        api_export_word_download:'/pmpheep/zip/download',
         powerSearch:true,
         powerSearchList:[
           {
@@ -337,6 +342,7 @@
           value: 2,
           label: '已收到纸质表'
         }],
+        offlineProgress:['未收到纸质表','已退回纸质表','已收到纸质表'],
         searchParams:{
           pageNumber:1,
           pageSize:20,
@@ -488,6 +494,10 @@
        * 导出excel
        */
       exportExcel(){
+        if(this.exportDialog){
+          this.$message.warning('已有文件正在导出，请稍后再试！');
+          return;
+        }
         this.exportDialog=true;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
         this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,6000,(val)=>{
@@ -521,6 +531,92 @@
       handleExportDialogClose(done){
         done();
       },
+      /**
+       * 下载
+       */
+      exportWordGetId(){
+        if(this.exportDialog){
+          this.$message.warning('已有文件正在导出，请稍后再试！');
+          return;
+        }
+
+        this.$axios.get(this.api_export_word_getid)
+          .then(response=>{
+            var res = response.data;
+            this.exportWordStart(res);
+            this.exportWordProgress(res);
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('导出失败，请重试！')
+          })
+      },
+      exportWordStart(id){
+        this.exportDialog=true;
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,60000,(val)=>{
+          this.exportLoading = val;
+          if(this.exportLoading==100){
+            this.exportDialog=false;
+          }
+        },true);
+        this.$axios.get(this.api_export_word_start,{params:{
+          materialId:this.searchParams.materialId,
+          textBookids:this.searchParams.textBookids.join(','),
+          realname:this.searchParams.realname,
+          position:this.searchParams.position,
+          title:this.searchParams.title,
+          orgName:this.searchParams.orgName,
+          unitName:this.searchParams.unitName,
+          positionType:this.searchParams.positionType,
+          onlineProgress:this.searchParams.onlineProgress,
+          offlineProgress:this.searchParams.offlineProgress,
+          id:id,
+        }})
+          .then(response=>{
+
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('导出失败，请重试！')
+          })
+      },
+      exportWordProgress(id){
+        var timeout = 3*60*1000;//设置3分钟超时
+        var useTime = 0;
+        var timer = setInterval(()=>{
+          useTime+=1000;
+          this.$axios.get(this.api_export_word_progress,{params:{
+            id:id
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res){
+                clearInterval(timer);
+                this.exportWordDownload(id);
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+              this.$message.error('导出失败，请重试！');
+              clearInterval(timer);
+              this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+            })
+          //超时提醒
+            if(useTime>timeout){
+              this.$message.error('导出请求超时，请重试！');
+              clearInterval(timer);
+              this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+            }
+        },1000)
+
+      },
+      exportWordDownload(id){
+        let url = this.api_export_word_download+'?id='+id;
+        this.$commonFun.downloadFile(url);
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+
+      }
     },
     created(){
       this.searchParams.materialId = this.$route.params.materialId;
