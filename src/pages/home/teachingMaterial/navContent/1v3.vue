@@ -566,7 +566,7 @@
         }).then(response => {
           let res = response.data;
           if (res.code == 1) {
-
+            // this.$commonFun.downloadFile();
           }
         })
       },
