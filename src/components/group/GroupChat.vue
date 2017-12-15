@@ -269,7 +269,9 @@
        */
       changeTextarea(){
         if(this.editingTextarea.length>250){
-          this.editingTextarea=this.editingTextarea.substring(0,250);
+          this.$nextTick(() => {
+            this.editingTextarea=this.editingTextarea.substring(0,250);
+          })
         }
       },
       /**

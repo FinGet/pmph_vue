@@ -102,14 +102,14 @@ export default {
       formRules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
-          { min: 1, max: 50, message: "标题过长", trigger: "change" }
+          { min: 1, max: 50, message: "标题不能超过50个字符", trigger: "change" }
         ],
         categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
-        summary: [{ min: 1, max: 50, message: "摘要内容过长", trigger: "change" }],
-        keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }],
+        summary: [{ min: 1, max: 50, message: "摘要内容不能超过50个字符", trigger: "change" }],
+        keyword: [{ min: 1, max: 50, message: "关键字不能超过50个字符", trigger: "change" }],
         sort:[
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "blur" },
+            { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "blur" },
         ]
       },
       defaultType: {

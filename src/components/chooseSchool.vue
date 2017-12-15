@@ -23,7 +23,7 @@ props: default-history-id 默认选中的历史记录
           学校导入：&nbsp;&nbsp;
         </div>
         <div>
-        <span class="grey_span lineheight-36">
+        <span class="grey_span lineheight-36 fastQuery_r_text">
           请按照模板格式上传（
           <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
@@ -659,5 +659,9 @@ props: default-history-id 默认选中的历史记录
     width: 280px;
     margin-right: 10px;
     margin-left: 0 !important;
+  }
+  .fastQuery_r_text{
+    display: inline-block;
+    vertical-align: top;
   }
 </style>

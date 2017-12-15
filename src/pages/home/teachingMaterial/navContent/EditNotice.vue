@@ -1,5 +1,5 @@
 <template>
-	<div class="edit-notice max-width-1300">
+  	<div class="edit-notice max-width-1300">
     <!--操作按钮-->
     <div class="clearfix marginT30">
       <div class="operation-wrapper">
