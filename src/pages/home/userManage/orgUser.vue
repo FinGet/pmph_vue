@@ -479,23 +479,23 @@ export default {
       // 表单校验规则
       rules: {
         username: [
-          { required: true, message: "请输入用户代码", trigger: "blur" },
+          { required: true, message: "请输入机构账号", trigger: "blur" },
           { pattern: /^[A-Za-z0-9]+$/, message: '只能输入英文和数字' },
-          { min: 1, max: 20, message: "请输入1~20个英文数字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "机构账号不能超过20个字符", trigger: "change,blur" }
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "机构名称不能超过20个字符", trigger: "change,blur" }
           ],
         email: [
-          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式错误", trigger: "blur" }
         ],
         realname:[
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "管理员姓名不能超过20个字符", trigger: "change,blur" }
         ],
         handphone: [
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
+          { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
         ],
         orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
