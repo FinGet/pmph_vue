@@ -42,7 +42,7 @@
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" >主编/副主编批量导出</el-button>        
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary">批量导出名单</el-button>
+        <el-button type="primary" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -559,16 +559,11 @@
       },
       /** 导出Excel */
       exportExcel(id){
-        this.$axios.get('/pmpheep/position/exportExcel',{
-          params:{
-            textbookIds : id || this.selectedIds
-          }
-        }).then(response => {
-          let res = response.data;
-          if (res.code == 1) {
-            // this.$commonFun.downloadFile();
-          }
-        })
+        // console.log(id,this.selectedIds)
+        let url = '/pmpheep/position/exportExcel/?textbookIds='+ (id || this.selectedIds);
+        console.log(url)
+        this.$commonFun.downloadFile(url);
+        
       },
       /**删除成员 */
       deleteMember(index, rows){
