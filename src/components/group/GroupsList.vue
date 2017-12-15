@@ -52,13 +52,14 @@
           <el-form label-width="120px" :model="newGroupData" :rules="rules" ref="ruleForm">
             <el-form-item label="小组头像：">
               <div class="headImageWrapper">
-                <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+                <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start" v-if="!isIe9">
                   <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
                 </el-tooltip>
                 <!--上传文件按钮-->
                 <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
 
                 <my-upload
+                  v-if="!isIe9"
                   class="fileInput"
                   ref="upload"
                   action="/pmpheep/group/add"
@@ -70,7 +71,7 @@
                   :auto-upload="false">
                   <el-button class="fileInput">上传</el-button>
                 </my-upload>
-                <div ref="headImageWrapper" v-show="newGroupData.filename">
+                <div ref="headImageWrapper" v-show="newGroupData.filename" v-if="!isIe9">
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
                 <div v-show="!newGroupData.filename">
@@ -119,6 +120,9 @@
         let obj = {};
         obj.groupName = this.newGroupData.name?this.newGroupData.name:'';
         return obj
+      },
+      isIe9(){
+        return this.$commonFun.Browser.ie==9
       }
     },
     components:{
