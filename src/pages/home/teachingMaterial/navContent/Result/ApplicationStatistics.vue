@@ -46,6 +46,10 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
           </div>
           <!--表格-->
           <div class="table-wrapper">
@@ -138,6 +142,10 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right marginL10">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
             <el-button type="primary" class="pull-right"  @click="sortType=!sortType">{{!sortType?'按当选数排序':'按申报数排序'}}</el-button>
           </div>
           <!--表格-->
