@@ -38,9 +38,9 @@
   <div class="my-upload-components">
     <!--卡槽-->
     <div class="upload-slot">
-      <slot></slot>
+      <slot ></slot>
       <!--隐藏的input-->
-      <div class="upload-input">
+      <div class="upload-input" style="float:left;">
         <input
           class="el-upload__input"
           type="file"
@@ -560,6 +560,9 @@
   position: relative;
   width: 100%;
   height:100%;
+}
+.upload-slot .el-button{
+  float:left;
 }
 .upload-tips{
   font-size: 12px;
