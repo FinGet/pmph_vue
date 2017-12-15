@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)" v-if="!materialInfo.isForceEnd">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!materialInfo.isForceEnd" @click="onlineCheckPass(3)">
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
