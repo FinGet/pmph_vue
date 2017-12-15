@@ -39,9 +39,10 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="!hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" >主编/副主编批量导出</el-button>        
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary">批量导出Excel</el-button>
+        <el-button type="primary">导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -136,7 +137,7 @@
             <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || !scope.row.isLocked || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
-            <el-button type="text">导出Excel</el-button>
+            <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出Excel</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
@@ -149,7 +150,7 @@
         v-if="totalNum>30"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-sizes="[10,20,30,40]"
         :page-size="searchForm.pageSize"
         :current-page="searchForm.pageNumber"
         layout="total, sizes, prev, pager, next, jumper"
@@ -365,17 +366,18 @@
       search(){
         this.searchForm.pageSize = 30;
         this.searchForm.pageNumber = 1;
-        this.getTableData()
+        this.getTableData();
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        this.searchForm.pageSize = val
-        this.search()
+        this.searchForm.pageSize = val;
+        console.log(this.searchForm.pageSize);
+        this.getTableData();
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
-        this.search()
+        this.getTableData();
       },
       /**强制结束 */
       isForceEnd(){
@@ -552,6 +554,19 @@
           let res = response.data;
           if (res.code == 1) {
             this.$message.success('更新成功！');
+          }
+        })
+      },
+      /** 导出Excel */
+      exportExcel(id){
+        this.$axios.get('/pmpheep/position/exportExcel',{
+          params:{
+            textBookId : id
+          }
+        }).then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+
           }
         })
       },

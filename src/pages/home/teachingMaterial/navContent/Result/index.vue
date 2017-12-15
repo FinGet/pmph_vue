@@ -17,12 +17,6 @@
     <div class="material-result-content" v-if="isResultTotal" id="result-admin1">
       <div class="result-content-head clearfix marginB20">
         <p>申报情况统计</p>
-        <div class="pull-right paddingR20 export">
-          <el-button type="primary" size="small">
-            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-            导出
-          </el-button>
-        </div>
       </div>
       <application-statistics></application-statistics>
     </div>
@@ -31,12 +25,6 @@
     <div class="material-result-content" v-if="!isResultTotal" id="result-admin2">
       <div class="result-content-head clearfix marginB20">
         <p>申报结果统计</p>
-        <div class="pull-right paddingR20 export1">
-          <el-button type="primary" size="small">
-            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-            导出
-          </el-button>
-        </div>
       </div>
       <result-statistics></result-statistics>
     </div>

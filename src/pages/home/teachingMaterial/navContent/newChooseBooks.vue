@@ -291,7 +291,7 @@
                   :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
                   :file-list="material.noteFiles">
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  <el-button size="small" type="primary" >点击上传</el-button>
                 </my-upload>
               </el-col>
             </el-form-item>
@@ -548,7 +548,10 @@ export default {
         materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
         projectEditorPowers:[{type:'array', required: true,message:'请指定至少一个项目编辑权限' ,trigger: "change" }],
         cehuaPowers:[{type:'array', required: true,message:'请指定至少一个策划编辑权限' ,trigger: "change" }],
-        mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
+        mailAddress:[
+          { required: true, message: "邮寄地址不能为空", trigger: "blur" },
+          {min:1,max:100,message:'邮寄地址长度不能超过100个字符',trigger:'change,blur'}
+          ],
         contactUserName:[
          {required: true, message: "请填写姓名", trigger: "blur" },
          {min:1,max:20,message:'姓名不能超过20个字符',trigger:'change,blur'}
@@ -564,6 +567,7 @@ export default {
         ],
         extensionName:[
           {required: true, message: "请填写姓名", trigger: "blur" },
+          {min:1,max:20,message:'扩展项名称长度不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
           {type:'array',required: true, message: "至少上传一张图片", trigger: "blur" },
