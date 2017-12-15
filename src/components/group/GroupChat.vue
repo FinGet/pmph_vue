@@ -150,22 +150,22 @@
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+          this.$message.error("不能上传可执行文件");
           flag = false;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+        if(file.name.length>50){
+          this.$message.error("文件名称不能超过50个字符");
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$message.error("文件大小不能为0kb");
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$message.error("文件上传最大为100M！");
           flag = false;
         }
         console.log(flag)

@@ -431,12 +431,15 @@
           })
       },
       /**
-       * 分页每页显示条数发生改变
+       * 点击搜索按钮
        * @param val
        */
       handleSearchCLick(){
-        this.searchParams.pageNumber=1;
-        this.getTableData();
+        if(this.searchParams.pageNumber==1){
+          this.getTableData();
+        }else{
+          this.searchParams.pageNumber=1;
+        }
       },
       /**
        * 获取当前教材下所有书籍

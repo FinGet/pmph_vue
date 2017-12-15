@@ -72,7 +72,7 @@
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('msgState',scope.row)" :disabled="!hasAccessAuthority(0,scope.row,true)">消息状态</el-button>
+                                  <el-button type="text" @click="operation('msgState',scope.row)" :disabled="!hasAccessAuthority(true,scope.row,true)">消息状态</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('setBookList',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">设置书目录</el-button>
@@ -188,12 +188,15 @@ export default {
           })
       },
       /**
-       * 分页每页显示条数发生改变
+       * 点击搜索按钮
        * @param val
        */
       handleSearchCLick(){
-        this.searchForm.pageNumber=1;
-        this.getTableData();
+        if(this.searchForm.pageNumber==1){
+          this.getTableData();
+        }else{
+          this.searchForm.pageNumber=1;
+        }
       },
 
       /**
@@ -219,6 +222,9 @@ export default {
        * @param row 该套教材data
        */
       hasAccessAuthority(index,row,endShow){
+        if(!row.isMy){
+          return false;
+        }
         //如果传的是boolean类型，就直接返回
         if((typeof index).toLowerCase() == "boolean"){
           return (row.isMy && index || (endShow || !(row.isForceEnd||row.isAllTextbookPublished)));

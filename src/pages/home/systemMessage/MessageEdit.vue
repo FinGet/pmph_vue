@@ -78,7 +78,7 @@ export default {
       messageRules:{
        title:[
           { required: true, message: '请输入标题', trigger: 'blur' },
-          {max:50, message: '长度不能超过50个字符', trigger: 'change,blur'}
+          {max:50, message: '标题不能超过50个字符', trigger: 'change,blur'}
        ],
        sendType:[
           {type: 'number', required: true, message: '请选择发送对象', trigger: 'change' },
@@ -132,18 +132,18 @@ export default {
       const ext = file.name.substring(file.name.lastIndexOf('.')+1);
       console.log(file)
       const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
-      const nameLen = file.name.length <= 80;
+      const nameLen = file.name.length <= 50;
       if (file.size / 1024 / 1024==0) {
-        this.$message.error('上传文件大小不能小于 0kb!');
+        this.$message.error('文件大小不能为0kb!');
       }
       if (file.size / 1024 / 1024>100) {
-        this.$message.error('文件大小不能超过100M！');
+        this.$message.error('文件上传最大为100M！');
       }
       if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-        this.$message.error('上传文件不能是可执行文件!');
+        this.$message.error('不能上传可执行文件!');
       }
       if (!nameLen) {
-        this.$message.error('上传文件名字长度不能超过80个字符!');
+        this.$message.error('文件名称不能超过50个字符!');
       }
       return isLt0M&&nameLen&&!(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif')
     },
@@ -281,7 +281,7 @@ export default {
         })
           }
       })
-      
+
     },
     /**
      * 由选择发送对象页面返回编辑页面，需要将原有内容插入编辑器中，供再次编辑
