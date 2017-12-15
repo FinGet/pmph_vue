@@ -323,11 +323,13 @@
             <tr>
               <th><div>课程名称</div></th>
               <th><div>该课程全年课时数</div></th>
+              <th><div>级别</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in decCourseConstruction">
               <td><div>{{iterm.courseName}}</div></td>
               <td><div>{{iterm.classHour}}</div></td>
+              <td><div>{{courseConstructionList[iterm.type]}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -518,6 +520,7 @@
               rankList:['','国际','国家','省部','其他'],
               national_plan_rankList:['','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
+              courseConstructionList:['','国家','省部','学校'],
               onlineProgressBtn:[],
             }
         },

@@ -28,7 +28,7 @@ Vue.use(ElementUI);
 
 
 /*polyfill插件*/
-require('../static/ie9-oninput-polyfill');//解决ie9输入框绑不响应删除键bug
+require('./common/js/ie9-oninput-polyfill');//解决ie9输入框绑不响应删除键bug
 require('./common/js/jsApiPolyfill');
 
 //请求根地址配置
