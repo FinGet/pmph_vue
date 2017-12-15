@@ -532,25 +532,25 @@ export default {
       rules: {
         materialName: [
           { required: true, message: "请输入教材名称", trigger: "blur" },
-          {min:1,max:40,message:'教材名称过长',trigger:'change,blur'}
+          {min:1,max:40,message:'教材名称不能超过40个字符',trigger:'change,blur'}
           ],
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
-          {min:0,max:10,message:'轮次长度过长',trigger:'blur'},
+          {min:0,max:10,message:'轮次不能超过10个字符',trigger:'blur'},
           {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
         ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         materialType:[{type:'array', required: true, message: "请选择教材分类", trigger: "change" }],
-        materialContacts:[{type:'array', required: true,message:'至少选择一个联系人' ,trigger: "change" }],
+        materialContacts:[{type:'array', required: true,message:'请至少选择一个联系人' ,trigger: "change" }],
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
-        materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
+        materialProjectEditors:[{type:'array', required: true,message:'请至少选择一个项目编辑' ,trigger: "change" }],
         projectEditorPowers:[{type:'array', required: true,message:'请指定至少一个项目编辑权限' ,trigger: "change" }],
         cehuaPowers:[{type:'array', required: true,message:'请指定至少一个策划编辑权限' ,trigger: "change" }],
         mailAddress:[
           { required: true, message: "邮寄地址不能为空", trigger: "blur" },
-          {min:1,max:100,message:'邮寄地址长度不能超过100个字符',trigger:'change,blur'}
+          {min:1,max:100,message:'邮寄地址不能超过100个字符',trigger:'change,blur'}
           ],
         contactUserName:[
          {required: true, message: "请填写姓名", trigger: "blur" },
@@ -562,18 +562,18 @@ export default {
         ],
         contactEmail:[
           {required: true, message: "请填写邮箱", trigger: "blur" },
-          { min: 1, max: 40, message: "邮箱长度不能超过40个字符", trigger: "change,blur" },
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
         ],
         extensionName:[
           {required: true, message: "请填写姓名", trigger: "blur" },
-          {min:1,max:20,message:'扩展项名称长度不能超过20个字符',trigger:'change,blur'}
+          {min:1,max:20,message:'扩展项名称不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
-          {type:'array',required: true, message: "至少上传一张图片", trigger: "blur" },
+          {type:'array',required: true, message: "请至少上传一张图片", trigger: "blur" },
         ],
         noteFiles:[
-          {type:'array',required: true, message: "至少上传一个文件", trigger: "blur" },
+          {type:'array',required: true, message: "请至少上传一个文件", trigger: "blur" },
         ],
         notice:[
           {required: true, message: "请填写主要内容", trigger: "blur" },
@@ -975,7 +975,7 @@ export default {
        * 返回上一级
        */
     back() {
-      this.$router.push("applicationlist");
+      this.$router.go(-1);
     },
     handleNodeClick(data) {
       this.checkedTreeData = data;

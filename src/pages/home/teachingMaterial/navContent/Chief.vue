@@ -183,6 +183,7 @@
           materialId:this.formData.materialId,
         }})
           .then(response=>{
+          
             var res = response.data;
             this.getHistoryLog();
             if(res.code==1){
@@ -193,7 +194,7 @@
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
                 iterm.offlineProgress = offlineProgress[iterm.offlineProgress];
                 iterm.presetPosition = positionList[iterm.presetPosition];
-
+                   
                 iterm.isZhubian = iterm.chosenPosition==1;
                 iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
                 iterm.zhubianSortIsOk = true;
