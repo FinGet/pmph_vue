@@ -425,14 +425,14 @@ export default {
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "姓名不能超过20个字符", trigger: "change,blur" }
           ],
         email: [
-          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式错误", trigger: "blur" }
           ],
         handphone: [
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
+          { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
           ],
         orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
         isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
