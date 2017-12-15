@@ -90,8 +90,8 @@
                 {{scope.row.planningEditorName}}
               </span>
               <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
-                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished">
-                  <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
+                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished" @click="showEditor(scope.row)">
+                  <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </el-tooltip>
             </p>
