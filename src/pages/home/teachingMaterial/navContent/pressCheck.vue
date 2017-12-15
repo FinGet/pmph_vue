@@ -598,9 +598,11 @@
             })
             .catch(e=>{
               console.log(e);
-              this.$message.error('导出失败，请重试！');
-              clearInterval(timer);
-              this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+              if(this.exportDialog){
+                this.$message.error('导出失败，请重试！');
+                clearInterval(timer);
+                this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+              }
             })
           //超时提醒
             if(useTime>timeout){

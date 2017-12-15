@@ -83,9 +83,9 @@
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">设置选题号</el-button>
                                 </el-dropdown-item>
-                                <el-dropdown-item>
-                                  <el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row,true)">导出学校(Excel)</el-button>
-                                </el-dropdown-item>
+                                <!--<el-dropdown-item>-->
+                                  <!--<el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row,true)">导出学校(Excel)</el-button>-->
+                                <!--</el-dropdown-item>-->
                                 <el-dropdown-item>
                                   <el-button type="text" @click="operation('delete',scope.row)" :disabled="!hasAccessAuthority(0,scope.row,true)">删除</el-button>
                                 </el-dropdown-item>

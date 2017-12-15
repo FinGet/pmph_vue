@@ -91,7 +91,9 @@ export default {
       if(this.$router.currentRoute.params.materialId=='new'){
         this.materialInfo.materialName='新建通知'
       }else{
-        this.getMaterialData();
+        setTimeout(()=>{
+          this.getMaterialData();
+        },200)
       }
     },
   mounted(){
