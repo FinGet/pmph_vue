@@ -5,17 +5,17 @@
                 <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
-            <el-input class="input" v-model.trim="searchForm.materialName" @keyup.enter.native="getTableData" v-if="selectValue==1"></el-input>
-            <el-input class="input" v-model.trim="searchForm.contactUserName" @keyup.enter.native="getTableData" v-if="selectValue==2"></el-input>
+            <el-input class="input" v-model.trim="searchForm.materialName" @keyup.enter.native="handleSearchCLick" v-if="selectValue==1"></el-input>
+            <el-input class="input" v-model.trim="searchForm.contactUserName" @keyup.enter.native="handleSearchCLick" v-if="selectValue==2"></el-input>
             <span style="margin-left:25px;">状态：</span>
-            <el-select v-model="searchForm.state" class="select_input" @change="getTableData" style="float:none;" placeholder="全部">
+            <el-select v-model="searchForm.state" class="select_input" @change="handleSearchCLick" style="float:none;" placeholder="全部">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="已发布" value="已发布"></el-option>
                 <el-option label="未发布" value="未发布"></el-option>
                 <el-option label="已结束" value="已结束"></el-option>
             </el-select>
-            <el-button type="primary" class="button" icon="search" @click="getTableData">搜索</el-button>
-            <el-checkbox v-model="searchForm.isMy" class="check" @change="getTableData">仅查看我的</el-checkbox>
+            <el-button type="primary" class="button" icon="search" @click="handleSearchCLick">搜索</el-button>
+            <el-checkbox v-model="searchForm.isMy" class="check" @change="handleSearchCLick">仅查看我的</el-checkbox>
             <router-link :to="{name:'新建通知',params:{materialId:'new'}}">
                 <el-button class="right_button" type="primary">新建通知</el-button>
             </router-link>
@@ -187,6 +187,15 @@ export default {
             console.log(e);
           })
       },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      handleSearchCLick(){
+        this.searchForm.pageNumber=1;
+        this.getTableData();
+      },
+
       /**
        * 分页每页显示条数发生改变
        * @param val

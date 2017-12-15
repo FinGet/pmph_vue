@@ -74,7 +74,7 @@
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
                 <div v-show="!newGroupData.filename">
-                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
+                  <img :src="DEFAULT_USER_IMAGE" class="avatar avatar-ie9">
                 </div>
               </div>
             </el-form-item>
@@ -217,8 +217,7 @@
         }else{
           self.newGroupData.filename=file.name;
           prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
-          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
-          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
+          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale',src=\"" + file.raw.value + "\")";
         }
 
       },

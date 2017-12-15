@@ -28,7 +28,7 @@
           <el-table-column label="申报单位"  prop="reportName"></el-table-column>
 
           <!--<el-table-column label="工作单位" prop="orgName"></el-table-column>-->
-          <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
+          <el-table-column label="申请职位" prop="strPresetPosition"></el-table-column>
           <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
           <el-table-column label="出版社审核" width="120" prop="offlineProgress"></el-table-column>
 

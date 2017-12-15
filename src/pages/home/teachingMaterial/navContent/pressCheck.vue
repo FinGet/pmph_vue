@@ -6,7 +6,7 @@
         <div class="searchBox-wrapper lg">
           <div class="searchName">书名：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择">
+            <el-select v-model="searchParams.textBookids" @change="handleSearchCLick" multiple placeholder="请选择">
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.id"
@@ -20,42 +20,42 @@
         <div class="searchBox-wrapper">
           <div class="searchName">账号/姓名：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职务：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--职称搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--工作单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">工作单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--申报单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报职务：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -69,7 +69,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">学校审核：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in onlineProgressList"
                 :key="item.value"
@@ -83,7 +83,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">纸质表：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in offlineProgressList"
                 :key="item.value"
@@ -95,7 +95,7 @@
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -119,7 +119,7 @@
             </el-option>
           </el-select>
           <div class="searchInput">
-            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择" v-if="powerSearchValue===1">
+            <el-select v-model="searchParams.textBookids" @change="handleSearchCLick" multiple placeholder="请选择" v-if="powerSearchValue===1">
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.id"
@@ -127,7 +127,7 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===6">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -135,7 +135,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===7">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===7">
               <el-option
                 v-for="item in onlineProgressList"
                 :key="item.value"
@@ -143,7 +143,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===8">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===8">
               <el-option
                 v-for="item in offlineProgressList"
                 :key="item.value"
@@ -151,15 +151,15 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===0"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===2"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===3"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===4"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===5"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===0"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===3"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===4"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===5"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
         </div>
         <div class="searchBox-wrapper searchBtn">
           <el-button type="text" @click="toggleSearchType">高级搜索</el-button>
@@ -429,6 +429,14 @@
           .catch(e=>{
             console.log(e);
           })
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      handleSearchCLick(){
+        this.searchParams.pageNumber=1;
+        this.getTableData();
       },
       /**
        * 获取当前教材下所有书籍
