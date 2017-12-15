@@ -42,7 +42,7 @@
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" >主编/副主编批量导出</el-button>        
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary">导出名单</el-button>
+        <el-button type="primary">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -137,7 +137,7 @@
             <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || !scope.row.isLocked || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">最终结果公布</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
-            <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出Excel</el-button>
+            <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
@@ -561,7 +561,7 @@
       exportExcel(id){
         this.$axios.get('/pmpheep/position/exportExcel',{
           params:{
-            textBookId : id
+            textbookIds : id || this.selectedIds
           }
         }).then(response => {
           let res = response.data;
