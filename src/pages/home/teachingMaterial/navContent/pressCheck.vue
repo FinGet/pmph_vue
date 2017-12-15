@@ -222,7 +222,7 @@
         </el-table-column>
         <el-table-column label="出版社审核">
           <template scope="scope">
-            <p type="text" v-if="scope.row.offlineProgress==0&&!materialInfo.isForceEnd" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
 
             <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p>
 
@@ -598,9 +598,11 @@
             })
             .catch(e=>{
               console.log(e);
-              this.$message.error('导出失败，请重试！');
-              clearInterval(timer);
-              this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+              if(this.exportDialog){
+                this.$message.error('导出失败，请重试！');
+                clearInterval(timer);
+                this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+              }
             })
           //超时提醒
             if(useTime>timeout){

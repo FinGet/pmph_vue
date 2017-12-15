@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)" v-if="!materialInfo.isForceEnd">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!materialInfo.isForceEnd" @click="onlineCheckPass(3)">
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
@@ -356,7 +356,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
         </div>
       </div>
 
@@ -380,6 +380,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -893,7 +894,9 @@
          */
         changeTextarea(){
           if(this.inputMsg.length>250){
-            this.inputMsg=this.inputMsg.substring(0,250);
+            this.$nextTick(() => {
+              this.inputMsg=this.inputMsg.substring(0,250);
+            })
           }
         },
         /**
