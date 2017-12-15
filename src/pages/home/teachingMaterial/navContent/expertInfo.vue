@@ -356,7 +356,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
         </div>
       </div>
 
@@ -380,6 +380,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
