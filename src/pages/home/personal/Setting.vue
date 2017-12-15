@@ -26,11 +26,12 @@
                 <el-form :model="formSetting"  ref="ruleForm" :rules="formRules"  label-width="80px">
                   <el-form-item label="头像:">
                     <div class="headImageWrapper">
-                      <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+                      <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start" v-if="!isIe9">
                         <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
                       </el-tooltip>
                       <!--上传文件按钮-->
                       <my-upload
+                        v-if="!isIe9"
                         class="fileInput"
                         ref="upload"
                         action="/pmpheep/group/add"
@@ -42,11 +43,11 @@
                         :auto-upload="false">
                         <el-button class="fileInput">上传</el-button>
                       </my-upload>
-                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName">
+                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName||!isIe9">
                         <img :src="userInfo.avatar?userInfo.avatar:'/static/default_image.png'" class="avatar">
                       </div>
                       <div v-show="userHeadImage.fileName">
-                        <img :src="userHeadImage.imageUrl" class="avatar">
+                        <img :src="userHeadImage.imageUrl?userHeadImage.imageUrl:'/static/default_image.png'" class="avatar">
                       </div>
                     </div>
                   </el-form-item>
@@ -212,6 +213,11 @@
         }
       }
 		},
+    computed:{
+      isIe9(){
+        return this.$commonFun.Browser.ie==9
+      }
+    },
     methods:{
       /**
        * 上传头像input发生改变时触发

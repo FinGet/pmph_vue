@@ -125,7 +125,7 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目编辑："required prop="materialProjectEditors">
+            <el-form-item label="项目编辑：" required prop="materialProjectEditors">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
@@ -650,7 +650,7 @@ export default {
              console.log(res);
              if(res.data.code==1){
                this.ruleForm['material.id']=res.data.data.material.id;
-               this.ruleForm['materialExtra.id']=res.data.data.materialExtra.id;
+               this.ruleForm['materialExtra.id']=res.data.data.materialExtra?res.data.data.materialExtra.id:null;
                //选项赋值
                for(var i in this.listTableData){
                     this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
@@ -687,8 +687,8 @@ export default {
               this.ruleForm.materialProjectEditors=this.stringToArray(res.data.data.materialProjectEditors);
               this.material.materialProjectEditors=this.stringToArray(res.data.data.materialProjectEditors);
               //内容备注赋值
-              this.material.notice=res.data.data.materialExtra.notice;
-              this.material.note=res.data.data.materialExtra.note;
+              this.material.notice=res.data.data.materialExtra?res.data.data.materialExtra.notice:'';
+              this.material.note=res.data.data.materialExtra?res.data.data.materialExtra.note:'';
               //扩展项赋值
               this.ruleForm.materialExtensions=this.stringToArray(res.data.data.materialExtensions);
               //文件赋值
