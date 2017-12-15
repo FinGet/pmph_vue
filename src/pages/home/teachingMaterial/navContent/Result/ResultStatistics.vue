@@ -61,8 +61,10 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="booksTotal>10"
+              v-if="booksTotal>bookParams.pageSize"
               :page-sizes="[10,20,30, 40]"
+              @size-change="handleBookSizeChange"
+              @current-change="handleBookCurrentChange"
               :page-size="bookParams.pageSize"
               :current-page="bookParams.pageNumber"
               layout="total, sizes, prev, pager, next, jumper"
@@ -131,7 +133,9 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="schoolTotal>10"
+              v-if="schoolTotal>schoolParams.pageSize"
+              @size-change="handleSchoolSizeChange"
+              @current-change="handleSchoolCurrentChange"
               :page-sizes="[10,20,30,40]"
               :page-size="schoolParams.pageSize"
               :current-page="schoolParams.pageNumber"
@@ -234,6 +238,7 @@ export default {
        }
      })
     },
+    /**按数据统计获取表格数据 */
     getBooksTableData(){
       this.$axios.get(this.bookResultUrl,{
         params: this.bookParams
@@ -241,11 +246,26 @@ export default {
         let res = response.data
         if(res.code==1){
           var resData = res.data.rows;
-          console.log(resData)
-          this.booksTotal=resData.total;
+          this.booksTotal=res.data.total;
           this.bookTableData=resData;
        }
       })
+    },
+    handleBookSizeChange(val){
+      this.bookParams.pageSize = val;
+      this.getBooksTableData();
+    },
+    handleBookCurrentChange(val){
+      this.bookParams.pageNumber = val;
+      this.getBooksTableData();
+    },
+    handleSchoolSizeChange(val){
+      this.schoolParams.pageSize = val;
+      this.getSchoolTableData();
+    },
+    handleSchoolCurrentChange(val) {
+      this.schoolParams.pageNumber = val;
+      this.getSchoolTableData();
     },
     /**
        * 点击tabs切换
