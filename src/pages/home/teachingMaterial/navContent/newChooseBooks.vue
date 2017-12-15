@@ -392,7 +392,7 @@ export default {
         },
         {
           name: "数字编委遴选",
-          key:'material.isDigitaleditorOptional',
+          key:'material.isDigitalEditorOptional',
           usecheck: false,
           show: true
         },
