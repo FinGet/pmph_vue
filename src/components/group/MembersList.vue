@@ -48,13 +48,13 @@
           <div class="tabsContainer">
 
             <div class="searchBox-wrapper">
-              <span>账号/姓名：</span>
+              <span>姓名/账号：</span>
               <div>
                 <el-input placeholder="请输入内容" v-model.trim="writerParams.name" @keyup.enter.native="getWriterUserList" class="searchInputEle"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
-              <span>所属院校：</span>
+              <span>所属机构：</span>
               <div>
                 <el-input placeholder="请输入内容" v-model.trim="writerParams.orgName" @keyup.enter.native="getWriterUserList" class="searchInputEle"></el-input>
               </div>
@@ -85,7 +85,7 @@
                 </el-table-column>
                 <el-table-column prop="position" label="遴选职位">
                 </el-table-column>
-                <el-table-column prop="orgName" label="所属院校" show-overflow-tooltip>
+                <el-table-column prop="orgName" label="所属机构" show-overflow-tooltip>
                 </el-table-column>
               </el-table>
               <el-pagination class="pull-right"

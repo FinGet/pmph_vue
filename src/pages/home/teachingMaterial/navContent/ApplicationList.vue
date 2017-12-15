@@ -26,7 +26,7 @@
             <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
-                    <p class="link" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row.isMy,scope.row.myPower)">{{scope.row.materialName}}</p>
+                    <p class="link" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</p>
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
@@ -60,9 +60,9 @@
             <el-table-column label="操作" width="278">
                 <template scope="scope">
                     <p class="operation_p">
-                        <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">修改</el-button>
+                        <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="operation('publish',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">通知发布</el-button>
+                        <el-button type="text" class="op_button" @click="operation('publish',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">通知发布</el-button>
                         <span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="operation('msg',scope.row)">通知详情</el-button>
                         <el-dropdown trigger="click">
@@ -72,22 +72,22 @@
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('msgState',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">消息状态</el-button>
+                                  <el-button type="text" @click="operation('msgState',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">消息状态</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('setBookList',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">设置书目录</el-button>
+                                  <el-button type="text" @click="operation('setBookList',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">设置书目录</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('result',scope.row)" :disabled="!hasAccessAuthority(true,scope.row.isMy,scope.row.myPower)">结果统计</el-button>
+                                  <el-button type="text" @click="operation('result',scope.row)" :disabled="!hasAccessAuthority(true,scope.row)">结果统计</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">设置选题号</el-button>
+                                  <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">设置选题号</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">导出学校(Excel)</el-button>
+                                  <el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">导出学校(Excel)</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('delete',scope.row)" :disabled="!hasAccessAuthority(0,scope.row.isMy,scope.row.myPower)">删除</el-button>
+                                  <el-button type="text" @click="operation('delete',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">删除</el-button>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -207,16 +207,17 @@ export default {
       /**
        * 是否有权限访问
        * @param index 权限表下标
-       * * @param isMy  Boolean 是否属于当前用户
+       * @param row 该套教材data
        */
-      hasAccessAuthority(index,isMy,powerList){
+      hasAccessAuthority(index,row){
         //如果传的是boolean类型，就直接返回
         if((typeof index).toLowerCase() == "boolean"){
-          return (isMy && index);
+          return (row.isMy && index);
         }
 
-        let rolesAccessAuthority = this.$commonFun.materialPower(index,powerList);
-        return (isMy && rolesAccessAuthority);
+        let rolesAccessAuthority = this.$commonFun.materialPower(index,row.myPower);
+
+        return (row.isMy && rolesAccessAuthority);
       },
       /**
        * 点击操作按钮，
