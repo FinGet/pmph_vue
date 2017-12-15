@@ -291,7 +291,7 @@
                   :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
                   :file-list="material.noteFiles">
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  <el-button size="small" type="primary" >点击上传</el-button>
                 </my-upload>
               </el-col>
             </el-form-item>
