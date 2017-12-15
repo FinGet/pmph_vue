@@ -893,7 +893,9 @@
          */
         changeTextarea(){
           if(this.inputMsg.length>250){
-            this.inputMsg=this.inputMsg.substring(0,250);
+            this.$nextTick(() => {
+              this.inputMsg=this.inputMsg.substring(0,250);
+            })
           }
         },
         /**
