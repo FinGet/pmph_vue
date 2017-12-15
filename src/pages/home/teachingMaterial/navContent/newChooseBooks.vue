@@ -262,7 +262,7 @@
                 :auto-upload="true"
                 name="files"
                 action="/pmpheep/material/upTempFile"
-                :on-change="imgUploadChange"
+                :on-remove="imgUploadChange"
                 :on-success="imgUploadSuccess"
                 :before-upload="imgBeforeUpload"
                 :file-list="material.noticeFiles">
@@ -287,7 +287,7 @@
                   action="/pmpheep/material/upTempFile"
                   name="files"
                   :auto-upload="true"
-                  :on-change="fileUploadChange"
+                  :on-remove="fileUploadChange"
                   :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
                   :file-list="material.noteFiles">
@@ -650,7 +650,7 @@ export default {
              console.log(res);
              if(res.data.code==1){
                this.ruleForm['material.id']=res.data.data.material.id;
-               this.ruleForm['materialExtra.id']=res.data.data.materialExtra?res.data.data.materialExtra.id:null;
+               this.ruleForm['materialExtra.id']=res.data.data.materialExtra?res.data.data.materialExtra.id:'';
                //选项赋值
                for(var i in this.listTableData){
                     this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
