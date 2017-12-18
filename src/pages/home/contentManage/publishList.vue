@@ -25,7 +25,7 @@
                 label="文章标题"
                 >
                 <template scope="scope">
-                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <!-- 管理员才予以显示 -->
@@ -145,8 +145,8 @@
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
-            @change="handleChange"> -->
-          </el-cascader>
+            @change="handleChange">
+          </el-cascader> -->
           <span>文章标题：</span>
           <el-input placeholder="请输入" class="input" v-model="commentTitle" @keyup.enter.native="searchComment"></el-input>
           <span style="margin-left:10px;">评论人：</span>
@@ -175,7 +175,7 @@
                 prop="title"
                 >
                 <template scope="scope">
-                    <el-button type="text" @click="commentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link" @click="commentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -249,7 +249,7 @@
         <div style="width:100%;overflow:hidden">
             <div class="center_box">  
             <el-button type="danger" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,1)" >退回</el-button>
-            <el-button type="primary":disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,2)" >通过</el-button>
+            <el-button type="primary" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,2)" >通过</el-button>
             </div>
         </div>
     </el-dialog>
