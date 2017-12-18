@@ -362,6 +362,7 @@
         exportDialog:false,
         exportLoading:0,
         exportLoadingTimerHandle:undefined,
+        handleExportWordtimer:null,
       }
     },
     watch:{
@@ -589,13 +590,15 @@
           })
           .catch(e=>{
             console.log(e);
+            this.exportDialog=false;
+            clearInterval(this.handleExportWordtimer);
             this.$message.error('导出失败，请重试！')
           })
       },
       exportWordProgress(id){
         var timeout = 3*60*1000;//设置3分钟超时
         var useTime = 0;
-        var timer = setInterval(()=>{
+        this.handleExportWordtimer = setInterval(()=>{
           useTime+=1000;
           this.$axios.get(this.api_export_word_progress,{params:{
             id:id
@@ -603,7 +606,7 @@
             .then(response=>{
               var res = response.data;
               if(res){
-                clearInterval(timer);
+                clearInterval(this.handleExportWordtimer);
                 this.exportWordDownload(id);
               }
             })
@@ -611,14 +614,15 @@
               console.log(e);
               if(this.exportDialog){
                 this.$message.error('导出失败，请重试！');
-                clearInterval(timer);
+                this.exportDialog=false;
+                clearInterval(this.handleExportWordtimer);
                 this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
               }
             })
           //超时提醒
             if(useTime>timeout){
               this.$message.error('导出请求超时，请重试！');
-              clearInterval(timer);
+              clearInterval(this.handleExportWordtimer);
               this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
             }
         },1000)
