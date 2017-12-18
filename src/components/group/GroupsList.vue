@@ -8,8 +8,6 @@
           placeholder="小组搜索"
           icon="search"
           v-model.trim="inputSearchGroup"
-          :on-icon-click="getGroupData"
-          @keyup.enter.native="getGroupData"
           >
         </el-input>
       </div>
@@ -21,6 +19,7 @@
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
                @click="clickGroup(item)"
+               v-show="!item.no_matchSearch"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
@@ -141,7 +140,7 @@
         this.dialogVisible = !this.dialogVisible
       },
       /* 初始化小组列表 */
-      getGroupData(){
+      getGroupData(onlySearch){
         var _this=this;
         this.$axios.get(this.groupListUrl,{
           params:{
@@ -154,7 +153,7 @@
               iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
             });
             _this.groupListData=res.data.data;
-            if(res.data.data.length){
+            if(!onlySearch&&res.data.data.length){
               var hasCurrentGroup = false;
               res.data.data.forEach(iterm=>{
                 if(iterm.id == _this.currentActiveGroupId){
@@ -332,6 +331,17 @@
         this.newGroupData.filename=undefined;
         this.newGroupData.name=null;
       },
+    },
+    watch:{
+      inputSearchGroup(){
+        this.groupListData.map((iterm)=>{
+          if(iterm.groupName.includes(this.inputSearchGroup)){
+            iterm.no_matchSearch=false;
+          }else{
+            iterm.no_matchSearch=true;
+          }
+        })
+      }
     },
     created(){
        this.getGroupData();

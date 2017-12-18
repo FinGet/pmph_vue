@@ -183,7 +183,7 @@
           materialId:this.formData.materialId,
         }})
           .then(response=>{
-          
+
             var res = response.data;
             this.getHistoryLog();
             if(res.code==1){
@@ -193,15 +193,16 @@
               res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
                 iterm.offlineProgress = offlineProgress[iterm.offlineProgress];
-                iterm.presetPosition = positionList[iterm.presetPosition];
-                   
-                iterm.isZhubian = iterm.chosenPosition==1;
+
+                iterm.isZhubian = (iterm.chosenPosition%8)==4;
                 iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
                 iterm.zhubianSortIsOk = true;
-                iterm.isFuzhubian = iterm.chosenPosition==2;
+                iterm.isFuzhubian = (iterm.chosenPosition%8)==2;
                 iterm.fuzhubianSort = iterm.isFuzhubian?iterm.rank:'';
                 iterm.fuzhubianSortIsOk = true;
-                iterm.isBianwei = iterm.chosenPosition==3;
+                iterm.isBianwei = (iterm.chosenPosition%8)==1;
+                iterm.isDigitalEditor = iterm.chosenPosition>=8;
+
 
                 iterm.disabled_zb = this.type=='bw'||iterm.isBianwei;
                 iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
@@ -273,13 +274,12 @@
           .then(()=>{
             let jsonDecPosition = [];
             for(let i = 0, len = this.tableData.length; i < len; i++){
-              this.tableData[i].chosenPosition = this.tableData[i].isBianwei?3:this.tableData[i].isZhubian?1:this.tableData[i].isFuzhubian?2:0
+              this.tableData[i].chosenPosition = (this.tableData[i].isDigitalEditor?8:0)+(this.tableData[i].isZhubian?4:0)+(this.tableData[i].isFuzhubian?2:0)+(this.tableData[i].isBianwei?1:0);
               let tempObj = {
                 id:this.tableData[i].id,
                 textbookId:this.searchParams.textbookId,
                 chosenPosition:this.tableData[i].chosenPosition,
-                rank:this.tableData[i].chosenPosition==1?this.tableData[i].zhubianSort:(this.tableData[i].chosenPosition==2?this.tableData[i].fuzhubianSort:''),
-                isDigitalEditor:this.tableData[i].isDigitalEditor,
+                rank:(this.tableData[i].chosenPosition%8)==4?this.tableData[i].zhubianSort:((this.tableData[i].chosenPosition%8)==2?this.tableData[i].fuzhubianSort:'')
               };
               if(this.tableData[i].isZhubian||this.tableData[i].isFuzhubian||this.tableData[i].isBianwei||this.tableData[i].isDigitalEditor){
                 jsonDecPosition.push(tempObj);
