@@ -281,29 +281,57 @@
 				<el-table ref="multipleTable" :data="teachTableData" border tooltip-effect="dark" style="width: 100%;margin:10px 0;" @selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
-					<el-table-column label="教师姓名" prop="realname" width="120">
+					<el-table-column label="教师姓名" prop="realname" width="100">
 					</el-table-column>
-					<el-table-column prop="username" label="账号" width="150">
+					<el-table-column prop="username" label="账号" width="120">
 					</el-table-column>
-          <el-table-column prop="orgName" label="所属机构">
+          <el-table-column prop="orgName" label="所属机构" min-width="120">
 					</el-table-column>
-          <el-table-column prop="position" label="职务">
+          <el-table-column prop="position" label="职务" v-if="screenWidth_lg">
 					</el-table-column>
-					<el-table-column prop="title" label="职称" width="80">
+					<el-table-column prop="title" label="职称" width="80" v-if="screenWidth_lg">
 					</el-table-column>
-					<el-table-column label="手机号" width="160">
+          <el-table-column v-if="!screenWidth_lg" label="职务/职称" width="160">
+            <template scope="scope">
+              <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
+                <p>
+                  <i class="fa fa-tags"></i>
+                  {{scope.row.position}}
+                </p>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.title" placement="top">
+                <p>
+                  <i class="fa fa-graduation-cap"></i>
+                  {{scope.row.title}}
+                </p>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+					<el-table-column label="手机号" width="160" v-if="screenWidth_lg">
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
             </template>
           </el-table-column>
-          <el-table-column label="邮箱" width="220">
+          <el-table-column label="邮箱" width="220" v-if="screenWidth_lg">
             <template scope="scope">
               <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </template>
           </el-table-column>
-          <el-table-column prop="idcard" label="身份证" width="190">
+          <el-table-column v-if="!screenWidth_lg" label="联系方式" width="220">
+            <template scope="scope">
+              <p>
+                <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+                {{scope.row.handphone}}
+              </p>
+              <p>
+                <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+                {{scope.row.email}}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="idcard" label="身份证" width="190" v-if="screenWidth_lg">
 					</el-table-column>
 					<el-table-column label="教师资格证" width="110" align="center">
 						<template scope="scope">
