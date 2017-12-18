@@ -31,7 +31,7 @@
                 label="公告标题"
                 >
                 <template scope="scope">
-                   <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                   <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <el-table-column 

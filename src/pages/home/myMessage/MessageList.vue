@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+        <el-button  type="primary" icon="search" @click="searTableInfo">搜索</el-button>
       </div>
       <!--操作按钮-->
       <div class="pull-right">
@@ -76,8 +76,9 @@
         v-if="totalNum > searchForm.pageSize"
         :page-sizes="[30,50,100, 200, 300, 400]"
         :page-size="searchForm.pageSize"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
         :current-page="searchForm.pageNumber"
-        @current-change="getTableData"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalNum">
       </el-pagination>
@@ -113,6 +114,19 @@
       }
 		},
     methods:{
+      handleSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNumber=1;
+        this.getTableData();
+      },
+      handleCurrentChange(val){
+      this.searchForm.pageNumber=val;
+       this.getTableData();
+      },
+      searTableInfo(){
+       this.searchForm.pageNumber=1;
+       this.getTableData();
+      },
       /**
        * 获取消息列表数据
        */

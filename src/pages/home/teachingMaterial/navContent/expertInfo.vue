@@ -35,7 +35,7 @@
                         :key="i"
                         :label="item.textbookName"
                         :value="item.id"
-                        :disabled="item.id in allRightSelectedBookList">
+                        :disabled="allRightSelectedBookList.includes(item.id)">
                       </el-option>
                     </el-select>
                   </div>

@@ -226,7 +226,6 @@ methods:
         rolenames:[],
 
         dialogVisible:false,
-        rolenames:[],
         form: {// 修改弹窗 表单
           id: "",
           departmentName: "",

@@ -555,7 +555,7 @@
 }
 .upload-slot{
   display: inline-block;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   position: relative;
   width: 100%;
