@@ -103,14 +103,14 @@
         </el-table-column>
         <el-table-column prop="rankName" label="用户类型" width="120">
         </el-table-column>
-        <el-table-column label="启用标识" width="95" align="center">
+        <el-table-column label="启用标识" width="" align="center">
           <template scope="scope">
             {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
 
         <el-table-column label="操作"
-          align="center">
+          align="center" width="110">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
@@ -291,27 +291,27 @@
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
-					<el-table-column label="手机号" width="160">
+					<el-table-column label="手机号" width="">
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
             </template>
           </el-table-column>
-          <el-table-column label="邮箱" width="220">
+          <el-table-column label="邮箱" width="">
             <template scope="scope">
               <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </template>
           </el-table-column>
-          <el-table-column prop="idcard" label="身份证" width="190">
+          <el-table-column prop="idcard" label="身份证" width="">
 					</el-table-column>
-					<el-table-column label="教师资格证" width="110" align="center">
+					<el-table-column label="教师资格证" width="" align="center">
 						<template scope="scope">
 							<a href="javascript:;" v-if="scope.row.cert&&scope.row.cert!='DEFAULT'" style="color:#0000ff;" @click="preview(scope.row.cert)">预览</a>
 							<el-tag type="danger" v-if="!scope.row.cert||scope.row.cert=='DEFAULT'">未上传</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="progress" label="审核状态" width="100" align="center">
+					<el-table-column prop="progress" label="审核状态" width="" align="center">
 						<template scope="scope">
               <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>

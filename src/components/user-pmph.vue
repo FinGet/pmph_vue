@@ -89,7 +89,7 @@ methods:
               prop="use"
               label="启用标识"
               align="center"
-              width="100">
+              >
               <template scope="scope">
                 {{scope.row.isDisabled? '停用' : '启用'}}
               </template>
@@ -97,7 +97,8 @@ methods:
             <el-table-column
               v-if="show_manage"
               label="操作"
-              align="center">
+              align="center"
+              width="110">
               <template scope="scope">
                 <el-button type="text" @click="_openUpdateDialog(scope.$index)">修改</el-button>
                 <el-button type="text">登录</el-button>
