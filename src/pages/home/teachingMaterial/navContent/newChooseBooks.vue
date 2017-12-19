@@ -713,9 +713,9 @@ export default {
                     attachment:noteArr[i].attachment,
                   })
                  this.material.noteFiles.push({
-                   id:noticeArr[i].id,
-                    name:noticeArr[i].attachmentName,
-                    url:noticeArr[i].attachment
+                   id:noteArr[i].id,
+                    name:noteArr[i].attachmentName,
+                    url:noteArr[i].attachment
                  })  
               }
               //this.material.noteFiles=this.ruleForm.materialNoteAttachments;
