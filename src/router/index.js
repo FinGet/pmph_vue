@@ -180,7 +180,7 @@ export default new Router({
         },
         /*用户主页(个人设置)*/
         {
-          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 1}
+          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 22}
         },
       ]
     },

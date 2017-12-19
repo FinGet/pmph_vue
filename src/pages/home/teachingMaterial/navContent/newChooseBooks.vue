@@ -713,9 +713,9 @@ export default {
                     attachment:noteArr[i].attachment,
                   })
                  this.material.noteFiles.push({
-                   id:noticeArr[i].id,
-                    name:noticeArr[i].attachmentName,
-                    url:noticeArr[i].attachment
+                   id:noteArr[i].id,
+                    name:noteArr[i].attachmentName,
+                    url:noteArr[i].attachment
                  })  
               }
               //this.material.noteFiles=this.ruleForm.materialNoteAttachments;
@@ -881,7 +881,11 @@ export default {
     /* 文件上传改变 */
     /* 图片 */
     imgUploadChange(file,filelist){
-     this.material.noticeFiles=filelist;
+     this.material.noticeFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoticeAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+      })
      console.log(file,filelist);
      this.$refs.ruleForm.validateField('noticeFiles');
     },
@@ -914,12 +918,16 @@ export default {
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
       })
     },
     /* 文件 */
     fileUploadChange(file,filelist){
-     this.material.noteFiles=filelist;
+     this.material.noteFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoteAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+      })
      this.$refs.ruleForm.validateField('noteFiles');
     },
     fileBeforeUpload(file){
@@ -951,7 +959,7 @@ export default {
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
       })
     },
     /**

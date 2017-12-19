@@ -12,7 +12,7 @@
           <span>标题：</span>
           <el-input placeholder="输入公告标题" v-model.trim="title" class="input" @keyup.enter.native="search"></el-input>
           <span>发布状态：</span>
-          <el-select v-model="status" style="width:186px" class="input" placeholder="全部">
+          <el-select v-model="status" style="width:186px" clearable  class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -116,7 +116,7 @@
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="附件：">
-              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+              <a type="text" :href="item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
         </div>
