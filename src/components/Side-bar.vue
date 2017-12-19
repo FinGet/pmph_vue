@@ -42,6 +42,15 @@
         <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
         <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
       </el-submenu>
+      
+      <el-submenu index="/topic" >
+        <template slot="title">
+          <i class="fa fa-paste fa-fw"></i>
+          <span slot="title">选题申报</span>
+        </template>
+        <el-menu-item index="/topic/exam" >选题申报审核</el-menu-item>
+        <el-menu-item index="/topic/check" >选题申报查看</el-menu-item>
+      </el-submenu>
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
