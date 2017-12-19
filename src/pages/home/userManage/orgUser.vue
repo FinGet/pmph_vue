@@ -353,7 +353,7 @@
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
-					<el-table-column label="手机号" width="160">
+					<el-table-column label="手机号" >
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
