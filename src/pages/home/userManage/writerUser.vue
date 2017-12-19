@@ -291,9 +291,6 @@
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80" v-if="screenWidth_lg">
 					</el-table-column>
-<<<<<<< HEAD
-					<el-table-column label="手机号" width="">
-=======
           <el-table-column v-if="!screenWidth_lg" label="职务/职称" width="160">
             <template scope="scope">
               <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
@@ -311,25 +308,17 @@
             </template>
           </el-table-column>
 					<el-table-column label="手机号" width="160" v-if="screenWidth_lg">
->>>>>>> 4c37c1e58b48100bf91cd4440222b11d22cddbff
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
             </template>
           </el-table-column>
-<<<<<<< HEAD
-          <el-table-column label="邮箱" width="">
-=======
           <el-table-column label="邮箱" width="220" v-if="screenWidth_lg">
->>>>>>> 4c37c1e58b48100bf91cd4440222b11d22cddbff
             <template scope="scope">
               <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </template>
           </el-table-column>
-<<<<<<< HEAD
-          <el-table-column prop="idcard" label="身份证" width="">
-=======
           <el-table-column v-if="!screenWidth_lg" label="联系方式" width="220">
             <template scope="scope">
               <p>
@@ -343,7 +332,6 @@
             </template>
           </el-table-column>
           <el-table-column prop="idcard" label="身份证" width="190" v-if="screenWidth_lg">
->>>>>>> 4c37c1e58b48100bf91cd4440222b11d22cddbff
 					</el-table-column>
 					<el-table-column label="教师资格证" width="" align="center">
 						<template scope="scope">

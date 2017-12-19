@@ -267,6 +267,9 @@ export default {
               id: 21
             }
           ]
+        },{
+          label: "系统日志",
+          id: 22,
         }
       ],
       defaultProps: {
