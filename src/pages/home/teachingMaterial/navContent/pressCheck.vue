@@ -210,7 +210,7 @@
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职务" min-width="220">
+        <el-table-column label="所选书籍与职位" min-width="220">
           <template scope="scope">
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>

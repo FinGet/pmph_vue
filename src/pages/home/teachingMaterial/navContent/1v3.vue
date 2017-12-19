@@ -39,7 +39,7 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="!hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" >主编/副主编批量导出</el-button>        
+        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" >主编/副主编批量导出</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary" @click="exportExcel()">批量导出名单</el-button>
@@ -103,7 +103,7 @@
             <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb',q:scope.row.myPower}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -118,7 +118,7 @@
             <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',q:scope.row.myPower}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower}}">
                 <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
                   <i class="fa fa-pencil fa-fw"></i>
                 </el-button>
@@ -237,6 +237,7 @@
 <script type="text/javascript">
   // import Departments from 'components/departments'
   import userPmph from 'components/user-pmph'
+  import bus from 'common/eventBus/bus.js'
   export default{
     data(){
       return{
@@ -405,6 +406,7 @@
                 this.$message.success('已恢复')
               }
               this.getTableData()
+              bus.$emit('material:update-info');
             }
           })
         })
@@ -471,6 +473,8 @@
             this.dialogVisible = false
             this.$message.success('操作成功')
             this.getTableData()
+            //更新教材信息
+            bus.$emit('material:update-info');
           } else if(res.code == 3){
             this.$message.success(res.msg.msgTrim())
           }
@@ -519,7 +523,7 @@
           this.addEditor();
         }
         // console.log(id)
-        
+
       },
       /**提交小组名单 */
       submitGroup(){
@@ -563,7 +567,7 @@
         let url = '/pmpheep/position/exportExcel/?textbookIds='+ (id || this.selectedIds);
         console.log(url)
         this.$commonFun.downloadFile(url);
-        
+
       },
       /**删除成员 */
       deleteMember(index, rows){

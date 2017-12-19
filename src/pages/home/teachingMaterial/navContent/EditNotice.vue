@@ -110,29 +110,27 @@
             //设置文件
             this.formData.files=res.data.materialNoteAttachments?res.data.materialNoteAttachments:[];
             res.data.materialContacts=res.data.materialContacts?res.data.materialContacts:[];
-            if(res.data.content){
-              content=res.data.content;
-            }else{
-              //简介
-              content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
-              content += `<p></p>`;
-              //邮寄地址
-              content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
-              content += `<p></p>`;
-              //联系人
-              let contactsHtml = '';
-              for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
-                if(i==0){
-                  contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
-                }else{
-                  contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
-                }
+
+            //简介
+            content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
+            content += `<p></p>`;
+            //邮寄地址
+            content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
+            content += `<p></p>`;
+            //联系人
+            let contactsHtml = '';
+            for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
+              if(i==0){
+                contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
+              }else{
+                contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
               }
-              content+=contactsHtml;
-              content += `<p></p>`;
-              //备注
-              content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
             }
+            content+=contactsHtml;
+            content += `<p></p>`;
+            //备注
+            content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
+
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
 

@@ -79,7 +79,7 @@
                 </div>
                 <div class="info-iterm-text">
                   <div>职位：<span></span></div>
-                  <div>{{iterm.showPosition}}</div>
+                  <div class="lineheight-normal paddingT10">{{iterm.showPosition}}</div>
                 </div>
                 <div class="info-iterm-text">
                   <div>教学大纲：<span></span></div>
@@ -99,7 +99,7 @@
               </div>
               <div class="info-iterm-text">
                 <div>职位：<span></span></div>
-                <div>{{iterm.showPosition}}</div>
+                <div class="lineheight-normal paddingT10">{{iterm.showPosition}}</div>
               </div>
               <div class="info-iterm-text">
                 <div>教学大纲：<span></span></div>
@@ -111,8 +111,8 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success" v-if="iterm.chosenPosition||iterm.isDigitalEditor">
-                    已被选为{{positionList[iterm.chosenPosition]}}{{iterm.chosenPosition&&iterm.isDigitalEditor?',':''}}{{iterm.isDigitalEditor?'数字编委':''}}
+                  <el-tag type="success" v-if="iterm.showChosenPosition">
+                    已被选为{{iterm.showChosenPosition}}
                   </el-tag>
                 </div>
               </div>
@@ -658,6 +658,7 @@
                   iterm.isNew = false;
                 })
                 this.$message.success('保存成功！');
+                this.hasBookListChanged=false;
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
