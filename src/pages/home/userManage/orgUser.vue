@@ -770,11 +770,8 @@ export default {
               type: "success",
               message: "修改成功"
             });
-          } else if (code === 3) {
-            self.$message({
-              type: "error",
-              message: "机构账号不能修改"
-            });
+          } else {
+            self.$message.error(res.msg.msgTrim());
           }
         })
         .catch(function(error) {
