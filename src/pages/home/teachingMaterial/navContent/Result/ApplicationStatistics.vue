@@ -40,7 +40,7 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="bookParmas.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -129,14 +129,14 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="按学校统计" name="school">
+      <el-tab-pane label="按申报单位统计" name="school">
         <div class="applicationStatistics-bySchool">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
-              <div class="searchName">学  校  名：<span></span></div>
+              <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="schoolParams.schoolName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -162,7 +162,7 @@
               </el-table-column>
               <el-table-column
                 prop="schoolName"
-                label="申报学校">
+                label="申报单位">
               </el-table-column>
               <el-table-column
                 prop="presetPositionEditor"
@@ -362,7 +362,7 @@ export default {
             },
             xAxis: [
               {
-                name: "学校名称",
+                name: "申报单位",
                 type: "category",
                 data: this.stSchools,
                 axisPointer: {
@@ -386,8 +386,7 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
-                max: 100,
-                interval: 10,
+                minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -396,8 +395,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: 100,
-                interval: 10,
+                minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -503,8 +501,7 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
-                max: 100,
-                interval: 10,
+                minInterval:1,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
@@ -513,8 +510,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: 100,
-                interval: 10,
+                minInterval:1,
                 axisLabel: {
                   formatter: "{value} 人"
                 }
