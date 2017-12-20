@@ -1,6 +1,10 @@
 <template>
-	<div>
-      流量概况
+	<div class="flow-page">
+      <div class="page-title text-center">
+        流量概况（ 2017-12-20 ）
+      </div>
+
+      <div></div>
 	</div>
 </template>
 

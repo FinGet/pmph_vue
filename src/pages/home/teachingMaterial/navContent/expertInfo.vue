@@ -923,24 +923,33 @@
          *  type 2 标示退回给个人 3 标示通过
          */
         onlineCheckPass(type){
-          this.$axios.get(this.api_online_check,{params:{
-            id:this.searchFormData.declarationId,
-            onlineProgress:type,
-            materialId:this.searchFormData.materialId
-          }})
-            .then(response=>{
-              var res = response.data;
-              if(res.code==1){
-                this.expertInfoData.onlineProgress=type;
-                this.$message.success(type==3?'已通过！':'已退回！')
-              }else{
-                this.$message.error(res.msg.msgTrim())
-              }
+          this.$confirm("确定退回资料给个人？", "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(()=>{
+              this.$axios.get(this.api_online_check,{params:{
+                id:this.searchFormData.declarationId,
+                onlineProgress:type,
+                materialId:this.searchFormData.materialId
+              }})
+                .then(response=>{
+                  var res = response.data;
+                  if(res.code==1){
+                    this.expertInfoData.onlineProgress=type;
+                    this.$message.success(type==3?'已通过！':'已退回！')
+                  }else{
+                    this.$message.error(res.msg.msgTrim())
+                  }
+                })
+                .catch(e=>{
+                  console.log(e);
+                  this.$message.error('请求失败，请重试！');
+                })
             })
-            .catch(e=>{
-              console.log(e);
-              this.$message.error('请求失败，请重试！');
-            })
+            .catch(e=>{})
+
         }
 
       },
