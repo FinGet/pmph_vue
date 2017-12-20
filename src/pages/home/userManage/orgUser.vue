@@ -727,18 +727,17 @@ export default {
         url: "/pmpheep/users/org/add/orgAndUser",
         data: this.$initPostData(this.form)
       })
-        .then(function(response) {
+        .then((response)=> {
           let res = response.data;
-          let data = res.data.rows;
           //修改成功
-          if (res.code === 1) {
+          if (res.code == 1) {
             self.refreshTableData();
             self.dialogVisible = false;
             self.$message({
               type: "success",
               message: "添加成功"
             });
-          }else {
+          } else {
             self.$message.error(res.msg.msgTrim());
           }
         })
