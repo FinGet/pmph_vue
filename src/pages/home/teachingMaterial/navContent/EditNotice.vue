@@ -101,6 +101,7 @@
         this.$axios.get(this.api_msg_detail,{params:{
           materialId: this.formData.materialId
         }}).then(response=> {
+          console.log(response);
           let res = response.data
           if (res.code == '1') {
             let content = '';

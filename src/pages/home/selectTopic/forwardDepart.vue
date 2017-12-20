@@ -80,7 +80,7 @@
     </div>
 
     <!-- 选择编辑部对话框 -->
-    <el-dialog :visible.sync="dialogVisible" size="tiny" title="选择编辑部">
+    <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑部">
       <p class="header_p">
           <span>部门名称：</span>
           <el-input class="input" placeholder="请输入部门名称"></el-input>
@@ -89,18 +89,22 @@
       <el-table :data="dialogTableData" border style="width:100%" class="table-wrapper">
           <el-table-column
            label="部门名称"
+           prop="name"
           >    
           </el-table-column>
           <el-table-column
            label="部门负责人"
            width="110"
+           prop="chargePerson"
           >    
           </el-table-column>
           <el-table-column
            label="操作"
            width="90"
           >  
-          <el-button type="text">选择</el-button>  
+          <template scope="scope">
+           <el-button type="text">选择</el-button>  
+          </template>
           </el-table-column>
       </el-table>
     </el-dialog>
@@ -152,7 +156,18 @@
                     },
                 ],
                 dialogTableData:[
-                    
+                  {
+                      name:'综合编辑部',
+                      chargePerson:'张三'
+                  },
+                  {
+                      name:'中医药中心',
+                      chargePerson:'李四'
+                  },
+                  {
+                      name:'中国医刊杂志编辑部',
+                      chargePerson:'王五'
+                  },
                 ]
             }
         },
@@ -166,12 +181,15 @@
         }
     }
 </script>
-<style scoped>
+<style >
 .forward_depart .header_p {
   overflow: hidden;
 }
 .forward_depart .header_p .input {
   width: 217px;
   margin-right: 10px;
+}
+.forward_depart .dialog .el-dialog{
+    min-width: 450px;
 }
 </style>

@@ -270,7 +270,10 @@ export default {
     /**
        * 点击tabs切换
        */
-    handleTabsClick(tab, event) {}
+    handleTabsClick(tab, event) {
+       this.schoolParams.schoolName='';
+       this.bookParams.bookName='';
+    }
   },
   mounted() {}
 };
