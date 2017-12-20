@@ -55,7 +55,7 @@
 
       <el-submenu index="/bookerror" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
+          <i class="fa fa-exclamation-triangle fa-fw"></i>
           <span slot="title">图书纠错</span>
         </template>
         <el-menu-item index="/bookerror/check" v-if="isShowSide(15)">图书纠错审核</el-menu-item>
