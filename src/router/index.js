@@ -68,16 +68,10 @@ const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
 
 /** 图书纠错 */
 import ErrorRouter from '../pages/home/bookError/errorRouter';
-<<<<<<< HEAD
 const CheckError = () => import('../pages/home/bookError/checkError'); 
 const AfterError = () => import('../pages/home/bookError/afterError'); 
 const Check = () => import('../pages/home/bookError/check');
 /* 出版图书 */
-=======
-const CheckError = () => import('../pages/home/bookError/checkError');
-const AfterError = () => import('../pages/home/bookError/afterError');
-/* 商品管理 */
->>>>>>> 7f40e413172dc35d8b8e149eaf270a2e11c6b70f
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
 const CommentManage = () => import('pages/home/publishBooks/CommentManage');
