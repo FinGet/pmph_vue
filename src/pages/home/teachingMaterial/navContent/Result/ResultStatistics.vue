@@ -9,7 +9,7 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="bookParams.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -73,14 +73,14 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="按学校统计" name="school">
+      <el-tab-pane label="按申报单位统计" name="school">
         <div class="applicationStatistics-bySchool">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
-              <div class="searchName">学  校  名：<span></span></div>
+              <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="schoolParams.schoolName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -106,7 +106,7 @@
               </el-table-column>
               <el-table-column
                 prop="schoolName"
-                label="学校名称">
+                label="申报单位">
               </el-table-column>
               <el-table-column
                 prop="editorList"
