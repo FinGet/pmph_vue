@@ -81,7 +81,7 @@
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
             this.isPadding=false;
-        if(str=='materialrouter'||str=='groupmanage'||str=='auth'){
+        if(str=='materialrouter'||str=='groupmanage'||str=='auth' || str == 'bookerror'){
           this.isShowBorder=false;
         }
         if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'||this.$router.currentRoute.name=='选题申报审核'){

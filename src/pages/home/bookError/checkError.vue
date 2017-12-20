@@ -123,7 +123,7 @@ export default {
     }
 };
 </script>
-<style>
+<style scoped>
 .search-title{
     margin: 10px 0 0 10px;
     font-size: 16px;
@@ -137,8 +137,5 @@ export default {
 	.radio-group{
 		margin-top: 9px;
     margin-left: 5px;
-	}
-	.link{
-		color: blue;
 	}
 </style>
