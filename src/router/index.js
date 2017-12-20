@@ -67,6 +67,10 @@ const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressMana
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
 const CommentManage = () => import('pages/home/publishBooks/CommentManage');
+/* 选题申报 */
+import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter'
+const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
+const TopicCheck = () => import('../pages/home/selectTopic/topicCheck');
 
 /*用户主页(个人设置)*/
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
@@ -151,7 +155,7 @@ export default new Router({
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
-              { path: 'list', name: '文章管理',meta: { replaceName: false}, component: PublishList },
+            { path: 'list', name: '文章管理', meta: { authorityId: 9 }, component: PublishList },
               { path: 'new', name: '添加内容', component: ContentPublish },
             { path: 'info', name: '信息快报管理', meta: { authorityId: 10 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
@@ -164,6 +168,13 @@ export default new Router({
           { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 13 }},
           { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 14 }}
           ]
+        },
+        /* 选题申报 */
+        {
+          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false}, children:[
+           { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 1}},
+           { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 1} },
+         ]
         },
         /* 我的消息 */
         {

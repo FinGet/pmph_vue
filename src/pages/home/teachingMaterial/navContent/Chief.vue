@@ -1,6 +1,6 @@
 <template>
     <div class="teachMaterial chief">
-      <p class="bookTitle">医学心理学与精神病学（第4版）</p>
+      <p class="bookTitle" v-if="formData.bookName">《 {{formData.bookName}} 》</p>
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
@@ -143,6 +143,7 @@
         formData:{
           materialId:'',
           textbookId:'',
+          bookName:'',
         },
         dialogVisible:false,
         tableData:[],
@@ -159,6 +160,7 @@
     created(){
       this.formData.materialId = this.$route.params.materialId;
       this.formData.textbookId = this.$route.query.bookid;
+      this.formData.bookName = this.$route.query.bookname;
       this.searchParams.textbookId = this.formData.textbookId;
       this.type = this.$route.query.type;
       this.myPower = this.$route.query.q;
@@ -221,6 +223,8 @@
       getHistoryLog(){
         this.$axios.get(this.api_log,{params:{
           textbookId:this.formData.textbookId,
+          pageNumber:1,
+          pageSize:1000
         }})
           .then(response=>{
             var res = response.data;

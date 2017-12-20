@@ -23,6 +23,7 @@
 </template>
 
 <script type="text/ecmascript">
+  import bus from 'common/eventBus/bus.js'
 export default {
 	data() {
 		return {
@@ -95,11 +96,15 @@ export default {
           this.getMaterialData();
         },200)
       }
+
+
+      bus.$on('material:update-info',this.getMaterialData);
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
     var windowH = document.documentElement.clientHeight;
     this.contentH = windowH-100+'px';
+
   },
 }
 </script>
