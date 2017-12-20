@@ -51,6 +51,15 @@
         <el-menu-item index="/topic/exam" >选题申报审核</el-menu-item>
         <el-menu-item index="/topic/check" >选题申报查看</el-menu-item>
       </el-submenu>
+      
+      <el-submenu index="/bookerror" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">图书纠错</span>
+        </template>
+        <el-menu-item index="/bookerror/check" v-if="isShowSide(15)">图书纠错审核</el-menu-item>
+        <el-menu-item index="/bookerror/after" v-if="isShowSide(16)">图书纠错跟踪</el-menu-item>
+      </el-submenu>
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
