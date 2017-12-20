@@ -67,6 +67,7 @@ const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressMana
 import ErrorRouter from '../pages/home/bookError/errorRouter';
 const CheckError = () => import('../pages/home/bookError/checkError'); 
 const AfterError = () => import('../pages/home/bookError/afterError'); 
+const Check = () => import('../pages/home/bookError/check');
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
@@ -122,6 +123,7 @@ export default new Router({
         {
           path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 1 }, children: [
             {path: 'check', name: '图书纠错审核' , component: CheckError, meta: { authorityId: 1 }},
+            {path: 'checkerror', name: '纠错审核' , component: Check, meta: { authorityId: 1 }},
             {path: 'after', name: '图书纠错跟踪' , component: AfterError, meta: { authorityId: 1 }}
           ]
         },
