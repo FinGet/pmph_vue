@@ -33,6 +33,7 @@
         <el-menu-item index="/content/info" v-if="isShowSide(10)">信息快报管理</el-menu-item>
         <el-menu-item index="/content/notice" v-if="isShowSide(11)">公告管理</el-menu-item>
         <!-- <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item> -->
+        <el-menu-item index="/content/ad" v-if="isShowSide(11)">广告管理</el-menu-item>
       </el-submenu>
       <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(13)||isShowSide(14)">
         <template slot="title">
@@ -42,7 +43,7 @@
         <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
         <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
       </el-submenu>
-      
+
       <el-submenu index="/topic" >
         <template slot="title">
           <i class="fa fa-paste fa-fw"></i>
@@ -50,6 +51,26 @@
         </template>
         <el-menu-item index="/topic/exam" >选题申报审核</el-menu-item>
         <el-menu-item index="/topic/check" >选题申报查看</el-menu-item>
+      </el-submenu>
+
+      <el-submenu index="/bookerror" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">图书纠错</span>
+        </template>
+        <el-menu-item index="/bookerror/check" v-if="isShowSide(15)">图书纠错审核</el-menu-item>
+        <el-menu-item index="/bookerror/after" v-if="isShowSide(16)">图书纠错跟踪</el-menu-item>
+      </el-submenu>
+
+      <el-submenu index="/analysis" v-if="isShowSide(1)">
+        <template slot="title">
+          <i class="fa fa-bar-chart fa-fw"></i>
+          <span slot="title">数据分析</span>
+        </template>
+        <el-menu-item index="/analysis/flow" v-if="isShowSide(1)">流量概况</el-menu-item>
+        <el-menu-item index="/analysis/flow-map" v-if="isShowSide(1)">流量地图</el-menu-item>
+        <el-menu-item index="/analysis/book-flow" v-if="isShowSide(1)">图书流量概况</el-menu-item>
+        <el-menu-item index="/analysis/book-preference" v-if="isShowSide(1)">用户图书偏好分析</el-menu-item>
       </el-submenu>
 
       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
@@ -61,6 +82,8 @@
         <el-menu-item index="/user/writer" v-if="isShowSide(16)">个人用户</el-menu-item>
         <el-menu-item index="/user/org" v-if="isShowSide(17)">机构用户</el-menu-item>
       </el-submenu>
+
+
       <el-submenu index="10" v-if="isShowSide(8)||isShowSide(18)||isShowSide(19)||isShowSide(20)||isShowSide(21)">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>

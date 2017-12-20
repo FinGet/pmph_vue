@@ -62,7 +62,15 @@ const ContentPublish = () => import('../pages/home/contentManage/contentPublish'
 const PublishList = () => import('../pages/home/contentManage/publishList');
 const noticeManage = () => import('../pages/home/contentManage/noticeManage');
 const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
+//广告管理
+const adList = ()=> import('../pages/home/contentManage/adManage/ad-list');
+const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
 
+/** 图书纠错 */
+import ErrorRouter from '../pages/home/bookError/errorRouter';
+const CheckError = () => import('../pages/home/bookError/checkError'); 
+const AfterError = () => import('../pages/home/bookError/afterError'); 
+const Check = () => import('../pages/home/bookError/check');
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
@@ -71,6 +79,12 @@ const CommentManage = () => import('pages/home/publishBooks/CommentManage');
 import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter'
 const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
 const TopicCheck = () => import('../pages/home/selectTopic/topicCheck');
+/* 数据分析 */
+import AnalysisRouter from 'pages/home/analysis/analysis-router'
+const Flow = ()=>import('pages/home/analysis/flow');
+const FlowMap = ()=>import('pages/home/analysis/flow-map');
+const BookFlow = ()=>import('pages/home/analysis/book-flow');
+const BookPreference = ()=>import('pages/home/analysis/book-preference');
 
 /*用户主页(个人设置)*/
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
@@ -113,6 +127,13 @@ export default new Router({
               ]
             },
 
+          ]
+        },
+        {
+          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 1 }, children: [
+            {path: 'check', name: '图书纠错审核' , component: CheckError, meta: { authorityId: 1 }},
+            {path: 'checkerror', name: '纠错审核' , component: Check, meta: { authorityId: 1 }},
+            {path: 'after', name: '图书纠错跟踪' , component: AfterError, meta: { authorityId: 1 }}
           ]
         },
         {
@@ -160,6 +181,8 @@ export default new Router({
             { path: 'info', name: '信息快报管理', meta: { authorityId: 10 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
+            { path: 'ad', name: '广告管理', meta: { authorityId: 11 }, component: adList },
+            { path: 'ad-edit', name: '广告编辑', meta: { authorityId: 11 }, component: adEdit }
           ]
         },
         /* 出版图书 */
@@ -168,6 +191,15 @@ export default new Router({
           { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 13 }},
           { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 14 }}
           ]
+        },
+        /*数据分析 */
+        {
+          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 1 }, children: [
+          { path: 'flow', name: '流量概况', component: Flow },
+          { path: 'flow-map', name: '流量地图', component: FlowMap },
+          { path: 'book-flow', name: '图书流量概况', component: BookFlow },
+          { path: 'book-preference', name: '用户图书偏好分析', component: BookPreference }
+        ]
         },
         /* 选题申报 */
         {
