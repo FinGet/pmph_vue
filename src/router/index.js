@@ -183,7 +183,7 @@ export default new Router({
             { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
             { path: 'ad', name: '广告管理', meta: { authorityId: 11 }, component: adList },
-            { path: 'ad-edit', name: '广告编辑', meta: { authorityId: 11 }, component: adEdit }
+            { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 11 }, component: adEdit }
           ]
         },
         /* 出版图书 */

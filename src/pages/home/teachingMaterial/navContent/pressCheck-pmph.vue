@@ -6,7 +6,7 @@
         <div class="searchBox-wrapper lg">
           <div class="searchName">书名：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择">
+            <el-select v-model="searchParams.textBookids" @change="handleSearchCLick" multiple placeholder="请选择">
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.id"
@@ -20,42 +20,42 @@
         <div class="searchBox-wrapper">
           <div class="searchName">账号/姓名：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职务：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--职称搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">职称：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--工作单位搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">工作单位：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="handleSearchCLick"></el-input>
           </div>
         </div>
         <!--申报单位搜索-->
         <!--<div class="searchBox-wrapper">-->
           <!--<div class="searchName">申报单位：<span></span></div>-->
           <!--<div class="searchInput">-->
-            <!--<el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData"></el-input>-->
+            <!--<el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick"></el-input>-->
           <!--</div>-->
         <!--</div>-->
         <!--申报职务搜索-->
         <div class="searchBox-wrapper">
           <div class="searchName">申报职务：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -69,7 +69,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">学校审核：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in onlineProgressList"
                 :key="item.value"
@@ -83,7 +83,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">纸质表：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="handleSearchCLick">
               <el-option
                 v-for="item in offlineProgressList"
                 :key="item.value"
@@ -95,7 +95,7 @@
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -103,8 +103,8 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">导出Word</el-button>
-          <el-button type="primary">导出Excel</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
       <!--高级搜索-->
@@ -119,7 +119,7 @@
             </el-option>
           </el-select>
           <div class="searchInput">
-            <el-select v-model="searchParams.textBookids" @change="getTableData" multiple placeholder="请选择" v-if="powerSearchValue===1">
+            <el-select v-model="searchParams.textBookids" @change="handleSearchCLick" multiple placeholder="请选择" v-if="powerSearchValue===1">
               <el-option
                 v-for="item in booksChooseOptions"
                 :key="item.id"
@@ -127,7 +127,7 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===6">
+            <el-select v-model="searchParams.positionType" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===6">
               <el-option
                 v-for="item in positionValue"
                 :key="item.value"
@@ -135,7 +135,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===7">
+            <el-select v-model="searchParams.onlineProgress" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===7">
               <el-option
                 v-for="item in onlineProgressList"
                 :key="item.value"
@@ -143,7 +143,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===8">
+            <el-select v-model="searchParams.offlineProgress" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===8">
               <el-option
                 v-for="item in offlineProgressList"
                 :key="item.value"
@@ -151,34 +151,34 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===0"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===2"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===3"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===4"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===5"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===0"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===3"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===4"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===5"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
         </div>
         <div class="searchBox-wrapper searchBtn">
           <el-button type="text" @click="toggleSearchType">高级搜索</el-button>
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary">导出Word</el-button>
-          <el-button type="primary">导出Excel</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
     </div>
     <!--表格-->
     <div class="table-wrapper">
       <el-table border
-        :data="tableData"
-        style="width: 100%">
+                :data="tableData"
+                style="width: 100%">
         <el-table-column
           label="姓名"
-          width="120"
+          min-width="80"
         >
           <template scope="scope">
             <router-link :to="{name:'专家信息',query: { declarationId: scope.row.id }}" class="table-link">{{scope.row.realname}}</router-link>
@@ -186,34 +186,34 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          width="130">
+          min-width="110">
           <template scope="scope">
             {{scope.row.username}}
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="160">
+        <el-table-column label="申报单位/工作单位" min-width="120">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" min-width="190" >
+        <el-table-column label="职务/职称" min-width="120" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" width="220">
+        <el-table-column label="联系方式" min-width="160">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职务">
-            <template scope="scope">
-              <p v-html="scope.row.chooseBooksAndPostions"></p>
-            </template>
+        <el-table-column label="所选书籍与职位" min-width="220">
+          <template scope="scope">
+            <p v-html="scope.row.chooseBooksAndPostions"></p>
+          </template>
         </el-table-column>
         <el-table-column label="学校审核">
           <template scope="scope">
@@ -222,7 +222,10 @@
         </el-table-column>
         <el-table-column label="出版社审核">
           <template scope="scope">
-            <p>{{scope.row.offlineProgress==0?'未收到纸质表':'已收到纸质表'}}</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
+
+            <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p>
+
           </template>
         </el-table-column>
       </el-table>
@@ -239,15 +242,38 @@
         :total="totalNum">
       </el-pagination>
     </div>
+
+    <div>
+      <el-dialog
+        title="正在导出..."
+        :visible.sync="exportDialog"
+        size="tiny"
+        :before-close="handleExportDialogClose">
+        <div class="paddingT50 paddingB50">
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="exportLoading" status="success"></el-progress>
+        </div>
+        <!--<span slot="footer" class="dialog-footer">-->
+        <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
+        <!--<el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+        <!--</span>-->
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    props:['materialInfo'],
     data() {
       return {
+        api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
         api_declaration_list:'/pmpheep/declaration/list/declaration',
         api_book_list:'/pmpheep/textBook/list',
+        api_export_excel:'/pmpheep/excel/declaration',
+        api_export_word_getid:'/pmpheep/word/identification',
+        api_export_word_start:'/pmpheep/word/declaration',
+        api_export_word_progress:'/pmpheep/word/progress',
+        api_export_word_download:'/pmpheep/zip/download',
         powerSearch:true,
         powerSearchList:[
           {
@@ -257,10 +283,10 @@
           {
             value:1,
             label:'书名'
-//          },{
+          },{
 //            value:2,
 //            label:'申报单位'
-          },{
+//          },{
             value:3,
             label:'职务'
           },{
@@ -316,9 +342,10 @@
           value: 2,
           label: '已收到纸质表'
         }],
+        offlineProgress:['未收到纸质表','已退回纸质表','已收到纸质表'],
         searchParams:{
           pageNumber:1,
-          pageSize:30,
+          pageSize:20,
           materialId:'',
           textBookids:[],
           realname:'',
@@ -332,6 +359,15 @@
         },
         tableData: [],
         totalNum:0,
+        exportDialog:false,
+        exportLoading:0,
+        exportLoadingTimerHandle:undefined,
+        handleExportWordtimer:null,
+      }
+    },
+    watch:{
+      powerSearchValue(val){
+        this.cleanSearchInput();
       }
     },
     methods:{
@@ -340,12 +376,33 @@
        */
       toggleSearchType(){
         this.powerSearch=!this.powerSearch;
+        this.cleanSearchInput();
+      },
+      /* 清空搜索框 */
+      cleanSearchInput(){
+        var pageNumber=this.searchParams.pageNumber;
+        var pageSize=this.searchParams.pageSize;
+        var materialId=this.searchParams.materialId;
+        this.searchParams={
+          pageNumber:pageNumber,
+          pageSize:pageSize,
+          materialId:materialId,
+          textBookids:[],
+          realname:'',
+          position:'',
+          title:'',
+          orgName:'',
+          unitName:'人民卫生出版社',
+          positionType:'',
+          onlineProgress:'',
+          offlineProgress:'',
+        }
+
       },
       /**
        * 获取表格数据
        */
       getTableData(){
-        console.log(this.searchParams.textBookids.toString())
         this.$axios.get(this.api_declaration_list,{params:{
           pageNumber:this.searchParams.pageNumber,
           pageSize:this.searchParams.pageSize,
@@ -375,6 +432,17 @@
           })
       },
       /**
+       * 点击搜索按钮
+       * @param val
+       */
+      handleSearchCLick(){
+        if(this.searchParams.pageNumber==1){
+          this.getTableData();
+        }else{
+          this.searchParams.pageNumber=1;
+        }
+      },
+      /**
        * 获取当前教材下所有书籍
        * @param val
        */
@@ -402,6 +470,170 @@
         this.searchParams.pageNumber=1;
         this.getTableData();
       },
+
+      /**
+       * 确认收到纸质表
+       */
+      confirmPaperList(row){
+        console.log(row)
+        this.$confirm("确定收到纸质表？", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.get(this.api_confirm_paper,{params:{
+              id:row.id,
+              offlineProgress:2,
+              materialId:this.searchParams.materialId,
+            }})
+              .then(response=>{
+                var res = response.data;
+                if(res.code==1){
+                  this.$message.success('已确认！')
+                  row.offlineProgress=2;
+                }else{
+                  this.$message.error(res.msg.msgTrim())
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 导出excel
+       */
+      exportExcel(){
+        if(this.exportDialog){
+          this.$message.warning('已有文件正在导出，请稍后再试！');
+          return;
+        }
+        this.exportDialog=true;
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,6000,(val)=>{
+          this.exportLoading = val;
+          if(this.exportLoading==100){
+            this.exportDialog=false;
+          }
+        });
+
+        let params = {
+          materialId:this.searchParams.materialId,
+          textBookids:this.searchParams.textBookids.join(','),
+          realname:this.searchParams.realname,
+          position:this.searchParams.position,
+          title:this.searchParams.title,
+          orgName:this.searchParams.orgName,
+          unitName:this.searchParams.unitName,
+          positionType:this.searchParams.positionType,
+          onlineProgress:this.searchParams.onlineProgress,
+          offlineProgress:this.searchParams.offlineProgress,
+        };
+        let excelUrl = this.api_export_excel;
+        for(let key in params){
+          excelUrl+=((excelUrl.includes('?')?'&':'?')+key+'='+params[key]);
+        }
+        this.$commonFun.downloadFile(excelUrl);
+      },
+      /**
+       * 导出进度条关闭前
+       */
+      handleExportDialogClose(done){
+        done();
+      },
+      /**
+       * 下载
+       */
+      exportWordGetId(){
+        if(this.exportDialog){
+          this.$message.warning('已有文件正在导出，请稍后再试！');
+          return;
+        }
+
+        this.$axios.get(this.api_export_word_getid)
+          .then(response=>{
+            var res = response.data;
+            this.exportWordStart(res);
+            this.exportWordProgress(res);
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('导出失败，请重试！')
+          })
+      },
+      exportWordStart(id){
+        this.exportDialog=true;
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        this.exportLoadingTimerHandle = this.$commonFun.perfectAnimate(0,100,60000,(val)=>{
+          this.exportLoading = val;
+          if(this.exportLoading==100){
+            this.exportDialog=false;
+          }
+        },true);
+        this.$axios.get(this.api_export_word_start,{params:{
+          materialId:this.searchParams.materialId,
+          textBookids:this.searchParams.textBookids.join(','),
+          realname:this.searchParams.realname,
+          position:this.searchParams.position,
+          title:this.searchParams.title,
+          orgName:this.searchParams.orgName,
+          unitName:this.searchParams.unitName,
+          positionType:this.searchParams.positionType,
+          onlineProgress:this.searchParams.onlineProgress,
+          offlineProgress:this.searchParams.offlineProgress,
+          id:id,
+        }})
+          .then(response=>{
+
+          })
+          .catch(e=>{
+            console.log(e);
+            this.exportDialog=false;
+            clearInterval(this.handleExportWordtimer);
+            this.$message.error('导出失败，请重试！')
+          })
+      },
+      exportWordProgress(id){
+        var timeout = 3*60*1000;//设置3分钟超时
+        var useTime = 0;
+        this.handleExportWordtimer = setInterval(()=>{
+          useTime+=1000;
+          this.$axios.get(this.api_export_word_progress,{params:{
+            id:id
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res){
+                clearInterval(this.handleExportWordtimer);
+                this.exportWordDownload(id);
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+              if(this.exportDialog){
+                this.$message.error('导出失败，请重试！');
+                this.exportDialog=false;
+                clearInterval(this.handleExportWordtimer);
+                this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+              }
+            })
+          //超时提醒
+          if(useTime>timeout){
+            this.$message.error('导出请求超时，请重试！');
+            clearInterval(this.handleExportWordtimer);
+            this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+          }
+        },1000)
+
+      },
+      exportWordDownload(id){
+        let url = this.api_export_word_download+'?id='+id;
+        this.$commonFun.downloadFile(url);
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+
+      }
     },
     created(){
       this.searchParams.materialId = this.$route.params.materialId;
@@ -413,6 +645,7 @@
       this.getBookList();
     },
   }
+
 </script>
 
 <style scoped>

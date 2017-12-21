@@ -8,7 +8,7 @@
 		</div>
 		<div class="bottom-content">
 			<el-row>
-				<el-col span="12">
+				<el-col :span="12">
 					<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="书名:">
 							<p>{{ruleForm.bookname}}</p>
@@ -44,8 +44,8 @@
 							</el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button icon="arrow-left">返回</el-button>
-							<el-button type="primary" @click="back">提交</el-button>
+							<el-button icon="arrow-left" @click="back">返回</el-button>
+							<el-button type="primary" @click="submit('ruleForm')">提交</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>	
@@ -57,25 +57,26 @@
 export default {
   data() {
     return {
-				ruleForm: {
-					bookname: '', // 书名
-					page:'',
-					line:'',
-					realname: '', // 纠错人
-					gmtCreate: '', // 提交时间
-					result:'',
-					editorReply:''
-        },
-				rules: {
-          editorReply: [
-            { required: true, message: '请输入回复内容', trigger: 'blur' },
-            { min: 1, max: 500, message: '不能超过500个字符', trigger: 'blur' }
-					],
-					result: [
-						{ required: true, message: '检查结果', trigger: 'blur' },
-					]
-        }
-    };
+			id:'', // 主键id
+			ruleForm: {
+				bookname: '', // 书名
+				page:'',
+				line:'',
+				realname: '', // 纠错人
+				gmtCreate: '', // 提交时间
+				result:'',
+				editorReply:''
+			},
+			rules: {
+				editorReply: [
+					{ type:'string', required: true, message: '请输入回复内容', trigger: 'blur' },
+					{ min: 1, max: 500, message: '不能超过500个字符', trigger: 'change,blur' }
+				],
+				result: [
+					{ type:'boolean', required: true, message: '检查结果', trigger: 'blur' },
+				]
+			}
+    }
   },
   created(){
       this.ruleForm.bookname = this.$route.query.bookname;
@@ -83,22 +84,60 @@ export default {
 			this.getBookError();
 	},
 	methods:{
+		/**请求数据 */
 		getBookError(){
 			this.$axios.get('/pmpheep/bookCorrection/list',{
 			params:{
 					pageSize: 1,
 					pageNumber:1,
-					bookname: this.ruleForm.bookname,
+					bookname: this.bookname,
 					result: ''
 			}
 			}).then(response =>{
 					let res = response.data
 					if (res.code == 1) {
 						this.ruleForm = res.data.rows[0];
-						this.ruleForm.gmtCreate = this.$commonFun.formatDate(this.ruleForm.gmtCreate);                    
+						this.id = this.ruleForm.id;
+						this.ruleForm.gmtCreate = this.$commonFun.formatDate(this.ruleForm.gmtCreate);    
+						// 如果isEditorHandling 为false  发送该请求
+						if (!this.ruleForm.isEditorHandling && this.ruleForm.isAuthorReplied) {
+							this.updateStatus();
+						}                
 					}
 			})
 		},
+		/**更新状态 */
+		updateStatus(){
+			this.$axios.put('/pmpheep/bookCorrection/updateToAcceptancing',this.$initPostData({
+				id: this.id
+			})).then(response => {
+				let res = response.data;
+			})
+		},
+		/**提交 */
+		submit(formName){
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					if (this.ruleForm.isAuthorReplied) {
+						this.$axios.put('/pmpheep/bookCorrection/replyWriter',this.$initPostData({
+							id: this.id,
+							result: this.ruleForm.result,
+							editorReply: this.ruleForm.editorReply
+						})).then(response => {
+							let res = response.data
+						}).catch(err => {
+							this.$message.error('提交失败，请稍后再试！');
+						}) 
+					} else {
+						this.$message.error('主编没有回复，不能提交！');
+					}
+				} else {
+					console.log('error submit!!');
+					return false;
+				}
+			});
+		},
+		/** 返回上一步*/
 		back(){
 			this.$router.go(-1);
 		}

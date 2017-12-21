@@ -80,12 +80,13 @@ router.beforeEach((to, from, next) => {
 
 //添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
+  var currentLocation = window.location.hash.replace('#','');
   var userdata = getUserData();
   //请求发送之前的钩子
   if(userdata.token){
      config.headers.Authorization=userdata.token;
   }else{
-    router.push('/login');
+    router.push({name:'登录',query:{f:currentLocation}});
 
   }
 
@@ -106,10 +107,11 @@ axios.interceptors.request.use(function (config) {
 
 //添加一个返回拦截器
 axios.interceptors.response.use(function (response) {
+  var currentLocation = window.location.hash.replace('#','');
   //对返回的数据进行一些处理
   if (response.data.code == 30 ){
     ElementUI.Message.error('当前登录已过期，请重新登录');
-    router.push('/login');
+    router.push({name:'登录',query:{f:currentLocation}});
   }
   return response;
 }, function (error) {
