@@ -317,9 +317,7 @@ props: default-history-id 默认选中的历史记录
                   name:tempName[i]
                 })
               });
-              if(tempObj.province){
-                tempList.push(tempObj);
-              }
+              tempList.push(tempObj);
             });
             this.area_school= tempList;
             //如果有设置默认选中的历史记录id则执行查询选中
