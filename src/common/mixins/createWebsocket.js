@@ -8,7 +8,7 @@ export default {
     var userdata = this.$getUserData()
     var userType = userdata.userInfo.loginType || '1';
     var sessionid = userdata.sessionId || '';
-    var socket = new ReconnectingWebSocket(BASE_WS_URL + 'websocket?userType=' + userType+'&sessionId='+sessionid, null, {debug: true, reconnectInterval: 3000});
+    var socket = new ReconnectingWebSocket(BASE_WS_URL + 'websocket?userType=' + userType+'&sessionId='+sessionid, null, {debug: true, reconnectInterval: 5000});
     /**
      * websocket创建成功事件
      */

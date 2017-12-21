@@ -61,7 +61,7 @@
       width="210"
      >
      <template scope="scope">
-       <el-button type="text">分配部门编辑</el-button>
+       <el-button type="text" @click="dialogVisible=true">分配部门编辑</el-button>
        <span>|</span>
        <el-button type="text">退回分配人</el-button>
      </template>
@@ -81,7 +81,28 @@
       </el-pagination>
     </div>
     <!-- 选择编辑弹框 -->
-
+    <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑部">
+      <p class="header_p">
+          <span>编辑姓名：</span>
+          <el-input class="input" placeholder="请输入编辑姓名"></el-input>
+          <el-button type="primary" icon="search">搜索</el-button>
+      </p>
+      <el-table :data="dialogTableData" border style="width:100%" class="table-wrapper">
+          <el-table-column
+          label="姓名"
+          ></el-table-column>
+          <el-table-column
+          label="电话"
+          ></el-table-column>
+          <el-table-column
+          label="操作"
+          >
+          <template scope="scope">
+           <el-button type="text">选择</el-button>  
+          </template>
+          </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -127,7 +148,9 @@
                         submitData:'2017-5-21',
                         submission:'自由投稿'
                     },
-                ]
+                ],
+                dialogVisible:false,
+                dialogTableData:[]
             }
         },
         methods:{
@@ -140,12 +163,15 @@
         }
     }
 </script>
-<style scoped>
+<style >
 .distribute_editor .header_p {
   overflow: hidden;
 }
 .distribute_editor .header_p .input {
   width: 217px;
   margin-right: 10px;
+}
+.distribute_editor .dialog .el-dialog{
+    min-width: 450px;
 }
 </style>
