@@ -37,7 +37,7 @@
                     </el-table-column>
                     <el-table-column prop="result" label="核查结果" width="95" align="center">
 											<template scope="scope">
-												{{scope.row.result == true?'存在问题':scope.row.result == false?'无问题':'-'}}
+												<p v-if="scope.row.isEditorReplied">{{scope.row.result == true?'存在问题':scope.row.result == false?'无问题':'-'}}</p>
 											</template>
                     </el-table-column>
 										<el-table-column label="操作" width="80" align="center">
@@ -64,78 +64,80 @@
 <script>
 export default {
   data() {
-      return {
-				title: '', // 书名
-				result: null, // 检查结果
-        currentPage: 1, // 当前页
-        pageSize: 20,
-        pageNumber: 1,
-        total:0,
-        tableData: [],
-        startTime:'', // 开始时间
-        endTime:'' // 结束时间
-      }
+    return {
+      title: "", // 书名
+      result: null, // 检查结果
+      currentPage: 1, // 当前页
+      pageSize: 20,
+      pageNumber: 1,
+      total: 0,
+      tableData: [],
+      startTime: "", // 开始时间
+      endTime: "" // 结束时间
+    };
+  },
+  created() {
+    this.getBooks();
+  },
+  methods: {
+    getBooks() {
+      this.$axios
+        .get("/pmpheep/bookCorrection/list", {
+          params: {
+            pageSize: this.pageSize,
+            pageNumber: this.pageNumber,
+            bookname: this.title,
+            result: this.result
+          }
+        })
+        .then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+            this.tableData = res.data.rows;
+            this.total = res.data.total;
+            this.tableData.forEach(item => {
+              item.gmtCreate = this.$commonFun.formatDate(item.gmtCreate);
+            });
+          }
+        });
     },
-    created(){
-        this.getBooks()
+    /** 搜索*/
+    search() {
+      this.pageSize = 20;
+      this.pageNumber = 1;
+      this.getBooks();
     },
-    methods: {
-        getBooks(){
-            this.$axios.get('/pmpheep/bookCorrection/list',{
-                params:{
-                    pageSize: this.pageSize,
-                    pageNumber: this.pageNumber,
-										bookname: this.title,
-										result: this.result
-                }
-            }).then(response =>{
-                let res = response.data
-                if (res.code == 1) {
-                    this.tableData = res.data.rows
-                    this.total = res.data.total
-                    this.tableData.forEach(item => {
-                        item.gmtCreate = this.$commonFun.formatDate(item.gmtCreate);                    
-                    })
-                }
-            })
-				},
-				/** 搜索*/
-        search(){
-            this.pageSize = 20;
-            this.pageNumber = 1;
-            this.getBooks()
-        },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-            this.pageSize = val 
-            this.getBooks()
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-            this.pageNumber = val
-            this.getBooks()
-				},
-				/** 切换检查结果 */
-				change(val) {
-					this.result = val;
-					this.getBooks();
-				}
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.getBooks();
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.pageNumber = val;
+      this.getBooks();
+    },
+    /** 切换检查结果 */
+    change(val) {
+      this.result = val;
+      this.getBooks();
     }
+  }
 };
 </script>
 <style scoped>
-.search-title{
-    margin: 10px 0 0 10px;
-    font-size: 16px;
-    float: left;
-    height:36px;
-    line-height: 36px;
-  }
-	.searchBox-radio{
-		width: 380px;
-	}
-	.radio-group{
-		margin-top: 9px;
-    margin-left: 5px;
-	}
+.search-title {
+  margin: 10px 0 0 10px;
+  font-size: 16px;
+  float: left;
+  height: 36px;
+  line-height: 36px;
+}
+.searchBox-radio {
+  width: 380px;
+}
+.radio-group {
+  margin-top: 9px;
+  margin-left: 5px;
+}
 </style>
