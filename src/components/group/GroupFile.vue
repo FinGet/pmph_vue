@@ -20,7 +20,7 @@
           <el-button class="marginR20" @click="manageBtn(0)" v-else type="primary" size="small">管理我的文件</el-button>
         </div>
         <div class="fileupload">
-          <el-button @click="dialogChooseGroup = true" type="primary" size="small">上传</el-button>
+          <el-button @click="openUploadPop" type="primary" size="small">上传</el-button>
         </div>
       </div>
     </el-row>
@@ -99,7 +99,7 @@
     <el-dialog title="选择上传小组" :visible.sync="dialogChooseGroup">
       <el-table
         ref="fileTable"
-        :data="currentGroupList"
+        :data="groupListData"
         border
         tooltip-effect="dark"
         style="width: 100%"
@@ -139,6 +139,7 @@
     props:['currentGroup','currentGroupList','crurrentMemberInfo'],
 		data() {
 			return {
+			  api_group_list:'/pmpheep/group/list/pmphGroupFile',
         screenWidth_lg_computed: true,
         dialogChooseGroup: false,
         visible: false,
@@ -149,6 +150,7 @@
         groupSelection: [],
         // tableData文件列表
         tableData: [],
+        groupListData:[],
         fileList: [],
         searchFormData:{
           groupId:this.currentGroup.id,
@@ -187,7 +189,7 @@
         return data
       },
       uploadFileUrl(){
-        return this.$config.BASE_URL+'group/add/pmphgroupfile'
+        return '/pmpheep/group/add/pmphgroupfile'
       },
       myFileList(){
         var list = [];
@@ -275,6 +277,27 @@
             console.log(e);
             this.$message.error('获取小组文件失败');
           })
+      },
+      getGroupList(){
+        if(this.groupListData.length){
+          return;
+        }
+        this.$axios.get(this.api_group_list)
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.groupListData = res.data;
+            }else{
+              this.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(e=>{
+          })
+
+      },
+      openUploadPop(){
+        this.getGroupList();
+        this.dialogChooseGroup = true;
       },
       /**
        * 搜索
