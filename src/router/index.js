@@ -79,6 +79,7 @@ const CommentManage = () => import('pages/home/publishBooks/CommentManage');
 import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter'
 const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
 const TopicCheck = () => import('../pages/home/selectTopic/topicCheck');
+const dealTopic =()=> import ('../pages/home/selectTopic/dealTopic')
 /* 数据分析 */
 import AnalysisRouter from 'pages/home/analysis/analysis-router'
 const Flow = ()=>import('pages/home/analysis/flow');
@@ -206,6 +207,8 @@ export default new Router({
           path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false}, children:[
            { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 1}},
            { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 1} },
+            { path: 'deal', name: '选题受理', component: dealTopic, meta: { authorityId: 1 }}
+
          ]
         },
         /* 我的消息 */
