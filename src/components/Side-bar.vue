@@ -94,6 +94,19 @@
         <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item> -->
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
+       
+       <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+        <template slot="title">
+          <i class="fa fa-user-plus fa-fw"></i>
+          <span slot="title">问卷调查</span>
+        </template>
+        <el-menu-item index="/user/pmph" v-if="isShowSide(15)">调查问卷模板设置</el-menu-item>
+        <el-menu-item index="/user/writer" v-if="isShowSide(16)">问卷模板新增</el-menu-item>
+        <el-menu-item index="/user/org" v-if="isShowSide(17)">新建调查问卷</el-menu-item>
+        <el-menu-item index="/user/writer" v-if="isShowSide(16)">调查结果统计</el-menu-item>
+        <el-menu-item index="/user/org" v-if="isShowSide(17)">调查问卷回收</el-menu-item>
+      </el-submenu>
+
       <el-menu-item index="/systemlog" v-if="isShowSide(22)">
         <i class="fa fa-edit fa-fw"></i>
         <span slot="title">系统日志</span>

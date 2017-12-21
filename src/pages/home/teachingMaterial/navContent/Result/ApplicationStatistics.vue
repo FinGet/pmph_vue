@@ -560,8 +560,14 @@ export default {
        * 点击tabs切换
        */
     handleTabsClick(tab, event) {
+     console.log(tab,event);
      this.bookParmas.bookName='';
      this.schoolParams.schoolName=''; 
+     if(tab.name=='bookName'){
+        this.getBookTableData();
+     }else{
+       this.getSchoolTableData();
+     }
     }
   },
   mounted() {
