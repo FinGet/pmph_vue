@@ -91,6 +91,14 @@ const BookPreference = ()=>import('pages/home/analysis/book-preference');
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
 const PersonalSetting = () => import('pages/home/personal/Setting');
 
+/* 问卷调查 */
+import questionSurveyRouter from '../pages/home/questionSurvey/questionSurveyRouter';
+const addNewModel = () =>import('../pages/home/questionSurvey/addNewModel');
+const addNewSurvey = () => import('../pages/home/questionSurvey/addNewSurvey');
+const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet');
+const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
+const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
+
 /**系统日志 */
 const SystemLog = () => import('pages/home/systemLog/systemLog');
 
@@ -211,6 +219,17 @@ export default new Router({
 
          ]
         },
+        /* 问卷调查 */
+        {
+          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 1}, children:[
+            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 1 }},
+            { path: 'newmodel', name: '问卷模板新增', component: addNewModel, meta: { authorityId: 1 } },
+            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey, meta: { authorityId: 1 } },
+            { path: 'statistic', name:'调查结果统计', component: surveryResultStatistic, meta: { authorityId: 1 } },
+            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
+          ]
+        },
+
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: false, authorityId: 1}, children: [
