@@ -172,6 +172,7 @@ p{word-wrap:break-word}
 .paddingT30 { padding-top: 30px; }
 .paddingT40 { padding-top: 40px; }
 .paddingT50 { padding-top: 50px; }
+.paddingT60 { padding-top: 60px; }
 
 .paddingB0 { padding-bottom: 0; }
 .paddingB5  { padding-bottom: 5px; }
@@ -187,9 +188,11 @@ p{word-wrap:break-word}
 .paddingL10 { padding-left: 10px; }
 .paddingL15 { padding-left: 15px; }
 .paddingL20 { padding-left: 20px; }
+.paddingL60 { padding-left: 60px; }
 .paddingL30 { padding-left: 30px; }
+.paddingL80 { padding-left: 80px; }
 .paddingL100 { padding-left: 100px; }
-.paddingL110 { padding-left: 100px; }
+.paddingL110 { padding-left: 110px; }
 
 .paddingR0 { padding-right: 0; }
 .paddingR5  { padding-right: 5px; }
