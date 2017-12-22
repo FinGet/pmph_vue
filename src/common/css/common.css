@@ -80,6 +80,9 @@ p{word-wrap:break-word}
 .block{
   display: block;
 }
+.table{display: table}
+.table-cell{display: table-cell}
+.vertical-align-middle{vertical-align-middle: middle;}
 /*=================================================================
   float等宽列表
   使用示例：
