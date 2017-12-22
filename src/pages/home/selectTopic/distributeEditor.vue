@@ -51,10 +51,16 @@
      >
      </el-table-column> 
      <el-table-column
-      label="投稿方式"
+      label="是否退回"
       prop="submission"
       width="120"
      >
+     <template scope="scope">
+      <el-tooltip class="item" effect="dark" content="退回原因" placement="top-start" v-if="scope.row.submission=='已退回'">
+       <span>{{scope.row.submission}}</span>
+      </el-tooltip>
+      <span v-else>{{scope.row.submission}}</span>
+     </template>
      </el-table-column> 
      <el-table-column
       label="操作"
@@ -138,7 +144,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'指定编辑'
+                        submission:'已退回'
                     },
                     {
                         name:'中医基础',
@@ -146,7 +152,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'自由投稿'
+                        submission:'-'
                     },
                     {
                         name:'中医基础',
@@ -154,7 +160,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'指定编辑'
+                        submission:'-'
                     },
                     {
                         name:'中医基础',
@@ -162,7 +168,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'自由投稿'
+                        submission:'已退回'
                     },
                 ],
                 dialogParams:{

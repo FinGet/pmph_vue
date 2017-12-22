@@ -15,7 +15,16 @@
               :value="item.textBookId">
             </el-option>
           </el-select> -->
-          <el-input placeholder="请输入" v-model="searchForm.bookName" @keyup.enter.native="search"></el-input>
+          <!-- <el-input placeholder="请输入" v-model="searchForm.bookName" @keyup.enter.native="search"></el-input> -->
+          <el-autocomplete
+            class="inline-input input"
+            :props="defaultProp"
+            v-model="searchForm.bookName"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+          ></el-autocomplete>
         </div>
       </div>
       <!--进度搜索-->
@@ -281,7 +290,11 @@
         planningEditor: '',
         selectedBookId:'',
         groupData: [], // 小组名单
-        myPower:'' // 权限码
+        myPower:'', // 权限码
+        defaultProp:{
+          value: 'textbookName',
+          label: 'textbookName'
+        }
       }
     },
     computed:{
@@ -360,6 +373,22 @@
           .catch(e=>{
             console.log(e);
           })
+      },
+      /**远程搜索 */
+      querySearch(queryString,cb){
+        var restaurants = this.tableData;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.textbookName.indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      /**选中远程搜索项，则触发搜索 */
+      handleSelect(item) {
+       this.getTableData();
       },
       /**
        * 搜索
@@ -558,6 +587,8 @@
           let res = response.data;
           if (res.code == 1) {
             this.$message.success('更新成功！');
+          }else {
+            this.$message.error('更新失败！');
           }
         })
       },
@@ -605,5 +636,8 @@
   }
   .delete{
     color:red;
+  }
+  .input{
+    width: 100%;
   }
 </style>
