@@ -84,7 +84,7 @@
         if(str=='materialrouter'||str=='groupmanage'||str=='auth' || str == 'bookerror'){
           this.isShowBorder=false;
         }
-        if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'||this.$router.currentRoute.name=='选题申报审核'){
+        if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'||str=="topic"){
           this.isPadding=true;
         }
         if(this.$router.currentRoute.name=="通知列表"){

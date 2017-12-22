@@ -31,6 +31,7 @@ export default {
   data() {
     return {
       loginUrl:'/pmpheep/pmph/login',
+      from:null,
       loginForm: {
         username: '',
         password: ''
@@ -60,7 +61,7 @@ export default {
                   //将session放到cookie里
                   _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
                   _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
-                  _this.$router.push({name:'个人中心'});
+                  _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
                 }else{
                   _this.$message.error('账号/密码错误');
                 }
@@ -77,6 +78,9 @@ export default {
     }
   },
   mounted() {
+    if(this.$route.query.f){
+      this.from = this.$route.query.f;
+    }
   }
 }
 </script>

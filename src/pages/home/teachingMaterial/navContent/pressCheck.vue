@@ -307,7 +307,7 @@
           },
 
         ],
-        powerSearchValue:2,
+        powerSearchValue:0,
         positionValue:[{
           value:'',
           label:'全部'

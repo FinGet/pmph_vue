@@ -273,6 +273,11 @@ export default {
     handleTabsClick(tab, event) {
        this.schoolParams.schoolName='';
        this.bookParams.bookName='';
+       if(tab.name=="bookName"){
+         this.getBooksTableData();
+       }else{
+         this.getSchoolTableData();
+       }
     }
   },
   mounted() {}

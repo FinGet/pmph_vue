@@ -51,10 +51,16 @@
      >
      </el-table-column> 
      <el-table-column
-      label="投稿方式"
+      label="是否退回"
       prop="submission"
       width="120"
      >
+     <template scope="scope">
+      <el-tooltip class="item" effect="dark" content="退回原因" placement="top-start" v-if="scope.row.submission=='已退回'">
+       <span>{{scope.row.submission}}</span>
+      </el-tooltip>
+      <span v-else>{{scope.row.submission}}</span>
+     </template>
      </el-table-column> 
      <el-table-column
       label="操作"
@@ -87,21 +93,37 @@
           <el-input class="input" placeholder="请输入编辑姓名"></el-input>
           <el-button type="primary" icon="search">搜索</el-button>
       </p>
-      <el-table :data="dialogTableData" border style="width:100%" class="table-wrapper">
+      <el-table :data="dialogTableData"  border  class="table-wrapper">
           <el-table-column
           label="姓名"
+          prop="name"
           ></el-table-column>
           <el-table-column
           label="电话"
+          prop="phone"
           ></el-table-column>
           <el-table-column
           label="操作"
+          width="90"
           >
           <template scope="scope">
            <el-button type="text">选择</el-button>  
           </template>
           </el-table-column>
       </el-table>
+          <!--分页-->
+    <div class="pagination-wrapper" style="overflow:hidden;">
+      <el-pagination
+        v-if="dialogPageTotal>dialogParams.pageSize"
+        @size-change="dialogSizeChange"
+        @current-change="dialogCurrentChange"
+        :current-page="dialogParams.pageNumber"
+        :page-sizes="[10,20,30,50]"
+        :page-size="dialogParams.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dialogPageTotal">
+      </el-pagination>
+    </div>
     </el-dialog>
   </div>
 </template>
@@ -122,7 +144,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'指定编辑'
+                        submission:'已退回'
                     },
                     {
                         name:'中医基础',
@@ -130,7 +152,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'自由投稿'
+                        submission:'-'
                     },
                     {
                         name:'中医基础',
@@ -138,7 +160,7 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'指定编辑'
+                        submission:'-'
                     },
                     {
                         name:'中医基础',
@@ -146,11 +168,38 @@
                         expectData:'2018-6-30',
                         bookCategory:'教材',
                         submitData:'2017-5-21',
-                        submission:'自由投稿'
+                        submission:'已退回'
                     },
                 ],
+                dialogParams:{
+                  editorName:'',
+                  pageSize:10,
+                  pageNumber:1
+                },
+                dialogPageTotal:500,
                 dialogVisible:false,
-                dialogTableData:[]
+                dialogTableData:[
+                    {
+                        name:'张祥松',
+                        phone:'147258369'
+                    },
+                    {
+                        name:'张祥松',
+                        phone:'147258369'
+                    },
+                    {
+                        name:'张祥松',
+                        phone:'147258369'
+                    },
+                    {
+                        name:'张祥松',
+                        phone:'147258369'
+                    },
+                    {
+                        name:'张祥松',
+                        phone:'147258369'
+                    },
+                ]
             }
         },
         methods:{
@@ -159,7 +208,13 @@
             },
             handleCurrentChange(){
 
-            }
+            },
+            dialogSizeChange(){
+
+            },
+            dialogCurrentChange(){
+
+            },
         }
     }
 </script>
@@ -172,6 +227,6 @@
   margin-right: 10px;
 }
 .distribute_editor .dialog .el-dialog{
-    min-width: 450px;
+    min-width: 635px;
 }
 </style>

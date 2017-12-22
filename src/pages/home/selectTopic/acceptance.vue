@@ -51,19 +51,13 @@
      >
      </el-table-column> 
      <el-table-column
-      label="投稿方式"
-      prop="submission"
-      width="120"
-     >
-     </el-table-column> 
-     <el-table-column
       label="操作"
       width="210"
      >
      <template scope="scope">
        <el-button type="text">受理</el-button>
        <span>|</span>
-       <el-button type="text">审核</el-button>
+       <el-button type="text" @click="$router.push({name:'选题受理'})">审核</el-button>
        <span>|</span>
        <el-button type="text">退回分配人</el-button>
      </template>
