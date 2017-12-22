@@ -97,7 +97,7 @@
        
        <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
         <template slot="title">
-          <i class="fa fa-user-plus fa-fw"></i>
+          <i class="fa fa-pencil-square-o fa-fw"></i>
           <span slot="title">问卷调查</span>
         </template>
         <el-menu-item index="/user/pmph" v-if="isShowSide(15)">调查问卷模板设置</el-menu-item>
@@ -108,7 +108,7 @@
       </el-submenu>
 
       <el-menu-item index="/systemlog" v-if="isShowSide(22)">
-        <i class="fa fa-edit fa-fw"></i>
+        <i class="fa fa-file-text-o fa-fw"></i>
         <span slot="title">系统日志</span>
       </el-menu-item>
     </el-menu>
