@@ -45,7 +45,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button icon="arrow-left" @click="back">返回</el-button>
-							<el-button type="primary" @click="submit('ruleForm')">提交</el-button>
+							<el-button type="primary" :disabled="ruleForm.isEditorReplied" @click="submit('ruleForm')">提交</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>	
@@ -125,6 +125,10 @@ export default {
 							editorReply: this.ruleForm.editorReply
 						})).then(response => {
 							let res = response.data
+							if (res.code == 1){
+								this.$message.success('提交成功！');
+								this.back();
+							}
 						}).catch(err => {
 							this.$message.error('提交失败，请稍后再试！');
 						}) 
