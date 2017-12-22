@@ -91,7 +91,7 @@ methods:
               align="center"
               >
               <template scope="scope">
-                {{scope.row.isDisabled? '停用' : '启用'}}
+                {{scope.row.isDisabled? '禁用' : '启用'}}
               </template>
             </el-table-column>
             <el-table-column
