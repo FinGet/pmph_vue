@@ -294,7 +294,8 @@
         defaultProp:{
           value: 'textbookName',
           label: 'textbookName'
-        }
+        },
+        bookNames:[]
       }
     },
     computed:{
@@ -348,7 +349,22 @@
       add(){
         this.chooseVisiable2=false;
       },
-
+      /**获取书籍名称 */
+      getBookName(){
+         this.$axios.get('/pmpheep/position/getTextbookName',{params:{
+           materialId:this.searchForm.materialId
+         }}).then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.bookNames = res.data;
+            } else if (res.code == 2) {
+              this.$message.error(res.msg.msgTrim())
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
       /**
        * 获取表格数据
        */
@@ -376,7 +392,7 @@
       },
       /**远程搜索 */
       querySearch(queryString,cb){
-        var restaurants = this.tableData;
+        var restaurants = this.bookNames;
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
         // 调用 callback 返回建议列表的数据
         cb(results);
@@ -612,6 +628,7 @@
         this.$router.push({name:'通知列表'});
       }
       this.getTableData();
+      this.getBookName();
     },
     components:{
       userPmph
