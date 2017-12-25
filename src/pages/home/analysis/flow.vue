@@ -18,11 +18,11 @@
             tooltip-effect="dark"
             style="width: 100%">
             <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
-            <el-table-column label="浏览次数(PV)"  prop="pv"></el-table-column>
-            <el-table-column label="独立访问(UV)"  prop="uv"></el-table-column>
-            <el-table-column label="IP"  prop="ip"></el-table-column>
-            <el-table-column label="失跳率"  prop="shitiao"></el-table-column>
-            <el-table-column label="访问次数"  prop="num"></el-table-column>
+            <el-table-column label="浏览次数(PV)"  prop="pv"  align="center"></el-table-column>
+            <el-table-column label="独立访问(UV)"  prop="uv"  align="center"></el-table-column>
+            <el-table-column label="IP"  prop="ip"  align="center"></el-table-column>
+            <el-table-column label="失跳率"  prop="shitiao"  align="center"></el-table-column>
+            <el-table-column label="访问次数"  prop="num"  align="center"></el-table-column>
           </el-table>
         </div>
         <div class="table-wrapper">
@@ -34,11 +34,11 @@
             tooltip-effect="dark"
             style="width: 100%">
             <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
-            <el-table-column label="当日回头访客(占比)"  prop="pv"></el-table-column>
-            <el-table-column label="访问平均访问频度"  prop="uv"></el-table-column>
-            <el-table-column label="平均访问时长"  prop="ip"></el-table-column>
-            <el-table-column label="平均访问深度"  prop="shitiao"></el-table-column>
-            <el-table-column label="人均浏览页数"  prop="num"></el-table-column>
+            <el-table-column label="当日回头访客(占比)"  prop="pv" align="center"></el-table-column>
+            <el-table-column label="访问平均访问频度"  prop="uv" align="center"></el-table-column>
+            <el-table-column label="平均访问时长"  prop="ip" align="center"></el-table-column>
+            <el-table-column label="平均访问深度"  prop="shitiao" align="center"></el-table-column>
+            <el-table-column label="人均浏览页数"  prop="num" align="center"></el-table-column>
           </el-table>
         </div>
       </div>

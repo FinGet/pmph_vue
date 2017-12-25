@@ -20,7 +20,7 @@
     </div>
 
     <!--地图-->
-    <div class="map-all paddingT30">
+    <div class="map-all paddingT30  paddingL30">
       <div class="all-echar text-center fontsize-lg">
         <span class="gray inline-block paddingT20">总流量</span>
         <p class="orange all-echar-num">
@@ -28,19 +28,22 @@
         </p>
       </div>
       <div class="all-text-num">
-        <span class="inline-block">PV:4456</span>
-        <span class="inline-block paddingL30">UV:4456</span>
+        <span class="inline-block">PV : 4456</span>
+        <span class="inline-block paddingL30">UV : 4456</span>
       </div>
+
+      <div class="map-line-123"></div>
     </div>
 
     <!--树状图-->
-    <div>
-
+    <div class="paddingL60">
+      <map-list :data="data"></map-list>
     </div>
 	</div>
 </template>
 
 <script>
+  import mapList from './_components/flowmap-list.vue'
 	export default {
 		data() {
 			return {
@@ -72,8 +75,53 @@
             }
           }]
         },
+        data:[{
+          path:'首页',
+          pv:1,
+          uv:1,
+          zb:2
+        },{
+          path:'读书',
+          pv:1,
+          uv:1,
+          zb:2,
+          children:[{
+            path:'学校教育',
+            pv:1,
+            uv:1,
+            zb:2,
+          },{
+            path:'0/2/2',
+            pv:1,
+            uv:1,
+            zb:2,
+          }]
+        },{
+          path:'0/3',
+          pv:1,
+          uv:1,
+          zb:2,
+        },{
+          path:'0/4',
+          pv:1,
+          uv:1,
+          zb:2,
+        },{
+          path:'0/4',
+          pv:1,
+          uv:1,
+          zb:2,
+        },{
+          path:'0/4',
+          pv:1,
+          uv:1,
+          zb:2,
+        }],
       }
-		}
+		},
+    components:{
+      mapList
+    }
 	}
 </script>
 
@@ -103,5 +151,14 @@
     margin-left: 10px;
     border: 1px dashed #ccc;
     padding: 14px 30px;
+    color: #098309;
+    font-weight: bold;
+  }
+  .map-line-123{
+    width: 110px;
+    height: 22px;
+    margin-left: 70px;
+    border-bottom: 2px solid #ccc;
+    border-left: 2px solid #ccc;
   }
 </style>
