@@ -57,147 +57,170 @@
 export default {
   data() {
     return {
-			id:'', // 主键id
-			ruleForm: {
-				bookname: '', // 书名
-				page:'',
-				line:'',
-				realname: '', // 纠错人
-				gmtCreate: '', // 提交时间
-				result:'',
-				editorReply:''
-			},
-			rules: {
-				editorReply: [
-					{ type:'string', required: true, message: '请输入回复内容', trigger: 'blur' },
-					{ min: 1, max: 500, message: '不能超过500个字符', trigger: 'change,blur' }
-				],
-				result: [
-					{ type:'boolean', required: true, message: '检查结果', trigger: 'blur' },
-				]
-			}
-    }
+      id: "", // 主键id
+      ruleForm: {
+        bookname: "", // 书名
+        page: "",
+        line: "",
+        realname: "", // 纠错人
+        gmtCreate: "", // 提交时间
+        result: "",
+        editorReply: ""
+      },
+      rules: {
+        editorReply: [
+          {
+            type: "string",
+            required: true,
+            message: "请输入回复内容",
+            trigger: "blur"
+          },
+          { min: 1, max: 500, message: "不能超过500个字符", trigger: "change,blur" }
+        ],
+        result: [
+          { type: "boolean", required: true, message: "检查结果", trigger: "blur" }
+        ]
+      }
+    };
   },
-  created(){
-      this.ruleForm.bookname = this.$route.query.bookname;
-			// alert(this.bookname)
-			this.getBookError();
-	},
-	methods:{
-		/**请求数据 */
-		getBookError(){
-			this.$axios.get('/pmpheep/bookCorrection/list',{
-			params:{
-					pageSize: 1,
-					pageNumber:1,
-					bookname: this.bookname,
-					result: ''
-			}
-			}).then(response =>{
-					let res = response.data
-					if (res.code == 1) {
-						this.ruleForm = res.data.rows[0];
-						this.id = this.ruleForm.id;
-						this.ruleForm.gmtCreate = this.$commonFun.formatDate(this.ruleForm.gmtCreate);    
-						// 如果isEditorHandling 为false  发送该请求
-						if (!this.ruleForm.isEditorHandling && this.ruleForm.isAuthorReplied) {
-							this.updateStatus();
-						}                
-					}
-			})
-		},
-		/**更新状态 */
-		updateStatus(){
-			this.$axios.put('/pmpheep/bookCorrection/updateToAcceptancing',this.$initPostData({
-				id: this.id
-			})).then(response => {
-				let res = response.data;
-			})
-		},
-		/**提交 */
-		submit(formName){
-			this.$refs[formName].validate((valid) => {
-				if (valid) {
-					if (this.ruleForm.isAuthorReplied) {
-						this.$axios.put('/pmpheep/bookCorrection/replyWriter',this.$initPostData({
-							id: this.id,
-							result: this.ruleForm.result,
-							editorReply: this.ruleForm.editorReply
-						})).then(response => {
-							let res = response.data
-							if (res.code == 1){
-								this.$message.success('提交成功！');
-								this.back();
-							}
-						}).catch(err => {
-							this.$message.error('提交失败，请稍后再试！');
-						}) 
-					} else {
-						this.$message.error('主编没有回复，不能提交！');
-					}
-				} else {
-					console.log('error submit!!');
-					return false;
-				}
-			});
-		},
-		/** 返回上一步*/
-		back(){
-			this.$router.go(-1);
-		}
-	}
+  created() {
+    this.ruleForm.bookname = this.$route.query.bookname;
+    // alert(this.$route.query);
+    this.getBookError();
+  },
+  methods: {
+    /**请求数据 */
+    getBookError() {
+      this.$axios
+        .get("/pmpheep/bookCorrection/list", {
+          params: {
+            pageSize: 1,
+            pageNumber: 1,
+            bookname: this.ruleForm.bookname,
+            result: ""
+          }
+        })
+        .then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+            this.ruleForm = res.data.rows[0];
+            this.id = this.ruleForm.id;
+            this.ruleForm.gmtCreate = this.$commonFun.formatDate(
+              this.ruleForm.gmtCreate
+            );
+            // 如果isEditorHandling 为false  发送该请求
+            if (
+              !this.ruleForm.isEditorHandling &&
+              this.ruleForm.isAuthorReplied
+            ) {
+              this.updateStatus();
+            }
+          }
+        });
+    },
+    /**更新状态 */
+    updateStatus() {
+      this.$axios
+        .put(
+          "/pmpheep/bookCorrection/updateToAcceptancing",
+          this.$initPostData({
+            id: this.id
+          })
+        )
+        .then(response => {
+          let res = response.data;
+        });
+    },
+    /**提交 */
+    submit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if (this.ruleForm.isAuthorReplied) {
+            this.$axios
+              .put(
+                "/pmpheep/bookCorrection/replyWriter",
+                this.$initPostData({
+                  id: this.id,
+                  result: this.ruleForm.result,
+                  editorReply: this.ruleForm.editorReply
+                })
+              )
+              .then(response => {
+                let res = response.data;
+                if (res.code == 1) {
+                  this.$message.success("提交成功！");
+                  this.back();
+                }
+              })
+              .catch(err => {
+                this.$message.error("提交失败，请稍后再试！");
+              });
+          } else {
+            this.$message.error("主编没有回复，不能提交！");
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    /** 返回上一步*/
+    back() {
+      this.$router.go(-1);
+    }
+  }
 };
 </script>
 <style>
-.top-nav{
-	/* float: left; */
-	width:100%;
-	position: relative;
-	height: 43px;
-	background-color: rgb(238, 241, 246);
-	border: 1px solid rgb(209, 217, 229);
-	box-sizing: border-box;
+.top-nav {
+  /* float: left; */
+  width: 100%;
+  position: relative;
+  height: 43px;
+  background-color: rgb(238, 241, 246);
+  border: 1px solid rgb(209, 217, 229);
+  box-sizing: border-box;
 }
-.top-nav .header_title_tips{
-    margin-bottom:15px;
-    /* float:left; */
-    color:#fff;
-    position: absolute;
-    left:-8px;
-    top:8px;
+.top-nav .header_title_tips {
+  margin-bottom: 15px;
+  /* float:left; */
+  color: #fff;
+  position: absolute;
+  left: -8px;
+  top: 8px;
 }
-.top-nav .header_title_tips p{
-    /* float:left; */
-    background-color: #12806b;
-    font-size:16px;
-    padding:2px 20px 2px 15px;
-    max-width:545px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.top-nav .header_title_tips p {
+  /* float:left; */
+  background-color: #12806b;
+  font-size: 16px;
+  padding: 2px 20px 2px 15px;
+  max-width: 545px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.top-nav .header_title_tips .tips_icon{
-    border:4px solid #475669;
-    position: absolute;
-    left: 0;
-    bottom:-8px;
-    border-left-color:#fff;
-    border-bottom-color:#fff;
+.top-nav .header_title_tips .tips_icon {
+  border: 4px solid #475669;
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  border-left-color: #fff;
+  border-bottom-color: #fff;
 }
-.bottom-content{
-	border: 1px solid rgb(209, 217, 229);
-	box-sizing: border-box;
-	border-top: 0;
-	padding: 15px 20px;
-	float: left;
-	width: 100%;
-	background-color: #fff;
+.bottom-content {
+  border: 1px solid rgb(209, 217, 229);
+  box-sizing: border-box;
+  border-top: 0;
+  padding: 15px 20px;
+  float: left;
+  width: 100%;
+  background-color: #fff;
 }
-.messageBox{
-	min-height: 50px;
-	border: 1px solid #e2dddd;
-	padding: 0px 15px 20px 15px;
-	margin-top: 5px;
-	background: #f3f3f3;
+.messageBox {
+  min-height: 50px;
+  border: 1px solid #e2dddd;
+  padding: 0px 15px 20px 15px;
+  margin-top: 5px;
+  background: #f3f3f3;
 }
 </style>
