@@ -33,7 +33,7 @@
                     </el-table-column>
                     <el-table-column prop="realname" label="策划编辑">
                     </el-table-column>
-                    <el-table-column prop="authorReply" label="责任编辑" >
+                    <el-table-column prop="authorRep" label="责任编辑" >
                     </el-table-column>
                     <el-table-column prop="result" label="核查结果" width="95" align="center">
 											<template scope="scope">
@@ -110,7 +110,8 @@ export default {
 		},
 		/**导出excel */
 		exportExcel(){
-			let url = "/pmpheep/bookCorrectionTrack/exportExcel?bookname=" + this.title +'isEditorReplied='+this.result;
+      console.log(this.title);
+			let url = "/pmpheep/bookCorrectionTrack/exportExcel?bookname=" + this.title +'&isEditorReplied='+(this.result==null?'':this.result);
 			this.$commonFun.downloadFile(url);
 		},
     /** 搜索*/

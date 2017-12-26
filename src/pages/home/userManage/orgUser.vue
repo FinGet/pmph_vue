@@ -23,6 +23,18 @@
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
+        <div class="searchBox-wrapper">
+          <!--申报职务搜索-->
+          <div class="searchName">机构类型：
+            <span></span>
+          </div>
+          <div class="searchInput">
+            <el-select v-model="params.rank" placeholder="全部"  clearable>
+              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
         </div>
@@ -506,6 +518,20 @@ export default {
           {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
       },
+      //机构类型数据
+      orgoptions: [{
+          value:1,
+          label:'本科'
+        },{
+          value:2,
+          label:'医院'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科&职教'
+        }],
       //搜索所属机构用户
       OrgNameList: [],
       loading: false,
@@ -515,7 +541,8 @@ export default {
         pageNumber: 1,
         // username: "",
         orgName: "",
-        name: ""
+        name: "",
+        rank:''
       },
       totalPages: 0,// 数据总量
 			visible1: false,
