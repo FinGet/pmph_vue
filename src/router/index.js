@@ -71,6 +71,13 @@ import ErrorRouter from '../pages/home/bookError/errorRouter';
 const CheckError = () => import('../pages/home/bookError/checkError'); 
 const AfterError = () => import('../pages/home/bookError/afterError'); 
 const Check = () => import('../pages/home/bookError/check');
+
+/** 积分管理 */
+import PointRouter from '../pages/home/pointManage/pointRouter';
+const PointRule = () => import('../pages/home/pointManage/pointRule'); 
+const UserPoint = () => import('../pages/home/pointManage/userPoint'); 
+const ConvertibleRule = () => import('../pages/home/pointManage/ConvertibleRule');
+
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
@@ -143,6 +150,13 @@ export default new Router({
             {path: 'check', name: '图书纠错审核' , component: CheckError, meta: { authorityId: 1 }},
             {path: 'checkerror', name: '纠错审核' , component: Check, meta: { authorityId: 1 }},
             {path: 'after', name: '图书纠错跟踪' , component: AfterError, meta: { authorityId: 1 }}
+          ]
+        },
+        {
+          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 1 }, children: [
+            {path: 'pointrule', name: '积分管理' , component: PointRule, meta: { authorityId: 1 }},
+            {path: 'userpoint', name: '用户积分' , component: UserPoint, meta: { authorityId: 1 }},
+            {path: 'convertiblerule', name: '兑换规则' , component: ConvertibleRule, meta: { authorityId: 1 }}
           ]
         },
         {

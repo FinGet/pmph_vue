@@ -62,6 +62,16 @@
         <el-menu-item index="/bookerror/after" v-if="isShowSide(16)">图书纠错跟踪</el-menu-item>
       </el-submenu>
 
+      <el-submenu index="/pointmanage" v-if="isShowSide(1)">
+        <template slot="title">
+          <i class="fa fa-database fa-fw"></i>
+          <span slot="title">积分管理</span>
+        </template>
+        <el-menu-item index="/pointmanage/pointrule" v-if="isShowSide(1)">积分规则管理</el-menu-item>
+        <el-menu-item index="/pointmanage/userpoint" v-if="isShowSide(1)">用户积分看板</el-menu-item>
+        <el-menu-item index="/pointmanage/convertiblerule" v-if="isShowSide(1)">积分兑换规则</el-menu-item>
+      </el-submenu>
+
       <el-submenu index="/analysis" v-if="isShowSide(1)">
         <template slot="title">
           <i class="fa fa-bar-chart fa-fw"></i>
