@@ -8,11 +8,11 @@
         stripe
         tooltip-effect="dark"
         style="width: 100%">
-        <el-table-column label="广告名称"  prop="name" min-width="100"></el-table-column>
+        <el-table-column label="广告位置"  prop="adname" min-width="100"></el-table-column>
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
             <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index">
-              <img :src="iterm" alt="">
+              <img :src="iterm.image" alt="">
             </div>
           </template>
         </el-table-column>
@@ -21,9 +21,10 @@
             {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
+        <el-table-column label="备注"  prop="note"></el-table-column>
         <el-table-column label="操作" width="120">
           <template scope="scope">
-            <router-link :to="{name:'广告编辑',params:{id:scope.row.id}}">编辑</router-link>
+            <router-link :to="{name:'广告编辑',params:{id:scope.row.id,adData:scope.row}}">编辑</router-link>
           </template>
         </el-table-column>
       </el-table>
@@ -35,65 +36,29 @@
 	export default {
 		data() {
 			return {
-			  tableData:[{
-			    id:1,
-			    name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png','http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png','http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/web/img/xuxiaojiaoyu1.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/web/img/footercode_03.png']
-        },{
-          id:1,
-          name:'读书页banner',
-          image:['http://medu.ipmph.com/pmph_imesp/web/img/banner2d.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        },{
-          id:1,
-          name:'首页公告下方3张图片',
-          image:['http://medu.ipmph.com/pmph_imesp/upload/site/5643678b-2c39-4f9f-ba3d-dd4e0fed1da4.png']
-        }],
+			  api_ad_list:'/pmpheep/cms/cmsAdvertisement/list',
+			  tableData:[],
       }
-		}
+		},
+    methods:{
+      /**
+       * 获取广告列表
+       */
+      getTableData(){
+        this.$axios.get(this.api_ad_list)
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
+              this.tableData=res.data;
+            }else{
+              self.$message.error(res.msg.msgTrim());
+            }
+          })
+      }
+    },
+    created(){
+		  this.getTableData();
+    },
 	}
 </script>
 

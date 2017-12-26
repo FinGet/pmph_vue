@@ -1,7 +1,7 @@
 <template>
 	<div class="ad-edit-page">
     <div class="page-section">
-      栏目
+      广告位置
       <div class="inline-block paddingL20">
         <el-select v-model="id" placeholder="请选择">
           <el-option
@@ -38,6 +38,10 @@
           <el-radio v-for="(iterm,index) in adData.imageList" :key="index" :label="index">
             <div  class="imageList-iterm">
               <img :src="iterm" alt="" class="vertical-align-middle" />
+              <i
+                class="cursor-pointer el-icon-close remove-btn"
+                @click="removeImage(iterm.id)"
+              ></i>
             </div>
           </el-radio>
         </el-radio-group>
@@ -46,13 +50,15 @@
         <my-upload
           class="fileInput"
           ref="upload"
-          action="/pmpheep/cms/cmsAdvertisement/addimage"
+          :action="api_add_iamge"
           :data="uploadImageData"
           :on-success="upLoadFileSuccess"
           :on-error="uploadError"
+          :before-upload="beforeUpload"
           :show-file-list="false">
           <div class="inline-block add-img-btn-wrapper">
-            <i class="el-icon-plus add-img-btn"></i>
+            <i class="el-icon-plus add-img-btn" v-if="!uploadBtnLoading"></i>
+            <i class="el-icon-loading add-img-btn" v-else></i>
           </div>
         </my-upload>
       </div>
@@ -67,7 +73,7 @@
         <el-checkbox>自动播放</el-checkbox>
         <div class="inline-block paddingL10">
           动画间隔（秒）
-          <el-input-number size="small" v-model="num"></el-input-number>
+          <el-input-number size="small" v-model="num" :min="1" :max="600"></el-input-number>
         </div>
 
         <div class="ad-edit-input-title" v-if="hasTitle">
@@ -91,8 +97,10 @@
 	export default {
 		data() {
 			return {
+			  api_add_iamge:'/pmpheep/cms/cmsAdvertisement/addimage',
 			  colList:[{id:1,name:'首页公告下方3张图片'}],
         id:1,
+        currentAdData:undefined,
         adData:{
 			    img:['http://medu.ipmph.com/pmph_imesp/web/img/banner2d.png'],
           imageList:['http://medu.ipmph.com/pmph_imesp/web/img/banner2d.png','http://medu.ipmph.com/pmph_imesp/web/img/bannerd.png'],
@@ -104,12 +112,89 @@
         radio2:1,
         num:3,
         hasTitle:false,
-        uploadImageData:{},
+        formData:{
+          advertId:'',
+			    id:'',
+			    adName:'',
+          url:'',
+          isDisabled:false,
+          sort:'999',
+          note:'',
+          style:'',
+          type:0,
+          autoPlay:false,
+          navigationColor:'',
+          isNavigation:'',
+          animationInterval:3,
+          animationEffect:'',
+          isShowHeading:false,
+        },
+        uploadBtnLoading:false,
       }
 		},
+    computed:{
+      uploadImageData(){
+        let obj = {
+          advertId:this.formData.advertId
+        }
+        return obj;
+      }
+    },
     methods:{
-      upLoadFileSuccess(){},
-      uploadError(){}
+      beforeUpload(file){
+        let flag = true;
+        const ext = file.name.substring(file.name.lastIndexOf('.')+1);
+        const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
+        const nameLen = file.name.length <= 50;
+        if (file.size / 1024 / 1024==0) {
+          this.$message.error('文件大小不能为0kb!');
+          flag = false;
+        }
+        if (file.size / 1024 / 1024>10) {
+          this.$message.error('文件上传最大为10M！');
+          flag = false;
+        }
+        if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
+          this.$message.error('不能上传可执行文件!');
+          flag = false;
+        }
+        if (!nameLen) {
+          this.$message.error('文件名称不能超过50个字符!');
+          flag = false;
+        }
+        // 上传图片格式
+        if(ext!='png'&&ext!='jpg'&&ext!='jpeg'&&ext!='gif'){
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          flag = false;
+        }
+        if(flag){
+          this.uploadBtnLoading=true;
+        }
+        return flag;
+      },
+      upLoadFileSuccess(file,filelist){
+        console.log(file)
+      },
+      uploadError(){
+        this.$message.error('上传失败，请重试！');
+        this.uploadBtnLoading=false;
+      },
+      /**
+       * 删除图片，
+       * @param id 当前图id
+       */
+      removeImage(id){
+
+      }
+    },
+    created(){
+		  this.currentAdData = this.$route.params.adData
+      if(!this.currentAdData){
+		    this.$router.push({name:'广告管理'})
+      }
+      this.formData.id=this.currentAdData.id;
+      this.formData.advertId=this.currentAdData.advertId;
+      console.log(this.currentAdData)
     }
 	}
 </script>
@@ -150,6 +235,7 @@
     line-height: 100px;
     position: relative;
     text-align: center;
+    border:1px dashed #ccc;
   }
   .iterm-img-box{
     display: inline-block;
@@ -190,4 +276,14 @@
   max-width: 400px;
   padding-top: 60px;
 }
+  .imageList-iterm .remove-btn{
+    position: absolute;
+    top:0;
+    right: 0;
+    font-size: 12px;
+    padding:2px;
+  }
+  .imageList-iterm .remove-btn:hover{
+    color: #f5596e;
+  }
 </style>
