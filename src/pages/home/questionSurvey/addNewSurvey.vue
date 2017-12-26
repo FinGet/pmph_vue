@@ -2,7 +2,7 @@
   <div class="add_new_survey">
     <div class="question_list">
       <p class="left_header_p">
-         翻译书稿
+         新建调查问卷
        <span></span>
        </p>
         <ul >
