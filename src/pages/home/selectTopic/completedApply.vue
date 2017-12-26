@@ -46,7 +46,17 @@
       prop="bookCategory"
       width="100"
      >
-     </el-table-column> 
+     </el-table-column>
+     <el-table-column
+      label="状态"
+      prop="isPass"
+      width="100"
+     >
+     <template scope="scope">
+       <p v-if="scope.row.isPass">已通过</p>
+       <p v-if="!scope.row.isPass">未通过</p>
+     </template>
+     </el-table-column>  
      <!-- <el-table-column
       label="选题状态"
       prop="selectState"
