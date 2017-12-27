@@ -617,7 +617,7 @@
       },
       /**批量导出主编 */
       exportEditor(){
-        let url = '/pmpheep/position/exportExcel/?textbookIds=' + this.selectedIds;
+        let url = '/pmpheep/position/ExportEditor/?textbookIds=' + this.selectedIds;
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
