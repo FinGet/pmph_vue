@@ -31,7 +31,8 @@
       </div>
       <!-- 表单列表 -->
       <div class="form_list">
-         <h3>问卷模板名称</h3>
+         <h3 v-if="!isEditTitle" @dblclick="isEditTitle=true">{{title}}</h3>
+         <el-input type="text" v-else v-model="title"  style="width:60%;margin-left:20%;margin-bottom:20px;" @blur="isEditTitle=false"></el-input>
          <el-form :model="formData" ref="form" label-width="100px" label-position="top">
 
            <el-form-item :label="(index+1)+'.'+item.label" v-for="(item,index) in formList" :key="index">
@@ -64,7 +65,7 @@
                     <div slot="tip" class="el-upload__tip">{{item.note}}</div>
                 </el-upload>
                 <!-- 操作按钮 -->
-                <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item)">修改</el-button>
+                <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item,index)">修改</el-button>
                 <el-button type="text" class="form_button" @click="deleteFormItem(index)">删除</el-button>
             </el-form-item>
             <!-- <el-form-item label="活动名称">
@@ -140,6 +141,10 @@ export default {
         formData:{
             name:''
         },
+        title:'测试问卷',
+        isEditTitle:false,
+        editIndex:'',
+        isEdit:false,
         formList:[
            {
           label:'您使用过xx网吗？',
@@ -236,6 +241,7 @@ export default {
   methods:{
       /* 添加题目 */
       addNewFormItem(i){
+          this.isEdit=false;
           this.dialogForm.questionType=i;
           this.dialogVisible=true;
       },
@@ -249,6 +255,7 @@ export default {
       },
       /* 修改表单项 */
       editFormItem(item){
+          this.isEdit=true;
       this.dialogForm=item;
       this.dialogVisible=true;
       },
@@ -258,7 +265,11 @@ export default {
       },
       /* 确定添加题目 */
       upLoadFormItem(){
-          this.formList.push(this.dialogForm);
+          if(this.isEdit){
+              this.formList[this.editIndex]=this.dialogForm;
+          }else{
+             this.formList.push(this.dialogForm);
+          }
           this.dialogForm={
           label:'',
           note:'',  
