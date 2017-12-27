@@ -48,7 +48,7 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="!hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
+        <el-button type="primary" :disabled="isSelected || forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary" @click="exportExcel()">批量导出名单</el-button>
