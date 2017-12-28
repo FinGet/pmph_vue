@@ -18,7 +18,7 @@
             placeholder="请选择结束日期">
         </el-date-picker>
         <el-button type="primary" icon="search">搜索</el-button>
-        <el-button type="primary"  style="float:right">添加问卷</el-button>
+        <el-button type="primary"  style="float:right" @click="$router.push({name:'新建调查问卷'})">添加问卷</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -59,7 +59,7 @@
       width="150"
      >
      <template scope="scope">
-       <el-button type="text">修改</el-button>
+       <el-button type="text" @click="$router.push({name:'新建调查问卷'})">修改</el-button>
        <span>|</span>
        <el-button type="text" >发起调查</el-button>
      </template>
