@@ -12,17 +12,17 @@
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
             <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index">
-              <img :src="iterm.image" alt="">
+              <img :src="iterm.image" alt="" v-if="!iterm.isDisabled">
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="启用标示" width="120">
+        <el-table-column label="启用标示" width="100" align="center">
           <template scope="scope">
             {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
         <el-table-column label="备注"  prop="note"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="100" align="center">
           <template scope="scope">
             <router-link :to="{name:'广告编辑',params:{id:scope.row.id,adData:scope.row}}">编辑</router-link>
           </template>
