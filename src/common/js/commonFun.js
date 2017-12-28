@@ -448,3 +448,16 @@ export function downloadFile(url) {
   iframe.src = url;
   document.body.appendChild(iframe);
 }
+
+/**
+ * 复制到剪切板
+ * @param str
+ */
+export function copy(str){
+  var save = function (e){
+    e.clipboardData.setData('text/plain',str);//下面会说到clipboardData对象
+    e.preventDefault();//阻止默认行为
+  }
+  document.addEventListener('copy',save);
+  document.execCommand("copy");//使文档处于可编辑状态，否则无效
+}
