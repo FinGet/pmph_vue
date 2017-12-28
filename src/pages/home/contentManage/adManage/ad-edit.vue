@@ -29,23 +29,26 @@
       </div>
       <!--单选图片-->
       <div class="section-content section-content-arrow" v-if="formData.type===0">
-        <div class="carousel carousel-1">
+        <div class="carousel carousel-1" :style="{width:adWHobj.width+'px',height:adWHobj.height}">
           <img :src="currentPlayAd.image" alt="" v-if="imageLibs.length>0">
         </div>
-        <div class="carousel carousel-2"></div>
       </div>
       <!--多选图片-->
       <div class="section-content section-content-arrow" v-else>
-        <div class="carousel carousel-1">
+        <div class="carousel carousel-1" :style="{width:adWHobj.width+'px',height:adWHobj.height+'px'}">
           <div class="ad-preview-box">
-            <el-carousel height="150px">
+            <el-carousel
+              :height="adWHobj.height+'px'"
+              :interval="formData.animationInterval"
+              arrow="always"
+              :autoplay="autoplay"
+            >
               <el-carousel-item v-for="(iterm,index) in currentPlayAdList" :key="index">
                 <img :src="iterm.image" alt="">
               </el-carousel-item>
             </el-carousel>
           </div>
         </div>
-        <div class="carousel carousel-2"></div>
       </div>
 
     </div>
@@ -76,11 +79,8 @@
           v-else
           class="ad-image-manage inline-block"
           v-model="checkedImage"
-          :interval="formData.animationInterval"
-          arrow="always"
-          :autoplay="formData.autoPlay"
           :min="1"
-          :max="2">
+          :max="10">
           <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index">
             <div class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
@@ -116,10 +116,10 @@
         全局设置
       </div>
       <div class="section-content section-content-arrow">
-        <el-checkbox v-model="formData.autoPlay">自动播放</el-checkbox>
+        <el-checkbox v-model.sync="formData.autoPlay" :true-label="1" :false-label="0" @change="change">自动播放</el-checkbox>
         <div class="inline-block paddingL10">
           动画间隔（毫秒）
-          <el-input-number size="small" v-model="num" :min="100" :max="10000"></el-input-number>
+          <el-input-number size="small" v-model="formData.animationInterval" :min="100" :max="10000"></el-input-number>
         </div>
       </div>
     </div>
@@ -164,12 +164,13 @@
         },
         uploadBtnLoading:false,
         imageLibs:[],
+        autoplay:false,
       }
 		},
     computed:{
       uploadImageData(){
         let obj = {
-          advertId:this.formData.advertId
+          advertId:this.formData.id
         }
         return obj;
       },
@@ -183,16 +184,32 @@
         return obj;
       },
       currentPlayAdList(){
-        let obj = [];
-        this.imageLibs.forEach((iterm,index)=>{
-          if(!iterm.isDisabled){
-            obj.push(iterm);
+        return this.imageLibs.filter(iterm=>{
+          if(this.checkedImage.includes(iterm.id)){
+            return iterm;
           }
         });
-        return obj;
+      },
+      adWHobj(){
+        let wh = this.formData.style;
+        if(!wh||wh.indexOf('*')<0){
+          return {}
+        }
+        let whObj = wh.split('*');
+        whObj=[parseInt(whObj[0]),parseInt(whObj[1])];
+        let scale = 400/whObj[0];
+        return {
+          width:whObj[0]*scale,
+          height:whObj[1]*scale
+        }
       }
     },
     methods:{
+      change(){
+        this.autoPlay = !!(this.formData.autoPlay==1)
+
+        console.log(this.formData,this.autoPlay)
+      },
       beforeUpload(file){
         let flag = true;
         const ext = file.name.substring(file.name.lastIndexOf('.')+1);
@@ -268,11 +285,6 @@
        * 保存广告
        */
       saveAd(){
-        if(this.formData.type==0){
-          this.saveAd_single();
-        }
-      },
-      saveAd_single(){
         if(!this.formData.adname){
           this.$message.error('广告位置名称不能为空！');
           return false;
@@ -300,7 +312,7 @@
           animationInterval:this.formData.animationInterval||'',
           animationEffect:this.formData.animationEffect||'',
           isShowHeading:this.formData.isShowHeading||false,
-          image:true,
+          isDisplay:false,
           imageId:adIds.join(',')
         }))
           .then(response=>{
@@ -389,6 +401,10 @@
     text-align: center;
     border:1px dashed #ccc;
     margin-bottom: 10px;
+  }
+  .imageList-iterm img{
+    max-height: 100%;
+    max-width: 100%;
   }
   .iterm-img-box{
     display: inline-block;

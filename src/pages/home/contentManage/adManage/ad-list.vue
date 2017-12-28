@@ -11,8 +11,11 @@
         <el-table-column label="广告位置"  prop="adname" min-width="100"></el-table-column>
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
-            <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index">
+            <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index" v-if="scope.row.type===0">
               <img :src="iterm.image" alt="" v-if="!iterm.isDisabled">
+            </div>
+            <div class="ad-list-preview-img" v-else>
+
             </div>
           </template>
         </el-table-column>
@@ -49,11 +52,31 @@
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
+              res.data.map(iterm=>{
+                iterm.wh=this.adWHobj(iterm.style);
+              });
               this.tableData=res.data;
             }else{
               self.$message.error(res.msg.msgTrim());
             }
           })
+      },
+      /**
+       * 计算广告宽高
+       * @returns {*}
+       */
+      adWHobj(style){
+        let wh = style;
+        if(!wh||wh.indexOf('*')<0){
+          return {}
+        }
+        let whObj = wh.split('*');
+        whObj=[parseInt(whObj[0]),parseInt(whObj[1])];
+        let scale = 300/whObj[0]>1?1:300/whObj[0];
+        return {
+          width:whObj[0]*scale,
+          height:whObj[1]*scale
+        }
       }
     },
     created(){
@@ -65,7 +88,7 @@
 <style scoped>
 .ad-list-preview-img{
   display: inline-block;
-  max-width: 150px;
+  max-width: 300px;
   padding: 5px 5px 5px 0;
 }
 .ad-list-preview-img>img{
