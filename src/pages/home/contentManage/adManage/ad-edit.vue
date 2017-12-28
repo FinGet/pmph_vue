@@ -73,14 +73,14 @@
         </el-radio-group>
         <!--多选图片-->
         <el-checkbox-group
-          v-else
+          v-if="formData.type===1"
           class="ad-image-manage inline-block"
           v-model="checkedImage"
           :interval="formData.animationInterval"
           arrow="always"
           :autoplay="formData.autoPlay"
           :min="1"
-          :max="2">
+          :max="10">
           <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index">
             <div class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
@@ -169,7 +169,7 @@
     computed:{
       uploadImageData(){
         let obj = {
-          advertId:this.formData.advertId
+          advertId:this.formData.id
         }
         return obj;
       },
@@ -190,6 +190,11 @@
           }
         });
         return obj;
+      }
+    },
+    watch:{
+      currentPlayAdList(){
+
       }
     },
     methods:{
@@ -285,7 +290,7 @@
             adIds.push(iterm.id)
           })
         }
-        this.$axios.put(this.api_ad_save,this.$commonFun.initPostData({
+        this.$axios.post(this.api_ad_save,this.$commonFun.initPostData({
           id:this.formData.id,
           adname:this.formData.adname,
           url:this.formData.url||'',
@@ -389,6 +394,10 @@
     text-align: center;
     border:1px dashed #ccc;
     margin-bottom: 10px;
+  }
+  .imageList-iterm img{
+    max-height: 100%;
+    max-width: 100%;
   }
   .iterm-img-box{
     display: inline-block;
