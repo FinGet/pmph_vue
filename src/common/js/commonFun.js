@@ -210,6 +210,19 @@ export function formatDate(nS,str) {
 
 }
 /**
+ * 获取当前的日期 格式“yyyyMMdd”
+ * @returns {string}
+ */
+export function getcurrentDate() {
+  var date=new Date();
+  var year=date.getFullYear();
+  var mon = date.getMonth()+1;
+  var day = date.getDate();
+
+  return ''+year+mon+day;
+
+}
+/**
  * 获取当前的日期时间 格式“yyyy-MM-dd HH:MM:SS”
  * @returns {string}
  */
