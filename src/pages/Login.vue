@@ -81,6 +81,10 @@ export default {
     if(this.$route.query.f){
       this.from = this.$route.query.f;
     }
+
+    if(window._hmt){
+      _hmt.push(['_trackPageview', '/login']);
+    }
   }
 }
 </script>

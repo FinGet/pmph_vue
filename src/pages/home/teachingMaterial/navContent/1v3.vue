@@ -634,6 +634,10 @@
       }
       this.getTableData();
       this.getBookName();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/1v3']);
+      }
     },
     components:{
       userPmph

@@ -11,11 +11,25 @@
         <el-table-column label="广告位置"  prop="adname" min-width="100"></el-table-column>
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
-            <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index" v-if="scope.row.type===0">
-              <img :src="iterm.image" alt="" v-if="!iterm.isDisabled">
+            <div v-if="scope.row.type===0">
+              <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index" :style="scope.row.wh" v-if="!iterm.isDisabled">
+                <img :src="iterm.image" alt="">
+              </div>
             </div>
-            <div class="ad-list-preview-img" v-else>
-
+            <div v-else>
+              <div class="ad-list-preview-img" :style="scope.row.wh">
+                <el-carousel
+                  :height="scope.row.wh.height"
+                  :interval="scope.row.animationInterval"
+                  arrow="always"
+                  indicator-position="none"
+                  :autoplay="scope.row.autoPlay"
+                >
+                  <el-carousel-item v-for="(iterm,index) in scope.row.image" :key="index" v-if="!iterm.isDisabled">
+                    <img :src="iterm.image" alt="">
+                  </el-carousel-item>
+                </el-carousel>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -74,8 +88,8 @@
         whObj=[parseInt(whObj[0]),parseInt(whObj[1])];
         let scale = 300/whObj[0]>1?1:300/whObj[0];
         return {
-          width:whObj[0]*scale,
-          height:whObj[1]*scale
+          width:whObj[0]*scale+'px',
+          height:whObj[1]*scale+'px'
         }
       }
     },
@@ -93,5 +107,6 @@
 }
 .ad-list-preview-img>img{
   max-width: 100%;
+  max-height: 100%;
 }
 </style>
