@@ -181,6 +181,10 @@
       }
 
       this.getTableData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/press-chief']);
+      }
     },
     methods:{
       //获取table数据

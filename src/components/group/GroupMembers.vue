@@ -217,6 +217,10 @@ export default {
   },
   created(){
     this.getMemberManageList();
+
+    if(window._hmt){
+      _hmt.push(['_trackPageview', '/group/group-members']);
+    }
   }
 }
 </script>

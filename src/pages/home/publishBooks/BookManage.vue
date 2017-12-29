@@ -575,6 +575,10 @@
     created(){
 		  this.getTableData();
 		  this.getBookType();
+
+		  if(window._hmt){
+        _hmt.push(['_trackPageview', '/index']);
+      }
     },
 	}
 </script>

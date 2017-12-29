@@ -345,6 +345,10 @@
     },
     created(){
        this.getGroupData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group/group-list']);
+      }
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);

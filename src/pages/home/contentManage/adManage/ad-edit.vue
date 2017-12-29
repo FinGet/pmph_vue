@@ -7,9 +7,12 @@
       </div>
 
 
-      <el-form ref="form" :model="formData" class="ad-edit-form" label-width="80px">
+      <el-form ref="form" :model="formData" class="ad-edit-form" label-width="100px">
         <el-form-item label="广告位置:">
           <el-input v-model="formData.adname"></el-input>
+        </el-form-item>
+        <el-form-item label="点击跳转链接:">
+          <el-input v-model="formData.url" placeholder="输入地址:http://www.xxx.com"></el-input>
         </el-form-item>
         <el-form-item label="是否启用:">
           <el-radio-group v-model="formData.isDisabled">
@@ -41,7 +44,9 @@
               :height="adWHobj.height+'px'"
               :interval="formData.animationInterval"
               arrow="always"
-              :autoplay="autoplay"
+              indicator-position="none"
+              :autoplay="formData.autoPlay"
+              ref="carousel"
             >
               <el-carousel-item v-for="(iterm,index) in currentPlayAdList" :key="index">
                 <img :src="iterm.image" alt="">
@@ -119,7 +124,14 @@
         <el-checkbox v-model.sync="formData.autoPlay" :true-label="1" :false-label="0" @change="change">自动播放</el-checkbox>
         <div class="inline-block paddingL10">
           动画间隔（毫秒）
-          <el-input-number size="small" v-model="formData.animationInterval" :min="100" :max="10000"></el-input-number>
+          <el-input-number
+            size="small"
+            v-model="formData.animationInterval"
+            :min="100"
+            :max="10000"
+            :step="100"
+            @change="animationIntervalChange"
+          ></el-input-number>
         </div>
       </div>
     </div>
@@ -154,7 +166,7 @@
           note:'',
           style:'',
           type:0,
-          autoPlay:false,
+          autoPlay:true,
           navigationColor:'',
           isNavigation:'',
           animationInterval:3,
@@ -164,7 +176,7 @@
         },
         uploadBtnLoading:false,
         imageLibs:[],
-        autoplay:false,
+        timer:null,
       }
 		},
     computed:{
@@ -289,7 +301,13 @@
           this.$message.error('广告位置名称不能为空！');
           return false;
         }
+        var regex =/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i
+        if(this.formData.url&&!regex.test(this.formData.url)){
+          this.$message.error('请输入正确的跳转链接！');
+          return false;
+        }
         let adIds = [];
+        let disableIds = [];
         if(this.formData.type==0){
           adIds.push(this.currentPlayAd.id)
         }else{
@@ -297,6 +315,17 @@
             adIds.push(iterm.id)
           })
         }
+        this.imageLibs.forEach(iterm=>{
+          if(this.formData.type==0){
+            if(adIds[0]!=iterm.id){
+              disableIds.push(iterm.id);
+            }
+          }else{
+            if(!adIds.includes(iterm.id)){
+              disableIds.push(iterm.id);
+            }
+          }
+        });
         this.$axios.put(this.api_ad_save,this.$commonFun.initPostData({
           id:this.formData.id,
           adname:this.formData.adname,
@@ -313,12 +342,13 @@
           animationEffect:this.formData.animationEffect||'',
           isShowHeading:this.formData.isShowHeading||false,
           isDisplay:false,
-          imageId:adIds.join(',')
+          imageId:adIds.join(','),
+          disable:disableIds.join(',')
         }))
           .then(response=>{
             let res = response.data;
             if (res.code == '1') {
-
+              this.$message.success('修改成功！');
             }else{
               this.$message.error(res.msg.msgTrim());
             }
@@ -327,6 +357,16 @@
             this.$message.error('保存失败，请重试！');
           })
 
+      },
+      /**
+       * 当动画间隔发生变化时触发下当前轮播重置
+       */
+      animationIntervalChange(){
+        const carousel = this.$refs.carousel;
+        if(this.formData.autoPlay){
+          carousel.pauseTimer();
+          carousel.startTimer();
+        }
       }
     },
     created(){

@@ -99,6 +99,10 @@ export default {
 
 
       bus.$on('material:update-info',this.getMaterialData);
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application']);
+      }
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕

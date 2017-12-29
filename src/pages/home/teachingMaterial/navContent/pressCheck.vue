@@ -672,6 +672,10 @@
       }
       this.getTableData();
       this.getBookList();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/pressCheck']);
+      }
     },
   }
 
