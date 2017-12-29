@@ -2,15 +2,15 @@
   <div class="forward_depart">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.bookname"  placeholder="请输入选题名称"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.data"
+            v-model="searchParams.submitTime"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" icon="search">搜索</el-button>
+        <el-button type="primary" icon="search" @click="search">搜索</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -120,10 +120,12 @@
     export default{
         data(){
             return{
+                listDataUrl:'/pmpheep/topic/listOpts',  //选题列表url
                 searchParams:{
-                    data:'',
+                    bookname:'',
                     pageSize:10,
-                    pageNumber:1
+                    pageNumber:1,
+                    submitTime:''
                 },
                 pageTotal:100,
                 dialogVisible:false,
@@ -178,12 +180,35 @@
             }
         },
         methods:{
-            handleSizeChange(){
-
+            /* 获取列表数据 */
+            getListData(){
+               this.$axios.get(this.listDataUrl,{
+                   params:this.searchParams
+               }).then((res)=>{
+                   console.log(res);
+                   if(res.data.code==1){
+                       this.pageTotal=res.data.data.total;
+                      // this.tableData=res.data.data.rows;
+                   }
+               })
             },
-            handleCurrentChange(){
-
+            /* 搜索按钮 */
+            search(){
+               this.searchParams.pageNumber=1;
+               this.getListData();
+            },
+            handleSizeChange(val){
+                this.searchParams.pageSize=val;
+                this.searchParams.pageNumber=1;
+                this.getListData();
+            },
+            handleCurrentChange(val){
+                this.searchParams.pageNumber=val;
+                this.getListData();
             }
+        },
+        created(){
+            this.getListData();
         }
     }
 </script>
