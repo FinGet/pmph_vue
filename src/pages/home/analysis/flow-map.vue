@@ -47,6 +47,17 @@
 	export default {
 		data() {
 			return {
+        api_flow:'/pmpheep/baidu/rpt/trend',
+        searchParams:{
+          pageSize:100,
+          pageNum:1,
+          method:'visit/toppage/a',
+          metrics:'pv_count,visitor_count,outward_count,average_stay_time',
+          order:'outward_count,desc',
+          startDate:this.$commonFun.getcurrentDate(),
+          endDate:this.$commonFun.getcurrentDate(),
+        },
+        data_sum:{},
         value:'',
         pickerOptions: {
           shortcuts: [{
@@ -119,6 +130,41 @@
         }],
       }
 		},
+    methods:{
+      /**
+       * 获取数据
+       */
+      getData(callback){
+        this.$axios.get(this.api_flow,{params:this.searchParams})
+          .then((response) => {
+            let res = response.data;
+            if (res.code == '1') {
+              let data = JSON.parse(res.data);
+              callback&&callback(data);
+            }else{
+              self.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
+      handleResult(data){
+        let tempdata = data.body.data[0].result;
+
+        //初始化总量 pv_count,visitor_count,outward_count,average_stay_time
+        let sum = tempdata.sum;
+        this.data_sum={
+          pv_count:sum[0],
+          visitor_count:sum[1],
+          outward_count:sum[2],
+          average_stay_time:sum[3]
+        }
+      },
+    },
+    created(){
+		  this.getData(this.handleResult)
+    },
     components:{
       mapList
     }
