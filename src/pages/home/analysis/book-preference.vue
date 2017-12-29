@@ -111,6 +111,9 @@
               self.$message.error(res.msg.msgTrim());
             }
           })
+          .catch(e=>{
+            console.log(e);
+          })
       },
       /**
        * 搜索
@@ -186,5 +189,9 @@
   .searchBox-wrapper.lg{
     width: 500px;
 
+  }
+  .bookType{
+    width: 100% !important;
+    max-width: 100% !important;
   }
 </style>

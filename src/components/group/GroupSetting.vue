@@ -233,6 +233,10 @@
     mounted(){
       this.groupData.groupName=this.currentGroup.groupName;
       this.groupData.groupImage=this.currentGroup.groupImage;
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group/group-setting']);
+      }
     },
     watch:{
       currentGroupId(){
