@@ -136,9 +136,9 @@
         });
         let temp = [];
         map.forEach((iterm,index)=>{
-           for(let i = 0, len = iterm.splitPath.length; i < len; i++){
-               if(temp[iterm.splitPath])
-           }
+//           for(let i = 0, len = iterm.splitPath.length; i < len; i++){
+//               if(temp[iterm.splitPath])
+//           }
         });
         this.data=map;
       }
