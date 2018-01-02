@@ -1,3 +1,4 @@
+
 <template>
 	<div class="bookManage">
     <div class="clearfix" :class="{powerSearch:powerSearch}">

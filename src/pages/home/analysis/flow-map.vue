@@ -28,8 +28,8 @@
         </p>
       </div>
       <div class="all-text-num">
-        <span class="inline-block">PV : 4456</span>
-        <span class="inline-block paddingL30">UV : 4456</span>
+        <span class="inline-block">PV : {{sum.pv}}</span>
+        <span class="inline-block paddingL30">UV : {{sum.uv}}</span>
       </div>
 
       <div class="map-line-123"></div>
@@ -47,17 +47,17 @@
 	export default {
 		data() {
 			return {
-        api_flow:'/pmpheep/baidu/rpt/trend',
-        searchParams:{
-          pageSize:100,
-          pageNum:1,
+			  api_baidu_analysis:'/pmpheep//baidu/rpt/trend',
+        params:{
           method:'visit/toppage/a',
-          metrics:'pv_count,visitor_count,outward_count,average_stay_time',
-          order:'outward_count,desc',
-          startDate:this.$commonFun.getcurrentDate(),
-          endDate:this.$commonFun.getcurrentDate(),
+          startDate:'20171226',
+          endDate:'20180101',
+          metrics:'pv_count,visitor_count,visit1_count',
+          order:'visit1_count,desc',
+          pageNum:1,
+          pageSize:100,
         },
-        data_sum:{},
+        sum:[],
         value:'',
         pickerOptions: {
           shortcuts: [{
@@ -86,61 +86,21 @@
             }
           }]
         },
-        data:[{
-          path:'首页',
-          pv:1,
-          uv:1,
-          zb:2
-        },{
-          path:'读书',
-          pv:1,
-          uv:1,
-          zb:2,
-          children:[{
-            path:'学校教育',
-            pv:1,
-            uv:1,
-            zb:2,
-          },{
-            path:'0/2/2',
-            pv:1,
-            uv:1,
-            zb:2,
-          }]
-        },{
-          path:'0/3',
-          pv:1,
-          uv:1,
-          zb:2,
-        },{
-          path:'0/4',
-          pv:1,
-          uv:1,
-          zb:2,
-        },{
-          path:'0/4',
-          pv:1,
-          uv:1,
-          zb:2,
-        },{
-          path:'0/4',
-          pv:1,
-          uv:1,
-          zb:2,
-        }],
+        data:[],
       }
 		},
     methods:{
       /**
        * 获取数据
        */
-      getData(callback){
-        this.$axios.get(this.api_flow,{params:this.searchParams})
+      getData(){
+        this.$axios.get(this.api_baidu_analysis,{params:this.params})
           .then((response) => {
             let res = response.data;
             if (res.code == '1') {
-              let data = JSON.parse(res.data);
-              callback&&callback(data);
+              let data = JSON.parse(res.data)
+              console.log(data.body.data[0].result);
+              this.handleResultData(data.body.data[0].result);
             }else{
               self.$message.error(res.msg.msgTrim());
             }
@@ -149,26 +109,55 @@
             console.log(e);
           })
       },
-      handleResult(data){
-        let tempdata = data.body.data[0].result;
+      /**
+       * 处理获取到的数据
+       * @param result
+       */
+      handleResultData(result){
+        this.sum = {
+            pv:result.sum[0][0],
+            uv:result.sum[0][1]
+        };
 
-        //初始化总量 pv_count,visitor_count,outward_count,average_stay_time
-        let sum = tempdata.sum;
-        this.data_sum={
-          pv_count:sum[0],
-          visitor_count:sum[1],
-          outward_count:sum[2],
-          average_stay_time:sum[3]
-        }
-      },
+        let map=[];
+        result.items[0].forEach((iterm,index)=>{
+          map.push({
+            name:iterm[0].name,
+            pv:result.items[1][index][0],
+            uv:result.items[1][index][1],
+            visit1_count:result.items[1][index][2],
+            zb:Math.round((result.items[1][index][0]/result.sum[0][0])*10000)/100+'%',
+            path:this.$commonFun.parseURL(iterm[0].name).path,
+            splitPath:this.$commonFun.parseURL(iterm[0].name).path.split('/').splice(1)
+          });
+        });
+        map.sort((x,y)=>{
+            return x.splitPath.length-y.splitPath.length
+        });
+        let temp = [];
+        map.forEach((iterm,index)=>{
+//           for(let i = 0, len = iterm.splitPath.length; i < len; i++){
+//               if(temp[iterm.splitPath])
+//           }
+        });
+        this.data=map;
+      }
     },
     created(){
-		  this.getData(this.handleResult)
+		    this.getData();
     },
     components:{
       mapList
     }
 	}
+
+  function getNowformatDate() {
+    var date=new Date();
+    var year=date.getFullYear();
+    var mon = date.getMonth()+1;
+    var day = date.getDate();
+    return  ''+year+mon+day
+  }
 </script>
 
 <style scoped>
