@@ -2,9 +2,15 @@
   <div class="user_point" style="height:100%;">
 		<el-row>
             <div class="searchBox-wrapper">
-                <div class="searchName">用户名称:<span></span></div>
+                <div class="searchName">用户姓名:<span></span></div>
                 <div class="searchInput">
-                    <el-input v-model.trim="name" placeholder="请输入" @keyup.enter.native="search"></el-input>
+                    <el-input v-model.trim="realname" placeholder="请输入" @keyup.enter.native="search"></el-input>
+                </div>
+            </div>
+            <div class="searchBox-wrapper">
+                <div class="searchName">用户账号:<span></span></div>
+                <div class="searchInput">
+                    <el-input v-model.trim="username" placeholder="请输入" @keyup.enter.native="search"></el-input>
                 </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -14,13 +20,15 @@
         <el-row>
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
-                    <el-table-column prop="name" label="用户姓名">
+                    <el-table-column prop="realname" label="用户姓名">
                     </el-table-column>
-                    <el-table-column prop="tag" label="用户名">
+                    <el-table-column prop="username" label="用户账号">
                     </el-table-column>
-                    <el-table-column prop="point" label="消费总积分" >
+                    <el-table-column prop="loss" label="消费总积分" >
                     </el-table-column>
-                    <el-table-column prop="describe" label="用户当前总积分">
+                    <el-table-column prop="gain" label="获得总积分" >
+                    </el-table-column>
+                    <el-table-column prop="total" label="用户当前总积分">
                     </el-table-column>
                     <el-table-column label="操作" width="95" align="center">
                         <template scope="scope">
@@ -78,13 +86,12 @@
 export default {
   data() {
     return {
-      name: "", // 规则名称
-      tag: "", // 标识
-      currentPage: 1, // 当前页
-      pageSize: 20,
-      pageNumber: 1,
+      username: "", // 用户代码
+      realname: "", // 用户姓名
+      pageSize: 20, 
+      pageNumber: 1, // 当前页
       total: 0,
-      tableData: [{ name: "创建话题" }],
+      tableData: [],
       dialogFormVisible: false,
       form: {
         name: "",
@@ -113,9 +120,38 @@ export default {
       }
     };
   },
+  created(){
+    this.getUserPoint();
+  },
   methods: {
     /**搜索 */
-    search() {}
+    search() {},
+    /**获取用户积分 */
+    getUserPoint(){
+      this.$axios.get('/pmpheep/writerpoint/list',{
+        params:{
+          sessionId: this.$getUserData().sessionId,
+          pageSize : this.pageSize,
+          pageNumber: this.pageNumber,
+          username: this.username,
+          realname: this.realname
+        }
+      }).then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.tableData = res.data.rows;
+        }
+      })
+    },
+    // 分页查询
+		handleSizeChange(val){
+			this.pageSize = val;
+			this.getUserPoint();
+		},
+		handleSizeChange(val){
+			this.pageNumber = val;
+			this.getUserPoint();
+		},
   }
 };
 </script>
