@@ -1,46 +1,45 @@
 <template>
-  <div class="table-wrapper">
-    <el-table
-      ref="multipleTable"
-      :data="tableData_1"
-      border
-      stripe
-      tooltip-effect="dark"
-      style="width: 100%">
-      <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
-      <el-table-column label="浏览量(PV)"  align="center">
-        <template scope="scope">{{scope.row.pv_count}}</template>
-      </el-table-column>
-      <el-table-column label="访客数(UV)"  align="center">
-        <template scope="scope">{{scope.row.visitor_count}}</template>
-      </el-table-column>
-      <el-table-column label="IP数"  prop="ip_count"  align="center">
-        <template scope="scope">{{scope.row.ip_count}}</template>
-      </el-table-column>
-      <el-table-column label="跳出率" align="center">
-        <template scope="scope">{{scope.row.bounce_ratio}}{{scope.row.isObject?'':'%'}}</template>
-      </el-table-column>
-      <el-table-column label="转化次数"  prop="trans_countv"  align="center">
-        <template scope="scope">{{scope.row.trans_countv}}</template>
-      </el-table-column>
-    </el-table>
-  </div>
+  <el-table
+    ref="multipleTable"
+    :data="tableData"
+    border
+    stripe
+    tooltip-effect="dark"
+    style="width: 100%">
+    <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
+    <el-table-column label="浏览量(PV)"  align="center">
+      <template scope="scope">{{scope.row.pv_count}}</template>
+    </el-table-column>
+    <el-table-column label="访客数(UV)"  align="center">
+      <template scope="scope">{{scope.row.visitor_count}}</template>
+    </el-table-column>
+    <el-table-column label="IP数"  prop="ip_count"  align="center">
+      <template scope="scope">{{scope.row.ip_count}}</template>
+    </el-table-column>
+    <el-table-column label="跳出率" align="center">
+      <template scope="scope">{{scope.row.bounce_ratio}}{{scope.row.isObject?'':'%'}}</template>
+    </el-table-column>
+    <el-table-column label="转化次数"  prop="trans_countv"  align="center">
+      <template scope="scope">{{scope.row.trans_countv}}</template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
 	export default {
+	  props:['startDate','endDate'],
 		data() {
 			return {
         api_flow:'/pmpheep/baidu/rpt/trend',
-        tableData_1:[],
+        tableData:[],
         metricsList:["date", "pv_count", "visitor_count", "ip_count", "bounce_ratio", "avg_visit_time", "trans_count"],
         searchParams:{
           pageSize:100,
           pageNum:1,
           method:'overview/getOutline',
           metrics:'pv_count,visit_count,visitor_count,ip_count,bounce_ratio,avg_visit_time,contri_pv',
-          startDate:'20171220',
-          endDate:this.$commonFun.getcurrentDate(),
+          startDate:this.startDate,
+          endDate:this.endDate,
         },
       }
 		},
@@ -80,7 +79,7 @@
           obj.isObject = ((typeof iterm[1]).toLowerCase() === 'object');
           tempList.push(obj);
         });
-        this.tableData_1=tempList;
+        this.tableData=tempList;
       },
     },
     created(){

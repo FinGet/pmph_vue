@@ -579,7 +579,7 @@
        */
       bookClick(row){
         console.log(row);
-        _hmt.push(['_setCustomVar', 1, 'book_view', row.bookname, 3]);
+        _hmt.push(['_trackPageview', '/book/'+row.bookname]);
       }
     },
     created(){
