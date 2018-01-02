@@ -146,6 +146,7 @@
         :data="tableData"
         ref="myMsgTable"
         border
+        @row-click="bookClick"
         stripe
         tooltip-effect="dark"
         @selection-change="handleSelectionChange"
@@ -570,6 +571,14 @@
         this.searchForm.isNew='';
         this.searchForm.isPromote='';
         this.searchForm.isOnSale='';
+      },
+      /**
+       *
+       * @param row
+       */
+      bookClick(row){
+        console.log(row);
+        _hmt.push(['_setCustomVar', 1, 'book_view', row.bookname, 3]);
       }
     },
     created(){
