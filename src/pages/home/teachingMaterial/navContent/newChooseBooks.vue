@@ -255,19 +255,21 @@
                   v-model="material.notice">
                 </el-input>
               </el-col>
-            </el-form-item>
-            <el-form-item label="上传图片：" prop="noticeFiles">
-              <my-upload
-                class="upload"
-                :auto-upload="true"
-                name="files"
-                action="/pmpheep/material/upTempFile"
-                :on-remove="imgUploadChange"
-                :on-success="imgUploadSuccess"
-                :before-upload="imgBeforeUpload"
-                :file-list="material.noticeFiles">
-                <el-button size="small" type="primary">点击上传</el-button>
-              </my-upload>
+              <div class="form-item">
+                <el-form-item label="上传图片：" prop="noticeFiles">
+                  <my-upload
+                    class="upload"
+                    :auto-upload="true"
+                    name="files"
+                    action="/pmpheep/material/upTempFile"
+                    :on-remove="imgUploadChange"
+                    :on-success="imgUploadSuccess"
+                    :before-upload="imgBeforeUpload"
+                    :file-list="material.noticeFiles">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                  </my-upload>
+                </el-form-item>
+              </div>
             </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
@@ -1224,5 +1226,8 @@ export default {
 }
 .extend_list .add_button {
   color: #1ab194;
+}
+.form-item{
+  margin:182px 0 0 -150px;
 }
 </style>
