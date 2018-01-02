@@ -133,6 +133,9 @@ Vue.use(myUpload);
 String.prototype.msgTrim=function() {
   return this.replace(/(\S*)===>/g, '');
 };
+String.prototype.replaceAll = function(s1,s2){
+  return this.replace(new RegExp(s1,"gm"),s2);
+}
 
 /* eslint-disable no-new */
 new Vue({
