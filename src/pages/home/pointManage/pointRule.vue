@@ -27,13 +27,17 @@
                     </el-table-column>
                     <el-table-column prop="point" label="积分值" >
                     </el-table-column>
-										<el-table-column prop="creatTime" label="创建时间" align="center">
-                    </el-table-column>
                     <el-table-column prop="description" label="规则描述">
                     </el-table-column>
 										<el-table-column prop="isExchange" label="是否用于平台兑换" align="center">
+                      <template scope="scope">
+                        <p>{{scope.row.isExchange?'是':'否'}}</p>
+                      </template>
                     </el-table-column>
                     <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
+                      <template scope="scope">
+                        <p>{{scope.row.isDisabled?'是':'否'}}</p>
+                      </template>
                     </el-table-column>
 										<el-table-column label="操作" width="110" align="center">
 											<template scope="scope">
@@ -58,7 +62,7 @@
 
 				<!-- 积分规则新增/修改 -->
 				<el-dialog title="积分规则修改" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
-					<el-form :model="form" :rules="rules" ref="ruleForm" label-width="140px">
+					<el-form :model="form" :rules="rules" ref="ruleForm" label-width="130px">
 						<el-form-item label="积分规则名称:" prop="ruleName">		
 							<el-input  v-model="form.ruleName"></el-input>
 						</el-form-item>
@@ -66,14 +70,14 @@
 							<el-input  v-model="form.ruleCode"></el-input>
 						</el-form-item>
 						<el-form-item label="积分值:" prop="point" >
-							<el-input v-model="form.point"></el-input>
+							<el-input v-model.number="form.point"></el-input>
 						</el-form-item>
-						<el-form-item label="是否用于平台兑换:" prop="isExchange">
+						<!-- <el-form-item label="是否用于平台兑换:" prop="isExchange">
 							<el-radio-group v-model="form.isExchange">
 								<el-radio :label="true">是</el-radio>
 								<el-radio :label="false">否</el-radio>
 							</el-radio-group>
-						</el-form-item>
+						</el-form-item> -->
 						<el-form-item label="启用状态:" prop="isDisabled">
 							<el-radio-group v-model="form.isDisabled">
 								<el-radio :label="true">启用</el-radio>
@@ -106,7 +110,7 @@ export default {
 			], // 表格数据
 			dialogFormVisible: false, // 弹出层显示/隐藏
 			form: {
-				// id: '',
+				id: '',
 				ruleName: '', // 积分规则名称
 				ruleCode: '', // 积分规则标识
 				point: '', // 积分值
@@ -124,7 +128,8 @@ export default {
 					{ min: 1, max: 20, message: '规则标识不能超过20个字符', trigger: 'blur' }
 				],
 				point: [
-					{type: "string",required: true,message: "请输入积分值",trigger: "blur"}
+					{ required: true, message: '积分值不能为空'},
+          { type: 'number', message: '积分值必须为数字值'}
 				],
 				// 是否禁用
 				isDisabled: [
@@ -159,7 +164,7 @@ export default {
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
-					this.tableData = res.rows;
+					this.tableData = res.data.rows;
 				}
 			}).catch(err => {
 				this.$message.error('请稍后再试！');
@@ -187,6 +192,7 @@ export default {
 		/**新增积分规则 */
 		addRule(){
 			console.log(this.form);
+			this.form.isExchange = false;
 			this.$axios.post('/pmpheep/writerPoint/pointrule/add',this.$commonFun.initPostData(this.form)).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
@@ -203,17 +209,15 @@ export default {
 		},
 		/**修改积分规则 */
 		updateRule(){
-			this.$axios.post('/pmpheep/writerPoint/pointrule/update',{
-				params: {
-					id : this.ruleForm.id,
-					ruleName: this.ruleForm.ruleName,
-					ruleCode: this.ruleForm.ruleCode,
-					point: this.ruleForm.ruleCode,
-					isExchange: this.ruleForm.isExchange,
-					isDisabled: this.ruleForm.isDisabled,
-					description: this.ruleForm.description
-				}
-			}).then(response => {
+			this.$axios.put('/pmpheep/writerPoint/pointrule/update',this.$initPostData({
+					id : this.form.id,
+					ruleName: this.form.ruleName,
+					ruleCode: this.form.ruleCode,
+					point: this.form.point,
+					isExchange: this.form.isExchange,
+					isDisabled: this.form.isDisabled,
+					description: this.form.description
+			})).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
 					this.$message.success('修改成功!');
@@ -258,6 +262,7 @@ export default {
 						let res = response.data;
 						if (res.code == '1') {
 							this.$message.success('删除成功!');
+							this.getPointRule();
 						} else {
 							this.$message.error(res.msg.msgTrim());
 						}
@@ -270,7 +275,7 @@ export default {
 		resetForm() {
 			this.$refs.ruleForm.resetFields();
 			this.form = {
-				// id: '',
+				id: '',
 				ruleName: '', // 积分规则名称
 				ruleCode: '', // 积分规则标识
 				point: '', // 积分值
