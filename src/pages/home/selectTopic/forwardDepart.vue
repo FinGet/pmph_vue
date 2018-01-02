@@ -2,15 +2,15 @@
   <div class="forward_depart">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.bookname"  placeholder="请输入选题名称"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.data"
+            v-model="searchParams.submitTime"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" icon="search">搜索</el-button>
+        <el-button type="primary" icon="search" @click="search">搜索</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -20,46 +20,52 @@
     >
      <el-table-column
      label="选题名称"
-     prop="name"
+     prop="bookname"
      >
         <template scope="scope">
-         <p class="link">{{scope.row.name}}</p>
+         <p class="link">{{scope.row.bookname}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
       label="作者"
-      prop="writer"
+      prop="realname"
       width="90"
      >
      </el-table-column> 
      <el-table-column
       label="预计交稿日期"
-      prop="expectData"
-      width="120"
+      prop="deadline"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.deadline)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="图书类别"
-      prop="bookCategory"
+      prop="typeName"
       width="100"
      >
      </el-table-column> 
      <el-table-column
       label="提交日期"
-      prop="submitData"
-      width="120"
+      prop="submitTime"
+      width="170"
      >
+     <template scope="scope">
+       {{$commonFun.formatDate(scope.row.submitTime)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="是否退回"
-      prop="submission"
-      width="120"
+      prop="isRejectedByDirector"
+      width="100"
      >
      <template scope="scope">
-       <el-tooltip class="item" effect="dark" content="退回原因" placement="top-start" v-if="scope.row.submission=='已退回'">
-       <span>{{scope.row.submission}}</span>
+       <el-tooltip class="item" effect="dark" :content="scope.row.reasonDirector" placement="top-start" v-if="scope.row.isRejectedByDirector">
+       <span>已退回</span>
       </el-tooltip>
-      <span v-else>{{scope.row.submission}}</span>
+      <span v-else>-</span>
      </template>
      </el-table-column> 
      <el-table-column
@@ -67,7 +73,7 @@
       width="120"
      >
      <template scope="scope">
-       <el-button type="text" @click="dialogVisible=true">分配到部门</el-button>
+       <el-button type="text" @click="distributeDepartment(scope.row.id)">分配到部门</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -89,19 +95,20 @@
     <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑部">
       <p class="header_p">
           <span>部门名称：</span>
-          <el-input class="input" placeholder="请输入部门名称"></el-input>
-          <el-button type="primary" icon="search">搜索</el-button>
+          <el-input class="input" v-model="dialogParams.dpName" placeholder="请输入部门名称"></el-input>
+          <el-button type="primary" icon="search" @click="dialogSearch">搜索</el-button>
       </p>
+      <div style="overflow:hidden">
       <el-table :data="dialogTableData" border style="width:100%" class="table-wrapper">
           <el-table-column
            label="部门名称"
-           prop="name"
+           prop="dpName"
           >    
           </el-table-column>
           <el-table-column
            label="部门负责人"
            width="110"
-           prop="chargePerson"
+           prop="realname"
           >    
           </el-table-column>
           <el-table-column
@@ -109,10 +116,24 @@
            width="90"
           >  
           <template scope="scope">
-           <el-button type="text">选择</el-button>  
+           <el-button type="text" @click="selectDepartment(scope.row.id)">选择</el-button>  
           </template>
           </el-table-column>
       </el-table>
+          <!--分页-->
+    <div class="pagination-wrapper">
+      <el-pagination
+        v-if="dialogPageTotal>dialogParams.pageSize"
+        @size-change="dialogSizeChange"
+        @current-change="dialogCurrentChange"
+        :current-page="dialogParams.pageNumber"
+        :page-sizes="[10,20,30,50]"
+        :page-size="dialogParams.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dialogPageTotal">
+      </el-pagination>
+    </div> 
+    </div>     
     </el-dialog>
   </div>
 </template>
@@ -120,47 +141,24 @@
     export default{
         data(){
             return{
+                listDataUrl:'/pmpheep/topic/listOpts',  //选题列表url
+                dialogDataUrl:'/pmpheep/departments/listOpts',  //对话框列表url
+                distributeId:'',      //当前正在分配的题目id
                 searchParams:{
-                    data:'',
+                    bookname:'',
                     pageSize:10,
-                    pageNumber:1
+                    pageNumber:1,
+                    submitTime:''
                 },
                 pageTotal:100,
                 dialogVisible:false,
-                tableData:[
-                    {
-                        name:'中医基础',
-                        writer:'张三一',
-                        expectData:'2018-6-30',
-                        bookCategory:'教材',
-                        submitData:'2017-5-21',
-                        submission:'已退回'
-                    },
-                    {
-                        name:'中医基础',
-                        writer:'李四',
-                        expectData:'2018-6-30',
-                        bookCategory:'教材',
-                        submitData:'2017-5-21',
-                        submission:'已退回'
-                    },
-                    {
-                        name:'中医基础',
-                        writer:'张三',
-                        expectData:'2018-6-30',
-                        bookCategory:'教材',
-                        submitData:'2017-5-21',
-                        submission:'-'
-                    },
-                    {
-                        name:'中医基础',
-                        writer:'李四',
-                        expectData:'2018-6-30',
-                        bookCategory:'教材',
-                        submitData:'2017-5-21',
-                        submission:'已退回'
-                    },
-                ],
+                dialogPageTotal:100,
+                dialogParams:{
+                    pageSize:10,
+                    pageNumber:1,
+                    dpName:''
+                },
+                tableData:[],
                 dialogTableData:[
                   {
                       name:'综合编辑部',
@@ -178,12 +176,73 @@
             }
         },
         methods:{
-            handleSizeChange(){
-
+            /* 获取列表数据 */
+            getListData(){
+               this.$axios.get(this.listDataUrl,{
+                   params:this.searchParams
+               }).then((res)=>{
+                   console.log(res);
+                   if(res.data.code==1){
+                       this.pageTotal=res.data.data.total;
+                       this.tableData=res.data.data.rows;
+                   }
+               })
             },
-            handleCurrentChange(){
-
+            /* 获取对话框列表 */
+            getDialogData(){
+              this.$axios.get(this.dialogDataUrl,{
+                  params:this.dialogParams
+              }).then((res)=>{
+                  console.log(res);
+                  if(res.data.code==1){
+                      this.dialogPageTotal=res.data.data.total;
+                      this.dialogTableData=res.data.data.rows;
+                  }
+              })
+            },
+            /* 选择分配部门 */
+            selectDepartment(dId){
+             console.log(dId);
+            },
+            /* 搜索按钮 */
+            search(){
+               this.searchParams.pageNumber=1;
+               this.getListData();
+            },
+            /* 对话框搜索 */
+            dialogSearch(){
+                this.dialogParams.pageNumber=1;
+                this.getDialogData();
+            },
+            /* 列表分页 */
+            handleSizeChange(val){
+                this.searchParams.pageSize=val;
+                this.searchParams.pageNumber=1;
+                this.getListData();
+            },
+            handleCurrentChange(val){
+                this.searchParams.pageNumber=val;
+                this.getListData();
+            },
+            /* 分配到部门 */
+            distributeDepartment(id){
+              this.distributeId=id;
+              this.dialogVisible=true;
+            },
+            /* 对话框列表分页 */
+            dialogSizeChange(val){
+            this.dialogParams.pageSize=val;
+            this.dialogParams.pageNumber=1;
+            this.getDialogData();
+            },
+            dialogCurrentChange(val){
+            this.dialogParams.pageNumber=val;
+            this.getDialogData();
             }
+        },
+        created(){
+            this.getListData();
+            this.getDialogData();
         }
     }
 </script>
@@ -196,6 +255,6 @@
   margin-right: 10px;
 }
 .forward_depart .dialog .el-dialog{
-    min-width: 450px;
+    min-width: 630px;
 }
 </style>

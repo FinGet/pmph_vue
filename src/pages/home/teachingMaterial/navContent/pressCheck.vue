@@ -252,10 +252,24 @@
         <div class="paddingT50 paddingB50">
           <el-progress :text-inside="true" :stroke-width="18" :percentage="exportLoading" status="success"></el-progress>
         </div>
-        <!--<span slot="footer" class="dialog-footer">-->
-          <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
-          <!--<el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-        <!--</span>-->
+      </el-dialog>
+
+      <el-dialog
+        title="下载word"
+        :visible.sync="downloadWordDialog"
+        size="tiny"
+      >
+        <div class="paddingT20 paddingB50 text-center">
+          <div class="width100 inline-block">
+            <el-progress type="circle" :percentage="100" status="success"></el-progress>
+          </div>
+          <div class="paddingT10">
+            <el-button type="text" class="link" @click="downloadWord">点击此链接下载word</el-button>
+            <el-button type="text" @click="copyDownloadUrl">
+              <i class="fa fa-copy"></i>
+            </el-button>
+          </div>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -363,6 +377,8 @@
         exportLoading:0,
         exportLoadingTimerHandle:undefined,
         handleExportWordtimer:null,
+        downloadWordDialog:false,
+        wordUrl:'',
       }
     },
     watch:{
@@ -484,8 +500,7 @@
           .then(()=>{
             this.$axios.get(this.api_confirm_paper,{params:{
               id:row.id,
-              offlineProgress:2,
-              materialId:this.searchParams.materialId,
+              offlineProgress:2
             }})
               .then(response=>{
                 var res = response.data;
@@ -541,6 +556,8 @@
        * 导出进度条关闭前
        */
       handleExportDialogClose(done){
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        clearInterval(this.handleExportWordtimer)
         done();
       },
       /**
@@ -599,15 +616,15 @@
         var timeout = 3*60*1000;//设置3分钟超时
         var useTime = 0;
         this.handleExportWordtimer = setInterval(()=>{
-          useTime+=1000;
+          useTime+=1500;
           this.$axios.get(this.api_export_word_progress,{params:{
             id:id
           }})
             .then(response=>{
-              var res = response.data;
-              if(res){
+              let res = response.data;
+              if(res.state==1){
                 clearInterval(this.handleExportWordtimer);
-                this.exportWordDownload(id);
+                this.exportWordDownload(res.detail);
               }
             })
             .catch(e=>{
@@ -625,14 +642,26 @@
               clearInterval(this.handleExportWordtimer);
               this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
             }
-        },1000)
+        },1500)
 
       },
-      exportWordDownload(id){
-        let url = this.api_export_word_download+'?id='+id;
-        this.$commonFun.downloadFile(url);
+      exportWordDownload(url){
+        //this.$commonFun.downloadFile('/pmpheep'+url);
+        this.exportDialog=false;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+        this.downloadWordDialog=true;
+        this.wordUrl='/pmpheep'+url;
 
+      },
+      downloadWord(){
+        if(this.wordUrl){
+          this.$commonFun.downloadFile(this.wordUrl);
+        }
+      },
+      copyDownloadUrl(){
+        if(this.wordUrl){
+          this.$commonFun.copy(window.location.origin+this.wordUrl);
+        }
       }
     },
     created(){
@@ -643,6 +672,10 @@
       }
       this.getTableData();
       this.getBookList();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/pressCheck']);
+      }
     },
   }
 

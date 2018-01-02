@@ -140,6 +140,10 @@
           this.memberColDefaultWidth=4;
         }
       }
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group']);
+      }
     },
     methods:{
       fold(){//展开与收起右侧成员列表

@@ -66,8 +66,8 @@ p{word-wrap:break-word}
 .bg-yellow{background-color: yellow;}
 .bg-none{background: none !important;}
 .bg-none *{background: none !important;}
-
-.link{color: #337ab7;cursor: pointer}
+.bg-transparent{background: transparent;}
+.link{color: #337ab7;cursor: pointer;}
 /*=================================================================
   布局相关
   =================================================================*/

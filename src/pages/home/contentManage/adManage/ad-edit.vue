@@ -1,29 +1,61 @@
 <template>
 	<div class="ad-edit-page">
-    <div class="page-section">
-      广告位置
-      <div class="inline-block paddingL20">
-        <el-select v-model="id" placeholder="请选择">
-          <el-option
-            v-for="item in colList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
+    <div class="page-section paddingB0">
+      <!--操作按钮-->
+      <div class="operation-wrapper">
+        <el-button type="primary" size="large" @click="saveAd">保存</el-button>
       </div>
+
+
+      <el-form ref="form" :model="formData" class="ad-edit-form" label-width="100px">
+        <el-form-item label="广告位置:">
+          <el-input v-model="formData.adname"></el-input>
+        </el-form-item>
+        <el-form-item label="点击跳转链接:">
+          <el-input v-model="formData.url" placeholder="输入地址:http://www.xxx.com"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用:">
+          <el-radio-group v-model="formData.isDisabled">
+            <el-radio :label="false">启用</el-radio>
+            <el-radio :label="true">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注:">
+          <el-input type="textarea" v-model="formData.note" :autosize="{ minRows: 3}"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
 
     <div class="page-section">
       <div class="section-title">
         当前广告
       </div>
-      <div class="section-content section-content-arrow">
-        <div class="carousel carousel-1">
-          <img :src="adData.imageList[radio2]" alt="">
+      <!--单选图片-->
+      <div class="section-content section-content-arrow" v-if="formData.type===0">
+        <div class="carousel carousel-1" :style="{width:adWHobj.width+'px',height:adWHobj.height}">
+          <img :src="currentPlayAd.image" alt="" v-if="imageLibs.length>0">
         </div>
-        <div class="carousel carousel-2"></div>
       </div>
+      <!--多选图片-->
+      <div class="section-content section-content-arrow" v-else>
+        <div class="carousel carousel-1" :style="{width:adWHobj.width+'px',height:adWHobj.height+'px'}">
+          <div class="ad-preview-box">
+            <el-carousel
+              :height="adWHobj.height+'px'"
+              :interval="formData.animationInterval"
+              arrow="always"
+              indicator-position="none"
+              :autoplay="formData.autoPlay"
+              ref="carousel"
+            >
+              <el-carousel-item v-for="(iterm,index) in currentPlayAdList" :key="index">
+                <img :src="iterm.image" alt="">
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="page-section">
@@ -34,17 +66,37 @@
         </div>
       </div>
       <div class="section-content section-content-arrow">
-        <el-radio-group v-model="radio2">
-          <el-radio v-for="(iterm,index) in adData.imageList" :key="index" :label="index">
+        <!--单选图片-->
+        <el-radio-group v-model="radio2" class="ad-image-manage inline-block" v-if="formData.type===0">
+          <el-radio v-for="(iterm,index) in imageLibs" :key="index" :label="iterm.id">
             <div  class="imageList-iterm">
-              <img :src="iterm" alt="" class="vertical-align-middle" />
+              <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i
                 class="cursor-pointer el-icon-close remove-btn"
-                @click="removeImage(iterm.id)"
+                @click.prevent="removeImage(iterm.id,iterm.image,index)"
+                v-if="!(index==radio2)"
               ></i>
             </div>
           </el-radio>
         </el-radio-group>
+        <!--多选图片-->
+        <el-checkbox-group
+          v-else
+          class="ad-image-manage inline-block"
+          v-model="checkedImage"
+          :min="1"
+          :max="10">
+          <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index">
+            <div class="imageList-iterm">
+              <img :src="iterm.image" alt="" class="vertical-align-middle" />
+              <i
+                class="cursor-pointer el-icon-close remove-btn"
+                @click.prevent="removeImage(iterm.id,iterm.image,index)"
+                v-if="!(checkedImage.includes(iterm.id))"
+              ></i>
+            </div>
+          </el-checkbox>
+        </el-checkbox-group>
 
 
         <my-upload
@@ -64,27 +116,22 @@
       </div>
     </div>
 
-    <div class="page-section">
+    <div class="page-section"  v-if="!(formData.type===0)">
       <div class="section-title">
         全局设置
       </div>
       <div class="section-content section-content-arrow">
-        <el-checkbox v-model="hasTitle">是否显示标题</el-checkbox>
-        <el-checkbox>自动播放</el-checkbox>
+        <el-checkbox v-model.sync="formData.autoPlay" :true-label="1" :false-label="0" @change="change">自动播放</el-checkbox>
         <div class="inline-block paddingL10">
-          动画间隔（秒）
-          <el-input-number size="small" v-model="num" :min="1" :max="600"></el-input-number>
-        </div>
-
-        <div class="ad-edit-input-title" v-if="hasTitle">
-          <el-form label-position="left" label-width="60px" :model="formLabel">
-            <el-form-item label="标题:">
-              <el-input v-model="formLabel.title"></el-input>
-            </el-form-item>
-            <el-form-item label="描述:">
-              <el-input v-model="formLabel.des"></el-input>
-            </el-form-item>
-          </el-form>
+          动画间隔（毫秒）
+          <el-input-number
+            size="small"
+            v-model="formData.animationInterval"
+            :min="100"
+            :max="10000"
+            :step="100"
+            @change="animationIntervalChange"
+          ></el-input-number>
         </div>
       </div>
     </div>
@@ -98,49 +145,83 @@
 		data() {
 			return {
 			  api_add_iamge:'/pmpheep/cms/cmsAdvertisement/addimage',
-			  colList:[{id:1,name:'首页公告下方3张图片'}],
-        id:1,
+        api_image_delete:'/pmpheep/cms/cmsAdvertisement/delete',
+        api_ad_save:'/pmpheep/cms/cmsAdvertisement/update',
         currentAdData:undefined,
-        adData:{
-			    img:['http://medu.ipmph.com/pmph_imesp/web/img/banner2d.png'],
-          imageList:['http://medu.ipmph.com/pmph_imesp/web/img/banner2d.png','http://medu.ipmph.com/pmph_imesp/web/img/bannerd.png'],
-        },
         formLabel:{
 			    title:'',
           des:'',
         },
-        radio2:1,
+        radio2:0,
+        checkedImage:[],
         num:3,
         hasTitle:false,
         formData:{
           advertId:'',
 			    id:'',
-			    adName:'',
+          adname:'',
           url:'',
           isDisabled:false,
           sort:'999',
           note:'',
           style:'',
           type:0,
-          autoPlay:false,
+          autoPlay:true,
           navigationColor:'',
           isNavigation:'',
           animationInterval:3,
           animationEffect:'',
           isShowHeading:false,
+          image:[],
         },
         uploadBtnLoading:false,
+        imageLibs:[],
+        timer:null,
       }
 		},
     computed:{
       uploadImageData(){
         let obj = {
-          advertId:this.formData.advertId
+          advertId:this.formData.id
         }
         return obj;
+      },
+      currentPlayAd(){
+        let obj = {}
+        this.imageLibs.forEach((iterm,index)=>{
+          if(iterm.id==this.radio2){
+            obj = iterm;
+          }
+        });
+        return obj;
+      },
+      currentPlayAdList(){
+        return this.imageLibs.filter(iterm=>{
+          if(this.checkedImage.includes(iterm.id)){
+            return iterm;
+          }
+        });
+      },
+      adWHobj(){
+        let wh = this.formData.style;
+        if(!wh||wh.indexOf('*')<0){
+          return {}
+        }
+        let whObj = wh.split('*');
+        whObj=[parseInt(whObj[0]),parseInt(whObj[1])];
+        let scale = 400/whObj[0];
+        return {
+          width:whObj[0]*scale,
+          height:whObj[1]*scale
+        }
       }
     },
     methods:{
+      change(){
+        this.autoPlay = !!(this.formData.autoPlay==1)
+
+        console.log(this.formData,this.autoPlay)
+      },
       beforeUpload(file){
         let flag = true;
         const ext = file.name.substring(file.name.lastIndexOf('.')+1);
@@ -172,8 +253,9 @@
         }
         return flag;
       },
-      upLoadFileSuccess(file,filelist){
-        console.log(file)
+      upLoadFileSuccess(response,file,filelist){
+        this.uploadBtnLoading=false;
+        this.imageLibs.push(response.data);
       },
       uploadError(){
         this.$message.error('上传失败，请重试！');
@@ -183,18 +265,133 @@
        * 删除图片，
        * @param id 当前图id
        */
-      removeImage(id){
+      removeImage(id,image,index){
+        this.$confirm("确定删除该图片吗?", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(()=>{
+            this.$axios.delete(this.api_image_delete,{params:{
+              id:id,
+              image:image
+            }})
+              .then(response=>{
+                let res = response.data;
+                if (res.code == '1') {
+                  this.imageLibs.splice(index,1);
+                  if(index<this.radio2){
+                    this.radio2--;
+                  }
+                }else{
+                  this.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(e=>{
+                this.$message.error('删除失败，请重试！');
+              })
+          })
+          .catch(e=>{})
+      },
+      /**
+       * 保存广告
+       */
+      saveAd(){
+        if(!this.formData.adname){
+          this.$message.error('广告位置名称不能为空！');
+          return false;
+        }
+        var regex =/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i
+        if(this.formData.url&&!regex.test(this.formData.url)){
+          this.$message.error('请输入正确的跳转链接！');
+          return false;
+        }
+        let adIds = [];
+        let disableIds = [];
+        if(this.formData.type==0){
+          adIds.push(this.currentPlayAd.id)
+        }else{
+          this.currentPlayAdList.forEach((iterm,index)=>{
+            adIds.push(iterm.id)
+          })
+        }
+        this.imageLibs.forEach(iterm=>{
+          if(this.formData.type==0){
+            if(adIds[0]!=iterm.id){
+              disableIds.push(iterm.id);
+            }
+          }else{
+            if(!adIds.includes(iterm.id)){
+              disableIds.push(iterm.id);
+            }
+          }
+        });
+        this.$axios.put(this.api_ad_save,this.$commonFun.initPostData({
+          id:this.formData.id,
+          adname:this.formData.adname,
+          url:this.formData.url||'',
+          isDisabled:this.formData.isDisabled,
+          sort:this.formData.sort,
+          note:this.formData.note,
+          style:this.formData.style||'',
+          type:this.formData.type,
+          autoPlay:this.formData.autoPlay||true,
+          navigationColor:this.formData.navigationColor||'',
+          isNavigation:this.formData.isNavigation||false,
+          animationInterval:this.formData.animationInterval||'',
+          animationEffect:this.formData.animationEffect||'',
+          isShowHeading:this.formData.isShowHeading||false,
+          isDisplay:false,
+          imageId:adIds.join(','),
+          disable:disableIds.join(',')
+        }))
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.$message.success('修改成功！');
+            }else{
+              this.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(e=>{
+            this.$message.error('保存失败，请重试！');
+          })
 
+      },
+      /**
+       * 当动画间隔发生变化时触发下当前轮播重置
+       */
+      animationIntervalChange(){
+        const carousel = this.$refs.carousel;
+        if(this.formData.autoPlay){
+          carousel.pauseTimer();
+          carousel.startTimer();
+        }
       }
     },
     created(){
-		  this.currentAdData = this.$route.params.adData
+		  this.currentAdData = this.$route.params.adData;
       if(!this.currentAdData){
 		    this.$router.push({name:'广告管理'})
+      }else{
+
+        this.formData=this.currentAdData;
+        this.imageLibs = this.formData.image||[];
       }
-      this.formData.id=this.currentAdData.id;
-      this.formData.advertId=this.currentAdData.advertId;
-      console.log(this.currentAdData)
+
+      if(this.formData.type===0){
+        this.imageLibs.forEach(iterm=>{
+          if(!iterm.isDisabled){
+            this.radio2=iterm.id;
+          }
+        })
+      }else{
+        this.imageLibs.forEach(iterm=>{
+          if(!iterm.isDisabled){
+            this.checkedImage.push(iterm.id);
+          }
+        })
+      }
     }
 	}
 </script>
@@ -203,8 +400,15 @@
   .page-section{
     padding-bottom: 30px;
     padding-top: 10px;
-    display: inline-block;
-    min-width: 1000px;
+    display: block;
+    max-width: 1000px;
+  }
+  .page-section.paddingB0{
+    padding-bottom: 0;
+  }
+  .ad-edit-form{
+    max-width: 400px;
+    padding-bottom: 0;
   }
   .section-title{
     padding:10px 0;
@@ -236,6 +440,11 @@
     position: relative;
     text-align: center;
     border:1px dashed #ccc;
+    margin-bottom: 10px;
+  }
+  .imageList-iterm img{
+    max-height: 100%;
+    max-width: 100%;
   }
   .iterm-img-box{
     display: inline-block;
@@ -253,7 +462,7 @@
     width: 80px;
     height: 80px;
     border: 1px dashed #ccc;
-    margin-left: 10px;
+    margin-left: 23px;
     cursor: pointer;
     transition: all .28s;
   }
@@ -285,5 +494,19 @@
   }
   .imageList-iterm .remove-btn:hover{
     color: #f5596e;
+  }
+  .ad-image-manage .el-checkbox{
+    margin-right: 10px;
+    margin-left: 0 !important;
+  }
+  .carousel{
+    padding: 20px 10px;
+  }
+  .carousel.carousel-1 img{
+    display: inline-block;
+    max-width: 400px;
+  }
+  .ad-preview-box{
+
   }
 </style>

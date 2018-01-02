@@ -68,14 +68,14 @@ const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
 
 /** 图书纠错 */
 import ErrorRouter from '../pages/home/bookError/errorRouter';
-const CheckError = () => import('../pages/home/bookError/checkError'); 
-const AfterError = () => import('../pages/home/bookError/afterError'); 
+const CheckError = () => import('../pages/home/bookError/checkError');
+const AfterError = () => import('../pages/home/bookError/afterError');
 const Check = () => import('../pages/home/bookError/check');
 
 /** 积分管理 */
 import PointRouter from '../pages/home/pointManage/pointRouter';
-const PointRule = () => import('../pages/home/pointManage/pointRule'); 
-const UserPoint = () => import('../pages/home/pointManage/userPoint'); 
+const PointRule = () => import('../pages/home/pointManage/pointRule');
+const UserPoint = () => import('../pages/home/pointManage/userPoint');
 const ConvertibleRule = () => import('../pages/home/pointManage/ConvertibleRule');
 
 /* 出版图书 */

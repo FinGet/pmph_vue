@@ -420,6 +420,10 @@
     },
     created(){
       this.getFilelistData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group/group-file']);
+      }
     },
     mounted() {
       this.screenWidth_lg_computed = this.screenWidth_lg;

@@ -846,7 +846,6 @@
               this.$axios.get(this.api_confirm_paper,{params:{
                 id:this.searchFormData.declarationId,
                 offlineProgress:this.expertInfoData.offlineProgress,
-                materialId:this.searchFormData.materialId,
               }})
                 .then(response=>{
                 var res = response.data;
@@ -931,8 +930,7 @@
             .then(()=>{
               this.$axios.get(this.api_online_check,{params:{
                 id:this.searchFormData.declarationId,
-                onlineProgress:type,
-                materialId:this.searchFormData.materialId
+                onlineProgress:type
               }})
                 .then(response=>{
                   var res = response.data;

@@ -92,7 +92,7 @@ axios.interceptors.request.use(function (config) {
 
      /* 解决IE缓存添加一个随机时间戳 */
   if (config.params){
-    config.params._timer=''
+
   }else{
     config.params={};
   }

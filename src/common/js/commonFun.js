@@ -210,6 +210,20 @@ export function formatDate(nS,str) {
 
 }
 /**
+ * 获取当前的日期 格式“yyyyMMdd”
+ * @returns {string}
+ */
+export function getcurrentDate(nS) {
+  var date=nS?new Date(nS):new Date();
+  var year=date.getFullYear();
+  var mon = date.getMonth()+1;
+  mon=mon>9?mon:'0'+mon;
+  var day = date.getDate();
+  day=day>9?day:'0'+day;
+  return ''+year+mon+day;
+
+}
+/**
  * 获取当前的日期时间 格式“yyyy-MM-dd HH:MM:SS”
  * @returns {string}
  */
@@ -229,6 +243,36 @@ export function getNowFormatDate() {
     + " " + date.getHours() + seperator2 + date.getMinutes()
     + seperator2 + date.getSeconds();
   return currentdate;
+}
+/**
+ * 将秒数换成时分秒格式
+ */
+export function formatSeconds(value) {
+  var secondTime = parseInt(value);// 秒
+  var minuteTime = 0;// 分
+  var hourTime = 0;// 小时
+  if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+    //获取分钟，除以60取整数，得到整数分钟
+    minuteTime = parseInt(secondTime / 60);
+    //获取秒数，秒数取佘，得到整数秒数
+    secondTime = parseInt(secondTime % 60);
+    //如果分钟大于60，将分钟转换成小时
+    if(minuteTime > 60) {
+      //获取小时，获取分钟除以60，得到整数小时
+      hourTime = parseInt(minuteTime / 60);
+      //获取小时后取佘的分，获取分钟除以60取佘的分
+      minuteTime = parseInt(minuteTime % 60);
+    }
+  }
+  var result = "" + (parseInt(secondTime)>10?parseInt(secondTime):0+parseInt(secondTime));
+
+  if(minuteTime >= 0) {
+    result = "" + (parseInt(minuteTime)>10?parseInt(minuteTime):'0'+parseInt(minuteTime)) + " : " + result;
+  }
+  if(hourTime >= 0) {
+    result = "" + (parseInt(hourTime)>10?parseInt(hourTime):'0'+parseInt(hourTime)) + " : " + result;
+  }
+  return result;
 }
 
 /**=================================================================
@@ -447,4 +491,49 @@ export function downloadFile(url) {
   iframe.style.display = "none";
   iframe.src = url;
   document.body.appendChild(iframe);
+}
+
+/**
+ * 复制到剪切板
+ * @param str
+ */
+export function copy(str){
+  var save = function (e){
+    e.clipboardData.setData('text/plain',str);//下面会说到clipboardData对象
+    e.preventDefault();//阻止默认行为
+  }
+  document.addEventListener('copy',save);
+  document.execCommand("copy");//使文档处于可编辑状态，否则无效
+}
+/**
+ * 解析url地址
+ * @param url
+ * @returns {{source: *, protocol, host: (*|string), port, query, params, file: *, hash, path: string, relative: string, segments: Array}}
+ */
+export function parseURL(url) {
+  var a =  document.createElement('a');
+  a.href = url;
+  return {
+    source: url,
+    protocol: a.protocol.replace(':',''),
+    host: a.hostname,
+    port: a.port,
+    query: a.search,
+    params: (function(){
+      var ret = {},
+        seg = a.search.replace(/^\?/,'').split('&'),
+        len = seg.length, i = 0, s;
+      for (;i<len;i++) {
+        if (!seg[i]) { continue; }
+        s = seg[i].split('=');
+        ret[s[0]] = s[1];
+      }
+      return ret;
+    })(),
+    file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+    hash: a.hash.replace('#',''),
+    path: a.pathname.replace(/^([^\/])/,'/$1'),
+    relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+    segments: a.pathname.replace(/^\//,'').split('/')
+  };
 }
