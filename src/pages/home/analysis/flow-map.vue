@@ -6,10 +6,13 @@
         <div class="searchName">统计日期：<span></span></div>
         <div class="searchInput">
           <el-date-picker
+            ref="picker"
             v-model="value"
             type="daterange"
             align="left"
-            placeholder="选择日期范围"
+            :clearable="false"
+            :placeholder="today"
+            @change="dateChange"
             :picker-options="pickerOptions">
           </el-date-picker>
         </div>
@@ -50,8 +53,8 @@
 			  api_baidu_analysis:'/pmpheep//baidu/rpt/trend',
         params:{
           method:'visit/toppage/a',
-          startDate:'20171226',
-          endDate:'20180101',
+          startDate:'',
+          endDate:'',
           metrics:'pv_count,visitor_count,visit1_count',
           order:'visit1_count,desc',
           pageNum:1,
@@ -61,7 +64,31 @@
         value:'',
         pickerOptions: {
           shortcuts: [{
-            text: '最近一周',
+            text: '今天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '昨天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * 1);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '近48小时',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '近7天',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -69,19 +96,11 @@
               picker.$emit('pick', [start, end]);
             }
           }, {
-            text: '最近一个月',
+            text: '近30天',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit('pick', [start, end]);
             }
           }]
@@ -89,6 +108,12 @@
         data:[],
       }
 		},
+    computed:{
+      today(){
+        let temp_time =  this.$commonFun.getNowFormatDate().split(' ')[0];
+        return temp_time+' - '+temp_time;
+      }
+    },
     methods:{
       /**
        * 获取数据
@@ -126,25 +151,81 @@
             pv:result.items[1][index][0],
             uv:result.items[1][index][1],
             visit1_count:result.items[1][index][2],
-            zb:Math.round((result.items[1][index][0]/result.sum[0][0])*10000)/100+'%',
-            path:this.$commonFun.parseURL(iterm[0].name).path,
-            splitPath:this.$commonFun.parseURL(iterm[0].name).path.split('/').splice(1)
+            zb:Math.round((result.items[1][index][0]/result.sum[0][0])*10000)/100,
+            path:decodeURIComponent(this.$commonFun.parseURL(iterm[0].name).path),
+            splitPath:decodeURIComponent(this.$commonFun.parseURL(iterm[0].name).path).split('/').splice(1)
           });
         });
         map.sort((x,y)=>{
             return x.splitPath.length-y.splitPath.length
         });
-        let temp = [];
+        let list=[];
         map.forEach((iterm,index)=>{
-//           for(let i = 0, len = iterm.splitPath.length; i < len; i++){
-//               if(temp[iterm.splitPath])
-//           }
+          if(!list[iterm.splitPath.length-1]){
+            list[iterm.splitPath.length-1]=[];
+          }
+          list[iterm.splitPath.length-1].push(iterm);
         });
-        this.data=map;
-      }
+        console.log(list);
+        let computedData = [];
+        for(let i = 0, len = list.length; i < len; i++){
+          if(i===0){
+            list[i].forEach((iterm,index)=>{
+              if(computedData[iterm.splitPath[0]]){
+                computedData[iterm.splitPath[0]].pv+=iterm.pv;
+                computedData[iterm.splitPath[0]].uv+=iterm.uv;
+                computedData[iterm.splitPath[0]].zb+=iterm.zb;
+              }else{
+                computedData[iterm.splitPath[0]]=iterm;
+              }
+            });
+          }
+          if(i===1){
+            list[i].forEach((iterm,index)=>{
+              if(!(computedData[iterm.splitPath[0]])){
+                computedData[iterm.splitPath[0]]={};
+              }
+              if(!(computedData[iterm.splitPath[0]].children)){
+                computedData[iterm.splitPath[0]].children=[];
+              }
+              if(computedData[iterm.splitPath[0]].children[iterm.splitPath[1]]){
+                computedData[iterm.splitPath[0]].children[iterm.splitPath[1]].pv+=iterm.pv;
+                computedData[iterm.splitPath[0]].children[iterm.splitPath[1]].uv+=iterm.uv;
+                computedData[iterm.splitPath[0]].children[iterm.splitPath[1]].zb+=iterm.zb;
+              }else{
+                computedData[iterm.splitPath[0]].children[iterm.splitPath[1]]=iterm;
+              }
+            });
+          }
+        }
+        let data_list=[];
+        for(let key in computedData){
+          data_list.push(computedData[key]);
+          let len = data_list.length;
+          if(data_list[len-1].children){
+            let t_list=[];
+            for(let k in computedData[key].children){
+              t_list.push(computedData[key].children[k]);
+            }
+            data_list[len-1].children = t_list;
+          }
+        }
+        console.log(data_list);
+        this.data=data_list;
+      },
+      dateChange(val){
+        console.log(val)
+        let temp_time =  val.split(' - ');
+        this.params.startDate = temp_time[0].trim().replaceAll('-','');
+        this.params.endDate = temp_time[1].trim().replaceAll('-','');
+        this.getData();
+      },
     },
     created(){
-		    this.getData();
+      let temp_time =  this.$commonFun.getNowFormatDate().split(' ')[0].replaceAll('-','');
+      this.params.startDate = temp_time;
+      this.params.endDate = temp_time;
+		  this.getData();
     },
     components:{
       mapList
