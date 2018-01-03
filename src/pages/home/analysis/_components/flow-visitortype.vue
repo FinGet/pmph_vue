@@ -47,6 +47,7 @@
         searchParams:{
           pageSize:10,
           pageNum:1,
+          siteId:'',
           method:'overview/getVisitorType',
           metrics:'pv_count',
           startDate:this.startDate,

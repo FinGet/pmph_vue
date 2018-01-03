@@ -46,12 +46,14 @@
           stripe
           tooltip-effect="dark"
           style="width: 100%">
-          <el-table-column label="书籍名称"  prop="bookName" min-width="200"></el-table-column>
-          <el-table-column label="浏览次数(PV)"  prop="pv" align="center"></el-table-column>
-          <el-table-column label="独立访问(UV)"  prop="uv" align="center"></el-table-column>
-          <el-table-column label="IP"  prop="ip" align="center"></el-table-column>
-          <el-table-column label="失跳率"  prop="shitiao" align="center"></el-table-column>
-          <el-table-column label="访问次数"  prop="num" align="center"></el-table-column>
+          <el-table-column label="书籍名称"  prop="name" min-width="200"></el-table-column>
+          <el-table-column label="浏览次数(PV)"  prop="pv_count" align="center"></el-table-column>
+          <el-table-column label="独立访问(UV)"  prop="visitor_count" align="center"></el-table-column>
+          <el-table-column label="IP"  prop="ip_count" align="center"></el-table-column>
+          <el-table-column label="失跳率" align="center">
+            <template scope="scope">{{scope.row.exit_ratio}}%</template>
+          </el-table-column>
+          <el-table-column label="平均停留时长"  prop="average_stay_time" align="center"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -64,14 +66,18 @@
       return {
         api_flow:'/pmpheep/baidu/rpt/trend',
         searchParams:{
+          siteId:'11588122',
           pageSize:30,
           pageNum:1,
-          method:'overview/getVisitPage',
-          metrics:'visitor_count',
-          searchWord:'/book/',
+          source:'卫生统计学',
+          searchWord:'卫生统计学',
+          method:'visit/toppage/a',
+          metrics:'average_stay_time,ip_count,visit1_count,exit_ratio,visitor_count,pv_count',
+          order:'pv_count,desc',
           startDate:this.$commonFun.getcurrentDate(),
           endDate:this.$commonFun.getcurrentDate(),
         },
+        metrics:["pv_count", "visitor_count", "ip_count", "visit1_count", "average_stay_time", "exit_ratio"],
         value:'',
         pickerOptions: {
           shortcuts: [{
@@ -143,9 +149,22 @@
           })
       },
       handleResultFlow(data){
+        console.log(data);
+        let list = [];
         let tempdata = data.body.data[0].result.items;
-        this.tableData=tempdata;
-        console.log(tempdata)
+        tempdata[1].forEach((iterm,index)=>{
+          let obj = {
+            name: (tempdata[0][index][0].name).split('/')
+          };
+          this.metrics.forEach((key,index)=>{
+            obj[key] = iterm[index]
+          });
+          obj.average_stay_time=this.$commonFun.formatSeconds(obj.average_stay_time);
+          obj.name=obj.name[obj.name.length-1];
+          list.push(obj);
+        });
+        this.tableData=list;
+        console.log(this.tableData)
       },
       dateChange(val){
         let temp_time =  val.split(' - ');
