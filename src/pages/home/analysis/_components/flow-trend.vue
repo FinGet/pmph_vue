@@ -25,6 +25,7 @@
         searchParams:{
           pageSize:100,
           pageNum:1,
+          siteId:'',
           method:'overview/getTimeTrendRpt',
           metrics:'pv_count',
           startDate:this.startDate,
