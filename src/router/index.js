@@ -107,7 +107,7 @@ const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
 const surveryResultDetail = () => import('../pages/home/questionSurvey/surveyResultDetail')
 const launchSurvey =()=> import('../pages/home/questionSurvey/launchSurvey')
-
+const recoveryResult = () => import('../pages/home/questionSurvey/recoveryResult')
 /**系统日志 */
 const SystemLog = () => import('pages/home/systemLog/systemLog');
 
@@ -245,6 +245,7 @@ export default new Router({
             { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 1 } },
             { path: 'detail', name:'结果明细', component: surveryResultDetail, meta: { authorityId: 1 } },
             { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
+            { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: 1 } },
           ]
         },
 
