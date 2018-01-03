@@ -91,7 +91,7 @@
       <p class="header_p">
           <span>编辑姓名：</span>
           <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.editorName"></el-input>
-          <el-button type="primary" icon="search">搜索</el-button>
+          <el-button type="primary" icon="search" @click="diaSearch">搜索</el-button>
       </p>
       <el-table :data="dialogTableData"  border  class="table-wrapper">
           <el-table-column
@@ -281,7 +281,12 @@ export default {
 			this.searchParams.pageSize = 10;
 			this.searchParams.pageNumber = 1;
 			this.getTableData();
-		},
+    },
+    diaSearch(){
+      this.dialogParams.pageSize = 10;
+			this.dialogParams.pageNumber = 1;
+			this.getListEditors();
+    },
 		/**分页查询 */
     handleSizeChange(val) {
 			this.searchParams.pageSize = val;

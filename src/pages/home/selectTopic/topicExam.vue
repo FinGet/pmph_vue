@@ -23,6 +23,9 @@ import acceptance from './acceptance.vue'
       activeName:'first'
      }
    },
+   created(){
+     this.activeName = this.$route.query.active || 'first';
+   },
    components: {
      forwardDepart,distributeEditor,acceptance
    },
