@@ -23,7 +23,7 @@
      prop="bookName"
      >
         <template scope="scope">
-         <p class="link">{{scope.row.bookName}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">{{scope.row.bookName}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -55,11 +55,11 @@
       width="210"
      >
      <template scope="scope">
-       <el-button type="text" @click="acceptance">受理</el-button>
+       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="acceptance(scope.row.id,true)">受理</el-button>
        <span>|</span>
-       <el-button type="text" @click="$router.push({name:'选题受理'})">审核</el-button>
+       <el-button type="text" :disabled="!scope.row.isEditorHandling" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
        <span>|</span>
-       <el-button type="text">退回分配人</el-button>
+       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="retire(scope.row.id)">退回分配人</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -76,6 +76,16 @@
         :total="pageTotal">
       </el-pagination>
     </div>
+		<el-dialog title="退回原因" :visible.sync="dialogTableVisible" size="tiny">
+			<el-input
+				type="textarea"
+				:rows="4"
+				placeholder="请输入内容"
+				v-model="reasonEditor">
+			</el-input>
+			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>	
+			<el-button class="pull-right marginB10 marginT10">取消</el-button>	
+		</el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -91,6 +101,7 @@ export default {
       pageTotal: 100,
       tableData: [
         {
+					id:'1',
           bookName: "中医基础",
           writer: "张三一",
           expectData: "2018-6-30",
@@ -122,7 +133,10 @@ export default {
           submitData: "2017-5-21",
           submission: "自由投稿"
         }
-      ]
+			],
+			id: '', // 选题id
+			dialogTableVisible: false,
+			reasonEditor: '' // 部门编辑退回原因
     };
 	},
 	created(){
@@ -147,9 +161,36 @@ export default {
 				}
 			})
 		},
-		/**受理 */
-		acceptance(){
-
+		makeSure(){
+			console.log(this.id);
+			this.acceptanceApi(this.id,'',true,this.reasonEditor);
+		},
+		// 点击退回
+		retire(id){
+			this.dialogTableVisible = true;
+			this.id = id;
+			console.log(this.id);
+		},
+		acceptance(id,isEditorHandling){
+			this.acceptanceApi(id,isEditorHandling,'','');
+		},
+		/**受理、退回分配人 */
+		acceptanceApi(id,isEditorHandling,isRejectedByEditor,reasonEditor){
+			this.$axios.put('/pmpheep/topic/put/editorHandling',this.$initPostData({
+				id: id,
+				isEditorHandling: isEditorHandling, // 受理
+				isRejectedByEditor: isRejectedByEditor, // 退回
+				reasonEditor: reasonEditor // 退回
+			})).then(response => {
+				let res = response.data;
+				if (res.code == '1') {
+					this.$message.sucees('操作成功！');
+				} else {
+					this.$message.error(res.msg.msgTrim());
+				}
+			}).catch(err => {
+				this.$message.error('操作错误，请稍后再试！')
+			})
 		},
 		/**搜索 */
 		search(){

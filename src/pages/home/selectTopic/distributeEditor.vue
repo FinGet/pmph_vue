@@ -23,7 +23,7 @@
      prop="bookName"
      >
         <template scope="scope">
-         <p class="link">{{scope.row.bookName}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookName}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -140,7 +140,7 @@ export default {
       pageTotal: 100,
       tableData: [
         {
-          name: "中医基础",
+          bookName: "中医基础",
           writer: "张三一",
           expectData: "2018-6-30",
           bookCategory: "教材",
@@ -223,7 +223,7 @@ export default {
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1'){
-					this.tableData = res.data.rows;
+					// this.tableData = res.data.rows;
 					this.tableData.forEach(item => {
 							item.submitTime = this.$commonFun.formatDate(item.submitTime);                    
 					})
