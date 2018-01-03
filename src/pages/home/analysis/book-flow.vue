@@ -12,12 +12,12 @@
 
       <!--搜索-->
       <div class="clearfix paddingT30">
-        <div class="searchBox-wrapper">
-          <div class="searchName">书籍名称：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" v-model="searchText"   @keyup.enter.native="search"></el-input>
-          </div>
-        </div>
+        <!--<div class="searchBox-wrapper">-->
+          <!--<div class="searchName">书籍名称：<span></span></div>-->
+          <!--<div class="searchInput">-->
+            <!--<el-input placeholder="请输入" v-model="searchText"   @keyup.enter.native="_input_search"></el-input>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="searchBox-wrapper lg">
           <div class="searchName">统计日期：<span></span></div>
           <div class="searchInput">
@@ -26,7 +26,6 @@
               v-model="value"
               type="daterange"
               align="left"
-              :clearable="false"
               :placeholder="today"
               @change="dateChange"
               :picker-options="pickerOptions">
@@ -34,7 +33,7 @@
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="search">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="_input_search">搜索</el-button>
         </div>
       </div>
 
@@ -56,6 +55,19 @@
           <el-table-column label="平均停留时长"  prop="average_stay_time" align="center"></el-table-column>
         </el-table>
       </div>
+      <!--分页-->
+      <div class="pagination-wrapper">
+        <el-pagination
+          v-if="totalNum > searchParams.pageSize"
+          :page-sizes="[10,30,50,100, 200, 300, 400]"
+          :page-size="searchParams.pageSize"
+          :current-page.sync="searchParams.pageNum"
+          @size-change="paginationSizeChange"
+          @current-change="search"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalNum">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -67,16 +79,15 @@
         api_flow:'/pmpheep/baidu/rpt/trend',
         searchParams:{
           siteId:'11588122',
-          pageSize:30,
+          pageSize:10,
           pageNum:1,
-          source:'卫生统计学',
-          searchWord:'卫生统计学',
           method:'visit/toppage/a',
           metrics:'average_stay_time,ip_count,visit1_count,exit_ratio,visitor_count,pv_count',
           order:'pv_count,desc',
           startDate:this.$commonFun.getcurrentDate(),
           endDate:this.$commonFun.getcurrentDate(),
         },
+        totalNum:0,
         metrics:["pv_count", "visitor_count", "ip_count", "visit1_count", "average_stay_time", "exit_ratio"],
         value:'',
         pickerOptions: {
@@ -152,6 +163,7 @@
         console.log(data);
         let list = [];
         let tempdata = data.body.data[0].result.items;
+        this.totalNum = data.body.data[0].result.total;
         tempdata[1].forEach((iterm,index)=>{
           let obj = {
             name: (tempdata[0][index][0].name).split('/')
@@ -171,12 +183,33 @@
         this.searchParams.searchWord ='/book/' +this.searchText;
         this.searchParams.startDate = temp_time[0].trim().replaceAll('-','');
         this.searchParams.endDate = temp_time[1].trim().replaceAll('-','');
+        this.searchParams.pageNum=1;
         this.getData();
       },
       search(){
         this.searchParams.searchWord ='/book/' +this.searchText;
         this.getData();
       },
+      /**
+       * 搜索
+       */
+      _input_search(){
+        this.searchParams.pageNum=1;
+        this.searchParams.searchWord ='/book/' +this.searchText;
+        this.getData();
+      },
+      /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      paginationSizeChange(val){
+        this.searchForm.pageSize=val;
+        this.searchForm.pageNum=1;
+        this.getData();
+      },
+      /**
+       * 获取书籍类别树数据
+       */
     },
     created(){
       this.getData();
