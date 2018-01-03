@@ -137,7 +137,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      pageTotal: 100,
+      pageTotal: 0,
       tableData: [
         {
           bookName: "中医基础",
@@ -177,7 +177,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      dialogPageTotal: 500,
+      dialogPageTotal: 0,
       dialogVisible: false,
       dialogTableData: [
         {
@@ -223,7 +223,7 @@ export default {
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1'){
-					// this.tableData = res.data.rows;
+					this.tableData = res.data.rows;
 					this.tableData.forEach(item => {
 							item.submitTime = this.$commonFun.formatDate(item.submitTime);                    
 					})

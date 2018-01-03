@@ -156,7 +156,7 @@ export default {
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
-					// this.tableData = res.data.rows;
+					this.tableData = res.data.rows;
 					this.pageTotal = res.pageTotal;
 				}
 			})

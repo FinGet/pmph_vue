@@ -150,9 +150,9 @@ export default {
         pageNumber: 1,
         submitTime: ""
       },
-      pageTotal: 100,
+      pageTotal: 0,
       dialogVisible: false,
-      dialogPageTotal: 100,
+      dialogPageTotal: 0,
       dialogParams: {
         pageSize: 10,
         pageNumber: 1,
