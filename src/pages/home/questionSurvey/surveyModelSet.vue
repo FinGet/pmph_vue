@@ -63,7 +63,7 @@
        <span>|</span>
        <el-button type="text" @click="$router.push({name:'发起调查'})">发起调查</el-button>
        <span>|</span>
-       <el-button type="text" >模板新建</el-button>
+       <el-button type="text" @click="$router.push({name:'问卷模板新增'})">模板新建</el-button>
      </template>
      </el-table-column> 
     </el-table>

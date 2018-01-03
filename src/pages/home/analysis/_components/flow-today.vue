@@ -36,6 +36,7 @@
         searchParams:{
           pageSize:100,
           pageNum:1,
+          siteId:'',
           method:'overview/getOutline',
           metrics:'pv_count,visit_count,visitor_count,ip_count,bounce_ratio,avg_visit_time,contri_pv',
           startDate:this.startDate,
