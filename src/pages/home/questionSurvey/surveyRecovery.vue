@@ -41,7 +41,7 @@
       width="100"
      >
      <template scope="scope">
-       <el-button type="text" @click="$router.push({name:'调查结果统计'})">查看</el-button>
+       <el-button type="text" @click="$router.push({name:'问卷回收结果'})">查看</el-button>
      </template>
      </el-table-column> 
     </el-table>
