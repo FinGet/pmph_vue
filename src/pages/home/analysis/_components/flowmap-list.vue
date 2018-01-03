@@ -4,7 +4,7 @@
       <div>
         <i class="fa fa-file-o"></i>
         <p class="inline-block minWidth120"  v-if="iterm.path">
-          <a :href="iterm.name" target="_blank">{{iterm.path}}</a>
+          <a :href="iterm.name" target="_blank" class="link">{{iterm.path}}</a>
         </p>
         <p class="inline-block paddingL30"  v-if="iterm.path">
           <span class="inline-block">PV : {{iterm.pv}}</span>

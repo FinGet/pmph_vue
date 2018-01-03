@@ -214,7 +214,6 @@
         this.data=data_list;
       },
       dateChange(val){
-        console.log(val)
         let temp_time =  val.split(' - ');
         this.params.startDate = temp_time[0].trim().replaceAll('-','');
         this.params.endDate = temp_time[1].trim().replaceAll('-','');
