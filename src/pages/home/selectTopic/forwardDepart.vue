@@ -138,113 +138,118 @@
   </div>
 </template>
 <script type="text/javascript">
-    export default{
-        data(){
-            return{
-                listDataUrl:'/pmpheep/topic/listOpts',  //选题列表url
-                dialogDataUrl:'/pmpheep/departments/listOpts',  //对话框列表url
-                distributeId:'',      //当前正在分配的题目id
-                searchParams:{
-                    bookname:'',
-                    pageSize:10,
-                    pageNumber:1,
-                    submitTime:''
-                },
-                pageTotal:100,
-                dialogVisible:false,
-                dialogPageTotal:100,
-                dialogParams:{
-                    pageSize:10,
-                    pageNumber:1,
-                    dpName:''
-                },
-                tableData:[],
-                dialogTableData:[
-                  {
-                      name:'综合编辑部',
-                      chargePerson:'张三'
-                  },
-                  {
-                      name:'中医药中心',
-                      chargePerson:'李四'
-                  },
-                  {
-                      name:'中国医刊杂志编辑部',
-                      chargePerson:'王五'
-                  },
-                ]
-            }
+export default {
+  data() {
+    return {
+      listDataUrl: "/pmpheep/topic/listOpts", //选题列表url
+      dialogDataUrl: "/pmpheep/departments/listOpts", //对话框列表url
+      distributeId: "", //当前正在分配的题目id
+      searchParams: {
+        bookname: "",
+        pageSize: 10,
+        pageNumber: 1,
+        submitTime: ""
+      },
+      pageTotal: 100,
+      dialogVisible: false,
+      dialogPageTotal: 100,
+      dialogParams: {
+        pageSize: 10,
+        pageNumber: 1,
+        dpName: ""
+      },
+      tableData: [],
+      dialogTableData: [
+        {
+          name: "综合编辑部",
+          chargePerson: "张三"
         },
-        methods:{
-            /* 获取列表数据 */
-            getListData(){
-               this.$axios.get(this.listDataUrl,{
-                   params:this.searchParams
-               }).then((res)=>{
-                   console.log(res);
-                   if(res.data.code==1){
-                       this.pageTotal=res.data.data.total;
-                       this.tableData=res.data.data.rows;
-                   }
-               })
-            },
-            /* 获取对话框列表 */
-            getDialogData(){
-              this.$axios.get(this.dialogDataUrl,{
-                  params:this.dialogParams
-              }).then((res)=>{
-                  console.log(res);
-                  if(res.data.code==1){
-                      this.dialogPageTotal=res.data.data.total;
-                      this.dialogTableData=res.data.data.rows;
-                  }
-              })
-            },
-            /* 选择分配部门 */
-            selectDepartment(dId){
-             console.log(dId);
-            },
-            /* 搜索按钮 */
-            search(){
-               this.searchParams.pageNumber=1;
-               this.getListData();
-            },
-            /* 对话框搜索 */
-            dialogSearch(){
-                this.dialogParams.pageNumber=1;
-                this.getDialogData();
-            },
-            /* 列表分页 */
-            handleSizeChange(val){
-                this.searchParams.pageSize=val;
-                this.searchParams.pageNumber=1;
-                this.getListData();
-            },
-            handleCurrentChange(val){
-                this.searchParams.pageNumber=val;
-                this.getListData();
-            },
-            /* 分配到部门 */
-            distributeDepartment(id){
-              this.distributeId=id;
-              this.dialogVisible=true;
-            },
-            /* 对话框列表分页 */
-            dialogSizeChange(val){
-            this.dialogParams.pageSize=val;
-            this.dialogParams.pageNumber=1;
-            this.getDialogData();
-            },
-            dialogCurrentChange(val){
-            this.dialogParams.pageNumber=val;
-            this.getDialogData();
-            }
+        {
+          name: "中医药中心",
+          chargePerson: "李四"
         },
-        created(){
-            this.getListData();
-            this.getDialogData();
+        {
+          name: "中国医刊杂志编辑部",
+          chargePerson: "王五"
         }
+      ]
+    };
+  },
+  methods: {
+    /* 获取列表数据 */
+    getListData() {
+      this.$axios
+        .get(this.listDataUrl, {
+          params: this.searchParams
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.pageTotal = res.data.data.total;
+            this.tableData = res.data.data.rows;
+          }
+        });
+    },
+    /* 获取对话框列表 */
+    getDialogData() {
+      this.$axios
+        .get(this.dialogDataUrl, {
+          params: this.dialogParams
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == 1) {
+            this.dialogPageTotal = res.data.data.total;
+            this.dialogTableData = res.data.data.rows;
+          }
+        });
+    },
+    /* 选择分配部门 */
+    selectDepartment(dId) {
+      console.log(dId);
+    },
+    /* 搜索按钮 */
+    search() {
+      this.searchParams.pageNumber = 1;
+      this.getListData();
+    },
+    /* 对话框搜索 */
+    dialogSearch() {
+      this.dialogParams.pageNumber = 1;
+      this.getDialogData();
+    },
+    /* 列表分页 */
+    handleSizeChange(val) {
+      this.searchParams.pageSize = val;
+      this.searchParams.pageNumber = 1;
+      this.getListData();
+    },
+    handleCurrentChange(val) {
+      this.searchParams.pageNumber = val;
+      this.getListData();
+    },
+    /* 分配到部门 */
+    distributeDepartment(id) {
+      this.distributeId = id;
+      this.dialogVisible = true;
+			this.getDialogData();
+    },
+    /* 对话框列表分页 */
+    dialogSizeChange(val) {
+      this.dialogParams.pageSize = val;
+      this.dialogParams.pageNumber = 1;
+      this.getDialogData();
+    },
+    dialogCurrentChange(val) {
+      this.dialogParams.pageNumber = val;
+      this.getDialogData();
     }
+  },
+  created() {
+    this.getListData();
+    this.getDialogData();
+  }
+};
 </script>
 <style >
 .forward_depart .header_p {
@@ -254,7 +259,7 @@
   width: 217px;
   margin-right: 10px;
 }
-.forward_depart .dialog .el-dialog{
-    min-width: 630px;
+.forward_depart .dialog .el-dialog {
+  min-width: 630px;
 }
 </style>
