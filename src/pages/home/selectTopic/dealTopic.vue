@@ -6,7 +6,7 @@
        <span></span>
    </p>
    </div>
-   <el-form :model="formData" ref="form" label-width="150px" class="form_box">
+   <el-form  ref="form" label-width="150px" class="form_box">
        <el-form-item label-width="0">
        <div class="percent50">
             <el-form-item
@@ -121,7 +121,8 @@ export default {
 		this.type = this.$route.query.type;
 		this.active = this.$route.query.active || '';
 		this.routerName = this.$route.query.name || null;
-		console.log(this.$route.query)
+		// console.log(this.$route.query)
+		this.getData();
 	},
 	methods:{
 		getData(){
