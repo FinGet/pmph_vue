@@ -580,6 +580,7 @@
       bookClick(row){
         console.log(row);
         _hmt.push(['_trackPageview', '/book/'+row.bookname]);
+        _hmt.push(['_trackEvent’', 'book', 'pageView', row.bookname])
       }
     },
     created(){

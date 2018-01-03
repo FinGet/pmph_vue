@@ -56,12 +56,14 @@
      </el-table-column>
      <el-table-column
       label="操作"
-      width="150"
+      width="210"
      >
      <template scope="scope">
        <el-button type="text" @click="$router.push({name:'新建调查问卷'})">修改</el-button>
        <span>|</span>
-       <el-button type="text" >发起调查</el-button>
+       <el-button type="text" @click="$router.push({name:'发起调查'})">发起调查</el-button>
+       <span>|</span>
+       <el-button type="text" >模板新建</el-button>
      </template>
      </el-table-column> 
     </el-table>

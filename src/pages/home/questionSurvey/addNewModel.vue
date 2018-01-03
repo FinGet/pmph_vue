@@ -2,7 +2,24 @@
   <div class="add_new_model">
       <div style="width:100%;float:left;">
       <p class="left_header_p">
-         新增问卷模板
+         问卷信息
+       <span></span>
+       </p>
+       </div>      
+      <div style="width:100%;float:left;">
+      <el-form :model="surveyTitle" ref="surveyTitle" label-width="120px" style="margin:30px 0;width:80%;">
+          <el-form-item label="调查问卷名称:">
+             <el-input placeholder="请输入调查问卷名称"></el-input> 
+          </el-form-item>
+          <el-form-item label="调查对象:">
+             <el-input placeholder="请输入调查对象"></el-input> 
+          </el-form-item>
+          <el-form-item label="调查概述:">
+             <el-input type="textarea" :rows="3"  placeholder="调查概述"></el-input> 
+          </el-form-item>  
+      </el-form>
+      <p class="left_header_p">
+         调查内容
        <span></span>
        </p>
        </div>
@@ -15,24 +32,24 @@
         <li>
             <el-button type="primary" class="button" @click="addNewFormItem(2)">多选题</el-button>
         </li>
-        <li>
+        <!-- <li>
             <el-button type="primary" class="button" @click="addNewFormItem(3)">下拉题</el-button>
-        </li>
+        </li> -->
         <li>
             <el-button type="primary" class="button" @click="addNewFormItem(4)">单行文本题</el-button>
         </li>
          <li>
             <el-button type="primary" class="button" @click="addNewFormItem(5)">多行文本题</el-button>
         </li>
-         <li>
+         <!-- <li>
             <el-button type="primary" class="button" @click="addNewFormItem(6)">附件内容题</el-button>
-        </li>
+        </li> -->
         </ul>
       </div>
       <!-- 表单列表 -->
       <div class="form_list">
-         <h3 v-if="!isEditTitle" @dblclick="isEditTitle=true">{{title}}</h3>
-         <el-input type="text" v-else v-model="title"  style="width:60%;margin-left:20%;margin-bottom:20px;" @blur="isEditTitle=false"></el-input>
+         <!-- <h3 v-if="!isEditTitle" @dblclick="isEditTitle=true">{{title}}</h3>
+         <el-input type="text" v-else v-model="title"  style="width:60%;margin-left:20%;margin-bottom:20px;" @blur="isEditTitle=false"></el-input> -->
          <el-form :model="formData" ref="form" label-width="100px" label-position="top">
 
            <el-form-item :label="(index+1)+'.'+item.label" v-for="(item,index) in formList" :key="index">
@@ -140,6 +157,9 @@ export default {
     return {
         formData:{
             name:''
+        },
+        surveyTitle:{          //问卷信息抬头
+
         },
         title:'测试问卷',
         isEditTitle:false,
