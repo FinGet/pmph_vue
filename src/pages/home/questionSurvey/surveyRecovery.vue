@@ -3,21 +3,9 @@
     <p class="header_p">
        <span>调查问卷名称：</span>
        <el-input class="input" placeholder="请输入调查问卷名称"></el-input>
-       <span>回收日期：</span>
-       <el-date-picker
-            v-model="searchParams.startDate"
-            class="input"
-            type="date"
-            placeholder="请选择开始日期">
-        </el-date-picker>
-        <span>-</span>
-        <el-date-picker
-            v-model="searchParams.endDate"
-            class="input"
-            type="date"
-            placeholder="请选择结束日期">
-        </el-date-picker>
-        <el-button type="primary" icon="search">搜索</el-button>
+       <span>提交人：</span>
+        <el-input class="input" placeholder="提交人姓名"></el-input>
+        <el-button type="primary" icon="search">查询</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -30,27 +18,22 @@
      prop="name"
      >  
      </el-table-column>
-      <el-table-column
-     label="调查对象"
-     prop="surveyObj"
-     width="100"
-     >  
-     </el-table-column>
      <el-table-column
-     label="问卷制作人"
+     label="提交人"
      prop="writer"
      width="110"
      >  
-     </el-table-column> 
-     <el-table-column
-     label="问卷概述"
-     prop="summary"
+     </el-table-column>     
+      <el-table-column
+     label="用户类别"
+     prop="surveyObj"
+     width="100"
      >  
      </el-table-column> 
      <el-table-column
-     label="回收日期"
+     label="提交时间"
      prop="createDate"
-     width="120"
+     width="170"
      >  
      </el-table-column>
      <el-table-column
@@ -58,7 +41,7 @@
       width="100"
      >
      <template scope="scope">
-       <el-button type="text" @click="$router.push({name:'调查结果统计'})">查看详情</el-button>
+       <el-button type="text" @click="$router.push({name:'调查结果统计'})">查看</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -94,35 +77,35 @@
                         surveyObj:'在校学生',
                         writer:'张三',
                         summary:'调查学生的职业规划',
-                        createDate:'2017-10-1'
+                        createDate:'2017-10-1 12:30:20'
                     },
                     {
                         name:'创业调查',
                         surveyObj:'在校老师',
                         writer:'李四',
                         summary:'调查学生的创业能力',
-                        createDate:'2017-9-1'
+                        createDate:'2017-9-1 11:15:23'
                     },
                     {
                         name:'卫生情况调查',
                         surveyObj:'卫生院系',
                         writer:'王五',
                         summary:'调查卫生学校情况',
-                        createDate:'2017-8-1'
+                        createDate:'2017-8-1 15:26:30'
                     },
                     {
                         name:'课外活动项目调查',
                         surveyObj:'在校学生',
                         writer:'赵六',
                         summary:'调查学生课外活动参与情况',
-                        createDate:'2017-4-1'
+                        createDate:'2017-4-1 26:52:14'
                     },
                     {
                         name:'校园兴趣调查',
                         surveyObj:'在校学生',
                         writer:'张三',
                         summary:'调查学生的校园兴趣',
-                        createDate:'2017-8-5'
+                        createDate:'2017-8-5 10:21:45'
                     },
                 ]
             }
