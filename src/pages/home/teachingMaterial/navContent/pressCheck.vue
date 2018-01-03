@@ -103,7 +103,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordStart">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -166,7 +166,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordStart">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -600,10 +600,9 @@
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
-          id:id,
         }})
           .then(response=>{
-
+            this.exportWordProgress(response.data);
           })
           .catch(e=>{
             console.log(e);
