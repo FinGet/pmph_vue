@@ -23,7 +23,7 @@
      prop="bookName"
      >
         <template scope="scope">
-         <p class="link">{{scope.row.bookName}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookName}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -137,10 +137,10 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      pageTotal: 100,
+      pageTotal: 0,
       tableData: [
         {
-          name: "中医基础",
+          bookName: "中医基础",
           writer: "张三一",
           expectData: "2018-6-30",
           bookCategory: "教材",
@@ -177,7 +177,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      dialogPageTotal: 500,
+      dialogPageTotal: 0,
       dialogVisible: false,
       dialogTableData: [
         {

@@ -106,6 +106,7 @@ const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet
 const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
 const surveryResultDetail = () => import('../pages/home/questionSurvey/surveyResultDetail')
+const editSurveyObj = () => import('../pages/home/questionSurvey/editSurveyObj')
 const launchSurvey =()=> import('../pages/home/questionSurvey/launchSurvey')
 const recoveryResult = () => import('../pages/home/questionSurvey/recoveryResult')
 /**系统日志 */
@@ -246,6 +247,7 @@ export default new Router({
             { path: 'detail', name:'结果明细', component: surveryResultDetail, meta: { authorityId: 1 } },
             { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
             { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: 1 } },
+            { path: 'obj', name: '调查对象管理', component: editSurveyObj, meta: { authorityId: 1 } },
           ]
         },
 

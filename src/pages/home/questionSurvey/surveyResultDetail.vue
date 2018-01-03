@@ -404,9 +404,7 @@ export default {
   width:50%;
 
 }
-.survery_result_detail .data_statistic .option_ul{
 
-}
 .survery_result_detail .data_statistic .option_ul li{
   box-sizing: border-box;
   padding-top:5px;
