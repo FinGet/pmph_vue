@@ -23,7 +23,7 @@
      prop="bookname"
      >
         <template scope="scope">
-         <p class="link">{{scope.row.bookname}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'first',type:'detail'}})">{{scope.row.bookname}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -150,9 +150,9 @@ export default {
         pageNumber: 1,
         submitTime: ""
       },
-      pageTotal: 100,
+      pageTotal: 0,
       dialogVisible: false,
-      dialogPageTotal: 100,
+      dialogPageTotal: 0,
       dialogParams: {
         pageSize: 10,
         pageNumber: 1,
