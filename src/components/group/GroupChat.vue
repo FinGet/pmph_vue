@@ -181,6 +181,7 @@
       uploadFileSuceess(response, file, fileList){
         if (response.code == '1') {
           this.fileUploading=false;
+          bus.$emit('group-file:add');
         }else{
           this.$message.error(response.msg.msgTrim());
         }

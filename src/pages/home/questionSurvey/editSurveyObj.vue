@@ -3,7 +3,7 @@
      <h4>调查对象列表</h4> 
      <p class="header_p">
         <span>对象名称：</span>
-        <el-input placeholder="请输入对象名称" class="input"></el-input>
+        <el-input placeholder="请输入对象名称"   class="input"></el-input>
         <el-button type="primary" icon="search">搜索</el-button>
         <el-button type="primary" style="float:right" @click="dialogVisible=true">增加对象</el-button>  
      </p>
@@ -56,12 +56,28 @@
     export default{
         data(){
             return{
+                objListUrl:'/pmpheep/survey/list',  //对象列表url
+                searchParams:{
+
+                },
                 tableData:[],
                 dialogVisible:false,
                 dialogForm:{
                     
                 }
             }
+        },
+        methods:{
+            // getObjList(){
+            //  this.$axios.get(this.objListUrl,{
+            //      params:{
+                        
+            //      }
+            //  })
+            // }
+        },
+        created(){
+
         }
     }
 </script>

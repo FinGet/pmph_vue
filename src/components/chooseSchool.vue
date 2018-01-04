@@ -192,6 +192,44 @@ props: default-history-id 默认选中的历史记录
         :total="total">
       </el-pagination>
     </el-dialog>
+
+    <el-dialog
+      title="导入学校"
+      :visible.sync="importExcelInfoView"
+      size="tiny">
+      <div class="text-center">
+        <div class="paddingT20 inline-block  text-left margin-auto">
+          <div class="width100 inline-block">
+            <el-progress type="circle" width="100" :percentage="100" class="inline-block" :status="importExcelInfo.error?'exception':'success'"></el-progress>
+          </div>
+          <br>
+          <div class="paddingT10 text-left inline-block">
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入总数: <span></span></div>
+              <p class="inline-block fontBold fontsize-lg">{{importExcelInfo.all}}</p>
+            </div>
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入成功: <span></span></div>
+              <p class="inline-block fontBold green fontsize-lg">{{importExcelInfo.success}}</p>
+            </div>
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入失败: <span></span></div>
+              <p class="inline-block fontBold error fontsize-lg">{{importExcelInfo.error}}</p>
+            </div>
+
+            <div class="importExcelInfoView-list" v-if="importExcelInfo.error">
+              <div class="fontsize-lg importExcelInfoView-title">失败信息：</div>
+              <ul class="inline-block">
+                <li v-for="(item,index) in importExcelInfo.errorData" :key="index">{{item}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importExcelInfoView = false">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,6 +275,13 @@ props: default-history-id 默认选中的历史记录
         total: 0,
         materialId: '',
         uploadLoading:false,
+        importExcelInfo:{
+          all:0,
+          success:0,
+          error:0,
+          errorData:[],
+        },
+        importExcelInfoView:false,
       };
     },
     computed:{
@@ -563,8 +608,15 @@ props: default-history-id 默认选中的历史记录
        */
       upLoadFileSuccess(res, file, fileList){
         if (res.code == '1') {
+          this.importExcelInfo={
+            all:res.data.orgs.length+res.data.erros.length,
+            success:res.data.orgs.length,
+            error:res.data.erros.length,
+            errorData:res.data.erros,
+          };
+          this.importExcelInfoView=true;
           //将匹配到的学校选中
-          res.data.forEach(iterm=>{
+          res.data.orgs.forEach(iterm=>{
             this.area_school.forEach(item1=>{
               item1.schoolList.forEach(iterm2=>{
                 if(iterm2.name==iterm.orgName){
@@ -661,5 +713,13 @@ props: default-history-id 默认选中的历史记录
   .fastQuery_r_text{
     display: inline-block;
     vertical-align: top;
+  }
+  .importExcelInfoView-title{
+    width: 100px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .importExcelInfoView-list{
+    padding-bottom: 4px;
   }
 </style>
