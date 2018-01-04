@@ -44,7 +44,7 @@
         <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/topic" >
+      <el-submenu index="/topic"  v-if="isShowSide(23)">
         <template slot="title">
           <i class="fa fa-paste fa-fw"></i>
           <span slot="title">选题申报</span>
@@ -53,7 +53,7 @@
         <el-menu-item index="/topic/check" >选题申报查看</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/bookerror" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+      <el-submenu index="/bookerror" v-if="isShowSide(25)">
         <template slot="title">
           <i class="fa fa-exclamation-triangle fa-fw"></i>
           <span slot="title">图书纠错</span>
@@ -72,7 +72,7 @@
         <el-menu-item index="/pointmanage/convertiblerule" v-if="isShowSide(1)">积分兑换规则</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/analysis" v-if="isShowSide(1)">
+      <el-submenu index="/analysis" v-if="isShowSide(24)">
         <template slot="title">
           <i class="fa fa-bar-chart fa-fw"></i>
           <span slot="title">数据分析</span>
@@ -104,8 +104,8 @@
         <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item> -->
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
-       
-       <el-submenu index="/survey" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+
+       <el-submenu index="/survey" v-if="isShowSide(27)">
         <template slot="title">
           <i class="fa fa-pencil-square-o fa-fw"></i>
           <span slot="title">问卷调查</span>
