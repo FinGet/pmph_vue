@@ -1,7 +1,7 @@
 <template>
   <div class="orgUser">
     <el-tabs type="border-card">
-  <el-tab-pane label="机构用户">
+  <el-tab-pane label="学校/医院用户">
        <div class="clearfix" >
     </div>
       <div class="clearfix">
@@ -34,6 +34,12 @@
               </el-option>
             </el-select>
           </div>
+        </div>
+        <div class="searchBox-wrapper searchBox-radio">
+          <el-radio-group v-model="orgniztionType" class="radio-group">
+            <el-radio :label="1">医院</el-radio>
+            <el-radio :label="2">学校</el-radio>
+          </el-radio-group>
         </div>
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
@@ -559,6 +565,7 @@ export default {
       pageSize:10,
       pageNumber:1,
       // 机构类型
+      orgniztionType: 1,
       orgTypeList: [],
       // 新增机构类型弹窗表单
       // addOrgTypeForm:{
@@ -1020,18 +1027,13 @@ export default {
 .title{
   cursor: pointer;
 }
-/* .detail-info-box .detail-info-item>div{
-  display: inline-block;
-  font-size: 16px;
+.searchBox-radio {
+  width: 150px;
 }
-.detail-info-box .detail-info-item{
-  display: inline-block;
-  height: 36px;
-  width: 50%;
-  max-width: 410px;
-  line-height: 36px;
-  vertical-align: middle;
-} */
+.radio-group {
+  margin-top: 9px;
+  margin-left: 5px;
+}
 .detail-info-box{
   display: flex;
   font-size: 16px;

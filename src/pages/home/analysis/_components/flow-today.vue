@@ -19,8 +19,8 @@
     <el-table-column label="跳出率" align="center">
       <template scope="scope">{{scope.row.bounce_ratio}}{{scope.row.isObject?'':'%'}}</template>
     </el-table-column>
-    <el-table-column label="转化次数"  prop="trans_countv"  align="center">
-      <template scope="scope">{{scope.row.trans_countv}}</template>
+    <el-table-column label="平均访问时长"  align="center">
+      <template scope="scope">{{scope.row.avg_visit_time}}</template>
     </el-table-column>
   </el-table>
 </template>
@@ -78,6 +78,8 @@
             }
           });
           obj.isObject = ((typeof iterm[1]).toLowerCase() === 'object');
+
+          obj.avg_visit_time = this.$commonFun.formatSeconds(obj.avg_visit_time);
           tempList.push(obj);
         });
         this.tableData=tempList;
