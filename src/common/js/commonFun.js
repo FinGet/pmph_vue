@@ -194,7 +194,10 @@ export function formatDate(nS,str) {
   if(!nS){
     return "";
   }
-  var date=new Date(nS);
+  if(parseInt(nS)===NaN){
+    return nS;
+  }
+  var date=new Date(parseInt(nS));
   var year=date.getFullYear();
   var mon = date.getMonth()+1;
   var day = date.getDate();
@@ -251,6 +254,11 @@ export function formatSeconds(value) {
   var secondTime = parseInt(value);// 秒
   var minuteTime = 0;// 分
   var hourTime = 0;// 小时
+
+  if(!secondTime){
+    return value
+  }
+
   if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
     //获取分钟，除以60取整数，得到整数分钟
     minuteTime = parseInt(secondTime / 60);

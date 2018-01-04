@@ -12,7 +12,15 @@
              <el-input placeholder="请输入调查问卷名称"></el-input> 
           </el-form-item>
           <el-form-item label="调查对象:">
-             <el-input placeholder="请输入调查对象"></el-input> 
+             <el-select v-model="surveyTitle.selectObj"  placeholder="请选择调查对象" style="width:50%">
+                    <el-option
+                    v-for="item in surveyObj"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select> 
+                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="$router.push({name:'调查对象管理'})">编辑调查对象</el-button>
           </el-form-item>
           <el-form-item label="调查概述:">
              <el-input type="textarea" :rows="3"  placeholder="调查概述"></el-input> 
@@ -159,8 +167,14 @@ export default {
             name:''
         },
         surveyTitle:{          //问卷信息抬头
-
+          selectObj:''
         },
+        surveyObj:[
+            {
+                value:1,
+                label:'在校学生'
+            }
+        ],
         title:'测试问卷',
         isEditTitle:false,
         editIndex:'',
