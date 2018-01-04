@@ -491,31 +491,22 @@
        * 确认收到纸质表
        */
       confirmPaperList(row){
-        console.log(row)
-        this.$confirm("确定收到纸质表？", "提示",{
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(()=>{
-            this.$axios.get(this.api_confirm_paper,{params:{
-              id:row.id,
-              offlineProgress:2
-            }})
-              .then(response=>{
-                var res = response.data;
-                if(res.code==1){
-                  this.$message.success('已确认！')
-                  row.offlineProgress=2;
-                }else{
-                  this.$message.error(res.msg.msgTrim())
-                }
-              })
-              .catch(e=>{
-                console.log(e);
-              })
+        this.$axios.get(this.api_confirm_paper,{params:{
+          id:row.id,
+          offlineProgress:2
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$message.success('已确认收到纸质表！');
+              row.offlineProgress=2;
+            }else{
+              this.$message.error(res.msg.msgTrim())
+            }
           })
-          .catch(e=>{})
+          .catch(e=>{
+            console.log(e);
+          })
       },
       /**
        * 导出excel
@@ -602,6 +593,7 @@
           offlineProgress:this.searchParams.offlineProgress,
         }})
           .then(response=>{
+            console.log(response);
             this.exportWordProgress(response.data);
           })
           .catch(e=>{

@@ -245,6 +245,9 @@ p{word-wrap:break-word}
 .marginB50 { margin-bottom: 50px; }
 .marginB60 { margin-bottom: 60px; }
 
+.margin-auto{margin-left: auto;margin-right: auto;}
+
+
 /*=================================================================
   z-index-100
   =================================================================*/

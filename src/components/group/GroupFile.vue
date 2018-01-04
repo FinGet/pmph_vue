@@ -134,6 +134,7 @@
 
 <script>
   import ScreenSize from 'common/mixins/ScreenSize.js';
+  import bus from 'common/eventBus/bus.js'
 	export default {
     mixins: [ScreenSize],
     props:['currentGroup','currentGroupList','crurrentMemberInfo'],
@@ -271,6 +272,7 @@
                 this.fileList.push(iterm);
               });
               this.fileNum = res.data.total;
+              bus.$emit('group-file:set',this.fileNum);
             }
           })
           .catch(e=>{

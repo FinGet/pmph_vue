@@ -151,6 +151,7 @@
           if(res.data.code==1){
             res.data.data.map(iterm=>{
               iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
+              iterm.filesNumber = iterm.files||0;
             });
             _this.groupListData=res.data.data;
             if(!onlySearch&&res.data.data.length){
