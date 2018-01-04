@@ -90,7 +90,7 @@
         </template>
         <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>
         <el-menu-item index="/user/writer" v-if="isShowSide(16)">个人用户</el-menu-item>
-        <el-menu-item index="/user/org" v-if="isShowSide(17)">学校和医院用户</el-menu-item>
+        <el-menu-item index="/user/org" v-if="isShowSide(17)">学校 / 医院用户</el-menu-item>
       </el-submenu>
 
 
