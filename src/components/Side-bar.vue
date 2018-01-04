@@ -105,7 +105,7 @@
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
 
-       <el-submenu index="/survey" v-if="isShowSide(27)">
+       <el-submenu index="/survey" >
         <template slot="title">
           <i class="fa fa-pencil-square-o fa-fw"></i>
           <span slot="title">问卷调查</span>
