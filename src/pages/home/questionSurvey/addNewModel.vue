@@ -20,12 +20,49 @@
                     :value="item.value">
                     </el-option>
                 </el-select> 
-                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="$router.push({name:'调查对象管理'})">编辑调查对象</el-button>
+                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="objDialogVisible=true">编辑调查对象</el-button>
           </el-form-item>
           <el-form-item label="调查概述:">
              <el-input type="textarea" :rows="3"  placeholder="调查概述"></el-input> 
           </el-form-item>  
       </el-form>
+      <!-- 调查对象弹框 -->
+     <el-dialog :visible.sync="objDialogVisible" title="调查类型（对象）列表" size="tiny" class="obj_dialog table-wrapper">
+        <p style="overflow:hidden;">
+            <el-button type="primary" style="float:right" @click="isEditObj=true">增加对象</el-button> 
+        </p> 
+            <el-table class="table-wrapper" :data="objTableData" border>
+                <el-table-column  label="对象名称">
+                </el-table-column>
+                <el-table-column  label="显示顺序" width="100">
+                </el-table-column>
+                <el-table-column  label="操作" width="100">
+                    <template scope="scope">
+                        <el-button type="text">修改</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>        
+     </el-dialog>
+
+  <!-- 增加/修改 对象弹框 -->
+        <el-dialog title="新增对象" :visible.sync="isEditObj"   class="obj_dialog" size="tiny">
+            <div style="padding-right:30px;" >
+                <el-form ref="dialogForm" :model="editObjForm"   label-width="100px">
+                    <el-form-item label="对象名称：" prop="roleName">
+                        <el-input  placeholder="请输入对象名称"></el-input>
+                    </el-form-item>
+                    <el-form-item label="显示顺序：" prop="sort">
+                        <el-input  placeholder="请输入数字"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="isEditObj=false">取 消</el-button>
+                <el-button type="primary" @click="isEditObj=false">确 定</el-button>
+            </span>
+        </el-dialog>
+
+
       <p class="left_header_p">
          调查内容
        <span></span>
@@ -175,7 +212,12 @@ export default {
                 label:'在校学生'
             }
         ],
-        title:'测试问卷',
+        objDialogVisible:false,
+        isEditObj:false,
+        editObjForm:{
+
+        },
+        objTableData:[],
         isEditTitle:false,
         editIndex:'',
         isEdit:false,
