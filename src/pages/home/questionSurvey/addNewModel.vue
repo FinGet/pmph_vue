@@ -384,36 +384,43 @@ export default {
         });
       },
       /* 提交对象编辑 */
-      submitObjEdit(){         
-        if(this.isAddNewObj){
-            this.$axios.post(this.addNewObjUrl,
-                this.$commonFun.initPostData(this.editObjForm)
-            ).then((res)=>{
-                console.log(res);
-                if(res.data.code==1){
-                   this.isEditObj=false; 
-                   this.objDialogVisible=false;
-                   this.getObjList();
-                   this.$message.success('新增成功');
+      submitObjEdit(){ 
+          this.$refs.editObjForm.validate((valid) => {
+           if(valid){
+                if(this.isAddNewObj){
+                    this.$axios.post(this.addNewObjUrl,
+                        this.$commonFun.initPostData(this.editObjForm)
+                    ).then((res)=>{
+                        console.log(res);
+                        if(res.data.code==1){
+                        this.isEditObj=false; 
+                        this.objDialogVisible=false;
+                        this.getObjList();
+                        this.$message.success('新增成功');
+                        }else{
+                            this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
                 }else{
-                    this.$message.error(res.data.msg.msgTrim());
+                    this.$axios.put(this.editObjUrl,
+                    this.$commonFun.initPostData(this.editObjForm)
+                    ).then((res)=>{
+                        console.log(res);
+                        if(res.data.code==1){
+                        this.isEditObj=false;
+                        this.objDialogVisible=false;
+                        this.getObjList();
+                        this.$message.success('修改成功');  
+                        }else{
+                        this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
                 }
-            })
-        }else{
-            this.$axios.put(this.editObjUrl,
-            this.$commonFun.initPostData(this.editObjForm)
-            ).then((res)=>{
-                console.log(res);
-                if(res.data.code==1){
-                  this.isEditObj=false;
-                  this.objDialogVisible=false;
-                  this.getObjList();
-                  this.$message.success('修改成功');  
-                }else{
-                  this.$message.error(res.data.msg.msgTrim());
-                }
-            })
-        }
+           }else{
+               return false;
+           }
+          })        
+
       },
       /* 添加题目 */
       addNewFormItem(i){
