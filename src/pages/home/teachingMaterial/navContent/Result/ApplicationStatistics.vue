@@ -12,8 +12,7 @@
             </div>
             <div class="num-chart-iterm">
               <div>
-                <br>
-                <span>平均数/{{situationCount.schoolDeclarationAverage}}</span>
+                <span class="marginspan"><span class="gray">平均数/</span> {{situationCount.schoolDeclarationAverage}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
@@ -664,9 +663,12 @@ export default {
 .echart-wrapper {
   padding: 60px 0 0;
 }
-
 .gray{
   color:#8a8585;
   font-weight: normal;
+}
+.marginspan{
+  display: inline-block;
+  margin-top: 27px;
 }
 </style>
