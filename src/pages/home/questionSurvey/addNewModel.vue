@@ -7,12 +7,12 @@
        </p>
        </div>      
       <div style="width:100%;float:left;">
-      <el-form :model="surveyTitle" ref="surveyTitle" label-width="120px" style="margin:30px 0;width:80%;">
-          <el-form-item label="调查问卷名称:">
-             <el-input placeholder="请输入调查问卷名称"></el-input> 
+      <el-form :model="surveyForm" ref="surveyForm" :rules="rules"  label-width="120px" style="margin:30px 0;width:80%;">
+          <el-form-item label="调查问卷名称:" prop="templateName">
+             <el-input placeholder="请输入调查问卷名称" v-model="surveyForm.templateName"></el-input> 
           </el-form-item>
-          <el-form-item label="调查对象:">
-             <el-select v-model="surveyTitle.selectObj"  placeholder="请选择调查对象" style="width:50%">
+          <el-form-item label="调查对象:" prop="typeId">
+             <el-select v-model="surveyForm.typeId"  placeholder="请选择调查对象" style="width:50%">
                     <el-option
                     v-for="item in objTableData"
                     :key="item.id"
@@ -22,8 +22,8 @@
                 </el-select> 
                 <el-button type="text" style="margin-left:10px;color:#337ab7" @click="objDialogVisible=true">编辑调查对象</el-button>
           </el-form-item>
-          <el-form-item label="调查概述:">
-             <el-input type="textarea" :rows="3"  placeholder="调查概述"></el-input> 
+          <el-form-item label="调查概述:" prop="intro">
+             <el-input type="textarea" :rows="3" v-model="surveyForm.intro"  placeholder="调查概述"></el-input> 
           </el-form-item>  
       </el-form>
       <!-- 调查对象弹框 -->
@@ -82,10 +82,10 @@
             <el-button type="primary" class="button" @click="addNewFormItem(3)">下拉题</el-button>
         </li> -->
         <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(4)">单行文本题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem(3)">单行文本题</el-button>
         </li>
          <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(5)">多行文本题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem(4)">多行文本题</el-button>
         </li>
          <!-- <li>
             <el-button type="primary" class="button" @click="addNewFormItem(6)">附件内容题</el-button>
@@ -94,54 +94,32 @@
       </div>
       <!-- 表单列表 -->
       <div class="form_list">
-         <!-- <h3 v-if="!isEditTitle" @dblclick="isEditTitle=true">{{title}}</h3>
-         <el-input type="text" v-else v-model="title"  style="width:60%;margin-left:20%;margin-bottom:20px;" @blur="isEditTitle=false"></el-input> -->
-         <el-form :model="formData" ref="form" label-width="100px" label-position="top">
+         <h3 v-if="surveyForm.questionAnswerJosn.length==0">题目为空，请在左侧选择题目添加</h3>
+         <el-form  ref="form" label-width="100px" label-position="top">
 
-           <el-form-item :label="(index+1)+'.'+item.label" v-for="(item,index) in formList" :key="index">
+           <el-form-item :label="(index+1)+'.'+item.surveyQuestion.title" v-for="(item,index) in surveyForm.questionAnswerJosn" :key="index">
                <!-- 单选 -->
-                <el-radio-group v-model="formData[item.key]" v-if="item.questionType==1">
-                    <el-radio :label="it.value" v-for="(it,index) in item.SelectOptions" :key="index">{{it.label}}</el-radio>
+                <el-radio-group  v-if="item.surveyQuestion.type==1">
+                    <el-radio :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-radio>
                 </el-radio-group>
                 <!-- 多选 -->
-                <el-checkbox-group v-model="formData[item.key]"  v-if="item.questionType==2" style="float:left;">
-                    <el-checkbox :label="it.label" v-for="(it,index) in item.SelectOptions" :key="index"></el-checkbox>
+                <el-checkbox-group   v-if="item.surveyQuestion.type==2" style="float:left;">
+                    <el-checkbox :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-checkbox>
                 </el-checkbox-group>
-                <!-- 下拉 -->
-                <el-select v-model="formData[item.key]" placeholder="请选择" v-if="item.questionType==3">
-                    <el-option
-                    v-for="(it,index) in item.SelectOptions"
-                    :key="index"
-                    :label="it.label"
-                    :value="it.value">
-                    </el-option>
-                </el-select>
                 <!-- 单行文本 -->
-                <el-input v-model="formData[item.key]" class="form_input" v-if="item.questionType==4"></el-input>
+                <el-input  class="form_input" v-if="item.surveyQuestion.type==3"></el-input>
                 <!-- 多行文本 -->
-                <el-input  v-model="formData[item.key]" type="textarea" :rows="3" class="form_input" v-if="item.questionType==5"></el-input>
-                <el-upload
-                    style="float:left"
-                    v-if="item.questionType==6"
-                    >
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">{{item.note}}</div>
-                </el-upload>
+                <el-input   type="textarea" :rows="3" class="form_input" v-if="item.surveyQuestion.type==4"></el-input>
                 <!-- 操作按钮 -->
                 <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item,index)">修改</el-button>
                 <el-button type="text" class="form_button" @click="deleteFormItem(index)">删除</el-button>
             </el-form-item>
-            <!-- <el-form-item label="活动名称">
-                <el-input v-model="formData.name" class="form_input"></el-input>
-                <el-button type="text" class="form_button">修改</el-button>
-                <el-button type="text" class="form_button">删除</el-button>
-            </el-form-item> -->
          </el-form>
 
-         <div class="bottom_box">
+         <div class="bottom_box" v-if="surveyForm.questionAnswerJosn.length!=0">
              <div class="button_box">
                  <el-button >返回</el-button>
-                 <el-button type="primary">确定</el-button>
+                 <el-button type="primary" @click="submitTemplate">确定</el-button>
              </div>
          </div>
       </div>
@@ -150,13 +128,13 @@
       <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog">
            <el-form :model="dialogForm" ref="dialogForm" label-width="70px">
                <el-form-item label="题目：">
-                   <el-input placeholder="请输入题目" v-model="dialogForm.label"></el-input>
+                   <el-input placeholder="请输入题目" v-model="dialogForm.surveyQuestion.title"></el-input>
                </el-form-item>
-               <el-form-item label="备注：" v-if="dialogForm.questionType!=1&&dialogForm.questionType!=2&&dialogForm.questionType!=3">
-                   <el-input placeholder="请输入备注" v-model="dialogForm.note"></el-input>
+               <el-form-item label="备注：" v-if="dialogForm.surveyQuestion.type!=1&&dialogForm.surveyQuestion.type!=2">
+                   <el-input placeholder="请输入备注" v-model="dialogForm.surveyQuestion.direction"></el-input>
                </el-form-item>
                <el-form-item label="类型：">
-                   <el-select v-model="dialogForm.questionType" placeholder="请选择题目类型" >
+                   <el-select v-model="dialogForm.surveyQuestion.type" placeholder="请选择题目类型" >
                     <el-option
                         v-for="item in dialogOptions"
                         :key="item.value"
@@ -165,15 +143,15 @@
                     </el-option>
                    </el-select>
                </el-form-item>
-               <el-form-item label="必填：">
-                   <el-radio-group v-model="dialogForm.isRequired">
+               <!-- <el-form-item label="必填：">
+                   <el-radio-group >
                         <el-radio :label="true">是</el-radio>
                         <el-radio :label="false">否</el-radio>
                     </el-radio-group>
-               </el-form-item>
-               <el-form-item label="选项：" v-if="dialogForm.questionType!=4&&dialogForm.questionType!=5&&dialogForm.questionType!=6">
-                 <el-form-item label-width="0" v-for="(item,index) in dialogForm.SelectOptions" :key="index">
-                    <el-input placeholder="请输入选项" class="dialog_input" v-model="item.label"></el-input>
+               </el-form-item> -->
+               <el-form-item label="选项：" v-if="dialogForm.surveyQuestion.type!=3&&dialogForm.surveyQuestion.type!=4">
+                 <el-form-item label-width="0" v-for="(item,index) in dialogForm.ptionList" :key="index">
+                    <el-input placeholder="请输入选项" class="dialog_input" v-model="item.optionContent"></el-input>
                     <el-button type="text"  style="color:#ff4949" @click="deleteDlalogOption(index)">删除</el-button>
                  </el-form-item>
 
@@ -205,18 +183,29 @@ export default {
         addNewObjUrl:'/pmpheep/survey/type/create', //添加新对象url
         editObjUrl:'/pmpheep/survey/type/update',  //修改对象url
         deleteObjUrl:'/pmpheep/survey/type/',  //删除对象url
-        formData:{
-            name:''
+        addTemplateUrl:'/pmpheep/survey/template/create', //新增模板url
+        surveyForm:{          //问卷信息抬头
+          templateName:'',
+          typeId:'',
+          intro:'',
+          questionAnswerJosn:[
+                    {
+                surveyQuestion:{
+                        title:'你是否使用过XX社交网站',
+                        type:1,
+                        direction:''    
+                } ,
+                surveyQuestionOptionList:[
+                    {
+                        optionContent:'是' 
+                    },
+                    {
+                        optionContent:'否' 
+                    },
+                ]
+                }
+          ]
         },
-        surveyTitle:{          //问卷信息抬头
-          selectObj:''
-        },
-        surveyObj:[
-            {
-                value:1,
-                label:'在校学生'
-            }
-        ],
         objDialogVisible:false,
         isEditObj:false,
         isAddNewObj:true,
@@ -228,52 +217,6 @@ export default {
         isEditTitle:false,
         editIndex:'',
         isEdit:false,
-        formList:[
-           {
-          label:'您使用过xx网吗？',
-          note:'',  
-          isRequired:'',
-          questionType:1,
-          SelectOptions:[
-            {
-                label:'使用过',
-                value:1
-            },
-            {
-                label:'没有',
-                value:2
-            },
-            ]
-        },
-        {
-          label:'您的年龄',
-          note:'',  
-          isRequired:'',
-          questionType:4,
-          SelectOptions:[
-            ]
-        },
-        {
-          label:'您经常上什么网站？',
-          note:'',  
-          isRequired:'',
-          questionType:2,
-          SelectOptions:[
-            {
-                label:'知乎',
-                value:1
-            },
-            {
-                label:'微博',
-                value:2
-            },
-            {
-                label:'论坛',
-                value:2
-            },
-            ]
-        },
-        ],
         dialogOptions:[
          {
              value:1,
@@ -285,36 +228,27 @@ export default {
          },
          {
              value:3,
-             label:'下拉题'
-         },
-         {
-             value:4,
              label:'单行文本题'
          },
          {
-             value:5,
+             value:4,
              label:'多行文本题'
-         },
-         {
-             value:6,
-             label:'附件内容题'
          },
         ],
         dialogForm:{
-          label:'',
-          note:'',  
-          isRequired:'',
-          questionType:1,
-          SelectOptions:[
-            {
-                label:'',
-                value:1
-            },
-            {
-                label:'',
-                value:2
-            },
-            ]
+          surveyQuestion:{
+                title:'',
+                type:'',
+                direction:''    
+          } ,
+          ptionList:[
+              {
+                 optionContent:'' 
+              },
+              {
+                 optionContent:'' 
+              },
+          ]
         },
         dialogVisible:false,
         rules:{
@@ -323,7 +257,7 @@ export default {
                 {min:1,max:20,message:'对象名称不能超过20个字符',trigger:'change,blur'}
             ],
             sort:[
-                {min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
+                { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
                 {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ]
         }
@@ -343,6 +277,16 @@ export default {
              }
          })
       },
+      submitTemplate(){
+          for(var i in this.surveyForm.questionAnswerJosn){
+              this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
+          }
+         this.$axios.post(this.addTemplateUrl,
+         this.$commonFun.initPostData(this.surveyForm)
+         ).then((res)=>{
+             console.log(res);
+         })
+      },
       /* 新增对象 */
       addObjInfo(){
        this.editObjForm={
@@ -355,7 +299,7 @@ export default {
       /* 修改对象 */
       editObjInfo(obj){
        for(var i in obj){
-         this.editObjForm[i]=obj[i];   
+         this.editObjForm[i]=obj[i]+'';   
        }
        this.isAddNewObj=false;
        this.isEditObj=true;
@@ -394,7 +338,6 @@ export default {
                         console.log(res);
                         if(res.data.code==1){
                         this.isEditObj=false; 
-                        this.objDialogVisible=false;
                         this.getObjList();
                         this.$message.success('新增成功');
                         }else{
@@ -408,7 +351,6 @@ export default {
                         console.log(res);
                         if(res.data.code==1){
                         this.isEditObj=false;
-                        this.objDialogVisible=false;
                         this.getObjList();
                         this.$message.success('修改成功');  
                         }else{
@@ -425,50 +367,51 @@ export default {
       /* 添加题目 */
       addNewFormItem(i){
           this.isEdit=false;
-          this.dialogForm.questionType=i;
+          this.dialogForm.surveyQuestion.type=i;
           this.dialogVisible=true;
       },
       /* 对话框 选项删除 */
       deleteDlalogOption(i){
-       this.dialogForm.SelectOptions.splice(i,1);
+       this.dialogForm.surveyQuestionOptionList.splice(i,1);
       },
       /* 添加对话框选项 */
       addDialogOption(){
-         this.dialogForm.SelectOptions.push({label:''});
+         this.dialogForm.surveyQuestionOptionList.push({optionContent:''});
       },
       /* 修改表单项 */
-      editFormItem(item){
+      editFormItem(item,index){
           this.isEdit=true;
+          this.editIndex=index;
       this.dialogForm=item;
       this.dialogVisible=true;
       },
       /* 删除表单项1 */
       deleteFormItem(index){
-      this.formList.splice(index,1);
+      this.surveyForm.questionAnswerJosn.splice(index,1);
       },
       /* 确定添加题目 */
       upLoadFormItem(){
           if(this.isEdit){
-              this.formList[this.editIndex]=this.dialogForm;
+              this.surveyForm.questionAnswerJosn[this.editIndex]=this.dialogForm;
+
           }else{
-             this.formList.push(this.dialogForm);
+             this.surveyForm.questionAnswerJosn.push(this.dialogForm);
           }
           this.dialogForm={
-          label:'',
-          note:'',  
-          isRequired:'',
-          questionType:1,
-          SelectOptions:[
-            {
-                label:'',
-                value:1
-            },
-            {
-                label:'',
-                value:2
-            },
-            ]
-        };
+                    surveyQuestion:{
+                            title:'',
+                            type:'',
+                            direction:''    
+                    } ,
+                    ptionList:[
+                        {
+                            optionContent:'' 
+                        },
+                        {
+                            optionContent:'' 
+                        },
+                    ]
+                    }
           this.dialogVisible=false;
         
       },
