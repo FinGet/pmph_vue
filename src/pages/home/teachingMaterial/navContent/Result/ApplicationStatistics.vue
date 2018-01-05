@@ -3,35 +3,56 @@
     <div class="total-chart paddingT30 paddingB30">
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.schoolDeclarationCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.schoolDeclarationCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.schoolDeclarationChosenCount}}</span>
               </div>
-              <p>院校申报总数</p>
+              <p>院校申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.schoolDeclarationAverage}}</span>
+                <span class="marginspan"><span class="gray">平均数/</span> {{situationCount.schoolDeclarationAverage}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.editorCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.editorCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorCount}}</span>
               </div>
-              <p>主编申报总数</p>
+              <p>主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.subEditorCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.subEditorCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenSubeditorCount}}</span>
               </div>
-              <p>副主编申报总数</p>
+              <p>副主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.editorialCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.editorialCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorialCount}}</span>
               </div>
-              <p>编委申报总数</p>
+              <p>编委申报</p>
             </div>
-          </div>
+            <div class="num-chart-iterm">
+              <div>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.digitalCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenDigitalCount}}</span>
+              </div>
+              <p>数字编委申报</p>
+            </div>
+    </div>
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="按书名统计" name="bookName">
         <div class="applicationStatistics-byBookName">
@@ -592,14 +613,14 @@ export default {
 .num-chart-iterm > div {
   margin: 0 auto;
   width: 104px;
-  height: 54px;
+  height: 62px;
   border-bottom: none !important;
   border-radius: 68px 68px 0 0;
   text-align: center;
-  line-height: 70px;
+  line-height: 20px;
 }
 .num-chart-iterm > div > span {
-  font-size: 22px;
+  font-size: 14px;
   font-weight: bold;
 }
 .num-chart-iterm > div > span.small {
@@ -615,31 +636,39 @@ export default {
   margin: 0 auto;
   text-align: center;
 }
-.num-chart-iterm:nth-of-type(6n + 1) > div {
+.num-chart-iterm:nth-of-type(n + 1) > div {
   border: 8px solid #c24fb7;
   color: #c24fb7;
 }
-.num-chart-iterm:nth-of-type(6n + 2) > div {
+.num-chart-iterm:nth-of-type(n + 2) > div {
   border: 8px solid #ff9f40;
   color: #ff9f40;
 }
-.num-chart-iterm:nth-of-type(6n + 3) > div {
+.num-chart-iterm:nth-of-type(n + 3) > div {
   border: 8px solid #ff685f;
   color: #ff685f;
 }
-.num-chart-iterm:nth-of-type(6n + 4) > div {
+.num-chart-iterm:nth-of-type(n + 4) > div {
   border: 8px solid #25a3de;
   color: #25a3de;
 }
-.num-chart-iterm:nth-of-type(6n + 5) > div {
+.num-chart-iterm:nth-of-type(n + 5) > div {
   border: 8px solid #2dc183;
   color: #2dc183;
 }
-.num-chart-iterm:nth-of-type(6n + 6) > div {
+.num-chart-iterm:nth-of-type(n + 6) > div {
   border: 8px solid #357ab3;
   color: #357ab3;
 }
 .echart-wrapper {
   padding: 60px 0 0;
+}
+.gray{
+  color:#8a8585;
+  font-weight: normal;
+}
+.marginspan{
+  display: inline-block;
+  margin-top: 27px;
 }
 </style>
