@@ -523,7 +523,7 @@
             //更新教材信息
             bus.$emit('material:update-info');
           } else if(res.code == 3){
-            this.$message.success(res.msg.msgTrim())
+            this.$message.error(res.msg.msgTrim())
           }
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
