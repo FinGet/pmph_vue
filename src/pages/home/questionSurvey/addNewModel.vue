@@ -14,18 +14,56 @@
           <el-form-item label="调查对象:">
              <el-select v-model="surveyTitle.selectObj"  placeholder="请选择调查对象" style="width:50%">
                     <el-option
-                    v-for="item in surveyObj"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in objTableData"
+                    :key="item.id"
+                    :label="item.surveyName"
+                    :value="item.id">
                     </el-option>
                 </el-select> 
-                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="$router.push({name:'调查对象管理'})">编辑调查对象</el-button>
+                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="objDialogVisible=true">编辑调查对象</el-button>
           </el-form-item>
           <el-form-item label="调查概述:">
              <el-input type="textarea" :rows="3"  placeholder="调查概述"></el-input> 
           </el-form-item>  
       </el-form>
+      <!-- 调查对象弹框 -->
+     <el-dialog :visible.sync="objDialogVisible" title="调查类型（对象）列表" size="tiny" class="obj_dialog table-wrapper">
+        <p style="overflow:hidden;">
+            <el-button type="primary" style="float:right" @click="addObjInfo">增加对象</el-button> 
+        </p> 
+            <el-table class="table-wrapper" :data="objTableData" border>
+                <el-table-column  label="对象名称" prop="surveyName">
+                </el-table-column>
+                <el-table-column  label="显示顺序" prop="sort" width="100">
+                </el-table-column>
+                <el-table-column  label="操作" width="110">
+                    <template scope="scope">
+                        <el-button type="text" @click="editObjInfo(scope.row)">修改</el-button>
+                        <el-button type="text" @click="deleteObjInfo(scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>        
+     </el-dialog>
+
+  <!-- 增加/修改 对象弹框 -->
+        <el-dialog title="新增对象" :visible.sync="isEditObj"   class="obj_dialog" size="tiny">
+            <div style="padding-right:30px;" >
+                <el-form ref="editObjForm" :model="editObjForm" :rules="rules"  label-width="100px">
+                    <el-form-item label="对象名称：" prop="surveyName">
+                        <el-input  placeholder="请输入对象名称" v-model="editObjForm.surveyName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="显示顺序：" prop="sort" >
+                        <el-input  placeholder="请输入数字" v-model="editObjForm.sort"> </el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="isEditObj=false">取 消</el-button>
+                <el-button type="primary" @click="submitObjEdit()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+
       <p class="left_header_p">
          调查内容
        <span></span>
@@ -163,6 +201,10 @@
 export default {
   data() {
     return {
+        objListUrl:'/pmpheep/survey/type/list',   //调查对象列表url
+        addNewObjUrl:'/pmpheep/survey/type/create', //添加新对象url
+        editObjUrl:'/pmpheep/survey/type/update',  //修改对象url
+        deleteObjUrl:'/pmpheep/survey/type/',  //删除对象url
         formData:{
             name:''
         },
@@ -175,7 +217,14 @@ export default {
                 label:'在校学生'
             }
         ],
-        title:'测试问卷',
+        objDialogVisible:false,
+        isEditObj:false,
+        isAddNewObj:true,
+        editObjForm:{
+           surveyName:'',
+           sort:''
+        },
+        objTableData:[],
         isEditTitle:false,
         editIndex:'',
         isEdit:false,
@@ -267,12 +316,112 @@ export default {
             },
             ]
         },
-        
         dialogVisible:false,
+        rules:{
+            surveyName:[
+                { required: true, message: '请输入对象名称', trigger: 'blur' },
+                {min:1,max:20,message:'对象名称不能超过20个字符',trigger:'change,blur'}
+            ],
+            sort:[
+                {min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
+                {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+            ]
+        }
 
     }
   },
+  created(){
+  this.getObjList();
+  },
   methods:{
+      /* 获取对象列表 */
+      getObjList(){
+         this.$axios.get(this.objListUrl).then((res)=>{
+             console.log(res);
+             if(res.data.code==1){
+                 this.objTableData=res.data.data;
+             }
+         })
+      },
+      /* 新增对象 */
+      addObjInfo(){
+       this.editObjForm={
+           surveyName:'',
+           sort:''
+        }
+        this.isAddNewObj=true;
+        this.isEditObj=true;
+      },
+      /* 修改对象 */
+      editObjInfo(obj){
+       for(var i in obj){
+         this.editObjForm[i]=obj[i];   
+       }
+       this.isAddNewObj=false;
+       this.isEditObj=true;
+      },
+      /* 删除对象 */
+      deleteObjInfo(obj){
+       this.$confirm('确认删除该对象?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+            this.$axios.delete(this.deleteObjUrl+obj.id+'/remove').then((res)=>{
+                if(res.data.code==1){
+                    this.isEditObj=false; 
+                   this.objDialogVisible=false;
+                    this.getObjList();
+                    this.$message.success('删除成功')
+                }else{
+                    this.$message.error(res.data.msg.msgTrim());
+                }
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+      /* 提交对象编辑 */
+      submitObjEdit(){ 
+          this.$refs.editObjForm.validate((valid) => {
+           if(valid){
+                if(this.isAddNewObj){
+                    this.$axios.post(this.addNewObjUrl,
+                        this.$commonFun.initPostData(this.editObjForm)
+                    ).then((res)=>{
+                        console.log(res);
+                        if(res.data.code==1){
+                        this.isEditObj=false; 
+                        this.objDialogVisible=false;
+                        this.getObjList();
+                        this.$message.success('新增成功');
+                        }else{
+                            this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
+                }else{
+                    this.$axios.put(this.editObjUrl,
+                    this.$commonFun.initPostData(this.editObjForm)
+                    ).then((res)=>{
+                        console.log(res);
+                        if(res.data.code==1){
+                        this.isEditObj=false;
+                        this.objDialogVisible=false;
+                        this.getObjList();
+                        this.$message.success('修改成功');  
+                        }else{
+                        this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
+                }
+           }else{
+               return false;
+           }
+          })        
+
+      },
       /* 添加题目 */
       addNewFormItem(i){
           this.isEdit=false;

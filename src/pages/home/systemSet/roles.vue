@@ -131,7 +131,7 @@ export default {
             ],
         isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
         sort: [
-            {min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" }, 
+            {min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[
@@ -227,7 +227,22 @@ export default {
             }
           ]
         },
-
+        {
+          label: "选题申报",
+          id: 23
+        },
+        {
+          label: "图书纠错",
+          id: 25
+        },
+        {
+          label: "数据分析",
+          id: 24
+        },
+        {
+          label: "积分管理",
+          id: 26
+        },
         {
           label: "用户管理",
           id: 7,
@@ -267,7 +282,12 @@ export default {
               id: 21
             }
           ]
-        },{
+        },
+        {
+          label: "问卷调查",
+          id: 27,
+        },
+        {
           label: "系统日志",
           id: 22,
         }

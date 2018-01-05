@@ -106,7 +106,6 @@ const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet
 const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
 const surveryResultDetail = () => import('../pages/home/questionSurvey/surveyResultDetail')
-const editSurveyObj = () => import('../pages/home/questionSurvey/editSurveyObj')
 const launchSurvey =()=> import('../pages/home/questionSurvey/launchSurvey')
 const recoveryResult = () => import('../pages/home/questionSurvey/recoveryResult')
 /**系统日志 */
@@ -149,17 +148,17 @@ export default new Router({
           ]
         },
         {
-          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 1 }, children: [
-            {path: 'check', name: '图书纠错审核' , component: CheckError, meta: { authorityId: 1 }},
-            {path: 'checkerror', name: '纠错审核' , component: Check, meta: { authorityId: 1 }},
-            {path: 'after', name: '图书纠错跟踪' , component: AfterError, meta: { authorityId: 1 }}
+          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 25 }, children: [
+            {path: 'check', name: '图书纠错审核' , component: CheckError,},
+            {path: 'checkerror', name: '纠错审核' , component: Check,},
+            {path: 'after', name: '图书纠错跟踪' , component: AfterError,}
           ]
         },
         {
-          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 1 }, children: [
-            {path: 'pointrule', name: '积分管理' , component: PointRule, meta: { authorityId: 1 }},
-            {path: 'userpoint', name: '用户积分' , component: UserPoint, meta: { authorityId: 1 }},
-            {path: 'convertiblerule', name: '兑换规则' , component: ConvertibleRule, meta: { authorityId: 1 }}
+          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 26 }, children: [
+            {path: 'pointrule', name: '积分管理' , component: PointRule,},
+            {path: 'userpoint', name: '用户积分' , component: UserPoint,},
+            {path: 'convertiblerule', name: '兑换规则' , component: ConvertibleRule,}
           ]
         },
         {
@@ -220,7 +219,7 @@ export default new Router({
         },
         /*数据分析 */
         {
-          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 1 }, children: [
+          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 24 }, children: [
           { path: 'flow', name: '流量概况', component: Flow },
           { path: 'flow-map', name: '流量地图', component: FlowMap },
           { path: 'book-flow', name: '图书流量概况', component: BookFlow },
@@ -229,10 +228,10 @@ export default new Router({
         },
         /* 选题申报 */
         {
-          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false}, children:[
-           { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 1}},
-           { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 1} },
-            { path: 'deal', name: '选题受理', component: dealTopic, meta: { authorityId: 1 }}
+          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false,authorityId: 23}, children:[
+           { path: 'exam', name: '选题申报审核', component: TopicExam,},
+           { path: 'check', name: '选题申报查看', component: TopicCheck,},
+            { path: 'deal', name: '选题受理', component: dealTopic,}
 
          ]
         },
@@ -247,7 +246,6 @@ export default new Router({
             { path: 'detail', name:'结果明细', component: surveryResultDetail, meta: { authorityId: 1 } },
             { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
             { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: 1 } },
-            { path: 'obj', name: '调查对象管理', component: editSurveyObj, meta: { authorityId: 1 } },
           ]
         },
 

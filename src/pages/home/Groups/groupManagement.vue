@@ -17,7 +17,7 @@
                 v-show="tab.view=='GroupChat'||tab.view=='GroupFile'||(tab.view=='GroupSetting'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder))||(tab.view=='GroupMembers'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin))"
             >
               {{tab.type}}
-              <span class="filesNumber" v-if="tab.type==='文件共享'"&&currentGroup.filesNumber>{{currentGroup.filesNumber}}</span>
+              <span class="filesNumber" v-if="tab.type==='文件共享'&&currentGroup.filesNumber">{{currentGroup.filesNumber}}</span>
             </li>
 
           </ul>
