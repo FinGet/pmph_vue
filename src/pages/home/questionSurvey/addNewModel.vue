@@ -97,19 +97,19 @@
          <h3 v-if="surveyForm.questionAnswerJosn.length==0">题目为空，请在左侧选择题目添加</h3>
          <el-form  ref="form" label-width="100px" label-position="top">
 
-           <el-form-item :label="(index+1)+'.'+item.surveyQuestion.title" v-for="(item,index) in surveyForm.questionAnswerJosn" :key="index">
+           <el-form-item :label="(index+1)+'.'+item.title" v-for="(item,index) in surveyForm.questionAnswerJosn" :key="index">
                <!-- 单选 -->
-                <el-radio-group  v-if="item.surveyQuestion.type==1">
+                <el-radio-group  v-if="item.type==1">
                     <el-radio :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-radio>
                 </el-radio-group>
                 <!-- 多选 -->
-                <el-checkbox-group   v-if="item.surveyQuestion.type==2" style="float:left;">
+                <el-checkbox-group   v-if="item.type==2" style="float:left;">
                     <el-checkbox :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-checkbox>
                 </el-checkbox-group>
                 <!-- 单行文本 -->
-                <el-input  class="form_input" v-if="item.surveyQuestion.type==3"></el-input>
+                <el-input  class="form_input" v-if="item.type==3"></el-input>
                 <!-- 多行文本 -->
-                <el-input   type="textarea" :rows="3" class="form_input" v-if="item.surveyQuestion.type==4"></el-input>
+                <el-input   type="textarea" :rows="3" class="form_input" v-if="item.type==4"></el-input>
                 <!-- 操作按钮 -->
                 <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item,index)">修改</el-button>
                 <el-button type="text" class="form_button" @click="deleteFormItem(index)">删除</el-button>
@@ -128,13 +128,13 @@
       <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog">
            <el-form :model="dialogForm" ref="dialogForm" label-width="70px">
                <el-form-item label="题目：">
-                   <el-input placeholder="请输入题目" v-model="dialogForm.surveyQuestion.title"></el-input>
+                   <el-input placeholder="请输入题目" v-model="dialogForm.title"></el-input>
                </el-form-item>
-               <el-form-item label="备注：" v-if="dialogForm.surveyQuestion.type!=1&&dialogForm.surveyQuestion.type!=2">
-                   <el-input placeholder="请输入备注" v-model="dialogForm.surveyQuestion.direction"></el-input>
+               <el-form-item label="备注：" v-if="dialogForm.type!=1&&dialogForm.type!=2">
+                   <el-input placeholder="请输入备注" v-model="dialogForm.direction"></el-input>
                </el-form-item>
                <el-form-item label="类型：">
-                   <el-select v-model="dialogForm.surveyQuestion.type" placeholder="请选择题目类型" >
+                   <el-select v-model="dialogForm.type" placeholder="请选择题目类型" >
                     <el-option
                         v-for="item in dialogOptions"
                         :key="item.value"
@@ -149,7 +149,7 @@
                         <el-radio :label="false">否</el-radio>
                     </el-radio-group>
                </el-form-item> -->
-               <el-form-item label="选项：" v-if="dialogForm.surveyQuestion.type!=3&&dialogForm.surveyQuestion.type!=4">
+               <el-form-item label="选项：" v-if="dialogForm.type!=3&&dialogForm.type!=4">
                  <el-form-item label-width="0" v-for="(item,index) in dialogForm.ptionList" :key="index">
                     <el-input placeholder="请输入选项" class="dialog_input" v-model="item.optionContent"></el-input>
                     <el-button type="text"  style="color:#ff4949" @click="deleteDlalogOption(index)">删除</el-button>
@@ -190,11 +190,9 @@ export default {
           intro:'',
           questionAnswerJosn:[
                     {
-                surveyQuestion:{
-                        title:'你是否使用过XX社交网站',
-                        type:1,
-                        direction:''    
-                } ,
+                title:'你是否使用过XX社交网站',
+                type:1,
+                direction:'',    
                 surveyQuestionOptionList:[
                     {
                         optionContent:'是' 
@@ -236,12 +234,10 @@ export default {
          },
         ],
         dialogForm:{
-          surveyQuestion:{
-                title:'',
-                type:'',
-                direction:''    
-          } ,
-          ptionList:[
+        title:'',
+        type:'',
+        direction:'' ,   
+          surveyQuestionOptionList:[
               {
                  optionContent:'' 
               },
@@ -367,7 +363,7 @@ export default {
       /* 添加题目 */
       addNewFormItem(i){
           this.isEdit=false;
-          this.dialogForm.surveyQuestion.type=i;
+          this.dialogForm.type=i;
           this.dialogVisible=true;
       },
       /* 对话框 选项删除 */
@@ -398,11 +394,9 @@ export default {
              this.surveyForm.questionAnswerJosn.push(this.dialogForm);
           }
           this.dialogForm={
-                    surveyQuestion:{
-                            title:'',
-                            type:'',
-                            direction:''    
-                    } ,
+                    title:'',
+                    type:'',
+                    direction:'',    
                     ptionList:[
                         {
                             optionContent:'' 
