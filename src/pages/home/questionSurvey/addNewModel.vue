@@ -285,6 +285,23 @@ export default {
        if(this.$route.params.type!='add'&&this.$route.params.surveryData){
            var surveyData=this.$route.params.surveryData;
           console.log(surveyData) ;
+          this.surveyForm.templateName=surveyData.survey.title;
+          this.surveyForm.typeId=surveyData.survey.typeId;
+          this.surveyForm.intro=surveyData.survey.intro;
+          for(var i in surveyData.qestionAndOption){
+              this.surveyForm.questionAnswerJosn[i]={};
+              this.surveyForm.questionAnswerJosn[i].title=surveyData.qestionAndOption[i].title;
+              this.surveyForm.questionAnswerJosn[i].type=surveyData.qestionAndOption[i].type;
+              this.surveyForm.questionAnswerJosn[i].direction=surveyData.qestionAndOption[i].direction;
+              this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort;
+              this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList=[];
+              var options=surveyData.qestionAndOption[i].optionContent.join(',');
+              for(var t in options){
+                 this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList.push(
+                     {optionContent:options[t]}
+                     )
+              }
+          }
        }
       },
       /* 确定提交按钮 */

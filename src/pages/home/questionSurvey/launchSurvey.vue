@@ -106,10 +106,10 @@
             checkedData:[],
             rules:{
               startTime:[
-                { required: true, message: '开始日期不能为空', trigger: 'blur,change' },
+                {required: true, message: '开始日期不能为空', trigger: 'change' },
               ],
               endTime:[
-                { required: true, message: '结束日期不能为空', trigger: 'blur,change' },
+                {required: true, message: '结束日期不能为空', trigger: 'change' },
               ],
               tableData:[
                 { type:'array',required: true, message: '发送学校不能为空', trigger: 'blur,change' },
@@ -118,6 +118,9 @@
            }
        },
        created(){
+         if(!this.$route.params.surveyId){
+           this.$router.push({name:'调查问卷模板设置'});
+         }
          this.getTableData();
        },
        methods:{
@@ -125,11 +128,36 @@
          submitSurvery(){
          this.$refs.leftFrom.validate((valid)=>{
            if(valid){
-               this.$axios.post(this.submitUrl,{})
+               console.log(this.resizePostData());
+               this.$axios.post(this.submitUrl,
+                this.$commonFun.initPostData(this.resizePostData())
+               ).then((res)=>{
+                 console.log(res);
+                 if(res.data.code==1){
+                   this.$message.success('发起调查成功');
+                 }else{
+                   this.$message.error(res.data.msg.msgTrim());
+                 }
+               })
            }else{
              return false;
            }
          })
+         },
+         /* 提交前参数处理 */
+         resizePostData(){
+           var obj={};
+               obj.title='111';
+               obj.content='12312';
+               obj.surveyId=this.$route.params.surveyId;
+               obj.startTime=this.leftFrom.startTime;
+               obj.endTime=this.leftFrom.endTime;
+               obj.orgIds=[];
+              for(var i in this.leftFrom.tableData){
+                  obj.orgIds.push(this.leftFrom.tableData[i].id);
+              }
+              obj.orgIds=obj.orgIds.join();
+              return obj;
          },
           /* 获取机构信息列表 */
           getTableData(){
@@ -161,6 +189,7 @@
                 this.leftFrom.tableData.push(this.checkedData[item]);
               }
             }
+            this.$refs.leftFrom.validateField('tableData');
           },
           /* 移除 */
           removeCheckedData(val){
