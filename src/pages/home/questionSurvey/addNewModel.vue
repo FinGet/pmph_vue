@@ -126,17 +126,17 @@
 
       <!-- 添加 修改弹窗 -->
       <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
-           <el-form :model="dialogForm" ref="dialogForm" label-width="70px">
-               <el-form-item label="题目：">
+           <el-form :model="dialogForm" ref="dialogForm"  :rules="dialogRules" label-width="70px">
+               <el-form-item label="题目：" prop="title">
                    <el-input placeholder="请输入题目" v-model="dialogForm.title"></el-input>
                </el-form-item>
-               <el-form-item label="序号：">
-                   <el-input placeholder="请输入题目" v-model="dialogForm.sort"></el-input>
+               <el-form-item label="序号：" prop="sort">
+                   <el-input placeholder="请输入序号" v-model="dialogForm.sort"></el-input>
                </el-form-item>
-               <el-form-item label="备注：" v-if="dialogForm.type!=1&&dialogForm.type!=2">
+               <el-form-item label="备注：" v-if="dialogForm.type!=1&&dialogForm.type!=2" prop="direction">
                    <el-input placeholder="请输入备注" v-model="dialogForm.direction"></el-input>
                </el-form-item>
-               <el-form-item label="类型：">
+               <el-form-item label="类型：" prop="type">
                    <el-select v-model="dialogForm.type" placeholder="请选择题目类型" >
                     <el-option
                         v-for="item in dialogOptions"
@@ -153,11 +153,12 @@
                     </el-radio-group>
                </el-form-item> -->
                <el-form-item label="选项：" v-if="dialogForm.type!=3&&dialogForm.type!=4">
-                 <el-form-item label-width="0" v-for="(item,index) in dialogForm.surveyQuestionOptionList" :key="index">
+                   <el-form :model="item" v-for="(item,index) in dialogForm.surveyQuestionOptionList" :key="index">
+                 <el-form-item label-width="0" >
                     <el-input placeholder="请输入选项" class="dialog_input" v-model="item.optionContent"></el-input>
                     <el-button type="text"  style="color:#ff4949" @click="deleteDlalogOption(index)">删除</el-button>
                  </el-form-item>
-
+                    </el-form>
                  <!-- <el-form-item label-width="0">
                     <el-input placeholder="请输入选项" class="dialog_input"></el-input>
                     <el-button type="text"  style="color:#ff4949">删除</el-button>
@@ -192,20 +193,6 @@ export default {
           typeId:'',
           intro:'',
           questionAnswerJosn:[
-                    {
-                title:'你是否使用过XX社交网站',
-                type:1,
-                direction:'',
-                sort:1,    
-                surveyQuestionOptionList:[
-                    {
-                        optionContent:'是' 
-                    },
-                    {
-                        optionContent:'否' 
-                    },
-                ]
-                }
           ]
         },
         objDialogVisible:false,
@@ -253,6 +240,17 @@ export default {
         },
         dialogVisible:false,
         rules:{
+            templateName:[
+               { required: true, message: '请输入问卷名称', trigger: 'blur' },
+               {min:1,max:50,message:'问卷名称不能超过50个字符',trigger:'change,blur'} 
+            ],
+            typeId:[
+                { required: true, message: '请输入问卷名称', trigger: 'blur' },
+            ],
+            intro:[
+                { required: true, message: '请输入调查概述', trigger: 'blur' },
+                {min:1,max:50,message:'概述不能超过50个字符',trigger:'change,blur'}
+            ],
             surveyName:[
                 { required: true, message: '请输入对象名称', trigger: 'blur' },
                 {min:1,max:20,message:'对象名称不能超过20个字符',trigger:'change,blur'}
@@ -261,11 +259,15 @@ export default {
                 { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
                 {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ]
+        },
+        dialogRules:{
+
         }
 
     }
   },
   created(){
+      this.initFormData();
   this.getObjList();
   },
   methods:{
@@ -278,7 +280,24 @@ export default {
              }
          })
       },
+      /* 修改初始化 */
+      initFormData(){
+       if(this.$route.params.type!='add'&&this.$route.params.surveryData){
+           var surveyData=this.$route.params.surveryData;
+          console.log(surveyData) ;
+       }
+      },
+      /* 确定提交按钮 */
       submitTemplate(){
+       if(this.$route.params.type=='add'){
+          this.addTemplate();  
+       }
+       else if(this.$route.params.surveryData){
+          this.editTemplate(); 
+       }
+      },
+      /* 新增 */
+      addTemplate(){
           var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
               arr[i]=this.surveyForm.questionAnswerJosn[i];
@@ -290,13 +309,18 @@ export default {
              console.log(res);
              console.log(this.surveyForm.questionAnswerJosn,arr);
              if(res.data.code==1){
- 
+              this.$message.success('添加成功');
+              this.$router.push({name:'调查问卷模板设置'});
+
              }else{
                  this.$message.error(res.data.msg.msgTrim());
              }
          })
          this.surveyForm.questionAnswerJosn=arr;
          
+      },
+      editTemplate(){
+
       },
       /* 新增对象 */
       addObjInfo(){

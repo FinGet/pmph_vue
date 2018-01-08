@@ -8,22 +8,22 @@
        </div>
       <el-form :model="formTop" ref="formTop" label-width="120px" style="width:80%;">
         <el-form-item label="调查问卷名称：">
-         第七轮全国高等学校五年制本科口腔医学专业国家级规划教材质量调查表
+         {{formTop.title}}
         </el-form-item>
         <el-form-item label="调查对象：">
-         医学院校及口腔专业从业人员
+         {{formTop.surveyName }}
         </el-form-item>
         <el-form-item label="调查概述：">
-         <el-input type="textarea" :rows="3" ></el-input>
+         <el-input type="textarea" :rows="3" v-model="formTop.intro"></el-input>
         </el-form-item>
         <el-form-item label="调查日期范围：">
-         2017-8-1到2017-8-30
+         {{$commonFun.formatDate(formTop.beginDate,'yyyy-MM-dd')}}到{{$commonFun.formatDate(formTop.endDate,'yyyy-MM-dd')}}
         </el-form-item>
         <el-form-item label="参与人数：">
          134
         </el-form-item>
         <el-form-item label="发起人：">
-         张三
+         {{formTop.realname }}
         </el-form-item>
         <el-form-item label="问卷地址：">
          http：//120.76.221.250/#/user/org/id=12
@@ -36,17 +36,17 @@
        </p>
        </div>
        <ul class="result_list">
-           <li>
+           <li v-for="(item,index) in questionList" :key="index">
              <p class="header_p">
                  <label>标题：</label>
-                 <span>调查教材名称</span>
+                 <span>{{item.title}}</span>
              </p>
              <p class="header_p">
                  <label>回答：</label>
-                 <span></span>
+                 <span>{{item.optionContent}}</span>
              </p>
            </li>
-           <li>
+           <!-- <li>
              <p class="header_p">
                  <label>标题：</label>
                  <span>填表人姓名</span>
@@ -85,7 +85,7 @@
                  <label>回答：</label>
                  <span></span>
              </p>
-           </li>
+           </li> -->
        </ul>                   
   </div>
 </template>
@@ -93,7 +93,29 @@
     export default{
         data(){
             return{
-             formTop:{}
+             surveryDetailUrl:'/pmpheep/survey/question/answer/detail',   //详情url
+             formTop:{
+             },
+             questionList:[]
+            }
+        },
+        created(){
+          console.log(this.$route);
+          this.getDetailData();
+        },
+        methods:{
+            getDetailData(){
+                this.$axios.get(this.surveryDetailUrl,{
+                    params:{
+                        surveyId:this.$route.params.surveyId
+                    }
+                }).then((res)=>{
+                    console.log(res);
+                    if(res.data.code==1){
+                        this.formTop=res.data.data.Survey;
+                        this.questionList=res.data.data.SurveyQuestionAnswer;
+                    }
+                })
             }
         }
     }

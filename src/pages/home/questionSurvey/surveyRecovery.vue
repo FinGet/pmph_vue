@@ -23,6 +23,17 @@
      prop="realname"
      width="110"
      >  
+     </el-table-column>
+     <el-table-column
+     label="用户类别"
+     prop="loginType"
+     width="100"
+     > 
+      <template scope="scope">
+        <p v-if="scope.row.loginType==1">社内用户</p>
+        <p v-if="scope.row.loginType==2">作家用户</p>
+        <p v-if="scope.row.loginType==3">机构用户</p>
+         </template> 
      </el-table-column>     
       <el-table-column
      label="所在机构"
@@ -44,7 +55,7 @@
       width="100"
      >
      <template scope="scope">
-       <el-button type="text" @click="$router.push({name:'问卷回收结果'})">查看</el-button>
+       <el-button type="text" @click="$router.push({name:'问卷回收结果',params:{surveyId:scope.row.surveyId}})">查看</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -116,7 +127,6 @@
         },
         created(){
           this.getRecoveryList();
-          this.$router.push({name:'问卷模板新增'})
         },
         methods:{
             /* 获取调查问卷列表 */
@@ -131,6 +141,7 @@
                  }
              })
             },
+            /* 搜索 */
             search(){
              this.searchParams.pageNumber=1;
              this.getRecoveryList();

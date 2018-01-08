@@ -45,7 +45,7 @@
         <p class="header_p">
             <span>学校名称：</span>
             <el-input class="input" placeholder="请输入学校名称"></el-input>
-            <el-button type="primary" icon="search">搜索</el-button>
+            <el-button type="primary" icon="search" @click="tableSearch">搜索</el-button>
             <el-button type="primary">确认选择</el-button>
         </p>
         <el-table :data="rightTableData" class="table-wrapper" border>
@@ -80,6 +80,7 @@
    export default{
        data(){
            return{
+             tableDataUrl:'',  //机构列表url
             leftFrom:{
               startDate:'',
               tableData:[
@@ -133,12 +134,33 @@
             ]
            }
        },
+       created(){
+
+       },
        methods:{
-          handleSizeChange(){
-
+          /* 获取机构信息列表 */
+          getTableData(){
+           this.$axios.get(this.tableDataUrl,{
+             params:this.searchParams
+           }).then((res)=>{
+             console.log(res);
+             if(res.data.code==1){
+               this.pageTotal=res.data.pageTotal;
+             }
+           })
           },
-          handleCurrentChange(){
-
+          tableSearch(){
+           this.searchParams.pageNumber=1;
+           this.getTableData();
+          },
+          handleSizeChange(val){
+           this.searchParams.pageSize=val;
+           this.searchParams.pageNumber=1;
+           this.getTableData();
+          },
+          handleCurrentChange(val){
+           this.searchParams.pageNumber=val;
+           this.getTableData();
           }
        }
    } 
