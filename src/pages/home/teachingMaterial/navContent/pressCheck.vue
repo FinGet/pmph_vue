@@ -593,7 +593,6 @@
           offlineProgress:this.searchParams.offlineProgress,
         }})
           .then(response=>{
-            console.log(response);
             this.exportWordProgress(response.data);
           })
           .catch(e=>{

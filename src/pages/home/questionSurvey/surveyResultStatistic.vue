@@ -2,150 +2,104 @@
   <div class="survey_result_statistic">
    <p class="header_p">
        <span>调查问卷名称：</span>
-       <el-input class="input" placeholder="请输入调查问卷名称"></el-input>
-       <el-button type="primary" icon="search">搜索</el-button>
+       <el-input class="input" placeholder="请输入调查问卷名称" v-model="searchParams.title"  @keyup.enter.native="search"></el-input>
+       <el-button type="primary" icon="search" @click="search">搜索</el-button>
    </p>
    <el-table :data="tableData" border class="table-wrapper">
-       <el-table-column label="调查问卷名称" prop="surveyName">
+       <el-table-column label="调查问卷名称" prop="surveyTitle">
        </el-table-column>
-       <el-table-column label="调查概述" prop="note">
-       </el-table-column>       
+       <el-table-column label="调查概述" prop="intro">
+       </el-table-column>
        <el-table-column label="调查开始日期" prop="startDate" width="120">
        </el-table-column>
        <el-table-column label="调查结束日期" prop="endDate" width="120">
        </el-table-column>
-       <el-table-column label="调查对象" prop="surveyObj"  width="110">
+       <el-table-column label="调查对象" prop="surveyName"  width="110">
        </el-table-column>
-       <el-table-column label="参与人数" prop="putNum" width="100">
+       <el-table-column label="参与人数" prop="surveyUsers" width="100">
        </el-table-column>
-       <el-table-column label="发起人" prop="startP" width="100">
+       <el-table-column label="发起人" prop="realname" width="100">
        </el-table-column>
        <el-table-column label="操作" width="170">
          <template scope="scope">
-           <el-button type="text" @click="$router.push({name:'结果明细'})">查看</el-button>
+           <el-button type="text" @click="$router.push({name:'结果明细',params:{data:scope.row},query:{id:scope.row.surveyId}})">查看</el-button>
            <span>|</span>
-           <el-button type="text">复制问卷地址</el-button>             
-             </template>  
+           <el-button type="text">复制问卷地址</el-button>
+             </template>
        </el-table-column>
    </el-table>
    <!-- 分页 -->
     <div class="pagination-wrapper">
       <el-pagination
         v-if="pageTotal>searchParams.pageSize"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="searchParams.pageNumber"
+        @size-change="paginationSizeChange"
+        :current-page.sync="searchParams.pageNumber"
         :page-sizes="[10,20,30,50]"
         :page-size="searchParams.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageTotal">
       </el-pagination>
-    </div>   
+    </div>
   </div>
 </template>
 <script type="text/javascript">
     export default{
         data(){
             return{
-              pageTotal:100,
+              api_statistic_list:'/pmpheep/survey/question/answer/result',
+              pageTotal:0,
               searchParams:{
-                  pageSize:10,
-                  pageNumber:1
+                  pageSize:30,
+                  pageNumber:1,
+                  title:'',
               },
-              tableData:[
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-                  {
-                     surveyName:'求职调查',
-                     startDate:'2017-8-1',
-                     endDate:'2017-8-31' ,
-                     surveyObj:'在校学生',
-                     note:'调查学生的职业规划',
-                     putNum:200,
-                     startP:'张三'
-                  },
-
-              ]
+              tableData:[],
             }
         },
         methods:{
-            handleSizeChange(){
-
-            },
-            handleCurrentChange(){
-
-            }
-        }
+          /**
+           * 获取数据
+           */
+          getTableData(){
+            this.$axios.get(this.api_statistic_list,{params:this.searchParams})
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  res.data.rows.map(iterm=>{
+                    iterm.startDate=this.$commonFun.formatDate(iterm.startDate,'yyyy-MM-dd');
+                    iterm.endDate=this.$commonFun.formatDate(iterm.endDate,'yyyy-MM-dd');
+                  });
+                  this.pageTotal = res.data.total;
+                  this.tableData=res.data.rows;
+                  console.log(res.data);
+                }else{
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(e=>{
+                console.log(e);
+              })
+          },
+          /**
+           * 搜索
+           */
+          search(){
+            this.searchParams.pageNumber=1;
+            this.getTableData()
+          },
+          /**
+           * 分页每页显示条数发生改变
+           * @param val
+           */
+          paginationSizeChange(val){
+            this.searchParams.pageSize=val;
+            this.searchParams.pageNumber=1;
+            this.getTableData();
+          },
+        },
+      created(){
+          this.search();
+      },
     }
 </script>
 <style>
