@@ -922,6 +922,7 @@ export default {
       filelist.forEach((item)=>{
         this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
       })
+      this.$refs.ruleForm.validateField('noticeFiles');
     },
     /* 文件 */
     fileUploadChange(file,filelist){
@@ -963,6 +964,7 @@ export default {
       filelist.forEach((item)=>{
         this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
       })
+      this.$refs.ruleForm.validateField('noteFiles');
     },
     /**
        * 删除选中的项目主任

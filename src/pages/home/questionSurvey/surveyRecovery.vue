@@ -2,10 +2,10 @@
   <div class="survey_recovery">
     <p class="header_p">
        <span>调查问卷名称：</span>
-       <el-input class="input" placeholder="请输入调查问卷名称"></el-input>
+       <el-input class="input" placeholder="请输入调查问卷名称" v-model="searchParams.title"></el-input>
        <span>提交人：</span>
-        <el-input class="input" placeholder="提交人姓名"></el-input>
-        <el-button type="primary" icon="search">查询</el-button>
+        <el-input class="input" placeholder="提交人姓名" v-model="searchParams.username"></el-input>
+        <el-button type="primary" icon="search" @click="search">查询</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -15,33 +15,47 @@
     >
      <el-table-column
      label="调查问卷名称"
-     prop="name"
+     prop="title"
      >  
      </el-table-column>
      <el-table-column
      label="提交人"
-     prop="writer"
+     prop="realname"
      width="110"
      >  
+     </el-table-column>
+     <el-table-column
+     label="用户类别"
+     prop="loginType"
+     width="100"
+     > 
+      <template scope="scope">
+        <p v-if="scope.row.loginType==1">社内用户</p>
+        <p v-if="scope.row.loginType==2">作家用户</p>
+        <p v-if="scope.row.loginType==3">机构用户</p>
+         </template> 
      </el-table-column>     
       <el-table-column
-     label="用户类别"
-     prop="surveyObj"
+     label="所在机构"
+     prop="org_name"
      width="100"
      >  
      </el-table-column> 
      <el-table-column
      label="提交时间"
-     prop="createDate"
+     prop="gmt_create"
      width="170"
      >  
+     <template scope="scope">
+       {{$commonFun.formatDate(scope.row.gmt_create)}}
+     </template>
      </el-table-column>
      <el-table-column
       label="操作"
       width="100"
      >
      <template scope="scope">
-       <el-button type="text" @click="$router.push({name:'问卷回收结果'})">查看</el-button>
+       <el-button type="text" @click="$router.push({name:'问卷回收结果',params:{surveyId:scope.row.surveyId}})">查看</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -64,9 +78,10 @@
     export default{
         data(){
             return{
+                recoveryListUrl:'/pmpheep/survey/question/answer/recovery',   //回收列表url
                 searchParams:{
-                    startDate:'',
-                    endDate:'',
+                    username:'',
+                    title:'',
                     pageSize:10,
                     pageNumber:1
                 },
@@ -110,12 +125,35 @@
                 ]
             }
         },
+        created(){
+          this.getRecoveryList();
+        },
         methods:{
-            handleSizeChange(){
-
+            /* 获取调查问卷列表 */
+            getRecoveryList(){
+             this.$axios.get(this.recoveryListUrl,{
+                 params:this.searchParams
+             }).then((res)=>{
+                 if(res.data.code==1){
+                     this.pageTotal=res.data.pageTotal;
+                     this.tableData=res.data.rows;
+                     console.log(res);
+                 }
+             })
             },
-            handleCurrentChange(){
-
+            /* 搜索 */
+            search(){
+             this.searchParams.pageNumber=1;
+             this.getRecoveryList();
+            },
+            handleSizeChange(val){
+             this.searchParams.pageSize=val;
+             this.searchParams.pageNumber=1;
+             this.getRecoveryList();
+            },
+            handleCurrentChange(val){
+              this.searchParams.pageNumber=val;
+              this.getRecoveryList();
             }
         }
     }
