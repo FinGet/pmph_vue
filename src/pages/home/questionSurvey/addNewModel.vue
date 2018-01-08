@@ -289,11 +289,11 @@ export default {
       },
       /* 确定提交按钮 */
       submitTemplate(){
-       if(this.$route.params.type=='add'){
-          this.addTemplate();  
-       }
-       else if(this.$route.params.surveryData){
+       if(this.$route.params.surveryData&&this.$route.params.typ!=='add'){
           this.editTemplate(); 
+       }
+       else{
+          this.addTemplate();  
        }
       },
       /* 新增 */
