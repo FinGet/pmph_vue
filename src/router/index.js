@@ -106,7 +106,6 @@ const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet
 const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
 const surveryResultDetail = () => import('../pages/home/questionSurvey/surveyResultDetail')
-const editSurveyObj = () => import('../pages/home/questionSurvey/editSurveyObj')
 const launchSurvey =()=> import('../pages/home/questionSurvey/launchSurvey')
 const recoveryResult = () => import('../pages/home/questionSurvey/recoveryResult')
 /**系统日志 */
@@ -238,16 +237,15 @@ export default new Router({
         },
         /* 问卷调查 */
         {
-          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 27}, children:[
-            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet,},
-            { path: 'launch', name: '发起调查', component: launchSurvey,},
-            { path: 'newmodel', name: '问卷模板新增', component: addNewModel,},
-            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey,},
-            { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic,},
-            { path: 'detail', name:'结果明细', component: surveryResultDetail,},
-            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, },
-            { path: 'result', name: '问卷回收结果', component: recoveryResult,},
-            { path: 'obj', name: '调查对象管理', component: editSurveyObj,},
+          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 1}, children:[
+            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 1 }},
+            { path: 'launch', name: '发起调查', component: launchSurvey, meta: { authorityId: 1 }},
+            { path: 'newmodel', name: '问卷模板新增', component: addNewModel, meta: { authorityId: 1 } },
+            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey, meta: { authorityId: 1 } },
+            { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 1 } },
+            { path: 'detail', name:'结果明细', component: surveryResultDetail, meta: { authorityId: 1 } },
+            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
+            { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: 1 } },
           ]
         },
 

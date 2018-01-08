@@ -105,14 +105,14 @@
         <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
       </el-submenu>
 
-       <el-submenu index="/survey" v-if="isShowSide(27)">
+       <el-submenu index="/survey" >
         <template slot="title">
           <i class="fa fa-pencil-square-o fa-fw"></i>
           <span slot="title">问卷调查</span>
         </template>
         <el-menu-item index="/survey/setmodel" v-if="isShowSide(15)">调查问卷模板设置</el-menu-item>
-        <el-menu-item index="/survey/newmodel" v-if="isShowSide(16)">问卷模板新增</el-menu-item>
-        <el-menu-item index="/survey/newsurvey" v-if="isShowSide(17)">新建调查问卷</el-menu-item>
+        <!-- <el-menu-item index="/survey/newmodel" v-if="isShowSide(16)">问卷模板新增</el-menu-item>
+        <el-menu-item index="/survey/newsurvey" v-if="isShowSide(17)">新建调查问卷</el-menu-item> -->
         <el-menu-item index="/survey/statistic" v-if="isShowSide(16)">调查结果统计</el-menu-item>
         <el-menu-item index="/survey/recovery" v-if="isShowSide(17)">调查问卷回收</el-menu-item>
       </el-submenu>

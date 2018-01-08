@@ -29,16 +29,16 @@
             <span></span>
           </div>
           <div class="searchInput">
-            <el-select v-model="params.rank" placeholder="全部"  clearable>
+            <el-select v-model="params.orgTypeName" placeholder="全部"  clearable>
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </div>
         </div>
         <div class="searchBox-wrapper searchBox-radio">
-          <el-radio-group v-model="orgniztionType" class="radio-group">
-            <el-radio :label="1">医院</el-radio>
-            <el-radio :label="2">学校</el-radio>
+          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="refreshTableData">
+            <el-radio :label="true">医院</el-radio>
+            <el-radio :label="false">学校</el-radio>
           </el-radio-group>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -548,7 +548,8 @@ export default {
         // username: "",
         orgName: "",
         name: "",
-        rank:''
+        orgTypeName:'',
+        isHospital: true
       },
       totalPages: 0,// 数据总量
 			visible1: false,

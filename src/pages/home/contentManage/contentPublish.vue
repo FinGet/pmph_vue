@@ -17,6 +17,16 @@
             @change="handleChange">
           </el-cascader>
       </el-form-item>
+      <el-form-item label="所属教材：">
+          <el-select v-model="formData.book" placeholder="请选择" class="input">
+            <el-option
+              v-for="item in bookOptions"
+              :key="item.id"
+              :label="item.materialName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+      </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
@@ -93,7 +103,8 @@ export default {
         file: [],
         scheduledTime:'',
         isPublished: "",
-        path:'0'
+        path:'0',
+        book:''
       },
       showPreventDialog:false,
       preventContent:'',
@@ -116,6 +127,10 @@ export default {
         value: "id",
         label: "categoryName"
       },
+      // bookType:{
+      //   value: "id",
+      //   label: "materialName"
+      // },
       defaultCategoryId:[],
       uploadFileList: [],
          fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
@@ -146,7 +161,8 @@ export default {
           categoryName:'公告管理',
           children:null
         }
-        ]
+        ],
+        bookOptions: []
     };
   },
   computed: {
@@ -455,10 +471,20 @@ export default {
           
         }
       }
+    },
+    /**获取教材列表 */
+    getBookLists(){
+      this.$axios.get('/pmpheep/material/published').then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.bookOptions=res.data;
+        }
+      })
     }
   },
   created() {
     this.initIsEdit();
+    this.getBookLists();
   },
   components: {
     Editor
