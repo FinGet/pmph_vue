@@ -43,7 +43,7 @@
                     <li v-for="(iterm,index) in choiceQuestionData" :key="index">
                       <div class="question_p">
                         <p><span>内容类型：</span>{{iterm.questionType===1?'单选题':'多选题'}}</p>
-                        <p><span>顺序号：</span>{{iterm.questionSort}}</p>
+                        <!--<p><span>顺序号：</span>{{iterm.questionSort}}</p>-->
                         <p><span>内容标题：</span>
                           {{iterm.title}}
                           {{iterm.questionType===1?'':'(可多选)'}}
@@ -70,7 +70,6 @@
                     <li v-for="(iterm,index) in writeQuestionData" :key="index">
                         <div class="question_p">
                           <p><span>内容类型：</span>{{iterm.questionType===4||iterm.questionType===5?'填空题':'其他'}}</p>
-                          <p><span>顺序号：</span>{{iterm.questionSort}}</p>
                           <p><span>内容标题：</span>{{iterm.title}}</p>
                         </div>
                         <div class="question_p">
@@ -317,8 +316,8 @@ export default {
   overflow: hidden;
 }
 .survery_result_detail .data_statistic .question_p p{
-  float: left;
-  width:50%;
+  /*float: left;*/
+  /*width:50%;*/
 
 }
 
