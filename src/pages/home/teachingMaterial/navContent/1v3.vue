@@ -522,7 +522,7 @@
             this.getTableData()
             //更新教材信息
             bus.$emit('material:update-info');
-          } else if(res.code == 3){
+          } else{
             this.$message.error(res.msg.msgTrim())
           }
         }).catch(err => {
