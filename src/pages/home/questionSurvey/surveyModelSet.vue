@@ -8,6 +8,7 @@
             v-model="searchParams.startTime"
             class="input"
             type="date"
+            @change="startDateChange"
             placeholder="请选择开始日期">
         </el-date-picker>
         <span>-</span>
@@ -15,6 +16,7 @@
             v-model="searchParams.endTime"
             class="input"
             type="date"
+            @change="endDateChange"
             placeholder="请选择结束日期">
         </el-date-picker>
         <el-button type="primary" icon="search" @click="search()">搜索</el-button>
@@ -52,7 +54,10 @@
      label="创建日期"
      prop="gmtCreat"
      width="120"
-     >  
+     > 
+     <template scope="scope">
+         {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}
+         </template> 
      </el-table-column>
      <el-table-column
       label="操作"
@@ -154,6 +159,13 @@
             search(){
               this.searchParams.pageNumber=1;
               this.getSurveyList();
+            },
+        
+            startDateChange(val){
+             this.searchParams.startTime=val;
+            },
+            endDateChange(val){
+              this.searchParams.endTime=val;
             },
             /* 分页改变 */
             handleSizeChange(val){

@@ -5,7 +5,7 @@
        <el-input class="input" placeholder="请输入调查问卷名称" v-model="searchParams.title"></el-input>
        <span>提交人：</span>
         <el-input class="input" placeholder="提交人姓名" v-model="searchParams.username"></el-input>
-        <el-button type="primary" icon="search">查询</el-button>
+        <el-button type="primary" icon="search" @click="search">查询</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -116,6 +116,7 @@
         },
         created(){
           this.getRecoveryList();
+          this.$router.push({name:'问卷模板新增'})
         },
         methods:{
             /* 获取调查问卷列表 */
@@ -130,11 +131,18 @@
                  }
              })
             },
-            handleSizeChange(){
-
+            search(){
+             this.searchParams.pageNumber=1;
+             this.getRecoveryList();
             },
-            handleCurrentChange(){
-
+            handleSizeChange(val){
+             this.searchParams.pageSize=val;
+             this.searchParams.pageNumber=1;
+             this.getRecoveryList();
+            },
+            handleCurrentChange(val){
+              this.searchParams.pageNumber=val;
+              this.getRecoveryList();
             }
         }
     }

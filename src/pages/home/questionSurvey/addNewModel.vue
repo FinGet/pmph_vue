@@ -279,19 +279,24 @@ export default {
          })
       },
       submitTemplate(){
+          var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
+              arr[i]=this.surveyForm.questionAnswerJosn[i];
               this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
          this.$axios.post(this.addTemplateUrl,
          this.$commonFun.initPostData(this.surveyForm)
          ).then((res)=>{
              console.log(res);
+             console.log(this.surveyForm.questionAnswerJosn,arr);
              if(res.data.code==1){
-
+ 
              }else{
-                 this.$message.error(res.dat)
+                 this.$message.error(res.data.msg.msgTrim());
              }
          })
+         this.surveyForm.questionAnswerJosn=arr;
+         
       },
       /* 新增对象 */
       addObjInfo(){
