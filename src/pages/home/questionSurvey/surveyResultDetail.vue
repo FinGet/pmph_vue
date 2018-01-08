@@ -8,22 +8,22 @@
        </div>
       <el-form :model="formTop" ref="formTop" label-width="120px" style="width:80%;">
         <el-form-item label="调查问卷名称：">
-         求职调查
+         {{surveyData.surveyTitle}}
         </el-form-item>
         <el-form-item label="调查对象：">
-         在校学生
+          {{surveyData.surveyName}}
         </el-form-item>
         <el-form-item label="调查概述：">
-         <el-input type="textarea" :rows="3" ></el-input>
+         {{surveyData.intro}}
         </el-form-item>
         <el-form-item label="调查日期范围：">
-         2017-8-1到2017-8-30
+          {{surveyData.startDate}} 到 {{surveyData.endDate}}
         </el-form-item>
         <el-form-item label="参与人数：">
-         134
+          {{surveyData.surveyUsers}}
         </el-form-item>
         <el-form-item label="发起人：">
-         张三
+          {{surveyData.realname}}
         </el-form-item>
         <el-form-item label="问卷地址：">
          http：//120.76.221.250/#/user/org/id=12
@@ -40,88 +40,46 @@
          <el-tabs v-model="activeName" >
             <el-tab-pane label="数据统计" name="first" class="data_statistic">
                 <ul class="option_ul">
-                    <li>
-                        <div class="question_p">
-                          <p><span>内容类型：</span>多选题</p>
-                          <p><span>顺序号：</span>1</p>
-                          <p><span>内容标题：</span>你喜欢那种类型的小说？（可多选）</p>
-                        </div>
-                         <el-table :data="tableData" border class="question_table">
-                           <el-table-column label="选项序号" width="100" prop="num">  
-                           </el-table-column>
-                           <el-table-column label="选项标题" prop="option">  
-                           </el-table-column>
-                           <el-table-column label="占比" prop="percent" width="90">   
-                           </el-table-column>                           
-                             <el-table-column label="统计次数" prop="total" width="100">   
-                             </el-table-column>        
-                         </el-table>
+                    <li v-for="(iterm,index) in choiceQuestionData" :key="index">
+                      <div class="question_p">
+                        <p><span>内容类型：</span>{{iterm.questionType===1?'单选题':'多选题'}}</p>
+                        <!--<p><span>顺序号：</span>{{iterm.questionSort}}</p>-->
+                        <p><span>内容标题：</span>
+                          {{iterm.title}}
+                          {{iterm.questionType===1?'':'(可多选)'}}
+                        </p>
+                      </div>
+                      <el-table :data="iterm.choicesList" border class="question_table">
+                        <el-table-column label="选项序号" width="100" prop="index">
+                        </el-table-column>
+                        <el-table-column label="选项标题" prop="title">
+                        </el-table-column>
+                        <el-table-column label="占比" width="240">
+                          <template scope="scope">
+                            <div class="zb-box">
+                              <p>{{scope.row.zb}}%</p>
+                              <div class="zb-box-percent" :style="{width:scope.row.zb+'%'}"></div>
+                            </div>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="统计次数" prop="num" width="100">
+                        </el-table-column>
+                      </el-table>
                     </li>
-                    <li>
+
+                    <li v-for="(iterm,index) in writeQuestionData" :key="index">
                         <div class="question_p">
-                          <p><span>内容类型：</span>多选题</p>
-                          <p><span>顺序号：</span>1</p>
-                          <p><span>内容标题：</span>你喜欢那种类型的小说？（可多选）</p>
-                        </div>
-                         <el-table :data="tableData" border class="question_table">
-                           <el-table-column label="选项序号" width="100" prop="num">  
-                           </el-table-column>
-                           <el-table-column label="选项标题" prop="option">  
-                           </el-table-column>
-                           <el-table-column label="占比" prop="percent" width="90">   
-                           </el-table-column>                           
-                             <el-table-column label="统计次数" prop="total" width="100">   
-                             </el-table-column>        
-                         </el-table>
-                    </li>
-                    <li>
-                        <div class="question_p">
-                          <p><span>内容类型：</span>多选题</p>
-                          <p><span>顺序号：</span>1</p>
-                          <p><span>内容标题：</span>你喜欢那种类型的小说？（可多选）</p>
-                        </div>
-                         <el-table :data="tableData" border class="question_table">
-                           <el-table-column label="选项序号" width="100" prop="num">  
-                           </el-table-column>
-                           <el-table-column label="选项标题" prop="option">  
-                           </el-table-column>
-                           <el-table-column label="占比" prop="percent" width="90">   
-                           </el-table-column>                           
-                             <el-table-column label="统计次数" prop="total" width="100">   
-                             </el-table-column>        
-                         </el-table>
-                    </li>
-                    <li>
-                        <div class="question_p">
-                          <p><span>内容类型：</span>多选题</p>
-                          <p><span>顺序号：</span>1</p>
-                          <p><span>内容标题：</span>你喜欢那种类型的小说？（可多选）</p>
-                        </div>
-                         <el-table :data="tableData" border class="question_table">
-                           <el-table-column label="选项序号" width="100" prop="num">  
-                           </el-table-column>
-                           <el-table-column label="选项标题" prop="option">  
-                           </el-table-column>
-                           <el-table-column label="占比" prop="percent" width="90">   
-                           </el-table-column>                           
-                             <el-table-column label="统计次数" prop="total" width="100">   
-                             </el-table-column>        
-                         </el-table>
-                    </li>
-                    <li>
-                        <div class="question_p">
-                          <p><span>内容类型：</span>填空题</p>
-                          <p><span>顺序号：</span>5</p>
-                          <p><span>内容标题：</span>留下您的建议？</p>
+                          <p><span>内容类型：</span>{{iterm.questionType===4||iterm.questionType===5?'填空题':'其他'}}</p>
+                          <p><span>内容标题：</span>{{iterm.title}}</p>
                         </div>
                         <div class="question_p">
                           <p>
                             <span>统计结果：</span>
-                            10987条
-                            <el-button type="text" style="color:#337ab7;margin-left:20px;" @click="dialogVisible=true">查看调查结果</el-button>
-                            <el-button type="text" style="color:#337ab7">导出结果查看</el-button>
+                            {{iterm.count}}条
+                            <el-button type="text" style="color:#337ab7;margin-left:20px;" @click="resultDetail(iterm.surveyId,iterm.questionId)">查看调查结果</el-button>
+                            <el-button type="text" style="color:#337ab7" @click="exportResult(iterm.surveyId,iterm.questionId)">导出结果查看</el-button>
                             </p>
-                        </div> 
+                        </div>
                     </li>
                 </ul>
             </el-tab-pane>
@@ -144,14 +102,14 @@
          <div style="overflow:hidden;">
           <p class="header_p">
              <span>问题：</span>
-             <span>留下您的建议？</span>
+             <span v-if="dialogTableData.length">{{dialogTableData[0].questionName}}</span>
           </p>
           <el-table :data="dialogTableData" border class="table-wrapper">
-            <el-table-column label="序号" prop="num" width="85">
+            <el-table-column label="序号" prop="index" width="65">
             </el-table-column>
-            <el-table-column label="调查结果" prop="name">
+            <el-table-column label="调查结果" prop="optionContent">
             </el-table-column>
-            <el-table-column label="时间" prop="time" width="120">
+            <el-table-column label="时间" prop="gmtCreate" width="180">
             </el-table-column>
             <el-table-column label="填写人" prop="realname" width="90">
             </el-table-column>
@@ -159,12 +117,12 @@
                     <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="pageTotal>searchParams.pageSize"
+              v-if="pageTotal>dialogSearchParams.pageSize"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="searchParams.pageNumber"
+              :current-page.sync="dialogSearchParams.pageNumber"
               :page-sizes="[10,20,30,50]"
-              :page-size="searchParams.pageSize"
+              :page-size="dialogSearchParams.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="pageTotal">
             </el-pagination>
@@ -178,175 +136,133 @@ import echarts from "../../../../static/echarts/echarts.common.min";
 export default {
   data() {
     return {
+      api_detail:'/pmpheep/survey/question/answer/count',
+      api__question_result:'/pmpheep/survey/question/answer/fill',
+      surveyData:{
+        surveyId: '',
+        surveyTitle: '',
+        surveyName: "",
+        intro: null,
+        realname: "",
+        surveyUsers: '',
+        questionId: null,
+        title: null,
+        optionId: null,
+        optionContent: null,
+        optionCount: null,
+        questionSum: null,
+        startDate: null,
+        endDate: null,
+        questionSort: null,
+        questionType: null,
+        count: 0
+      },
+      searchParams:{
+        surveyId:'',
+      },
       activeName: "first",
       formTop:{
 
       },
-      dialogVisible:false,
-      dialogTableData:[
-          {
-            num:1,
-            name:'建议建议1',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-          {
-            num:2,
-            name:'建议建议2',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-          {
-            num:3,
-            name:'建议建议3',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-          {
-            num:4,
-            name:'建议建议4',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-          {
-            num:5,
-            name:'建议建议5',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-          {
-            num:6,
-            name:'建议建议6',
-            time:'2017-8-10',
-            realname:'张三'
-          },
-      ],
-      searchParams:{
+      dialogSearchParams:{
+        pageSize:30,
         pageNumber:1,
-        pageSize:10,
-        
+        surveyId:"",
+        questionId:''
       },
-      pageTotal:1000,
-      tableData: [
-        {
-          num:1,
-          option: "言情小说",
-          total: 345,
-          percent: "54.46%"
-        },
-        {
-          num:2,
-          option: "穿越小说",
-          total: 234,
-          percent: "38.3%"
-        },
-        {
-          num:3,
-          option: "古典小说",
-          total: 20,
-          percent: "3.73%"
-        },
-        {
-          num:4,
-          option: "科幻",
-          total: 12,
-          percent: "1.96%"
-        },
-      ],
-      tableData1: [
-        {
-          option: "交友",
-          total: 5,
-          percent: "25%"
-        },
-        {
-          option: "征婚",
-          total: 5,
-          percent: "25%"
-        },
-        {
-          option: "找人聊天",
-          total: 10,
-          percent: "50%"
-        }
-      ],
+      dialogVisible:false,
+      dialogTableData:[],
+      pageTotal:0,
+      choiceQuestionData: [],
+      writeQuestionData:[],
     };
   },
   methods: {
-    initChart() {
-      console.log(1231);
-      var myChart1 = echarts.init(document.getElementById("pieChart1"));
-      var option1 = {
-        title: {
-          text: "",
-          x: "center"
-        },
-        tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-          orient: "vertical",
-          left: "left",
-          data: ["是", "否"]
-        },
-        series: [
-          {
-            name: "统计数据",
-            type: "pie",
-            radius: "80%",
-            center: ["50%", "45%"],
-            data: [{ value: 10, name: "是" }, { value: 10, name: "否" }],
-            itemStyle: {
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)"
-              }
-            }
-          }
-        ]
-      };
-      var myChart2 = echarts.init(document.getElementById("barChart1"));
-      var option2 = {
-        title: {},
-        tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c}"
-        },
-        legend: {
-          data: ["是", "否"]
-        },
-        xAxis:{
-          data: ["是", "否"]
-        },
-        yAxis:{},
-        series: [
-          {
-            name: "统计数据",
-            type: "bar",
-            barMaxWidth:50,
-            data: [{ value: 10, name: "是" }, { value: 10, name: "否" }]
-          }
-        ]
-      };
-      myChart1.setOption(option1);
-      console.log(myChart2);
-      myChart2.setOption(option2);
-    },
-    handleSizeChange(){
-
-    },
-    handleCurrentChange(){
-
+    handleSizeChange(val){
+      this.dialogSearchParams.pageSize=val;
+      this.dialogSearchParams.pageNumber=1;
+      this.resultDetail('','',true);
     },
     closeDialog(done){
       done();
-    }
+    },
+    /**
+     * 获取当前问卷数据
+     */
+    getSurveyData(){
+      this.$axios.get(this.api_detail,{params:this.searchParams})
+        .then((response) => {
+          let res = response.data;
+          if (res.code == '1') {
+            res.data.questionOne.map((iterm,index)=>{
+              iterm.choicesList=[];
+              iterm.optionContent=iterm.optionContent.split(',');
+              iterm.optionCount=iterm.optionCount.split(',');
+              iterm.optionContent.forEach((t,i)=>{
+                iterm.choicesList.push({
+                  index:index+1,
+                  title:t,
+                  num:iterm.optionCount[i],
+                  zb:iterm.questionSum ? Math.round((iterm.optionCount[i]/iterm.questionSum)*10000)/100 : 0,
+                })
+              })
+            });
+            this.choiceQuestionData=res.data.questionOne;
+            this.writeQuestionData = res.data.questionMore;
+          }else{
+            self.$message.error(res.msg.msgTrim());
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+    },
+    /**
+     * 输入题型查看结果
+     */
+    resultDetail(surveyId,questionId,openDialog){
+      if(!openDialog){
+        this.dialogVisible=true;
+        this.dialogSearchParams.surveyId=surveyId;
+        this.dialogSearchParams.questionId=questionId;
+      }
+      this.$axios.get(this.api__question_result,{params:this.dialogSearchParams})
+        .then((response) => {
+          let res = response.data;
+          if (res.code == '1') {
+            console.log(res.data);
+            res.data.rows.forEach((iterm,index)=>{
+              iterm.index = index+1;
+              iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
+            })
+            this.dialogTableData = res.data.rows;
+            this.pageTotal=res.data.total;
+          }else{
+            self.$message.error(res.msg.msgTrim());
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+    },
+    /**
+     * 导出结果查看
+     */
+    exportResult(surveyId,questionId){
+
+    },
   },
   mounted() {
-    //this.initChart();
-  }
+  },
+  created(){
+    this.searchParams.surveyId = this.$route.query.id;
+    this.surveyData = this.$route.params.data||{};
+    if(!this.searchParams.surveyId||!this.surveyData.surveyTitle){
+      this.$router.go(-1);
+      return;
+    }
+    this.getSurveyData();
+  },
 };
 </script>
 <style>
@@ -382,7 +298,7 @@ export default {
   margin-left:40px;
   color:#999;
   float:left;
-  line-height: 30px;  
+  line-height: 30px;
 }
 .survery_result_detail  .tips span{
   color:#ff4949;
@@ -400,8 +316,8 @@ export default {
   overflow: hidden;
 }
 .survery_result_detail .data_statistic .question_p p{
-  float: left;
-  width:50%;
+  /*float: left;*/
+  /*width:50%;*/
 
 }
 
@@ -431,4 +347,21 @@ export default {
   width: 217px;
   margin-right: 10px;
 }
+  .zb-box{
+    position: relative;
+  }
+.zb-box>p{
+  position: relative;
+  z-index: 2;
+}
+  .zb-box-percent{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 0;
+    height: 100%;
+    background-color: #dcebfe;
+    transition: all .28s;
+    z-index: 1;
+  }
 </style>
