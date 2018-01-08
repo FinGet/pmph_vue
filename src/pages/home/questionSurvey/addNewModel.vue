@@ -97,7 +97,7 @@
          <h3 v-if="surveyForm.questionAnswerJosn.length==0">题目为空，请在左侧选择题目添加</h3>
          <el-form  ref="form" label-width="100px" label-position="top">
 
-           <el-form-item :label="(index+1)+'.'+item.title" v-for="(item,index) in surveyForm.questionAnswerJosn" :key="index">
+           <el-form-item :label="item.sort+'.'+item.title" v-for="(item,index) in surveyForm.questionAnswerJosn" :key="index">
                <!-- 单选 -->
                 <el-radio-group  v-if="item.type==1">
                     <el-radio :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-radio>
@@ -125,10 +125,13 @@
       </div>
 
       <!-- 添加 修改弹窗 -->
-      <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog">
+      <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
            <el-form :model="dialogForm" ref="dialogForm" label-width="70px">
                <el-form-item label="题目：">
                    <el-input placeholder="请输入题目" v-model="dialogForm.title"></el-input>
+               </el-form-item>
+               <el-form-item label="序号：">
+                   <el-input placeholder="请输入题目" v-model="dialogForm.sort"></el-input>
                </el-form-item>
                <el-form-item label="备注：" v-if="dialogForm.type!=1&&dialogForm.type!=2">
                    <el-input placeholder="请输入备注" v-model="dialogForm.direction"></el-input>
@@ -150,7 +153,7 @@
                     </el-radio-group>
                </el-form-item> -->
                <el-form-item label="选项：" v-if="dialogForm.type!=3&&dialogForm.type!=4">
-                 <el-form-item label-width="0" v-for="(item,index) in dialogForm.ptionList" :key="index">
+                 <el-form-item label-width="0" v-for="(item,index) in dialogForm.surveyQuestionOptionList" :key="index">
                     <el-input placeholder="请输入选项" class="dialog_input" v-model="item.optionContent"></el-input>
                     <el-button type="text"  style="color:#ff4949" @click="deleteDlalogOption(index)">删除</el-button>
                  </el-form-item>
@@ -192,7 +195,8 @@ export default {
                     {
                 title:'你是否使用过XX社交网站',
                 type:1,
-                direction:'',    
+                direction:'',
+                sort:1,    
                 surveyQuestionOptionList:[
                     {
                         optionContent:'是' 
@@ -236,7 +240,8 @@ export default {
         dialogForm:{
         title:'',
         type:'',
-        direction:'' ,   
+        direction:'' ,
+        sort:'',   
           surveyQuestionOptionList:[
               {
                  optionContent:'' 
@@ -281,6 +286,11 @@ export default {
          this.$commonFun.initPostData(this.surveyForm)
          ).then((res)=>{
              console.log(res);
+             if(res.data.code==1){
+
+             }else{
+                 this.$message.error(res.dat)
+             }
          })
       },
       /* 新增对象 */
@@ -372,13 +382,16 @@ export default {
       },
       /* 添加对话框选项 */
       addDialogOption(){
+          console.log(this.dialogForm);
          this.dialogForm.surveyQuestionOptionList.push({optionContent:''});
       },
       /* 修改表单项 */
       editFormItem(item,index){
           this.isEdit=true;
           this.editIndex=index;
-      this.dialogForm=item;
+      for(var i in item){
+        this.dialogForm[i]=item[i]; 
+      }
       this.dialogVisible=true;
       },
       /* 删除表单项1 */
@@ -396,8 +409,9 @@ export default {
           this.dialogForm={
                     title:'',
                     type:'',
-                    direction:'',    
-                    ptionList:[
+                    direction:'',
+                    sort:'',    
+                    surveyQuestionOptionList:[
                         {
                             optionContent:'' 
                         },
@@ -409,6 +423,24 @@ export default {
           this.dialogVisible=false;
         
       },
+      /* 清空dialog */
+      reloadDialog(done){
+        this.dialogForm={
+                    title:'',
+                    type:'',
+                    direction:'', 
+                    sort:'',   
+                    surveyQuestionOptionList:[
+                        {
+                            optionContent:'' 
+                        },
+                        {
+                            optionContent:'' 
+                        },
+                    ]
+                    }
+                    done();
+      }
   }
 };
 </script>
