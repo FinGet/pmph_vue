@@ -188,6 +188,7 @@ export default {
         editObjUrl:'/pmpheep/survey/type/update',  //修改对象url
         deleteObjUrl:'/pmpheep/survey/type/',  //删除对象url
         addTemplateUrl:'/pmpheep/survey/template/create', //新增模板url
+        editTemplateUrl:'/pmpheep/survey/modify', //修改提交url
         surveyForm:{          //问卷信息抬头
           templateName:'',
           typeId:'',
@@ -295,38 +296,42 @@ export default {
               this.surveyForm.questionAnswerJosn[i].direction=surveyData.qestionAndOption[i].direction;
               this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort;
               this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList=[];
-              var options=surveyData.qestionAndOption[i].optionContent.join(',');
+              var options=surveyData.qestionAndOption[i].optionContent.split(',');
               for(var t in options){
                  this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList.push(
                      {optionContent:options[t]}
                      )
               }
           }
+          console.log(this.surveyForm);
        }
       },
       /* 确定提交按钮 */
       submitTemplate(){
        if(this.$route.params.surveryData&&this.$route.params.typ!=='add'){
-          this.editTemplate(); 
+          this.updateTemplate('edit'); 
        }
        else{
-          this.addTemplate();  
+          this.updateTemplate('add');  
        }
       },
-      /* 新增 */
-      addTemplate(){
+      /* 新增或修改 */
+      updateTemplate(str){
           var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
               arr[i]=this.surveyForm.questionAnswerJosn[i];
               this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
-         this.$axios.post(this.addTemplateUrl,
-         this.$commonFun.initPostData(this.surveyForm)
-         ).then((res)=>{
+         this.$axios(
+             {
+                 url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
+                 method: str=='add'?'POST':'PUT',
+                 data:this.$commonFun.initPostData(this.surveyForm)
+         }).then((res)=>{
              console.log(res);
              console.log(this.surveyForm.questionAnswerJosn,arr);
              if(res.data.code==1){
-              this.$message.success('添加成功');
+              this.$message.success(str=='add'?'添加成功':'修改成功');
               this.$router.push({name:'调查问卷模板设置'});
 
              }else{
@@ -335,9 +340,6 @@ export default {
          })
          this.surveyForm.questionAnswerJosn=arr;
          
-      },
-      editTemplate(){
-
       },
       /* 新增对象 */
       addObjInfo(){

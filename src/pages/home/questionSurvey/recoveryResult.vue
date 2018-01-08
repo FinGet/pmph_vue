@@ -20,7 +20,7 @@
          {{$commonFun.formatDate(formTop.beginDate,'yyyy-MM-dd')}}到{{$commonFun.formatDate(formTop.endDate,'yyyy-MM-dd')}}
         </el-form-item>
         <el-form-item label="参与人数：">
-         134
+          {{formTop.count }}
         </el-form-item>
         <el-form-item label="发起人：">
          {{formTop.realname }}

@@ -135,6 +135,7 @@
                  console.log(res);
                  if(res.data.code==1){
                    this.$message.success('发起调查成功');
+                   this.$router.push({name:'调查问卷模板设置'});
                  }else{
                    this.$message.error(res.data.msg.msgTrim());
                  }
