@@ -103,7 +103,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordStart">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -152,7 +152,7 @@
               </el-option>
             </el-select>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===0"></el-input>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>
+            <!--<el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>-->
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===3"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.title" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===4"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.orgName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===5"></el-input>
@@ -166,7 +166,7 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="primary" :disabled="!tableData.length" @click="exportWordGetId">导出Word</el-button>
+          <el-button type="primary" :disabled="!tableData.length" @click="exportWordStart">导出Word</el-button>
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -252,10 +252,24 @@
         <div class="paddingT50 paddingB50">
           <el-progress :text-inside="true" :stroke-width="18" :percentage="exportLoading" status="success"></el-progress>
         </div>
-        <!--<span slot="footer" class="dialog-footer">-->
-        <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
-        <!--<el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-        <!--</span>-->
+      </el-dialog>
+
+      <el-dialog
+        title="下载word"
+        :visible.sync="downloadWordDialog"
+        size="tiny"
+      >
+        <div class="paddingT20 paddingB50 text-center">
+          <div class="width100 inline-block">
+            <el-progress type="circle" :percentage="100" status="success"></el-progress>
+          </div>
+          <div class="paddingT10">
+            <el-button type="text" class="link" @click="downloadWord">点击此链接下载word</el-button>
+            <el-button type="text" @click="copyDownloadUrl">
+              <i class="fa fa-copy"></i>
+            </el-button>
+          </div>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -351,8 +365,8 @@
           realname:'',
           position:'',
           title:'',
-          orgName:'',
-          unitName:'人民卫生出版社',
+          orgId:0,
+          unitName:'',
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
@@ -363,6 +377,8 @@
         exportLoading:0,
         exportLoadingTimerHandle:undefined,
         handleExportWordtimer:null,
+        downloadWordDialog:false,
+        wordUrl:'',
       }
     },
     watch:{
@@ -391,8 +407,8 @@
           realname:'',
           position:'',
           title:'',
-          orgName:'',
-          unitName:'人民卫生出版社',
+          orgId:0,
+          unitName:'',
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
@@ -411,7 +427,7 @@
           realname:this.searchParams.realname,
           position:this.searchParams.position,
           title:this.searchParams.title,
-          orgName:this.searchParams.orgName,
+          orgId:0,
           unitName:this.searchParams.unitName,
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
@@ -475,32 +491,22 @@
        * 确认收到纸质表
        */
       confirmPaperList(row){
-        console.log(row)
-        this.$confirm("确定收到纸质表？", "提示",{
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(()=>{
-            this.$axios.get(this.api_confirm_paper,{params:{
-              id:row.id,
-              offlineProgress:2,
-              materialId:this.searchParams.materialId,
-            }})
-              .then(response=>{
-                var res = response.data;
-                if(res.code==1){
-                  this.$message.success('已确认！')
-                  row.offlineProgress=2;
-                }else{
-                  this.$message.error(res.msg.msgTrim())
-                }
-              })
-              .catch(e=>{
-                console.log(e);
-              })
+        this.$axios.get(this.api_confirm_paper,{params:{
+          id:row.id,
+          offlineProgress:2
+        }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$message.success('已确认收到纸质表！');
+              row.offlineProgress=2;
+            }else{
+              this.$message.error(res.msg.msgTrim())
+            }
           })
-          .catch(e=>{})
+          .catch(e=>{
+            console.log(e);
+          })
       },
       /**
        * 导出excel
@@ -541,6 +547,8 @@
        * 导出进度条关闭前
        */
       handleExportDialogClose(done){
+        this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.bort();
+        clearInterval(this.handleExportWordtimer)
         done();
       },
       /**
@@ -583,10 +591,9 @@
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
-          id:id,
         }})
           .then(response=>{
-
+            this.exportWordProgress(response.data);
           })
           .catch(e=>{
             console.log(e);
@@ -599,15 +606,15 @@
         var timeout = 3*60*1000;//设置3分钟超时
         var useTime = 0;
         this.handleExportWordtimer = setInterval(()=>{
-          useTime+=1000;
+          useTime+=1500;
           this.$axios.get(this.api_export_word_progress,{params:{
             id:id
           }})
             .then(response=>{
-              var res = response.data;
-              if(res){
+              let res = response.data;
+              if(res.state==1){
                 clearInterval(this.handleExportWordtimer);
-                this.exportWordDownload(id);
+                this.exportWordDownload(res.detail);
               }
             })
             .catch(e=>{
@@ -625,14 +632,26 @@
             clearInterval(this.handleExportWordtimer);
             this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
           }
-        },1000)
+        },1500)
 
       },
-      exportWordDownload(id){
-        let url = this.api_export_word_download+'?id='+id;
-        this.$commonFun.downloadFile(url);
+      exportWordDownload(url){
+        //this.$commonFun.downloadFile('/pmpheep'+url);
+        this.exportDialog=false;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
+        this.downloadWordDialog=true;
+        this.wordUrl='/pmpheep'+url;
 
+      },
+      downloadWord(){
+        if(this.wordUrl){
+          this.$commonFun.downloadFile(this.wordUrl);
+        }
+      },
+      copyDownloadUrl(){
+        if(this.wordUrl){
+          this.$commonFun.copy(window.location.origin+this.wordUrl);
+        }
       }
     },
     created(){
@@ -643,6 +662,10 @@
       }
       this.getTableData();
       this.getBookList();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/pressCheck']);
+      }
     },
   }
 

@@ -26,7 +26,7 @@
       <!--操作按钮-->
       <div class="pull-right">
         <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
-        <!-- <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button> -->
+         <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
       </div>
 
@@ -43,24 +43,6 @@
             type="selection"
             width="55">
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="bookname"-->
-            <!--label="书籍名称">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="isbn"-->
-            <!--label="ISBN"-->
-            <!--width="210">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="writerName"-->
-            <!--label="评论人"-->
-            <!--width="120">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="content"-->
-            <!--label="评论内容">-->
-          <!--</el-table-column>-->
           <el-table-column
             prop="content"
             label="评论">
@@ -150,13 +132,10 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              let list = ['不通过','已通过','待审核']
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
-                if(iterm.isAuth){
-                  iterm.state='已通过';
-                }else{
-                  iterm.state = '待审核';
-                }
+                iterm.state=list[iterm.isAuth];
               });
               this.totalNum = res.data.total;
               this.tableData = res.data.rows;
