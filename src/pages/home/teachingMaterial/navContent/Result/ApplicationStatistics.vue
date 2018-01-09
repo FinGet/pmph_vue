@@ -407,6 +407,8 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
+
+                max: Math.max.apply(null, this.stSchoolPresetPersons),
                 minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -416,6 +418,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
+                max: Math.max.apply(null, this.stSchoolPresetPersons),
                 minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -522,6 +525,7 @@ export default {
                 type: "value",
                 name: "申报人数",
                 min: 0,
+                max: Math.max.apply(null, this.stPresetPersons),
                 minInterval:1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -531,6 +535,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
+                max: Math.max.apply(null, this.stPresetPersons),
                 minInterval:1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -583,7 +588,7 @@ export default {
     handleTabsClick(tab, event) {
      console.log(tab,event);
      this.bookParmas.bookName='';
-     this.schoolParams.schoolName=''; 
+     this.schoolParams.schoolName='';
      if(tab.name=='bookName'){
         this.getBookTableData();
      }else{
