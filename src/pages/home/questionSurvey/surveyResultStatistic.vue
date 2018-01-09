@@ -18,7 +18,7 @@
        </el-table-column>
        <el-table-column label="参与人数" prop="surveyUsers" width="100">
        </el-table-column>
-       <el-table-column label="发起人" prop="realname" width="100">
+       <el-table-column label="发起人" prop="realname" width="110">
        </el-table-column>
        <el-table-column label="操作" width="170">
          <template scope="scope">

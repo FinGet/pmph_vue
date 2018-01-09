@@ -54,7 +54,7 @@
             <el-button type="primary" icon="search" @click="tableSearch">搜索</el-button>
             <el-button type="primary" @click="sureCheckedData">确认选择</el-button>
         </p>
-        <el-table :data="rightTableData" class="table-wrapper" border @selection-change="handleSelectionChange">
+        <el-table :data="rightTableData" class="table-wrapper" style="margin-bottom:10px;" border @selection-change="handleSelectionChange">
             <el-table-column
                 type="selection"
                 width="45">
@@ -128,18 +128,27 @@
          submitSurvery(){
          this.$refs.leftFrom.validate((valid)=>{
            if(valid){
-               console.log(this.resizePostData());
-               this.$axios.post(this.submitUrl,
-                this.$commonFun.initPostData(this.resizePostData())
-               ).then((res)=>{
-                 console.log(res);
-                 if(res.data.code==1){
-                   this.$message.success('发起调查成功');
-                   this.$router.push({name:'调查问卷模板设置'});
-                 }else{
-                   this.$message.error(res.data.msg.msgTrim());
-                 }
-               })
+                this.$confirm('是否确定发起问卷调查？', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                }).then(() => {
+                    this.$axios.post(this.submitUrl,
+                      this.$commonFun.initPostData(this.resizePostData())
+                    ).then((res)=>{
+                      console.log(res);
+                      if(res.data.code==1){
+                        this.$message.success('发起调查成功');
+                        this.$router.push({name:'调查问卷模板设置'});
+                      }else{
+                        this.$message.error(res.data.msg.msgTrim());
+                      }
+                    })
+                }).catch(() => {
+                  this.$message({
+                    type: 'warning',
+                    message: '已取消操作'
+                  });          
+                });
            }else{
              return false;
            }
