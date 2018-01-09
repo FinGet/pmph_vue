@@ -226,7 +226,7 @@
         let flag = true;
         const ext = file.name.substring(file.name.lastIndexOf('.')+1);
         const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
-        const nameLen = file.name.length <= 50;
+        const nameLen = file.name.length <= 60;
         if (file.size / 1024 / 1024==0) {
           this.$message.error('文件大小不能为0kb!');
           flag = false;
@@ -301,7 +301,7 @@
           this.$message.error('广告位置名称不能为空！');
           return false;
         }
-        var regex =/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i
+        var regex =/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
         if(this.formData.url&&!regex.test(this.formData.url)){
           this.$message.error('请输入正确的跳转链接！');
           return false;
