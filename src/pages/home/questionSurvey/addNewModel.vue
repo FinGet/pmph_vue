@@ -304,6 +304,8 @@ export default {
           this.surveyForm.templateName=surveyData.survey.title;
           this.surveyForm.typeId=surveyData.survey.typeId;
           this.surveyForm.intro=surveyData.survey.intro;
+          this.surveyForm.id=surveyData.survey.id;
+          this.surveyForm.templateId=surveyData.survey.templateId;
           for(var i in surveyData.qestionAndOption){
               this.surveyForm.questionAnswerJosn[i]={};
               this.surveyForm.questionAnswerJosn[i].title=surveyData.qestionAndOption[i].title;
