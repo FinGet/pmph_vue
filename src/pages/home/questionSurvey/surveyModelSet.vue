@@ -64,7 +64,7 @@
       width="150"
      >
      <template scope="scope">
-       <el-button type="text" @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
+       <el-button type="text" :disabled="scope.row.status!=0"  @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
        <span>|</span>
        <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id}})">发起调查</el-button>
        <!-- <span>|</span>
