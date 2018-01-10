@@ -313,7 +313,7 @@ export default {
               this.surveyForm.questionAnswerJosn[i].direction=surveyData.qestionAndOption[i].direction;
               this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort+'';
               this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList=[];
-              var options=surveyData.qestionAndOption[i].optionContent.split(',');
+              var options=surveyData.qestionAndOption[i].optionContent?surveyData.qestionAndOption[i].optionContent.split(','):[];
               for(var t in options){
                  this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList.push(
                      {optionContent:options[t]}

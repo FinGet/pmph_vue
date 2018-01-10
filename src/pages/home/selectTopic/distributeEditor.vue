@@ -107,7 +107,7 @@
           width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="directorHandling(null,scope.row.id)">选择</el-button>  
+           <el-button type="text" @click="distributeSelect(1,scope.row.id)">选择</el-button>  
           </template>
           </el-table-column>
       </el-table>
@@ -163,6 +163,7 @@ export default {
   props:['activeName'],
 	created(){
 		this.getTableData();
+    this.getListEditors();
 	},
   watch:{
    activeName(val){
@@ -200,7 +201,6 @@ export default {
 		},
 		/**获取部门编辑列表 */
 		getListEditors(){
-			this.dialogVisible = true;
 			this.$axios.get('/pmpheep/topic/listEditors',{
 				params:this.dialogParams
 			}).then(response => {
@@ -214,22 +214,35 @@ export default {
 		/**分配编辑 */
 		allot(obj){
       this.dialogParams.departmentId=obj.departmentId;
-      this.getListEditors();
       this.distributeParams.id=obj.id;
-      this.distributeParams.isRejectedByDirector=obj.isRejectedByDirector;
 			this.dialogVisible = true;
 		},
 		/**分配部门编辑、退回运维人员 */
-		directorHandling(id,editorId,isRejectedByDirector,reasonDirector){
-			this.$axios.put('/pmpheep/topic/put/directorHandling',this.$initPostData({
-				id: id || this.id,
-				editorId: editorId,
-				isRejectedByDirector: isRejectedByDirector || this.isRejectedByDirector,
-				reasonDirector: reasonDirector || this.reasonDirector
-			})).then(response => {
+    distributeSelect(i,id){
+        this.$confirm(i=1?'确定分配给该编辑?':'确定退回给分配人？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          if(id){
+            this.distributeParams.editorId=id;
+            this.distributeParams.isRejectedByDirector=i=1?false:true;
+          }
+          this.directorHandling(i);
+        }).catch(() => {
+          this.$message({
+            type: 'warning',
+            message: '已取消操作'
+          });          
+        });      
+    },
+		directorHandling(i){
+			this.$axios.put('/pmpheep/topic/put/directorHandling',
+      this.$initPostData(
+        this.distributeParams
+			)).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
-					this.$message.success('操作成功！');
+					this.$message.success(i=1?'分配成功！':'退回成功');
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());
