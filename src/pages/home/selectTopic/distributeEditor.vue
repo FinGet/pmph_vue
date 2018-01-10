@@ -149,7 +149,12 @@ export default {
       dialogVisible: false,
       dialogTableData: [
 			],
-
+      distributeParams:{
+        id:'',
+        editorId:'',
+        isRejectedByDirector:'',
+        reasonDirector:''
+      },  
 			id: '', // 选题申报id
 			isRejectedByDirector: '', //是否被主任退回
 			reasonDirector: '' // 主任退回原因
@@ -194,7 +199,7 @@ export default {
 			})
 		},
 		/**获取部门编辑列表 */
-		getListEditors(id){
+		getListEditors(){
 			this.dialogVisible = true;
 			this.$axios.get('/pmpheep/topic/listEditors',{
 				params:this.dialogParams
@@ -209,11 +214,10 @@ export default {
 		/**分配编辑 */
 		allot(obj){
       this.dialogParams.departmentId=obj.departmentId;
+      this.getListEditors();
+      this.distributeParams.id=obj.id;
+      this.distributeParams.isRejectedByDirector=obj.isRejectedByDirector;
 			this.dialogVisible = true;
-			this.id = id;
-			this.isRejectedByDirector = isRejectedByDirector;
-			this.reasonDirector = reasonDirector;
-			this.getListEditors();
 		},
 		/**分配部门编辑、退回运维人员 */
 		directorHandling(id,editorId,isRejectedByDirector,reasonDirector){

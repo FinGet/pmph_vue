@@ -337,8 +337,9 @@ export default {
           var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
               arr[i]=this.surveyForm.questionAnswerJosn[i];
-              this.surveyForm.questionAnswerJosn[i]='['+JSON.stringify(this.surveyForm.questionAnswerJosn[i])+']'; 
+              this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
+          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';
          this.$axios(
              {
                  url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
