@@ -2,7 +2,7 @@
   <div class="acceptance">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称" @keyup.enter.native='search'></el-input>
        <span>提交日期：</span>
        <el-date-picker
             v-model="searchParams.data"
@@ -139,6 +139,14 @@ export default {
 			reasonEditor: '' // 部门编辑退回原因
     };
 	},
+  props:['activeName'],
+  watch:{
+   activeName(val){
+   if(val=='third'){
+     this.search();
+   }
+   }
+  },
 	created(){
 		this.getTableData();
 	},
@@ -194,7 +202,6 @@ export default {
 		},
 		/**搜索 */
 		search(){
-			this.searchParams.pageSize = 10;
 			this.searchParams.pageNumber = 1;
 			this.getTableData();
 		},

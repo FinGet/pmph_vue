@@ -2,12 +2,13 @@
   <div class="survey_model_set">
     <p class="header_p">
        <span>调查问卷名称：</span>
-       <el-input class="input" v-model="searchParams.title"  placeholder="请输入调查问卷名称"></el-input>
+       <el-input class="input" v-model="searchParams.title"  placeholder="请输入调查问卷名称" @keyup.enter.native="search()"></el-input>
        <span>创建日期：</span>
        <el-date-picker
             v-model="searchParams.startTime"
             class="input"
             type="date"
+            clearable
             @change="startDateChange"
             placeholder="请选择开始日期">
         </el-date-picker>
@@ -16,6 +17,7 @@
             v-model="searchParams.endTime"
             class="input"
             type="date"
+            clearable
             @change="endDateChange"
             placeholder="请选择结束日期">
         </el-date-picker>
@@ -61,14 +63,14 @@
      </el-table-column>
      <el-table-column
       label="操作"
-      width="150"
+      width="210"
      >
      <template scope="scope">
-       <el-button type="text" @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
+       <el-button type="text" :disabled="scope.row.status!=0"  @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
        <span>|</span>
-       <el-button type="text" @click="$router.push({name:'发起调查'})">发起调查</el-button>
-       <!-- <span>|</span>
-       <el-button type="text" @click="$router.push({name:'问卷模板新增',params:{type:'add'}})">添加问卷</el-button> -->
+       <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id}})">发起调查</el-button>
+       <span>|</span>
+       <el-button type="text" @click="$router.push({name:'问卷模板新增',params:{type:'add'}})">添加问卷</el-button>
      </template>
      </el-table-column> 
     </el-table>

@@ -48,10 +48,10 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="allTextbookPublished || !hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
+        <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary" @click="exportExcel()">批量导出名单</el-button>
+        <el-button type="primary" :disabled="forceEnd" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -150,7 +150,7 @@
             <span class="vertical-line"></span>
             <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
-          </template> 
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -214,8 +214,7 @@
           label="遴选职位">
           <template scope="scope">
             <p>
-              <span>{{scope.row.presetPosition==1?'主编':scope.row.presetPosition==2?'副主编':'编委'}}</span>
-              <span v-if="scope.row.isDigitalEditor">| 数字编委</span>
+              {{positionList[scope.row.presetPosition]}}
               </p>
           </template>
         </el-table-column>
@@ -296,7 +295,8 @@
           label: 'textbookName'
         },
         bookNames:[],
-        allTextbookPublished: false // 是否所有书籍都公布
+        allTextbookPublished: false, // 是否所有书籍都公布
+        positionList:['','编委','副主编','副主编，编委','主编','主编，编委','主编，副主编','主编，副主编，编委','数组编委','编委，数组编委','副主编，数组编委','副主编，编委，数组编委','主编，数组编委','主编，编委，数组编委','主编，副主编，数组编委','主编，副主编，编委，数组编委'],
       }
     },
     computed:{

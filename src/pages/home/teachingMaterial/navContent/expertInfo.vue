@@ -430,7 +430,7 @@
         <div>
           <div class="info-iterm-text">
             <div>申报单位：<span></span></div>
-            <div>{{expertInfoData.orgNameOne}}</div>
+            <div>{{expertInfoData.orgId?expertInfoData.orgNameOne:'人民卫生出版社'}}</div>
           </div>
         </div>
       </div>

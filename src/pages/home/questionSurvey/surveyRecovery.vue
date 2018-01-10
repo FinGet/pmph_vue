@@ -20,7 +20,7 @@
      </el-table-column>
      <el-table-column
      label="提交人"
-     prop="realname"
+     prop="userName"
      width="110"
      >  
      </el-table-column>
@@ -37,8 +37,8 @@
      </el-table-column>     
       <el-table-column
      label="所在机构"
-     prop="org_name"
-     width="100"
+     prop="orgName"
+     width="150"
      >  
      </el-table-column> 
      <el-table-column
@@ -47,7 +47,7 @@
      width="170"
      >  
      <template scope="scope">
-       {{$commonFun.formatDate(scope.row.gmt_create)}}
+       {{$commonFun.formatDate(scope.row.gmtCreate)}}
      </template>
      </el-table-column>
      <el-table-column
@@ -135,8 +135,8 @@
                  params:this.searchParams
              }).then((res)=>{
                  if(res.data.code==1){
-                     this.pageTotal=res.data.pageTotal;
-                     this.tableData=res.data.rows;
+                     this.pageTotal=res.data.data.pageTotal;
+                     this.tableData=res.data.data.rows;
                      console.log(res);
                  }
              })

@@ -5,7 +5,8 @@
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">发布</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">确认</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">确认</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>

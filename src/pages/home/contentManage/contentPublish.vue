@@ -454,13 +454,25 @@ export default {
              _this.$refs.editor.setContent(editData.content.content);
           }, 1000);
           /* 填充默认附件 */
-         editData.cmsExtras.forEach((item)=>{
-          var obj={};
+          console.log('111111111111');
+          console.log(this.fileList.length);
+          for(var i in editData.cmsExtras){
+             var obj={};
+          obj.name=editData.cmsExtras[i].attachmentName;
+          obj.url=editData.cmsExtras[i].attachment;
+          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
+          this.fileList.push(obj);                   
+          }
+          console.log('2222222222');
+          console.log(this.fileList); 
+         /* editData.cmsExtras.forEach((item)=>{
+          
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();
+          console.log('1111111111',obj);
           this.fileList.push(obj);
-         })
+         }) */
          this.formData.attachment=[];
         } else {
           var _this=this;

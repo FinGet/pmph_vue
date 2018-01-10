@@ -2,13 +2,13 @@
   <div class="topic_exam">
   <el-tabs v-model="activeName" type="border-card" >
     <el-tab-pane label="转发部门" name="first">
-      <forward-depart></forward-depart>
+      <forward-depart :activeName.sync='activeName' @changeActive='changeActive'></forward-depart>
     </el-tab-pane>
     <el-tab-pane label="分配编辑" name="second">
-      <distribute-editor></distribute-editor>
+      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive'></distribute-editor>
     </el-tab-pane>
     <el-tab-pane label="受理" name="third">
-      <acceptance></acceptance>
+      <acceptance :activeName.sync='activeName' @changeActive='changeActive'></acceptance>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -23,6 +23,8 @@ import acceptance from './acceptance.vue'
       activeName:'first'
      }
    },
+   computed:{
+   },
    created(){
      this.activeName = this.$route.query.active || 'first';
    },
@@ -30,7 +32,9 @@ import acceptance from './acceptance.vue'
      forwardDepart,distributeEditor,acceptance
    },
    methods:{
-
+    changeActive(val){
+      this.activeName=val;
+    }
    }
  }
 </script>
