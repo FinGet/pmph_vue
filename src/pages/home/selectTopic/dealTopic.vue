@@ -248,9 +248,9 @@
    </el-form>
    <div class="bottom_box marginB50">
        <el-button type="primary" icon="arrow-left" @click="goBack">返回</el-button>
-       <!-- <el-button type="danger" v-if="type=='check'" :disabled="isAccepted || isEditorHandling">退回分配人</el-button> -->
-       <el-button type="primary" v-if="type=='check'" :disabled="!isAccepted" @click="check(3)">通过并提交ERP</el-button>
-       <el-button type="danger" v-if="type=='check'" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
+       <!-- <el-button type="danger" v-if="type!='check'" :disabled="isAccepted || isEditorHandling">退回分配人</el-button> -->
+       <el-button type="primary" v-if="type!='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(3)">通过并提交ERP</el-button>
+       <el-button type="danger" v-if="type!='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
    </div>
   </div>
 </template>
