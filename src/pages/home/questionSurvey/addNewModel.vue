@@ -466,6 +466,8 @@ export default {
       /* 弹框表单验证 */
       dialogValid(){
           var isPass=true;
+          console.log(this.dialogForm);
+          if(this.dialogForm.type==1||this.dialogForm.type==2){
           for(var i in this.dialogForm.surveyQuestionOptionList){
               var str='dialog'+i;
               this.$refs[str][0].validate((valid)=>{
@@ -474,6 +476,7 @@ export default {
                  }
               })
                
+          }
           }
           return isPass;
       },

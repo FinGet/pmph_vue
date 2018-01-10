@@ -67,7 +67,7 @@
       width="210"
      >
      <template scope="scope">
-       <el-button type="text" @click="allot(scope.row.id,scope.row.isRejectedByEditor,scope.row.reasonEditor)">分配部门编辑</el-button>
+       <el-button type="text" @click="allot(scope.row)">分配部门编辑</el-button>
        <span>|</span>
        <el-button type="text" @click="directorHandling(scope.row.id,'',scope.row.isRejectedByEditor,scope.row.reasonEditor)">退回分配人</el-button>
      </template>
@@ -90,7 +90,7 @@
     <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑部">
       <p class="header_p">
           <span>编辑姓名：</span>
-          <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.editorName"></el-input>
+          <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.realName"></el-input>
           <el-button type="primary" icon="search" @click="diaSearch">搜索</el-button>
       </p>
       <el-table :data="dialogTableData"  border  class="table-wrapper">
@@ -138,77 +138,34 @@ export default {
         pageNumber: 1
       },
       pageTotal: 0,
-      tableData: [
-        {
-          bookName: "中医基础",
-          writer: "张三一",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "已退回"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "-"
-        },
-        {
-          name: "中医基础",
-          writer: "张三",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "-"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "已退回"
-        }
-      ],
+      tableData: [],
       dialogParams: {
-        editorName: "",
+        departmentId:'',
+        realName: "",
         pageSize: 10,
         pageNumber: 1
       },
       dialogPageTotal: 0,
       dialogVisible: false,
       dialogTableData: [
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        }
 			],
+
 			id: '', // 选题申报id
 			isRejectedByDirector: '', //是否被主任退回
 			reasonDirector: '' // 主任退回原因
     };
 	},
+  props:['activeName'],
 	created(){
 		this.getTableData();
 	},
+  watch:{
+   activeName(val){
+     if(val=='second'){
+       this.search();
+     }
+   }
+  },
   methods: {
      /* 搜索按钮 */
      search(){
@@ -240,12 +197,7 @@ export default {
 		getListEditors(id){
 			this.dialogVisible = true;
 			this.$axios.get('/pmpheep/topic/listEditors',{
-				params:{
-					departmentId: id,
-					pageSize: this.dialogParams.pageSize,
-					pageNumber: this.dialogParams.pageNumber,
-					realName: this.dialogParams.editorName
-				}
+				params:this.dialogParams
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
@@ -255,7 +207,8 @@ export default {
 			})
 		},
 		/**分配编辑 */
-		allot(id,isRejectedByDirector,reasonDirector){
+		allot(obj){
+      this.dialogParams.departmentId=obj.departmentId;
 			this.dialogVisible = true;
 			this.id = id;
 			this.isRejectedByDirector = isRejectedByDirector;
