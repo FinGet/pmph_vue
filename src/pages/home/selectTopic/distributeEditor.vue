@@ -236,6 +236,7 @@ export default {
 			this.dialogVisible = true;
 		},
     openBackDialog(i,id){
+        this.distributeParams.reasonDirector='';
         this.distributeParams.id=id;
         this.backDialogVislble=true;
     },

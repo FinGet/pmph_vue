@@ -175,6 +175,7 @@ export default {
 		},
 		// 点击退回
 		retire(id){
+      this.reasonEditor='';
 			this.dialogTableVisible = true;
 			this.id = id;
 			console.log(this.id);
@@ -189,15 +190,20 @@ export default {
 				isEditorHandling: isEditorHandling, // 受理
 				isRejectedByEditor: isRejectedByEditor, // 退回
 				reasonEditor: reasonEditor // 退回
-			})).then(response => {
-				let res = response.data;
-				if (res.code == '1') {
-					this.$message.sucees('操作成功！');
+			})).then((res) => {
+				if (res.data.code == '1') {
+          console.log('222222222');
+					this.$message.success('操作成功！');
+          this.dialogTableVisible=false;
+          if(isEditorHandling){
+
+          }else{
+            this.$emit('changeActive','second');
+          }
 				} else {
 					this.$message.error(res.msg.msgTrim());
 				}
 			}).catch(err => {
-				this.$message.error('操作错误，请稍后再试！')
 			})
 		},
 		/**搜索 */
