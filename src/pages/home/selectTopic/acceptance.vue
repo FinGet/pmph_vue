@@ -187,7 +187,7 @@ export default {
 		acceptanceApi(id,isEditorHandling,isRejectedByEditor,reasonEditor){
 			this.$axios.put('/pmpheep/topic/put/editorHandling',this.$initPostData({
 				id: id,
-				isEditorHandling: isEditorHandling, // 受理
+				isAccepted: isEditorHandling, // 受理
 				isRejectedByEditor: isRejectedByEditor, // 退回
 				reasonEditor: reasonEditor // 退回
 			})).then((res) => {
