@@ -613,13 +613,13 @@
       /** 导出Excel */
       exportExcel(id){
         // console.log(id,this.selectedIds)
-        let url = '/pmpheep/position/exportExcel/?textbookIds='+ (id || this.selectedIds);
+        let url = '/pmpheep/chosenPosition/exportExcel/?textbookIds='+ (id || this.selectedIds);
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
       /**批量导出主编 */
       exportEditor(){
-        let url = '/pmpheep/position/ExportEditor/?textbookIds=' + this.selectedIds;
+        let url = '/pmpheep/position/exportEditors/?textbookIds=' + this.selectedIds;
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
