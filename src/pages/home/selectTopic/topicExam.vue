@@ -23,6 +23,8 @@ import acceptance from './acceptance.vue'
       activeName:'first'
      }
    },
+   computed:{
+   },
    created(){
      this.activeName = this.$route.query.active || 'first';
    },

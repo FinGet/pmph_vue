@@ -2,7 +2,7 @@
   <div class="distribute_editor">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"  @keyup.enter.native="search"></el-input>
        <span>提交日期：</span>
        <el-date-picker
             v-model="searchParams.data"
@@ -10,7 +10,7 @@
             type="date"
             placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" icon="search">搜索</el-button>
+        <el-button type="primary" icon="search" @click="search()">搜索</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -210,6 +210,11 @@ export default {
 		this.getTableData();
 	},
   methods: {
+     /* 搜索按钮 */
+     search(){
+      this.searchParams.pageNumber=1; 
+      this.getTableData();
+     },
 		/**获取表格数据 */
 		getTableData(){
 			this.$axios.get('/pmpheep/topic/listDirector',{
