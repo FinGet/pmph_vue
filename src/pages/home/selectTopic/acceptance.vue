@@ -194,6 +194,7 @@ export default {
 				if (res.data.code == '1') {
           console.log('222222222');
 					this.$message.success('操作成功！');
+          this.getTableData();
           this.dialogTableVisible=false;
           if(isEditorHandling){
 

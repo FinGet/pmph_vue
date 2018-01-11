@@ -206,10 +206,11 @@
             </el-table-column> 
             <el-table-column
                 label="操作"
-                width="150"
+                width="180"
                 >
                 <template scope="scope">
                     <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,2)">通过</el-button>
+                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">不通过</el-button>
                     <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">退回</el-button>
                 </template>
             </el-table-column>

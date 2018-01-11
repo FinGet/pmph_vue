@@ -267,7 +267,7 @@ export default {
 					this.$message.success(i==1?'分配成功！':'退回成功');
           this.dialogVisible=false;
           this.backDialogVislble=false;
-          this.$emit('changeActive',i==1?'third':'first');
+          
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());

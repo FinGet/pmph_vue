@@ -230,7 +230,7 @@ export default {
            console.log(res);
            if(res.data.code==1){
              this.$message.success('分配成功');
-             this.$emit('changeActive','second');
+             this.getListData();
              this.dialogVisible=false;
            }else{
              this.$message.error(res.data.msg.msgTrim());
