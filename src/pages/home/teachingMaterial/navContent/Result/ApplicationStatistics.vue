@@ -1,6 +1,7 @@
 <template>
 	<div class="applicationStatistics">
     <div class="total-chart paddingT30 paddingB30">
+          <p class="title">以下统计数据包含申报单位为人民出版社的作家:</p>
             <div class="num-chart-iterm">
               <div>
                 <br>
@@ -611,6 +612,12 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin-bottom: 18px;
+    margin-left: 20px;
+    font-size: 15px;
+    color: #8a8585;
+}
 .num-chart-iterm {
   display: inline-block;
   width: 180px;
