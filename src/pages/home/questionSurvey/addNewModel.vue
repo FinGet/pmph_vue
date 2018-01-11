@@ -125,7 +125,7 @@
       </div>
 
       <!-- 添加 修改弹窗 -->
-      <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
+      <el-dialog  :title="isEdit?'修改问题':'新增问题'" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
            <el-form :model="dialogForm" ref="dialogForm"  :rules="dialogRules" label-width="70px">
                <el-form-item label="题目：" prop="title">
                    <el-input placeholder="请输入题目" v-model="dialogForm.title"></el-input>
@@ -168,7 +168,7 @@
                     <el-button type="text"  style="color:#ff4949">删除</el-button>
                  </el-form-item> -->  
 
-                   <el-button type="primary" size="small" @click="addDialogOption">新建选项</el-button>
+                   <el-button type="primary" size="small" @click="addDialogOption">添加选项</el-button>
 
                </el-form-item>
            </el-form>
@@ -309,7 +309,7 @@ export default {
           for(var i in surveyData.qestionAndOption){
               this.surveyForm.questionAnswerJosn[i]={};
               this.surveyForm.questionAnswerJosn[i].title=surveyData.qestionAndOption[i].title;
-              this.surveyForm.questionAnswerJosn[i].type=surveyData.qestionAndOption[i].type;
+              this.surveyForm.questionAnswerJosn[i].type=surveyData.qestionAndOption[i].type+'';
               this.surveyForm.questionAnswerJosn[i].direction=surveyData.qestionAndOption[i].direction;
               this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort+'';
               this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList=[];
