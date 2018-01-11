@@ -63,7 +63,7 @@
      <template scope="scope">
        <el-button type="text" :disabled="scope.row.isAccepted" @click="acceptance(scope.row.id,true)">受理</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
+       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">审核</el-button>
        <span>|</span>
        <el-button type="text" :disabled="scope.row.isAccepted" @click="retire(scope.row.id)">退回分配人</el-button>
      </template>
@@ -198,7 +198,6 @@ export default {
 				reasonEditor: reasonEditor // 退回
 			})).then((res) => {
 				if (res.data.code == '1') {
-          console.log('222222222');
 					this.$message.success('操作成功！');
           this.getTableData();
           this.dialogTableVisible=false;
