@@ -255,7 +255,7 @@
                   v-model="material.notice">
                 </el-input>
               </el-col>
-              <div class="form-item">
+            </el-form-item>
                 <el-form-item label="上传图片：" prop="noticeFiles">
                   <my-upload
                     class="upload"
@@ -269,8 +269,6 @@
                     <el-button size="small" type="primary">点击上传</el-button>
                   </my-upload>
                 </el-form-item>
-              </div>
-            </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
                 <el-input

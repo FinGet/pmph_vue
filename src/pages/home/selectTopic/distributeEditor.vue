@@ -35,8 +35,11 @@
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
-      width="130"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.deadline)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="图书类别"
@@ -47,7 +50,7 @@
      <el-table-column
       label="提交日期"
       prop="submitTime"
-      width="120"
+      width="170"
      >
      </el-table-column> 
      <el-table-column
@@ -267,7 +270,7 @@ export default {
 					this.$message.success(i==1?'分配成功！':'退回成功');
           this.dialogVisible=false;
           this.backDialogVislble=false;
-          this.$emit('changeActive',i==1?'third':'first');
+          
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());

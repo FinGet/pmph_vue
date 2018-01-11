@@ -29,14 +29,17 @@
      <el-table-column
       label="作者"
       prop="realName"
-      width="90"
+      width="100"
      >
      </el-table-column> 
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
-      width="130"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.deadline)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="图书类别"
@@ -47,19 +50,22 @@
      <el-table-column
       label="提交日期"
       prop="submitTime"
-      width="120"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.submitTime)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="操作"
       width="210"
      >
      <template scope="scope">
-       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="acceptance(scope.row.id,true)">受理</el-button>
+       <el-button type="text" :disabled="scope.row.isAccepted" @click="acceptance(scope.row.id,true)">受理</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="!scope.row.isEditorHandling" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
+       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="retire(scope.row.id)">退回分配人</el-button>
+       <el-button type="text" :disabled="scope.row.isAccepted" @click="retire(scope.row.id)">退回分配人</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -194,6 +200,7 @@ export default {
 				if (res.data.code == '1') {
           console.log('222222222');
 					this.$message.success('操作成功！');
+          this.getTableData();
           this.dialogTableVisible=false;
           if(isEditorHandling){
 
