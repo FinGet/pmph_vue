@@ -173,6 +173,12 @@ methods:
             <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="是否主任：" prop="isDirector">
+          <el-radio-group v-model="form.isDirector">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible=false">取消</el-button>
@@ -232,6 +238,7 @@ methods:
           email: "",
           handphone: "",
           isDisabled: false,
+          isDirector: false,
           name: "",
           note: "",
           departmentId: "",
@@ -263,7 +270,8 @@ methods:
             { type: "email", message: "邮箱格式不正确", trigger: "blur" }
           ],
           departmentId: [],
-          isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }]
+          isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }],
+          isDirector: [{ type:'boolean',required: true, message: "请选择是否主任", trigger: "blur" }]
         },
         loading: false,
         DepartmentNameList:[],
