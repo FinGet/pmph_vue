@@ -22,6 +22,15 @@ var formCheckedRules={
         }
 
     },
+  //整数验证
+  positiveChecked: function (rule, value, callback) {
+    if (value <=0) {
+      callback('请输入大于0的整数');
+    } else {
+      callback()
+    }
+
+  },
      //手机号码和电话验证
     phoneNumberChecked: function(rule, value, callback){
           //固定电话号码验证规则

@@ -537,7 +537,8 @@ export default {
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
           {min:0,max:10,message:'轮次不能超过10个字符',trigger:'blur'},
-          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
+          {validator:this.$formCheckedRules.positiveChecked,trigger: "blur"},
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
