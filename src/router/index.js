@@ -76,7 +76,7 @@ const Check = () => import('../pages/home/bookError/check');
 import PointRouter from '../pages/home/pointManage/pointRouter';
 const PointRule = () => import('../pages/home/pointManage/pointRule');
 const UserPoint = () => import('../pages/home/pointManage/userPoint');
-const ConvertibleRule = () => import('../pages/home/pointManage/ConvertibleRule');
+const ConvertibleRule = () => import('../pages/home/pointManage/convertibleRule');
 
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
