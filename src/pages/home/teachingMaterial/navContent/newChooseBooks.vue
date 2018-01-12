@@ -113,11 +113,11 @@
                 <el-button type="primary"  size="small" @click="chooseProjectDirector" style="margin-right:10px;">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
                 <el-tag
-                  v-for="tag in projectDirectorData"
+                  v-for="(tag,index) in projectDirectorData"
                   :key="tag.realname"
                   :closable="true"
                   type="info"
-                  @close="handleDirectorClose(tag)"
+                  @close="handleDirectorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -130,11 +130,11 @@
                 <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
                   class="marginR10"
-                  v-for="tag in ruleForm.materialProjectEditors"
-                  :key="tag.realname"
+                  v-for="(tag,index) in ruleForm.materialProjectEditors"
+                  :key="index"
                   :closable="true"
                   type="info"
-                  @close="handleEditorClose(tag)"
+                  @close="handleEditorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -567,7 +567,7 @@ export default {
         ],
         extensionName:[
           {required: true, message: "请填写姓名", trigger: "blur" },
-          {min:1,max:20,message:'扩展项名称不能超过20个字符',trigger:'change,blur'}
+          {min:1,max:20,message:'不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
           {type:'array',required: true, message: "请至少上传一张图片", trigger: "blur" },
@@ -977,6 +977,8 @@ export default {
        * 删除选中的项目编辑
        */
     handleEditorClose(val) {
+      console.log(1111,val);
+      
       this.ruleForm.materialProjectEditors.splice(val, 1);
       this.material.materialProjectEditors.splice(val, 1);
       this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -1150,14 +1152,14 @@ export default {
                     console.log(res);
                     if(res.data.code==1){
                       this.isloading=false;
-                      this.$message.success(this.$router.currentRoute.params.materialId=='new'?'新建成功':'更新成功');
+                      this.$message.success('已保存教材通知');
                       this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
                     }
                   })  
 
 
           } else {
-            this.$message.error('表单验证未通过');
+            this.$message.error('输入的内容不正确，请正确填写');
             return false;
           }
         });       
