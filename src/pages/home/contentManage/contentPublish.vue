@@ -254,11 +254,13 @@ export default {
           this.formData.sessionId = this.$getUserData().sessionId;
           /* 判断新增还是修改 */
           if(!this.isEditContent){
+            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
               this.$axios
             .post(this.addNewUrl, this.$commonFun.initPostData(this.formData))
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -275,9 +277,11 @@ export default {
               }
             });
           }else{
+            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
             this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                  
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -330,6 +334,7 @@ export default {
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;
                 this.$message.success("审核成功");
                 this.showContentDetail = false;
                 this.$router.push({name:'文章管理'})
