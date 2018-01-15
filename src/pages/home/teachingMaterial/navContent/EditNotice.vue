@@ -10,7 +10,7 @@
     <!--输入标题-->
     <el-form :model="formData" ref="form" :rules="formRules" label-width="110px">
       <el-form-item label="标题：" prop="title">
-        <el-input v-model.trim="formData.title" placeholder="请输入文章标题" class="title-input"></el-input>
+        <el-input v-model.trim="formData.title" placeholder="请输入文章标题" class="title-input" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="消息内容：" required>
         <el-input v-model="formData.title" class="none"></el-input>
@@ -64,6 +64,7 @@
 
 <script>
   import Editor from 'components/Editor.vue'
+  import {teachPicUrl} from '../../../../common/config.js'
 	export default {
 		data() {
 			return {
@@ -131,7 +132,10 @@
             content += `<p></p>`;
             //备注
             content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
-
+           /*  /* 底部图片 
+            for(var i in this.formData.image){
+              content+='<br/><p><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+            } */
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
 
