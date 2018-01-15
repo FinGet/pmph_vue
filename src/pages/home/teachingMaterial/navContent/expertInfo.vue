@@ -684,13 +684,13 @@
             return;
           }
           //文件名不超过40个字符
-          if(file.name.length>40){
+          if(file.name.length>60){
             this.$message.error("文件名不能超过40个字符");
             return;
           }
           // 类型判断
           if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-            this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+            this.$message.error("不能上传可执行文件");
             return;
           }
           // 判断文件大小是否符合 文件不为0
@@ -715,9 +715,9 @@
           const ext = file.name.substring(file.name.lastIndexOf('.')+1);
           console.log(file)
           const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
-          const nameLen = file.name.length <= 40;
+          const nameLen = file.name.length <= 60;
           //文件名不超过40个字符
-          if(file.name.length>40){
+          if(file.name.length>60){
             this.$message.error("文件名不能超过40个字符");
             return false;
           }
