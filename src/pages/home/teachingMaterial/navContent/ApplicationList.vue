@@ -44,7 +44,7 @@
             </el-table-column>
             <el-table-column label="联系人">
                 <template scope="scope">
-                  <div class="contact_p" v-if="scope.row.contacts.length">
+                  <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
                       <span> <i class="fa fa-phone"></i> {{scope.row.contacts[0].contactPhone}}</span>
                       <span> <i class="fa fa-envelope-o"></i> {{scope.row.contacts[0].contactEmail}}</span>

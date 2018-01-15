@@ -535,15 +535,12 @@
       },
     },
     created(){
-      this.fileList.forEach(iterm=>{
-        this.uploadFiles.push(iterm);
-      });
       for(var key in this.data){
         this.postData[key] = this.data[key]
       }
     },
     mounted(){
-
+      console.log(123,this.uploadFiles)
     },
 	}
 </script>

@@ -171,10 +171,10 @@ export default {
         case 1:
           return this.newContentUrl;
           break;
-        case 2: 
+        case 2:
           return this.newLettersUrl;
         case 3:
-         return this.newNoticeUrl;  
+         return this.newNoticeUrl;
         default:
           break;
       }
@@ -230,7 +230,7 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          });          
+          });
         });
     }
     },
@@ -244,7 +244,7 @@ export default {
       this.$refs["addForm"].validate(valid => {
         if (valid) {
             /* 判断暂存还是发布 */
-            
+
             if(num==0){
                this.formData.isStaging=true;
             }
@@ -451,7 +451,7 @@ export default {
                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
             }
-            
+
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);
@@ -487,7 +487,7 @@ export default {
         setTimeout(function() {
              _this.$router.go(-1);
         }, 1000);
-          
+
         }
       }
     },
