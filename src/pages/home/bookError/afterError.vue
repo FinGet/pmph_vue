@@ -33,7 +33,7 @@
                     </el-table-column>
                     <el-table-column prop="realname" label="策划编辑">
                     </el-table-column>
-                    <el-table-column prop="authorRep" label="责任编辑" >
+                    <el-table-column prop="dutyName" label="责任编辑" >
                     </el-table-column>
                     <el-table-column prop="result" label="核查结果" width="95" align="center">
 											<template scope="scope">
