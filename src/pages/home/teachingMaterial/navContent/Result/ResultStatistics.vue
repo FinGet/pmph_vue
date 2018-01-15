@@ -42,7 +42,7 @@
                 align="center">
               </el-table-column>
               <el-table-column
-                prop="subeditorList"
+                prop="subEditorList"
                 label="副主编名单"
                 align="center">
               </el-table-column>
@@ -114,7 +114,7 @@
                 align="center">
               </el-table-column>
               <el-table-column
-                prop="subeditorList"
+                prop="subEditorList"
                 label="副主编名单"
                 align="center">
               </el-table-column>

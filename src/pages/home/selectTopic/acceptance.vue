@@ -2,7 +2,7 @@
   <div class="acceptance">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称" @keyup.enter.native='search'></el-input>
        <span>提交日期：</span>
        <el-date-picker
             v-model="searchParams.data"
@@ -29,14 +29,17 @@
      <el-table-column
       label="作者"
       prop="realName"
-      width="90"
+      width="100"
      >
      </el-table-column> 
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
-      width="130"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.deadline)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="图书类别"
@@ -47,19 +50,22 @@
      <el-table-column
       label="提交日期"
       prop="submitTime"
-      width="120"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.submitTime)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="操作"
       width="210"
      >
      <template scope="scope">
-       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="acceptance(scope.row.id,true)">受理</el-button>
+       <el-button type="text" :disabled="scope.row.isAccepted" @click="acceptance(scope.row.id,true)">受理</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="!scope.row.isEditorHandling" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
+       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">审核</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="scope.row.isEditorHandling" @click="retire(scope.row.id)">退回分配人</el-button>
+       <el-button type="text" :disabled="scope.row.isAccepted" @click="retire(scope.row.id)">退回分配人</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -139,6 +145,14 @@ export default {
 			reasonEditor: '' // 部门编辑退回原因
     };
 	},
+  props:['activeName'],
+  watch:{
+   activeName(val){
+   if(val=='third'){
+     this.search();
+   }
+   }
+  },
 	created(){
 		this.getTableData();
 	},
@@ -167,6 +181,7 @@ export default {
 		},
 		// 点击退回
 		retire(id){
+      this.reasonEditor='';
 			this.dialogTableVisible = true;
 			this.id = id;
 			console.log(this.id);
@@ -178,23 +193,27 @@ export default {
 		acceptanceApi(id,isEditorHandling,isRejectedByEditor,reasonEditor){
 			this.$axios.put('/pmpheep/topic/put/editorHandling',this.$initPostData({
 				id: id,
-				isEditorHandling: isEditorHandling, // 受理
+				isAccepted: isEditorHandling, // 受理
 				isRejectedByEditor: isRejectedByEditor, // 退回
 				reasonEditor: reasonEditor // 退回
-			})).then(response => {
-				let res = response.data;
-				if (res.code == '1') {
-					this.$message.sucees('操作成功！');
+			})).then((res) => {
+				if (res.data.code == '1') {
+					this.$message.success('操作成功！');
+          this.getTableData();
+          this.dialogTableVisible=false;
+          if(isEditorHandling){
+
+          }else{
+            this.$emit('changeActive','second');
+          }
 				} else {
 					this.$message.error(res.msg.msgTrim());
 				}
 			}).catch(err => {
-				this.$message.error('操作错误，请稍后再试！')
 			})
 		},
 		/**搜索 */
 		search(){
-			this.searchParams.pageSize = 10;
 			this.searchParams.pageNumber = 1;
 			this.getTableData();
 		},

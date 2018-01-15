@@ -73,19 +73,19 @@
        <h4>题目控件</h4>
       <ul >
         <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(1)">单选题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem('1')">单选题</el-button>
         </li>
         <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(2)">多选题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem('2')">多选题</el-button>
         </li>
         <!-- <li>
             <el-button type="primary" class="button" @click="addNewFormItem(3)">下拉题</el-button>
         </li> -->
         <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(3)">单行文本题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem('4')">单行文本题</el-button>
         </li>
          <li>
-            <el-button type="primary" class="button" @click="addNewFormItem(4)">多行文本题</el-button>
+            <el-button type="primary" class="button" @click="addNewFormItem('5')">多行文本题</el-button>
         </li>
          <!-- <li>
             <el-button type="primary" class="button" @click="addNewFormItem(6)">附件内容题</el-button>
@@ -107,9 +107,9 @@
                     <el-checkbox :label="it.optionContent" v-for="(it,index) in item.surveyQuestionOptionList" :key="index">{{it.optionContent}}</el-checkbox>
                 </el-checkbox-group>
                 <!-- 单行文本 -->
-                <el-input  class="form_input" v-if="item.type==3"></el-input>
+                <el-input  class="form_input" v-if="item.type==4"></el-input>
                 <!-- 多行文本 -->
-                <el-input   type="textarea" :rows="3" class="form_input" v-if="item.type==4"></el-input>
+                <el-input   type="textarea" :rows="3" class="form_input" v-if="item.type==5"></el-input>
                 <!-- 操作按钮 -->
                 <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item,index)">修改</el-button>
                 <el-button type="text" class="form_button" @click="deleteFormItem(index)">删除</el-button>
@@ -125,7 +125,7 @@
       </div>
 
       <!-- 添加 修改弹窗 -->
-      <el-dialog  title="新增问题项" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
+      <el-dialog  :title="isEdit?'修改问题':'新增问题'" :visible.sync="dialogVisible" size="tiny" class="form_item_dialog" :before-close="reloadDialog">
            <el-form :model="dialogForm" ref="dialogForm"  :rules="dialogRules" label-width="70px">
                <el-form-item label="题目：" prop="title">
                    <el-input placeholder="请输入题目" v-model="dialogForm.title"></el-input>
@@ -152,9 +152,9 @@
                         <el-radio :label="false">否</el-radio>
                     </el-radio-group>
                </el-form-item> -->
-               <el-form-item label="选项：" v-if="dialogForm.type!=3&&dialogForm.type!=4">
-                   <el-form :model="item" v-for="(item,index) in dialogForm.surveyQuestionOptionList" :key="index">
-                 <el-form-item label-width="0" >
+               <el-form-item label="选项：" v-if="dialogForm.type!=4&&dialogForm.type!=5" required>
+                   <el-form :model="item" v-for="(item,index) in dialogForm.surveyQuestionOptionList" :rules="dialogRules" :ref="'dialog'+index" :key="index">
+                 <el-form-item label-width="0"  prop="optionContent">
                     <el-input placeholder="请输入选项" class="dialog_input" v-model="item.optionContent"></el-input>
                     <el-button type="text"  style="color:#ff4949" @click="deleteDlalogOption(index)">删除</el-button>
                  </el-form-item>
@@ -168,7 +168,7 @@
                     <el-button type="text"  style="color:#ff4949">删除</el-button>
                  </el-form-item> -->  
 
-                   <el-button type="primary" size="small" @click="addDialogOption">新建选项</el-button>
+                   <el-button type="primary" size="small" @click="addDialogOption">添加选项</el-button>
 
                </el-form-item>
            </el-form>
@@ -209,19 +209,19 @@ export default {
         isEdit:false,
         dialogOptions:[
          {
-             value:1,
+             value:'1',
              label:'单选题'
          },
          {
-             value:2,
+             value:'2',
              label:'多选题'
          },
          {
-             value:3,
+             value:'4',
              label:'单行文本题'
          },
          {
-             value:4,
+             value:'5',
              label:'多行文本题'
          },
         ],
@@ -262,7 +262,22 @@ export default {
             ]
         },
         dialogRules:{
-
+             title:[
+                 { required: true, message: '请输入题目', trigger: 'blur' },
+                 {min:1,max:50,message:'题目不能超过50个字符',trigger:'change,blur'}
+             ],
+             sort:[
+                 { min:1,max:10, message: "序号不能超过10个字符", trigger: "change,blur" },
+                 {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+             ],
+             type:[
+                 { required: true, message: '请选择题目类型', trigger: 'blur' },
+             ],
+             optionContent:[
+                 { required: true, message: '请输入选项', trigger: 'blur' },
+                 {min:1,max:50,message:'选项不能超过50个字符',trigger:'change,blur'}
+             ]
+             
         }
 
     }
@@ -289,14 +304,16 @@ export default {
           this.surveyForm.templateName=surveyData.survey.title;
           this.surveyForm.typeId=surveyData.survey.typeId;
           this.surveyForm.intro=surveyData.survey.intro;
+          this.surveyForm.id=surveyData.survey.id;
+          this.surveyForm.templateId=surveyData.survey.templateId;
           for(var i in surveyData.qestionAndOption){
               this.surveyForm.questionAnswerJosn[i]={};
               this.surveyForm.questionAnswerJosn[i].title=surveyData.qestionAndOption[i].title;
-              this.surveyForm.questionAnswerJosn[i].type=surveyData.qestionAndOption[i].type;
+              this.surveyForm.questionAnswerJosn[i].type=surveyData.qestionAndOption[i].type+'';
               this.surveyForm.questionAnswerJosn[i].direction=surveyData.qestionAndOption[i].direction;
-              this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort;
+              this.surveyForm.questionAnswerJosn[i].sort=surveyData.qestionAndOption[i].sort+'';
               this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList=[];
-              var options=surveyData.qestionAndOption[i].optionContent.split(',');
+              var options=surveyData.qestionAndOption[i].optionContent?surveyData.qestionAndOption[i].optionContent.split(','):[];
               for(var t in options){
                  this.surveyForm.questionAnswerJosn[i].surveyQuestionOptionList.push(
                      {optionContent:options[t]}
@@ -322,6 +339,7 @@ export default {
               arr[i]=this.surveyForm.questionAnswerJosn[i];
               this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
+          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';
          this.$axios(
              {
                  url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
@@ -446,30 +464,52 @@ export default {
       deleteFormItem(index){
       this.surveyForm.questionAnswerJosn.splice(index,1);
       },
+      /* 弹框表单验证 */
+      dialogValid(){
+          var isPass=true;
+          console.log(this.dialogForm);
+          if(this.dialogForm.type==1||this.dialogForm.type==2){
+          for(var i in this.dialogForm.surveyQuestionOptionList){
+              var str='dialog'+i;
+              this.$refs[str][0].validate((valid)=>{
+                 if(!valid){
+                     isPass=false;
+                 }
+              })
+               
+          }
+          }
+          return isPass;
+      },
       /* 确定添加题目 */
       upLoadFormItem(){
-          if(this.isEdit){
-              this.surveyForm.questionAnswerJosn[this.editIndex]=this.dialogForm;
-
-          }else{
-             this.surveyForm.questionAnswerJosn.push(this.dialogForm);
-          }
-          this.dialogForm={
-                    title:'',
-                    type:'',
-                    direction:'',
-                    sort:'',    
-                    surveyQuestionOptionList:[
-                        {
-                            optionContent:'' 
-                        },
-                        {
-                            optionContent:'' 
-                        },
-                    ]
-                    }
-          this.dialogVisible=false;
-        
+         this.dialogValid(); 
+        this.$refs.dialogForm.validate((valid)=>{
+              if(valid&&this.dialogValid()){
+                    if(this.isEdit){
+                    this.surveyForm.questionAnswerJosn[this.editIndex]=this.dialogForm;
+                }else{
+                    this.surveyForm.questionAnswerJosn.push(this.dialogForm);
+                }
+                this.dialogForm={
+                            title:'',
+                            type:'',
+                            direction:'',
+                            sort:'',    
+                            surveyQuestionOptionList:[
+                                {
+                                    optionContent:'' 
+                                },
+                                {
+                                    optionContent:'' 
+                                },
+                            ]
+                            }
+                this.dialogVisible=false;
+            }else{
+                return false;
+            }
+          })         
       },
       /* 清空dialog */
       reloadDialog(done){

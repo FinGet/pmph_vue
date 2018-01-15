@@ -2,7 +2,7 @@
   <div class="distribute_editor">
     <p class="header_p">
        <span>选题名称：</span>
-       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"></el-input>
+       <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"  @keyup.enter.native="search"></el-input>
        <span>提交日期：</span>
        <el-date-picker
             v-model="searchParams.data"
@@ -10,7 +10,7 @@
             type="date"
             placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" icon="search">搜索</el-button>
+        <el-button type="primary" icon="search" @click="search()">搜索</el-button>
     </p>
     <el-table
     :data="tableData"
@@ -35,8 +35,11 @@
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
-      width="130"
+      width="170"
      >
+     <template scope="scope">
+      {{$commonFun.formatDate(scope.row.deadline)}}
+     </template>
      </el-table-column> 
      <el-table-column
       label="图书类别"
@@ -47,7 +50,7 @@
      <el-table-column
       label="提交日期"
       prop="submitTime"
-      width="120"
+      width="170"
      >
      </el-table-column> 
      <el-table-column
@@ -67,9 +70,9 @@
       width="210"
      >
      <template scope="scope">
-       <el-button type="text" @click="allot(scope.row.id,scope.row.isRejectedByEditor,scope.row.reasonEditor)">分配部门编辑</el-button>
+       <el-button type="text" @click="allot(scope.row)">分配部门编辑</el-button>
        <span>|</span>
-       <el-button type="text" @click="directorHandling(scope.row.id,'',scope.row.isRejectedByEditor,scope.row.reasonEditor)">退回分配人</el-button>
+       <el-button type="text" @click="openBackDialog(2,scope.row.id)">退回分配人</el-button>
      </template>
      </el-table-column> 
     </el-table>
@@ -87,10 +90,10 @@
       </el-pagination>
     </div>
     <!-- 选择编辑弹框 -->
-    <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑部">
+    <el-dialog :visible.sync="dialogVisible" class="dialog"  size="tiny" title="选择编辑">
       <p class="header_p">
           <span>编辑姓名：</span>
-          <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.editorName"></el-input>
+          <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.realName"></el-input>
           <el-button type="primary" icon="search" @click="diaSearch">搜索</el-button>
       </p>
       <el-table :data="dialogTableData"  border  class="table-wrapper">
@@ -107,7 +110,7 @@
           width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="directorHandling(null,scope.row.id)">选择</el-button>  
+           <el-button type="text" @click="distributeSelect(1,scope.row.id)">选择</el-button>  
           </template>
           </el-table-column>
       </el-table>
@@ -125,6 +128,20 @@
       </el-pagination>
     </div>
     </el-dialog>
+
+    <!-- 退回弹框 -->
+    <el-dialog title="退回原因" :visible.sync="backDialogVislble" size="tiny">
+			<el-input
+				type="textarea"
+				:rows="4"
+				placeholder="请输入内容"
+				v-model="distributeParams.reasonDirector">
+			</el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="backDialogVislble = false">取 消</el-button>
+          <el-button type="primary" @click="directorHandling(2)">确 定</el-button>
+        </span>
+		</el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -138,78 +155,46 @@ export default {
         pageNumber: 1
       },
       pageTotal: 0,
-      tableData: [
-        {
-          bookName: "中医基础",
-          writer: "张三一",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "已退回"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "-"
-        },
-        {
-          name: "中医基础",
-          writer: "张三",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "-"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "已退回"
-        }
-      ],
+      tableData: [],
       dialogParams: {
-        editorName: "",
+        departmentId:'',
+        realName: "",
         pageSize: 10,
         pageNumber: 1
       },
       dialogPageTotal: 0,
       dialogVisible: false,
+      backDialogVislble:false,
       dialogTableData: [
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        },
-        {
-          name: "张祥松",
-          phone: "147258369"
-        }
 			],
+      distributeParams:{
+        id:'',
+        editorId:'',
+        isRejectedByDirector:'',
+        reasonDirector:''
+      },  
 			id: '', // 选题申报id
 			isRejectedByDirector: '', //是否被主任退回
 			reasonDirector: '' // 主任退回原因
     };
 	},
+  props:['activeName'],
 	created(){
 		this.getTableData();
 	},
+  watch:{
+   activeName(val){
+     if(val=='second'){
+       this.search();
+     }
+   }
+  },
   methods: {
+     /* 搜索按钮 */
+     search(){
+      this.searchParams.pageNumber=1; 
+      this.getTableData();
+     },
 		/**获取表格数据 */
 		getTableData(){
 			this.$axios.get('/pmpheep/topic/listDirector',{
@@ -224,6 +209,10 @@ export default {
 				let res = response.data;
 				if (res.code == '1'){
 					this.tableData = res.data.rows;
+          if(res.data.rows.length>0){
+             this.dialogParams.departmentId=res.data.rows[0].departmentId;
+             this.getListEditors();
+          }
 					this.tableData.forEach(item => {
 							item.submitTime = this.$commonFun.formatDate(item.submitTime);                    
 					})
@@ -232,15 +221,9 @@ export default {
 			})
 		},
 		/**获取部门编辑列表 */
-		getListEditors(id){
-			this.dialogVisible = true;
+		getListEditors(){
 			this.$axios.get('/pmpheep/topic/listEditors',{
-				params:{
-					departmentId: id,
-					pageSize: this.dialogParams.pageSize,
-					pageNumber: this.dialogParams.pageNumber,
-					realName: this.dialogParams.editorName
-				}
+				params:this.dialogParams
 			}).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
@@ -250,30 +233,50 @@ export default {
 			})
 		},
 		/**分配编辑 */
-		allot(id,isRejectedByDirector,reasonDirector){
+		allot(obj){
+      this.dialogParams.departmentId=obj.departmentId;
+      this.distributeParams.id=obj.id;
 			this.dialogVisible = true;
-			this.id = id;
-			this.isRejectedByDirector = isRejectedByDirector;
-			this.reasonDirector = reasonDirector;
-			this.getListEditors();
 		},
+    openBackDialog(i,id){
+        this.distributeParams.reasonDirector='';
+        this.distributeParams.id=id;
+        this.backDialogVislble=true;
+    },
 		/**分配部门编辑、退回运维人员 */
-		directorHandling(id,editorId,isRejectedByDirector,reasonDirector){
-			this.$axios.put('/pmpheep/topic/put/directorHandling',this.$initPostData({
-				id: id || this.id,
-				editorId: editorId,
-				isRejectedByDirector: isRejectedByDirector || this.isRejectedByDirector,
-				reasonDirector: reasonDirector || this.reasonDirector
-			})).then(response => {
+    distributeSelect(i,id){
+        this.$confirm('确定分配给该编辑?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          this.distributeParams.editorId=id;
+          this.directorHandling(i);
+        }).catch(() => {
+          this.$message({
+            type: 'warning',
+            message: '已取消操作'
+          });          
+        });            
+    },
+		directorHandling(i){
+      this.distributeParams.isRejectedByDirector=(i==2?true:false);
+      this.distributeParams.editorId=(i==1?this.distributeParams.editorId:'');
+			this.$axios.put('/pmpheep/topic/put/directorHandling',
+      this.$initPostData(
+        this.distributeParams
+			)).then(response => {
 				let res = response.data;
 				if (res.code == '1') {
-					this.$message.success('操作成功！');
+					this.$message.success(i==1?'分配成功！':'退回成功');
+          this.dialogVisible=false;
+          this.backDialogVislble=false;
+          
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());
 				}
 			}).catch(err=>{
-				this.$message.error('操作错误，请稍后再试！');
+				
 			})
 		},
 		/**搜索 */

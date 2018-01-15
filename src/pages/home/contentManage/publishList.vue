@@ -163,7 +163,7 @@
          </el-select>
          <el-button type="primary" icon="search" @click="searchComment">搜索</el-button>
 
-            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment">批量删除</el-button>
+            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment()">批量删除</el-button>
       </p>
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
             <el-table-column
@@ -206,11 +206,12 @@
             </el-table-column> 
             <el-table-column
                 label="操作"
-                width="150"
+                width="180"
                 >
                 <template scope="scope">
                     <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,2)">通过</el-button>
-                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">退回</el-button>
+                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">不通过</el-button>
+                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="deleteComment(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -418,25 +419,30 @@ export default {
       })
     },
     /**批量删除评论 */
-    deleteComment(){
+    deleteComment(id){
       var ids = []
-      this.$confirm('确认删除选中的评论吗？',"提示",{
+      this.$confirm(id?'确认删除该条评论？':'确认删除选中的评论吗？',"提示",{
         confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+        cancelButtonText: "取消"
       }).then(()=>{
-        this.commentSelectData.forEach(item => {
+        if(id){
+          ids=id;
+        }else{
+         this.commentSelectData.forEach(item => {
           ids.push(item.id)
-        })
-        this.$axios.delete('/pmpheep//cms/comment/delete',{
+        })  
+        }
+        this.$axios.delete('/pmpheep/cms/comment/delete',{
           params: {
-            ids : ids.toString()
+            ids :id?id:ids.toString()
           }
         }).then(response => {
           let res = response.data
           if (res.code == 1) {
             this.$message.success('删除成功!');
             this.getCommentList()
+          }else{
+            this.$message.error(res.msg.msgTrim());
           }
         })
       })

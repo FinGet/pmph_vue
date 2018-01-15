@@ -31,7 +31,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">进度：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="currentState" placeholder="全部">
+          <el-select v-model="searchForm.state" placeholder="全部">
             <el-option
               v-for="item in currentStateList"
               :key="item.value"
@@ -49,8 +49,8 @@
       <div class="operation-wrapper">
         <el-button type="primary" :disabled="allTextbookPublished || !hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="isLocked || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <el-button type="primary" :disabled="isPublished || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary" :disabled="forceEnd" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
@@ -262,7 +262,6 @@
         forceEnd:false, // 是否强制结束
         booksChooseValue5:'',
         booksChooseOptions: [],
-        currentState:0,
         currentStateList:[{
           value:0,
           label:'全部'
@@ -301,10 +300,10 @@
     },
     computed:{
       /**
-       * 判断当前是否有选中项来设置删除按钮是否可以点击
+       * 判断当前是否有选中项来是否可以点击
        * @returns {boolean}
        */
-      isSelected() {
+      isPublished() {
         let arr = [];
         if (this.selected.length > 0){
           this.selected.forEach(item => {
@@ -318,11 +317,21 @@
           console.log(3);
           return true;
         }
-        // if (this.selectedIds.length > 0) {
-        //   return false
-        // } else {
-        //   return true
-        // }
+      },
+      isLocked() {
+        let arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isLocked);
+            arr.push(item.isLocked);
+          });
+          return arr.some(x=>{
+            return x == true;
+          })
+        } else {
+          console.log(3);
+          return true;
+        }
       }
     },
     methods:{
@@ -613,13 +622,13 @@
       /** 导出Excel */
       exportExcel(id){
         // console.log(id,this.selectedIds)
-        let url = '/pmpheep/position/exportExcel/?textbookIds='+ (id || this.selectedIds);
+        let url = '/pmpheep/chosenPosition/exportExcel/?textbookIds='+ (id || this.selectedIds);
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
       /**批量导出主编 */
       exportEditor(){
-        let url = '/pmpheep/position/ExportEditor/?textbookIds=' + this.selectedIds;
+        let url = '/pmpheep/position/exportEditors/?textbookIds=' + this.selectedIds;
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },

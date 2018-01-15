@@ -93,7 +93,7 @@
     export default{
         data(){
             return{
-             surveryDetailUrl:'/pmpheep/survey/question/answer/detail',   //详情url
+             surveryDetailUrl:'/pmpheep/survey/question/answer/recovery/detail',   //详情url
              formTop:{
              },
              questionList:[]

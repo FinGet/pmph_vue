@@ -143,6 +143,7 @@ export default {
     return {
       listDataUrl: "/pmpheep/topic/listOpts", //选题列表url
       dialogDataUrl: "/pmpheep/departments/listOpts", //对话框列表url
+      distributeUrl:'/pmpheep/topic/put/optsHandling',      //分配部门url
       distributeId: "", //当前正在分配的题目id
       searchParams: {
         bookname: "",
@@ -175,6 +176,14 @@ export default {
       ]
     };
   },
+  props:['activeName'],
+  watch:{
+   activeName(val){
+    if(val=='first'){
+      this.search();
+    }
+   }
+  },
   methods: {
     /* 获取列表数据 */
     getListData() {
@@ -206,7 +215,34 @@ export default {
     },
     /* 选择分配部门 */
     selectDepartment(dId) {
-      console.log(dId);
+        this.$confirm('确定分配到该部门？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.$axios({
+            method:'PUT',
+            url:this.distributeUrl,
+            data:this.$commonFun.initPostData({
+              id:this.distributeId,
+              departmentId:dId
+            })
+          }).then((res)=>{
+           console.log(res);
+           if(res.data.code==1){
+             this.$message.success('分配成功');
+             this.getListData();
+             this.dialogVisible=false;
+           }else{
+             this.$message.error(res.data.msg.msgTrim());
+           }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'warning',
+            message: '已取消操作'
+          });          
+        });
+      
     },
     /* 搜索按钮 */
     search() {

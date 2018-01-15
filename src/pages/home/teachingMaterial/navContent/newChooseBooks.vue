@@ -113,11 +113,11 @@
                 <el-button type="primary"  size="small" @click="chooseProjectDirector" style="margin-right:10px;">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
                 <el-tag
-                  v-for="tag in projectDirectorData"
+                  v-for="(tag,index) in projectDirectorData"
                   :key="tag.realname"
                   :closable="true"
                   type="info"
-                  @close="handleDirectorClose(tag)"
+                  @close="handleDirectorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -130,11 +130,11 @@
                 <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
                   class="marginR10"
-                  v-for="tag in ruleForm.materialProjectEditors"
-                  :key="tag.realname"
+                  v-for="(tag,index) in ruleForm.materialProjectEditors"
+                  :key="index"
                   :closable="true"
                   type="info"
-                  @close="handleEditorClose(tag)"
+                  @close="handleEditorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -255,7 +255,7 @@
                   v-model="material.notice">
                 </el-input>
               </el-col>
-              <div class="form-item">
+            </el-form-item>
                 <el-form-item label="上传图片：" prop="noticeFiles">
                   <my-upload
                     class="upload"
@@ -269,8 +269,6 @@
                     <el-button size="small" type="primary">点击上传</el-button>
                   </my-upload>
                 </el-form-item>
-              </div>
-            </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
                 <el-input
@@ -539,7 +537,8 @@ export default {
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
           {min:0,max:10,message:'轮次不能超过10个字符',trigger:'blur'},
-          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
+          {validator:this.$formCheckedRules.positiveChecked,trigger: "blur"},
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
@@ -569,7 +568,7 @@ export default {
         ],
         extensionName:[
           {required: true, message: "请填写姓名", trigger: "blur" },
-          {min:1,max:20,message:'扩展项名称不能超过20个字符',trigger:'change,blur'}
+          {min:1,max:20,message:'不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
           {type:'array',required: true, message: "请至少上传一张图片", trigger: "blur" },
@@ -979,6 +978,8 @@ export default {
        * 删除选中的项目编辑
        */
     handleEditorClose(val) {
+      console.log(1111,val);
+      
       this.ruleForm.materialProjectEditors.splice(val, 1);
       this.material.materialProjectEditors.splice(val, 1);
       this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -1152,14 +1153,14 @@ export default {
                     console.log(res);
                     if(res.data.code==1){
                       this.isloading=false;
-                      this.$message.success(this.$router.currentRoute.params.materialId=='new'?'新建成功':'更新成功');
+                      this.$message.success('已保存教材通知');
                       this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
                     }
                   })  
 
 
           } else {
-            this.$message.error('表单验证未通过');
+            this.$message.error('输入的内容不正确，请正确填写');
             return false;
           }
         });       

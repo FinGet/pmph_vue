@@ -30,7 +30,7 @@
           </div>
           <div class="searchInput">
             <el-select v-model="params.orgTypeName" placeholder="全部"  clearable>
-              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
             </el-select>
           </div>

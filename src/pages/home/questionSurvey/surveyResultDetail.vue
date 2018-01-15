@@ -70,14 +70,14 @@
                     <li v-for="(iterm,index) in writeQuestionData" :key="index">
                         <div class="question_p">
                           <p><span>内容类型：</span>{{iterm.questionType===4||iterm.questionType===5?'填空题':'其他'}}</p>
-                          <p><span>内容标题：</span>{{iterm.title}}</p>
+                          <p><span>内容标题：</span>{{iterm.questionName}}</p>
                         </div>
                         <div class="question_p">
                           <p>
                             <span>统计结果：</span>
                             {{iterm.count}}条
                             <el-button type="text" style="color:#337ab7;margin-left:20px;" @click="resultDetail(iterm.surveyId,iterm.questionId)">查看调查结果</el-button>
-                            <el-button type="text" style="color:#337ab7" @click="exportResult(iterm.surveyId,iterm.questionId)">导出结果查看</el-button>
+                            <el-button type="text" style="color:#337ab7" @click="exportResult(iterm.surveyId,iterm.questionId,iterm.questionName)">导出结果查看</el-button>
                             </p>
                         </div>
                     </li>
@@ -138,6 +138,7 @@ export default {
     return {
       api_detail:'/pmpheep/survey/question/answer/count',
       api__question_result:'/pmpheep/survey/question/answer/fill',
+      exportUrl:'/pmpheep/excel/surveyQuestionExcel',
       surveyData:{
         surveyId: '',
         surveyTitle: '',
@@ -248,8 +249,9 @@ export default {
     /**
      * 导出结果查看
      */
-    exportResult(surveyId,questionId){
-
+    exportResult(surveyId,questionId,title){
+      let url = this.exportUrl+"?surveyId=" + surveyId +'&questionId='+questionId+'&title'+title;
+			this.$commonFun.downloadFile(url);
     },
   },
   mounted() {

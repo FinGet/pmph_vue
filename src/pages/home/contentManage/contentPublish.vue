@@ -18,7 +18,7 @@
           </el-cascader>
       </el-form-item>
       <el-form-item label="所属教材：">
-          <el-select v-model="formData.book" placeholder="请选择" class="input">
+          <el-select v-model="formData.materialId" placeholder="请选择" class="input">
             <el-option
               v-for="item in bookOptions"
               :key="item.id"
@@ -104,7 +104,7 @@ export default {
         scheduledTime:'',
         isPublished: "",
         path:'0',
-        book:''
+        materialId:''
       },
       showPreventDialog:false,
       preventContent:'',
@@ -254,11 +254,13 @@ export default {
           this.formData.sessionId = this.$getUserData().sessionId;
           /* 判断新增还是修改 */
           if(!this.isEditContent){
+            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
               this.$axios
             .post(this.addNewUrl, this.$commonFun.initPostData(this.formData))
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -275,9 +277,11 @@ export default {
               }
             });
           }else{
+            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
             this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                  
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -311,6 +315,8 @@ export default {
     /* 审核 */
     examineContent(obj,status){
       console.log(obj);
+      console.log(this.formData)
+      this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
       this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -328,6 +334,7 @@ export default {
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;
                 this.$message.success("审核成功");
                 this.showContentDetail = false;
                 this.$router.push({name:'文章管理'})
@@ -454,13 +461,25 @@ export default {
              _this.$refs.editor.setContent(editData.content.content);
           }, 1000);
           /* 填充默认附件 */
-         editData.cmsExtras.forEach((item)=>{
-          var obj={};
+          console.log('111111111111');
+          console.log(this.fileList.length);
+          for(var i in editData.cmsExtras){
+             var obj={};
+          obj.name=editData.cmsExtras[i].attachmentName;
+          obj.url=editData.cmsExtras[i].attachment;
+          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
+          this.fileList.push(obj);                   
+          }
+          console.log('2222222222');
+          console.log(this.fileList); 
+         /* editData.cmsExtras.forEach((item)=>{
+          
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();
+          console.log('1111111111',obj);
           this.fileList.push(obj);
-         })
+         }) */
          this.formData.attachment=[];
         } else {
           var _this=this;
