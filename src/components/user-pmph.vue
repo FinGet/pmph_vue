@@ -463,7 +463,8 @@ methods:
               departmentId: this.form.departmentId,
               email: this.form.email,
               handphone: this.form.handphone,
-              isDisabled: this.form.isDisabled
+              isDisabled: this.form.isDisabled,
+              isDirector: this.form.isDirector
             })
           )
           .then(response => {

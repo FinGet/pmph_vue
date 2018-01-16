@@ -254,13 +254,11 @@ export default {
           this.formData.sessionId = this.$getUserData().sessionId;
           /* 判断新增还是修改 */
           if(!this.isEditContent){
-            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
               this.$axios
-            .post(this.addNewUrl, this.$commonFun.initPostData(this.formData))
+            .post(this.addNewUrl, this.$commonFun.initPostData(this.initFormData(this.formData)))
             .then(res => {
               console.log(res);
-              if (res.data.code == 1) {
-                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                
+              if (res.data.code == 1) {            
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -277,11 +275,9 @@ export default {
               }
             });
           }else{
-            this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
-            this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
+            this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.initFormData(this.formData))).then((res)=>{
                 console.log(res);
-                if(res.data.code==1){
-                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;                  
+                if(res.data.code==1){               
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -452,6 +448,9 @@ export default {
             }
             }
 
+            if(item=='materialId') {
+              this.formData[item]=this.formData[item]==0?'':this.formData[item];
+            }
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);
@@ -461,8 +460,6 @@ export default {
              _this.$refs.editor.setContent(editData.content.content);
           }, 1000);
           /* 填充默认附件 */
-          console.log('111111111111');
-          console.log(this.fileList.length);
           for(var i in editData.cmsExtras){
              var obj={};
           obj.name=editData.cmsExtras[i].attachmentName;
@@ -470,8 +467,6 @@ export default {
           obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
           this.fileList.push(obj);                   
           }
-          console.log('2222222222');
-          console.log(this.fileList); 
          /* editData.cmsExtras.forEach((item)=>{
           
           obj.name=item.attachmentName;
@@ -499,6 +494,18 @@ export default {
           this.bookOptions=res.data;
         }
       })
+    },
+    /* 提交数据处理 */
+    initFormData(obj){
+      var formData={};
+      for(var i in obj){
+        if(i=='materialId'){
+           formData[i]=obj[i]?obj[i]:'0';
+        }else{
+          formData[i]=obj[i];
+        }
+      } 
+      return formData;
     }
   },
   created() {

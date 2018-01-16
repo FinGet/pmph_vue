@@ -51,7 +51,7 @@
         <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
         <el-button type="primary" :disabled="isLocked || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isPublished || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary" :disabled="forceEnd" @click="exportExcel()">批量导出名单</el-button>
+        <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -141,7 +141,7 @@
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(3,scope.row.myPower) || scope.row.allTextbookPublished || !scope.row.planningEditorName || !scope.row.isChiefPublished || !scope.row.bianWeisNum || scope.row.isLocked || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':scope.row.revisionTimes>0?'再次确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || !scope.row.isLocked || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">{{scope.row.isPublished?'已公布':scope.row.revisionTimes>0?'再次公布':'最终结果公布'}}</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">{{scope.row.isPublished?'已公布':scope.row.revisionTimes>0?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
@@ -302,6 +302,13 @@
        * 判断当前是否有选中项来是否可以点击
        * @returns {boolean}
        */
+       isSelected() {
+        if (this.selected.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      },
       isPublished() {
         let arr = [];
         if (this.selected.length > 0){
@@ -339,7 +346,7 @@
        * @param type 0代表通过按钮，1代表点击结果公布按钮
        * @param data 数据，当为空时代表批量导出或公布
        */
-      showDialog(type,data){
+      showDialog(type,data,isLocked){
         var html = '';
         if(data) {
           this.currentId = data.textBookId
@@ -348,8 +355,13 @@
           this.method = 'pass'
           html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单通过后，除您以外的其他编辑和主编将无法继续变动名单`
         }else{
-          this.method = 'result'
-          html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+          if (isLocked) {
+            this.method = 'result'
+            html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+          } else {
+            this.$message.error('还未进行名单确认，不能公布！');
+            return;
+          }
         }
         this.dialogContent = html;
 
