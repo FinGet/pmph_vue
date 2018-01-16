@@ -8,7 +8,7 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(2)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="showOfflineProgress=true" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
@@ -460,6 +460,28 @@
         <el-button type="primary" @click="sendmsg">发 送</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="退回原因："
+      :visible.sync="showOfflineProgress"
+      :before-close="clearOfflineProgressMsg"
+      size="tiny">
+      <div class="relative">
+        <el-input
+          autofocus
+          type="textarea"
+          :rows="6"
+          placeholder="请输入退出原因"
+          @input.native="changeOfflineProgressTextarea"
+          @keyup.native.enter="onlineCheckPass(2)"
+          v-model="offlineProgressText">
+        </el-input>
+        <p class="tip-text" v-if="250-offlineProgressText.length<20">还可输入{{250-offlineProgressText.length}}个字符</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeOfflineProgress">取 消</el-button>
+        <el-button type="primary" @click="onlineCheckPass(2)">发 送</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -524,6 +546,10 @@
               courseConstructionList:['无','国家','省部','学校'],
               materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
               onlineProgressBtn:[],
+
+              //退回给个人弹窗
+              showOfflineProgress:false,
+              offlineProgressText:'',
             }
         },
         computed:{
@@ -923,33 +949,48 @@
          *  type 2 标示退回给个人 3 标示通过
          */
         onlineCheckPass(type){
-          this.$confirm("确定退回资料给个人？", "提示",{
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          })
-            .then(()=>{
-              this.$axios.get(this.api_online_check,{params:{
-                id:this.searchFormData.declarationId,
-                onlineProgress:type
-              }})
-                .then(response=>{
-                  var res = response.data;
-                  if(res.code==1){
-                    this.expertInfoData.onlineProgress=type;
-                    this.$message.success(type==3?'已通过！':'已退回！')
-                  }else{
-                    this.$message.error(res.msg.msgTrim())
-                  }
-                })
-                .catch(e=>{
-                  console.log(e);
-                  this.$message.error('请求失败，请重试！');
-                })
+          if(type===2&&!!!this.offlineProgressText){
+            this.$message.error('退回原因不能为空！')
+            return;
+          }
+          this.$axios.get(this.api_online_check,{params:{
+            id:this.searchFormData.declarationId,
+            onlineProgress:type,
+            returnCause:this.offlineProgressText||''
+          }})
+            .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.expertInfoData.onlineProgress=type;
+                this.$message.success(type==3?'已通过！':'已退回！')
+              }else{
+                this.$message.error(res.msg.msgTrim())
+              }
             })
-            .catch(e=>{})
+            .catch(e=>{
+              console.log(e);
+              this.$message.error('请求失败，请重试！');
+            })
 
-        }
+        },
+        /**
+         * 关闭退回原因弹窗
+         */
+        clearOfflineProgressMsg(){
+          this.offlineProgressText='';
+          done();
+        },
+        closeOfflineProgress(){
+          this.offlineProgressText='';
+          this.showOfflineProgress=false;
+        },
+        changeOfflineProgressTextarea(){
+          if(this.offlineProgressText.length>250){
+            this.$nextTick(() => {
+              this.offlineProgressText=this.offlineProgressText.substring(0,250);
+            })
+          }
+        },
 
       },
       created(){
