@@ -360,7 +360,7 @@ export default {
               materialName:this.formData.materialName,
               materialRound:this.formData.materialRound,
               materialType:this.formData.materialType,
-              isPublic:this.formData.isPublic,
+              isPublic:!this.formData.isPublic,
               textbooks:JSON.stringify(bookList),
             }))
               .then((response) => {

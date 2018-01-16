@@ -376,7 +376,7 @@
             </tr>
             <tr v-for="(iterm,index) in textbook">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div> {{iterm.rank&&iterm.rank<6?textbook_rankList[iterm.rank]:''}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.publishDate}}</div></td>
@@ -512,16 +512,17 @@
               decExtensionList:[],
               personalAchievements:'',
               bookList:[],
-              positionList:['','主编','副主编','编委'],
-              positionList_2:['','编委,数字编委','副主编','副主编,数字编委','副主编,编委','副主编,编委,数字编委'],
+              positionList:['无','主编','副主编','编委'],
+              positionList_2:['无','编委,数字编委','副主编','副主编,数字编委','副主编,编委','副主编,编委,数字编委'],
               addBookList:[],
               hasBookListChanged:false,
               showSendMsg:false,
               inputMsg:'',
-              rankList:['','国际','国家','省部','其他'],
-              national_plan_rankList:['','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
-              textbook_rankList:['','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
-              courseConstructionList:['','国家','省部','学校'],
+              rankList:['无','国际','国家','省部','其他'],
+              national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
+              textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
+              courseConstructionList:['无','国家','省部','学校'],
+              materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
               onlineProgressBtn:[],
             }
         },
