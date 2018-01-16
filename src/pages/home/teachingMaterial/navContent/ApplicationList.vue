@@ -42,12 +42,19 @@
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人">
+            <el-table-column label="创建人" width="80">
+                <template scope="scope">
+                    <p>
+                        {{scope.row.founderName}}
+                    </p>
+                </template>
+            </el-table-column>
+            <el-table-column label="联系人" width="210">
                 <template scope="scope">
                   <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
                       <span> <i class="fa fa-phone"></i> {{scope.row.contacts[0].contactPhone}}</span>
-                      <span> <i class="fa fa-envelope-o"></i> {{scope.row.contacts[0].contactEmail}}</span>
+                      <!-- <span> <i class="fa fa-envelope-o"></i> {{scope.row.contacts[0].contactEmail}}</span> -->
                     <el-button type="text" v-if="scope.row.contacts.length>1" @click="showMoreContact(scope.row.contacts)">更多</el-button>
                   </div>
                 </template>
