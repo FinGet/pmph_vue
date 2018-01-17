@@ -150,7 +150,7 @@
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> 
     </div>
     <div class="pagination-wrapper">
       <el-pagination

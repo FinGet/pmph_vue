@@ -474,6 +474,13 @@ export default {
           needcheck: false
         },
         {
+          name: "主编学术专著情况",
+          key:'material.isMonographUsed',
+          requiredKey:'material.isMonographRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
           name: "教材编写情况",
           key:'material.isTextbookUsed',
           requiredKey:'material.isTextbookRequired',
@@ -487,7 +494,34 @@ export default {
           usecheck: false,
           needcheck: false
         },
-
+        {
+          name: "出版行业获奖情况",
+          key:'material.isPublishRewardUsed',
+          requiredKey:'material.isPublishRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "SCI论文投稿及影响因子",
+          key:'material.isSciUsed',
+          requiredKey:'material.isSciRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "临床医学获奖情况",
+          key:'material.isClinicalRewardUsed',
+          requiredKey:'material.isClinicalRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "学术荣誉授予情况",
+          key:'material.isAcadeRewardUsed',
+          requiredKey:'material.isAcadeRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
       ],
       material:{
          materialName:'',
