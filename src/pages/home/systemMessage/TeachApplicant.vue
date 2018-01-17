@@ -188,18 +188,22 @@
         this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {
             let res = response.data;
+            // console.log('教材报名',res.code);
             if(res.code===1){
-              self.$message.success('发布成功！');
+              // console.log(1);
+              self.$message.success('发送成功！');
               self.$router.push({name: '消息列表'});
+              return;
             }else{
               self.$message.error(res.msg.msgTrim());
             }
             this.submiting=false;
           })
           .catch(function (error) {
+            // console.log(error);            
             self.$message({
               type:'error',
-              message:'发布失败，请重试'
+              message:'发送失败，请重试'
             });
             self.submiting=false;
           });

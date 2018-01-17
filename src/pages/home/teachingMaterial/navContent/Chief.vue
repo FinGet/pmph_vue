@@ -4,10 +4,10 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">发布</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">确认</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">确认</el-button>
-          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">重置</el-button>
+          <el-button type="primary" @click="submit(2)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">发布</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
@@ -50,7 +50,7 @@
                   class="border-radius-4"
                   :class="{'border-red':scope.row.isZhubian&&!scope.row.zhubianSortIsOk}"
                   v-model.trim="scope.row.zhubianSort"
-                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
                   @blur="sortChange(1,scope.row)"
                   @change="sortChange(1,scope.row)"
                   size="mini"
@@ -67,7 +67,7 @@
               <el-checkbox
                 v-model="scope.row.isFuzhubian"
                 @change="checkboxChange(2,scope.row)"
-                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)"
+                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -79,7 +79,7 @@
                   class="border-radius-4"
                   :class="{'border-red':!scope.row.fuzhubianSortIsOk}"
                   v-model.trim="scope.row.fuzhubianSort"
-                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
                   @blur="sortChange(2,scope.row)"
                   @change="sortChange(2,scope.row)"
                   size="mini"
@@ -94,14 +94,14 @@
               <el-checkbox
                 v-model="scope.row.isBianwei"
                 @change="checkboxChange(3,scope.row)"
-                :disabled="(scope.row.disabled_bw||!hasPermission(3))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)"
+                :disabled="(scope.row.disabled_bw||!hasPermission(3))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
 
           <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)"></el-checkbox>
+              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>
@@ -151,7 +151,8 @@
         fuzhubianSelectSortNumber:[],
         historyLog:[],
         IsDigitalEditorOptional:false,
-        myPower:'00000000'
+        myPower:'00000000',
+        optionsType:'edit',
       }
     },
     computed:{
@@ -172,6 +173,7 @@
       this.searchParams.textbookId = this.formData.textbookId;
       this.type = this.$route.query.type;
       this.myPower = this.$route.query.q;
+      this.optionsType = this.$route.query.opt;
       //如果没有教材id则跳转到通知列表
       if(!this.formData.materialId){
         this.$router.push({name:'通知列表'});

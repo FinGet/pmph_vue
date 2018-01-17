@@ -29,7 +29,7 @@
             <span></span>
           </div>
           <div class="searchInput">
-            <el-select v-model="params.orgTypeName" placeholder="全部"  clearable>
+            <el-select v-model="params.orgTypeName" placeholder="全部"  clearable @change ="refreshTableData">
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
             </el-select>
@@ -536,7 +536,7 @@ export default {
           label:'职教'
         },{
           value:4,
-          label:'本科&职教'
+          label:'本科、职教'
         }],
       //搜索所属机构用户
       OrgNameList: [],
