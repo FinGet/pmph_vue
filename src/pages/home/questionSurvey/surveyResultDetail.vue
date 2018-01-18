@@ -224,9 +224,10 @@ export default {
     resultDetail(surveyId,questionId,openDialog){
       if(!openDialog){
         this.dialogVisible=true;
-        this.dialogSearchParams.surveyId=surveyId;
-        this.dialogSearchParams.questionId=questionId;
+        this.dialogSearchParams.surveyId=surveyId?surveyId:'';
+        this.dialogSearchParams.questionId=questionId?questionId:'';
       }
+      console.log(this.dialogSearchParams)
       this.$axios.get(this.api__question_result,{params:this.dialogSearchParams})
         .then((response) => {
           let res = response.data;
