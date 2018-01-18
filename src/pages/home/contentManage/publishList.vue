@@ -125,7 +125,7 @@
          <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
-         <el-form-item label="附件：">
+         <el-form-item label="附件：" v-if="contentDetailData.cmsExtras.length!=0">
               <a type="text" :href="item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
