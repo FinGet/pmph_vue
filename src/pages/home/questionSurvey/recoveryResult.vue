@@ -26,7 +26,7 @@
          {{formTop.realname }}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         http：//120.76.221.250/#/user/org/id=12
+         {{'http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
