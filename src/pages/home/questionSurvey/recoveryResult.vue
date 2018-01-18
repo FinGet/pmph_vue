@@ -107,13 +107,16 @@
             getDetailData(){
                 this.$axios.get(this.surveryDetailUrl,{
                     params:{
-                        surveyId:this.$route.params.surveyId
+                        surveyId:this.$route.params.surveyId,
+                        userId:this.$route.params.userId
                     }
                 }).then((res)=>{
                     console.log(res);
                     if(res.data.code==1){
                         this.formTop=res.data.data.Survey;
                         this.questionList=res.data.data.SurveyQuestionAnswer;
+                    }else{
+                        this.$message.error(res.data.msg.msgTrim());
                     }
                 })
             }
