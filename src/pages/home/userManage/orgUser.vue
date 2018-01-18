@@ -966,18 +966,8 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
     preview(proxy) {
-      this.$axios
-        .get("/pmpheep/image/" + proxy)
-        .then(response => {
-          let res = response.data;
-          if (res.code == "1") {
-            this.dialogVisible = true;
-            console.log(res);
-          }
-        })
-        .catch(error => {
-          console.log(error.msg);
-        });
+      this.schoolDialogVisible = true
+      this.imgsrc = "/pmpheep/image/"+proxy;
     },
     /**
      * 查看详情
