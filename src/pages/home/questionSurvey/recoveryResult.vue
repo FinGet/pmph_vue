@@ -43,7 +43,8 @@
              </p>
              <p class="header_p">
                  <label>回答：</label>
-                 <span>{{item.optionContent}}</span>
+                 <span v-if="item.noteOptionContent">{{item.noteOptionContent}}</span>
+                 <span v-else>{{item.oneOrManyOptionContent}}</span>
              </p>
            </li>
            <!-- <li>
