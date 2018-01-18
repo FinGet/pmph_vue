@@ -115,6 +115,9 @@
          <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
+         <p style="width:100%" v-for="item in contentDetailData.MaterialNoteAttachment" :key="item.id">
+         <img :src="'/pmpheep/file/notice/download/'+item.attachment" alt="" style="margin-left:50%;transform:translateX(-50%);">
+         </p>
          <el-form-item label="附件：">
               <p v-for="item in contentDetailData.cmsExtras" :key="item.id"><a type="text" :href="item.attachment" style="color:#337ab7" >{{item.attachmentName}}</a></p>
          </el-form-item>
