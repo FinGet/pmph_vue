@@ -449,7 +449,7 @@ export default {
             }
 
             if(item=='materialId') {
-              this.formData[item]=this.formData[item]==0?'':this.formData[item];
+              this.formData[item]=editData.cmsContent[item]==0?'':editData.cmsContent[item];
             }
           }
           /* 设置默认栏目 */
@@ -500,7 +500,7 @@ export default {
       var formData={};
       for(var i in obj){
         if(i=='materialId'){
-           formData[i]=obj[i]?obj[i]:'0';
+           formData[i]=obj[i]?obj[i]:0;
         }else{
           formData[i]=obj[i];
         }
