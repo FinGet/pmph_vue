@@ -367,6 +367,7 @@
 			:visible.sync="previewDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
       <img :src="imgsrc" width="100%" alt="教师资格证">
 
@@ -859,6 +860,12 @@ export default {
         isDisabled:"",
         note:""
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {

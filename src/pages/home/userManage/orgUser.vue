@@ -420,6 +420,7 @@
 			:visible.sync="schoolDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
 			<img :src="imgsrc" width="100%" alt="委托书">
 		</el-dialog>
@@ -997,6 +998,12 @@ export default {
         username:"",
         isDisabled: false
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {
