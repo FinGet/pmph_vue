@@ -567,21 +567,6 @@
           </div>
         </div>
       </div>
-      <div class="expert-info-box">
-        <p class="info-box-title">院校推荐意见:</p>
-        <div>
-          <div class="school-device text-right">
-            <div>
-              <p class=" paddingB10">负责人签字：<span class="inline-block width100"></span> (院校盖章)</p>
-              <p>
-                <span class="inline-block width60">年</span>
-                <span class="inline-block width60">月</span>
-                <span class="inline-block width60">日</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div>
 
@@ -993,8 +978,6 @@
                 this.clinical_reward = res.data.decClinicalRewardList;
                 //作家科研情况表
                 this.acade_reward = res.data.decAcadeRewardList;
-
-
 
                 //扩展项
                 this.decExtensionList = res.data.decExtensionList;

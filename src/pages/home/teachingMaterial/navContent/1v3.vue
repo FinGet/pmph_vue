@@ -208,11 +208,10 @@
           </template>
         </el-table-column> -->
         <el-table-column
-          prop="presetPosition"
           label="遴选职位">
           <template scope="scope">
             <p>
-              {{positionList[scope.row.presetPosition]}}
+              {{positionList[scope.row.choosePosition]}}
               </p>
           </template>
         </el-table-column>
