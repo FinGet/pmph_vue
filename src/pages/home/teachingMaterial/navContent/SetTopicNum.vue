@@ -17,6 +17,8 @@
 
       <!--操作按钮-->
       <div class="operation-wrapper">
+        <el-button type="primary" >导入</el-button>
+        <el-button type="primary" >导出</el-button>
         <el-button type="primary" @click="submit">确认</el-button>
       </div>
     </div>
@@ -104,14 +106,14 @@
       },
       submit(){
         // console.log(this.tableData)
-        var re = /^[0-9]+[0-9]*]*$/ 
+        var re = /^[0-9]+[0-9]*]*$/
         for (var i = 0; i < this.tableData.length; i++) {
           for (var key in this.book) {
             this.book[key] = this.tableData[i][key]
           }
           if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
             this.$message.error('选题号只能为数字')
-            return 
+            return
           }
           // console.log(this.book)
           this.topicTextbooks.push(this.book)
