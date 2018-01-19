@@ -352,7 +352,7 @@ export default {
             sort:iterm.sort?iterm.sort:null,
             founderId:this.currentUserId
           };
-          if(tempObj.textbookName===''&&tempObj.textbookName===''&&tempObj.textbookName===''){
+          if(!tempObj.sort&&!tempObj.textbookName&&!tempObj.textbookRound){
             //空数据给过滤掉
           }else{
             bookList.push(tempObj);
