@@ -351,8 +351,12 @@ export default {
             textbookRound:iterm.textbookRound?iterm.textbookRound:null,
             sort:iterm.sort?iterm.sort:null,
             founderId:this.currentUserId
+          };
+          if(tempObj.textbookName===''&&tempObj.textbookName===''&&tempObj.textbookName===''){
+            //空数据给过滤掉
+          }else{
+            bookList.push(tempObj);
           }
-          bookList.push(tempObj);
         })
         //提交
         this.$confirm("确认保存修改？", "提示",{
@@ -377,6 +381,7 @@ export default {
                     this.$router.push({name:'教材申报选择学校'});
                   }else{
                     this.$message.success('保存成功！');
+                    this.getBookList();
                   }
                 }else{
                   this.$message.error(res.msg.msgTrim());
