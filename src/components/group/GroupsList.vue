@@ -58,23 +58,20 @@
                 <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
 
                 <my-upload
-                  v-if="!isIe9"
                   class="fileInput"
                   ref="upload"
-                  action="/pmpheep/group/add"
-                  :data="creadGroupPostData"
-                  :on-change="filechange"
+                  :action="groupImgFile"
+                  :before-upload="beforeUpload"
                   :on-success="upLoadFileSuccess"
                   :on-error="uploadError"
-                  :show-file-list="false"
-                  :auto-upload="false">
+                  :show-file-list="false">
                   <el-button class="fileInput">上传</el-button>
                 </my-upload>
-                <div ref="headImageWrapper" v-show="newGroupData.filename" v-if="!isIe9">
-                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
+                <div ref="headImageWrapper" v-show="newGroupData.filename">
+                  <img :src="newGroupData.imgUrl" class="avatar">
                 </div>
                 <div v-show="!newGroupData.filename">
-                  <img :src="DEFAULT_USER_IMAGE" class="avatar avatar-ie9">
+                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
                 </div>
               </div>
             </el-form-item>
@@ -99,6 +96,7 @@
       var _this = this;
        return {
          groupListUrl:'/pmpheep/group/list/pmphGroup',
+         groupImgFile:'/pmpheep/group/files',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
          currentActiveGroupId:undefined,
@@ -107,7 +105,8 @@
          newGroupData:{
            filename:undefined,
            name:'',
-           currentFile:undefined
+           currentFile:undefined,
+           imgUrl:undefined,
          },
          rules:{
            name:[this.$formRules.required('小组名不能为空','blur'),this.$formRules.name()]
@@ -182,47 +181,42 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(file){
+      beforeUpload(file){
         let self=this;
         let prevDiv = this.$refs.headImageWrapper;
         let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
-        if(!ext){return;}
+        if(!ext){return false;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
           this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
         }
         //文件名不超过40个字符
         if(file.name.length>50){
           this.$message.error("文件名称不能超过50个字符");
-          return;
+          return false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
           this.$message.error("文件大小不能为0kb");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
+        }
+        if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
+          this.$message.error('不能上传可执行文件!');
+          return false;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
           this.$message.error("图片大小不能大于10M");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
         }
-        self.newGroupData.currentFile = file;
-        if(window.FileReader){
-          let reader = new FileReader();
-          reader.onload = function(evt) {
-            self.newGroupData.filename=file.name;
-            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
-          }
-          reader.readAsDataURL(file.raw);
-        }else{
-          self.newGroupData.filename=file.name;
-          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
-          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale',src=\"" + file.raw.value + "\")";
-        }
+
+        return true;
+
+
 
       },
       PreviewImg(imgFile){
@@ -240,9 +234,9 @@
        */
       upLoadFileSuccess(response, file, fileList){
         if (response.code == '1') {
-          this.$message.success('创建小组成功');
-          this.getGroupData();
-          this.dialogVisible=false;
+          this.newGroupData.filename=file.name;
+          this.newGroupData.imgUrl='/pmpheep/'+response.data;
+          this.newGroupData.currentFile=file.file;
         }else{
           this.$message.error(response.msg.msgTrim());
         }
@@ -251,7 +245,7 @@
        * 创建小组请求失败的回调
        */
       uploadError(err, file, fileList){
-        this.$message.error('创建小组失败');
+
       },
       /**
        * 创建小组
@@ -265,27 +259,23 @@
         let self= this;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            if(this.newGroupData.currentFile) {
-              this.newGroupData.currentFile.upload();
-            }else{
-              this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
-                file:'',
-                groupName:this.newGroupData.name
-              }))
-                .then((response) => {
-                  let res = response.data;
-                  if (res.code == '1') {
-                    self.$message.success('创建小组成功');
-                    self.getGroupData();
-                    self.dialogVisible=false;
-                  }else{
-                    self.$message.error(res.msg.msgTrim());
-                  }
-                })
-                .catch((error) => {
-                  self.$message.error('创建小组失败');
-                });
-            }
+            this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
+              file:this.newGroupData.imgUrl?this.newGroupData.imgUrl.replace('/pmpheep/',''):'',
+              groupName:this.newGroupData.name
+            }))
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.$message.success('创建小组成功');
+                  self.getGroupData();
+                  self.dialogVisible=false;
+                }else{
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                self.$message.error('创建小组失败');
+              });
           } else {
             self.$message.error('请完善表单后再添加！');
             return false;
