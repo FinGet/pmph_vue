@@ -2,7 +2,7 @@
   <div class="submit_apply">
     <p class="header_p">
           <span>选题名称：</span>
-          <el-input class="input" @keyup.enter.native="search" v-model="searchParams.bookName" placeholder="请输入选题名称"></el-input>
+          <el-input class="input" @keyup.enter.native="search" v-model="searchParams.bookname" placeholder="请输入选题名称"></el-input>
           <span>提交日期：</span>
           <el-date-picker
             v-model="date"
@@ -93,7 +93,7 @@
                 pageNumber:1,
                 authProgress:1,
                 submitTime:'',
-                bookName:''
+                bookname:''
               },
               typeList:['专著','基础理论','论文集','科普','应用技术','工具书','其他'],
               date:'',
@@ -102,11 +102,14 @@
             }
         },
         methods:{
-            handleSizeChange(){
-
+            handleSizeChange(val){
+               this.searchParams.pageSize=val;
+               this.searchParams.pageNumber=1;
+               this.getData();
             },
-            handleCurrentChange(){
-
+            handleCurrentChange(val){
+               this.searchParams.pageNumber=val;
+               this.getData();
             },
           /**
            * 获取数据
