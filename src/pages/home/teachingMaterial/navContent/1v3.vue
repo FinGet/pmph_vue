@@ -211,7 +211,7 @@
           label="遴选职位">
           <template scope="scope">
             <p>
-              {{positionList[scope.row.choosePosition]}}
+              {{positionList[scope.row.chosenPosition]}}
               </p>
           </template>
         </el-table-column>
