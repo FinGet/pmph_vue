@@ -257,6 +257,9 @@ export default {
         }else{
           temp = this.$commonFun.checkType(row.sort,'number');
         }
+        if(row.sort.length>9){
+          temp=false;
+        }
         row.sortIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
           row.nameIsOk=true;
@@ -295,6 +298,9 @@ export default {
           }
         }else{
           temp = this.$commonFun.checkType(row.textbookRound,'number');
+        }
+        if(row.textbookRound.length>9){
+          temp=false;
         }
         row.roundIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){

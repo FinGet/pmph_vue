@@ -188,12 +188,25 @@
             <div>证件号码：<span></span></div>
             <div>{{expertInfoData.idcard}}</div>
           </div>
+
+          <div class="info-iterm-text lg-label">
+            <div>是否服从调剂：<span></span></div>
+            <div>{{expertInfoData.isDispensed?'是':'否'}}</div>
+          </div>
+          <div class="info-iterm-text xl-label">
+            <div>是否参与本科教学评估认证：<span></span></div>
+            <div>{{expertInfoData.isUtec?'是':'否'}}</div>
+          </div>
+          <div class="info-iterm-text lg">
+            <div>专业特长：<span></span></div>
+            <div>{{expertInfoData.expertise}}</div>
+          </div>
         </div>
       </div>
 
       <!--主要学习经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要学习经历</p>
+        <p class="info-box-title">学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -220,7 +233,7 @@
 
       <!--主要工作经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要工作经历</p>
+        <p class="info-box-title">工作经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -242,7 +255,7 @@
 
       <!--主要教学经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要教学经历</p>
+        <p class="info-box-title">教学经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -275,7 +288,7 @@
 
       <!--主要学术兼职-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要学术兼职</p>
+        <p class="info-box-title">学术兼职</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -411,6 +424,126 @@
         </div>
       </div>
 
+      <!--出版行业获奖情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">出版行业获奖情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>专著名称</div></th>
+              <th><div>专著发表日期</div></th>
+              <th><div>出版方式</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in monograph">
+              <td><div>{{iterm.monographName}}</div></td>
+              <td><div>{{iterm.monographDate}}</div></td>
+              <td><div>{{iterm.isSelfPaid?'自费':'公费'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--出版行业获奖情况表-->
+      <div class="expert-info-box">
+        <p class="info-box-title">科研情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>奖项名称</div></th>
+              <th><div>获奖日期</div></th>
+              <th><div>评奖单位</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in publish_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{iterm.awardUnit}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--SCI论文投稿及影响因子情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">SCI论文投稿及影响因子情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>论文名称</div></th>
+              <th><div>期刊名称</div></th>
+              <th><div>期刊SCI影响因子</div></th>
+              <th><div>发表日期</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in sci">
+              <td><div>{{iterm.paperName}}</div></td>
+              <td><div>{{iterm.journalName}}</div></td>
+              <td><div>{{iterm.factor}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--临床医学获奖情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">临床医学获奖情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>奖项名称</div></th>
+              <th><div>获奖日期</div></th>
+              <th><div>奖项级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in clinical_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{rankList[iterm.awardUnit]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--学术荣誉授予情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">学术荣誉授予情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>荣誉名称</div></th>
+              <th><div>授予日期 </div></th>
+              <th><div>荣誉级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in acade_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{rankList[iterm.awardUnit]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
 
       <div>
         <!--扩展项-->
@@ -431,6 +564,21 @@
           <div class="info-iterm-text">
             <div>申报单位：<span></span></div>
             <div>{{expertInfoData.orgId?expertInfoData.orgNameOne:'人民卫生出版社'}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="expert-info-box">
+        <p class="info-box-title">院校推荐意见:</p>
+        <div>
+          <div class="school-device text-right">
+            <div>
+              <p class=" paddingB10">负责人签字：<span class="inline-block width100"></span> (院校盖章)</p>
+              <p>
+                <span class="inline-block width60">年</span>
+                <span class="inline-block width60">月</span>
+                <span class="inline-block width60">日</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -475,11 +623,11 @@
           @keyup.native.enter="onlineCheckPass(2)"
           v-model="offlineProgressText">
         </el-input>
-        <p class="tip-text" v-if="250-offlineProgressText.length<20">还可输入{{250-offlineProgressText.length}}个字符</p>
+        <p class="tip-text" v-if="100-offlineProgressText.length<20">还可输入{{100-offlineProgressText.length}}个字符</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeOfflineProgress">取 消</el-button>
-        <el-button type="primary" @click="onlineCheckPass(2)">发 送</el-button>
+        <el-button type="primary" @click="onlineCheckPass(2)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -533,6 +681,11 @@
               researchData:[],
               decExtensionList:[],
               personalAchievements:'',
+              monograph:[],//出版行业获奖情况
+              publish_reward:[],//出版行业获奖情况表
+              sci:[],//SCI论文投稿及影响因子情况
+              clinical_reward:[],//临床医学获奖情况
+              acade_reward:[],//学术荣誉授予情况
               bookList:[],
               positionList:['无','主编','副主编','编委'],
               positionList_2:['无','编委,数字编委','副主编','副主编,数字编委','副主编,编委','副主编,编委,数字编委'],
@@ -829,6 +982,20 @@
                 this.textbook = res.data.decTextbookList;
                 //作家科研情况表
                 this.researchData = res.data.decResearchList;
+
+                //出版行业获奖情况
+                this.monograph = res.data.decMonographList;
+                //出版行业获奖情况表
+                this.publish_reward = res.data.decPublishRewardList;
+                //SCI论文投稿及影响因子情况
+                this.sci = res.data.decSciList;
+                //临床医学获奖情况
+                this.clinical_reward = res.data.decClinicalRewardList;
+                //作家科研情况表
+                this.acade_reward = res.data.decAcadeRewardList;
+
+
+
                 //扩展项
                 this.decExtensionList = res.data.decExtensionList;
 
@@ -976,7 +1143,7 @@
         /**
          * 关闭退回原因弹窗
          */
-        clearOfflineProgressMsg(){
+        clearOfflineProgressMsg(done){
           this.offlineProgressText='';
           done();
         },
@@ -985,9 +1152,9 @@
           this.showOfflineProgress=false;
         },
         changeOfflineProgressTextarea(){
-          if(this.offlineProgressText.length>250){
+          if(this.offlineProgressText.length>100){
             this.$nextTick(() => {
-              this.offlineProgressText=this.offlineProgressText.substring(0,250);
+              this.offlineProgressText=this.offlineProgressText.substring(0,100);
             })
           }
         },
@@ -1012,6 +1179,7 @@
 <style scoped>
   .info-wrapper{
     /*width: 1100px;*/
+    padding-bottom: 20px;
   }
   .expert-info-box{
 
@@ -1043,6 +1211,10 @@
     line-height: 36px;
     vertical-align: middle;
   }
+  .info-iterm-text.lg{
+    width: 100%;
+    max-width: 1200px;
+  }
   .user-info-wrapper .info-iterm-text{
     padding-bottom: 8px;
   }
@@ -1057,6 +1229,21 @@
   .info-iterm-text>div:nth-of-type(2){
     margin-left: 88px;
     padding-right: 10px;
+  }
+
+  .info-iterm-text.lg-label>div:nth-of-type(1){
+    width: 120px;
+  }
+
+  .info-iterm-text.lg-label>div:nth-of-type(2){
+    margin-left: 120px;
+  }
+  .info-iterm-text.xl-label>div:nth-of-type(1){
+    width: 200px;
+  }
+
+  .info-iterm-text.xl-label>div:nth-of-type(2){
+    margin-left: 200px;
   }
   .expert_info-buttonWrapper{
     margin-top: 30px;
@@ -1127,5 +1314,8 @@
   }
   .achievements{
     min-height: 60px;
+  }
+  .school-device{
+    padding: 160px 0 0;
   }
 </style>
