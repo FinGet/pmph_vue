@@ -204,7 +204,7 @@
           return false;
         }
         if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-          this.$message.error('不能上传可执行文件!');
+          this.$message.error('请勿上传可执行文件!');
           return false;
         }
         // 判断文件大小是否符合 文件不大于10M

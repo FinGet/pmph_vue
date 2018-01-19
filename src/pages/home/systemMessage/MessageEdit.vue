@@ -140,7 +140,7 @@ export default {
         this.$message.error('文件上传最大为100M！');
       }
       if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-        this.$message.error('不能上传可执行文件!');
+        this.$message.error('请勿上传可执行文件!');
       }
       if (!nameLen) {
         this.$message.error('文件名称不能超过50个字符!');

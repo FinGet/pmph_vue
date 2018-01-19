@@ -365,7 +365,7 @@
             <tr v-for="(iterm,index) in lastPositionList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
-              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -865,12 +865,12 @@
           }
           //文件名不超过40个字符
           if(file.name.length>60){
-            this.$message.error("文件名不能超过40个字符");
+            this.$message.error("文件名不能超过60个字符");
             return;
           }
           // 类型判断
           if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-            this.$message.error("不能上传可执行文件");
+            this.$message.error("请勿上传可执行文件！");
             return;
           }
           // 判断文件大小是否符合 文件不为0
@@ -898,7 +898,7 @@
           const nameLen = file.name.length <= 60;
           //文件名不超过40个字符
           if(file.name.length>60){
-            this.$message.error("文件名不能超过40个字符");
+            this.$message.error("文件名不能超过60个字符");
             return false;
           }
           if (file.size / 1024 / 1024==0) {
@@ -910,7 +910,7 @@
             return false;
           }
           if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-            this.$message.error('上传文件不能是可执行文件!');
+            this.$message.error('请勿上传可执行文件!');
             return false;
           }
           if (!nameLen) {
