@@ -26,7 +26,7 @@
           {{surveyData.realname}}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         http：//120.76.221.250/#/user/org/id=12
+         {{'http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+searchParams.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -224,9 +224,10 @@ export default {
     resultDetail(surveyId,questionId,openDialog){
       if(!openDialog){
         this.dialogVisible=true;
-        this.dialogSearchParams.surveyId=surveyId;
-        this.dialogSearchParams.questionId=questionId;
+        this.dialogSearchParams.surveyId=surveyId?surveyId:'';
+        this.dialogSearchParams.questionId=questionId?questionId:'';
       }
+      console.log(this.dialogSearchParams)
       this.$axios.get(this.api__question_result,{params:this.dialogSearchParams})
         .then((response) => {
           let res = response.data;

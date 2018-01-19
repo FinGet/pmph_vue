@@ -47,10 +47,10 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="allTextbookPublished || !hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="allTextbookPublished || !hasAccess(7,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
-        <el-button type="primary" :disabled="isLocked || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isPublished || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <el-button type="primary" :disabled="isPublished || !hasAccess(5,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
@@ -139,14 +139,14 @@
           label="操作" min-width="170">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(3,scope.row.myPower) || scope.row.allTextbookPublished || !scope.row.planningEditorName || !scope.row.isChiefPublished || !scope.row.bianWeisNum || scope.row.isLocked || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':scope.row.revisionTimes>0?'再次确认':'名单确认'}}</el-button>
+            <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':scope.row.revisionTimes>0?'再次确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished">{{scope.row.isPublished?'已公布':scope.row.revisionTimes>0?'再次公布':'最终结果公布'}}</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">{{scope.row.isPublished?'已公布':scope.row.revisionTimes>0?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
+            <el-button type="text" :disabled="!hasAccess(6,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>

@@ -19,14 +19,14 @@
         <el-form-item label="调查日期范围：">
          {{$commonFun.formatDate(formTop.beginDate,'yyyy-MM-dd')}}到{{$commonFun.formatDate(formTop.endDate,'yyyy-MM-dd')}}
         </el-form-item>
-        <el-form-item label="参与人数：">
+        <!-- <el-form-item label="参与人数：">
           {{formTop.count }}
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="发起人：">
          {{formTop.realname }}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         http：//120.76.221.250/#/user/org/id=12
+         {{'http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -43,7 +43,8 @@
              </p>
              <p class="header_p">
                  <label>回答：</label>
-                 <span>{{item.optionContent}}</span>
+                 <span v-if="item.noteOptionContent">{{item.noteOptionContent}}</span>
+                 <span v-else>{{item.oneOrManyOptionContent}}</span>
              </p>
            </li>
            <!-- <li>
@@ -107,13 +108,16 @@
             getDetailData(){
                 this.$axios.get(this.surveryDetailUrl,{
                     params:{
-                        surveyId:this.$route.params.surveyId
+                        surveyId:this.$route.params.surveyId,
+                        userId:this.$route.params.userId
                     }
                 }).then((res)=>{
                     console.log(res);
                     if(res.data.code==1){
                         this.formTop=res.data.data.Survey;
                         this.questionList=res.data.data.SurveyQuestionAnswer;
+                    }else{
+                        this.$message.error(res.data.msg.msgTrim());
                     }
                 })
             }

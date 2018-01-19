@@ -55,7 +55,7 @@
       width="100"
      >
      <template scope="scope">
-       <el-button type="text" @click="$router.push({name:'问卷回收结果',params:{surveyId:scope.row.surveyId}})">查看</el-button>
+       <el-button type="text" @click="$router.push({name:'问卷回收结果',params:{surveyId:scope.row.surveyId,userId:scope.row.userId}})">查看</el-button>
      </template>
      </el-table-column> 
     </el-table>

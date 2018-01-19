@@ -98,14 +98,14 @@
           .then(function (response) {
             let res = response.data;
             if(res.code===1){
-              self.$message.success('发布成功！');
+              self.$message.success('发送成功！');
               self.$router.push({name: '消息列表'});
             }
           })
           .catch(function (error) {
             self.$message({
               type:'error',
-              message:'发布失败，请重试'
+              message:'发送失败，请重试'
             });
           });
       },

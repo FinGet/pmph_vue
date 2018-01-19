@@ -367,8 +367,10 @@
 			:visible.sync="previewDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
-			<img :src="imgsrc" width="100%" alt="教师资格证">
+      <img :src="imgsrc" width="100%" alt="教师资格证">
+
 		</el-dialog>
 	</div>
   </el-tab-pane>
@@ -818,15 +820,18 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
 		preview(cert) {
-			this.$axios.get("/pmpheep/image/"+cert).then(response => {
-				let res = response.data
-				if (res.code == '1'){
-					this.dialogVisible = true
-					console.log(res)
-				}
-			}).catch((error) => {
-        console.log(error.msg)
-      })
+      this.previewDialogVisible = true
+		  this.imgsrc = "/pmpheep/image/"+cert;
+      console.log(this.imgsrc);
+//			this.$axios.get("/pmpheep/image/"+cert).then(response => {
+//				let res = response.data
+//				if (res.code == '1'){
+//					this.dialogVisible = true
+//					console.log(res)
+//				}
+//			}).catch((error) => {
+//        console.log(error.msg)
+//      })
     },
     /**
      * 点击查看详情
@@ -855,6 +860,12 @@ export default {
         isDisabled:"",
         note:""
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {

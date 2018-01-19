@@ -29,14 +29,14 @@
             <span></span>
           </div>
           <div class="searchInput">
-            <el-select v-model="params.orgTypeName" placeholder="全部"  clearable>
+            <el-select v-model="params.orgTypeName" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
             </el-select>
           </div>
         </div>
         <div class="searchBox-wrapper searchBox-radio">
-          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="refreshTableData">
+          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="orgSearch">
             <el-radio :label="true">医院</el-radio>
             <el-radio :label="false">学校</el-radio>
           </el-radio-group>
@@ -420,6 +420,7 @@
 			:visible.sync="schoolDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
 			<img :src="imgsrc" width="100%" alt="委托书">
 		</el-dialog>
@@ -536,7 +537,7 @@ export default {
           label:'职教'
         },{
           value:4,
-          label:'本科&职教'
+          label:'本科、职教'
         }],
       //搜索所属机构用户
       OrgNameList: [],
@@ -549,7 +550,7 @@ export default {
         orgName: "",
         name: "",
         orgTypeName:'',
-        isHospital: true
+        isHospital: false
       },
       totalPages: 0,// 数据总量
 			visible1: false,
@@ -708,6 +709,43 @@ export default {
         .catch(function(error) {
           console.error(error);
         });
+    },
+
+    /**
+     * 搜索医院、本科、职教、本科&职教
+     */
+    specialSearch(){
+      if (this.params.orgTypeName == '医院') {
+        this.params.isHospital = true;
+        this.refreshTableData();
+      } else {
+        this.params.isHospital = false;
+        this.refreshTableData();
+      }
+
+    },
+
+    /**
+     * 按医院和学校查询
+     */
+    orgSearch(){
+      if (this.params.isHospital) {
+        this.params.orgTypeName = '医院';
+        this.refreshTableData();
+      } else {
+        this.params.orgTypeName = '';
+        this.orgoptions = [{
+          value:1,
+          label:'本科'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科、职教'
+        }]
+        this.refreshTableData();
+      }
     },
     /**
        * 获取所属部门信息
@@ -966,18 +1004,8 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
     preview(proxy) {
-      this.$axios
-        .get("/pmpheep/image/" + proxy)
-        .then(response => {
-          let res = response.data;
-          if (res.code == "1") {
-            this.dialogVisible = true;
-            console.log(res);
-          }
-        })
-        .catch(error => {
-          console.log(error.msg);
-        });
+      this.schoolDialogVisible = true
+      this.imgsrc = "/pmpheep/image/"+proxy;
     },
     /**
      * 查看详情
@@ -1007,6 +1035,12 @@ export default {
         username:"",
         isDisabled: false
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {

@@ -24,7 +24,7 @@
          <template scope="scope">
            <el-button type="text" @click="$router.push({name:'结果明细',params:{data:scope.row},query:{id:scope.row.surveyId}})">查看</el-button>
            <span>|</span>
-           <el-button type="text">复制问卷地址</el-button>
+           <el-button type="text" @click="copyAddress(scope.row.surveyId)">复制问卷地址</el-button>
              </template>
        </el-table-column>
    </el-table>
@@ -40,6 +40,7 @@
         :total="pageTotal">
       </el-pagination>
     </div>
+    <div id="copyBox" ></div>
   </div>
 </template>
 <script type="text/javascript">
@@ -48,6 +49,7 @@
             return{
               api_statistic_list:'/pmpheep/survey/question/answer/result',
               pageTotal:0,
+              copyContent:'',
               searchParams:{
                   pageSize:30,
                   pageNumber:1,
@@ -96,6 +98,16 @@
             this.searchParams.pageNumber=1;
             this.getTableData();
           },
+          /* 复制 */
+          copyAddress(id){
+            this.copyContent='http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+id;
+            var e="<input id='copyText' value='"+this.copyContent+"' />";
+             document.getElementById('copyBox').innerHTML=e;
+             var text=document.getElementById('copyText').select();
+                document.execCommand('copy');
+                document.getElementById('copyBox').innerHTML='';
+                this.$message.success('问卷地址已复制到剪贴板');
+          }
         },
       created(){
           this.search();
