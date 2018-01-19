@@ -29,14 +29,14 @@
             <span></span>
           </div>
           <div class="searchInput">
-            <el-select v-model="params.orgTypeName" placeholder="全部"  clearable @change ="refreshTableData">
+            <el-select v-model="params.orgTypeName" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
             </el-select>
           </div>
         </div>
         <div class="searchBox-wrapper searchBox-radio">
-          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="refreshTableData">
+          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="orgSearch">
             <el-radio :label="true">医院</el-radio>
             <el-radio :label="false">学校</el-radio>
           </el-radio-group>
@@ -550,7 +550,7 @@ export default {
         orgName: "",
         name: "",
         orgTypeName:'',
-        isHospital: true
+        isHospital: false
       },
       totalPages: 0,// 数据总量
 			visible1: false,
@@ -709,6 +709,43 @@ export default {
         .catch(function(error) {
           console.error(error);
         });
+    },
+
+    /**
+     * 搜索医院、本科、职教、本科&职教
+     */
+    specialSearch(){
+      if (this.params.orgTypeName == '医院') {
+        this.params.isHospital = true;
+        this.refreshTableData();
+      } else {
+        this.params.isHospital = false;
+        this.refreshTableData();
+      }
+
+    },
+
+    /**
+     * 按医院和学校查询
+     */
+    orgSearch(){
+      if (this.params.isHospital) {
+        this.params.orgTypeName = '医院';
+        this.refreshTableData();
+      } else {
+        this.params.orgTypeName = '';
+        this.orgoptions = [{
+          value:1,
+          label:'本科'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科、职教'
+        }]
+        this.refreshTableData();
+      }
     },
     /**
        * 获取所属部门信息
