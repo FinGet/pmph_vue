@@ -20,10 +20,10 @@
     >
      <el-table-column
      label="选题名称"
-     prop="bookName"
+     prop="bookname"
      >
         <template scope="scope">
-         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookName}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookname}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -199,7 +199,7 @@ export default {
 		getTableData(){
 			this.$axios.get('/pmpheep/topic/listDirector',{
 				params:{
-					bookName: this.searchParams.name,
+					bookname: this.searchParams.name,
 					sessionId: this.$getUserData().sessionId,
 					submitTime: this.$commonFun.formatDate(this.searchParams.data),
 					pageSize: this.searchParams.pageSize,
