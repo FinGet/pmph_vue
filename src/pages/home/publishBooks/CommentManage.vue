@@ -110,10 +110,15 @@
           value:'',
           label:'全部'
         },{
-          value:true,
+          value:0,
+          label:'不通过'
+        },
+        {
+          value:1,
           label:'已通过'
-        },{
-          value:false,
+        },
+        {
+          value:2,
           label:'待审核'
         }],
         totalNum:0,
