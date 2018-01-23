@@ -24,7 +24,7 @@
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
-            <!-- <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:3}})">新建公告</el-button> -->
+            <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:3}})">新建公告</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
@@ -82,7 +82,7 @@
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
                     <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
-                    <!-- <el-button type="text" @click="deleted(scope.row.id)">删除</el-button> -->
+                    <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
 
