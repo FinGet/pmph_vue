@@ -424,9 +424,9 @@
         </div>
       </div>
 
-      <!--出版行业获奖情况-->
+      <!--主编学术专著情况表-->
       <div class="expert-info-box">
-        <p class="info-box-title">出版行业获奖情况</p>
+        <p class="info-box-title">主编学术专著情况表</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -453,7 +453,7 @@
 
       <!--出版行业获奖情况表-->
       <div class="expert-info-box">
-        <p class="info-box-title">科研情况</p>
+        <p class="info-box-title">出版行业获奖情况表</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
