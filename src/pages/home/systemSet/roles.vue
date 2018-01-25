@@ -139,7 +139,7 @@ export default {
         ]
       },
       powerTreeVisible: false,
-      defaultCheckedData: [1, 2],
+      defaultCheckedData: [],
       defaultTeachData:[],
       revisePowerId: "", //更新角色的id
       teachTreeData:[
@@ -185,7 +185,6 @@ export default {
         {
           label: "教材申报",
           id: 2,
-          children:[]
         },
         {
           label: "我的小组",
@@ -201,15 +200,19 @@ export default {
           children: [
             {
               label: "文章管理",
-              id: 9
+              id: 15
             },
             {
               label: "信息快报管理",
-              id: 10
+              id: 16
             },
             {
               label: "公告管理",
-              id: 11
+              id: 17
+            },
+            {
+              label: "广告管理",
+              id: 18
             }
           ]
         },
@@ -219,77 +222,136 @@ export default {
           children: [
             {
               label: "图书管理",
-              id: 13
+              id: 19
             },
             {
               label: "评论审核",
-              id: 14
+              id: 20
             }
           ]
         },
         {
           label: "选题申报",
-          id: 23
+          id: 7,
+          children:[
+            {
+              label: "选题申报审核",
+              id: 21
+            },
+            {
+              label: "选题申报查看",
+              id: 22
+            }
+          ]
         },
         {
           label: "图书纠错",
-          id: 25
-        },
-        {
-          label: "数据分析",
-          id: 24
+          id: 8,
+          children:[
+            {
+              label: "图书纠错审核",
+              id: 23
+            },
+            {
+              label: "图书纠错跟踪",
+              id: 24
+            }
+          ]
         },
         {
           label: "积分管理",
-          id: 26
+          id: 9,
+          children:[
+            {
+              label: "积分规则管理",
+              id: 25
+            },
+            {
+              label: "用户积分看板",
+              id: 26
+            },
+            {
+              label: "积分兑换规则",
+              id: 27
+            },
+          ]
+        },
+        {
+          label: "数据分析",
+          id: 10,
+          children:[
+            {
+              label: "流量概况",
+              id: 28
+            },
+            {
+              label: "流量地图",
+              id: 29
+            },
+            {
+              label: "图书流量概况",
+              id: 30
+            },
+            {
+              label: "用户图书偏好分析",
+              id: 31
+            },
+          ]
+
         },
         {
           label: "用户管理",
-          id: 7,
+          id: 11,
           children: [
             {
               label: "社内用户",
-              id: 15
+              id: 32
             },
             {
-              label: "作家用户",
-              id: 16
+              label: "个人用户",
+              id: 33
             },
             {
-              label: "机构用户",
-              id: 17
+              label: "学校/医院用户",
+              id: 34
             }
           ]
         },
         {
           label: "系统设置",
-          id: 8,
+          id: 12,
           children: [
             {
               label: "角色权限",
-              id: 18
-            },
-            {
-              label: "地区",
-              id: 19
-            },
-            {
-              label: "院校机构",
-              id: 20
+              id: 35
             },
             {
               label: "社内部门",
-              id: 21
+              id: 36
             }
           ]
         },
         {
           label: "问卷调查",
-          id: 27,
+          id: 13,
+          children:[
+            {
+              label: "调查问卷模板设置",
+              id: 37
+            },
+            {
+              label: "调查问卷结果统计",
+              id: 38
+            },
+            {
+              label: "调查问卷回收",
+              id: 39
+            },
+          ]
         },
         {
           label: "系统日志",
-          id: 22,
+          id: 14,
         }
       ],
       defaultProps: {
