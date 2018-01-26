@@ -76,12 +76,12 @@
             </el-table-column> -->
             <el-table-column
                 label="操作"
-                width="90"
+                width="120"
                 >
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
