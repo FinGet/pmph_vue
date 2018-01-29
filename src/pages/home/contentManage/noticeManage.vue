@@ -34,9 +34,9 @@
                    <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
-            <el-table-column 
-            prop="username"  
-            label="作者" 
+            <el-table-column
+            prop="username"
+            label="作者"
             width="110">
             </el-table-column>
             <el-table-column
@@ -62,7 +62,7 @@
                 >
             <template scope="scope">
                    {{$commonFun.formatDate(scope.row.authDate)}}
-                </template>   
+                </template>
             </el-table-column>
             <!-- <el-table-column
                 label="被查看次数"
@@ -81,7 +81,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isMaterialEntry"  @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -317,7 +317,7 @@ export default {
             }else{
                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
-            } 
+            }
           }
          obj.categoryId=parseInt(obj.categoryId);
          obj.isPublished=true;
@@ -334,14 +334,14 @@ export default {
                 }else {
                 this.$message.error(res.data.msg);
               }
-            })    
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          });          
+          });
         });
-    },    
+    },
     /* 查看详情 */
     contentDetail(obj) {
       this.$axios
