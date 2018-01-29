@@ -48,7 +48,7 @@
 							<el-button type="primary" :disabled="ruleForm.isEditorReplied" @click="submit('ruleForm')">提交</el-button>
 						</el-form-item>
 					</el-form>
-				</el-col>	
+				</el-col>
 			</el-row>
 		</div>
   </div>
@@ -84,7 +84,7 @@ export default {
     };
   },
   created() {
-    this.ruleForm.bookname = this.$route.query.bookname;
+    this.id = this.$route.query.id;
     // alert(this.$route.query);
     this.getBookError();
   },
@@ -92,19 +92,12 @@ export default {
     /**请求数据 */
     getBookError() {
       this.$axios
-        .get("/pmpheep/bookCorrection/list", {
-          params: {
-            pageSize: 1,
-            pageNumber: 1,
-            bookname: this.ruleForm.bookname,
-            result: ""
-          }
-        })
+        .get("/pmpheep/bookCorrection/detail?id="+this.id)
         .then(response => {
           let res = response.data;
           if (res.code == 1) {
-            this.ruleForm = res.data.rows[0];
-            this.id = this.ruleForm.id;
+            this.ruleForm = res.data;
+//            this.id = this.ruleForm.id;
             this.ruleForm.gmtCreate = this.$commonFun.formatDate(
               this.ruleForm.gmtCreate
             );

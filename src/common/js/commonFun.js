@@ -48,6 +48,7 @@ export function initPostData(obj, keyArr) {
 /* 权限比对 */
 export function authorityComparison(matchArr, userArr) {
     var result = false;
+    console.log(matchArr, userArr);
     matchArr.forEach(function (elem) {
         userArr.forEach(function (num) {
             if (num && num == elem.meta.authorityId) {
