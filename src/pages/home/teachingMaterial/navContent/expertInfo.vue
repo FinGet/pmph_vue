@@ -11,6 +11,9 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="showOfflineProgress=true" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+          退回给学校
+        </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
@@ -605,14 +608,14 @@
           :rows="6"
           placeholder="请输入退出原因"
           @input.native="changeOfflineProgressTextarea"
-          @keyup.native.enter="onlineCheckPass(2)"
+          @keyup.native.enter="onlineCheckPass(5)"
           v-model="offlineProgressText">
         </el-input>
         <p class="tip-text" v-if="100-offlineProgressText.length<20">还可输入{{100-offlineProgressText.length}}个字符</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeOfflineProgress">取 消</el-button>
-        <el-button type="primary" @click="onlineCheckPass(2)">确 定</el-button>
+        <el-button type="primary" @click="onlineCheckPass(5)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -1099,7 +1102,7 @@
          *  type 2 标示退回给个人 3 标示通过
          */
         onlineCheckPass(type){
-          if(type===2&&!!!this.offlineProgressText){
+          if(type===5&&!!!this.offlineProgressText){
             this.$message.error('退回原因不能为空！')
             return;
           }
