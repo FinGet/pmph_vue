@@ -20,10 +20,10 @@
     >
      <el-table-column
      label="选题名称"
-     prop="bookName"
+     prop="bookname"
      >
         <template scope="scope">
-         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">{{scope.row.bookName}}</p>
+         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">{{scope.row.bookname}}</p>
          </template>   
      </el-table-column>   
      <el-table-column
@@ -105,41 +105,7 @@ export default {
         pageNumber: 1
       },
       pageTotal: 100,
-      tableData: [
-        {
-					id:'1',
-          bookName: "中医基础",
-          writer: "张三一",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "指定编辑"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "自由投稿"
-        },
-        {
-          name: "中医基础",
-          writer: "张三",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "指定编辑"
-        },
-        {
-          name: "中医基础",
-          writer: "李四",
-          expectData: "2018-6-30",
-          bookCategory: "教材",
-          submitData: "2017-5-21",
-          submission: "自由投稿"
-        }
-			],
+      tableData: [],
 			id: '', // 选题id
 			dialogTableVisible: false,
 			reasonEditor: '' // 部门编辑退回原因
@@ -164,7 +130,7 @@ export default {
 					pageSize: this.searchParams.pageSize,
 					pageNumber: this.searchParams.pageNumber,
 					sessionId: this.$getUserData().sessionId,
-					bookName: this.searchParams.name,
+					bookname: this.searchParams.name,
 					submitTime: this.searchParams.data
 				}
 			}).then(response => {

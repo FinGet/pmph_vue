@@ -100,7 +100,7 @@
         searchParams:{
           pageSize:30,
           pageNumber:1,
-          authProgress:3,
+          authProgress:'2,3',
           submitTime:'',
           bookName:''
         },

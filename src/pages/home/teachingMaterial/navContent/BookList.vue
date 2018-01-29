@@ -257,6 +257,9 @@ export default {
         }else{
           temp = this.$commonFun.checkType(row.sort,'number');
         }
+        if(row.sort.length>9){
+          temp=false;
+        }
         row.sortIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
           row.nameIsOk=true;
@@ -295,6 +298,9 @@ export default {
           }
         }else{
           temp = this.$commonFun.checkType(row.textbookRound,'number');
+        }
+        if(row.textbookRound.length>9){
+          temp=false;
         }
         row.roundIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
@@ -345,8 +351,12 @@ export default {
             textbookRound:iterm.textbookRound?iterm.textbookRound:null,
             sort:iterm.sort?iterm.sort:null,
             founderId:this.currentUserId
+          };
+          if(!tempObj.sort&&!tempObj.textbookName&&!tempObj.textbookRound){
+            //空数据给过滤掉
+          }else{
+            bookList.push(tempObj);
           }
-          bookList.push(tempObj);
         })
         //提交
         this.$confirm("确认保存修改？", "提示",{
@@ -371,6 +381,7 @@ export default {
                     this.$router.push({name:'教材申报选择学校'});
                   }else{
                     this.$message.success('保存成功！');
+                    this.getBookList();
                   }
                 }else{
                   this.$message.error(res.msg.msgTrim());

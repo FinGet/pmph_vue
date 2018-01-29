@@ -24,100 +24,100 @@
         <span slot="title">系统消息</span>
       </el-menu-item>
 
-      <el-submenu index="/content" v-if="isShowSide(5)||isShowSide(9)||isShowSide(10)||isShowSide(11)||isShowSide(12)">
+      <el-submenu index="/content" v-if="isShowSide(5)||isShowSide(15)||isShowSide(16)||isShowSide(17)||isShowSide(18)">
         <template slot="title">
           <i class="fa  fa-file-text fa-fw"></i>
           <span slot="title">内容管理</span>
         </template>
-        <el-menu-item index="/content/list" v-if="isShowSide(9)">文章管理</el-menu-item>
-        <el-menu-item index="/content/info" v-if="isShowSide(10)">信息快报管理</el-menu-item>
-        <el-menu-item index="/content/notice" v-if="isShowSide(11)">公告管理</el-menu-item>
+        <el-menu-item index="/content/list" v-if="isShowSide(5)||isShowSide(15)">文章管理</el-menu-item>
+        <el-menu-item index="/content/info" v-if="isShowSide(5)||isShowSide(16)">信息快报管理</el-menu-item>
+        <el-menu-item index="/content/notice" v-if="isShowSide(5)||isShowSide(17)">公告管理</el-menu-item>
         <!-- <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item> -->
-        <el-menu-item index="/content/ad" v-if="isShowSide(11)">广告管理</el-menu-item>
+        <el-menu-item index="/content/ad" v-if="isShowSide(5)||isShowSide(18)">广告管理</el-menu-item>
       </el-submenu>
-      <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(13)||isShowSide(14)">
+      <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(19)||isShowSide(20)">
         <template slot="title">
           <i class="fa fa-align-justify fa-fw"></i>
           <span slot="title">商品管理</span>
         </template>
-        <el-menu-item index="/book/manage" v-if="isShowSide(13)">图书管理</el-menu-item>
-        <el-menu-item index="/book/comment" v-if="isShowSide(14)">评论审核</el-menu-item>
+        <el-menu-item index="/book/manage" v-if="isShowSide(6)||isShowSide(19)">图书管理</el-menu-item>
+        <el-menu-item index="/book/comment" v-if="isShowSide(6)||isShowSide(20)">评论审核</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/topic"  v-if="isShowSide(23)">
+      <el-submenu index="/topic"  v-if="isShowSide(7)||isShowSide(21)||isShowSide(22)">
         <template slot="title">
           <i class="fa fa-paste fa-fw"></i>
           <span slot="title">选题申报</span>
         </template>
-        <el-menu-item index="/topic/exam" >选题申报审核</el-menu-item>
-        <el-menu-item index="/topic/check" >选题申报查看</el-menu-item>
+        <el-menu-item index="/topic/exam" v-if="isShowSide(7)||isShowSide(21)">选题申报审核</el-menu-item>
+        <el-menu-item index="/topic/check" v-if="isShowSide(7)||isShowSide(22)">选题申报查看</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/bookerror" v-if="isShowSide(25)">
+      <el-submenu index="/bookerror" v-if="isShowSide(8)||isShowSide(23)||isShowSide(24)">
         <template slot="title">
           <i class="fa fa-exclamation-triangle fa-fw"></i>
           <span slot="title">图书纠错</span>
         </template>
-        <el-menu-item index="/bookerror/check" v-if="isShowSide(15)">图书纠错审核</el-menu-item>
-        <el-menu-item index="/bookerror/after" v-if="isShowSide(16)">图书纠错跟踪</el-menu-item>
+        <el-menu-item index="/bookerror/check" v-if="isShowSide(8)||isShowSide(23)">图书纠错审核</el-menu-item>
+        <el-menu-item index="/bookerror/after" v-if="isShowSide(8)||isShowSide(24)">图书纠错跟踪</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/pointmanage" v-if="isShowSide(1)">
+      <el-submenu index="/pointmanage" v-if="isShowSide(9)||isShowSide(25)||isShowSide(26)||isShowSide(27)">
         <template slot="title">
           <i class="fa fa-database fa-fw"></i>
           <span slot="title">积分管理</span>
         </template>
-        <el-menu-item index="/pointmanage/pointrule" v-if="isShowSide(1)">积分规则管理</el-menu-item>
-        <el-menu-item index="/pointmanage/userpoint" v-if="isShowSide(1)">用户积分看板</el-menu-item>
-        <el-menu-item index="/pointmanage/convertiblerule" v-if="isShowSide(1)">积分兑换规则</el-menu-item>
+        <el-menu-item index="/pointmanage/pointrule" v-if="isShowSide(9)||isShowSide(25)">积分规则管理</el-menu-item>
+        <el-menu-item index="/pointmanage/userpoint" v-if="isShowSide(9)||isShowSide(26)">用户积分看板</el-menu-item>
+        <el-menu-item index="/pointmanage/convertiblerule" v-if="isShowSide(9)||isShowSide(27)">积分兑换规则</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/analysis" v-if="isShowSide(24)">
+      <el-submenu index="/analysis" v-if="isShowSide(10)||isShowSide(28)||isShowSide(29)||isShowSide(30)||isShowSide(31)">
         <template slot="title">
           <i class="fa fa-bar-chart fa-fw"></i>
           <span slot="title">数据分析</span>
         </template>
-        <el-menu-item index="/analysis/flow" v-if="isShowSide(1)">流量概况</el-menu-item>
-        <el-menu-item index="/analysis/flow-map" v-if="isShowSide(1)">流量地图</el-menu-item>
-        <el-menu-item index="/analysis/book-flow" v-if="isShowSide(1)">图书流量概况</el-menu-item>
-        <el-menu-item index="/analysis/book-preference" v-if="isShowSide(1)">用户图书偏好分析</el-menu-item>
+        <el-menu-item index="/analysis/flow" v-if="isShowSide(10)||isShowSide(28)">流量概况</el-menu-item>
+        <el-menu-item index="/analysis/flow-map" v-if="isShowSide(10)||isShowSide(29)">流量地图</el-menu-item>
+        <el-menu-item index="/analysis/book-flow" v-if="isShowSide(10)||isShowSide(30)">图书流量概况</el-menu-item>
+        <el-menu-item index="/analysis/book-preference" v-if="isShowSide(10)||isShowSide(31)">用户图书偏好分析</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="/userrouter" v-if="isShowSide(7)||isShowSide(15)||isShowSide(16)||isShowSide(17)">
+      <el-submenu index="/userrouter" v-if="isShowSide(11)||isShowSide(32)||isShowSide(33)||isShowSide(34)">
         <template slot="title">
           <i class="fa fa-user-plus fa-fw"></i>
           <span slot="title">用户管理</span>
         </template>
-        <el-menu-item index="/user/pmph" v-if="isShowSide(15)">社内用户</el-menu-item>
-        <el-menu-item index="/user/writer" v-if="isShowSide(16)">个人用户</el-menu-item>
-        <el-menu-item index="/user/org" v-if="isShowSide(17)">学校 / 医院用户</el-menu-item>
+        <el-menu-item index="/user/pmph" v-if="isShowSide(11)||isShowSide(32)">社内用户</el-menu-item>
+        <el-menu-item index="/user/writer" v-if="isShowSide(11)||isShowSide(33)">个人用户</el-menu-item>
+        <el-menu-item index="/user/org" v-if="isShowSide(11)||isShowSide(34)">学校 / 医院用户</el-menu-item>
       </el-submenu>
 
 
-      <el-submenu index="10" v-if="isShowSide(8)||isShowSide(18)||isShowSide(19)||isShowSide(20)||isShowSide(21)">
+      <el-submenu index="/set" v-if="isShowSide(12)||isShowSide(35)||isShowSide(36)">
         <template slot="title">
           <i class="fa fa-cog fa-fw"></i>
           <span slot="title">系统设置</span>
         </template>
-        <el-menu-item index="/set/roles" v-if="isShowSide(18)">角色</el-menu-item>
+        <el-menu-item index="/set/roles" v-if="isShowSide(12)||isShowSide(35)">角色</el-menu-item>
         <!-- <el-menu-item index="/set/area" v-if="isShowSide(19)">地区</el-menu-item>
         <el-menu-item index="/set/orgs" v-if="isShowSide(20)">院校机构</el-menu-item> -->
-        <el-menu-item index="/set/departments" v-if="isShowSide(21)">社内部门</el-menu-item>
+        <el-menu-item index="/set/departments" v-if="isShowSide(12)||isShowSide(36)">社内部门</el-menu-item>
       </el-submenu>
 
-       <el-submenu index="/survey" >
+       <el-submenu index="/survey" v-if="isShowSide(13)||isShowSide(37)||isShowSide(38)||isShowSide(39)">
         <template slot="title">
           <i class="fa fa-pencil-square-o fa-fw"></i>
           <span slot="title">问卷调查</span>
         </template>
-        <el-menu-item index="/survey/setmodel" v-if="isShowSide(15)">调查问卷模板设置</el-menu-item>
+        <el-menu-item index="/survey/setmodel" v-if="isShowSide(13)||isShowSide(37)">调查问卷模板设置</el-menu-item>
         <!-- <el-menu-item index="/survey/newmodel" v-if="isShowSide(16)">问卷模板新增</el-menu-item>
         <el-menu-item index="/survey/newsurvey" v-if="isShowSide(17)">新建调查问卷</el-menu-item> -->
-        <el-menu-item index="/survey/statistic" v-if="isShowSide(16)">调查结果统计</el-menu-item>
-        <el-menu-item index="/survey/recovery" v-if="isShowSide(17)">调查问卷回收</el-menu-item>
+        <el-menu-item index="/survey/statistic" v-if="isShowSide(13)||isShowSide(38)">调查结果统计</el-menu-item>
+        <el-menu-item index="/survey/recovery" v-if="isShowSide(13)||isShowSide(39)">调查问卷回收</el-menu-item>
       </el-submenu>
 
-      <el-menu-item index="/systemlog" v-if="isShowSide(22)">
+      <el-menu-item index="/systemlog" v-if="isShowSide(14)">
         <i class="fa fa-file-text-o fa-fw"></i>
         <span slot="title">系统日志</span>
       </el-menu-item>

@@ -28,7 +28,7 @@
             style="width: 100%">
             <el-table-column
               prop="materialName"
-              label="书籍名称">
+              label="教材名称">
             </el-table-column>
           </el-table>
 
@@ -58,7 +58,7 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="id"
+              prop="sort"
               label="书序"
               width="80">
             </el-table-column>
@@ -200,7 +200,7 @@
             this.submiting=false;
           })
           .catch(function (error) {
-            // console.log(error);            
+            // console.log(error);
             self.$message({
               type:'error',
               message:'发送失败，请重试'

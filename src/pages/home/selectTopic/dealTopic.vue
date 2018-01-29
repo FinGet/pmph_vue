@@ -276,7 +276,6 @@ export default {
     this.type = this.$route.query.type;
     this.active = this.$route.query.active || "";
     this.routerName = this.$route.query.name || null;
-    // console.log(this.$route.query)
     this.getData();
   },
   methods: {

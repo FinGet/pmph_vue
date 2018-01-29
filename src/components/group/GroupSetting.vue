@@ -11,20 +11,17 @@
             <!--上传文件按钮-->
             <!--<input type="file" @change="filechange" ref="fileInput" class="fileInput" />-->
             <my-upload
-              v-if="!isIe9"
               class="fileInput"
               ref="upload"
-              action="/pmpheep/group/update/pmphGroupDetail"
-              :data="groupPostData"
-              :on-change="filechange"
+              :action="groupImgFile"
+              :before-upload="beforeUpload"
               :on-success="upLoadFileSuccess"
               :on-error="uploadError"
-              :show-file-list="false"
-              :auto-upload="false">
+              :show-file-list="false">
               <el-button class="fileInput">上传</el-button>
             </my-upload>
-            <div ref="headImageWrapper" v-show="groupData.filename" v-if="!isIe9">
-              <img :src="DEFAULT_USER_IMAGE" class="avatar">
+            <div ref="headImageWrapper" v-show="groupData.filename">
+              <img :src="groupData.imgUrl" class="avatar">
             </div>
             <div v-show="!groupData.filename">
               <img :src="groupData.groupImage" class="avatar">
@@ -51,6 +48,7 @@
     props:['currentGroup'],
     data() {
       return {
+        groupImgFile:'/pmpheep/group/files',
         visible:false,
         visible1:false,
         DEFAULT_USER_IMAGE:this.$config.DEFAULT_USER_IMAGE,
@@ -58,6 +56,7 @@
           filename:undefined,
           groupName:null,
           groupImage:null,
+          imgUrl:undefined,
           currentFile:undefined
         },
         rules:{
@@ -89,50 +88,40 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(file){
-        var self=this;
+      beforeUpload(file){
+        let self=this;
         let prevDiv = this.$refs.headImageWrapper;
         let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
-
-        if(!ext){return;}
+        if(!ext){return false;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg格式！");
+          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
           self.groupData.filename=undefined;
-          return;
+          return false;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
-          return;
+        if(file.name.length>50){
+          this.$message.error("文件名称不能超过50个字符");
+          return false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("图片大小不能小于1bt");
+          this.$message.error("文件大小不能为0kb");
           self.groupData.filename=undefined;
-          return;
+          return false;
+        }
+        if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
+          this.$message.error('请勿上传可执行文件!');
+          return false;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
           this.$message.error("图片大小不能大于10M");
           self.groupData.filename=undefined;
-          return;
+          return false;
         }
 
-        self.groupData.currentFile = file;
-        if(window.FileReader){
-          let reader = new FileReader();
-          reader.onload = function(evt) {
-            self.groupData.filename=file.name;
-            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
-          }
-          reader.readAsDataURL(file.raw);
-        }else{
-          self.groupData.filename=file.name;
-          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
-          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
-          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
-        }
+        return true;
       },
       /**
        * 修改小组
@@ -150,29 +139,25 @@
               return false;
             }
             let self= this;
-            if(this.groupData.currentFile){
-              this.groupData.currentFile.upload();
-            }else{
-              this.$axios.post('/pmpheep/group/update/pmphGroupDetail',this.$commonFun.initPostData({
-                file:'',
-                id:this.currentGroup.id,
-                groupName:this.groupData.groupName,
-                sessionId:this.$getUserData().sessionId
-              }))
-                .then((response) => {
-                  let res = response.data;
-                  if (res.code == '1') {
-                    self.$message.success('修改小组成功');
-                    //修改成功通过vue bus派发一个事件
-                    bus.$emit('group:info-change')
-                  }else{
-                    self.$message.error(res.msg.msgTrim());
-                  }
-                })
-                .catch((error) => {
-                  self.$message.error('修改小组失败，请重试');
-                });
-            }
+            this.$axios.put('/pmpheep/group/update/pmphGroupDetail',this.$commonFun.initPostData({
+              file:this.groupData.imgUrl?this.groupData.imgUrl.replace('/pmpheep/',''):'',
+              id:this.currentGroup.id,
+              groupName:this.groupData.groupName,
+              sessionId:this.$getUserData().sessionId
+            }))
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.$message.success('修改小组成功');
+                  //修改成功通过vue bus派发一个事件
+                  bus.$emit('group:info-change')
+                }else{
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                self.$message.error('修改小组失败，请重试');
+              });
 
           })
           .catch(e=>{})
@@ -183,11 +168,10 @@
        */
       upLoadFileSuccess(response, file, fileList){
         if (response.code == '1') {
-          this.$message.success('修改小组成功');
-          //修改成功通过vue bus派发一个事件
-          bus.$emit('group:info-change')
+          this.groupData.filename=file.name;
+          this.groupData.imgUrl='/pmpheep/'+response.data;
+          this.groupData.currentFile=file.file;
         }else{
-          this.groupData.filename=undefined;
           this.$message.error(response.msg.msgTrim());
         }
       },

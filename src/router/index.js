@@ -148,24 +148,24 @@ export default new Router({
           ]
         },
         {
-          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 25 }, children: [
-            {path: 'check', name: '图书纠错审核' , component: CheckError,},
-            {path: 'checkerror', name: '纠错审核' , component: Check,},
-            {path: 'after', name: '图书纠错跟踪' , component: AfterError,}
+          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 8 }, children: [
+            { path: 'check', name: '图书纠错审核', component: CheckError, meta: { authorityId: 23 }},
+            { path: 'checkerror', name: '纠错审核', component: Check, },
+            { path: 'after', name: '图书纠错跟踪', component: AfterError, meta: { authorityId: 24 }}
           ]
         },
         {
-          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 26 }, children: [
-            {path: 'pointrule', name: '积分管理' , component: PointRule,},
-            {path: 'userpoint', name: '用户积分' , component: UserPoint,},
-            {path: 'convertiblerule', name: '兑换规则' , component: ConvertibleRule,}
+          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 9 }, children: [
+            { path: 'pointrule', name: '积分管理', component: PointRule, meta: { authorityId: 25 }},
+            { path: 'userpoint', name: '用户积分', component: UserPoint, meta: { authorityId: 26 }},
+            { path: 'convertiblerule', name: '兑换规则', component: ConvertibleRule, meta: { authorityId: 27 }}
           ]
         },
         {
-          path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 7 }, children: [
-            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 15 } },
-            { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 16 } },
-            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 17 } },
+          path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 11 }, children: [
+            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 32 } },
+            { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 33 } },
+            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 34 } },
           ]
         },
         {
@@ -182,12 +182,12 @@ export default new Router({
         },
         /* 系统设置 */
         {
-          path: 'set', name: '系统设置', component: systemRouter, meta: { replaceName: false, authorityId: 8 }, children: [
-            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 18 } },
+          path: 'set', name: '系统设置', component: systemRouter, meta: { replaceName: false, authorityId: 12 }, children: [
+            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 35 } },
             /*  {path:'authority',name:'权限管理',component:Authority}, */
-            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 21 } },
-            { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 20 } },
-            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 19 } }
+            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 36 } },
+            /* { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 20 } },
+            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 19 } } */
           ]
         },
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { authorityId: 3 } },
@@ -201,51 +201,51 @@ export default new Router({
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
-            { path: 'list', name: '文章管理', meta: { authorityId: 9 }, component: PublishList },
+            { path: 'list', name: '文章管理', meta: { authorityId: 15 }, component: PublishList },
               { path: 'new', name: '添加内容', component: ContentPublish },
-            { path: 'info', name: '信息快报管理', meta: { authorityId: 10 }, component: infoExpertInfo },
-            { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
+            { path: 'info', name: '信息快报管理', meta: { authorityId: 16 }, component: infoExpertInfo },
+            { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
-            { path: 'ad', name: '广告管理', meta: { authorityId: 11 }, component: adList },
-            { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 11 }, component: adEdit }
+            { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },
+            { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 18 }, component: adEdit }
           ]
         },
         /* 出版图书 */
         {
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
-          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 13 }},
-          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 14 }}
+          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 }},
+          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}}
           ]
         },
         /*数据分析 */
         {
-          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 24 }, children: [
-          { path: 'flow', name: '流量概况', component: Flow },
-          { path: 'flow-map', name: '流量地图', component: FlowMap },
-          { path: 'book-flow', name: '图书流量概况', component: BookFlow },
-          { path: 'book-preference', name: '用户图书偏好分析', component: BookPreference }
+          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 10 }, children: [
+            { path: 'flow', name: '流量概况', component: Flow ,meta: { authorityId: 28 }},
+            { path: 'flow-map', name: '流量地图', component: FlowMap, meta: { authorityId: 29 }},
+            { path: 'book-flow', name: '图书流量概况', component: BookFlow, meta: { authorityId: 30 } },
+            { path: 'book-preference', name: '用户图书偏好分析', component: BookPreference, meta: { authorityId: 31 } }
         ]
         },
         /* 选题申报 */
         {
-          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false,authorityId: 23}, children:[
-           { path: 'exam', name: '选题申报审核', component: TopicExam,},
-           { path: 'check', name: '选题申报查看', component: TopicCheck,},
-            { path: 'deal', name: '选题受理', component: dealTopic,}
+          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false,authorityId: 7}, children:[
+            { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 21 }},
+            { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 22 }},
+            { path: 'deal', name: '选题受理', component: dealTopic}
 
          ]
         },
         /* 问卷调查 */
         {
-          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 1}, children:[
-            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 1 }},
-            { path: 'launch', name: '发起调查', component: launchSurvey, meta: { authorityId: 1 }},
-            { path: 'newmodel', name: '问卷模板新增', component: addNewModel, meta: { authorityId: 1 } },
-            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey, meta: { authorityId: 1 } },
-            { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 1 } },
-            { path: 'detail', name:'结果明细', component: surveryResultDetail, meta: { authorityId: 1 } },
-            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 1 } },
-            { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: 1 } },
+          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 13}, children:[
+            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 37 }},
+            { path: 'launch', name: '发起调查', component: launchSurvey},
+            { path: 'newmodel', name: '问卷模板新增', component: addNewModel,  },
+            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey,  },
+            { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 38 } },
+            { path: 'detail', name:'结果明细', component: surveryResultDetail,  },
+            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 39 } },
+            { path: 'result', name: '问卷回收结果', component: recoveryResult, },
           ]
         },
 
@@ -264,7 +264,7 @@ export default new Router({
         },
         /*用户主页(个人设置)*/
         {
-          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 22}
+          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 14}
         },
       ]
     },

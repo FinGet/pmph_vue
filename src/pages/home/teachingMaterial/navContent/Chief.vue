@@ -50,7 +50,7 @@
                   class="border-radius-4"
                   :class="{'border-red':scope.row.isZhubian&&!scope.row.zhubianSortIsOk}"
                   v-model.trim="scope.row.zhubianSort"
-                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
                   @blur="sortChange(1,scope.row)"
                   @change="sortChange(1,scope.row)"
                   size="mini"
@@ -67,7 +67,7 @@
               <el-checkbox
                 v-model="scope.row.isFuzhubian"
                 @change="checkboxChange(2,scope.row)"
-                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
+                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -79,7 +79,7 @@
                   class="border-radius-4"
                   :class="{'border-red':!scope.row.fuzhubianSortIsOk}"
                   v-model.trim="scope.row.fuzhubianSort"
-                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
                   @blur="sortChange(2,scope.row)"
                   @change="sortChange(2,scope.row)"
                   size="mini"
@@ -94,14 +94,14 @@
               <el-checkbox
                 v-model="scope.row.isBianwei"
                 @change="checkboxChange(3,scope.row)"
-                :disabled="(scope.row.disabled_bw||!hasPermission(3))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"
+                :disabled="(scope.row.disabled_bw||!hasPermission(3))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
 
           <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType!='view'"></el-checkbox>
+              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>

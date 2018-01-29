@@ -79,7 +79,7 @@
                 width="120"
                 >
                 <template scope="scope">
-                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -108,7 +108,7 @@
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)}}</span>
        </p>
        <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label-width="0">

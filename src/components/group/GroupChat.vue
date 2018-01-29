@@ -150,7 +150,7 @@
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("不能上传可执行文件");
+          this.$message.error("请勿上传可执行文件!");
           flag = false;
         }
         //文件名不超过40个字符
