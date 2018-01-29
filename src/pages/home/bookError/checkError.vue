@@ -42,8 +42,8 @@
                     </el-table-column>
 										<el-table-column label="操作" width="80" align="center">
 											<template scope="scope">
-												<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{bookname: scope.row.bookname}}">审核</router-link>
-											</template>	
+												<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id}}">审核</router-link>
+											</template>
                     </el-table-column>
                 </el-table>
             </el-col>
