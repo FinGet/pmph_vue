@@ -121,6 +121,10 @@
          if(!this.$route.params.surveyId){
            this.$router.push({name:'调查问卷模板设置'});
          }
+         if(this.$route.params.beginDate){
+           this.leftFrom.startTime=this.$commonFun.formatDate(this.$route.params.beginDate,'yyyy-MM-dd');
+           this.leftFrom.endTime=this.$commonFun.formatDate(this.$route.params.endDate,'yyyy-MM-dd');
+         }
          this.getTableData();
        },
        methods:{

@@ -212,8 +212,8 @@
                 >
                 <template scope="scope">
                     <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,2)">通过</el-button>
-                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">不通过</el-button>
-                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="deleteComment(scope.row.id)">删除</el-button>
+                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">未通过</el-button>
+                    <el-button type="text"  @click="deleteComment(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
 

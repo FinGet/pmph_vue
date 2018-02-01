@@ -112,7 +112,7 @@
         :visible.sync="dialogVisible">
         <div class="history-box timeLine">
           <ul v-if="historyLog.length>0">
-            <li v-for="(iterm,index) in historyLog" :key="iterm.id">
+            <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
               <p>{{iterm.detail}}</p>
             </li>

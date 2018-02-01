@@ -925,6 +925,19 @@ export default {
      this.$refs.ruleForm.validateField('noticeFiles');
     },
     imgBeforeUpload(file){
+       for(var i in this.ruleForm.materialNoticeAttachments){
+         if(this.ruleForm.materialNoticeAttachments[i].name==file.name){
+           this.$message.error('请勿多次上传同一图片');
+           return false;
+         }
+       }
+       for(var i in this.material.noticeFiles){
+         if(this.material.noticeFiles[i].name==file.name){
+           this.$message.error('请勿多次上传同一图片');
+           return false;
+         }
+       }
+          
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
@@ -953,7 +966,7 @@ export default {
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name});
       })
       this.$refs.ruleForm.validateField('noticeFiles');
     },
@@ -967,6 +980,19 @@ export default {
      this.$refs.ruleForm.validateField('noteFiles');
     },
     fileBeforeUpload(file){
+        for(var i in this.ruleForm.materialNoteAttachments){
+         if(this.ruleForm.materialNoteAttachments[i].name==file.name){
+           this.$message.error('请勿多次上传同一附件');
+           return false;
+         }
+       }
+       for(var i in this.material.noteFiles){
+         if(this.material.noteFiles[i].name==file.name){
+           this.$message.error('请勿多次上传同一附件');
+           return false;
+         }
+       }
+          
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
@@ -995,7 +1021,7 @@ export default {
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name});
       })
       this.$refs.ruleForm.validateField('noteFiles');
     },
