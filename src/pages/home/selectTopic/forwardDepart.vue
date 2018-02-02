@@ -24,14 +24,14 @@
      >
         <template scope="scope">
          <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'first',type:'detail'}})">{{scope.row.bookname}}</p>
-         </template>   
-     </el-table-column>   
+         </template>
+     </el-table-column>
      <el-table-column
       label="作者"
       prop="realname"
       width="90"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
@@ -40,13 +40,13 @@
      <template scope="scope">
       {{$commonFun.formatDate(scope.row.deadline)}}
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="图书类别"
       prop="typeName"
       width="100"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="提交日期"
       prop="submitTime"
@@ -55,19 +55,19 @@
      <template scope="scope">
        {{$commonFun.formatDate(scope.row.submitTime)}}
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="是否退回"
       prop="isRejectedByDirector"
       width="100"
      >
      <template scope="scope">
-       <el-tooltip class="item" effect="dark" :content="scope.row.reasonDirector" placement="top-start" v-if="scope.row.isRejectedByDirector">
-       <span>已退回</span>
-      </el-tooltip>
+        <el-tooltip class="item" effect="dark" :content="scope.row.reasonDirector" placement="top-start" v-if="scope.row.isRejectedByDirector">
+          <span class="link">已退回</span>
+        </el-tooltip>
       <span v-else>-</span>
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="操作"
       width="120"
@@ -75,7 +75,7 @@
      <template scope="scope">
        <el-button type="text" @click="distributeDepartment(scope.row.id)">分配到部门</el-button>
      </template>
-     </el-table-column> 
+     </el-table-column>
     </el-table>
           <!--分页-->
     <div class="pagination-wrapper">
@@ -103,20 +103,20 @@
           <el-table-column
            label="部门名称"
            prop="dpName"
-          >    
+          >
           </el-table-column>
           <el-table-column
            label="部门负责人"
            width="110"
            prop="realname"
-          >    
+          >
           </el-table-column>
           <el-table-column
            label="操作"
            width="90"
-          >  
+          >
           <template scope="scope">
-           <el-button type="text" @click="selectDepartment(scope.row.id)">选择</el-button>  
+           <el-button type="text" @click="selectDepartment(scope.row.id)">选择</el-button>
           </template>
           </el-table-column>
       </el-table>
@@ -132,8 +132,8 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dialogPageTotal">
       </el-pagination>
-    </div> 
-    </div>     
+    </div>
+    </div>
     </el-dialog>
   </div>
 </template>
@@ -240,9 +240,9 @@ export default {
           this.$message({
             type: 'warning',
             message: '已取消操作'
-          });          
+          });
         });
-      
+
     },
     /* 搜索按钮 */
     search() {
