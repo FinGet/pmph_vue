@@ -6,7 +6,7 @@
        <span>创建日期：</span>
        <el-date-picker
             v-model="searchParams.startTime"
-            class="input"
+            class="input data"
             type="date"
             clearable
             @change="startDateChange"
@@ -15,7 +15,7 @@
         <span>-</span>
         <el-date-picker
             v-model="searchParams.endTime"
-            class="input"
+            class="input data"
             type="date"
             clearable
             @change="endDateChange"
@@ -204,4 +204,7 @@
   width: 217px;
   margin-right: 10px;
 }
+.survey_model_set .header_p .data{
+    width:200px;
+} 
 </style>
