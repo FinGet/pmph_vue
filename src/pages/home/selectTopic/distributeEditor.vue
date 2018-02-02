@@ -24,14 +24,14 @@
      >
         <template scope="scope">
          <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookname}}</p>
-         </template>   
-     </el-table-column>   
+         </template>
+     </el-table-column>
      <el-table-column
       label="作者"
       prop="realName"
       width="90"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
@@ -40,31 +40,31 @@
      <template scope="scope">
       {{$commonFun.formatDate(scope.row.deadline)}}
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="图书类别"
       prop="typeName"
       width="100"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="提交日期"
       prop="submitTime"
       width="170"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="是否退回"
       prop="submission"
       width="120"
      >
      <template scope="scope">
-      <el-tooltip class="item" effect="dark" content="退回原因" placement="top-start" v-if="scope.row.isRejectedByEditor">
+      <el-tooltip class="item" effect="dark" :content="scope.row.reasonEditor || '无退回理由'" placement="top-start" v-if="scope.row.isRejectedByEditor">
        <span>已退回</span>
       </el-tooltip>
       <span v-else>未退回</span>
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="操作"
       width="210"
@@ -74,7 +74,7 @@
        <span>|</span>
        <el-button type="text" @click="openBackDialog(2,scope.row.id)">退回分配人</el-button>
      </template>
-     </el-table-column> 
+     </el-table-column>
     </el-table>
           <!--分页-->
     <div class="pagination-wrapper">
@@ -110,7 +110,7 @@
           width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="distributeSelect(1,scope.row.id)">选择</el-button>  
+           <el-button type="text" @click="distributeSelect(1,scope.row.id)">选择</el-button>
           </template>
           </el-table-column>
       </el-table>
@@ -172,7 +172,7 @@ export default {
         editorId:'',
         isRejectedByDirector:'',
         reasonDirector:''
-      },  
+      },
 			id: '', // 选题申报id
 			isRejectedByDirector: '', //是否被主任退回
 			reasonDirector: '' // 主任退回原因
@@ -192,7 +192,7 @@ export default {
   methods: {
      /* 搜索按钮 */
      search(){
-      this.searchParams.pageNumber=1; 
+      this.searchParams.pageNumber=1;
       this.getTableData();
      },
 		/**获取表格数据 */
@@ -214,7 +214,7 @@ export default {
              this.getListEditors();
           }
 					this.tableData.forEach(item => {
-							item.submitTime = this.$commonFun.formatDate(item.submitTime);                    
+							item.submitTime = this.$commonFun.formatDate(item.submitTime);
 					})
 					this.pageTotal = res.pageTotal;
 				}
@@ -255,8 +255,8 @@ export default {
           this.$message({
             type: 'warning',
             message: '已取消操作'
-          });          
-        });            
+          });
+        });
     },
 		directorHandling(i){
       this.distributeParams.isRejectedByDirector=(i==2?true:false);
@@ -270,13 +270,13 @@ export default {
 					this.$message.success(i==1?'分配成功！':'退回成功');
           this.dialogVisible=false;
           this.backDialogVislble=false;
-          
+
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());
 				}
 			}).catch(err=>{
-				
+
 			})
 		},
 		/**搜索 */

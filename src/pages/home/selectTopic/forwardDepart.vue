@@ -62,7 +62,7 @@
       width="100"
      >
      <template scope="scope">
-        <el-tooltip class="item" effect="dark" :content="scope.row.reasonDirector" placement="top-start" v-if="scope.row.isRejectedByDirector">
+        <el-tooltip class="item" effect="dark" :content="scope.row.reasonDirector || '无退回理由'" placement="top-start" v-if="scope.row.isRejectedByDirector">
           <span class="link">已退回</span>
         </el-tooltip>
       <span v-else>-</span>
