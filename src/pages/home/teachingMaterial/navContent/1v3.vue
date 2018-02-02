@@ -31,7 +31,7 @@
       <div class="searchBox-wrapper">
         <div class="searchName">进度：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="searchForm.state" placeholder="全部">
+          <el-select v-model="searchForm.state" placeholder="全部" @change="search">
             <el-option
               v-for="item in currentStateList"
               :key="item.value"
