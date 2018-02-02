@@ -24,7 +24,7 @@
         >
           <template scope="scope">
 
-            <router-link :to="{name:'选题受理',query:{name:'选题申报查看',id:scope.row.id,type:'check'}}">{{scope.row.bookname}}</router-link>
+            <router-link :to="{name:'选题受理',query:{name:'选题申报查看',id:scope.row.id,type:'detail'}}">{{scope.row.bookname}}</router-link>
           </template>
      </el-table-column>
      <el-table-column
@@ -73,7 +73,7 @@
       width="85"
      >
      <template scope="scope">
-       <router-link :to="{name:'选题受理',query:{name:'选题申报查看',id:scope.row.id,type:'check'}}">查看</router-link>
+       <router-link :to="{name:'选题受理',query:{name:'选题申报查看',id:scope.row.id,type:'detail'}}">查看</router-link>
      </template>
      </el-table-column>
     </el-table>

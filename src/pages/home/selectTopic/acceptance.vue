@@ -24,14 +24,14 @@
      >
         <template scope="scope">
          <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">{{scope.row.bookname}}</p>
-         </template>   
-     </el-table-column>   
+         </template>
+     </el-table-column>
      <el-table-column
       label="作者"
       prop="realName"
       width="100"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
@@ -40,13 +40,13 @@
      <template scope="scope">
       {{$commonFun.formatDate(scope.row.deadline)}}
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="图书类别"
       prop="typeName"
       width="100"
      >
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="提交日期"
       prop="submitTime"
@@ -55,7 +55,7 @@
      <template scope="scope">
       {{$commonFun.formatDate(scope.row.submitTime)}}
      </template>
-     </el-table-column> 
+     </el-table-column>
      <el-table-column
       label="操作"
       width="210"
@@ -63,11 +63,11 @@
      <template scope="scope">
        <el-button type="text" :disabled="scope.row.isAccepted" @click="acceptance(scope.row.id,true)">受理</el-button>
        <span>|</span>
-       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'detail'}})">审核</el-button>
+       <el-button type="text" :disabled="!scope.row.isAccepted" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'third',type:'check'}})">审核</el-button>
        <span>|</span>
        <el-button type="text" :disabled="scope.row.isAccepted" @click="retire(scope.row.id)">退回分配人</el-button>
      </template>
-     </el-table-column> 
+     </el-table-column>
     </el-table>
           <!--分页-->
     <div class="pagination-wrapper">
@@ -89,8 +89,8 @@
 				placeholder="请输入内容"
 				v-model="reasonEditor">
 			</el-input>
-			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>	
-			<el-button class="pull-right marginB10 marginT10">取消</el-button>	
+			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
+			<el-button class="pull-right marginB10 marginT10">取消</el-button>
 		</el-dialog>
   </div>
 </template>

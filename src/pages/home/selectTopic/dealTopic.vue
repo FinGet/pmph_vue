@@ -9,7 +9,7 @@
 		</div>
 
 
-    <div style="overflow:hidden;" class="marginT10">   
+    <div style="overflow:hidden;" class="marginT10">
       <p class="left_header_p">
           图书书稿情况
           <span></span>
@@ -22,68 +22,68 @@
                 label="选题名称："
               >
               <p>{{data.bookname}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="读者对象："
               >
               <p>{{data.readType}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="选题来源："
               >
               <p>{{data.sourceType}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="预计交稿日期："
               >
               <p>{{data.deadline}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="预估字数："
               >
               <p>{{data.wordNumber}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="预估图数："
               >
               <p>{{data.pictureNumber}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="学科及专业："
               >
               <p>{{data.subject}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="图书类别："
               >
               <p>{{data.typeName}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="级别："
               >
               <p>{{data.rankType}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
-       </el-form-item>    
+       </el-form-item>
    </el-form>
 
-    <div style="overflow:hidden;" class="marginT10">   
+    <div style="overflow:hidden;" class="marginT10">
       <p class="left_header_p">
           结算信息
           <span></span>
@@ -96,12 +96,12 @@
                 label="银行账户："
               >
               <p>{{data.accountNumber}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
-       </el-form-item>    
+       </el-form-item>
    </el-form>
 
-    <div style="overflow:hidden;" class="marginT10">   
+    <div style="overflow:hidden;" class="marginT10">
       <p class="left_header_p">
           选题情况
           <span></span>
@@ -114,26 +114,26 @@
                 label="(一)选题理由："
               >
               <p>{{topicExtra.reason}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="(二)出版价值："
               >
               <p>{{topicExtra.price}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="(三)主要内容："
               >
               <p>{{topicExtra.score}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
-       </el-form-item>    
+       </el-form-item>
    </el-form>
 
-  <div style="overflow:hidden;" class="marginT10">   
+  <div style="overflow:hidden;" class="marginT10">
       <p class="left_header_p">
           读者情况及印刷预测
           <span></span>
@@ -146,16 +146,16 @@
                 label="作者购书："
               >
               <p>{{data.purchase}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="作者赞助："
               >
               <p>{{data.sponsorship}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
-       </el-form-item>    
+       </el-form-item>
    </el-form>
 
     <div style="overflow:hidden;">
@@ -171,33 +171,33 @@
                 label="译稿原书名："
               >
               <p>{{data.originalBookname}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="原编著者："
               >
               <p>{{data.originalAuthor}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="国籍："
               >
               <p>{{data.nation}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="出版年代及版次："
               >
               <p>{{data.edition}}</p>
-              </el-form-item> 
+              </el-form-item>
           </div>
-       </el-form-item>    
+       </el-form-item>
    </el-form>
    <el-form label-width="150px" class="form_box">
-     <div style="overflow:hidden;">   
+     <div style="overflow:hidden;">
         <p class="left_header_p">
             编者情况
             <span></span>
@@ -218,12 +218,12 @@
         <template scope="scope">
             <span>{{scope.row.sex==0?'男':'女'}}</span>
           </template>
-        </el-table-column> 
+        </el-table-column>
         <el-table-column
         label="年龄"
         prop="price"
         width="90"
-        ></el-table-column> 
+        ></el-table-column>
         <el-table-column
         label="行政职务"
         prop="position"
@@ -231,7 +231,7 @@
         <el-table-column
         label="工作单位"
         prop="workplace"
-        ></el-table-column>   
+        ></el-table-column>
       </el-table>
     </el-form-item>
     <el-form-item
@@ -249,8 +249,8 @@
    <div class="bottom_box marginB50">
        <el-button type="primary" icon="arrow-left" @click="goBack">返回</el-button>
        <!-- <el-button type="danger" v-if="type!='check'" :disabled="isAccepted || isEditorHandling">退回分配人</el-button> -->
-       <el-button type="primary" v-if="type!='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(3)">通过并提交ERP</el-button>
-       <el-button type="danger" v-if="type!='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
+       <el-button type="primary" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(3)">通过并提交ERP</el-button>
+       <el-button type="danger" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
    </div>
   </div>
 </template>
