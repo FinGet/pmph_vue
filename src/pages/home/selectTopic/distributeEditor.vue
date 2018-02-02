@@ -55,16 +55,19 @@
      </el-table-column>
      <el-table-column
       label="是否退回"
-      prop="submission"
       width="120"
      >
      <template scope="scope">
-      <el-tooltip class="item" effect="dark" :content="scope.row.reasonEditor || '无退回理由'" placement="top-start" v-if="scope.row.isRejectedByEditor">
-       <span>已退回</span>
-      </el-tooltip>
-      <span v-else>未退回</span>
+      <span>{{scope.row.isRejectedByEditor?'已退回':'未退回'}}</span>
      </template>
      </el-table-column>
+      <el-table-column
+        label="退回理由"
+      >
+        <template scope="scope">
+          <span>{{scope.row.reasonEditor || '无退回理由'}}</span>
+        </template>
+      </el-table-column>
      <el-table-column
       label="操作"
       width="210"
