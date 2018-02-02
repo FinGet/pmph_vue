@@ -165,7 +165,7 @@ export default new Router({
           path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 11 }, children: [
             { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 32 } },
             { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 33 } },
-            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 34 } },
+            { path: 'org', name: '学校 / 医院用户', component: orgUser, meta: { authorityId: 34 } },
           ]
         },
         {
