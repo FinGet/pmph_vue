@@ -8,7 +8,7 @@
          <span>作者：</span>
           <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
           <span>审核状态：</span>
-          <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
+          <el-select v-model="selectValue" clearable  style="width:150px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -18,7 +18,8 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>         
+         <el-button type="primary"   style="float:right;" @click="syncDialogVisible=true">同步</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
@@ -137,6 +138,17 @@
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
         </div>
+    </el-dialog>
+   <!-- 同步弹框 -->
+    <el-dialog title="稿件同步"
+     :visible.sync="syncDialogVisible"
+     size="tiny"
+     class="sync_dialog"
+    >
+      <el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>  
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="syncGetArticle" type="primary">确定</el-button>
+      </span>
     </el-dialog>
   </el-tab-pane>
   <el-tab-pane label="评论">
@@ -272,6 +284,8 @@ export default {
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
       commentListUrl:'/pmpheep/cms/comments',         //评论列表url
+      syncGetUrl:'/pmpheep/cms/wechat/article/getArticle',         //同步地址url
+      syncGetDetailUrl:'/pmpheep/cms/wechat/article/synchro',          //获取稿件详情detail
       selectOp: [
         {
           value: 0,
@@ -301,6 +315,8 @@ export default {
         }
       ],
       showContentDetail: false,
+      syncDialogVisible:false,
+      syncInputUrl:'',
       contentDetailData: {
         cmsContent: "",
         cmsExtras: "",
@@ -547,7 +563,9 @@ export default {
         });
     },
     /* 删除内容 */
-    deleteContent(obj) {
+    deleteContent(obj) {{
+      url:this.syncInputUrl
+    }
       this.$confirm("确定删除该文章?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -591,6 +609,31 @@ export default {
     commentHandleCurrentChange(val) {
       this.comPageNumber = val
       this.getCommentList()      
+    },
+    /* 同步弹框确定按钮 */
+    syncGetArticle(){
+      this.$axios.post('http://192.168.200.113:8080/pmpheep/cms/wechat/article/getArticle',this.$commonFun.initPostData(
+        {
+          url:this.syncInputUrl
+        }
+      )).then((res)=>{
+        console.log(res);
+        if(res.data.code==1){
+          this.$message.success('同步成功');
+          this.syncCheckDetail(res.data.data);
+          this.syncDialogVisible=false;
+        }else{
+          this.$message.error(res.data.msg.msgTrim());
+        }
+      })
+    },
+    /* 查看稿件详情 */
+    syncCheckDetail(id){
+     this.$axios.post('http://192.168.200.113:8080/pmpheep/cms/wechat/article/synchro',this.$commonFun.initPostData({
+       guid:id
+     })).then((res)=>{
+       console.log(res);
+     })
     }
   },
   created() {
@@ -605,7 +648,7 @@ export default {
   overflow: hidden;
 }
 .publish_list .header_p .input {
-  width: 217px;
+  width: 190px;
   margin-right: 10px;
 }
 .publish_list .table_i {
