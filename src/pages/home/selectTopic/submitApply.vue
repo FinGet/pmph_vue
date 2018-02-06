@@ -126,7 +126,7 @@
                     iterm.submitTime=this.$commonFun.formatDate(iterm.submitTime,'yyyy-MM-dd');
                   });
                   this.tableData = res.data.rows;
-                  this.pageTotal = res.data.pageTotal;
+                  this.pageTotal = res.data.total;
                 }else{
                   self.$message.error(res.msg.msgTrim());
                 }
