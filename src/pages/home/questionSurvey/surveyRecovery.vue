@@ -16,36 +16,36 @@
      <el-table-column
      label="调查问卷名称"
      prop="title"
-     >  
+     >
      </el-table-column>
      <el-table-column
      label="提交人"
      prop="userName"
      width="110"
-     >  
+     >
      </el-table-column>
      <el-table-column
      label="用户类别"
      prop="loginType"
      width="100"
-     > 
+     >
       <template scope="scope">
         <p v-if="scope.row.loginType==1">社内用户</p>
         <p v-if="scope.row.loginType==2">作家用户</p>
         <p v-if="scope.row.loginType==3">机构用户</p>
-         </template> 
-     </el-table-column>     
+         </template>
+     </el-table-column>
       <el-table-column
      label="所在机构"
      prop="orgName"
      width="150"
-     >  
-     </el-table-column> 
+     >
+     </el-table-column>
      <el-table-column
      label="提交时间"
      prop="gmt_create"
      width="170"
-     >  
+     >
      <template scope="scope">
        {{$commonFun.formatDate(scope.row.gmtCreate)}}
      </template>
@@ -57,7 +57,7 @@
      <template scope="scope">
        <el-button type="text" @click="$router.push({name:'问卷回收结果',params:{surveyId:scope.row.surveyId,userId:scope.row.userId}})">查看</el-button>
      </template>
-     </el-table-column> 
+     </el-table-column>
     </el-table>
           <!--分页-->
     <div class="pagination-wrapper">
@@ -135,7 +135,7 @@
                  params:this.searchParams
              }).then((res)=>{
                  if(res.data.code==1){
-                     this.pageTotal=res.data.data.pageTotal;
+                     this.pageTotal=res.data.data.total;
                      this.tableData=res.data.data.rows;
                      console.log(res);
                  }

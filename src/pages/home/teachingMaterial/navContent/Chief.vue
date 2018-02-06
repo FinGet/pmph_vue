@@ -112,7 +112,7 @@
         :visible.sync="dialogVisible">
         <div class="history-box timeLine">
           <ul v-if="historyLog.length>0">
-            <li v-for="(iterm,index) in historyLog" :key="iterm.id">
+            <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
               <p>{{iterm.detail}}</p>
             </li>
@@ -204,7 +204,7 @@
             this.getHistoryLog();
             if(res.code==1){
               var onlineProgress = ['未提交','待审核','被退回','已审核'];
-              var offlineProgress = ['未收到纸质表','未收到纸质表','已收到纸质表'];
+              var offlineProgress = ['未提交纸质表','未收到纸质表','已收到纸质表'];
               var positionList = ['','主编','副主编','编委'];
               res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];

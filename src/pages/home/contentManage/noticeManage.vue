@@ -125,7 +125,7 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished || isDisabled"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="publishSubmit">发布</el-button>
             </div>
         </div>
@@ -179,7 +179,8 @@ export default {
         cmsExtras: "",
         listObj: "",
         content: ""
-      }
+      },
+      isDisabled: false
     };
   },
   computed: {
@@ -344,6 +345,7 @@ export default {
     },
     /* 查看详情 */
     contentDetail(obj) {
+      this.isDisabled = obj.isMaterialEntry;
       this.$axios
         .get(this.editContentUrl + obj.id + "/detail", {})
         .then(res => {

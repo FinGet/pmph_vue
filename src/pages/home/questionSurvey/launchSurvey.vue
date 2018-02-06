@@ -36,15 +36,15 @@
                      <template scope="scope">
                          <el-button type="text" @click="removeCheckedData(scope.$index)">移除</el-button>
                      </template>
-                     </el-table-column>       
-             </el-table> 
+                     </el-table-column>
+             </el-table>
            </el-form-item>
            <el-form-item label="">
              <p style="margin-top:10px;">
              <el-button type="primary" icon="arrow-left">返回</el-button>
              <el-button type="primary" @click="submitSurvery">发起问卷调查</el-button>
              </p>
-             </el-form-item> 
+             </el-form-item>
        </el-form>
        </div>
        <div class="right_table_box">
@@ -78,8 +78,8 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageTotal">
       </el-pagination>
-    </div>        
-       </div>   
+    </div>
+       </div>
   </div>
 </template>
 <script type="text/javascript">
@@ -121,6 +121,10 @@
          if(!this.$route.params.surveyId){
            this.$router.push({name:'调查问卷模板设置'});
          }
+         if(this.$route.params.beginDate){
+           this.leftFrom.startTime=this.$commonFun.formatDate(this.$route.params.beginDate,'yyyy-MM-dd');
+           this.leftFrom.endTime=this.$commonFun.formatDate(this.$route.params.endDate,'yyyy-MM-dd');
+         }
          this.getTableData();
        },
        methods:{
@@ -147,7 +151,7 @@
                   this.$message({
                     type: 'warning',
                     message: '已取消操作'
-                  });          
+                  });
                 });
            }else{
              return false;
@@ -176,7 +180,7 @@
            }).then((res)=>{
              console.log(res);
              if(res.data.code==1){
-               this.pageTotal=res.data.data.pageTotal;
+               this.pageTotal=res.data.data.total;
                this.rightTableData=res.data.data.rows;
              }
            })
@@ -227,7 +231,7 @@
            this.getTableData();
           }
        }
-   } 
+   }
 </script>
 <style>
 .launch_survey{

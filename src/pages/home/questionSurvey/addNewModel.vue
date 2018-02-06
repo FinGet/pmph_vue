@@ -340,24 +340,30 @@ export default {
               this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
           this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';
-         this.$axios(
-             {
-                 url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
-                 method: str=='add'?'POST':'PUT',
-                 data:this.$commonFun.initPostData(this.surveyForm)
-         }).then((res)=>{
-             console.log(res);
-             console.log(this.surveyForm.questionAnswerJosn,arr);
-             if(res.data.code==1){
-              this.$message.success(str=='add'?'添加成功':'修改成功');
-              this.$router.push({name:'调查问卷模板设置'});
+         this.$refs.surveyForm.validate((valid)=>{
+             if(valid){
+                    this.$axios(
+                        {
+                            url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
+                            method: str=='add'?'POST':'PUT',
+                            data:this.$commonFun.initPostData(this.surveyForm)
+                    }).then((res)=>{
+                        console.log(res);
+                        console.log(this.surveyForm.questionAnswerJosn,arr);
+                        if(res.data.code==1){
+                        this.$message.success(str=='add'?'添加成功':'修改成功');
+                        this.$router.push({name:'调查问卷模板设置'});
 
+                        }else{
+                            this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
+                    this.surveyForm.questionAnswerJosn=arr;
+                    
              }else{
-                 this.$message.error(res.data.msg.msgTrim());
+                 return false;
              }
          })
-         this.surveyForm.questionAnswerJosn=arr;
-         
       },
       /* 新增对象 */
       addObjInfo(){
