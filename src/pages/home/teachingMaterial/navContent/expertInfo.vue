@@ -14,9 +14,9 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
-          {{'通过'}}
-        </el-button>
+        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
+          <!--{{'通过'}}-->
+        <!--</el-button>-->
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
@@ -721,7 +721,7 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,1,3].includes(this.expertInfoData.onlineProgress);
+            let l = [0,1,3,4].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
               return true&&l;
             }
@@ -1052,7 +1052,7 @@
           this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
             content:this.inputMsg,
             sessionId:this.$getUserData().userInfo.id,
-            receiverId:this.searchFormData.declarationId
+            receiverId:this.searchFormData.userId
           }))
             .then(response=>{
               var res = response.data;
