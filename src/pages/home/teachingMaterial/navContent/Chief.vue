@@ -297,6 +297,8 @@
                 id:this.tableData[i].id,
                 textbookId:this.searchParams.textbookId,
                 chosenPosition:this.tableData[i].chosenPosition,
+                declarationId:this.tableData[i].declarationId,
+                presetPosition:this.tableData[i].presetPosition,
                 rank:(this.tableData[i].chosenPosition%8)==4?this.tableData[i].zhubianSort:((this.tableData[i].chosenPosition%8)==2?this.tableData[i].fuzhubianSort:'')
               };
               if(this.tableData[i].isZhubian||this.tableData[i].isFuzhubian||this.tableData[i].isBianwei||this.tableData[i].isDigitalEditor){
