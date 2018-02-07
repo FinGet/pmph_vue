@@ -3,7 +3,7 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-          <span>文章标题：</span> 
+          <span>文章标题：</span>
           <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
          <span>作者：</span>
           <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
@@ -18,7 +18,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>         
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
          <el-button type="primary"   style="float:right;" @click="syncDialogVisible=true">同步</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -62,7 +62,7 @@
                     <p v-if="scope.row.authStatus==1">已退回</p>
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
-            </el-table-column> 
+            </el-table-column>
             <el-table-column
                 label="相关统计"
                 width="190"
@@ -88,8 +88,8 @@
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text" 
-                    
+                    <el-button type="text"
+
                     @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
@@ -133,7 +133,7 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
@@ -145,9 +145,20 @@
      size="tiny"
      class="sync_dialog"
     >
-      <el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>  
+      <el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="syncGetArticle" type="primary">确定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="稿件同步"
+               :visible.sync="syncDialogVisible1"
+               size="tiny"
+               class="sync_dialog"
+    >
+      <!--<el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>-->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="syncCheckDetail" type="primary">确定</el-button>
       </span>
     </el-dialog>
   </el-tab-pane>
@@ -217,7 +228,7 @@
                     <p v-if="scope.row.authStatus==1">已退回</p>
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
-            </el-table-column> 
+            </el-table-column>
             <el-table-column
                 label="操作"
                 width="180"
@@ -262,14 +273,14 @@
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden">
-            <div class="center_box">  
+            <div class="center_box">
             <el-button type="danger" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,1)" >退回</el-button>
             <el-button type="primary" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,2)" >通过</el-button>
             </div>
         </div>
     </el-dialog>
   </el-tab-pane>
-  
+
 </el-tabs>
 
 
@@ -279,6 +290,7 @@
 export default {
   data() {
     return {
+      syncDialogVisible1: false,
       publicListUrl: "/pmpheep/cms/contents", //获取列表url
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
@@ -404,7 +416,7 @@ export default {
           let res = response.data
           if (res.code == 1 ) {
             this.comDataTotal = res.data.total
-            // this.commentTableData.gmtCreate = 
+            // this.commentTableData.gmtCreate =
             res.data.rows.map(item=>{
                 item.gmtCreate=this.$commonFun.formatDate(item.gmtCreate);
                 item.authDate = this.$commonFun.formatDate(item.authDate);
@@ -448,7 +460,7 @@ export default {
         }else{
          this.commentSelectData.forEach(item => {
           ids.push(item.id)
-        })  
+        })
         }
         this.$axios.delete('/pmpheep/cms/comment/delete',{
           params: {
@@ -464,7 +476,7 @@ export default {
           }
         })
       })
-      
+
     },
     /**展示评论详情 */
     commentDetail(obj){
@@ -608,11 +620,11 @@ export default {
     },
     commentHandleCurrentChange(val) {
       this.comPageNumber = val
-      this.getCommentList()      
+      this.getCommentList()
     },
     /* 同步弹框确定按钮 */
     syncGetArticle(){
-      this.$axios.post('http://192.168.200.113:8080/pmpheep/cms/wechat/article/getArticle',this.$commonFun.initPostData(
+      this.$axios.post('/pmpheep/cms/wechat/article/getArticle',this.$commonFun.initPostData(
         {
           url:this.syncInputUrl
         }
@@ -621,6 +633,7 @@ export default {
         if(res.data.code==1){
           this.$message.success('同步成功');
           this.syncCheckDetail(res.data.data);
+//          this.syncDialogVisible1 = true;
           this.syncDialogVisible=false;
         }else{
           this.$message.error(res.data.msg.msgTrim());
@@ -629,7 +642,7 @@ export default {
     },
     /* 查看稿件详情 */
     syncCheckDetail(id){
-     this.$axios.post('http://192.168.200.113:8080/pmpheep/cms/wechat/article/synchro',this.$commonFun.initPostData({
+     this.$axios.post('/pmpheep/cms/wechat/article/synchro',this.$commonFun.initPostData({
        guid:id
      })).then((res)=>{
        console.log(res);
