@@ -313,7 +313,8 @@ export default {
         .then(response => {
           let res = response.data;
           if (res.code == '1') {
-            this.$message.sucees("操作成功！");
+            this.$message.success("操作成功！");
+            this.goBack();
           } else {
             this.$message.error(res.msg.msgTrim());
           }
