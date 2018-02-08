@@ -606,7 +606,7 @@
           autofocus
           type="textarea"
           :rows="6"
-          placeholder="请输入退出原因"
+          placeholder="请输入退回原因"
           @input.native="changeOfflineProgressTextarea"
           @keyup.native.enter="onlineCheckPass(5)"
           v-model="offlineProgressText">

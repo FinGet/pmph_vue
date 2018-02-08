@@ -313,6 +313,9 @@
   .searchBox-wrapper{
     width: 340px;
   }
+  .searchBox-wrapper.searchBtn{
+    width: 94px;
+  }
   .searchBox-wrapper .searchName{
     width: 110px;
   }

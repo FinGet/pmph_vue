@@ -247,10 +247,10 @@ props: default-history-id 默认选中的历史记录
         sortOrg:-1,
         select_provinces:[],
         orgTypeList:[{
-          id:1,
+          id:2,
           name:'本科'
         },{
-          id:2,
+          id:1,
           name:'医院'
         },{
           id:3,
