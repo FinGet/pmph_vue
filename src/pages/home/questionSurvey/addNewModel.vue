@@ -264,7 +264,7 @@ export default {
         dialogRules:{
              title:[
                  { required: true, message: '请输入题目', trigger: 'blur' },
-                 {min:1,max:50,message:'题目不能超过200个字符',trigger:'change,blur'}
+                 {min:1,max:200,message:'题目不能超过200个字符',trigger:'change,blur'}
              ],
              sort:[
                  { min:1,max:10, message: "序号不能超过10个字符", trigger: "change,blur" },
@@ -275,7 +275,7 @@ export default {
              ],
              optionContent:[
                  { required: true, message: '请输入选项', trigger: 'blur' },
-                 {min:1,max:50,message:'选项不能超过300个字符',trigger:'change,blur'}
+                 {min:1,max:300,message:'选项不能超过300个字符',trigger:'change,blur'}
              ]
              
         }

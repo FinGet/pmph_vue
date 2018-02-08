@@ -242,7 +242,7 @@
     <el-form-item
     label="审核意见："
     >
-      <el-input type="textarea" v-if="type=='check'" :rows="4" v-model="data.authFeedback"></el-input>
+      <el-input type="textarea" v-if="type=='check'" @blur="textSize" :rows="4" v-model="data.authFeedback"></el-input>
       <p v-else>{{data.authFeedback}}</p>
     </el-form-item>
    </el-form>
@@ -329,6 +329,12 @@ export default {
         name: this.routerName ? this.routerName : "选题申报审核",
         query: { active: this.active }
       });
+    },
+    textSize(){
+      var val = this.data.authFeedback;
+      if (val.length > 200) {
+        this.$message.error('审核意见不能超过200个字');
+      }
     }
   }
 };
