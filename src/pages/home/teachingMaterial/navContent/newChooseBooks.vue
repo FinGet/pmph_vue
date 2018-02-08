@@ -1211,10 +1211,12 @@ export default {
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
                     this.uploadFormMerge(this.ruleForm)).then((res)=>{
                     console.log(res);
+                    this.isloading=false;
                     if(res.data.code==1){
-                      this.isloading=false;
                       this.$message.success('已保存教材通知');
                       this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+                    }else{
+                      this.$message.error(res.data.msg.msgTrim());
                     }
                   })  
 
