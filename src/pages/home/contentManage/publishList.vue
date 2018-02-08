@@ -133,7 +133,7 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>

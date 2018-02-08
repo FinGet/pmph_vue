@@ -246,11 +246,11 @@ export default {
                {min:1,max:50,message:'问卷名称不能超过50个字符',trigger:'change,blur'} 
             ],
             typeId:[
-                { required: true, message: '请输入问卷名称', trigger: 'blur' },
+                {type:'number', required: true, message: '请选择调查对象', trigger: 'blur' },
             ],
             intro:[
                 { required: true, message: '请输入调查概述', trigger: 'blur' },
-                {min:1,max:50,message:'概述不能超过50个字符',trigger:'change,blur'}
+                {min:1,max:200,message:'概述不能超过200个字符',trigger:'change,blur'}
             ],
             surveyName:[
                 { required: true, message: '请输入对象名称', trigger: 'blur' },
@@ -264,7 +264,7 @@ export default {
         dialogRules:{
              title:[
                  { required: true, message: '请输入题目', trigger: 'blur' },
-                 {min:1,max:50,message:'题目不能超过50个字符',trigger:'change,blur'}
+                 {min:1,max:50,message:'题目不能超过200个字符',trigger:'change,blur'}
              ],
              sort:[
                  { min:1,max:10, message: "序号不能超过10个字符", trigger: "change,blur" },
@@ -275,7 +275,7 @@ export default {
              ],
              optionContent:[
                  { required: true, message: '请输入选项', trigger: 'blur' },
-                 {min:1,max:50,message:'选项不能超过50个字符',trigger:'change,blur'}
+                 {min:1,max:50,message:'选项不能超过300个字符',trigger:'change,blur'}
              ]
              
         }
@@ -329,19 +329,19 @@ export default {
           this.updateTemplate('edit'); 
        }
        else{
-          this.updateTemplate('add');  
+          this.updateTemplate('add'); 
        }
       },
       /* 新增或修改 */
       updateTemplate(str){
+         this.$refs.surveyForm.validate((valid)=>{
+             if(valid){
           var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
               arr[i]=this.surveyForm.questionAnswerJosn[i];
               this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
           }
-          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';
-         this.$refs.surveyForm.validate((valid)=>{
-             if(valid){
+          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';                 
                     this.$axios(
                         {
                             url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
