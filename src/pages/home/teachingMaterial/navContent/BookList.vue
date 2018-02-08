@@ -20,6 +20,7 @@
                     class="ChatInputFileBtn"
                     ref="upload"
                     :action="api_upload"
+                    :data="{materialId:formData.materialId}"
                     :before-upload="beforeUploadFile"
                     :on-success="upLoadFileSuccess"
                     :on-error="uploadError"
@@ -366,6 +367,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
+
         })
           .then(()=>{
             this.$axios.post(this.api_save,this.$commonFun.initPostData({
