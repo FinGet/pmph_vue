@@ -65,7 +65,7 @@
         label="退回理由"
       >
         <template scope="scope">
-          <span>{{scope.row.reasonEditor || '无退回理由'}}</span>
+          <span>{{scope.row.reasonEditor || '-'}}</span>
         </template>
       </el-table-column>
      <el-table-column
