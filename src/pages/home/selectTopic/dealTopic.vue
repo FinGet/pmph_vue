@@ -293,6 +293,7 @@ export default {
             this.isEditorHandling = res.data.isEditorHandling; //是否由编辑受理
             this.isAccepted = res.data.isAccepted; //编辑是否接受办理
             this.data = res.data;
+            this.data.authFeedback?this.data.authFeedback:'';
             this.topicExtra = res.data.topicExtra || {};
             this.writerData = res.data.topicWriters;
           }
@@ -306,12 +307,12 @@ export default {
           this.$initPostData({
             id: this.id,
             authProgress: authProgress, // 审核进度
-            authFeedback: this.data.authFeedback
+            authFeedback: this.data.authFeedback || ''
           })
         )
         .then(response => {
           let res = response.data;
-          if (res.code == "1") {
+          if (res.code == '1') {
             this.$message.sucees("操作成功！");
           } else {
             this.$message.error(res.msg.msgTrim());
