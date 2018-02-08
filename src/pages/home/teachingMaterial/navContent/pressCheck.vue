@@ -217,7 +217,7 @@
         </el-table-column>
         <el-table-column label="学校审核">
           <template scope="scope">
-            <p>{{scope.row.onlineProgress==1?'待审核':'已审核'}}</p>
+            <p>{{stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
         <el-table-column label="出版社审核">
@@ -379,6 +379,7 @@
         handleExportWordtimer:null,
         downloadWordDialog:false,
         wordUrl:'',
+        stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
       }
     },
     watch:{

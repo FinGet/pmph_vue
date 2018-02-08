@@ -162,18 +162,21 @@ export default {
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              this.formData.materialName = res.data.materialName;
-              this.formData.materialType = res.data.materialType;
-              this.formData.materialRound = res.data.materialRound;
-              this.formData.isPublic = !!res.data.isPublic;
-              res.data.textbooks = JSON.parse(res.data.textbooks);
-              res.data.textbooks.map(iterm=>{
-                iterm.sortIsOk = true;
-                iterm.nameIsOk = true;
-                iterm.roundIsOk = true;
+              this.formData.materialName = res.data[0].materialName;
+              this.formData.materialType = res.data[0].materialType;
+              this.formData.materialRound = res.data[0].materialRound;
+              this.formData.isPublic = !!res.data[0].isPublic;
+              var bookList =[];
+              res.data.map(iterm=>{
+                if(!!iterm.textbook){
+                  iterm.textbook.sortIsOk = true;
+                  iterm.textbook.nameIsOk = true;
+                  iterm.textbook.roundIsOk = true;
+                  bookList.push(iterm.textbook);
+                }
               });
-              if(res.data.textbooks.length>0){
-                this.extendListData = res.data.textbooks;
+              if(bookList.length>0){
+                this.extendListData = bookList;
               }
             }
           })
