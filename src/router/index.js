@@ -81,7 +81,7 @@ const ConvertibleRule = () => import('../pages/home/pointManage/convertibleRule'
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
-const CommentManage = () => import('pages/home/publishBooks/CommentManage');
+const CommentManage = () => import('pages/home/publishBooks/comment');
 /* 选题申报 */
 import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter'
 const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
