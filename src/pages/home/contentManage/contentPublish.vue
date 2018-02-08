@@ -310,8 +310,6 @@ export default {
     },
     /* 审核 */
     examineContent(obj,status){
-      console.log(obj);
-      console.log(this.formData)
       this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
       this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
@@ -323,19 +321,20 @@ export default {
            this.formData.authStatus=status;
            this.formData.content=this.$refs.editor.getContent();
           this.$axios
-            .put(
-              this.examineUrl,
-              this.$commonFun.initPostData(this.formData)
-               )
+            ({
+              method:this.$route.query.type=='new'?'post':'put',
+              url:this.$route.query.type=='new'?this.addNewUrl:this.examineUrl,
+              data:this.$commonFun.initPostData(this.formData)
+            })
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
                 this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;
-                this.$message.success("审核成功");
+                this.$message.success("操作成功");
                 this.showContentDetail = false;
                 this.$router.push({name:'文章管理'})
               } else {
-                this.$message.error(res.data.msg);
+                this.$message.error(res.data.msg.msgTrim());
               }
             });
         })
@@ -506,6 +505,13 @@ export default {
         }
       } 
       return formData;
+    },
+    formChecked(type){
+      this.$refs['addForm'].validate((valid)=>{
+        if(valid){
+
+        }
+      })
     }
   },
   created() {
