@@ -8,15 +8,15 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="showOfflineProgress=true" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="onlineCheckPass(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
-          <!--{{'通过'}}-->
-        <!--</el-button>-->
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
+          {{'通过'}}
+        </el-button>
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
@@ -615,7 +615,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeOfflineProgress">取 消</el-button>
-        <el-button type="primary" @click="onlineCheckPass(5)">确 定</el-button>
+        <el-button type="primary" @click="onlineCheckPass(offlineProgressType)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -691,6 +691,7 @@
               //退回给个人弹窗
               showOfflineProgress:false,
               offlineProgressText:'',
+              offlineProgressType:4,
             }
         },
         computed:{
@@ -1102,10 +1103,6 @@
          *  type 2 标示退回给个人 3 标示通过
          */
         onlineCheckPass(type){
-          if(type===5&&!!!this.offlineProgressText){
-            this.$message.error('退回原因不能为空！')
-            return;
-          }
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
             onlineProgress:type,
@@ -1115,6 +1112,7 @@
               var res = response.data;
               if(res.code==1){
                 this.expertInfoData.onlineProgress=type;
+                this.closeOfflineProgress();
                 this.$message.success(type==3?'已通过！':'已退回！')
               }else{
                 this.$message.error(res.msg.msgTrim())
@@ -1144,6 +1142,10 @@
             })
           }
         },
+        setOnlineCheckPassType(num){
+          this.offlineProgressType = num||4;
+          this.showOfflineProgress=true;
+        }
 
       },
       created(){

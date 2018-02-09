@@ -146,7 +146,7 @@
           label:'全部'
         },{
           value:0,
-          label:'不通过'
+          label:'待审核'
         },
           {
             value:1,
@@ -154,7 +154,7 @@
           },
           {
             value:2,
-            label:'待审核'
+            label:'不通过'
           }],
         totalNum:0,
         commentDialogVisible:false,
@@ -181,7 +181,7 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              let list = ['不通过','已通过','待审核']
+              let list = ['待审核','已通过','不通过']
               res.data.rows.map(iterm=>{
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
                 iterm.state=list[iterm.isAuth];
