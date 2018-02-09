@@ -34,9 +34,14 @@
           <el-button type="primary" style="float:right">添加微视频</el-button>
        </p>
        <el-table :data="rightTableData" border style="width:100%;margin-bottom:10px;">
+          <el-table-column type="selection" width="45"></el-table-column>
          <el-table-column label="视频标题" prop="fileNmae"></el-table-column>
-         <el-table-column label="创建人" prop="" width="90"></el-table-column>
-         <el-table-column label="创建时间"></el-table-column>
+         <el-table-column label="创建人" prop="writer" width="90"></el-table-column>
+         <el-table-column label="创建时间">
+             <template scope="scope">
+                 {{$commonFun.formatDate(scope.row.gmtCreate)}}
+             </template>   
+         </el-table-column>
        </el-table>
     </div>
   </div>
