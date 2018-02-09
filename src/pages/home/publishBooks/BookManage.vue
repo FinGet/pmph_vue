@@ -264,6 +264,17 @@
               :change-on-select="true"
             ></el-cascader>
           </el-form-item>
+
+          <el-form-item label="所属教材">
+            <el-select v-model="form.materialId" filterable placeholder="请选择">
+              <el-option
+                v-for="item in materialList"
+                :key="item.id"
+                :label="item.materialName"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -312,7 +323,8 @@
           isNew:true,
           isPromote:true,
           isOnSale:true,
-          typeId:[]
+          typeId:[],
+          materialId:'',
         },
         bookSyncVisible:false,
         bookSyncData:[],
@@ -370,6 +382,7 @@
           children: 'childrenMaterialTypeVO'
         },
         bookTypeSelected:[],
+        materialList:[],
       }
 		},
     methods:{
@@ -462,6 +475,7 @@
         this.form.isNew = row.isNew;
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
+        this.form.materialId = row.materialId;
         typelist = row.path?row.path.split('-'):[];
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
@@ -511,6 +525,7 @@
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           type:type,
+          materialId:this.form.materialId,
         }))
           .then(response=>{
             let res = response.data;
@@ -585,12 +600,27 @@
         console.log(row);
         _hmt.push(['_trackPageview', '/book/'+row.bookname]);
         _hmt.push(['_trackEvent’', 'book', 'pageView', row.bookname])
-      }
+      },
+      /**
+       * 获取教材列表
+       */
+      getMaterialList(){
+        this.$axios.get('/pmpheep/material/published')
+          .then((response)=>{
+            var res = response.data;
+            if(res.code==1){
+              this.materialList = res.data;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
     },
     created(){
 		  this.getTableData();
 		  this.getBookType();
-
+      this.getMaterialList();
 		  if(window._hmt){
         _hmt.push(['_trackPageview', '/index']);
       }
