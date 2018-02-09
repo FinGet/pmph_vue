@@ -4,7 +4,7 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">发布</el-button>
+          <el-button type="primary" @click="submit(2)" :disabled="true" v-if="showPublishBtn">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
@@ -165,6 +165,26 @@
           }
         })
         return flag;
+      },
+      showPublishBtn(){
+        //是否是选择主编的界面
+        const is_select_zhubian_view =  this.type=='zb';
+        //教材是否结束
+        const no_end = !(this.materialInfo.isForceEnd||this.materialInfo.isAllTextbookPublished);
+        //是否是遴选操作（分为查看和遴选）
+        const is_select_operation = this.optionsType!='view';
+
+        return is_select_zhubian_view && no_end && is_select_operation;
+      },
+      disabledPublishBtn(){
+        //是否有主编
+        const hasZhubian =  this.hasZhubian;
+        //是否有遴选权限
+        const hasPermission = this.hasPermission([2,3]);
+        //是否有后选人员
+        const select_length = this.tableData.length>0;
+
+        return hasZhubian;
       }
     },
     created(){

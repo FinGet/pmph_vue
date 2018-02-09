@@ -439,7 +439,7 @@ export default {
           this.extendListData=[];
           res.data.forEach(iterm=>{
             this.extendListData.push({
-              id:'',
+              id:iterm.id,
               sort: iterm.sort,
               textbookName: iterm.textbookName,
               textbookRound: iterm.textbookRound,
