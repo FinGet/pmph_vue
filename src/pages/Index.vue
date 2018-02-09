@@ -445,10 +445,10 @@ export default {
     }
   },
   methods:{
-   /* 获取小组数据 */
-   getGroupListData(){
-
-   },
+    /**
+     * 获取页面数据
+     */
+    
   },
   mounted() {
     //将四个面板设为等高

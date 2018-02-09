@@ -16,7 +16,7 @@
             <div class="searchBox-wrapper searchBtn">
                 <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
             </div>
-			<el-button type="primary" class="pull-right" @click="newRule">新建积分规则</el-button>	
+			<!--<el-button type="primary" class="pull-right" @click="newRule">新建积分规则</el-button>	-->
         </el-row>
         <el-row>
             <el-col>
@@ -63,10 +63,10 @@
 				<!-- 积分规则新增/修改 -->
 				<el-dialog title="积分规则修改" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
 					<el-form :model="form" :rules="rules" ref="ruleForm" label-width="130px">
-						<el-form-item label="积分规则名称:" prop="ruleName">		
+						<el-form-item label="积分规则名称:" prop="ruleName">
 							<el-input  v-model="form.ruleName"></el-input>
 						</el-form-item>
-						<el-form-item label="积分规则标识:" prop="ruleCode">		
+						<el-form-item label="积分规则标识:" prop="ruleCode">
 							<el-input  v-model="form.ruleCode"></el-input>
 						</el-form-item>
 						<el-form-item label="积分值:" prop="point" >

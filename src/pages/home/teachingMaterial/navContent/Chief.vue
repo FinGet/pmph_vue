@@ -4,7 +4,7 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">发布</el-button>
+          <el-button type="primary" @click="submit(2)" :disabled="true" v-if="showPublishBtn">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
@@ -19,6 +19,7 @@
           border
           stripe
           tooltip-effect="dark"
+          :row-class-name="setRowClassName"
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
@@ -114,7 +115,7 @@
           <ul v-if="historyLog.length>0">
             <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
-              <p>{{iterm.detail}}</p>
+              <p v-for="(item,index) in iterm.detail">{{item}}</p>
             </li>
           </ul>
           <p v-else>暂无历史消息</p>
@@ -164,6 +165,26 @@
           }
         })
         return flag;
+      },
+      showPublishBtn(){
+        //是否是选择主编的界面
+        const is_select_zhubian_view =  this.type=='zb';
+        //教材是否结束
+        const no_end = !(this.materialInfo.isForceEnd||this.materialInfo.isAllTextbookPublished);
+        //是否是遴选操作（分为查看和遴选）
+        const is_select_operation = this.optionsType!='view';
+
+        return is_select_zhubian_view && no_end && is_select_operation;
+      },
+      disabledPublishBtn(){
+        //是否有主编
+        const hasZhubian =  this.hasZhubian;
+        //是否有遴选权限
+        const hasPermission = this.hasPermission([2,3]);
+        //是否有后选人员
+        const select_length = this.tableData.length>0;
+
+        return hasZhubian;
       }
     },
     created(){
@@ -243,6 +264,9 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              res.data.rows.forEach(iterm=>{
+                iterm.detail = iterm.detail.split(';');
+              });
               this.historyLog = res.data.rows;
             }
           })
@@ -397,6 +421,22 @@
       },
       hasPermission(index){
         return this.$commonFun.materialPower(index,this.myPower);
+      },
+      /**
+       * 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。
+       * @param row
+       * @param index
+       */
+      setRowClassName(row, index){
+        if(row.isZhubian){
+          return 'row-zhubian'
+        }else if(row.isFuzhubian){
+          return 'row-fuzhubian'
+        }else if(row.isBianwei){
+          return 'row-bianwei'
+        }else{
+          return ''
+        }
       }
     }
   }
@@ -417,5 +457,14 @@
     bottom: 7px;
     height: 12px;
     left: 0;
+  }
+  .row-zhubian,.row-zhubian>td{
+    background-color: rgba(76, 175, 80, 0.2) !important;
+  }
+  .row-fuzhubian ,.row-fuzhubian>td{
+    background-color: rgba(76, 175, 80, 0.1) !important;
+  }
+  .row-bianwei,.row-bianwei>td{
+    background-color: rgba(26, 177, 148, 0.06) !important;
   }
 </style>

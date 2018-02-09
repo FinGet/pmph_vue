@@ -14,7 +14,7 @@
             </el-option>
           </el-select>
           <div class="searchInput">
-            <el-select v-model="searchForm.isNew" @change="getTableData" placeholder="请选择" v-if="powerSearchValue===3">
+            <el-select v-model="searchForm.isNew" @change="search" placeholder="请选择" v-if="powerSearchValue===3">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -23,7 +23,7 @@
               </el-option>
             </el-select>
 
-            <el-select v-model="searchForm.isPromote" @change="getTableData" placeholder="请选择" v-else-if="powerSearchValue===4">
+            <el-select v-model="searchForm.isPromote" @change="search" placeholder="请选择" v-else-if="powerSearchValue===4">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -32,7 +32,7 @@
               </el-option>
             </el-select>
 
-            <el-select v-model="searchForm.isOnSale" placeholder="请选择" @change="getTableData" v-else-if="powerSearchValue===5">
+            <el-select v-model="searchForm.isOnSale" placeholder="请选择" @change="search" v-else-if="powerSearchValue===5">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -49,7 +49,7 @@
               @change="bookTypeChange"
               :change-on-select="true"
             ></el-cascader>
-            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchForm.name" @keyup.enter.native="getTableData" v-else-if="powerSearchValue===1"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchForm.name" @keyup.enter.native="search" v-else-if="powerSearchValue===1"></el-input>
           </div>
         </div>
         <div class="searchBox-wrapper searchBtn">
@@ -64,7 +64,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">书籍名称/ISBN：<span></span></div>
           <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="getTableData" v-model.trim="searchForm.name"></el-input>
+            <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="search" v-model.trim="searchForm.name"></el-input>
           </div>
         </div>
         <!--书名选择框-->
@@ -85,7 +85,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">是否新书推荐：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchForm.isNew" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchForm.isNew" placeholder="请选择" @change="search">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -99,7 +99,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">是否重磅推荐：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchForm.isPromote" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchForm.isPromote" placeholder="请选择" @change="search">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -113,7 +113,7 @@
         <div class="searchBox-wrapper">
           <div class="searchName">是否上架：<span></span></div>
           <div class="searchInput">
-            <el-select v-model="searchForm.isOnSale" placeholder="请选择" @change="getTableData">
+            <el-select v-model="searchForm.isOnSale" placeholder="请选择" @change="search">
               <el-option
                 v-for="item in FilterNameList"
                 :key="item.value"
@@ -125,7 +125,7 @@
         </div>
         <!--搜索按钮-->
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="search">搜索</el-button>
         </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
@@ -264,6 +264,17 @@
               :change-on-select="true"
             ></el-cascader>
           </el-form-item>
+
+          <el-form-item label="所属教材">
+            <el-select v-model="form.materialId" filterable placeholder="请选择">
+              <el-option
+                v-for="item in materialList"
+                :key="item.id"
+                :label="item.materialName"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -312,7 +323,8 @@
           isNew:true,
           isPromote:true,
           isOnSale:true,
-          typeId:[]
+          typeId:[],
+          materialId:'',
         },
         bookSyncVisible:false,
         bookSyncData:[],
@@ -370,6 +382,7 @@
           children: 'childrenMaterialTypeVO'
         },
         bookTypeSelected:[],
+        materialList:[],
       }
 		},
     methods:{
@@ -409,6 +422,10 @@
           .catch(e=>{
             console.log(e);
           })
+      },
+      search(){
+        this.searchForm.pageNumber=1;
+        this.getTableData();
       },
       /**
        * 获取书籍类别树数据
@@ -458,6 +475,7 @@
         this.form.isNew = row.isNew;
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
+        this.form.materialId = row.materialId;
         typelist = row.path?row.path.split('-'):[];
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
@@ -507,6 +525,7 @@
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           type:type,
+          materialId:this.form.materialId,
         }))
           .then(response=>{
             let res = response.data;
@@ -581,12 +600,27 @@
         console.log(row);
         _hmt.push(['_trackPageview', '/book/'+row.bookname]);
         _hmt.push(['_trackEvent’', 'book', 'pageView', row.bookname])
-      }
+      },
+      /**
+       * 获取教材列表
+       */
+      getMaterialList(){
+        this.$axios.get('/pmpheep/material/published')
+          .then((response)=>{
+            var res = response.data;
+            if(res.code==1){
+              this.materialList = res.data;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
     },
     created(){
 		  this.getTableData();
 		  this.getBookType();
-
+      this.getMaterialList();
 		  if(window._hmt){
         _hmt.push(['_trackPageview', '/index']);
       }

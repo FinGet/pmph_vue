@@ -42,7 +42,7 @@
         <!--操作按钮-->
         <div class="text-right paddingT20">
           <el-button type="primary"  @click="back" v-if="type=='new'">返回编辑</el-button>
-          <el-button type="primary" :disabled="selections.length==0" @click="send" :loading="submiting">发送</el-button>
+          <el-button type="primary" :disabled="selections.length==0" @click="showMemberList" :loading="submiting">下一步</el-button>
         </div>
         <!--表格-->
         <div class="table-wrapper">
@@ -75,6 +75,36 @@
         </div>
       </el-col>
     </el-row>
+
+    <!--已选择院校预览-->
+    <el-dialog
+      title="已选中机构"
+      :visible.sync="dialogVisible">
+      <div class="table-wrapper">
+        <el-table
+          :data="hasCheckedMemberList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            label="姓名">
+            <template scope="scope">
+              <p class="bg-none" v-html="scope.row.realname"></p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="工作单位">
+            <template scope="scope">
+              <p class="bg-none" v-html="scope.row.orgName"></p>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="send">发 送</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,6 +138,8 @@
           bookIds:'',
         },
         submiting:false,
+        dialogVisible:false,
+        hasCheckedMemberList:[],
       }
     },
     methods:{
@@ -135,6 +167,27 @@
             }
           }
         })
+      },
+      /**
+       * 获取已选中人的
+       */
+      geMember(){
+        this.$axios.get('/pmpheep/decPosition/textbook/declaration',{
+          params:{
+            textbookIds: this.formdata.bookIds ,
+            pageSize: 1000,
+            pageNumber: 1,
+          }
+        }).then(response => {
+          if (res.code == '1') {
+            this.hasCheckedMemberList = res.data.rows;
+          }
+        })
+      },
+      showMemberList(){
+        this.hasCheckedMemberList=[];
+        this.geMember();
+        this.dialogVisible=true;
       },
       /**
        * 搜索

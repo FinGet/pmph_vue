@@ -10,13 +10,13 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
+                <el-input placeholder="请输入" @keyup.enter.native="search" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
               <div class="searchName">审核状态：<span></span></div>
               <div class="searchInput">
-                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
+                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="search">
                   <el-option
                     v-for="(item,index) in stateOption"
                     :key="item.label"
@@ -27,10 +27,12 @@
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <!--操作按钮-->
             <div class="pull-right">
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -57,13 +59,13 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
+                <el-input placeholder="请输入" @keyup.enter.native="search" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
               <div class="searchName">审核状态：<span></span></div>
               <div class="searchInput">
-                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
+                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="search">
                   <el-option
                     v-for="(item,index) in stateOption"
                     :key="item.label"
@@ -74,10 +76,12 @@
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <!--操作按钮-->
             <div class="pull-right">
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -194,6 +198,10 @@
             console.log(e);
           })
       },
+      search(){
+        this.searchForm.pageNumber=1;
+        this.getTableData();
+      },
       /**
        * 表格复选框发生变化触发事件
        */
@@ -270,6 +278,38 @@
           })
           .catch(e=>{})
 
+      },
+      /**
+       * 设置评论状态，是否置顶，是否精选
+       * @param typeText
+       */
+      setState(typeText){
+        let url = '/pmpheep/bookusercomment/comment';
+        let select = [];
+        this.selectData.forEach(iterm=>{
+          select.push(iterm.id);
+        });
+        this.$axios.put(url,this.$commonFun.initPostData({
+          ids:select.join(','),
+          isStick:typeText==='isStick'?true:'',
+          sort:'',
+          isPromote:typeText==='isPromote'?true:'',
+          isHot:typeText==='isHot'?true:'',
+          SortHot:'',
+        }))
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$message.success('提交成功');
+              this.getTableData();
+            }else{
+              this.$message.error('操作失败请重试！');
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('操作失败请重试！');
+          })
       },
       /**
        * 显示评论详情
