@@ -31,7 +31,7 @@
         <el-table-column
           prop="writerName"
           label="评论人"
-          width="168">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="gmtCreate"
@@ -42,6 +42,22 @@
           prop="score"
           label="评分"
           width="70">
+        </el-table-column>
+        <el-table-column
+          prop="isStick"
+          label="是否置顶"
+          width="94">
+          <template scope="scope">
+            {{scope.row.scope?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="isPromote"
+          label="是否精选"
+          width="94">
+          <template scope="scope">
+            {{scope.row.scope?'是':'否'}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="state"
