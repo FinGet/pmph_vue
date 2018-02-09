@@ -82,8 +82,10 @@ const ConvertibleRule = () => import('../pages/home/pointManage/convertibleRule'
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 const BookManage = () => import('pages/home/publishBooks/BookManage');
 const CommentManage = () => import('pages/home/publishBooks/comment');
+const MicVideo = () => import('../pages/home/publishBooks/micVideo');
+
 /* 选题申报 */
-import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter'
+import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter';
 const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
 const TopicCheck = () => import('../pages/home/selectTopic/topicCheck');
 const dealTopic =()=> import ('../pages/home/selectTopic/dealTopic')
@@ -214,7 +216,9 @@ export default new Router({
         {
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
           { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 }},
-          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}}
+          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}},
+          { path: 'video', name: '微视频管理', component: MicVideo, meta: { authorityId: 20 } }
+          
           ]
         },
         /*数据分析 */

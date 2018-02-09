@@ -141,7 +141,7 @@
           </div>
           <div class="info-iterm-text">
             <div>传真：<span></span></div>
-            <div></div>
+            <div>{{expertInfoData.fax}}</div>
           </div>
           <div class="info-iterm-text">
             <div>性别：<span></span></div>
