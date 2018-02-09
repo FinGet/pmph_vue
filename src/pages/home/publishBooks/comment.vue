@@ -31,6 +31,8 @@
             </div>
             <!--操作按钮-->
             <div class="pull-right">
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -78,6 +80,8 @@
             </div>
             <!--操作按钮-->
             <div class="pull-right">
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -274,6 +278,38 @@
           })
           .catch(e=>{})
 
+      },
+      /**
+       * 设置评论状态，是否置顶，是否精选
+       * @param typeText
+       */
+      setState(typeText){
+        let url = '/pmpheep/bookusercomment/comment';
+        let select = [];
+        this.selectData.forEach(iterm=>{
+          select.push(iterm.id);
+        });
+        this.$axios.put(url,this.$commonFun.initPostData({
+          ids:select.join(','),
+          isStick:typeText==='isStick'?true:'',
+          sort:'',
+          isPromote:typeText==='isPromote'?true:'',
+          isHot:typeText==='isHot'?true:'',
+          SortHot:'',
+        }))
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$message.success('提交成功');
+              this.getTableData();
+            }else{
+              this.$message.error('操作失败请重试！');
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$message.error('操作失败请重试！');
+          })
       },
       /**
        * 显示评论详情
