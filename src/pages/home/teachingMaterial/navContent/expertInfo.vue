@@ -638,6 +638,7 @@
               },
               currentUploadFileBookIndex:undefined,
               expertInfoData:{
+                userId:'',
                 realname:'',
                 sex:'男',
                 birthday:'',
@@ -1053,7 +1054,7 @@
           this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
             content:this.inputMsg,
             sessionId:this.$getUserData().userInfo.id,
-            receiverId:this.searchFormData.userId
+            receiverId:this.expertInfoData.userId
           }))
             .then(response=>{
               var res = response.data;
