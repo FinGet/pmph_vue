@@ -275,7 +275,7 @@ export default {
              ],
              optionContent:[
                  { required: true, message: '请输入选项', trigger: 'blur' },
-                 {min:1,max:300,message:'选项不能超过300个字符',trigger:'change,blur'}
+                 {min:1,max:200,message:'选项不能超过200个字符',trigger:'change,blur'}
              ]
              
         }
