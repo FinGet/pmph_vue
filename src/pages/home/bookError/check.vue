@@ -13,11 +13,17 @@
 						<el-form-item label="书名:">
 							<p>{{ruleForm.bookname}}</p>
 						</el-form-item>
-						<el-form-item label="纠错信息:">
+            <el-form-item label="页码行数:">
+              <p>页码：{{ruleForm.page}} 行数：{{ruleForm.line}}</p>
+            </el-form-item>
+						<el-form-item label="纠错内容:">
 							<div class="messageBox">
-								<p>页码：{{ruleForm.page}} 行数：{{ruleForm.line}}</p>
+								<p>{{ruleForm.content}}</p>
 							</div>
 						</el-form-item>
+            <el-form-item label="附件:">
+              <a type="text" :href="ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
+            </el-form-item>
 						<el-form-item label="纠错人:">
 							<p>{{ruleForm.realname}}</p>
 						</el-form-item>
