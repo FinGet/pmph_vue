@@ -10,13 +10,13 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
+                <el-input placeholder="请输入" @keyup.enter.native="search" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
               <div class="searchName">审核状态：<span></span></div>
               <div class="searchInput">
-                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
+                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="search">
                   <el-option
                     v-for="(item,index) in stateOption"
                     :key="item.label"
@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <!--操作按钮-->
             <div class="pull-right">
@@ -57,13 +57,13 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" @keyup.enter.native="getTableData" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
+                <el-input placeholder="请输入" @keyup.enter.native="search" class="searchInputEle" v-model.trim="searchForm.name"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper">
               <div class="searchName">审核状态：<span></span></div>
               <div class="searchInput">
-                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="getTableData">
+                <el-select  v-model="searchForm.isAuth" placeholder="全部" @change="search">
                   <el-option
                     v-for="(item,index) in stateOption"
                     :key="item.label"
@@ -74,7 +74,7 @@
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <!--操作按钮-->
             <div class="pull-right">
@@ -193,6 +193,10 @@
           .catch(e=>{
             console.log(e);
           })
+      },
+      search(){
+        this.searchForm.pageNumber=1;
+        this.getTableData();
       },
       /**
        * 表格复选框发生变化触发事件

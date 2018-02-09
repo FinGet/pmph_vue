@@ -203,6 +203,7 @@ export default {
           this.getTableData();
         }else{
           this.searchForm.pageNumber=1;
+          this.getTableData();
         }
       },
 
