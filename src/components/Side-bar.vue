@@ -42,6 +42,7 @@
         </template>
         <el-menu-item index="/book/manage" v-if="isShowSide(6)||isShowSide(19)">图书管理</el-menu-item>
         <el-menu-item index="/book/comment" v-if="isShowSide(6)||isShowSide(20)">评论审核</el-menu-item>
+        <el-menu-item index="/book/video" v-if="isShowSide(6)||isShowSide(20)">微视频管理</el-menu-item>
       </el-submenu>
 
       <el-submenu index="/topic"  v-if="isShowSide(7)||isShowSide(21)||isShowSide(22)">
