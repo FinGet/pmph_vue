@@ -645,9 +645,11 @@ export default {
     /* 查看稿件详情 */
     syncCheckDetail(id){
 
-     this.$axios.post('/pmpheep/cms/wechat/article/synchro',this.$commonFun.initPostData({
-       guid:id
-     })).then((res)=>{
+     this.$axios.get('/pmpheep/cms/wechat/article/synchro',{
+       params:{
+           guid:id
+       }
+     }).then((res)=>{
        console.log(res);
        if(res.data.code==1){
            if(!res.data.data.id){

@@ -66,7 +66,8 @@ methods: refresh 刷新当前树状图
         treeData:[],
         defaultProps:{
           children: "sonDepartment",
-          label: "dpName"
+          label: "dpName",
+          isLeaf: 'leaf'
         },
         default_expanded_keys:[427],//默认展开人卫社（人卫社id为427）
         hasSelected: false,
