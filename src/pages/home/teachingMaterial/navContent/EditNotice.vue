@@ -21,9 +21,9 @@
     </el-form>
 
     <div class="image-wrapper marginL110 text-center marginB30" v-if="formData.image.length">
-      <div class="text-center" v-for="(iterm,index) in formData.image" :key="index">
+      <!-- <div class="text-center" v-for="(iterm,index) in formData.image" :key="index">
         <img class="img" :src="iterm.attachment" alt="">
-      </div>
+      </div> -->
     </div>
     <div class="marginL110 clearfix" v-if="formData.files.length">
       <p class="width60 paddingR20 pull-left text-right">附件 : </p>
@@ -132,10 +132,10 @@
             content += `<p></p>`;
             //备注
             content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
-           /*  /* 底部图片 
+           /*  /* 底部图片 */
             for(var i in this.formData.image){
-              content+='<br/><p><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
-            } */
+              content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+            } 
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
 

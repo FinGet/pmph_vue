@@ -34,6 +34,22 @@
           width="70">
         </el-table-column>
         <el-table-column
+          prop="isStick"
+          label="是否置顶"
+          width="94">
+          <template scope="scope">
+            {{scope.row.scope?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="isPromote"
+          label="是否精选"
+          width="94">
+          <template scope="scope">
+            {{scope.row.scope?'是':'否'}}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="state"
           label="审核状态"
           width="120">

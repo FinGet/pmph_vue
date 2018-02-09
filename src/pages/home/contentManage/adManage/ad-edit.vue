@@ -9,7 +9,7 @@
 
       <el-form ref="form" :model="formData" class="ad-edit-form" label-width="100px">
         <el-form-item label="广告位置:">
-          <el-input v-model="formData.adname"></el-input>
+          <el-input v-model="formData.adname" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="点击跳转链接:">
           <el-input v-model="formData.url" placeholder="输入地址:http://www.xxx.com"></el-input>

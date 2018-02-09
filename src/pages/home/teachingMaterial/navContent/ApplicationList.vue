@@ -88,7 +88,7 @@
                                   <el-button type="text" @click="operation('result',scope.row)" :disabled="!hasAccessAuthority(true,scope.row,true)">结果统计</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                  <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">设置选题号</el-button>
+                                  <el-button type="text" @click="operation('setTopic',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)||scope.row.state!='已结束'">设置选题号</el-button>
                                 </el-dropdown-item>
                                 <!--<el-dropdown-item>-->
                                   <!--<el-button type="text" @click="operation('exportExcel',scope.row)" :disabled="!hasAccessAuthority(0,scope.row,true)">导出学校(Excel)</el-button>-->
@@ -203,6 +203,7 @@ export default {
           this.getTableData();
         }else{
           this.searchForm.pageNumber=1;
+          this.getTableData();
         }
       },
 

@@ -19,6 +19,7 @@
           border
           stripe
           tooltip-effect="dark"
+          :row-class-name="setRowClassName"
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
@@ -114,7 +115,7 @@
           <ul v-if="historyLog.length>0">
             <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
-              <p>{{iterm.detail}}</p>
+              <p v-for="(item,index) in iterm.detail">{{item}}</p>
             </li>
           </ul>
           <p v-else>暂无历史消息</p>
@@ -243,6 +244,9 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              res.data.rows.forEach(iterm=>{
+                iterm.detail = iterm.detail.split(';');
+              });
               this.historyLog = res.data.rows;
             }
           })
@@ -397,6 +401,22 @@
       },
       hasPermission(index){
         return this.$commonFun.materialPower(index,this.myPower);
+      },
+      /**
+       * 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。
+       * @param row
+       * @param index
+       */
+      setRowClassName(row, index){
+        if(row.isZhubian){
+          return 'row-zhubian'
+        }else if(row.isFuzhubian){
+          return 'row-fuzhubian'
+        }else if(row.isBianwei){
+          return 'row-bianwei'
+        }else{
+          return ''
+        }
       }
     }
   }
@@ -417,5 +437,14 @@
     bottom: 7px;
     height: 12px;
     left: 0;
+  }
+  .row-zhubian,.row-zhubian>td{
+    background-color: rgba(76, 175, 80, 0.2) !important;
+  }
+  .row-fuzhubian ,.row-fuzhubian>td{
+    background-color: rgba(76, 175, 80, 0.1) !important;
+  }
+  .row-bianwei,.row-bianwei>td{
+    background-color: rgba(26, 177, 148, 0.06) !important;
   }
 </style>

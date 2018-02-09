@@ -51,9 +51,14 @@
           width="168">
         </el-table-column>
         <el-table-column
+          prop="fileLenth"
+          label="大小"
+          width="100">
+        </el-table-column>
+        <el-table-column
           prop="memberName"
           label="分享者"
-          width="110">
+          width="90">
         </el-table-column>
         <el-table-column
           v-if="screenWidth_lg_computed"
