@@ -114,7 +114,7 @@
           <ul v-if="historyLog.length>0">
             <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
-              <p>{{iterm.detail}}</p>
+              <p v-for="(item,index) in iterm.detail">{{item}}</p>
             </li>
           </ul>
           <p v-else>暂无历史消息</p>
@@ -243,6 +243,9 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              res.data.rows.forEach(iterm=>{
+                iterm.detail = iterm.detail.split(';');
+              });
               this.historyLog = res.data.rows;
             }
           })
