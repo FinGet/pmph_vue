@@ -3,7 +3,7 @@
     <div class="paddingB10 border-dashed-B">
       <span class="fontsize-20 fontBold orange marginR20">{{userInfo.realname}}，欢迎您！</span>
       <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{userType}}</span></span>
-      <span class="blue">最近登录：2017-09-27 16:00:00</span>
+      <span class="blue">最近登录：{{lastLoginTime}}</span>
     </div>
     <ul class="backlogList paddingT20 paddingB20 clearfix">
       <li>
@@ -20,20 +20,20 @@
           <span class="orange">({{topicList.total}})</span>
         </router-link>
       </li>
-      <!--<li>-->
-        <!--<router-link to="/404">-->
-          <!--<span><i class="fa fa-home fa-fw"></i></span>-->
-          <!--教师认证-->
-          <!--<span class="orange">(16)</span>-->
-        <!--</router-link>-->
-      <!--</li>-->
-      <!--<li>-->
-        <!--<router-link to="/404">-->
-          <!--<span><i class="fa fa-home fa-fw"></i></span>-->
-          <!--机构认证-->
-          <!--<span class="orange">(16)</span>-->
-        <!--</router-link>-->
-      <!--</li>-->
+      <li>
+        <router-link to="/404">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          教师认证
+          <span class="orange">({{orgUserCount}})</span>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/404">
+          <span><i class="fa fa-home fa-fw"></i></span>
+          机构认证
+          <span class="orange">({{writerUserCount}})</span>
+        </router-link>
+      </li>
     </ul>
 
     <ul class="clearfix panel-box">
@@ -107,7 +107,7 @@
                 </span>
                 <div class="groupHeadName">
                   <span>{{item.groupName}}</span>
-                  <span> ( {{item.num}} 人 )</span>
+                  <!--<span> ( {{item.num}} 人 )</span>-->
                 </div>
                 <span class="lastMessageTime">{{$commonFun.getDateDiff(item.gmtLastMessage)}}</span>
               </div>
@@ -257,6 +257,8 @@ export default {
       bookUserComment:{},
       bookCorrectionAudit:{},
       bookFiles:{},
+      orgUserCount:'',
+      writerUserCount:'',
 
     };
   },
@@ -276,7 +278,11 @@ export default {
       }else{
         return '学校机构用户'
       }
-    }
+    },
+    lastLoginTime(){
+      let time = +new Date();
+      return this.$commonFun.formatDate(time);
+    },
   },
   methods:{
     /**
@@ -303,6 +309,8 @@ export default {
             this.cmsContent = res.data.cmsContent;
             this.bookUserComment = res.data.bookUserComment;
             this.bookCorrectionAudit = res.data.bookCorrectionAudit;
+            this.orgUserCount = res.data.orgUserCount;
+            this.writerUserCount = res.data.writerUserCount;
           }
         })
         .catch(e=>{
