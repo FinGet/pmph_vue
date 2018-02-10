@@ -184,7 +184,7 @@
         //是否有后选人员
         const select_length = this.tableData.length>0;
 
-        return hasZhubian;
+        return !(hasZhubian&&hasPermission&&select_length);
       }
     },
     created(){
