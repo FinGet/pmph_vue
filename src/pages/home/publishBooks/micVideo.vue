@@ -30,10 +30,12 @@
     <div class="right_table_box">
        <h4>微视频列表</h4>
        <p class="header_p">
-          <el-button type="danger" style="float:right;margin-left:10px;">删除</el-button>
+          <el-button type="danger" style="float:right;margin-left:10px;" @click="deleteVideoSubmit">删除</el-button>
           <el-button type="primary" style="float:right" @click="dialogVisible=true">添加微视频</el-button>
        </p>
-       <el-table :data="rightTableData" border style="width:100%;margin-bottom:10px;">
+       <el-table :data="rightTableData" border style="width:100%;margin-bottom:10px;"
+           @selection-change="videoSelectionChange"
+       >
           <el-table-column type="selection" width="45"></el-table-column>
          <el-table-column label="视频标题" prop="fileName"></el-table-column>
          <el-table-column label="创建人" prop="writer" width="78"></el-table-column>
@@ -56,11 +58,21 @@
                <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
            </el-form-item>
            <el-form-item label="视频封面：">
-               
+               <el-upload
+                  style="float:left;"
+                  action="/pmpheep/material/upTempFile"
+                  name="files"
+                  :auto-upload="true"
+                  :on-remove="imgUploadRemove"
+                  :before-upload="imgBeforeUpload"
+                  :on-success="imgUploadSuccess"
+                  :file-list="dialogForm.imgList">
+                  <el-button size="small" type="primary" >点击上传</el-button>
+                </el-upload>
            </el-form-item>
            <el-form-item label="视频内容：">
                <el-upload
-                  class="upload"
+                  style="float:left;"
                   action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
@@ -94,6 +106,7 @@
          return{
            bookListUrl:'/pmpheep/bookVedio/getList',   //书籍视频列表url
            examVideoUrl:'/pmpheep/bookVedio/audit', //  审核视频url
+           deleteVideoUrl:'/pmpheep/bookVedio/deleteBookVedio',    //删除视频url
            leftTableData:[],
            leftPageTotal:1002,
            leftParams:{
@@ -104,11 +117,14 @@
            rightTableData:[],
            dialogVisible:false,
            examDialogVisible:false,
-           currentExamId:'',
+           activeBookIndex:'',   //当前选中book索引
+           currentExamId:'',  //当前审核视频id
            dialogForm:{
                videoName:'',
-               videoList:[]
-           }
+               videoList:[],
+               imgList:[]
+           },
+           deleteVideoIds:[],
          }
      },
      created(){
@@ -124,21 +140,27 @@
                   console.log(res);
                   this.leftTableData=res.data.data.rows;
                   this.leftPageTotal=res.data.data.total;
-                  /* 默认选中第一行 */
-                  this.$refs.leftTable.setCurrentRow(this.leftTableData[0]);
+                  /* 默认选中切换 */
+                  this.$refs.leftTable.setCurrentRow(this.leftTableData[this.activeBookIndex]);
               }
           })
          },
          /* 搜索按钮 */
          search(){
            this.leftParams.pageNumber=1;
-           console.log(this.$getUserData());
+           this.activeBookIndex=0;
            this.getList();
          },
          /* 当前选中行改变 */
          tableCurrentChange(val){
-           console.log(val);
-           this.rightTableData=val.bookVedios;
+             if(val){
+                this.rightTableData=val.bookVedios;
+                for(var i in this.leftTableData){
+                    if(val.bookId==this.leftTableData[i].bookId){
+                        this.activeBookIndex=i;
+                    }
+                }
+             }
          },
          /* 分页size改变 */
          leftSizeChange(val){
@@ -157,6 +179,7 @@
             this.examDialogVisible=true;
             this.currentExamId=val.id;
          },
+         /* 审核 */
          examSubmit(bool){
           this.$axios.put(this.examVideoUrl,this.$commonFun.initPostData({
               id:this.currentExamId,
@@ -164,9 +187,81 @@
           })).then((res)=>{
               console.log(res);
               if(res.data.code==1){
-                  
+                  this.$message.success('操作成功');
+                  this.examDialogVisible=false;
+              }else{
+                  this.$message.error(res.data.msg.msgTrim());
               }
           })
+         },
+         /* 视频选择改变 */
+         videoSelectionChange(val){
+            this.deleteVideoIds=val;
+         },
+         /* 删除视频 */
+         deleteVideoSubmit(){
+           if(this.deleteVideoIds.length==0){
+               this.$message.error('请至少选择一个视频');
+               return;
+           }else{
+               var arr=[];
+               for(var i in this.deleteVideoIds){
+                  arr.push(this.deleteVideoIds[i].id);
+               }
+           }
+                this.$confirm('确认删除该视频吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    this.$axios.put(this.deleteVideoUrl,this.$commonFun.initPostData({
+                        id:arr.join('')
+                    })).then((res)=>{
+                        if(res.data.code==1){
+                            this.$message.success('视频已删除');
+                            this.getList();
+                        }else{
+                            this.$message.error(res.data.msg.msgTrim());
+                        }
+                    })
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+                });          
+         },
+         imgUploadRemove(){
+
+         },
+         imgBeforeUpload(file){
+            var exStr=file.name.split('.').pop().toLowerCase();
+            var exSize=file.size?file.size:1;
+            if(exSize/ 1024 / 1024 > 20){
+                this.$message.error('图片的大小不能超过20MB！');
+            // this.material.noticeFiles.pop();
+                return false;
+            }
+            if(exSize==0){
+                this.$message.error('请勿上传空文件！');
+            // this.material.noticeFiles.pop();
+                return false;
+            }
+            if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+                this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+            // this.material.noticeFiles.pop();
+                return false;
+            }
+            if(file.name.length>80){
+                this.$message.error('图片名称不能超过80个字符！');
+                //this.material.noticeFiles.pop();
+                return false;
+            } 
+         },
+         imgUploadSuccess(res,file,fileList){
+           console.log(res,file,fileList);
+           this.dialogForm.imgList=fileList;
+           console.log(this.dialogForm.imgList);
          },
          videoUploadRemove(file,fileList){
            console.log(file,fileList)
