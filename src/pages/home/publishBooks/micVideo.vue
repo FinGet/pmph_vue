@@ -55,7 +55,10 @@
            <el-form-item label="视频名称：">
                <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
            </el-form-item>
-           <el-form-item label="">
+           <el-form-item label="视频封面：">
+               
+           </el-form-item>
+           <el-form-item label="视频内容：">
                <el-upload
                   class="upload"
                   action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"

@@ -225,7 +225,7 @@ export default {
 			})
 		},
 		/**获取部门编辑列表 */
-		getListEditors(){
+		getListEditors(bool){
 			this.$axios.get('/pmpheep/topic/listEditors',{
 				params:this.dialogParams
 			}).then(response => {
@@ -233,6 +233,9 @@ export default {
 				if (res.code == '1') {
 					this.dialogTableData = res.data.rows;
 					this.dialogPageTotal = res.data.total;
+          if(bool){
+            this.dialogVisible = true;
+          }
 				}
 			})
 		},
@@ -240,7 +243,8 @@ export default {
 		allot(obj){
       this.dialogParams.departmentId=obj.departmentId;
       this.distributeParams.id=obj.id;
-			this.dialogVisible = true;
+      this.getListEditors(true);
+
 		},
     openBackDialog(i,id){
         this.distributeParams.reasonDirector='';
