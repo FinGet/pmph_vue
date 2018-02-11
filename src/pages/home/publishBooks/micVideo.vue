@@ -56,9 +56,9 @@
                <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
            </el-form-item>
            <el-form-item label="">
-               <my-upload
+               <el-upload
                   class="upload"
-                  action="http://120.76.221.250:11000/pmph_vedio/video/fileUpOnly"
+                  action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
@@ -66,7 +66,7 @@
                   :on-success="videoUploadSuccess"
                   :file-list="dialogForm.videoList">
                   <el-button size="small" type="primary" >点击上传</el-button>
-                </my-upload>
+                </el-upload>
            </el-form-item>
        </el-form>
             <span slot="footer" class="dialog-footer">
@@ -169,10 +169,10 @@
            console.log(file,fileList)
          },
          videoBeforeUpload(file,fileList){
-
+          console.log(file,fileList)
          },
          videoUploadSuccess(res,file,fileList){
-
+           console.log(res,file,fileList)
          }
      }
  }   

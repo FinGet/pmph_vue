@@ -20,7 +20,7 @@ import acceptance from './acceptance.vue'
  export default{
    data(){
      return{
-       activeName:'',
+       activeName:'',        //不要改成计算属性  计算属性无法触发更改
        Identity:{}
      }
    },
