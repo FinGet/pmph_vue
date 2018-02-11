@@ -187,6 +187,7 @@ export default {
 	},
   watch:{
    activeName(val){
+     console.log(val);
      if(val=='second'){
        this.search();
      }
@@ -231,7 +232,7 @@ export default {
 				let res = response.data;
 				if (res.code == '1') {
 					this.dialogTableData = res.data.rows;
-					this.dialogPageTotal = res.pageTotal;
+					this.dialogPageTotal = res.data.total;
 				}
 			})
 		},
