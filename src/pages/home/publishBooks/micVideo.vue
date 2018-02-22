@@ -53,11 +53,11 @@
     </div>
     <!-- 上传视频对话框 -->
     <el-dialog title="添加微视频" :visible.sync="dialogVisible" size="tiny" >
-       <el-form ref="dialogForm" :model="dialogForm" label-width="100px">
-           <el-form-item label="视频名称：">
+       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogRules"  label-width="100px">
+           <el-form-item label="视频名称：" prop="videoName">
                <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
            </el-form-item>
-           <el-form-item label="视频封面：">
+           <el-form-item label="视频封面：" prop="imgList">
                <el-upload
                   style="float:left;"
                   action="/pmpheep/material/upTempFile"
@@ -70,7 +70,7 @@
                   <el-button size="small" type="primary" >点击上传</el-button>
                 </el-upload>
            </el-form-item>
-           <el-form-item label="视频内容：">
+           <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
                   action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"
@@ -86,7 +86,7 @@
        </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="addVideoSubmit">确 定</el-button>
             </span>       
     </el-dialog>
 
@@ -125,6 +125,19 @@
                imgList:[]
            },
            deleteVideoIds:[],
+           dialogRules:{
+               videoName:[
+                   {required: true, message: '请输入视频名称', trigger: 'blur' },
+                   { min: 1, max: 50, message: '视频名称不能超过50个字符', trigger: 'blur,change' }
+               ],
+               imgList:[
+                   { type: 'array', required: true, message: '请上传视频封面', trigger: 'change' }
+               ],
+               videoList:[
+                   { type: 'array', required: true, message: '请上传视频内容', trigger: 'change' }
+               ]
+
+           }  
          }
      },
      created(){
@@ -231,9 +244,13 @@
                 });          
                 });          
          },
-         imgUploadRemove(){
-
+         /* 添加上传视频图片 */
+         imgUploadRemove(file, fileList){
+           console.log(file, fileList);
+            this.dialogForm.imgList=fileList;
+            this.$refs.dialogForm.validateField('imgList');    
          },
+         /* 视频不图片验证 */
          imgBeforeUpload(file){
             var exStr=file.name.split('.').pop().toLowerCase();
             var exSize=file.size?file.size:1;
@@ -258,19 +275,35 @@
                 return false;
             } 
          },
+         /* 上传成功 */
          imgUploadSuccess(res,file,fileList){
-           console.log(res,file,fileList);
-           this.dialogForm.imgList=fileList;
-           console.log(this.dialogForm.imgList);
+           this.dialogForm.imgList=[];
+           this.dialogForm.imgList.push(file);
+           this.$refs.dialogForm.validateField('imgList');   
          },
+         /* 添加上传视频 */
          videoUploadRemove(file,fileList){
-           console.log(file,fileList)
+           this.dialogForm.videoList=fileList;
+           this.$refs.dialogForm.validateField('videoList');
          },
+         /* 视频验证 */
          videoBeforeUpload(file,fileList){
           console.log(file,fileList)
          },
+         /* 视频上传成功 */
          videoUploadSuccess(res,file,fileList){
-           console.log(res,file,fileList)
+           this.dialogForm.videoList=[];
+           this.dialogForm.videoList.push(file);
+           this.$refs.dialogForm.validateField('videoList');
+         },
+         addVideoSubmit(){
+             this.$refs.dialogForm.validate((valid)=>{
+                 if(valid){
+                     
+                 }else{
+                     return ;
+                 }
+             })
          }
      }
  }   
