@@ -601,7 +601,7 @@ export default {
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
         ],
         extensionName:[
-          {required: true, message: "请填写姓名", trigger: "blur" },
+          {required: true, message: "请填写名称", trigger: "blur" },
           {min:1,max:20,message:'不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
@@ -615,7 +615,6 @@ export default {
           {min:1,max:2000,message:'内容不能超过2000个字符',trigger:'blur'}
           ],
         note:[
-           {required: true, message: "请填写备注", trigger: "blur" },
           {min:1,max:2000,message:'备注不能超过2000个字符',trigger:'blur'}
           ]
 
