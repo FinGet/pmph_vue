@@ -62,6 +62,7 @@ const ContentPublish = () => import('../pages/home/contentManage/contentPublish'
 const PublishList = () => import('../pages/home/contentManage/publishList');
 const noticeManage = () => import('../pages/home/contentManage/noticeManage');
 const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
+const sensitiveWords = ()=> import('../pages/home/contentManage/sensitiveWords')
 //广告管理
 const adList = ()=> import('../pages/home/contentManage/adManage/ad-list');
 const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
@@ -207,6 +208,7 @@ export default new Router({
               { path: 'new', name: '添加内容', component: ContentPublish },
             { path: 'info', name: '信息快报管理', meta: { authorityId: 16 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
+            { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 17 }},
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
             { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },
             { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 18 }, component: adEdit }
