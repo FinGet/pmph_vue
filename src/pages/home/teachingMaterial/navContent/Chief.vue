@@ -4,7 +4,7 @@
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="true" v-if="showPublishBtn">发布</el-button>
+          <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
@@ -246,6 +246,10 @@
 
               });
               this.tableData = res.data.DecPositionEditorSelectionVO;
+              /* 排序 */
+              for(var k in this.tableData){
+                
+              }
               this.IsDigitalEditorOptional = res.data.IsDigitalEditorOptional;
             }
           })
