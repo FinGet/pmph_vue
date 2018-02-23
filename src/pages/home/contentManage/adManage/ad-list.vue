@@ -101,8 +101,9 @@
 
 <style scoped>
 .ad-list-preview-img{
-  display: inline-block;
+  display: block;
   max-width: 300px;
+  height: 128px;
   padding: 5px 5px 5px 0;
 }
 .ad-list-preview-img>img{

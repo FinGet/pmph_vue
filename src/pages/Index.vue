@@ -10,7 +10,7 @@
         <router-link :to="{name:'通知列表'}">
           <span><i class="fa fa-home fa-fw"></i></span>
           教材申报
-          <span class="orange">({{materialList.total}})</span>
+          <span class="orange">({{materialListTotal}})</span>
         </router-link>
       </li>
       <li>
@@ -255,7 +255,7 @@ export default {
       bookFiles:{},
       orgUserCount:'',
       writerUserCount:'',
-
+      materialListTotal:0,
     };
   },
   computed: {
@@ -307,6 +307,8 @@ export default {
             this.bookCorrectionAudit = res.data.bookCorrectionAudit;
             this.orgUserCount = res.data.orgUserCount;
             this.writerUserCount = res.data.writerUserCount;
+
+            this.materialListTotal=this.materialList.total;
           }
         })
         .catch(e=>{
