@@ -40,12 +40,11 @@
       <li>
         <div>
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">教材申报</p>
-          <el-tabs v-model="activeName1">
+          <el-tabs v-model="activeName1" @tab-click="materialListChange">
             <el-tab-pane label="全部" name="first">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
@@ -56,14 +55,13 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">
+            <el-tab-pane label="已发布" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state=='进行中'">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="materialList.length>limit_size">
+                <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -73,12 +71,11 @@
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in materialList" :key="index" v-if="index<limit_size" >
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="materialList.length>limit_size">
+                <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -130,8 +127,7 @@
             <el-tab-pane label="全部" name="first">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
+                  <el-tag :type="iterm.state==='不通过'?'gray':'success'">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
@@ -142,36 +138,36 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>
-                </li>
-                <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link to="/404">
-                    查看更多
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
-                </li>
-              </ul>
-            </el-tab-pane>
-            <el-tab-pane label="已结束" name="fourth">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in topicList.rows" :key="index">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>
-                </li>
-                <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link to="/404">
-                    查看更多
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
-                </li>
-              </ul>
-            </el-tab-pane>
+            <!--<el-tab-pane label="已发布" name="second">-->
+              <!--<ul class="panel-min-list">-->
+                <!--<li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">-->
+                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
+                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
+                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
+                <!--</li>-->
+                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
+                  <!--<router-link to="/404">-->
+                    <!--查看更多-->
+                    <!--<i class="el-icon-d-arrow-right"></i>-->
+                  <!--</router-link>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</el-tab-pane>-->
+            <!--<el-tab-pane label="已结束" name="fourth">-->
+              <!--<ul class="panel-min-list">-->
+                <!--<li v-for="(iterm,index) in topicList.rows" :key="index">-->
+                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
+                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
+                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
+                <!--</li>-->
+                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
+                  <!--<router-link to="/404">-->
+                    <!--查看更多-->
+                    <!--<i class="el-icon-d-arrow-right"></i>-->
+                  <!--</router-link>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</el-tab-pane>-->
           </el-tabs>
         </div>
       </li>
@@ -296,7 +292,7 @@ export default {
         bookname:'',
         name:'',
         title:'',
-        authProgress:0,
+        authProgress:'2,3',
         topicBookname:'',
       };
       this.$axios.get('/pmpheep/users/pmph/personal/center',{params:params})
@@ -316,7 +312,33 @@ export default {
         .catch(e=>{
           console.log(e);
         })
-    }
+    },
+    /**
+     * 当点击教材申报列表tab切换时触发
+     * @param val
+     */
+    materialListChange(val){
+      let state = val.label;
+      state=state==='全部'?'':state;
+      this.$axios.get('/pmpheep/material/list',{params:{
+        pageSize:5,
+        pageNumber:1,
+        isMy:false,
+        state:state,
+        contactUserName:'',
+        materialName:'',
+      }})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.materialList = res.data;
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+
+    },
   },
   mounted() {
     //将四个面板设为等高
