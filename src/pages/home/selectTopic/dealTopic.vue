@@ -196,7 +196,7 @@
           </div>
        </el-form-item>
    </el-form>
-   <el-form label-width="150px" class="form_box">
+   <el-form label-width="150px" :model="data" :rules="formRules"  class="form_box">
      <div style="overflow:hidden;">
         <p class="left_header_p">
             编者情况
@@ -241,8 +241,9 @@
     </el-form-item>
     <el-form-item
     label="审核意见："
+    prop="authFeedback"
     >
-      <el-input type="textarea" v-if="type=='check'" @blur="textSize" :rows="4" v-model="data.authFeedback"></el-input>
+      <el-input type="textarea" v-if="type=='check'"  :rows="4" v-model="data.authFeedback"></el-input>
       <p v-else>{{data.authFeedback}}</p>
     </el-form-item>
    </el-form>
@@ -268,7 +269,12 @@ export default {
       //	authFeedback: '',  // 审核意见
       isDirectorHandling: true, //是否由主任受理
       isEditorHandling: true, //是否由编辑受理
-      isAccepted: true //编辑是否接受办理
+      isAccepted: true ,//编辑是否接受办理
+      formRules:{
+        authFeedback:[
+          {min:0,max:200,message:'审核意见不能超过200个字符',trigger:'change,blur'}
+        ]
+      }
     };
   },
   created() {

@@ -177,7 +177,9 @@
           </div>
           <div class="info-iterm-text">
             <div>证件类型：<span></span></div>
-            <div>身份证</div>
+            <div v-if="expertInfoData.idtype==0">身份证</div>
+            <div v-if="expertInfoData.idtype==1">护照</div>
+            <div v-if="expertInfoData.idtype==2">军官证</div>
           </div>
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
