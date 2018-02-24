@@ -190,7 +190,7 @@
               this.getSurveyList();
             },
             handleCurrentChange(val){
-                  this.searchParams.pageNumber=1;
+                  this.searchParams.pageNumber=val;
               this.getSurveyList();
             }
         }

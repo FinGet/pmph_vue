@@ -163,8 +163,7 @@
          resizePostData(){
            var obj={};
                obj.title=this.$route.params.surverData.title;
-               /* obj.content=this.$route.params.surverData.intro; */
-               obj.content='';
+               obj.content=this.$route.params.surverData.intro;
                obj.surveyId=this.$route.params.surveyId;
                obj.startTime=this.leftFrom.startTime;
                obj.endTime=this.leftFrom.endTime;
