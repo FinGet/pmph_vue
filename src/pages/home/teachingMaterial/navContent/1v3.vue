@@ -139,9 +139,9 @@
           label="操作" min-width="170">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':scope.row.revisionTimes>0?'再次确认':'名单确认'}}</el-button>
+            <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">{{scope.row.isPublished?'已公布':scope.row.revisionTimes>0?'再次公布':'最终结果公布'}}</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">{{(scope.row.isPublished&&scope.row.republishTimes>0&&scope.row.revisionTimes>0&&scope.row.revisionTimes==scope.row.republishTimes)?'已公布':(scope.row.revisionTimes>0&&scope.row.republishTimes>0&&scope.row.revisionTimes!=scope.row.republishTimes)?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
@@ -280,6 +280,7 @@
         dialogContent:'',
         totalNum: 0,
         selectedIds:'', // 选择项的ids
+        materialId:'', // 教材id
         selected:'', // 选中项
         method:'',
         currentId: '', // 当前id
@@ -485,7 +486,7 @@
         val.forEach(item => {
           arr.push(item.textBookId)
         })
-        this.selectedIds = arr.toString()
+        this.selectedIds = arr.toString();
         this.selected = val;
       },
       /**
@@ -534,7 +535,8 @@
       },
       putApi(url,ids){
         this.$axios.put(url,this.$initPostData({
-          ids: ids || this.selectedIds
+          ids: ids || this.selectedIds,
+          materialId: this.materialId
         })).then(response => {
           let res = response.data
           if(res.code == 1){
@@ -651,6 +653,7 @@
     },
     created(){
       this.searchForm.materialId = this.$route.params.materialId;
+      this.materialId = this.$route.params.materialId;
       //如果没有教材id则跳转到通知列表
       if(!this.searchForm.materialId){
         this.$router.push({name:'通知列表'});
