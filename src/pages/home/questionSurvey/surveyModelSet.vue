@@ -68,7 +68,7 @@
      <template scope="scope">
        <el-button type="text" :disabled="scope.row.status!=0"  @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
        <span>|</span>
-       <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id,beginDate:scope.row.beginDate,endDate:scope.row.endDate}})">发起调查</el-button>
+       <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id,surverData:scope.row}})">发起调查</el-button>
        <span>|</span>
        <el-button type="text" @click="$router.push({name:'问卷模板新增',params:{type:'add'}})">添加问卷</el-button>
      </template>
@@ -153,7 +153,7 @@
               }).then((res)=>{
                   console.log(res);
                   if(res.data.code==1){
-                      this.pageTotal=res.data.pageTotal;
+                      this.pageTotal=res.data.data.total;
                       this.tableData=res.data.data.rows;
                   }
               })
