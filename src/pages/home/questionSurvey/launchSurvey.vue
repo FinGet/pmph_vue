@@ -100,7 +100,7 @@
               pageNumber:1,
 
             },
-            pageTotal:10,
+            pageTotal:20,
             rightTableData:[
             ],
             checkedData:[],
@@ -121,9 +121,10 @@
          if(!this.$route.params.surveyId){
            this.$router.push({name:'调查问卷模板设置'});
          }
-         if(this.$route.params.beginDate){
-           this.leftFrom.startTime=this.$commonFun.formatDate(this.$route.params.beginDate,'yyyy-MM-dd');
-           this.leftFrom.endTime=this.$commonFun.formatDate(this.$route.params.endDate,'yyyy-MM-dd');
+         if(this.$route.params.surverData){
+           console.log(this.$route.params.surverData);
+           this.leftFrom.startTime=this.$commonFun.formatDate(this.$route.params.surverData.beginDate,'yyyy-MM-dd');
+           this.leftFrom.endTime=this.$commonFun.formatDate(this.$route.params.surverData.endDate,'yyyy-MM-dd');
          }
          this.getTableData();
        },
@@ -161,8 +162,8 @@
          /* 提交前参数处理 */
          resizePostData(){
            var obj={};
-               obj.title='111';
-               obj.content='12312';
+               obj.title=this.$route.params.surverData.title;
+               obj.content=this.$route.params.surverData.intro;
                obj.surveyId=this.$route.params.surveyId;
                obj.startTime=this.leftFrom.startTime;
                obj.endTime=this.leftFrom.endTime;

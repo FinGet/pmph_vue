@@ -495,7 +495,12 @@ export default {
                     if(this.isEdit){
                     this.surveyForm.questionAnswerJosn[this.editIndex]=this.dialogForm;
                 }else{
-                    this.surveyForm.questionAnswerJosn.push(this.dialogForm);
+                    if(this.checkOrderNumber(this.dialogForm)){
+                     this.surveyForm.questionAnswerJosn.push(this.dialogForm);
+                    }else{
+                        this.$message.error('该问题序号已存在');
+                        return ;
+                    }
                 }
                 this.dialogForm={
                             title:'',
@@ -534,6 +539,15 @@ export default {
                     ]
                     }
                     done();
+      },
+      /* 核验问题序号 */
+      checkOrderNumber(obj){
+       for(var i in this.surveyForm.questionAnswerJosn){
+           if(obj.sort==this.surveyForm.questionAnswerJosn[i].sort){
+               return false;
+           }
+       }
+       return true;
       }
   }
 };

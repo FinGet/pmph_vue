@@ -181,7 +181,7 @@
           min-width="80"
         >
           <template scope="scope">
-            <router-link :to="{name:'专家信息',query: { declarationId: scope.row.id }}" class="table-link">{{scope.row.realname}}</router-link>
+            <el-button type="text" @click="linkToExpertInfo(scope.row.id)">{{scope.row.realname}}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -277,7 +277,7 @@
 
 <script>
   export default {
-    props:['materialInfo'],
+    props:['materialInfo','pressCheckSearchParams'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
@@ -652,10 +652,29 @@
         if(this.wordUrl){
           this.$commonFun.copy(window.location.origin+this.wordUrl);
         }
-      }
+      },
+      /**
+       * 跳转到专家信息页面
+       * @param id
+       */
+      linkToExpertInfo(id){
+        var searParams = { declarationId: id };
+        for(let key in this.searchParams){
+          searParams[key] = this.searchParams[key];
+        }
+        this.$router.push({
+          name:'专家信息',
+          query: searParams,
+        })
+      },
     },
     created(){
       this.searchParams.materialId = this.$route.params.materialId;
+
+      for(let key in this.pressCheckSearchParams){
+        this.searchParams[key] = this.pressCheckSearchParams[key];
+      }
+
       //如果没有教材id则跳转到通知列表
       if(!this.searchParams.materialId){
         this.$router.push({name:'通知列表'});

@@ -11,12 +11,12 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
-          {{'通过'}}
-        </el-button>
+        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
+          <!--{{'通过'}}-->
+        <!--</el-button>-->
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
@@ -726,9 +726,9 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,1,3,4].includes(this.expertInfoData.onlineProgress);
+            let l = [0,1,2,4,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
-              return true&&l;
+              return !l;
             }
             let flag = true;
             for(let iterm of this.addBookList){
@@ -737,7 +737,7 @@
                 break;
               };
             }
-            return flag&&l;
+            return flag&&!l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3];
@@ -1104,7 +1104,7 @@
         },
         /**
          * 点击审核通过
-         *  type 2 标示退回给个人 3 标示通过
+         *  type 5 标示退回给个人 4退回给学校 3 标示通过 2退回给单位
          */
         onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
@@ -1155,7 +1155,7 @@
       created(){
         this.searchFormData.declarationId = this.$route.query.declarationId;
         this.searchFormData.materialId = this.$route.params.materialId;
-        if(this.$route.params.pageNumber||this.$route.params.pageSize){
+        if(this.$route.query.pageNumber||this.$route.query.pageSize){
           this.fromPageSearchParamsData = this.$route.query;
         }
         //如果没有教材id则跳转到通知列表
@@ -1171,10 +1171,15 @@
       },
 
       beforeDestroy(){
-        console.log(123,this.$route)
+//        console.log(this.$route)
         //当返回到申报表审核页面时要带上原来查询参数
+        /**
+         * 实现方法，将搜索的参数储存在父组件，通过props传给页面
+         */
         if((this.$route.name==='申报表审核'||this.$route.name==='提交到出版社')&&this.fromPageSearchParamsData){
-          this.$router.addRoutes({params:this.fromPageSearchParamsData});
+          bus.$emit('pressCheck:searchParams',this.fromPageSearchParamsData);
+        }else{
+          bus.$emit('pressCheck:searchParams',{});
         }
       },
     }
