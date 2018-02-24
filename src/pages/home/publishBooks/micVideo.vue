@@ -73,7 +73,7 @@
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
-                  action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"
+                  action="/pmpheep/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
