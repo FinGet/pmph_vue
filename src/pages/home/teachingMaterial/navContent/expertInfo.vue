@@ -726,9 +726,9 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,1,3,4].includes(this.expertInfoData.onlineProgress);
+            let l = [0,2,3,4,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
-              return true&&l;
+              return !l;
             }
             let flag = true;
             for(let iterm of this.addBookList){
@@ -737,7 +737,7 @@
                 break;
               };
             }
-            return flag&&l;
+            return flag&&!l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3];
@@ -1104,7 +1104,7 @@
         },
         /**
          * 点击审核通过
-         *  type 2 标示退回给个人 3 标示通过
+         *  type 5 标示退回给个人 4退回给学校 3 标示通过 2退回给单位
          */
         onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
