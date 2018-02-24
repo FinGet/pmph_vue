@@ -1,37 +1,37 @@
 <template>
   <div class="index">
     <div class="paddingB10 border-dashed-B">
-      <span class="fontsize-20 fontBold orange marginR20">刘德华，欢迎您！</span>
-      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">超级管理员</span></span>
-      <span class="blue">最近登录：2017-09-27 16:00:00</span>
+      <span class="fontsize-20 fontBold orange marginR20">{{userInfo.realname}}，欢迎您！</span>
+      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{userType}}</span></span>
+      <span class="blue">最近登录：{{lastLoginTime}}</span>
     </div>
     <ul class="backlogList paddingT20 paddingB20 clearfix">
       <li>
-        <router-link :to="{name:'申报表审核'}">
+        <router-link :to="{name:'通知列表'}">
           <span><i class="fa fa-home fa-fw"></i></span>
           教材申报
-          <span class="orange">(16)</span>
+          <span class="orange">({{materialListTotal}})</span>
         </router-link>
       </li>
       <li>
         <router-link to="/404">
           <span><i class="fa fa-home fa-fw"></i></span>
           选题申报
-          <span class="orange">(16)</span>
+          <span class="orange">({{topicList.total}})</span>
         </router-link>
       </li>
       <li>
         <router-link to="/404">
           <span><i class="fa fa-home fa-fw"></i></span>
           教师认证
-          <span class="orange">(16)</span>
+          <span class="orange">({{orgUserCount}})</span>
         </router-link>
       </li>
       <li>
         <router-link to="/404">
           <span><i class="fa fa-home fa-fw"></i></span>
           机构认证
-          <span class="orange">(16)</span>
+          <span class="orange">({{writerUserCount}})</span>
         </router-link>
       </li>
     </ul>
@@ -40,15 +40,14 @@
       <li>
         <div>
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">教材申报</p>
-          <el-tabs v-model="activeName1">
+          <el-tabs v-model="activeName1" @tab-click="materialListChange">
             <el-tab-pane label="全部" name="first">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1.length>limit_size">
+                <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -56,14 +55,13 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">
+            <el-tab-pane label="已发布" name="second">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1_option.state0" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
+                <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -73,12 +71,11 @@
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data1_option.state1" :key="index">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
+                  <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
+                <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -96,22 +93,23 @@
             <!--小组头像-->
             <router-link class="groupHead"
                          :to="{name:'小组管理'}"
-                 v-for="(item,index) in groupListData"
+                 v-for="(item,index) in groupList.rows"
                  :key="index"
                  @click="clickGroup(item.id,item)"
+                         v-if="index<3"
             >
               <div class="groupHead-inner">
                 <span class="groupHeadImg">
-                  <img :src="item.avatar" alt="小组头像">
+                  <img :src="item.groupImage" alt="小组头像">
                 </span>
                 <div class="groupHeadName">
-                  <span>{{item.name}}</span>
-                  <span> ( {{item.num}} 人 )</span>
+                  <span>{{item.groupName}}</span>
+                  <!--<span> ( {{item.num}} 人 )</span>-->
                 </div>
-                <span class="lastMessageTime">{{item.lastMesTime}}</span>
+                <span class="lastMessageTime">{{$commonFun.getDateDiff(item.gmtLastMessage)}}</span>
               </div>
             </router-link>
-            <div class="panel-more-btn" v-if="groupListData.length>4">
+            <div class="panel-more-btn" v-if="groupList.total>4">
               <router-link :to="{name:'小组管理'}">
                 查看更多
                 <i class="el-icon-d-arrow-right"></i>
@@ -128,12 +126,11 @@
           <el-tabs v-model="activeName2">
             <el-tab-pane label="全部" name="first">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data2" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
+                  <el-tag :type="iterm.state==='不通过'?'gray':'success'">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data1.length>limit_size">
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
                   <router-link to="/404">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -141,36 +138,36 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data2_option.state0" :key="index" v-if="index<limit_size">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
-                </li>
-                <li class="panel-more-btn" v-if="data1_option.state0.length>limit_size">
-                  <router-link to="/404">
-                    查看更多
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
-                </li>
-              </ul>
-            </el-tab-pane>
-            <el-tab-pane label="已结束" name="fourth">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data2_option.state1" :key="index">
-                  <el-tag type="success" v-if="iterm.state==0">进行中</el-tag>
-                  <el-tag type="warning" v-else>已结束</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
-                </li>
-                <li class="panel-more-btn" v-if="data1_option.state1.length>limit_size">
-                  <router-link to="/404">
-                    查看更多
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
-                </li>
-              </ul>
-            </el-tab-pane>
+            <!--<el-tab-pane label="已发布" name="second">-->
+              <!--<ul class="panel-min-list">-->
+                <!--<li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">-->
+                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
+                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
+                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
+                <!--</li>-->
+                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
+                  <!--<router-link to="/404">-->
+                    <!--查看更多-->
+                    <!--<i class="el-icon-d-arrow-right"></i>-->
+                  <!--</router-link>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</el-tab-pane>-->
+            <!--<el-tab-pane label="已结束" name="fourth">-->
+              <!--<ul class="panel-min-list">-->
+                <!--<li v-for="(iterm,index) in topicList.rows" :key="index">-->
+                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
+                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
+                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
+                <!--</li>-->
+                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
+                  <!--<router-link to="/404">-->
+                    <!--查看更多-->
+                    <!--<i class="el-icon-d-arrow-right"></i>-->
+                  <!--</router-link>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</el-tab-pane>-->
           </el-tabs>
         </div>
       </li>
@@ -179,11 +176,11 @@
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data3" :key="index" v-if="index<limit_size">
-                  <router-link :to="{name:'通知列表'}">{{iterm.title}}</router-link>
+                <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
+                  <router-link :to="{name:'文章管理'}">{{iterm.title}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data3.length>limit_size">
-                  <router-link to="/404">
+                <li class="panel-more-btn" v-if="cmsContent.total>limit_size">
+                  <router-link :to="{name:'文章管理'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -192,11 +189,11 @@
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.errorMes}}</router-link>
+                <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <router-link :to="{name:'纠错审核',query:{id:iterm.id}}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data4.length>limit_size">
-                  <router-link to="/404">
+                <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
+                  <router-link :to="{name:'图书纠错审核'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -205,11 +202,11 @@
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.comment}}</router-link>
+                <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis">
+                  <router-link :to="{name:'通知列表'}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data4.length>limit_size">
-                  <router-link to="/404">
+                <li class="panel-more-btn" v-if="bookUserComment.total>limit_size">
+                  <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -218,10 +215,10 @@
             </el-tab-pane>
             <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
-                <li v-for="(iterm,index) in data4" :key="index" v-if="index<limit_size" class="ellipsis">
+                <li v-for="(iterm,index) in bookFiles.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="data4.length>limit_size">
+                <li class="panel-more-btn" v-if="bookFiles.total>limit_size">
                   <router-link to="/404">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -240,221 +237,116 @@ export default {
   data() {
     return {
       groupListUrl:'/pmpheep/group/list/pmphGroup',  //小组列表url
-      limit_size: 6,
+      limit_size: 5,
       DEFAULT_USER_IMAGE: this.$config.DEFAULT_USER_IMAGE,
       activeName1: "first",
       activeName2: "first",
       activeName3: "first",
-      data1: [
-        {
-          title: "全国高等学校五年制临床医学专业第九轮规划教材",
-          state: 0
-        },
-        {
-          title: "第四轮全国高等学校医药学成人学历教育临床医学专业",
-          state: 0
-        },
-        {
-          title: "全国高等学校五年制临床医学专业第九轮规划教材",
-          state: 1
-        },
-        {
-          title: "第四轮全国高等学校医药学成人学历教育临床医学专业",
-          state: 1
-        },
-        {
-          title: "全国高等学校五年制临床医学专业第九轮规划教材",
-          state: 1
-        },
-        {
-          title: "全国高等学校五年制临床医学专业第九轮规划教材",
-          state: 0
-        },
-        {
-          title: "全国高等学校五年制临床医学专业第九轮规划教材",
-          state: 0
-        }
-      ],
-      data2: [
-        {
-          title: "疼痛的眼动脱敏治疗：实用指南",
-          state: 0
-        },
-        {
-          title: "大学生（青年）身心健康自我关注与管理",
-          state: 0
-        },
-        {
-          title: "生命孕育感知及漫谈",
-          state: 1
-        },
-        {
-          title: "免疫与病原生物学",
-          state: 1
-        },
-        {
-          title: "老年健康服务与管理",
-          state: 1
-        },
-        {
-          title: "美国职业医师考试临床知识指导",
-          state: 0
-        },
-        {
-          title: "健康经济与政策",
-          state: 0
-        }
-      ],
-      data3: [
-        {
-          title: "疼痛的眼动脱敏治疗：实用指南",
-          state: 0
-        },
-        {
-          title: "大学生（青年）身心健康自我关注与管理",
-          state: 0
-        },
-        {
-          title: "生命孕育感知及漫谈",
-          state: 1
-        },
-        {
-          title: "免疫与病原生物学",
-          state: 1
-        },
-        {
-          title: "老年健康服务与管理",
-          state: 1
-        },
-        {
-          title: "美国职业医师考试临床知识指导",
-          state: 0
-        },
-        {
-          title: "健康经济与政策",
-          state: 0
-        }
-      ],
-      data4: [
-        {
-          title: "口腔组织病理学（第7版本科口腔含实验教程附光盘）",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 0
-        },
-        {
-          title: "美容心理学",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 0
-        },
-        {
-          title: "美容临床心理学",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 1
-        },
-        {
-          title: "介入放射学（第4版）",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 1
-        },
-        {
-          title: "2017全国护士执业资格考试 习题精选与答案解析",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 1
-        },
-        {
-          title: "2017全国护士执业资格考试 习题精选与答案解析",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 0
-        },
-        {
-          title: "介入放射学（第4版）",
-          errorMes: "残存的细胞壁相互连接成网状”。动物细胞没有细胞壁，仅有细胞膜。",
-          comment: "这本书不错，虽然我一页都没看过",
-          file: "教学大纲.pdf",
-          state: 0
-        }
-      ],
-      groupListData: [
-        {
-          name: "成都医科大学内部",
-          lastMesTime: "7-28",
-          num: 9,
-          avatar: this.$config.DEFAULT_USER_IMAGE
-        },
-        {
-          name: "人卫社小组",
-          id: 1231,
-          lastMesTime: "昨天",
-          num: 10,
-          avatar: this.$config.DEFAULT_USER_IMAGE
-        },
-        {
-          name: "成都医科大学内部",
-          lastMesTime: "7-28",
-          num: 9,
-          avatar: this.$config.DEFAULT_USER_IMAGE
-        },
-        {
-          name: "第九轮教材申报讨论组123",
-          id: 12377,
-          lastMesTime: "去年",
-          num: 8,
-          avatar: this.$config.DEFAULT_USER_IMAGE
-        }
-      ]
+      materialList: {
+        loading:true,
+      },
+      groupList:{
+        loading:true,
+      },
+      topicList:{},
+      cmsContent:{},
+      bookUserComment:{},
+      bookCorrectionAudit:{},
+      bookFiles:{},
+      orgUserCount:'',
+      writerUserCount:'',
+      materialListTotal:0,
     };
   },
   computed: {
-    data1_option() {
-      var data = {
-        state0: [],
-        state1: []
-      };
-
-      this.data1.forEach(function(iterm, index) {
-        iterm.state == 0 && data.state0.push(iterm);
-        iterm.state == 1 && data.state1.push(iterm);
-      });
-
-      return data;
+    userInfo(){
+      return this.$getUserData().userInfo;
     },
-    data2_option() {
-      var data = {
-        state0: [],
-        state1: []
-      };
+    userType(){
+      let isAdmin = this.userInfo.isAdmin;
+      if(isAdmin){
+        return '超级管理员'
+      }
 
-      this.data2.forEach(function(iterm, index) {
-        iterm.state == 0 && data.state0.push(iterm);
-        iterm.state == 1 && data.state1.push(iterm);
-      });
-
-      return data;
-    }
+      let loginType = this.userInfo.loginType;
+      if(loginType===1){
+        return '社内用户'
+      }else{
+        return '学校机构用户'
+      }
+    },
+    lastLoginTime(){
+      let time = +new Date();
+      return this.$commonFun.formatDate(time);
+    },
   },
   methods:{
     /**
      * 获取页面数据
      */
-    
+    getPageData(){
+      var params = {
+        state:'',
+        materialName:'',
+        groupName:'',
+        bookname:'',
+        name:'',
+        title:'',
+        authProgress:'2,3',
+        topicBookname:'',
+      };
+      this.$axios.get('/pmpheep/users/pmph/personal/center',{params:params})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.materialList = res.data.materialList;
+            this.groupList = res.data.pmphGroup;
+            this.topicList = res.data.topicList;
+            this.cmsContent = res.data.cmsContent;
+            this.bookUserComment = res.data.bookUserComment;
+            this.bookCorrectionAudit = res.data.bookCorrectionAudit;
+            this.orgUserCount = res.data.orgUserCount;
+            this.writerUserCount = res.data.writerUserCount;
+
+            this.materialListTotal=this.materialList.total;
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+    },
+    /**
+     * 当点击教材申报列表tab切换时触发
+     * @param val
+     */
+    materialListChange(val){
+      let state = val.label;
+      state=state==='全部'?'':state;
+      this.$axios.get('/pmpheep/material/list',{params:{
+        pageSize:5,
+        pageNumber:1,
+        isMy:false,
+        state:state,
+        contactUserName:'',
+        materialName:'',
+      }})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.materialList = res.data;
+          }
+        })
+        .catch(e=>{
+          console.log(e);
+        })
+
+    },
   },
   mounted() {
     //将四个面板设为等高
   },
   created() {
-    console.log(this.$getUserData());
+    this.getPageData();
   }
 };
 </script>

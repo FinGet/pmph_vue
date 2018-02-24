@@ -1,6 +1,6 @@
 <template>
   <div class="topic_exam">
-  <el-tabs v-model="activeName" type="border-card" >
+  <el-tabs v-model="activeName" type="border-card"  @tab-click="handleClick">
     <el-tab-pane label="转发部门" name="first" v-if="Identity.isAdmin || Identity.isOpts">
       <forward-depart :activeName.sync='activeName' @changeActive='changeActive'></forward-depart>
     </el-tab-pane>
@@ -20,27 +20,17 @@ import acceptance from './acceptance.vue'
  export default{
    data(){
      return{
+       activeName:'',        //不要改成计算属性  计算属性无法触发更改
        Identity:{}
      }
    },
    computed:{
-     activeName:{
-      get: function () {
-        if (this.Identity.isAdmin || this.Identity.isOpts) {
-          return 'first';
-        } else if (this.Identity.isAdmin || this.Identity.isDirector) {
-          return 'second';
-        } else if (this.Identity.isAdmin || this.Identity.isEditor) {
-          return 'third';
-        }
-      },
-       set: function () {
-       }
-     }
    },
    created(){
      this.activeName = this.$route.query.active || 'first';
      this.identity();
+   },
+   watch:{
    },
    components: {
      forwardDepart,distributeEditor,acceptance
@@ -49,11 +39,23 @@ import acceptance from './acceptance.vue'
     changeActive(val){
       this.activeName=val;
     },
+    handleClick(tab, event){
+      console.log(tab, event);
+      this.activeName=tab.name;
+      console.log(this.activeName);
+    },
      identity(){
       this.$axios.get('/pmpheep/topic/identity').then(response=> {
         let res = response.data;
         if (res.code == '1') {
           this.Identity = res.data;
+        if (this.Identity.isAdmin || this.Identity.isOpts) {
+          this.activeName='first';
+        } else if (this.Identity.isAdmin || this.Identity.isDirector) {
+          this.activeName='second';
+        } else if (this.Identity.isAdmin || this.Identity.isEditor) {
+          this.activeName='third';
+        }
         }
       })
      }

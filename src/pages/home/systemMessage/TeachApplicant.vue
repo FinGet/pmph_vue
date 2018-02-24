@@ -179,6 +179,7 @@
             pageNumber: 1,
           }
         }).then(response => {
+          var res = response.data;
           if (res.code == '1') {
             this.hasCheckedMemberList = res.data.rows;
           }

@@ -177,7 +177,9 @@
           </div>
           <div class="info-iterm-text">
             <div>证件类型：<span></span></div>
-            <div>身份证</div>
+            <div v-if="expertInfoData.idtype==0">身份证</div>
+            <div v-if="expertInfoData.idtype==1">护照</div>
+            <div v-if="expertInfoData.idtype==2">军官证</div>
           </div>
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
@@ -621,6 +623,7 @@
   </div>
 </template>
 <script type="text/javascript">
+    import bus from 'common/eventBus/bus.js'
     export default{
         props:['materialInfo'],
         data(){
@@ -1152,6 +1155,9 @@
       created(){
         this.searchFormData.declarationId = this.$route.query.declarationId;
         this.searchFormData.materialId = this.$route.params.materialId;
+        if(this.$route.params.pageNumber||this.$route.params.pageSize){
+          this.fromPageSearchParamsData = this.$route.query;
+        }
         //如果没有教材id则跳转到通知列表
         if(!this.searchFormData.materialId){
           this.$router.push({name:'通知列表'});
@@ -1162,6 +1168,14 @@
         }
         this.getTableData();
         this.getBookList();
+      },
+
+      beforeDestroy(){
+        console.log(123,this.$route)
+        //当返回到申报表审核页面时要带上原来查询参数
+        if((this.$route.name==='申报表审核'||this.$route.name==='提交到出版社')&&this.fromPageSearchParamsData){
+          this.$router.addRoutes({params:this.fromPageSearchParamsData});
+        }
       },
     }
 </script>

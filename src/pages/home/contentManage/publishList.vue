@@ -632,6 +632,7 @@ export default {
         console.log(res);
         if(res.data.code==1){
           this.$message.success('同步成功');
+          this.getPublicList();
           setTimeout(() => {
                       this.syncCheckDetail(res.data.data);
           }, 3000);
