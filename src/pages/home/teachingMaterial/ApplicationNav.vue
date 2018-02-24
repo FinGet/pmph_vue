@@ -16,7 +16,7 @@
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
-        <router-view :materialInfo="materialInfo"></router-view>
+        <router-view :materialInfo="materialInfo" :pressCheckSearchParams="pressCheckSearchParams"></router-view>
       </transition>
 		</div>
 	</div>
@@ -37,7 +37,8 @@ export default {
            isShowTabs:true,
       materialInfo:{
         materialName:'新建通知',
-      }
+      },
+      pressCheckSearchParams:{},
 		}
 	},
 	methods: {
@@ -99,6 +100,9 @@ export default {
 
 
       bus.$on('material:update-info',this.getMaterialData);
+      bus.$on('pressCheck:searchParams',(data)=>{
+        this.pressCheckSearchParams=data||{};
+      });
 
       if(window._hmt){
         _hmt.push(['_trackPageview', '/material-application']);

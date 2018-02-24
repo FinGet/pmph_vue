@@ -279,7 +279,7 @@
 
   import bus from 'common/eventBus/bus.js'
   export default {
-    props:['materialInfo'],
+    props:['materialInfo','pressCheckSearchParams'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
@@ -673,7 +673,11 @@
     },
     created(){
       this.searchParams.materialId = this.$route.params.materialId;
-      console.log(this.$route.params)
+
+
+      for(let key in this.pressCheckSearchParams){
+        this.searchParams[key] = this.pressCheckSearchParams[key];
+      }
       //如果没有教材id则跳转到通知列表
       if(!this.searchParams.materialId){
         this.$router.push({name:'通知列表'});
