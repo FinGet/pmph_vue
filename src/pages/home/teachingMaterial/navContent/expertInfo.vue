@@ -237,7 +237,7 @@
 
 
       <!--主要工作经历-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isEduExpUsed">
         <p class="info-box-title">工作经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -259,7 +259,7 @@
       </div>
 
       <!--主要教学经历-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isEduExpUsed">
         <p class="info-box-title">教学经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -269,7 +269,7 @@
               <th><div>教学科目</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in teachExperience">
+            <tr v-for="(iterm,index) in isTeachExpUsed">
               <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.subject}}</div></td>
@@ -282,7 +282,7 @@
 
 
       <!--个人成就-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isAchievementUsed">
         <p class="info-box-title">个人成就</p>
         <div>
           <p class="achievements">
@@ -292,7 +292,7 @@
       </div>
 
       <!--主要学术兼职-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isAcadeRequired">
         <p class="info-box-title">学术兼职</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -314,7 +314,7 @@
       </div>
 
       <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isLastPositionRequired">
         <p class="info-box-title">上版教材参编情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -334,7 +334,7 @@
       </div>
 
       <!--精品课程建设情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isCourseUsed">
         <p class="info-box-title">精品课程建设情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -357,7 +357,7 @@
 
 
       <!--主编国家级规划教材情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isNationalPlanUsed">
         <p class="info-box-title">主编国家级规划教材情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -379,7 +379,7 @@
       </div>
 
       <!--教材编写情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isTextbookUsed">
         <p class="info-box-title">教材编写情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -407,7 +407,7 @@
       </div>
 
       <!--科研情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isResearchUsed">
         <p class="info-box-title">科研情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -430,7 +430,7 @@
       </div>
 
       <!--主编学术专著情况表-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isMonographUsed">
         <p class="info-box-title">主编学术专著情况表</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -457,7 +457,7 @@
       </div>
 
       <!--出版行业获奖情况表-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isPublishRewardUsed">
         <p class="info-box-title">出版行业获奖情况表</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -480,7 +480,7 @@
       </div>
 
       <!--SCI论文投稿及影响因子情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isSciRequired">
         <p class="info-box-title">SCI论文投稿及影响因子情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -505,7 +505,7 @@
       </div>
 
       <!--临床医学获奖情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isClinicalRewardRequired">
         <p class="info-box-title">临床医学获奖情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -528,7 +528,7 @@
       </div>
 
       <!--学术荣誉授予情况-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="material.isAcadeRewardUsed">
         <p class="info-box-title">学术荣誉授予情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -550,7 +550,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="decExtensionList.length">
         <!--扩展项-->
         <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
           <p class="info-box-title">{{iterm.extensionName?iterm.extensionName:'更多信息'}}</p>
@@ -691,6 +691,8 @@
               courseConstructionList:['无','国家','省部','学校'],
               materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
               onlineProgressBtn:[],
+              //教材信息
+              material:{},
 
               //退回给个人弹窗
               showOfflineProgress:false,
@@ -989,6 +991,9 @@
 
                 //扩展项
                 this.decExtensionList = res.data.decExtensionList;
+
+                //教材信息
+                this.material = res.data.material;
 
               }else{
                 this.$message.error(res.msg.msgTrim())

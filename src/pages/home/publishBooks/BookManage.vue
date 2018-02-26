@@ -525,7 +525,7 @@
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           type:type,
-          materialId:this.form.materialId,
+          materialId:this.form.materialId||'',
         }))
           .then(response=>{
             let res = response.data;
