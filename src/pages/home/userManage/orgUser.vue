@@ -35,7 +35,7 @@
             </el-select>
           </div>
         </div>
-        <div class="searchBox-wrapper searchBox-radio">
+        <div class="searchBox-wrapper searchBox-radio" style="height:36px;">
           <el-radio-group v-model="params.isHospital" class="radio-group" @change ="orgSearch">
             <el-radio :label="true">医院</el-radio>
             <el-radio :label="false">学校</el-radio>
@@ -45,7 +45,7 @@
           <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
         </div>
         <!--操作按钮-->
-        <div class="pull-right">
+        <div class=" pull-right">
           <!-- <el-button type="primary" @click="addBtn(false)">添加管理员</el-button> -->
           <!-- <el-button type="primary" @click="setOrgsType">机构类型设置</el-button> -->
           <el-button type="primary" @click="addBtn(true)">新建机构用户</el-button>
@@ -357,7 +357,7 @@
 				<el-table ref="multipleTable"
 				:data="schoolTableData"
 				border tooltip-effect="dark"
-				style="width: 100%"
+				style="width: 100%;margin-top:10px;"
 				@selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>

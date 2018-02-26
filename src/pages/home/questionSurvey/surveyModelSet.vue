@@ -103,43 +103,7 @@
                     pageNumber:1
                 },
                 pageTotal:100,
-                tableData:[
-                    {
-                        name:'求职调查',
-                        surveyObj:'在校学生',
-                        writer:'张三',
-                        summary:'调查学生的职业规划',
-                        createDate:'2017-10-1'
-                    },
-                    {
-                        name:'创业调查',
-                        surveyObj:'在校老师',
-                        writer:'李四',
-                        summary:'调查学生的创业能力',
-                        createDate:'2017-9-1'
-                    },
-                    {
-                        name:'卫生情况调查',
-                        surveyObj:'卫生院系',
-                        writer:'王五',
-                        summary:'调查卫生学校情况',
-                        createDate:'2017-8-1'
-                    },
-                    {
-                        name:'课外活动项目调查',
-                        surveyObj:'在校学生',
-                        writer:'赵六',
-                        summary:'调查学生课外活动参与情况',
-                        createDate:'2017-4-1'
-                    },
-                    {
-                        name:'校园兴趣调查',
-                        surveyObj:'在校学生',
-                        writer:'张三',
-                        summary:'调查学生的校园兴趣',
-                        createDate:'2017-8-5'
-                    },
-                ]
+                tableData:[]
             }
         },
         created(){

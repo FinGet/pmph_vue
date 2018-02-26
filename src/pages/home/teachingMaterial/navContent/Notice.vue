@@ -83,7 +83,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route);
       this.formData.materialId = this.$route.params.materialId;
       this.getNotice()
     }

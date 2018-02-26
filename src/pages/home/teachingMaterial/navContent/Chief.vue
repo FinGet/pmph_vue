@@ -115,7 +115,7 @@
           <ul v-if="historyLog.length>0">
             <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
-              <p v-for="(item,index) in iterm.detail">{{item}}</p>
+              <p v-for="(item,index) in iterm.detail" :key="index">{{item}}</p>
             </li>
           </ul>
           <p v-else>暂无历史消息</p>
