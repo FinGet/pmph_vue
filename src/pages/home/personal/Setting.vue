@@ -26,11 +26,12 @@
                 <el-form :model="formSetting"  ref="ruleForm" :rules="formRules"  label-width="80px">
                   <el-form-item label="头像:">
                     <div class="headImageWrapper">
-                      <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+                      <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start" v-if="!isIe9">
                         <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
                       </el-tooltip>
                       <!--上传文件按钮-->
                       <my-upload
+                        v-if="!isIe9"
                         class="fileInput"
                         ref="upload"
                         action="/pmpheep/group/add"
@@ -42,11 +43,11 @@
                         :auto-upload="false">
                         <el-button class="fileInput">上传</el-button>
                       </my-upload>
-                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName">
+                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName||!isIe9">
                         <img :src="userInfo.avatar?userInfo.avatar:'/static/default_image.png'" class="avatar">
                       </div>
                       <div v-show="userHeadImage.fileName">
-                        <img :src="userHeadImage.imageUrl" class="avatar">
+                        <img :src="userHeadImage.imageUrl?userHeadImage.imageUrl:'/static/default_image.png'" class="avatar">
                       </div>
                     </div>
                   </el-form-item>
@@ -77,19 +78,19 @@
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="password">
               <div class="setting-iterm">
-                <el-form :model="formPassword" ref="formPassword" label-width="140px">
-                  <el-form-item label="旧密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                <el-form :model="formPassword" :rules="rules2" ref="formPassword" label-width="140px">
+                  <el-form-item label="旧密码" prop="oldPass">
+                    <el-input type="password" v-model="formPassword.oldPass"></el-input>
                   </el-form-item>
-                  <el-form-item label="新密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                  <el-form-item label="新密码" prop="pass">
+                    <el-input type="password" v-model="formPassword.newPass"></el-input>
                   </el-form-item>
-                  <el-form-item label="再次输入新密码">
-                    <el-input v-model="formPassword.oldPass"></el-input>
+                  <el-form-item label="再次输入新密码" prop="checkPass">
+                    <el-input type="password" v-model="formPassword.reEnterNewpass"></el-input>
                   </el-form-item>
                 </el-form>
                 <div class="text-right paddingT30">
-                  <el-button type="primary">确认修改</el-button>
+                  <el-button type="primary" @click="updatePassword">确认修改</el-button>
                 </div>
               </div>
             </el-tab-pane>
@@ -103,8 +104,39 @@
 <script>
 	export default {
 		data() {
+      var validateOldPass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.formPassword.oldPass !== '') {
+            this.$refs.formPassword.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass = (rule, value, callback) => {
+        if (this.formPassword.newPass === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.formPassword.newPass !== '') {
+            this.$refs.formPassword.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (this.formPassword.reEnterNewpass === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (this.formPassword.reEnterNewpass !== this.formPassword.newPass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
 			return {
 			  api_update_userInfo:'/pmpheep/users/pmph/updatePersonalData',
+        api_get_userInfo:'/pmpheep/users/pmph/getInfo',
+        api_update_password:'/pmpheep/users/pmph/updatePassword',
         activeName:'setting',
         formSetting:{
           id: '',
@@ -167,9 +199,25 @@
 //          address: [
 //            { max: 250, message: "名称长度过长", trigger: "change,blur" }
 //          ],
+        },
+        rules2: {
+          oldPass:[
+            { validator: validateOldPass, trigger: 'change,blur' }
+          ],
+          pass: [
+            { validator: validatePass, trigger: 'change,blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'change,blur' }
+          ]
         }
       }
 		},
+    computed:{
+      isIe9(){
+        return this.$commonFun.Browser.ie==9
+      }
+    },
     methods:{
       /**
        * 上传头像input发生改变时触发
@@ -187,13 +235,13 @@
           return;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+        if(file.name.length>50){
+          this.$message.error("文件名不能超过50个字符");
           return;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("图片大小不能小于1bt");
+          this.$message.error("图片大小不能为0kb");
           self.userHeadImage.filename=undefined;
           return;
         }
@@ -275,6 +323,7 @@
             //修改成功
             if (res.code === 1) {
               this.$message.success('修改成功!');
+              this.getUserInfo();
             } else {
               self.$message.error(res.msg.msgTrim());
             }
@@ -283,7 +332,53 @@
             console.log(error);
             this.$message.error('请求失败，请重试!');
           });
-      }
+      },
+      /**
+       * 获取当前用户信息
+       */
+      getUserInfo(){
+        this.$axios.get(this.api_get_userInfo,{params:{
+          id:this.userInfo.id
+        }})
+          .then(response=>{
+            let res = response.data;
+            if (res.code === 1) {
+              this.userInfo = res.data;
+            }
+          })
+          .catch(function (error) {});
+      },
+      /**
+       * 修改密码
+       */
+      updatePassword(){
+        var self= this;
+        this.$refs['formPassword'].validate((valid) => {
+          if (valid) {
+            this.$axios.put(this.api_update_password, this.$commonFun.initPostData({
+              id: this.formSetting.id,
+              oldPassword:this.formPassword.oldPass,
+              newPassword:this.formPassword.reEnterNewpass
+            }))
+              .then(function (response) {
+                let res = response.data;
+                //修改成功
+                if (res.code === 1) {
+                  self.$message.success('修改成功!');
+                } else {
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+                self.$message.error('请求失败，请重试!');
+              });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
     },
     created(){
       this.activeName=this.$route.query.type||'setting';
@@ -292,6 +387,7 @@
       for(let key in this.formSetting){
         this.formSetting[key] = this.userInfo[key];
       }
+      this.getUserInfo();
     },
 	}
 </script>

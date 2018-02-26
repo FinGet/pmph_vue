@@ -8,19 +8,22 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="[0,1,2].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(2)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="[0,2,3].includes(expertInfoData.onlineProgress)" @click="onlineCheckPass(3)">
-          {{'通过'}}
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+          退回给学校
         </el-button>
+        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
+          <!--{{'通过'}}-->
+        <!--</el-button>-->
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
 
       <!--图书选择-->
       <div class="expert-info-box expert-operation-wrapper">
-        <p class="info-box-title operation">图书选择（书籍可以多选，一本书职位可以多选）</p>
+        <p class="info-box-title operation">图书选择（{{expertInfoData.isMultiBooks?'可以选择多本书籍':'只能选择一本书籍'}}，{{expertInfoData.isMultiPosition?'书籍职位可以多选':'书籍职位只能单选'}}）</p>
         <div>
           <div class="chooseBook clearfix lineheight-36" v-for="(iterm,index) in addBookList" :key="index">
             <!--新增书籍-->
@@ -34,7 +37,8 @@
                         v-for="(item,i) in bookList"
                         :key="i"
                         :label="item.textbookName"
-                        :value="item.id">
+                        :value="item.id"
+                        :disabled="allRightSelectedBookList.includes(item.id)">
                       </el-option>
                     </el-select>
                   </div>
@@ -53,7 +57,7 @@
                 </el-checkbox-group>
                 <div class="info-iterm-text widthAuto marginL20">
                   <div>教学大纲：<span></span></div>
-                  <div class="ellipsis">
+                  <div class="ellipsis"  @click="uploadBtnClick(index)">
                     <my-upload
                       v-if="!iterm.syllabusName||iterm.fileUploading"
                       class="upload"
@@ -64,12 +68,12 @@
                       :before-upload="beforeUpload"
                       :on-success="uploadSuccess"
                       :show-file-list="false">
-                      <el-button size="small" type="primary" @click="uploadBtnClick(index)" :loading="iterm.fileUploading">点击上传</el-button>
+                      <el-button size="small" type="primary" :loading="iterm.fileUploading">点击上传</el-button>
                     </my-upload>
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -78,7 +82,7 @@
                 </div>
                 <div class="info-iterm-text">
                   <div>职位：<span></span></div>
-                  <div>{{iterm.showPosition}}</div>
+                  <div class="lineheight-normal paddingT10">{{iterm.showPosition}}</div>
                 </div>
                 <div class="info-iterm-text">
                   <div>教学大纲：<span></span></div>
@@ -87,7 +91,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
             </div>
             <!--已有书籍-->
@@ -98,7 +102,7 @@
               </div>
               <div class="info-iterm-text">
                 <div>职位：<span></span></div>
-                <div>{{iterm.showPosition}}</div>
+                <div class="lineheight-normal paddingT10">{{iterm.showPosition}}</div>
               </div>
               <div class="info-iterm-text">
                 <div>教学大纲：<span></span></div>
@@ -110,14 +114,16 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success">已被选为{{iterm.chosenPosition?positionList[iterm.chosenPosition]:iterm.isDigitalEditor?'数字编委':''}}</el-tag>
+                  <el-tag type="success" v-if="iterm.showChosenPosition">
+                    已被选为{{iterm.showChosenPosition}}
+                  </el-tag>
                 </div>
               </div>
             </div>
           </div>
           <div class="expert_info-buttonWrapper print-none">
-            <el-button type="primary" @click="addNewBook" v-if="addBookList.length==0||expertInfoData.isMultiBooks">添加图书</el-button>
-            <el-button type="primary" @click="saveBook" v-if="(hasNewAddbook||hasBookListChanged)&&addBookList.length">保存图书</el-button>
+            <el-button type="primary" @click="addNewBook" v-if="(addBookList.length==0||expertInfoData.isMultiBooks)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">添加图书</el-button>
+            <el-button type="primary" @click="saveBook" v-if="((hasNewAddbook||hasBookListChanged)&&addBookList.length)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">保存图书</el-button>
           </div>
         </div>
       </div>
@@ -135,7 +141,7 @@
           </div>
           <div class="info-iterm-text">
             <div>传真：<span></span></div>
-            <div></div>
+            <div>{{expertInfoData.fax}}</div>
           </div>
           <div class="info-iterm-text">
             <div>性别：<span></span></div>
@@ -171,7 +177,9 @@
           </div>
           <div class="info-iterm-text">
             <div>证件类型：<span></span></div>
-            <div>身份证</div>
+            <div v-if="expertInfoData.idtype==0">身份证</div>
+            <div v-if="expertInfoData.idtype==1">护照</div>
+            <div v-if="expertInfoData.idtype==2">军官证</div>
           </div>
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
@@ -185,324 +193,93 @@
             <div>证件号码：<span></span></div>
             <div>{{expertInfoData.idcard}}</div>
           </div>
+
+          <div class="info-iterm-text lg-label">
+            <div>是否服从调剂：<span></span></div>
+            <div>{{expertInfoData.isDispensed?'是':'否'}}</div>
+          </div>
+          <div class="info-iterm-text xl-label">
+            <div>是否参与本科教学评估认证：<span></span></div>
+            <div>{{expertInfoData.isUtec?'是':'否'}}</div>
+          </div>
+          <div class="info-iterm-text lg">
+            <div>专业特长：<span></span></div>
+            <div>{{expertInfoData.expertise}}</div>
+          </div>
         </div>
       </div>
 
       <!--主要学习经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要学习经历</p>
+        <p class="info-box-title">学习经历</p>
         <div class="no-padding">
-          <el-table
-            border
-            :data="learnExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="schoolName"
-              label="学校名称">
-            </el-table-column>
-            <el-table-column
-              prop="major"
-              label="专业">
-            </el-table-column>
-            <el-table-column
-              prop="degree"
-              label="学历">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>学校名称</div></th>
+              <th><div>专业</div></th>
+              <th><div>学历</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in learnExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.schoolName}}</div></td>
+              <td><div>{{iterm.major}}</div></td>
+              <td><div>{{iterm.degree}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!learnExperience.length">暂无数据</div>
         </div>
       </div>
 
+
+
+
       <!--主要工作经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要工作经历</p>
+        <p class="info-box-title">工作经历</p>
         <div class="no-padding">
-          <el-table border
-            :data="workExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="orgName"
-              label="工作单位">
-            </el-table-column>
-            <el-table-column
-              prop="position"
-              label="职位">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>工作单位</div></th>
+              <th><div>职位</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in workExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!workExperience.length">暂无数据</div>
         </div>
       </div>
 
       <!--主要教学经历-->
       <div class="expert-info-box">
-        <p class="info-box-title">主要教学经历</p>
+        <p class="info-box-title">教学经历</p>
         <div class="no-padding">
-          <el-table border
-            :data="teachExperience"
-            style="width: 100%">
-            <el-table-column
-              label="起止时间">
-              <template scope="scope">
-                {{scope.row.dateBegin}} &nbsp;-&nbsp; {{scope.row.dateEnd}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="schoolName"
-              label="学校名称">
-            </el-table-column>
-            <el-table-column
-              prop="subject"
-              label="教学科目">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>学校名称</div></th>
+              <th><div>教学科目</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in teachExperience">
+              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div>{{iterm.schoolName}}</div></td>
+              <td><div>{{iterm.subject}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!teachExperience.length">暂无数据</div>
         </div>
       </div>
 
-      <!--主要学术兼职-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主要学术兼职</p>
-        <div class="no-padding">
-          <el-table border
-            :data="academicExperience"
-            style="width: 100%">
-            <el-table-column
-              prop="orgName"
-              label="兼职学术组织">
-            </el-table-column>
-            <el-table-column
-              label="级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<5?rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="position"
-              label="职务">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
-      <div class="expert-info-box">
-        <p class="info-box-title">上版教材参编情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="lastPositionList"
-                    style="width: 100%">
-            <el-table-column
-              prop="materialName"
-              label="教材名称">
-            </el-table-column>
-            <el-table-column
-              label="职务">
-              <template scope="scope">{{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}</template>
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--国家精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">国家精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="nationalCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--省部级精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">省部级精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="provinceCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--学校精品课程建设情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">学校精品课程建设情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="schoolCourseConstruction"
-                    style="width: 100%">
-            <el-table-column
-              prop="courseName"
-              label="课程名称">
-            </el-table-column>
-            <el-table-column
-              prop="classHour"
-              label="该课程全年课时数">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--主编国家级规划教材情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">主编国家级规划教材情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="nationalPlan"
-                    style="width: 100%">
-            <el-table-column
-              prop="materialName"
-              label="规划教材名">
-            </el-table-column>
-            <el-table-column
-              prop="isbn"
-              label="标准书号">
-            </el-table-column>
-            <el-table-column
-              label="教材级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<4?national_plan_rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--教材编写情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">教材编写情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="textbook"
-                    style="width: 100%;table-layout:fixed;">
-            <el-table-column
-              prop="materialName"
-              label="教材名称">
-            </el-table-column>
-            <el-table-column
-              label="级别">
-              <template scope="scope">
-                {{scope.row.rank&&scope.row.rank<6?textbook_rankList[scope.row.rank]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="职务">
-              <template scope="scope">
-                {{scope.row.position&&scope.row.position<4?positionList[scope.row.position]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="publisher"
-              label="出版社">
-            </el-table-column>
-            <el-table-column
-              prop="publishDate"
-              label="出版时间">
-              <template scope="scope">
-                {{scope.row.publishDate?$commonFun.formatDate(scope.row.publishDate).split(' ')[0]:''}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="isbn"
-              label="标准书号">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-
-      <!--科研情况-->
-      <div class="expert-info-box">
-        <p class="info-box-title">科研情况</p>
-        <div class="no-padding">
-          <el-table border
-                    :data="researchData"
-                    style="width: 100%">
-            <el-table-column
-              prop="researchName"
-              label="课题名称（包括项目编号）"
-              width="600">
-            </el-table-column>
-            <el-table-column
-              prop="approvalUnit"
-              label="审批单位">
-            </el-table-column>
-            <el-table-column
-              prop="award"
-              label="获奖情况">
-            </el-table-column>
-            <el-table-column
-              prop="note"
-              label="备注">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
 
       <!--个人成就-->
       <div class="expert-info-box">
@@ -514,13 +291,284 @@
         </div>
       </div>
 
+      <!--主要学术兼职-->
+      <div class="expert-info-box">
+        <p class="info-box-title">学术兼职</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>兼职学术组织</div></th>
+              <th><div>级别</div></th>
+              <th><div>职务</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in academicExperience">
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
+      <div class="expert-info-box">
+        <p class="info-box-title">上版教材参编情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>职务</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--精品课程建设情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">精品课程建设情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>课程名称</div></th>
+              <th><div>该课程全年课时数</div></th>
+              <th><div>级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decCourseConstruction">
+              <td><div>{{iterm.courseName}}</div></td>
+              <td><div>{{iterm.classHour}}</div></td>
+              <td><div>{{courseConstructionList[iterm.type]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!decCourseConstruction.length">暂无数据</div>
+        </div>
+      </div>
+
+
+      <!--主编国家级规划教材情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主编国家级规划教材情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>规划教材名</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>教材级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in lastPositionList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--教材编写情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">教材编写情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>级别</div></th>
+              <th><div>职务</div></th>
+              <th><div>出版社</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in textbook">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--科研情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">科研情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>课题名称（包括项目编号）</div></th>
+              <th><div>审批单位</div></th>
+              <th><div>获奖情况</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in researchData">
+              <td><div>{{iterm.researchName}}</div></td>
+              <td><div>{{iterm.approvalUnit}}</div></td>
+              <td><div>{{iterm.award}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--主编学术专著情况表-->
+      <div class="expert-info-box">
+        <p class="info-box-title">主编学术专著情况表</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>专著名称</div></th>
+              <th><div>专著发表日期</div></th>
+              <th><div>出版方式</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in monograph">
+              <td><div>{{iterm.monographName}}</div></td>
+              <td><div>{{iterm.monographDate}}</div></td>
+              <td><div>{{iterm.isSelfPaid?'自费':'公费'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--出版行业获奖情况表-->
+      <div class="expert-info-box">
+        <p class="info-box-title">出版行业获奖情况表</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>奖项名称</div></th>
+              <th><div>获奖日期</div></th>
+              <th><div>评奖单位</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in publish_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{iterm.awardUnit}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--SCI论文投稿及影响因子情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">SCI论文投稿及影响因子情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>论文名称</div></th>
+              <th><div>期刊名称</div></th>
+              <th><div>期刊SCI影响因子</div></th>
+              <th><div>发表日期</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in sci">
+              <td><div>{{iterm.paperName}}</div></td>
+              <td><div>{{iterm.journalName}}</div></td>
+              <td><div>{{iterm.factor}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--临床医学获奖情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">临床医学获奖情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>奖项名称</div></th>
+              <th><div>获奖日期</div></th>
+              <th><div>奖项级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in clinical_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{rankList[iterm.awardUnit]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <!--学术荣誉授予情况-->
+      <div class="expert-info-box">
+        <p class="info-box-title">学术荣誉授予情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>荣誉名称</div></th>
+              <th><div>授予日期 </div></th>
+              <th><div>荣誉级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in acade_reward">
+              <td><div>{{iterm.rewardName}}</div></td>
+              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{rankList[iterm.awardUnit]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          </table>
+          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+        </div>
+      </div>
+
+      <div>
+        <!--扩展项-->
+        <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
+          <p class="info-box-title">{{iterm.extensionName?iterm.extensionName:'更多信息'}}</p>
+          <div>
+            <p class="achievements">
+              {{iterm.content}}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!--申报单位-->
       <div class="expert-info-box">
         <p class="info-box-title">申报单位</p>
         <div>
           <div class="info-iterm-text">
             <div>申报单位：<span></span></div>
-            <div>{{expertInfoData.orgNameOne}}</div>
+            <div>{{expertInfoData.orgId?expertInfoData.orgNameOne:'人民卫生出版社'}}</div>
           </div>
         </div>
       </div>
@@ -550,10 +598,34 @@
         <el-button type="primary" @click="sendmsg">发 送</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="退回原因："
+      :visible.sync="showOfflineProgress"
+      :before-close="clearOfflineProgressMsg"
+      size="tiny">
+      <div class="relative">
+        <el-input
+          autofocus
+          type="textarea"
+          :rows="6"
+          placeholder="请输入退回原因"
+          @input.native="changeOfflineProgressTextarea"
+          @keyup.native.enter="onlineCheckPass(5)"
+          v-model="offlineProgressText">
+        </el-input>
+        <p class="tip-text" v-if="100-offlineProgressText.length<20">还可输入{{100-offlineProgressText.length}}个字符</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeOfflineProgress">取 消</el-button>
+        <el-button type="primary" @click="onlineCheckPass(offlineProgressType)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
+    import bus from 'common/eventBus/bus.js'
     export default{
+        props:['materialInfo'],
         data(){
             return{
               api_info:'/pmpheep/declaration/list/declaration/exportExcel',
@@ -569,6 +641,7 @@
               },
               currentUploadFileBookIndex:undefined,
               expertInfoData:{
+                userId:'',
                 realname:'',
                 sex:'男',
                 birthday:'',
@@ -594,23 +667,35 @@
               teachExperience:[],
               academicExperience:[],
               lastPositionList:[],
-              nationalCourseConstruction:[],
-              provinceCourseConstruction:[],
-              schoolCourseConstruction:[],
+              decCourseConstruction:[],
               nationalPlan:[],
               textbook:[],
               researchData:[],
+              decExtensionList:[],
               personalAchievements:'',
+              monograph:[],//出版行业获奖情况
+              publish_reward:[],//出版行业获奖情况表
+              sci:[],//SCI论文投稿及影响因子情况
+              clinical_reward:[],//临床医学获奖情况
+              acade_reward:[],//学术荣誉授予情况
               bookList:[],
-              positionList:['','主编','副主编','编委'],
+              positionList:['无','主编','副主编','编委'],
+              positionList_2:['无','编委,数字编委','副主编','副主编,数字编委','副主编,编委','副主编,编委,数字编委'],
               addBookList:[],
               hasBookListChanged:false,
               showSendMsg:false,
               inputMsg:'',
-              rankList:['','国际','国家','省部','其他'],
-              national_plan_rankList:['','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
-              textbook_rankList:['','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
+              rankList:['无','国际','国家','省部','其他'],
+              national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
+              textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
+              courseConstructionList:['无','国家','省部','学校'],
+              materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
               onlineProgressBtn:[],
+
+              //退回给个人弹窗
+              showOfflineProgress:false,
+              offlineProgressText:'',
+              offlineProgressType:4,
             }
         },
         computed:{
@@ -630,6 +715,33 @@
               };
             }
             return flag;
+          },
+          allRightSelectedBookList(){
+            let flag = [];
+            for(let iterm of this.addBookList){
+              if(iterm.textbookId){
+                flag.push(iterm.textbookId);
+              }
+            }
+            return flag;
+          },
+          onlineProgressBtn_Back(){
+            let l = [0,1,2,4,5].includes(this.expertInfoData.onlineProgress);
+            if(this.addBookList.length==0){
+              return !l;
+            }
+            let flag = true;
+            for(let iterm of this.addBookList){
+              if(iterm.isDigitalEditor||iterm.chosenPosition){
+                flag = false;
+                break;
+              };
+            }
+            return flag&&!l;
+          },
+          onlineProgressBtn_Pass(){
+            var l = [0,2,3];
+            return (l.includes(this.expertInfoData.onlineProgress))
           }
         },
         created(){
@@ -673,13 +785,14 @@
          * @param index
          */
         deleteNew(index,hasChange){
+          if(this.addBookList.length==1&&!this.addBookList[0].isNew){
+            this.$message.error('至少要有一本书！');
+          }
           this.addBookList.splice(index, 1);
           if(hasChange){
             this.hasBookListChanged=true;
           }
-          if(this.addBookList.length==0){
-            this.$message.error('至少要有一本书！');
-          }
+
         },
         /**
          * 保存图书，保存成功后就将图书isNew状态改为false
@@ -718,6 +831,7 @@
                   iterm.isNew = false;
                 })
                 this.$message.success('保存成功！');
+                this.hasBookListChanged=false;
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
@@ -743,13 +857,13 @@
             return;
           }
           //文件名不超过40个字符
-          if(file.name.length>40){
-            this.$message.error("文件名不能超过40个字符");
+          if(file.name.length>60){
+            this.$message.error("文件名不能超过60个字符");
             return;
           }
           // 类型判断
           if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-            this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+            this.$message.error("请勿上传可执行文件！");
             return;
           }
           // 判断文件大小是否符合 文件不为0
@@ -774,10 +888,10 @@
           const ext = file.name.substring(file.name.lastIndexOf('.')+1);
           console.log(file)
           const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
-          const nameLen = file.name.length <= 40;
+          const nameLen = file.name.length <= 60;
           //文件名不超过40个字符
-          if(file.name.length>40){
-            this.$message.error("文件名不能超过40个字符");
+          if(file.name.length>60){
+            this.$message.error("文件名不能超过60个字符");
             return false;
           }
           if (file.size / 1024 / 1024==0) {
@@ -789,7 +903,7 @@
             return false;
           }
           if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-            this.$message.error('上传文件不能是可执行文件!');
+            this.$message.error('请勿上传可执行文件!');
             return false;
           }
           if (!nameLen) {
@@ -812,6 +926,7 @@
          * 用于当文件上传成功后通过currentUploadFileBookIndex找到正在操作哪本书
          */
         uploadBtnClick(index){
+          console.log('index',index);
           this.currentUploadFileBookIndex = index;
         },
         /**
@@ -846,22 +961,34 @@
                 this.academicExperience = res.data.decAcadeList;
 
                 //个人成就
-                this.personalAchievements = res.data.decExtensionList.length==0?'':res.data.decExtensionList[0].content;
+                this.personalAchievements =  (!!!res.data.decAchievement)?'':res.data.decAchievement.content;
 
                 //上版教材参编情况
                 this.lastPositionList = res.data.decLastPositionList;
-                //国家级精品课程建设情况
-                this.nationalCourseConstruction = res.data.decNationalCourseConstructionList;
-                //省部级精品课程建设情况
-                this.provinceCourseConstruction = res.data.decProvinceCourseConstructionList;
-                //学校精品课程建设情况
-                this.schoolCourseConstruction = res.data.decSchoolCourseConstructionList;
+
+                //精品课程建设情况
+                this.decCourseConstruction = res.data.decCourseConstruction
+
                 //作家主编国家级规划教材情况表
                 this.nationalPlan = res.data.decNationalPlanList;
                 //作家教材编写情况表
                 this.textbook = res.data.decTextbookList;
                 //作家科研情况表
                 this.researchData = res.data.decResearchList;
+
+                //出版行业获奖情况
+                this.monograph = res.data.decMonographList;
+                //出版行业获奖情况表
+                this.publish_reward = res.data.decPublishRewardList;
+                //SCI论文投稿及影响因子情况
+                this.sci = res.data.decSciList;
+                //临床医学获奖情况
+                this.clinical_reward = res.data.decClinicalRewardList;
+                //作家科研情况表
+                this.acade_reward = res.data.decAcadeRewardList;
+
+                //扩展项
+                this.decExtensionList = res.data.decExtensionList;
 
               }else{
                 this.$message.error(res.msg.msgTrim())
@@ -904,7 +1031,6 @@
               this.$axios.get(this.api_confirm_paper,{params:{
                 id:this.searchFormData.declarationId,
                 offlineProgress:this.expertInfoData.offlineProgress,
-                materialId:this.searchFormData.materialId,
               }})
                 .then(response=>{
                 var res = response.data;
@@ -931,7 +1057,7 @@
           this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
             content:this.inputMsg,
             sessionId:this.$getUserData().userInfo.id,
-            receiverId:this.searchFormData.declarationId
+            receiverId:this.expertInfoData.userId
           }))
             .then(response=>{
               var res = response.data;
@@ -953,7 +1079,9 @@
          */
         changeTextarea(){
           if(this.inputMsg.length>250){
-            this.inputMsg=this.inputMsg.substring(0,250);
+            this.$nextTick(() => {
+              this.inputMsg=this.inputMsg.substring(0,250);
+            })
           }
         },
         /**
@@ -972,21 +1100,23 @@
          */
         print(){
           window.print();
+          return false;
         },
         /**
          * 点击审核通过
-         *  type 2 标示退回给个人 3 标示通过
+         *  type 5 标示退回给个人 4退回给学校 3 标示通过 2退回给单位
          */
         onlineCheckPass(type){
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
-            onlineProgress:3,
-            materialId:this.searchFormData.materialId
+            onlineProgress:type,
+            returnCause:this.offlineProgressText||''
           }})
             .then(response=>{
               var res = response.data;
               if(res.code==1){
                 this.expertInfoData.onlineProgress=type;
+                this.closeOfflineProgress();
                 this.$message.success(type==3?'已通过！':'已退回！')
               }else{
                 this.$message.error(res.msg.msgTrim())
@@ -996,12 +1126,38 @@
               console.log(e);
               this.$message.error('请求失败，请重试！');
             })
+
+        },
+        /**
+         * 关闭退回原因弹窗
+         */
+        clearOfflineProgressMsg(done){
+          this.offlineProgressText='';
+          done();
+        },
+        closeOfflineProgress(){
+          this.offlineProgressText='';
+          this.showOfflineProgress=false;
+        },
+        changeOfflineProgressTextarea(){
+          if(this.offlineProgressText.length>100){
+            this.$nextTick(() => {
+              this.offlineProgressText=this.offlineProgressText.substring(0,100);
+            })
+          }
+        },
+        setOnlineCheckPassType(num){
+          this.offlineProgressType = num||4;
+          this.showOfflineProgress=true;
         }
 
       },
       created(){
         this.searchFormData.declarationId = this.$route.query.declarationId;
         this.searchFormData.materialId = this.$route.params.materialId;
+        if(this.$route.query.pageNumber||this.$route.query.pageSize){
+          this.fromPageSearchParamsData = this.$route.query;
+        }
         //如果没有教材id则跳转到通知列表
         if(!this.searchFormData.materialId){
           this.$router.push({name:'通知列表'});
@@ -1013,10 +1169,25 @@
         this.getTableData();
         this.getBookList();
       },
+
+      beforeDestroy(){
+//        console.log(this.$route)
+        //当返回到申报表审核页面时要带上原来查询参数
+        /**
+         * 实现方法，将搜索的参数储存在父组件，通过props传给页面
+         */
+        if((this.$route.name==='申报表审核'||this.$route.name==='提交到出版社')&&this.fromPageSearchParamsData){
+          bus.$emit('pressCheck:searchParams',this.fromPageSearchParamsData);
+        }else{
+          bus.$emit('pressCheck:searchParams',{});
+        }
+      },
     }
 </script>
 <style scoped>
   .info-wrapper{
+    /*width: 1100px;*/
+    padding-bottom: 20px;
   }
   .expert-info-box{
 
@@ -1048,6 +1219,10 @@
     line-height: 36px;
     vertical-align: middle;
   }
+  .info-iterm-text.lg{
+    width: 100%;
+    max-width: 1200px;
+  }
   .user-info-wrapper .info-iterm-text{
     padding-bottom: 8px;
   }
@@ -1062,6 +1237,21 @@
   .info-iterm-text>div:nth-of-type(2){
     margin-left: 88px;
     padding-right: 10px;
+  }
+
+  .info-iterm-text.lg-label>div:nth-of-type(1){
+    width: 120px;
+  }
+
+  .info-iterm-text.lg-label>div:nth-of-type(2){
+    margin-left: 120px;
+  }
+  .info-iterm-text.xl-label>div:nth-of-type(1){
+    width: 200px;
+  }
+
+  .info-iterm-text.xl-label>div:nth-of-type(2){
+    margin-left: 200px;
   }
   .expert_info-buttonWrapper{
     margin-top: 30px;
@@ -1096,5 +1286,44 @@
     position: absolute;
     right: 0;
     bottom: -20px;
+  }
+
+  .info-wrapper table{
+    width: 100%;
+    text-align: left;
+    border-color: rgb(223, 229, 236);
+    border: none;
+  }
+  .info-wrapper table tr:nth-of-type(2n+1){
+    background: #fafafa;
+  }
+  .info-wrapper table tr th{
+    background-color: #d4d9dd;
+    color: #5b6877;
+    height: 40px;
+  }
+  .info-wrapper table tr td{
+    height: 40px;
+  }
+  .info-wrapper table tr th>div,.info-wrapper table tr td>div{
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 24px;
+    padding-left: 18px;
+    padding-right: 18px;
+    text-overflow: ellipsis;
+    position: relative;
+    word-wrap: normal;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+  }
+  .achievements{
+    min-height: 60px;
+  }
+  .school-device{
+    padding: 160px 0 0;
   }
 </style>

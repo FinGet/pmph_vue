@@ -1,5 +1,5 @@
 <template>
-	<div class="edit-notice max-width-1300">
+  	<div class="edit-notice max-width-1300">
     <!--操作按钮-->
     <div class="clearfix marginT30">
       <div class="operation-wrapper">
@@ -10,7 +10,7 @@
     <!--输入标题-->
     <el-form :model="formData" ref="form" :rules="formRules" label-width="110px">
       <el-form-item label="标题：" prop="title">
-        <el-input v-model.trim="formData.title" placeholder="请输入文章标题" class="title-input"></el-input>
+        <el-input v-model.trim="formData.title" placeholder="请输入文章标题" class="title-input" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="消息内容：" required>
         <el-input v-model="formData.title" class="none"></el-input>
@@ -21,9 +21,9 @@
     </el-form>
 
     <div class="image-wrapper marginL110 text-center marginB30" v-if="formData.image.length">
-      <div class="text-center" v-for="(iterm,index) in formData.image" :key="index">
+      <!-- <div class="text-center" v-for="(iterm,index) in formData.image" :key="index">
         <img class="img" :src="iterm.attachment" alt="">
-      </div>
+      </div> -->
     </div>
     <div class="marginL110 clearfix" v-if="formData.files.length">
       <p class="width60 paddingR20 pull-left text-right">附件 : </p>
@@ -50,7 +50,7 @@
         </div>
         <div class="clearfix" v-if="formData.files.length">
           <p class="width40 paddingR20 pull-left text-right">附件 : </p>
-          <div class="marginL60">
+          <div class="marginL60 paddingT1">
             <p  v-for="(iterm,index) in formData.files" :key="index">
               <i class="fa fa-paperclip"></i>
               <a :href="iterm.attachment" class="link">{{iterm.attachmentName}}</a>
@@ -64,6 +64,7 @@
 
 <script>
   import Editor from 'components/Editor.vue'
+  import {teachPicUrl} from '../../../../common/config.js'
 	export default {
 		data() {
 			return {
@@ -101,37 +102,40 @@
         this.$axios.get(this.api_msg_detail,{params:{
           materialId: this.formData.materialId
         }}).then(response=> {
+          console.log(response);
           let res = response.data
           if (res.code == '1') {
             let content = '';
             this.formData.title = res.data.materialName.materialName;
             //设置显示图片
-            this.formData.image=res.data.materialNoticeAttachments;
+            this.formData.image=res.data.materialNoticeAttachments?res.data.materialNoticeAttachments:[];
             //设置文件
-            this.formData.files=res.data.materialNoteAttachments;
-            if(res.data.content){
-              content=res.data.content;
-            }else{
-              //简介
-              content += `<p>简介：${res.data.materialExtra.notice}</p>`;
-              content += `<p></p>`;
-              //邮寄地址
-              content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
-              content += `<p></p>`;
-              //联系人
-              let contactsHtml = '';
-              for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
-                if(i==0){
-                  contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
-                }else{
-                  contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
-                }
+            this.formData.files=res.data.materialNoteAttachments?res.data.materialNoteAttachments:[];
+            res.data.materialContacts=res.data.materialContacts?res.data.materialContacts:[];
+
+            //简介
+            content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
+            content += `<p></p>`;
+            //邮寄地址
+            content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
+            content += `<p></p>`;
+            //联系人
+            let contactsHtml = '';
+            for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
+              if(i==0){
+                contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
+              }else{
+                contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Emali：${res.data.materialContacts[i].contactEmail})</p>`
               }
-              content+=contactsHtml;
-              content += `<p></p>`;
-              //备注
-              content+=`<p>备注：${res.data.materialExtra.note}</p>`;
             }
+            content+=contactsHtml;
+            content += `<p></p>`;
+            //备注
+            content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
+           /*  /* 底部图片 */
+            for(var i in this.formData.image){
+              content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+            } 
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
 

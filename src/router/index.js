@@ -1,81 +1,118 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Login from 'pages/Login.vue';
-import Home from 'pages/Home.vue';
-const Index = () => import(/* webpackChunkName: "group-foo" */ '../pages/Index');
-/* import Index from '../pages/Index'; */
-import NoFind from 'pages/404.vue';
+
+import Login from 'pages/Login.vue'
+import Home from 'pages/Home.vue'
+const Index = () => import('../pages/Index');
+const NoFind = () => import('pages/404.vue');
 
 /* 教材申报 */
-/* import ApplicationList from '../pages/home/teachingMaterial/navContent/ApplicationList'; */
-const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList');
 import ApplicationRouter from '../pages/home/teachingMaterial/ApplicationRouter'
-import BooksSelect_1v3 from '../pages/home/teachingMaterial/navContent/1v3'
 import ApplicationNav from '../pages/home/teachingMaterial/ApplicationNav'
-import PressCheck from '../pages/home/teachingMaterial/navContent/pressCheck'
-import PressCheck_pmph from '../pages/home/teachingMaterial/navContent/pressCheck-pmph'
-import ExpertInfo from '../pages/home/teachingMaterial/navContent/expertInfo'
-import BookList from '../pages/home/teachingMaterial/navContent/BookList'
-import Notice from '../pages/home/teachingMaterial/navContent/Notice'
-import Chief from '../pages/home/teachingMaterial/navContent/Chief'
-import NewChooseBooks from 'pages/home/teachingMaterial/navContent/newChooseBooks'
-import ApplicationSchoolQuery from 'pages/home/teachingMaterial/navContent/SchoolQuery'
-import Result from 'pages/home/teachingMaterial/navContent/Result/index'
-import EditNotice from 'pages/home/teachingMaterial/navContent/EditNotice'
-import SetTopicNum from 'pages/home/teachingMaterial/navContent/SetTopicNum'
+
+const BooksSelect_1v3 = () => import('../pages/home/teachingMaterial/navContent/1v3')
+const ApplicationList = () => import('../pages/home/teachingMaterial/navContent/ApplicationList')
+const PressCheck = () => import('../pages/home/teachingMaterial/navContent/pressCheck')
+const PressCheck_pmph = () => import('../pages/home/teachingMaterial/navContent/pressCheck-pmph')
+const ExpertInfo = () => import('../pages/home/teachingMaterial/navContent/expertInfo')
+const BookList = () => import('../pages/home/teachingMaterial/navContent/BookList')
+const Notice = () => import('../pages/home/teachingMaterial/navContent/Notice')
+const Chief = () => import('../pages/home/teachingMaterial/navContent/Chief')
+const NewChooseBooks = () => import('pages/home/teachingMaterial/navContent/newChooseBooks')
+const ApplicationSchoolQuery = () => import('pages/home/teachingMaterial/navContent/SchoolQuery')
+const Result = () => import('pages/home/teachingMaterial/navContent/Result/index')
+const EditNotice = () => import('pages/home/teachingMaterial/navContent/EditNotice')
+const SetTopicNum = () => import('pages/home/teachingMaterial/navContent/SetTopicNum')
 
 /* 小组 */
-import GroupManage from 'pages/home/Groups/groupManagement'
+const GroupManage = () => import('pages/home/Groups/groupManagement');
 /* 用户信息管理 */
 import UserRouter from '../pages/home/userManage/userRouter'
-import pmphUser from '../pages/home/userManage/pmphUser'
-import writerUser from '../pages/home/userManage/writerUser'
-import orgUser from '../pages/home/userManage/orgUser'
+const pmphUser = () => import('../pages/home/userManage/pmphUser')
+const writerUser = () => import('../pages/home/userManage/writerUser')
+const orgUser = () => import('../pages/home/userManage/orgUser')
 /* 系统消息 */
 import MessageRouter from 'pages/home/systemMessage/MessageRouter'
-import MessageList from 'pages/home/systemMessage/MessageList'
-import MessageState from 'pages/home/systemMessage/MessageState'
-import MessageEdit from 'pages/home/systemMessage/MessageEdit'
-import MessageDetails from 'pages/home/systemMessage/MessageDetails'
-import SchoolQuery from 'pages/home/systemMessage/SchoolQuery'
-import SpecialObj from 'pages/home/systemMessage/specialObj'
-import TeachApplicant from 'pages/home/systemMessage/TeachApplicant'
+const MessageList = () => import('pages/home/systemMessage/MessageList')
+const MessageState = () => import('pages/home/systemMessage/MessageState')
+const MessageEdit = () => import('pages/home/systemMessage/MessageEdit')
+const MessageDetails = () => import('pages/home/systemMessage/MessageDetails')
+const SchoolQuery = () => import('pages/home/systemMessage/SchoolQuery')
+const SpecialObj = () => import('pages/home/systemMessage/specialObj')
+const TeachApplicant = () => import('pages/home/systemMessage/TeachApplicant')
 /* 系统设置 */
 import systemRouter from '../pages/home/systemSet/systemRouter'
-import Roles from '../pages/home/systemSet/roles'
-/* import Authority from '../pages/home/systemSet/authority' */
-import Departments from 'pages/home/systemSet/departments'
-import Orgs from 'pages/home/systemSet/orgs'
-import Area from 'pages/home/systemSet/area'
+const Roles = () => import('../pages/home/systemSet/roles')
+const Departments = () => import('pages/home/systemSet/departments')
+const Orgs = () => import('pages/home/systemSet/departments')
+const Area = () => import('pages/home/systemSet/area')
 /*学校/ 教师审核 */
 import SchoolRouter from 'pages/home/school/schoolRouter'
-import TeacherCheck from 'pages/home/school/teacherCheck'
-import SchoolAdminCheck from 'pages/home/school/schoolAdminCheck'
+const TeacherCheck = () => import('pages/home/school/teacherCheck')
+const SchoolAdminCheck = () => import('pages/home/school/schoolAdminCheck')
 
 /* 我的消息 */
 import MyMessageRouter from 'pages/home/myMessage/MessageRouter';
-import MyMessageList from 'pages/home/myMessage/MessageList';
-import MyMessageDetails from 'pages/home/myMessage/MessageDetails';
+const MyMessageList = () => import('pages/home/myMessage/MessageList')
+const MyMessageDetails = () => import('pages/home/myMessage/MessageDetails')
 /* 内容管理 */
 import ContentRouter from '../pages/home/contentManage/contentRouter'
-import ContentPublish from '../pages/home/contentManage/contentPublish'
-import PublishList from '../pages/home/contentManage/publishList'
-import noticeManage from '../pages/home/contentManage/noticeManage'
-import infoExpertInfo from '../pages/home/contentManage/infoExpressManage'
-import ColumnSet from '../pages/home/contentManage/columnSet'
+const ContentPublish = () => import('../pages/home/contentManage/contentPublish');
+const PublishList = () => import('../pages/home/contentManage/publishList');
+const noticeManage = () => import('../pages/home/contentManage/noticeManage');
+const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
+const sensitiveWords = ()=> import('../pages/home/contentManage/sensitiveWords')
+//广告管理
+const adList = ()=> import('../pages/home/contentManage/adManage/ad-list');
+const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
+
+/** 图书纠错 */
+import ErrorRouter from '../pages/home/bookError/errorRouter';
+const CheckError = () => import('../pages/home/bookError/checkError');
+const AfterError = () => import('../pages/home/bookError/afterError');
+const Check = () => import('../pages/home/bookError/check');
+
+/** 积分管理 */
+import PointRouter from '../pages/home/pointManage/pointRouter';
+const PointRule = () => import('../pages/home/pointManage/pointRule');
+const UserPoint = () => import('../pages/home/pointManage/userPoint');
+const ConvertibleRule = () => import('../pages/home/pointManage/convertibleRule');
 
 /* 出版图书 */
 import BookRouter from 'pages/home/publishBooks/BookRouter'
-import BookManage from 'pages/home/publishBooks/BookManage'
-import CommentManage from 'pages/home/publishBooks/CommentManage'
+const BookManage = () => import('pages/home/publishBooks/BookManage');
+const CommentManage = () => import('pages/home/publishBooks/comment');
+const MicVideo = () => import('../pages/home/publishBooks/micVideo');
+
+/* 选题申报 */
+import SelectTopicRouter from '../pages/home/selectTopic/selectTopicRouter';
+const  TopicExam =()=> import('../pages/home/selectTopic/topicExam');
+const TopicCheck = () => import('../pages/home/selectTopic/topicCheck');
+const dealTopic =()=> import ('../pages/home/selectTopic/dealTopic')
+/* 数据分析 */
+import AnalysisRouter from 'pages/home/analysis/analysis-router'
+const Flow = ()=>import('pages/home/analysis/flow');
+const FlowMap = ()=>import('pages/home/analysis/flow-map');
+const BookFlow = ()=>import('pages/home/analysis/book-flow');
+const BookPreference = ()=>import('pages/home/analysis/book-preference');
 
 /*用户主页(个人设置)*/
 import PersonalRouter from 'pages/home/personal/PersonalRouter'
-import PersonalSetting from 'pages/home/personal/Setting'
+const PersonalSetting = () => import('pages/home/personal/Setting');
 
+/* 问卷调查 */
+import questionSurveyRouter from '../pages/home/questionSurvey/questionSurveyRouter';
+const addNewModel = () =>import('../pages/home/questionSurvey/addNewModel');
+const addNewSurvey = () => import('../pages/home/questionSurvey/addNewSurvey');
+const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet');
+const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
+const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
+const surveryResultDetail = () => import('../pages/home/questionSurvey/surveyResultDetail')
+const launchSurvey =()=> import('../pages/home/questionSurvey/launchSurvey')
+const recoveryResult = () => import('../pages/home/questionSurvey/recoveryResult')
 /**系统日志 */
-import SystemLog from 'pages/home/systemLog/systemLog'
+const SystemLog = () => import('pages/home/systemLog/systemLog');
 
 Vue.use(Router)
 
@@ -114,10 +151,24 @@ export default new Router({
           ]
         },
         {
-          path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 7 }, children: [
-            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 15 } },
-            { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 16 } },
-            { path: 'org', name: '机构用户', component: orgUser, meta: { authorityId: 17 } },
+          path: 'bookerror', name:'图书纠错', component: ErrorRouter, meta: { replaceName: false, authorityId: 8 }, children: [
+            { path: 'check', name: '图书纠错审核', component: CheckError, meta: { authorityId: 23 }},
+            { path: 'checkerror', name: '纠错审核', component: Check, },
+            { path: 'after', name: '图书纠错跟踪', component: AfterError, meta: { authorityId: 24 }}
+          ]
+        },
+        {
+          path: 'pointmanage', name:'积分管理', component: PointRouter, meta: { replaceName: false, authorityId: 9 }, children: [
+            { path: 'pointrule', name: '积分管理', component: PointRule, meta: { authorityId: 25 }},
+            { path: 'userpoint', name: '用户积分', component: UserPoint, meta: { authorityId: 26 }},
+            { path: 'convertiblerule', name: '兑换规则', component: ConvertibleRule, meta: { authorityId: 27 }}
+          ]
+        },
+        {
+          path: 'user', name: '用户信息管理', component: UserRouter, meta: { replaceName: false, authorityId: 11 }, children: [
+            { path: 'pmph', name: '社内用户', component: pmphUser, meta: { authorityId: 32 } },
+            { path: 'writer', name: '个人用户', component: writerUser, meta: { authorityId: 33 } },
+            { path: 'org', name: '学校 / 医院用户', component: orgUser, meta: { authorityId: 34 } },
           ]
         },
         {
@@ -134,12 +185,12 @@ export default new Router({
         },
         /* 系统设置 */
         {
-          path: 'set', name: '系统设置', component: systemRouter, meta: { replaceName: false, authorityId: 8 }, children: [
-            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 18 } },
+          path: 'set', name: '系统设置', component: systemRouter, meta: { replaceName: false, authorityId: 12 }, children: [
+            { path: 'roles', name: '角色管理', component: Roles, meta: { authorityId: 35 } },
             /*  {path:'authority',name:'权限管理',component:Authority}, */
-            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 21 } },
-            { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 20 } },
-            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 19 } }
+            { path: 'departments', name: '社内部门设置', component: Departments, meta: { authorityId: 36 } },
+            /* { path: 'orgs', name: '院校机构设置', component: Orgs, meta: { authorityId: 20 } },
+            { path: 'area', name: '区域管理', component: Area, meta: { authorityId: 19 } } */
           ]
         },
         { path: 'groupmanage', name: '小组管理', component: GroupManage, meta: { authorityId: 3 } },
@@ -153,20 +204,57 @@ export default new Router({
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
-              { path: 'list', name: '文章管理',meta: { replaceName: false}, component: PublishList },
+            { path: 'list', name: '文章管理', meta: { authorityId: 15 }, component: PublishList },
               { path: 'new', name: '添加内容', component: ContentPublish },
-            { path: 'info', name: '信息快报管理', meta: { authorityId: 10 }, component: infoExpertInfo },
-            { path: 'notice', name: '公告管理', meta: { authorityId: 11 }, component: noticeManage },
+            { path: 'info', name: '信息快报管理', meta: { authorityId: 16 }, component: infoExpertInfo },
+            { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
+            { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 17 }},
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
+            { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },
+            { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 18 }, component: adEdit }
           ]
         },
         /* 出版图书 */
         {
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
-          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 13 }},
-          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 14 }}
+          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 }},
+          { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}},
+          { path: 'video', name: '微视频管理', component: MicVideo, meta: { authorityId: 20 } }
+          
           ]
         },
+        /*数据分析 */
+        {
+          path: 'analysis', name: '数据分析', component: AnalysisRouter, meta: { replaceName: false, authorityId: 10 }, children: [
+            { path: 'flow', name: '流量概况', component: Flow ,meta: { authorityId: 28 }},
+            { path: 'flow-map', name: '流量地图', component: FlowMap, meta: { authorityId: 29 }},
+            { path: 'book-flow', name: '图书流量概况', component: BookFlow, meta: { authorityId: 30 } },
+            { path: 'book-preference', name: '用户图书偏好分析', component: BookPreference, meta: { authorityId: 31 } }
+        ]
+        },
+        /* 选题申报 */
+        {
+          path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false,authorityId: 7}, children:[
+            { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 21 }},
+            { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 22 }},
+            { path: 'deal', name: '选题受理', component: dealTopic}
+
+         ]
+        },
+        /* 问卷调查 */
+        {
+          path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 13}, children:[
+            { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 37 }},
+            { path: 'launch', name: '发起调查', component: launchSurvey},
+            { path: 'newmodel', name: '问卷模板新增', component: addNewModel,  },
+            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey,  },
+            { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 38 } },
+            { path: 'detail', name:'结果明细', component: surveryResultDetail,  },
+            { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 39 } },
+            { path: 'result', name: '问卷回收结果', component: recoveryResult, },
+          ]
+        },
+
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: false, authorityId: 1}, children: [
@@ -182,7 +270,7 @@ export default new Router({
         },
         /*用户主页(个人设置)*/
         {
-          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 1}
+          path: 'systemlog', name: '系统日志', component: SystemLog, meta: {  replaceName: false, authorityId: 14}
         },
       ]
     },

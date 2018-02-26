@@ -20,7 +20,7 @@
           <el-button class="marginR20" @click="manageBtn(0)" v-else type="primary" size="small">管理我的文件</el-button>
         </div>
         <div class="fileupload">
-          <el-button @click="dialogChooseGroup = true" type="primary" size="small">上传</el-button>
+          <el-button @click="openUploadPop" type="primary" size="small">上传</el-button>
         </div>
       </div>
     </el-row>
@@ -51,9 +51,14 @@
           width="168">
         </el-table-column>
         <el-table-column
+          prop="fileLenth"
+          label="大小"
+          width="100">
+        </el-table-column>
+        <el-table-column
           prop="memberName"
           label="分享者"
-          width="110">
+          width="90">
         </el-table-column>
         <el-table-column
           v-if="screenWidth_lg_computed"
@@ -99,7 +104,7 @@
     <el-dialog title="选择上传小组" :visible.sync="dialogChooseGroup">
       <el-table
         ref="fileTable"
-        :data="currentGroupList"
+        :data="groupListData"
         border
         tooltip-effect="dark"
         style="width: 100%"
@@ -134,11 +139,13 @@
 
 <script>
   import ScreenSize from 'common/mixins/ScreenSize.js';
+  import bus from 'common/eventBus/bus.js'
 	export default {
     mixins: [ScreenSize],
     props:['currentGroup','currentGroupList','crurrentMemberInfo'],
 		data() {
 			return {
+			  api_group_list:'/pmpheep/group/list/pmphGroupFile',
         screenWidth_lg_computed: true,
         dialogChooseGroup: false,
         visible: false,
@@ -149,6 +156,7 @@
         groupSelection: [],
         // tableData文件列表
         tableData: [],
+        groupListData:[],
         fileList: [],
         searchFormData:{
           groupId:this.currentGroup.id,
@@ -187,7 +195,7 @@
         return data
       },
       uploadFileUrl(){
-        return this.$config.BASE_URL+'group/add/pmphgroupfile'
+        return '/pmpheep/group/add/pmphgroupfile'
       },
       myFileList(){
         var list = [];
@@ -269,12 +277,34 @@
                 this.fileList.push(iterm);
               });
               this.fileNum = res.data.total;
+              bus.$emit('group-file:set',this.fileNum);
             }
           })
           .catch(e=>{
             console.log(e);
             this.$message.error('获取小组文件失败');
           })
+      },
+      getGroupList(){
+        if(this.groupListData.length){
+          return;
+        }
+        this.$axios.get(this.api_group_list)
+          .then(response=>{
+            let res = response.data;
+            if (res.code == '1') {
+              this.groupListData = res.data;
+            }else{
+              this.$message.error(res.msg.msgTrim());
+            }
+          })
+          .catch(e=>{
+          })
+
+      },
+      openUploadPop(){
+        this.getGroupList();
+        this.dialogChooseGroup = true;
       },
       /**
        * 搜索
@@ -349,23 +379,23 @@
           flag = false;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+        if(file.name.length>50){
+          this.$message.error("文件名称不能超过50个字符");
           flag = false;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+          this.$message.error("请勿上传可执行文件!");
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$message.error("文件大小不能为0kb");
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$message.error("文件上传最大为100M！");
           self.newGroupData.filename=undefined;
           flag = false;
         }
@@ -397,6 +427,10 @@
     },
     created(){
       this.getFilelistData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group/group-file']);
+      }
     },
     mounted() {
       this.screenWidth_lg_computed = this.screenWidth_lg;

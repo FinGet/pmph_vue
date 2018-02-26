@@ -1,6 +1,8 @@
 <template>
   <div class="school-query">
-    <choose-school ref="chooseSchool" @selectChange="selectChange">
+    <choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="materialId">
+      <el-button type="primary" @click="exportExcel"  size="large">导出学校名单</el-button>
+
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
@@ -39,6 +41,7 @@
   export default {
     data() {
       return {
+        api_export_excel:'/pmpheep/excel/published/org',
         type:'new',
         reissueFormData:{
           id:'',
@@ -104,6 +107,14 @@
         }).catch(err => {
           this.$message.error('发布失败，请稍后再试！');
         })
+      },
+      /**
+       * 导出学校列表
+       * @param id 教材id
+       */
+      exportExcel(){
+        let url = this.api_export_excel+"?materialId="+this.materialId;
+        this.$commonFun.downloadFile(url);
       }
     },
     components:{

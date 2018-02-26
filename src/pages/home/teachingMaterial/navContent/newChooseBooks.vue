@@ -42,7 +42,7 @@
             <div class="clearfix"></div>
 
 
-            <el-form-item label="联系人：">
+            <el-form-item label="联系人：" prop="materialContacts">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseContact">选择联系人</el-button>
                 <br>
@@ -113,11 +113,11 @@
                 <el-button type="primary"  size="small" @click="chooseProjectDirector" style="margin-right:10px;">选择</el-button>
                 <!--<span>{{projectDirectorData[0].name}}</span>-->
                 <el-tag
-                  v-for="tag in projectDirectorData"
+                  v-for="(tag,index) in projectDirectorData"
                   :key="tag.realname"
                   :closable="true"
                   type="info"
-                  @close="handleDirectorClose(tag)"
+                  @close="handleDirectorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -125,16 +125,16 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item label="项目编辑："required prop="materialProjectEditors">
+            <el-form-item label="项目编辑：" required prop="materialProjectEditors">
               <el-col :span="24">
                 <el-button type="primary"  size="small" @click="chooseProjectEditor" style="margin-right:10px;">选择</el-button>
                 <el-tag
                   class="marginR10"
-                  v-for="tag in ruleForm.materialProjectEditors"
-                  :key="tag.realname"
+                  v-for="(tag,index) in ruleForm.materialProjectEditors"
+                  :key="index"
                   :closable="true"
                   type="info"
-                  @close="handleEditorClose(tag)"
+                  @close="handleEditorClose(index)"
                 >
                   {{tag.realname}}
                 </el-tag>
@@ -256,19 +256,19 @@
                 </el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="上传图片：" prop="noticeFiles">
-              <my-upload
-                class="upload"
-                :auto-upload="true"
-                name="files"
-                action="/pmpheep/material/upTempFile"
-                :on-change="imgUploadChange"
-                :on-success="imgUploadSuccess"
-                :before-upload="imgBeforeUpload"
-                :file-list="material.noticeFiles">
-                <el-button size="small" type="primary">点击上传</el-button>
-              </my-upload>
-            </el-form-item>
+                <el-form-item label="上传图片：" prop="noticeFiles">
+                  <my-upload
+                    class="upload"
+                    :auto-upload="true"
+                    name="files"
+                    action="/pmpheep/material/upTempFile"
+                    :on-remove="imgUploadChange"
+                    :on-success="imgUploadSuccess"
+                    :before-upload="imgBeforeUpload"
+                    :file-list="material.noticeFiles">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                  </my-upload>
+                </el-form-item>
             <el-form-item label="备注：" prop="note">
               <el-col :span="24">
                 <el-input
@@ -287,11 +287,11 @@
                   action="/pmpheep/material/upTempFile"
                   name="files"
                   :auto-upload="true"
-                  :on-change="fileUploadChange"
+                  :on-remove="fileUploadChange"
                   :before-upload="fileBeforeUpload"
                   :on-success="fileUploadSuccess"
                   :file-list="material.noteFiles">
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  <el-button size="small" type="primary" >点击上传</el-button>
                 </my-upload>
               </el-col>
             </el-form-item>
@@ -392,7 +392,7 @@ export default {
         },
         {
           name: "数字编委遴选",
-          key:'material.isDigitaleditorOptional',
+          key:'material.isDigitalEditorOptional',
           usecheck: false,
           show: true
         },
@@ -474,6 +474,13 @@ export default {
           needcheck: false
         },
         {
+          name: "主编学术专著情况",
+          key:'material.isMonographUsed',
+          requiredKey:'material.isMonographRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
           name: "教材编写情况",
           key:'material.isTextbookUsed',
           requiredKey:'material.isTextbookRequired',
@@ -487,7 +494,34 @@ export default {
           usecheck: false,
           needcheck: false
         },
-
+        {
+          name: "出版行业获奖情况",
+          key:'material.isPublishRewardUsed',
+          requiredKey:'material.isPublishRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "SCI论文投稿及影响因子",
+          key:'material.isSciUsed',
+          requiredKey:'material.isSciRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "临床医学获奖情况",
+          key:'material.isClinicalRewardUsed',
+          requiredKey:'material.isClinicalRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "学术荣誉授予情况",
+          key:'material.isAcadeRewardUsed',
+          requiredKey:'material.isAcadeRewardRequired',
+          usecheck: false,
+          needcheck: false
+        },
       ],
       material:{
          materialName:'',
@@ -496,6 +530,7 @@ export default {
          actualDeadline:'',
          ageDeadline:'',
          materialType:[],
+         materialContacts:[],
          director:'',
          materialProjectEditors:[],
          projectEditorPowers:[],
@@ -531,22 +566,27 @@ export default {
       rules: {
         materialName: [
           { required: true, message: "请输入教材名称", trigger: "blur" },
-          {min:1,max:40,message:'教材名称过长',trigger:'change,blur'}
+          {min:1,max:40,message:'教材名称不能超过40个字符',trigger:'change,blur'}
           ],
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
-          {min:0,max:10,message:'轮次长度过长',trigger:'blur'},
-          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
+          {min:0,max:10,message:'轮次不能超过10个字符',trigger:'blur'},
+          {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
+          {validator:this.$formCheckedRules.positiveChecked,trigger: "blur"},
           ],
         actualDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         deadline:[{ type:'date',required: true, message: "请选择日期", trigger: "change" }],
         ageDeadline:[{type:'date', required: true, message: "请选择日期", trigger: "change" }],
         materialType:[{type:'array', required: true, message: "请选择教材分类", trigger: "change" }],
+        materialContacts:[{type:'array', required: true,message:'请至少选择一个联系人' ,trigger: "change" }],
         director:[{type:'number', required: true, message: "请选择主任", trigger: "change" }],
-        materialProjectEditors:[{type:'array', required: true,message:'至少选择一个项目编辑' ,trigger: "change" }],
+        materialProjectEditors:[{type:'array', required: true,message:'请至少选择一个项目编辑' ,trigger: "change" }],
         projectEditorPowers:[{type:'array', required: true,message:'请指定至少一个项目编辑权限' ,trigger: "change" }],
         cehuaPowers:[{type:'array', required: true,message:'请指定至少一个策划编辑权限' ,trigger: "change" }],
-        mailAddress:[{ required: true, message: "邮寄地址不能为空", trigger: "blur" }],
+        mailAddress:[
+          { required: true, message: "邮寄地址不能为空", trigger: "blur" },
+          {min:1,max:100,message:'邮寄地址不能超过100个字符',trigger:'change,blur'}
+          ],
         contactUserName:[
          {required: true, message: "请填写姓名", trigger: "blur" },
          {min:1,max:20,message:'姓名不能超过20个字符',trigger:'change,blur'}
@@ -557,24 +597,24 @@ export default {
         ],
         contactEmail:[
           {required: true, message: "请填写邮箱", trigger: "blur" },
-          { min: 1, max: 40, message: "邮箱长度不能超过40个字符", trigger: "change,blur" },
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
           { type: "email", message: "邮箱格式不正确", trigger: "blur" }
         ],
         extensionName:[
-          {required: true, message: "请填写姓名", trigger: "blur" },
+          {required: true, message: "请填写名称", trigger: "blur" },
+          {min:1,max:20,message:'不能超过20个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
-          {type:'array',required: true, message: "至少上传一张图片", trigger: "blur" },
+          {type:'array',required: true, message: "请至少上传一张图片", trigger: "blur" },
         ],
         noteFiles:[
-          {type:'array',required: true, message: "至少上传一个文件", trigger: "blur" },
+          {type:'array',required: true, message: "请至少上传一个文件", trigger: "blur" },
         ],
         notice:[
           {required: true, message: "请填写主要内容", trigger: "blur" },
           {min:1,max:2000,message:'内容不能超过2000个字符',trigger:'blur'}
           ],
         note:[
-           /* {required: true, message: "请填写备注", trigger: "blur" }, */
           {min:1,max:2000,message:'备注不能超过2000个字符',trigger:'blur'}
           ]
 
@@ -644,7 +684,7 @@ export default {
              console.log(res);
              if(res.data.code==1){
                this.ruleForm['material.id']=res.data.data.material.id;
-               this.ruleForm['materialExtra.id']=res.data.data.materialExtra.id;
+               this.ruleForm['materialExtra.id']=res.data.data.materialExtra?res.data.data.materialExtra.id:'';
                //选项赋值
                for(var i in this.listTableData){
                     this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
@@ -675,13 +715,14 @@ export default {
               this.projectDirectorData=[{id:this.material.director,realname:res.data.data.directorName}];
              //联系人赋值
               this.ruleForm.materialContacts=this.stringToArray(res.data.data.materialContacts);
+              this.material.materialContacts=this.stringToArray(res.data.data.materialContacts);
               console.log(this.ruleForm.materialContacts)
                //项目编辑赋值
               this.ruleForm.materialProjectEditors=this.stringToArray(res.data.data.materialProjectEditors);
               this.material.materialProjectEditors=this.stringToArray(res.data.data.materialProjectEditors);
               //内容备注赋值
-              this.material.notice=res.data.data.materialExtra.notice;
-              this.material.note=res.data.data.materialExtra.note;
+              this.material.notice=res.data.data.materialExtra?res.data.data.materialExtra.notice:'';
+              this.material.note=res.data.data.materialExtra?res.data.data.materialExtra.note:'';
               //扩展项赋值
               this.ruleForm.materialExtensions=this.stringToArray(res.data.data.materialExtensions);
               //文件赋值
@@ -689,22 +730,30 @@ export default {
               for(var i in noticeArr){
                   this.ruleForm.materialNoticeAttachments.push({
                     id:noticeArr[i].id,
+                    attachment:noticeArr[i].attachment,
+                  })
+                  this.material.noticeFiles.push({
+                    id:noticeArr[i].id,
                     name:noticeArr[i].attachmentName,
-                    url:noticeArr[i].attachment,
+                    url:noticeArr[i].attachment
                   })
               }
-              this.material.noticeFiles=this.ruleForm.materialNoticeAttachments;
-              this.noticeFiles=this.ruleForm.materialNoticeAttachments;
+             // this.material.noticeFiles=this.ruleForm.materialNoticeAttachments;
+              //this.noticeFiles=this.ruleForm.materialNoticeAttachments;
               var noteArr=this.stringToArray(res.data.data.materialNoteAttachments);
               for(var i in noteArr){
                   this.ruleForm.materialNoteAttachments.push({
                     id:noteArr[i].id,
-                    name:noteArr[i].attachmentName,
-                    url:noteArr[i].attachment,
+                    attachment:noteArr[i].attachment,
                   })
+                 this.material.noteFiles.push({
+                   id:noteArr[i].id,
+                    name:noteArr[i].attachmentName,
+                    url:noteArr[i].attachment
+                 })  
               }
-              this.material.noteFiles=this.ruleForm.materialNoteAttachments;
-              this.noteFiles=this.ruleForm.materialNoteAttachments;
+              //this.material.noteFiles=this.ruleForm.materialNoteAttachments;
+              //this.noteFiles=this.ruleForm.materialNoteAttachments;
               //编辑权限赋值
               this.ruleForm.cehuaPowers=res.data.data.cehuaPowers;
               this.ruleForm.projectEditorPowers=res.data.data.projectEditorPowers;
@@ -790,6 +839,15 @@ export default {
                       sort:this.checkedConactPersonData[i].sort
                     }
                   );
+                  this.material.materialContacts.push(
+                    {
+                      contactUserId:this.checkedConactPersonData[i].id,
+                      contactUserName:this.checkedConactPersonData[i].realname,
+                      contactPhone:this.checkedConactPersonData[i].handphone,
+                      contactEmail:this.checkedConactPersonData[i].email,
+                      sort:this.checkedConactPersonData[i].sort
+                    }
+                  );
                }
            }
            
@@ -857,31 +915,48 @@ export default {
     /* 文件上传改变 */
     /* 图片 */
     imgUploadChange(file,filelist){
-     this.material.noticeFiles=filelist;
+     this.material.noticeFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoticeAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+      })
      console.log(file,filelist);
      this.$refs.ruleForm.validateField('noticeFiles');
     },
     imgBeforeUpload(file){
+       for(var i in this.ruleForm.materialNoticeAttachments){
+         if(this.ruleForm.materialNoticeAttachments[i].name==file.name){
+           this.$message.error('请勿多次上传同一图片');
+           return false;
+         }
+       }
+       for(var i in this.material.noticeFiles){
+         if(this.material.noticeFiles[i].name==file.name){
+           this.$message.error('请勿多次上传同一图片');
+           return false;
+         }
+       }
+          
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
         this.$message.error('图片的大小不能超过20MB！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(exSize==0){
         this.$message.error('请勿上传空文件！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
         this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
-        this.noticeFiles.pop();
+       // this.material.noticeFiles.pop();
         return false;
       }
       if(file.name.length>80){
         this.$message.error('图片名称不能超过80个字符！');
-        this.noticeFiles.pop();
+        //this.material.noticeFiles.pop();
         return false;
       }  
     },
@@ -890,35 +965,53 @@ export default {
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+        this.ruleForm.materialNoticeAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name});
       })
+      this.$refs.ruleForm.validateField('noticeFiles');
     },
     /* 文件 */
     fileUploadChange(file,filelist){
-     this.material.noteFiles=filelist;
+     this.material.noteFiles=filelist;   //表单验证用
+      this.ruleForm.materialNoteAttachments=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url});
+      })
      this.$refs.ruleForm.validateField('noteFiles');
     },
     fileBeforeUpload(file){
+        for(var i in this.ruleForm.materialNoteAttachments){
+         if(this.ruleForm.materialNoteAttachments[i].name==file.name){
+           this.$message.error('请勿多次上传同一附件');
+           return false;
+         }
+       }
+       for(var i in this.material.noteFiles){
+         if(this.material.noteFiles[i].name==file.name){
+           this.$message.error('请勿多次上传同一附件');
+           return false;
+         }
+       }
+          
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
         this.$message.error('附件大小不能超过100MB！');
-        this.noteFiles.pop();
+       // this.material.noteFiles.pop();
         return false;
      }
      if(exSize==0){
         this.$message.error('请勿上传空文件！');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
      if(exStr=='bat'||exStr=='com'||exStr=='exe'){
         this.$message.error('请勿上传可执行文件');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
      if(file.name.length>80){
         this.$message.error('附件名称不能超过80个字符');
-        this.noteFiles.pop();
+        //this.material.noteFiles.pop();
         return false;
      }
     },
@@ -927,8 +1020,9 @@ export default {
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
-        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.name});
+        this.ruleForm.materialNoteAttachments.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name});
       })
+      this.$refs.ruleForm.validateField('noteFiles');
     },
     /**
        * 删除选中的项目主任
@@ -943,6 +1037,8 @@ export default {
        * 删除选中的项目编辑
        */
     handleEditorClose(val) {
+      console.log(1111,val);
+      
       this.ruleForm.materialProjectEditors.splice(val, 1);
       this.material.materialProjectEditors.splice(val, 1);
       this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -951,7 +1047,7 @@ export default {
        * 返回上一级
        */
     back() {
-      this.$router.push("applicationlist");
+      this.$router.go(-1);
     },
     handleNodeClick(data) {
       this.checkedTreeData = data;
@@ -1114,16 +1210,18 @@ export default {
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
                     this.uploadFormMerge(this.ruleForm)).then((res)=>{
                     console.log(res);
+                    this.isloading=false;
                     if(res.data.code==1){
-                      this.isloading=false;
-                      this.$message.success(this.$router.currentRoute.params.materialId=='new'?'新建成功':'更新成功');
+                      this.$message.success('已保存教材通知');
                       this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
+                    }else{
+                      this.$message.error(res.data.msg.msgTrim());
                     }
                   })  
 
 
           } else {
-            this.$message.error('表单验证未通过');
+            this.$message.error('输入的内容不正确，请正确填写');
             return false;
           }
         });       
@@ -1192,5 +1290,8 @@ export default {
 }
 .extend_list .add_button {
   color: #1ab194;
+}
+.form-item{
+  margin:182px 0 0 -150px;
 }
 </style>

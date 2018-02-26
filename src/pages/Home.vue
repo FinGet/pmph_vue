@@ -81,10 +81,10 @@
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
             this.isPadding=false;
-        if(str=='materialrouter'||str=='groupmanage'||str=='auth'){
+        if(str=='materialrouter'||str=='groupmanage'||str=='auth' || str == 'bookerror'){
           this.isShowBorder=false;
         }
-        if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'){
+        if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'||str=="topic"||this.$router.currentRoute.name=='问卷模板新增'||this.$router.currentRoute.name=='结果明细'||this.$router.currentRoute.name=='发起调查'||this.$router.currentRoute.name=='问卷回收结果'){
           this.isPadding=true;
         }
         if(this.$router.currentRoute.name=="通知列表"){

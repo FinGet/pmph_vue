@@ -1,7 +1,6 @@
 /*css初始化*/
 body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,input,textarea,select{margin:0;padding:0}
-body{font-family: "Microsoft YaHei","微软雅黑",Arial,sans-serif,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB";
-  font-size:14px;line-height: 1.4;background:#f7f7f7;-webkit-text-size-adjust:100%;color: rgb(31, 43, 61);}
+body{font-size:14px;}
 a{text-decoration:none; color: #333;}
 a:hover{text-decoration:none}
 em{font-style:normal}
@@ -66,8 +65,8 @@ p{word-wrap:break-word}
 .bg-yellow{background-color: yellow;}
 .bg-none{background: none !important;}
 .bg-none *{background: none !important;}
-
-.link{color: #337ab7;cursor: pointer}
+.bg-transparent{background: transparent;}
+.link{color: #337ab7;cursor: pointer;}
 /*=================================================================
   布局相关
   =================================================================*/
@@ -80,6 +79,9 @@ p{word-wrap:break-word}
 .block{
   display: block;
 }
+.table{display: table}
+.table-cell{display: table-cell}
+.vertical-align-middle{vertical-align-middle: middle;}
 /*=================================================================
   float等宽列表
   使用示例：
@@ -164,6 +166,7 @@ p{word-wrap:break-word}
   padding
   =================================================================*/
 .paddingT0 { padding-top: 0; }
+.paddingT1{ padding-top: 1px; }
 .paddingT5  { padding-top: 5px; }
 .paddingT10 { padding-top: 10px; }
 .paddingT15 { padding-top: 15px; }
@@ -171,6 +174,7 @@ p{word-wrap:break-word}
 .paddingT30 { padding-top: 30px; }
 .paddingT40 { padding-top: 40px; }
 .paddingT50 { padding-top: 50px; }
+.paddingT60 { padding-top: 60px; }
 
 .paddingB0 { padding-bottom: 0; }
 .paddingB5  { padding-bottom: 5px; }
@@ -186,9 +190,11 @@ p{word-wrap:break-word}
 .paddingL10 { padding-left: 10px; }
 .paddingL15 { padding-left: 15px; }
 .paddingL20 { padding-left: 20px; }
+.paddingL60 { padding-left: 60px; }
 .paddingL30 { padding-left: 30px; }
+.paddingL80 { padding-left: 80px; }
 .paddingL100 { padding-left: 100px; }
-.paddingL110 { padding-left: 100px; }
+.paddingL110 { padding-left: 110px; }
 
 .paddingR0 { padding-right: 0; }
 .paddingR5  { padding-right: 5px; }
@@ -237,6 +243,9 @@ p{word-wrap:break-word}
 .marginB40 { margin-bottom: 40px; }
 .marginB50 { margin-bottom: 50px; }
 .marginB60 { margin-bottom: 60px; }
+
+.margin-auto{margin-left: auto;margin-right: auto;}
+
 
 /*=================================================================
   z-index-100

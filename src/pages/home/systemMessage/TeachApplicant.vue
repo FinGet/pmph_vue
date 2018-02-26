@@ -28,7 +28,7 @@
             style="width: 100%">
             <el-table-column
               prop="materialName"
-              label="书籍名称">
+              label="教材名称">
             </el-table-column>
           </el-table>
 
@@ -42,7 +42,7 @@
         <!--操作按钮-->
         <div class="text-right paddingT20">
           <el-button type="primary"  @click="back" v-if="type=='new'">返回编辑</el-button>
-          <el-button type="primary" :disabled="selections.length==0" @click="send">发送</el-button>
+          <el-button type="primary" :disabled="selections.length==0" @click="showMemberList" :loading="submiting">下一步</el-button>
         </div>
         <!--表格-->
         <div class="table-wrapper">
@@ -58,7 +58,7 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="id"
+              prop="sort"
               label="书序"
               width="80">
             </el-table-column>
@@ -75,6 +75,36 @@
         </div>
       </el-col>
     </el-row>
+
+    <!--已选择院校预览-->
+    <el-dialog
+      title="已选中机构"
+      :visible.sync="dialogVisible">
+      <div class="table-wrapper">
+        <el-table
+          :data="hasCheckedMemberList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            label="姓名">
+            <template scope="scope">
+              <p class="bg-none" v-html="scope.row.realname"></p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="工作单位">
+            <template scope="scope">
+              <p class="bg-none" v-html="scope.row.orgName"></p>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="send">发 送</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,6 +137,9 @@
           userIds:'',
           bookIds:'',
         },
+        submiting:false,
+        dialogVisible:false,
+        hasCheckedMemberList:[],
       }
     },
     methods:{
@@ -134,6 +167,28 @@
             }
           }
         })
+      },
+      /**
+       * 获取已选中人的
+       */
+      geMember(){
+        this.$axios.get('/pmpheep/decPosition/textbook/declaration',{
+          params:{
+            textbookIds: this.formdata.bookIds ,
+            pageSize: 1000,
+            pageNumber: 1,
+          }
+        }).then(response => {
+          var res = response.data;
+          if (res.code == '1') {
+            this.hasCheckedMemberList = res.data.rows;
+          }
+        })
+      },
+      showMemberList(){
+        this.hasCheckedMemberList=[];
+        this.geMember();
+        this.dialogVisible=true;
       },
       /**
        * 搜索
@@ -183,19 +238,28 @@
         // data.orgIds=this.queryData.join(',');
         data['sessionId']=this.$getUserData().sessionId;
         // console.log(this.formdata)
+        this.submiting=true;
         this.$axios.post(url,this.$initPostData(data))
           .then(function (response) {
             let res = response.data;
+            // console.log('教材报名',res.code);
             if(res.code===1){
-              self.$message.success('发布成功！');
+              // console.log(1);
+              self.$message.success('发送成功！');
               self.$router.push({name: '消息列表'});
+              return;
+            }else{
+              self.$message.error(res.msg.msgTrim());
             }
+            this.submiting=false;
           })
           .catch(function (error) {
+            // console.log(error);
             self.$message({
               type:'error',
-              message:'发布失败，请重试'
+              message:'发送失败，请重试'
             });
+            self.submiting=false;
           });
       },
       /**

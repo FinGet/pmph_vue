@@ -17,6 +17,7 @@
                 v-show="tab.view=='GroupChat'||tab.view=='GroupFile'||(tab.view=='GroupSetting'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder))||(tab.view=='GroupMembers'&&(crurrentMemberInfo.isSystemAdmin||crurrentMemberInfo.isFounder||crurrentMemberInfo.isAdmin))"
             >
               {{tab.type}}
+              <span class="filesNumber" v-if="tab.type==='文件共享'&&currentGroup.filesNumber">{{currentGroup.filesNumber}}</span>
             </li>
 
           </ul>
@@ -48,10 +49,11 @@
 <script>
   import GroupsList from 'components/group/GroupsList'
   import GroupChat from 'components/group/GroupChat'
-  import GroupFile from 'components/group/GroupFile'
-  import GroupSetting from 'components/group/GroupSetting'
   import MembersList from 'components/group/MembersList'
-  import GroupMembers from 'components/group/GroupMembers'
+  const GroupFile = () => import('components/group/GroupFile');
+  const GroupSetting = () => import('components/group/GroupSetting');
+  const GroupMembers = () => import('components/group/GroupMembers');
+  import bus from 'common/eventBus/bus.js'
   export default {
     data() {
       return {
@@ -67,7 +69,8 @@
           groupImage: "",
           groupName:"",
           textbook:'',
-          id:null
+          id:null,
+          filesNumber:0,
         },
         currentGroupList:[],
         crurrentMemberList:[],
@@ -140,6 +143,14 @@
           this.memberColDefaultWidth=4;
         }
       }
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group']);
+      }
+    },
+    mounted(){
+      bus.$on('group-file:add',this.currentGroupFileNumberAdd)
+      bus.$on('group-file:set',this.currentGroupFileNumberReset)
     },
     methods:{
       fold(){//展开与收起右侧成员列表
@@ -180,6 +191,12 @@
       getGroupMemberList(memberList){
         this.crurrentMemberList=memberList;
       },
+      currentGroupFileNumberAdd(){
+        this.currentGroup.filesNumber++;
+      },
+      currentGroupFileNumberReset(n){
+        this.currentGroup.filesNumber = n;
+      }
     },
     watch:{
       /**
@@ -257,5 +274,14 @@
   }
 
 
-
+.filesNumber{
+  display: inline-block;
+  background: #1ABB9C!important;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 13px;
+  padding: 3px 6px;
+  border-radius: 50%;
+}
 </style>

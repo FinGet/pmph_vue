@@ -86,6 +86,9 @@
           createTime:+(new Date()),
         },
         fileUploading:false,
+        supportWebsocket:true,
+        startIntervalFetchMessagesList:true,
+        timer:undefined,
       }
 		},
     computed:{
@@ -126,7 +129,7 @@
         this.messagesList.push(message);
         //发送完消息清空textarea
         this.editingTextarea = '';
-
+        this.startIntervalFetchMessagesList=true;//发送完成就ie9下打开模拟websocket
       },
       /**
        * 点击发送按钮，当消息为空时触发此方法
@@ -147,22 +150,22 @@
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("不可以上传可.exe|.bat|.com|.lnk|.pif等格式的可执行文件");
+          this.$message.error("请勿上传可执行文件!");
           flag = false;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+        if(file.name.length>50){
+          this.$message.error("文件名称不能超过50个字符");
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$message.error("文件大小不能为0kb");
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$message.error("文件上传最大为100M！");
           flag = false;
         }
         console.log(flag)
@@ -178,19 +181,21 @@
       uploadFileSuceess(response, file, fileList){
         if (response.code == '1') {
           this.fileUploading=false;
+          bus.$emit('group-file:add');
         }else{
           this.$message.error(response.msg.msgTrim());
         }
       },
       /**
        * 获取小组聊天历史消息
-       * @param pageSize
-       * @param pageNumber
-       * @param callback
+       * @param  Boolean reset
        */
-      getHistoryMessage(){
+      getHistoryMessage(reset){
         var self = this;
         this.messageLoading=true;
+        if(reset){
+          this.getHistoryMesListForm.createTime = +(new Date());
+        }
         this.$axios.get('/pmpheep/group/list/message',{params:{
           groupId:this.currentGroup.id,
           pageSize:this.getHistoryMesListForm.pageSize,
@@ -215,6 +220,9 @@
                 };
                 tempList.unshift(message)
               });
+              if(reset){
+                self.messagesList=[];
+              }
               tempList.forEach(iterm=>{
                 self.messagesList.unshift(iterm);
               });
@@ -230,9 +238,10 @@
        * 点击加载更多历史消息按钮，先将获取的页码参数加1，再执行getHistoryMessage方法
        */
       getMoreHistoryMessage(){
-          this.isClickLoadingMore=true;
-          this.getHistoryMesListForm.pageNumber++;
-          this.getHistoryMessage();
+        this.startIntervalFetchMessagesList=false;//当在查看历史消息的时候，先停止ie9模拟请求
+        this.isClickLoadingMore=true;
+        this.getHistoryMesListForm.pageNumber++;
+        this.getHistoryMessage();
       },
       /**
        * 处理接收到的消息事件
@@ -261,7 +270,9 @@
        */
       changeTextarea(){
         if(this.editingTextarea.length>250){
-          this.editingTextarea=this.editingTextarea.substring(0,250);
+          this.$nextTick(() => {
+            this.editingTextarea=this.editingTextarea.substring(0,250);
+          })
         }
       },
       /**
@@ -276,6 +287,15 @@
       removeListenMessage(){
         bus.$off('ws:message',this.handlerReceiveMessage)
       },
+      /**
+       * 模拟websocket定时请求消息列表
+       */
+      intervalFetchMessagesList(){
+        if(this.startIntervalFetchMessagesList){
+          this.getHistoryMesListForm.pageNumber=1;
+          this.getHistoryMessage(true);
+        }
+      }
 
     },
     components:{
@@ -288,6 +308,12 @@
     },
     mounted(){
       this.startListenMessage();
+      this.supportWebsocket = window.WebSocket;
+      if(!this.supportWebsocket){
+        this.timer = setInterval(()=>{
+          this.intervalFetchMessagesList();
+        },30000)
+      }
     },
     watch:{
       messagesList(){
@@ -310,6 +336,7 @@
     },
     beforeDestroy(){
       this.removeListenMessage();
+      clearInterval(this.timer);
     }
 	}
 </script>

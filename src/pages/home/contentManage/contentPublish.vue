@@ -17,6 +17,16 @@
             @change="handleChange">
           </el-cascader>
       </el-form-item>
+      <el-form-item label="所属教材：">
+          <el-select v-model="formData.materialId" placeholder="请选择" class="input">
+            <el-option
+              v-for="item in bookOptions"
+              :key="item.id"
+              :label="item.materialName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+      </el-form-item>
       <el-form-item label="显示顺序：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
@@ -67,7 +77,7 @@
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
           <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">通过</el-button>
           <el-button type="danger" v-if="formData.categoryId==1" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
-          <el-button type="primary"@click="ContentSubmit(0)" >暂存</el-button>
+          <el-button type="primary" @click="ContentSubmit(0)" >暂存</el-button>
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
   </div>
@@ -93,7 +103,8 @@ export default {
         file: [],
         scheduledTime:'',
         isPublished: "",
-        path:'0'
+        path:'0',
+        materialId:''
       },
       showPreventDialog:false,
       preventContent:'',
@@ -102,20 +113,24 @@ export default {
       formRules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
-          { min: 1, max: 50, message: "标题过长", trigger: "change" }
+          { min: 1, max: 50, message: "标题不能超过50个字符", trigger: "change" }
         ],
         categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
-        summary: [{ min: 1, max: 50, message: "摘要内容过长", trigger: "change" }],
-        keyword: [{ min: 1, max: 50, message: "关键字过长", trigger: "change" }],
+        summary: [{ min: 1, max: 50, message: "摘要内容不能超过50个字符", trigger: "change" }],
+        keyword: [{ min: 1, max: 50, message: "关键字不能超过50个字符", trigger: "change" }],
         sort:[
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
-            { min:1,max:10, message: "排序码长度不能超过10位", trigger: "blur" },
+            { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "blur" },
         ]
       },
       defaultType: {
         value: "id",
         label: "categoryName"
       },
+      // bookType:{
+      //   value: "id",
+      //   label: "materialName"
+      // },
       defaultCategoryId:[],
       uploadFileList: [],
          fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
@@ -146,7 +161,8 @@ export default {
           categoryName:'公告管理',
           children:null
         }
-        ]
+        ],
+        bookOptions: []
     };
   },
   computed: {
@@ -155,10 +171,10 @@ export default {
         case 1:
           return this.newContentUrl;
           break;
-        case 2: 
+        case 2:
           return this.newLettersUrl;
         case 3:
-         return this.newNoticeUrl;  
+         return this.newNoticeUrl;
         default:
           break;
       }
@@ -214,7 +230,7 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          });          
+          });
         });
     }
     },
@@ -228,7 +244,7 @@ export default {
       this.$refs["addForm"].validate(valid => {
         if (valid) {
             /* 判断暂存还是发布 */
-            
+
             if(num==0){
                this.formData.isStaging=true;
             }
@@ -239,10 +255,10 @@ export default {
           /* 判断新增还是修改 */
           if(!this.isEditContent){
               this.$axios
-            .post(this.addNewUrl, this.$commonFun.initPostData(this.formData))
+            .post(this.addNewUrl, this.$commonFun.initPostData(this.initFormData(this.formData)))
             .then(res => {
               console.log(res);
-              if (res.data.code == 1) {
+              if (res.data.code == 1) {            
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -259,9 +275,9 @@ export default {
               }
             });
           }else{
-            this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData)).then((res)=>{
+            this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.initFormData(this.formData))).then((res)=>{
                 console.log(res);
-                if(res.data.code==1){
+                if(res.data.code==1){               
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -294,7 +310,7 @@ export default {
     },
     /* 审核 */
     examineContent(obj,status){
-      console.log(obj);
+      this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
       this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -305,18 +321,20 @@ export default {
            this.formData.authStatus=status;
            this.formData.content=this.$refs.editor.getContent();
           this.$axios
-            .put(
-              this.examineUrl,
-              this.$commonFun.initPostData(this.formData)
-               )
+            ({
+              method:this.$route.query.type=='new'?'post':'put',
+              url:this.$route.query.type=='new'?this.addNewUrl:this.examineUrl,
+              data:this.$commonFun.initPostData(this.formData)
+            })
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
-                this.$message.success("审核成功");
+                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;
+                this.$message.success("操作成功");
                 this.showContentDetail = false;
                 this.$router.push({name:'文章管理'})
               } else {
-                this.$message.error(res.data.msg);
+                this.$message.error(res.data.msg.msgTrim());
               }
             });
         })
@@ -412,7 +430,7 @@ export default {
                 this.defaultCategoryId.push(this.$router.currentRoute.query.columnId);
                 this.formData.categoryId=this.$router.currentRoute.query.columnId;
       }else{
-        this.$router.push({ name: "文章管理" });
+           this.$router.push({ name: "文章管理" });
       }
       this.isEditContent=false;
       if (this.$router.currentRoute.query.type == "edit") {
@@ -428,7 +446,10 @@ export default {
                 this.formData[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
             }
-            
+
+            if(item=='materialId') {
+              this.formData[item]=editData.cmsContent[item]==0?'':editData.cmsContent[item];
+            }
           }
           /* 设置默认栏目 */
           this.formData.categoryId=parseInt(this.formData.categoryId);
@@ -438,22 +459,64 @@ export default {
              _this.$refs.editor.setContent(editData.content.content);
           }, 1000);
           /* 填充默认附件 */
-         editData.cmsExtras.forEach((item)=>{
-          var obj={};
+          for(var i in editData.cmsExtras){
+             var obj={};
+          obj.name=editData.cmsExtras[i].attachmentName;
+          obj.url=editData.cmsExtras[i].attachment;
+          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
+          this.fileList.push(obj);                   
+          }
+         /* editData.cmsExtras.forEach((item)=>{
+          
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();
+          console.log('1111111111',obj);
           this.fileList.push(obj);
-         })
+         }) */
          this.formData.attachment=[];
         } else {
-          this.$router.go(-1);
+          var _this=this;
+          _this.$message.error('文章内容为空');
+        setTimeout(function() {
+             _this.$router.go(-1);
+        }, 1000);
+
         }
       }
+    },
+    /**获取教材列表 */
+    getBookLists(){
+      this.$axios.get('/pmpheep/material/published').then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.bookOptions=res.data;
+        }
+      })
+    },
+    /* 提交数据处理 */
+    initFormData(obj){
+      var formData={};
+      for(var i in obj){
+        if(i=='materialId'){
+           formData[i]=obj[i]?obj[i]:0;
+        }else{
+          formData[i]=obj[i];
+        }
+      } 
+      return formData;
+    },
+    formChecked(type){
+      this.$refs['addForm'].validate((valid)=>{
+        if(valid){
+
+        }
+      })
     }
   },
   created() {
     this.initIsEdit();
+    this.getBookLists();
   },
   components: {
     Editor

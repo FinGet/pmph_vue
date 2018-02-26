@@ -1,37 +1,59 @@
 <template>
 	<div class="applicationStatistics">
     <div class="total-chart paddingT30 paddingB30">
+          <p class="title">以下统计数据包含申报单位为人民出版社的作家:</p>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.schoolDeclarationCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.schoolDeclarationCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.schoolDeclarationChosenCount}}</span>
               </div>
-              <p>院校申报总数</p>
+              <p>院校申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.schoolDeclarationAverage}}</span>
+                <span class="marginspan"><span class="gray">平均数/</span> {{situationCount.schoolDeclarationAverage}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.editorCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.editorCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorCount}}</span>
               </div>
-              <p>主编申报总数</p>
+              <p>主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.subEditorCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.subEditorCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenSubeditorCount}}</span>
               </div>
-              <p>副主编申报总数</p>
+              <p>副主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span>{{situationCount.editorialCount}}</span>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.editorialCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorialCount}}</span>
               </div>
-              <p>编委申报总数</p>
+              <p>编委申报</p>
             </div>
-          </div>
+            <div class="num-chart-iterm">
+              <div>
+                <br>
+                <span><span class="gray">总数/</span>{{situationCount.digitalCount}}</span>
+                <br>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenDigitalCount}}</span>
+              </div>
+              <p>数字编委申报</p>
+            </div>
+    </div>
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="按书名统计" name="bookName">
         <div class="applicationStatistics-byBookName">
@@ -40,12 +62,16 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="bookParmas.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
           </div>
           <!--表格-->
           <div class="table-wrapper">
@@ -125,19 +151,23 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="按学校统计" name="school">
+      <el-tab-pane label="按申报单位统计" name="school">
         <div class="applicationStatistics-bySchool">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
-              <div class="searchName">学  校  名：<span></span></div>
+              <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="schoolParams.schoolName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right marginL10">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
             <el-button type="primary" class="pull-right"  @click="sortType=!sortType">{{!sortType?'按当选数排序':'按申报数排序'}}</el-button>
           </div>
           <!--表格-->
@@ -154,7 +184,7 @@
               </el-table-column>
               <el-table-column
                 prop="schoolName"
-                label="申报学校">
+                label="申报单位">
               </el-table-column>
               <el-table-column
                 prop="presetPositionEditor"
@@ -269,14 +299,15 @@ export default {
     };
   },
   created(){
-  this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
-  this.getTotalChartData();
-
-  this.getSchoolTableData();
+    this.materialId=this.schoolParams.materialId=this.bookParmas.materialId=this.$route.params.materialId;
+    this.getTotalChartData();
+    this.getSchoolTableData();
+    this.getBookTableData();
   },
   watch:{
      sortType(){
        this.getSchoolTableData();
+      //  this.getSchoolEchart();
      }
   },
   methods: {
@@ -298,16 +329,118 @@ export default {
      this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
        params:this.schoolParams
      }).then((res)=>{
-       console.log(res);
        if(res.data.code==1){
           var resData = res.data.data;
           this.schoolTotal=resData.total;
           this.schoolTableData=resData.rows;
+       }
+     })
+    },
+    /* 获取学校申报情况统计数据图表 */
+    getSchoolEchart(){
+      var myChart2 = echarts.init(this.$refs.echarts2);
+     this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
+       params:{
+          pageNumber:1,
+          pageSize:20,
+          materialId:this.schoolParams.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
+          var resData = res.data.data;
           resData.rows.forEach(item => {
             this.stSchools.push(item.schoolName)
             this.stSchoolPresetPersons.push(item.presetPersons)
             this.stSchoolChosenPersons.push(item.chosenPersons)
           })
+          console.log(myChart2);
+          myChart2.clear();
+          myChart2.setOption({
+            title: {
+              show: "true",
+              text: "申报人数统计图表"
+            },
+            tooltip: {
+              show: true,
+              trigger: "axis",
+              axisPointer: {
+                type: "cross",
+                crossStyle: {
+                  color: "#999"
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ["line", "bar"] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+              }
+            },
+            legend: {
+              data: ["申报人数", "当选人数"]
+            },
+            xAxis: [
+              {
+                name: "申报单位",
+                type: "category",
+                data: this.stSchools,
+                axisPointer: {
+                  type: "shadow"
+                },
+                axisLabel: {
+                  interval: 0,
+                  boundaryGap: [0, 0.01],
+                  formatter: function(value) {
+                    return value.split("").join("\n");
+                  }
+                }
+              }
+            ],
+            grid: {
+              left: "10%",
+              bottom: "35%"
+            },
+            yAxis: [
+              {
+                type: "value",
+                name: "申报人数",
+                min: 0,
+
+                max: Math.max.apply(null, this.stSchoolPresetPersons),
+                minInterval: 1,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              },
+              {
+                type: "value",
+                name: "当选人数",
+                min: 0,
+                max: Math.max.apply(null, this.stSchoolPresetPersons),
+                minInterval: 1,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              }
+            ],
+            series: [
+              {
+                name: "申报人数",
+                type: "bar",
+                data: this.stSchoolPresetPersons
+              },
+              {
+                name: "当选人数",
+                type: "line",
+                yAxisIndex: 1,
+                data: this.stSchoolChosenPersons
+              }
+            ]
+          })
+          // console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
        }
      })
     },
@@ -317,14 +450,113 @@ export default {
        params:this.bookParmas
      }).then((res)=>{
        console.log(res)
+       console.log(this.bookTableData)
        if(res.data.code==1){
          this.bookTotal=res.data.data.total;
          this.bookTableData=res.data.data.rows;
+       }
+     })
+    },
+    /* 获取按书名统计申报情况图表 */
+    getBookEchart(){
+      var myChart = echarts.init(this.$refs.echarts1);
+     this.$axios.get(this.bookSituationUrl,{
+       params:{
+         pageNumber:1,
+          pageSize:20,
+          materialId:this.bookParmas.materialId,
+          schoolName:''
+       }
+     }).then((res)=>{
+       if(res.data.code==1){
          res.data.data.rows.forEach(item => {
            this.stBooks.push(item.bookName); // 书籍
            this.stPresetPersons.push(item.presetPersons); // 申报人数
            this.stChosenPersons.push(item.chosenPersons); // 当选人数
          })
+         myChart.setOption({
+            title: {
+              show: "true",
+              text: "申报人数统计图表"
+            },
+            tooltip: {
+              show: true,
+              trigger: "axis",
+              axisPointer: {
+                type: "cross",
+                crossStyle: {
+                  color: "#999"
+                }
+              }
+            },
+            toolbox: {
+              feature: {
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ["line", "bar"] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+              }
+            },
+            legend: {
+              data: ["申报人数", "当选人数"]
+            },
+            xAxis: [
+              {
+                name: "书籍名称",
+                type: "category",
+                data: this.stBooks,
+                axisPointer: {
+                  type: "shadow"
+                },
+                axisLabel: {
+                  interval: 0,
+                  boundaryGap: [0, 0.01],
+                  formatter: function(value) {
+                    return value.split("").join("\n");
+                  }
+                }
+              }
+            ],
+            grid: {
+              left: "10%",
+              bottom: "35%"
+            },
+            yAxis: [
+              {
+                type: "value",
+                name: "申报人数",
+                min: 0,
+                max: Math.max.apply(null, this.stPresetPersons),
+                minInterval:1,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              },
+              {
+                type: "value",
+                name: "当选人数",
+                min: 0,
+                max: Math.max.apply(null, this.stPresetPersons),
+                minInterval:1,
+                axisLabel: {
+                  formatter: "{value} 人"
+                }
+              }
+            ],
+            series: [
+              {
+                name: "申报人数",
+                type: "bar",
+                data: this.stPresetPersons
+              },
+              {
+                name: "当选人数",
+                type: "line",
+                yAxisIndex: 1,
+                data: this.stChosenPersons
+              }
+            ]
+          })
        }
      })
     },
@@ -354,7 +586,16 @@ export default {
     /**
        * 点击tabs切换
        */
-    handleTabsClick(tab, event) {}
+    handleTabsClick(tab, event) {
+     console.log(tab,event);
+     this.bookParmas.bookName='';
+     this.schoolParams.schoolName='';
+     if(tab.name=='bookName'){
+        this.getBookTableData();
+     }else{
+       this.getSchoolTableData();
+     }
+    }
   },
   mounted() {
     var echartWidth =
@@ -362,185 +603,21 @@ export default {
       300;
     this.$refs.echarts1.style.width = echartWidth + "px";
     this.$refs.echarts2.style.width = echartWidth + "px";
-    var myChart = echarts.init(this.$refs.echarts1);
-    var myChart2 = echarts.init(this.$refs.echarts2);
     console.log(echartWidth);
     // 指定图表的配置项和数据
-    var option2 = {
-      title: {
-        show: "true",
-        text: "申报人数统计图表"
-      },
-      tooltip: {
-        show: true,
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          crossStyle: {
-            color: "#999"
-          }
-        }
-      },
-      toolbox: {
-        feature: {
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ["line", "bar"] },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      legend: {
-        data: ["申报人数", "当选人数"]
-      },
-      xAxis: [
-        {
-          name: "书籍名称",
-          type: "category",
-          data: this.stBooks,
-          axisPointer: {
-            type: "shadow"
-          },
-          axisLabel: {
-            interval: 0,
-            boundaryGap: [0, 0.01],
-            formatter: function(value) {
-              return value.split("").join("\n");
-            }
-          }
-        }
-      ],
-      grid: {
-        left: "10%",
-        bottom: "35%"
-      },
-      yAxis: [
-        {
-          type: "value",
-          name: "申报人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        },
-        {
-          type: "value",
-          name: "当选人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        }
-      ],
-      series: [
-        {
-          name: "申报人数",
-          type: "bar",
-          data: this.stPresetPersons
-        },
-        {
-          name: "当选人数",
-          type: "line",
-          yAxisIndex: 1,
-          data: this.stChosenPersons
-        }
-      ]
-    };
-    // 指定图表的配置项和数据
-    var option3 = {
-      title: {
-        show: "true",
-        text: "申报人数统计图表"
-      },
-      tooltip: {
-        show: true,
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          crossStyle: {
-            color: "#999"
-          }
-        }
-      },
-      toolbox: {
-        feature: {
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ["line", "bar"] },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
-      legend: {
-        data: ["申报人数", "当选人数"]
-      },
-      xAxis: [
-        {
-          name: "书籍名称",
-          type: "category",
-          data: this.stBooks,
-          axisPointer: {
-            type: "shadow"
-          },
-          axisLabel: {
-            interval: 0,
-            boundaryGap: [0, 0.01],
-            formatter: function(value) {
-              return value.split("").join("\n");
-            }
-          }
-        }
-      ],
-      grid: {
-        left: "10%",
-        bottom: "35%"
-      },
-      yAxis: [
-        {
-          type: "value",
-          name: "申报人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        },
-        {
-          type: "value",
-          name: "当选人数",
-          min: 0,
-          max: 250,
-          interval: 50,
-          axisLabel: {
-            formatter: "{value} 人"
-          }
-        }
-      ],
-      series: [
-        {
-          name: "申报人数",
-          type: "bar",
-          data: this.stSchoolPresetPersons
-        },
-        {
-          name: "当选人数",
-          type: "line",
-          yAxisIndex: 1,
-          data: this.stSchoolChosenPersons
-        }
-      ]
-    };
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option2);
-    myChart2.setOption(option3);
+    this.getBookEchart();
+    this.getSchoolEchart();
   }
 };
 </script>
 
 <style scoped>
+.title {
+  margin-bottom: 18px;
+    margin-left: 20px;
+    font-size: 15px;
+    color: #8a8585;
+}
 .num-chart-iterm {
   display: inline-block;
   width: 180px;
@@ -548,14 +625,14 @@ export default {
 .num-chart-iterm > div {
   margin: 0 auto;
   width: 104px;
-  height: 54px;
+  height: 62px;
   border-bottom: none !important;
   border-radius: 68px 68px 0 0;
   text-align: center;
-  line-height: 70px;
+  line-height: 20px;
 }
 .num-chart-iterm > div > span {
-  font-size: 22px;
+  font-size: 14px;
   font-weight: bold;
 }
 .num-chart-iterm > div > span.small {
@@ -571,31 +648,39 @@ export default {
   margin: 0 auto;
   text-align: center;
 }
-.num-chart-iterm:nth-of-type(6n + 1) > div {
+.num-chart-iterm:nth-of-type(n + 1) > div {
   border: 8px solid #c24fb7;
   color: #c24fb7;
 }
-.num-chart-iterm:nth-of-type(6n + 2) > div {
+.num-chart-iterm:nth-of-type(n + 2) > div {
   border: 8px solid #ff9f40;
   color: #ff9f40;
 }
-.num-chart-iterm:nth-of-type(6n + 3) > div {
+.num-chart-iterm:nth-of-type(n + 3) > div {
   border: 8px solid #ff685f;
   color: #ff685f;
 }
-.num-chart-iterm:nth-of-type(6n + 4) > div {
+.num-chart-iterm:nth-of-type(n + 4) > div {
   border: 8px solid #25a3de;
   color: #25a3de;
 }
-.num-chart-iterm:nth-of-type(6n + 5) > div {
+.num-chart-iterm:nth-of-type(n + 5) > div {
   border: 8px solid #2dc183;
   color: #2dc183;
 }
-.num-chart-iterm:nth-of-type(6n + 6) > div {
+.num-chart-iterm:nth-of-type(n + 6) > div {
   border: 8px solid #357ab3;
   color: #357ab3;
 }
 .echart-wrapper {
   padding: 60px 0 0;
+}
+.gray{
+  color:#8a8585;
+  font-weight: normal;
+}
+.marginspan{
+  display: inline-block;
+  margin-top: 27px;
 }
 </style>

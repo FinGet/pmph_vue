@@ -1,5 +1,6 @@
 <template>
   <div class="applicationStatistics">
+    
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="按书名统计" name="bookName">
         <div class="applicationStatistics-byBookName">
@@ -8,12 +9,16 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="bookParams.bookName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getBooksTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right marginL10">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
           </div>
           <!--表格-->
           <div class="table-wrapper">
@@ -28,7 +33,7 @@
                 width="68">
               </el-table-column>
               <el-table-column
-                prop="schoolName"
+                prop="bookName"
                 label="书名">
               </el-table-column>
               <el-table-column
@@ -37,7 +42,7 @@
                 align="center">
               </el-table-column>
               <el-table-column
-                prop="subeditorList"
+                prop="subEditorList"
                 label="副主编名单"
                 align="center">
               </el-table-column>
@@ -56,8 +61,10 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="booksTotal>10"
+              v-if="booksTotal>bookParams.pageSize"
               :page-sizes="[10,20,30, 40]"
+              @size-change="handleBookSizeChange"
+              @current-change="handleBookCurrentChange"
               :page-size="bookParams.pageSize"
               :current-page="bookParams.pageNumber"
               layout="total, sizes, prev, pager, next, jumper"
@@ -66,19 +73,23 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="按学校统计" name="school">
+      <el-tab-pane label="按申报单位统计" name="school">
         <div class="applicationStatistics-bySchool">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
-              <div class="searchName">学  校  名：<span></span></div>
+              <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model="schoolParams.schoolName"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
+            <el-button type="primary" class="pull-right marginL10">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
             <el-button type="primary" class="pull-right"  @click="sortType=!sortType">{{!sortType?'按当选数排序':'按申报数排序'}}</el-button>
           </div>
           <!--表格-->
@@ -95,7 +106,7 @@
               </el-table-column>
               <el-table-column
                 prop="schoolName"
-                label="学校名称">
+                label="申报单位">
               </el-table-column>
               <el-table-column
                 prop="editorList"
@@ -103,7 +114,7 @@
                 align="center">
               </el-table-column>
               <el-table-column
-                prop="subeditorList"
+                prop="subEditorList"
                 label="副主编名单"
                 align="center">
               </el-table-column>
@@ -122,7 +133,9 @@
           <!--分页-->
           <div class="pagination-wrapper">
             <el-pagination
-              v-if="schoolTotal>10"
+              v-if="schoolTotal>schoolParams.pageSize"
+              @size-change="handleSchoolSizeChange"
+              @current-change="handleSchoolCurrentChange"
               :page-sizes="[10,20,30,40]"
               :page-size="schoolParams.pageSize"
               :current-page="schoolParams.pageNumber"
@@ -141,7 +154,7 @@ import echarts from "../../../../../../static/echarts/echarts.common.min";
 export default {
   data() {
     return {
-      activeName: "school",
+      activeName: "bookName",
       schoolResultUrl:'/pmpheep/decPosition/list',  //学校结果统计URL
       bookResultUrl: '/pmpheep/decPosition/list/bookList', // 书籍结果统计url
       sortType:true,   //排序方式 true 按当选数排序  false 按申报数排序
@@ -225,22 +238,47 @@ export default {
        }
      })
     },
+    /**按数据统计获取表格数据 */
     getBooksTableData(){
       this.$axios.get(this.bookResultUrl,{
         params: this.bookParams
       }).then(response => {
         let res = response.data
-        if(res.data.code==1){
-          var resData = res.data.data;
-          this.booksTotal=resData.total;
-          this.bookTableData=resData.rows;
+        if(res.code==1){
+          var resData = res.data.rows;
+          this.booksTotal=res.data.total;
+          this.bookTableData=resData;
        }
       })
+    },
+    handleBookSizeChange(val){
+      this.bookParams.pageSize = val;
+      this.getBooksTableData();
+    },
+    handleBookCurrentChange(val){
+      this.bookParams.pageNumber = val;
+      this.getBooksTableData();
+    },
+    handleSchoolSizeChange(val){
+      this.schoolParams.pageSize = val;
+      this.getSchoolTableData();
+    },
+    handleSchoolCurrentChange(val) {
+      this.schoolParams.pageNumber = val;
+      this.getSchoolTableData();
     },
     /**
        * 点击tabs切换
        */
-    handleTabsClick(tab, event) {}
+    handleTabsClick(tab, event) {
+       this.schoolParams.schoolName='';
+       this.bookParams.bookName='';
+       if(tab.name=="bookName"){
+         this.getBooksTableData();
+       }else{
+         this.getSchoolTableData();
+       }
+    }
   },
   mounted() {}
 };

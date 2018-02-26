@@ -3,12 +3,12 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-          <span>文章标题：</span> 
-          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="getPublicList()"></el-input>
+          <span>文章标题：</span>
+          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
          <span>作者：</span>
-          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="getPublicList()"></el-input>
+          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
           <span>审核状态：</span>
-          <el-select v-model="selectValue" clearable  style="width:186px" class="input" placeholder="全部">
+          <el-select v-model="selectValue" clearable  style="width:150px" class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -17,15 +17,16 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getPublicList()">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1}})">发布新内容</el-button>
+         <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1,type:'new'}})">发布新内容</el-button>
+         <el-button type="primary"   style="float:right;" @click="syncDialogVisible=true">同步</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 label="文章标题"
                 >
                 <template scope="scope">
-                    <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <!-- 管理员才予以显示 -->
@@ -61,7 +62,7 @@
                     <p v-if="scope.row.authStatus==1">已退回</p>
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
-            </el-table-column> 
+            </el-table-column>
             <el-table-column
                 label="相关统计"
                 width="190"
@@ -87,9 +88,11 @@
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text"
+
+                    @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
-                    <el-button type="text"@click="deleteContent(scope.row)">删除</el-button>
+                    <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -123,18 +126,40 @@
          <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
-         <el-form-item label="附件：">
+         <el-form-item label="附件：" v-if="contentDetailData.cmsExtras.length!=0">
               <a type="text" :href="item.attachment" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
          </el-form-item>
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
+            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
-            <el-button type="primary":disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
         </div>
+    </el-dialog>
+   <!-- 同步弹框 -->
+    <el-dialog title="稿件同步"
+     :visible.sync="syncDialogVisible"
+     size="tiny"
+     class="sync_dialog"
+    >
+      <el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="syncGetArticle" type="primary">确定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="稿件同步"
+               :visible.sync="syncDialogVisible1"
+               size="tiny"
+               class="sync_dialog"
+    >
+      <!--<el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>-->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="syncCheckDetail" type="primary">确定</el-button>
+      </span>
     </el-dialog>
   </el-tab-pane>
   <el-tab-pane label="评论">
@@ -145,12 +170,12 @@
             :clearable="true"
             class="input"
             placeholder="请选择栏目"
-            @change="handleChange"> -->
-          </el-cascader>
+            @change="handleChange">
+          </el-cascader> -->
           <span>文章标题：</span>
-          <el-input placeholder="请输入" class="input" v-model="commentTitle"></el-input>
+          <el-input placeholder="请输入" class="input" v-model="commentTitle" @keyup.enter.native="searchComment"></el-input>
           <span style="margin-left:10px;">评论人：</span>
-          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName"></el-input>
+          <el-input placeholder="输入姓名/账号" class="input" v-model="commentName" @keyup.enter.native="searchComment"></el-input>
           <span>审核状态：</span>
           <el-select v-model="commentSelect" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -161,9 +186,9 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getCommentList()">搜索</el-button>
+         <el-button type="primary" icon="search" @click="searchComment">搜索</el-button>
 
-            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment">批量删除</el-button>
+            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment()">批量删除</el-button>
       </p>
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
             <el-table-column
@@ -175,7 +200,7 @@
                 prop="title"
                 >
                 <template scope="scope">
-                    <el-button type="text" @click="commentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link" @click="commentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -203,14 +228,15 @@
                     <p v-if="scope.row.authStatus==1">已退回</p>
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
-            </el-table-column> 
+            </el-table-column>
             <el-table-column
                 label="操作"
-                width="150"
+                width="180"
                 >
                 <template scope="scope">
                     <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,2)">通过</el-button>
-                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">退回</el-button>
+                    <el-button type="text" :disabled="!scope.row.authStatus==0" @click="commentModeration(scope.row.id,1)">未通过</el-button>
+                    <el-button type="text"  @click="deleteComment(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
 
@@ -247,14 +273,14 @@
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden">
-            <div class="center_box">  
+            <div class="center_box">
             <el-button type="danger" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,1)" >退回</el-button>
-            <el-button type="primary":disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,2)" >通过</el-button>
+            <el-button type="primary" :disabled="commentDetailData.listObj.authStatus!=0"  @click="commentModeration(commentDetailData.listObj.id,2)" >通过</el-button>
             </div>
         </div>
     </el-dialog>
   </el-tab-pane>
-  
+
 </el-tabs>
 
 
@@ -264,11 +290,14 @@
 export default {
   data() {
     return {
+      syncDialogVisible1: false,
       publicListUrl: "/pmpheep/cms/contents", //获取列表url
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
       commentListUrl:'/pmpheep/cms/comments',         //评论列表url
+      syncGetUrl:'/pmpheep/cms/wechat/article/getArticle',         //同步地址url
+      syncGetDetailUrl:'/pmpheep/cms/wechat/article/synchro',          //获取稿件详情detail
       selectOp: [
         {
           value: 0,
@@ -298,6 +327,8 @@ export default {
         }
       ],
       showContentDetail: false,
+      syncDialogVisible:false,
+      syncInputUrl:'',
       contentDetailData: {
         cmsContent: "",
         cmsExtras: "",
@@ -363,6 +394,11 @@ export default {
           }
         });
     },
+    searchPublic(){
+      this.pageSize = 30;
+      this.currentPage = 1;
+      this.getPublicList()
+    },
     /* 获取评论列表 */
     getCommentList(){
       this.$axios.get(this.commentListUrl,{
@@ -380,7 +416,7 @@ export default {
           let res = response.data
           if (res.code == 1 ) {
             this.comDataTotal = res.data.total
-            // this.commentTableData.gmtCreate = 
+            // this.commentTableData.gmtCreate =
             res.data.rows.map(item=>{
                 item.gmtCreate=this.$commonFun.formatDate(item.gmtCreate);
                 item.authDate = this.$commonFun.formatDate(item.authDate);
@@ -389,6 +425,11 @@ export default {
             console.log(this.commentTableData )
           }
       })
+    },
+    searchComment(){
+      this.comPageSize = 20;
+      this.comPageNumber = 1;
+      this.getCommentList();
     },
     /**评论审核 */
     commentModeration(id, status){
@@ -408,29 +449,34 @@ export default {
       })
     },
     /**批量删除评论 */
-    deleteComment(){
+    deleteComment(id){
       var ids = []
-      this.$confirm('确认删除选中的评论吗？',"提示",{
+      this.$confirm(id?'确认删除该条评论？':'确认删除选中的评论吗？',"提示",{
         confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+        cancelButtonText: "取消"
       }).then(()=>{
-        this.commentSelectData.forEach(item => {
+        if(id){
+          ids=id;
+        }else{
+         this.commentSelectData.forEach(item => {
           ids.push(item.id)
         })
-        this.$axios.delete('/pmpheep//cms/comment/delete',{
+        }
+        this.$axios.delete('/pmpheep/cms/comment/delete',{
           params: {
-            ids : ids.toString()
+            ids :id?id:ids.toString()
           }
         }).then(response => {
           let res = response.data
           if (res.code == 1) {
             this.$message.success('删除成功!');
             this.getCommentList()
+          }else{
+            this.$message.error(res.msg.msgTrim());
           }
         })
       })
-      
+
     },
     /**展示评论详情 */
     commentDetail(obj){
@@ -529,7 +575,9 @@ export default {
         });
     },
     /* 删除内容 */
-    deleteContent(obj) {
+    deleteContent(obj) {{
+      url:this.syncInputUrl
+    }
       this.$confirm("确定删除该文章?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -572,7 +620,53 @@ export default {
     },
     commentHandleCurrentChange(val) {
       this.comPageNumber = val
-      this.getCommentList()      
+      this.getCommentList()
+    },
+    /* 同步弹框确定按钮 */
+    syncGetArticle(){
+      this.$axios.post('/pmpheep/cms/wechat/article/getArticle',this.$commonFun.initPostData(
+        {
+          url:this.syncInputUrl
+        }
+      )).then((res)=>{
+        console.log(res);
+        if(res.data.code==1){
+          this.$message.success('同步成功');
+          this.getPublicList();
+          setTimeout(() => {
+                      this.syncCheckDetail(res.data.data);
+          }, 3000);
+//          this.syncDialogVisible1 = true;
+          this.syncDialogVisible=false;
+        }else{
+          this.$message.error(res.data.msg.msgTrim());
+        }
+      })
+    },
+    /* 查看稿件详情 */
+    syncCheckDetail(id){
+
+     this.$axios.get('/pmpheep/cms/wechat/article/synchro',{
+       params:{
+           guid:id
+       }
+     }).then((res)=>{
+       console.log(res);
+       if(res.data.code==1){
+           if(!res.data.data.id){
+             setTimeout(() => {
+               this.syncCheckDetail(id);
+             }, 5000);
+
+           }else{
+             /* 有值的时候 */
+
+             return;
+           }
+       }else{
+         this.$message.error(res.data.msg.msgTrim());
+       }
+     })
     }
   },
   created() {
@@ -587,7 +681,7 @@ export default {
   overflow: hidden;
 }
 .publish_list .header_p .input {
-  width: 217px;
+  width: 190px;
   margin-right: 10px;
 }
 .publish_list .table_i {

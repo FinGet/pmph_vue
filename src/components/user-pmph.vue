@@ -27,11 +27,11 @@ methods:
           <div class="searchBox-wrapper">
             <div class="searchName">姓名/账号：<span></span></div>
             <div class="searchInput">
-              <el-input placeholder="请输入" class="searchInputEle"  @keyup.native.enter="_getTableData" v-model.trim="searchForm.name"></el-input>
+              <el-input placeholder="请输入" class="searchInputEle"  @keyup.native.enter="_search" v-model.trim="searchForm.name"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper searchBtn">
-            <el-button  type="primary" icon="search" @click="_getTableData">搜索</el-button>
+            <el-button  type="primary" icon="search" @click="_search">搜索</el-button>
           </div>
 
           <!--操作按钮-->
@@ -89,15 +89,16 @@ methods:
               prop="use"
               label="启用标识"
               align="center"
-              width="100">
+              >
               <template scope="scope">
-                {{scope.row.isDisabled? '停用' : '启用'}}
+                {{scope.row.isDisabled? '禁用' : '启用'}}
               </template>
             </el-table-column>
             <el-table-column
               v-if="show_manage"
               label="操作"
-              align="center">
+              align="center"
+              width="110">
               <template scope="scope">
                 <el-button type="text" @click="_openUpdateDialog(scope.$index)">修改</el-button>
                 <el-button type="text">登录</el-button>
@@ -172,6 +173,12 @@ methods:
             <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="是否主任：" prop="isDirector">
+          <el-radio-group v-model="form.isDirector">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible=false">取消</el-button>
@@ -225,13 +232,13 @@ methods:
         rolenames:[],
 
         dialogVisible:false,
-        rolenames:[],
         form: {// 修改弹窗 表单
           id: "",
           departmentName: "",
           email: "",
           handphone: "",
           isDisabled: false,
+          isDirector: false,
           name: "",
           note: "",
           departmentId: "",
@@ -263,7 +270,8 @@ methods:
             { type: "email", message: "邮箱格式不正确", trigger: "blur" }
           ],
           departmentId: [],
-          isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }]
+          isDisabled: [{ type:'boolean',required: true, message: "请选择是否启用", trigger: "blur" }],
+          isDirector: [{ type:'boolean',required: true, message: "请选择是否主任", trigger: "blur" }]
         },
         loading: false,
         DepartmentNameList:[],
@@ -435,6 +443,14 @@ methods:
             console.error(error);
           });
       },
+      /**搜索
+      
+       */
+      _search(){
+        this.searchForm.pageSize = 30;
+        this.searchForm.pageNumber = 1;
+        this._getTableData()
+      },
       /**
        * 修改用户信息
        */
@@ -447,7 +463,8 @@ methods:
               departmentId: this.form.departmentId,
               email: this.form.email,
               handphone: this.form.handphone,
-              isDisabled: this.form.isDisabled
+              isDisabled: this.form.isDisabled,
+              isDirector: this.form.isDirector
             })
           )
           .then(response => {

@@ -5,12 +5,12 @@
     </p>
     <p class="material-notice-time text-center" v-if="materialData.materialName">截止日期：{{$commonFun.formatDate(materialData.materialName.deadline).split(' ')[0]}}</p>
     <div class="material-notice-conten paddingT30" v-html="formData.content"></div>
-    <div class="material-notice-image text-center">
+    <!-- <div class="material-notice-image text-center">
       <div class="material-notice-image-iterm" v-for="(iterm,index) in formData.image" :key="index"><img class="img" :src="iterm.attachment" alt=""></div>
-    </div>
+    </div> -->
     <div class="clearfix" v-if="formData.files.length">
       <p class="width40 paddingR20 pull-left text-right">附件 : </p>
-      <div class="marginL60">
+      <div class="marginL60 paddingT1">
         <p  v-for="(iterm,index) in formData.files" :key="index">
           <i class="fa fa-paperclip"></i>
           <a :href="iterm.attachment" class="link">{{iterm.attachmentName}}</a>
@@ -47,14 +47,15 @@ export default {
           let content = '';
           this.formData.title = res.data.materialName.materialName;
           //设置显示图片
-          this.formData.image=res.data.materialNoticeAttachments;
+          this.formData.image=res.data.materialNoticeAttachments?res.data.materialNoticeAttachments:[];
           //设置文件
-          this.formData.files=res.data.materialNoteAttachments;
+          this.formData.files=res.data.materialNoteAttachments?res.data.materialNoteAttachments:[];
+          res.data.materialContacts=res.data.materialContacts?res.data.materialContacts:[];
           if(res.data.content){
             content=res.data.content;
           }else{
             //简介
-            content += `<p>简介：${res.data.materialExtra.notice}</p>`;
+            content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
             content += `<p></p>`;
             //邮寄地址
             content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
@@ -71,13 +72,14 @@ export default {
             content+=contactsHtml;
             content += `<p></p>`;
             //备注
-            content+=`<p>备注：${res.data.materialExtra.note}</p>`;
+            content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
           }
           this.formData.content = content;
 
           this.materialData = res.data;
         }
       })
+        .catch(e=>console.log(e))
     }
   },
   mounted() {

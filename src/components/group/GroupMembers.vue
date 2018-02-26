@@ -7,8 +7,8 @@
                     placeholder="请输入"
                     icon="search"
                     v-model.trim="searchValue"
-                    @keyup.enter.native="getMemberManageList"
-                    :on-icon-click="getMemberManageList"
+                    @keyup.enter.native="search"
+                    :on-icon-click="search"
           ></el-input>
         </div>
         <div class="pull-left marginT10 marginL10 textcolor">共有{{total}}个成员</div>
@@ -126,6 +126,10 @@ export default {
           }
      })
     },
+    search(){
+      this.currentPage=1;
+      this.getMemberManageList();
+    },
     /* 切换分页条数 */
     handleSizeChange(val) {
       this.pageSize=val;
@@ -217,6 +221,10 @@ export default {
   },
   created(){
     this.getMemberManageList();
+
+    if(window._hmt){
+      _hmt.push(['_trackPageview', '/group/group-members']);
+    }
   }
 }
 </script>

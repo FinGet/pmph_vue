@@ -1,6 +1,7 @@
 /**
 封装选择学校组件，提供操作按钮卡槽slot，和获取选中学校方法getSelectData,
 卡槽：操作按钮区域
+props: default-history-id 默认选中的历史记录
 方法：getSelectData 获取选中学校
 事件：selectChange 当所选学校发生变化  参数 function(list){} 参数形式[{},{}]
 */
@@ -22,7 +23,7 @@
           学校导入：&nbsp;&nbsp;
         </div>
         <div>
-        <span class="grey_span lineheight-36">
+        <span class="grey_span lineheight-36 fastQuery_r_text">
           请按照模板格式上传（
           <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
@@ -191,11 +192,54 @@
         :total="total">
       </el-pagination>
     </el-dialog>
+
+    <el-dialog
+      title="导入学校"
+      :visible.sync="importExcelInfoView"
+      size="tiny">
+      <div class="text-center">
+        <div class="paddingT20 inline-block  text-left margin-auto">
+          <div class="width100 inline-block">
+            <el-progress type="circle" width="100" :percentage="100" class="inline-block" :status="importExcelInfo.error?'exception':'success'"></el-progress>
+          </div>
+          <br>
+          <div class="paddingT10 text-left inline-block">
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入总数: <span></span></div>
+              <p class="inline-block fontBold fontsize-lg">{{importExcelInfo.all}}</p>
+            </div>
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入成功: <span></span></div>
+              <p class="inline-block fontBold green fontsize-lg">{{importExcelInfo.success}}</p>
+            </div>
+            <div class="importExcelInfoView-list">
+              <div class="importExcelInfoView-title">导入失败: <span></span></div>
+              <p class="inline-block fontBold error fontsize-lg">{{importExcelInfo.error}}</p>
+            </div>
+
+            <div class="importExcelInfoView-list" v-if="importExcelInfo.error">
+              <div class="fontsize-lg importExcelInfoView-title">失败信息：</div>
+              <ul class="inline-block">
+                <li v-for="(item,index) in importExcelInfo.errorData" :key="index">{{item}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importExcelInfoView = false">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   export default {
+    props:{
+      defaultHistoryId:{
+        required: false
+      },
+    },
     data() {
       return {
         api_upload:'/pmpheep/orgs/orgExport',
@@ -203,10 +247,10 @@
         sortOrg:-1,
         select_provinces:[],
         orgTypeList:[{
-          id:1,
+          id:2,
           name:'本科'
         },{
-          id:2,
+          id:1,
           name:'医院'
         },{
           id:3,
@@ -231,6 +275,13 @@
         total: 0,
         materialId: '',
         uploadLoading:false,
+        importExcelInfo:{
+          all:0,
+          success:0,
+          error:0,
+          errorData:[],
+        },
+        importExcelInfoView:false,
       };
     },
     computed:{
@@ -311,19 +362,20 @@
                   name:tempName[i]
                 })
               });
-              if(tempObj.province){
-                tempList.push(tempObj);
-              }
+              tempList.push(tempObj);
             });
             this.area_school= tempList;
-            // console.log(this.area_school)
+            //如果有设置默认选中的历史记录id则执行查询选中
+            if(this.defaultHistoryId){
+              this._getHistorySchools(this.defaultHistoryId);
+            }
           }
         })
       },
       /**
        * 加载历史学校列表
        */
-      _getHistorySchools() {
+      _getHistorySchools(id) {
         var schoolName = []
         var schoolType = []
         var schoolId = []
@@ -332,7 +384,7 @@
             sendType: 1,
             pageSize: 20,
             pageNumber: 1,
-            materialId: this.materialId,
+            materialId: id?id:this.materialId,
             userNameOrUserCode: '',
             orgName: '',
             materialName: ''
@@ -345,6 +397,9 @@
                 if (item.areaId == item1.id) {
                   var checkedId = item.id.split(',')
                   item1.checkedSchools = checkedId
+                  //设置地区省份选中状态
+                  item1.checkAll = item1.checkedSchools.length === item1.schoolList.length;
+                  item1.isIndeterminate = item1.checkedSchools.length > 0 && item1.checkedSchools.length < item1.schoolList.length;
                 }
               })
             })
@@ -358,7 +413,7 @@
       _chooseHistory(tableIndex,id){
         this.historyData = [this.tableData[tableIndex]]
         this.dialogVisible=false;
-        this.materialId = id
+        this.materialId = id;
         this._getHistorySchools()
       },
       /**
@@ -482,12 +537,12 @@
         this.searchResultFirstId=undefined;
         this.area_school.forEach((iterm,i)=>{
           iterm.schoolList.forEach((t,j)=>{
-            this.area_school[i].schoolList[j].name=this.$commonFun.getHTMLText(this.area_school[i].schoolList[j].name);
-            if(t.name.indexOf(this.searchName)>-1){
+            t.name=this.$commonFun.getHTMLText(t.name);
+            if(t.name.includes(this.searchName)){
               if(!this.searchResultFirstId){
                 this.searchResultFirstId=iterm.id;
               }
-              this.area_school[i].schoolList[j].name=this.area_school[i].schoolList[j].name.replace(this.searchName,highLightHtml);
+              t.name=t.name.replace(this.searchName,highLightHtml);
             }
           })
         });
@@ -496,7 +551,7 @@
        * ，定位到第一个匹配项处
        */
       _goToSearchPosition(){
-        console.log(this.searchResultFirstId);
+        if(!this.searchResultFirstId) return;
         var dom = document.getElementsByClassName('area'+this.searchResultFirstId);
         var top = dom[0].getBoundingClientRect().top;
         document.getElementsByClassName('app-main')[0].scrollTop=top-300;//通过scrollTop设置滚动到指定
@@ -553,8 +608,15 @@
        */
       upLoadFileSuccess(res, file, fileList){
         if (res.code == '1') {
+          this.importExcelInfo={
+            all:res.data.orgs.length+res.data.erros.length,
+            success:res.data.orgs.length,
+            error:res.data.erros.length,
+            errorData:res.data.erros,
+          };
+          this.importExcelInfoView=true;
           //将匹配到的学校选中
-          res.data.forEach(iterm=>{
+          res.data.orgs.forEach(iterm=>{
             this.area_school.forEach(item1=>{
               item1.schoolList.forEach(iterm2=>{
                 if(iterm2.name==iterm.orgName){
@@ -647,5 +709,17 @@
     width: 280px;
     margin-right: 10px;
     margin-left: 0 !important;
+  }
+  .fastQuery_r_text{
+    display: inline-block;
+    vertical-align: top;
+  }
+  .importExcelInfoView-title{
+    width: 100px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .importExcelInfoView-list{
+    padding-bottom: 4px;
   }
 </style>

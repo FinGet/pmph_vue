@@ -59,10 +59,12 @@ export function authorityComparison(matchArr, userArr) {
 }
 /* 教材申报权限判断 */
 export function materialPower(num,powerList) {
-  var userData= getSessionStorage('currentUser', 'json')||{};
-  var str = powerList?powerList:userData.materialPermission;
+  if(!powerList||!(Object.prototype.toString.call(powerList)=='[object Array]'||(typeof powerList).toLowerCase()=='string')){
+    return false;
+  }
+  var str = ((typeof powerList).toLowerCase()=='string')?powerList.split(''):powerList;
   //如果传的是数字
-  if((typeof num).toLowerCase() == "number"){
+  if((typeof num).toLowerCase() == "number"||(typeof num).toLowerCase() == "string"){
     return str[num]==1;
   }
   //如果是数组,只要匹配到任一一项则返回true
@@ -192,7 +194,10 @@ export function formatDate(nS,str) {
   if(!nS){
     return "";
   }
-  var date=new Date(nS);
+  if(parseInt(nS)===NaN){
+    return nS;
+  }
+  var date=new Date(parseInt(nS));
   var year=date.getFullYear();
   var mon = date.getMonth()+1;
   var day = date.getDate();
@@ -205,6 +210,20 @@ export function formatDate(nS,str) {
  }else{
    return year + '-' + (mon < 10 ? '0' + mon : mon) + '-' + (day < 10 ? '0' + day : day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minu < 10 ? '0' + minu : minu) + ':' + (sec < 10 ? '0' + sec : sec);
  }
+
+}
+/**
+ * 获取当前的日期 格式“yyyyMMdd”
+ * @returns {string}
+ */
+export function getcurrentDate(nS) {
+  var date=nS?new Date(nS):new Date();
+  var year=date.getFullYear();
+  var mon = date.getMonth()+1;
+  mon=mon>9?mon:'0'+mon;
+  var day = date.getDate();
+  day=day>9?day:'0'+day;
+  return ''+year+mon+day;
 
 }
 /**
@@ -227,6 +246,41 @@ export function getNowFormatDate() {
     + " " + date.getHours() + seperator2 + date.getMinutes()
     + seperator2 + date.getSeconds();
   return currentdate;
+}
+/**
+ * 将秒数换成时分秒格式
+ */
+export function formatSeconds(value) {
+  var secondTime = parseInt(value);// 秒
+  var minuteTime = 0;// 分
+  var hourTime = 0;// 小时
+
+  if(!secondTime){
+    return value
+  }
+
+  if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+    //获取分钟，除以60取整数，得到整数分钟
+    minuteTime = parseInt(secondTime / 60);
+    //获取秒数，秒数取佘，得到整数秒数
+    secondTime = parseInt(secondTime % 60);
+    //如果分钟大于60，将分钟转换成小时
+    if(minuteTime > 60) {
+      //获取小时，获取分钟除以60，得到整数小时
+      hourTime = parseInt(minuteTime / 60);
+      //获取小时后取佘的分，获取分钟除以60取佘的分
+      minuteTime = parseInt(minuteTime % 60);
+    }
+  }
+  var result = "" + (parseInt(secondTime)>10?parseInt(secondTime):0+parseInt(secondTime));
+
+  if(minuteTime >= 0) {
+    result = "" + (parseInt(minuteTime)>10?parseInt(minuteTime):'0'+parseInt(minuteTime)) + " : " + result;
+  }
+  if(hourTime >= 0) {
+    result = "" + (parseInt(hourTime)>10?parseInt(hourTime):'0'+parseInt(hourTime)) + " : " + result;
+  }
+  return result;
 }
 
 /**=================================================================
@@ -295,6 +349,7 @@ export function setCursorPosition(textarea, rangeData) {
  *获取HTML中的纯文本信息
  */
 export function getHTMLText(str) {
+  str=str?str:'';
   str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
   str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
   //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
@@ -380,4 +435,113 @@ export function checkType (str, type) {
     default :
       return true;
   }
+}
+
+/**
+ * 封装一个缓动函数
+ * @param start 初始值
+ * @param end 最终值
+ * @param time 运动时间
+ * @param callback 回调函数
+ */
+export function perfectAnimate(start,end,time,callback,noEnd){
+  var t = 0;
+  var unm = time/40;
+  var timer;
+  var state=start;
+  var easeOut = function(t, b, c, d) {
+    return -c * ((t = t/d - 1) * t * t*t - 1) + b;
+  };
+
+  timer = setInterval(()=>{
+    let m = Math.ceil(easeOut(t,start,end-start,unm))
+    t++;
+    if(t<unm){
+      state = m;
+      callback&&callback(state);
+      if(noEnd&&(end-m)<=1){
+        clearInterval(timer);
+      }
+    }else{
+      state = end;
+      callback&&callback(state);
+      clearInterval(timer);
+    }
+  },40);
+
+  return {
+    bort:function () {
+      timer&&clearInterval(timer);
+    },
+    end:function () {
+      timer&&clearInterval(timer);
+      let endState = state;
+      var endTime = setInterval(()=>{
+        endState++;
+        if(endState<end){
+          callback&&callback(endState);
+        }else{
+          callback&&callback(end);
+          clearInterval(endTime);
+        }
+      },20);
+    }
+  }
+}
+
+/**
+ * 下载文件
+ * @param url
+ */
+export function downloadFile(url) {
+  var iframe = document.createElement("iframe");
+  iframe.name = 'iframe-' + (+new Date())
+  iframe.style.display = "none";
+  iframe.src = url;
+  document.body.appendChild(iframe);
+}
+
+/**
+ * 复制到剪切板
+ * @param str
+ */
+export function copy(str){
+  var save = function (e){
+    e.clipboardData.setData('text/plain',str);//下面会说到clipboardData对象
+    e.preventDefault();//阻止默认行为
+  }
+  document.addEventListener('copy',save);
+  document.execCommand("copy");//使文档处于可编辑状态，否则无效
+}
+/**
+ * 解析url地址
+ * @param url
+ * @returns {{source: *, protocol, host: (*|string), port, query, params, file: *, hash, path: string, relative: string, segments: Array}}
+ */
+export function parseURL(url) {
+  var a =  document.createElement('a');
+  a.href = url;
+  return {
+    source: url,
+    protocol: a.protocol.replace(':',''),
+    host: a.hostname,
+    port: a.port,
+    query: a.search,
+    params: (function(){
+      var ret = {},
+        seg = a.search.replace(/^\?/,'').split('&'),
+        len = seg.length, i = 0, s;
+      for (;i<len;i++) {
+        if (!seg[i]) { continue; }
+        s = seg[i].split('=');
+        ret[s[0]] = s[1];
+      }
+      return ret;
+    })(),
+    file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+    hash: a.hash.replace('#',''),
+    path: a.pathname.replace(/^([^\/])/,'/$1'),
+    relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+    segments: a.pathname.replace(/^\//,'').split('/')
+  };
 }

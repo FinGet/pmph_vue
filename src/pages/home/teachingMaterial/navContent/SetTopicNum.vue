@@ -17,6 +17,18 @@
 
       <!--操作按钮-->
       <div class="operation-wrapper">
+        <span class="grey_button">请按照模板格式导入（<a href="/static/选题号模板下载.xlsx">模板下载.xls</a> ）</span>
+        <my-upload
+          class="ChatInputFileBtn"
+          ref="upload"
+          :action="api_upload"
+          :before-upload="beforeUploadFile"
+          :on-success="upLoadFileSuccess"
+          :on-error="uploadError"
+          :show-file-list="false">
+          <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击导入'}}</el-button>
+        </my-upload>
+        <el-button type="primary" @click="exportExcel">导出</el-button>
         <el-button type="primary" @click="submit">确认</el-button>
       </div>
     </div>
@@ -59,6 +71,7 @@
 	export default {
 		data() {
 			return {
+        api_upload: '/pmpheep/textBook/import/topicExcel',
         tableData:[],
         materialId:'',// 教材ID
         book:{
@@ -70,7 +83,8 @@
           isPublished: false, // 是否发布
           topicNumber: '', // 选题号
         },
-        topicTextbooks:[]
+        topicTextbooks:[],
+        uploadLoading:false
       }
 		},
     created(){
@@ -104,14 +118,14 @@
       },
       submit(){
         // console.log(this.tableData)
-        var re = /^[0-9]+[0-9]*]*$/ 
+        var re = /^[0-9]+[0-9]*]*$/
         for (var i = 0; i < this.tableData.length; i++) {
           for (var key in this.book) {
             this.book[key] = this.tableData[i][key]
           }
           if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
             this.$message.error('选题号只能为数字')
-            return 
+            return
           }
           // console.log(this.book)
           this.topicTextbooks.push(this.book)
@@ -143,6 +157,80 @@
             this.$message.error(err)
           })
         }).catch(() => {});
+      },
+      /**
+       * 当上传按钮添加excel
+       * @param file
+       */
+      beforeUploadFile(file){
+        let flag = true;
+
+        var filedata = file.raw;
+        var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+        // 类型判断
+        if(!(ext=='xls'||ext=='xlsx')){
+          this.$message.error("请按照模板格式的文档上传文件");
+          return;
+        }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size<1){
+          this.$message.error("文件大小不能小于1bt");
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于100M
+        if(file.size/1024/1024 > 100){
+          this.$message.error("文件大小不能超过100M！");
+          return;
+        }
+
+        this.uploadLoading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件请求成功的回调
+       */
+      upLoadFileSuccess(res, file, fileList){
+        if (res.code == '1') {
+          var upLoad = res.data;
+          var tableData = this.tableData;
+          var data = [];
+          /*提取相同数据*/
+          for (var i =0;i<tableData.length;i++) {
+            for (var j = 0; j<upLoad.length;j++) {
+              if (tableData[i].sort == upLoad[j].sort && tableData[i].textbookName == upLoad[j].textbookName && tableData[i].textbokkRound== upLoad[j].textbokkRound) {
+                data.push(upLoad[j]);
+              }
+            }
+          }
+          /*将不同的数据加入其中*/
+          if (data.length < tableData.length) {
+            data=[...data,...(tableData.slice(data.length))];
+          }
+//          console.log(data);
+          this.tableData = data;
+        }else{
+          this.$message.error(res.msg.msgTrim());
+        }
+        this.uploadLoading = false;
+      },
+      /**
+       * 上传文件请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        console.log(err);
+        this.$message.error(err.msg.msgTrim());
+        this.uploadLoading = false;
+      },
+      /** 导出Excel */
+      exportExcel(){
+        let url = '/pmpheep/textbook/exportTopic/?materialId='+ this.materialId;
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
       }
     }
 	}
@@ -151,5 +239,16 @@
 <style scoped>
 .searchInputEle {
   padding: 3px 0;
+}
+.grey_button{
+  color: #9c9c9c;
+}
+.grey_button a{
+  color: #337ab7
+}
+.ChatInputFileBtn{
+  position: relative;
+  top: 13px;
+  margin-right: 10px;
 }
 </style>

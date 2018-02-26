@@ -12,7 +12,7 @@
           <span>标题：</span>
           <el-input placeholder="输入公告标题" v-model.trim="title" class="input" @keyup.enter.native="search"></el-input>
           <span>发布状态：</span>
-          <el-select v-model="status" style="width:186px" class="input" placeholder="全部">
+          <el-select v-model="status" style="width:186px"   class="input" placeholder="全部">
            <el-option
              v-for="item in selectOp"
              :key="item.value"
@@ -31,12 +31,12 @@
                 label="公告标题"
                 >
                 <template scope="scope">
-                   <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                   <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
-            <el-table-column 
-            prop="username"  
-            label="作者" 
+            <el-table-column
+            prop="username"
+            label="作者"
             width="110">
             </el-table-column>
             <el-table-column
@@ -45,7 +45,7 @@
                 width="175"
                 >
               <template scope="scope">
-                   {{$commonFun.formatDate(scope.row.gmtCreate)}}
+                   {{scope.row.gmtCreate}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -62,7 +62,7 @@
                 >
             <template scope="scope">
                    {{$commonFun.formatDate(scope.row.authDate)}}
-                </template>   
+                </template>
             </el-table-column>
             <!-- <el-table-column
                 label="被查看次数"
@@ -81,7 +81,7 @@
                 <template scope="scope">
                    <!--  <el-button type="text" @click="isPass(scope.row.id,2)">通过</el-button>
                     <el-button type="text" @click="isPass(scope.row.id,1)">拒绝</el-button> -->
-                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isMaterialEntry"  @click="editContent(scope.row)">修改</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -115,14 +115,17 @@
          <el-form-item label-width="0">
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
+         <p style="width:100%" v-for="item in contentDetailData.MaterialNoteAttachment" :key="item.id">
+         <img :src="'/pmpheep/file/notice/download/'+item.attachment" alt="" style="margin-left:50%;transform:translateX(-50%);">
+         </p>
          <el-form-item label="附件：">
-              <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+              <p v-for="item in contentDetailData.cmsExtras" :key="item.id"><a type="text" :href="item.attachment" style="color:#337ab7" >{{item.attachmentName}}</a></p>
          </el-form-item>
        </el-form>
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="publishSubmit">发布</el-button>
             </div>
         </div>
@@ -143,6 +146,10 @@ export default {
         value: "id"
       },
       selectOp: [
+        {
+        value:'',
+        label:'全部'
+      },
       {
         value:true,
         label:'已发布'
@@ -172,7 +179,8 @@ export default {
         cmsExtras: "",
         listObj: "",
         content: ""
-      }
+      },
+      isDisabled: false
     };
   },
   computed: {
@@ -211,6 +219,7 @@ export default {
           }
         })
         .then(response => {
+          console.log(response);
           let res = response.data;
           this.conDataTotal = res.data.total;
           if (res.code == "1") {
@@ -263,6 +272,8 @@ export default {
      * 内容页搜索
      */
     search() {
+      this.conPageNumber = 1;
+      this.conPageSize = 30;
       this.getContentLists();
     },
     /* 内容table切换选项 */
@@ -307,7 +318,7 @@ export default {
             }else{
                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
-            } 
+            }
           }
          obj.categoryId=parseInt(obj.categoryId);
          obj.isPublished=true;
@@ -324,16 +335,17 @@ export default {
                 }else {
                 this.$message.error(res.data.msg);
               }
-            })    
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          });          
+          });
         });
-    },    
+    },
     /* 查看详情 */
     contentDetail(obj) {
+      this.isDisabled = obj.isMaterialEntry;
       this.$axios
         .get(this.editContentUrl + obj.id + "/detail", {})
         .then(res => {

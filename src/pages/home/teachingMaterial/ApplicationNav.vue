@@ -5,35 +5,40 @@
         <el-tabs type="border-card" v-model="activeTagName" class="tab_nav" :class="{tab_active_first:activeFirst,tab_active_last:activeLast}" @tab-click="routerChange" v-if="!$router.currentRoute.meta.isShowTags">
           <el-tab-pane label="提交到出版社" name="presscheck-pmph"></el-tab-pane>
           <el-tab-pane label="申报表审核" class="list_1" name="presscheck"></el-tab-pane>
-          <el-tab-pane label="职位遴选" name="1v3"></el-tab-pane>
+          <el-tab-pane label="角色遴选" name="1v3"></el-tab-pane>
           <el-tab-pane label="结果统计" name="result"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&title">
-        <p >{{title}}</p>
+      <div class="header_title_tips" v-if="!$router.currentRoute.meta.hideTabs&&materialInfo.materialName">
+        <p >{{materialInfo.materialName}}</p>
         <div class="tips_icon"></div>
       </div>
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
-        <router-view></router-view>
+        <router-view :materialInfo="materialInfo" :pressCheckSearchParams="pressCheckSearchParams"></router-view>
       </transition>
 		</div>
 	</div>
 </template>
 
 <script type="text/ecmascript">
+  import bus from 'common/eventBus/bus.js'
 export default {
 	data() {
 		return {
-		  api_material_detail:'/pmpheep/material/materialName',
+		  api_material_name:'/pmpheep/material/materialName',
+      api_material_info:'/pmpheep/material/getMaterialMainInfoById',
       materialId:'',
       activeTagName:'presscheck',
       activeFirst:false,
       activeLast:false,
            contentH:'auto',
            isShowTabs:true,
-      title:'新建通知',
+      materialInfo:{
+        materialName:'新建通知',
+      },
+      pressCheckSearchParams:{},
 		}
 	},
 	methods: {
@@ -52,19 +57,23 @@ export default {
      }
     },
     getMaterialData(){
-      this.$axios.get(this.api_material_detail,{params:{
+      this.$axios.get(this.api_material_info,{params:{
         id:this.materialId
       }})
         .then(response=>{
           var res = response.data;
           if(res.code==1){
-            this.title = res.data
+            res.data.hasPermission=(num)=>{
+              return this.$commonFun.materialPower(num,res.data.myPower);
+            };
+            this.materialInfo = res.data
           }
         })
         .catch(e=>{
           console.log(e);
         })
     },
+
   },
   watch:{
     activeTagName(newval,old){
@@ -82,16 +91,28 @@ export default {
       this.materialId = this.$route.params.materialId;
 
       if(this.$router.currentRoute.params.materialId=='new'){
-        this.title='新建通知'
+        this.materialInfo.materialName='新建通知'
       }else{
-        this.getMaterialData();
+        setTimeout(()=>{
+          this.getMaterialData();
+        },200)
       }
-      console.log(this.$route)
+
+
+      bus.$on('material:update-info',this.getMaterialData);
+      bus.$on('pressCheck:searchParams',(data)=>{
+        this.pressCheckSearchParams=data||{};
+      });
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application']);
+      }
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
     var windowH = document.documentElement.clientHeight;
     this.contentH = windowH-100+'px';
+
   },
 }
 </script>

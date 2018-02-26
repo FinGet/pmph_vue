@@ -11,7 +11,7 @@
             @change="handleChange">
           </el-cascader> -->
           <span>标题：</span>
-          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title" @keyup.enter.native="getOutContentList"></el-input>
+          <el-input placeholder="输入信息快报标题" class="input" v-model.trim="contentParams.title" @keyup.enter.native="searchOutContent"></el-input>
           <span>发布状态：</span>
           <el-select v-model="contentParams.isPublished" clearable  style="width:186px" class="input" placeholder="全部">
            <el-option
@@ -22,7 +22,7 @@
              >
          </el-option>
          </el-select>
-         <el-button type="primary" icon="search" @click="getOutContentList">搜索</el-button>
+         <el-button type="primary" icon="search" @click="searchOutContent">搜索</el-button>
          <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:2}})">新建信息快报</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -30,7 +30,7 @@
                 label="信息快报标题"
                 >
                 <template scope="scope">
-                  <el-button type="text" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                  <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -79,7 +79,7 @@
                 width="120"
                 >
                 <template scope="scope">
-                    <el-button type="text" :disabled="scope.row.isPublished"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -108,7 +108,7 @@
         <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
-      <span>{{contentDetailData.listObj.authDate?contentDetailData.listObj.authDate:'2017-11-14 10:17:52'}}</span>
+      <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)}}</span>
        </p>
        <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label-width="0">
@@ -121,7 +121,7 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished"  @click="editContent(contentDetailData.listObj)">修改</el-button>  
+            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>  
             <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>  
             </div>
         </div>
@@ -271,6 +271,11 @@ export default {
             this.totalPage = res.data.data.total;
           }
         });
+    },
+    searchOutContent(){
+      this.contentParams.pageSize = 30;
+      this.contentParams.pageNumber = 1;
+      this.getOutContentList();
     },
     /* 发布 */
     publishSubmit(){

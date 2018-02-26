@@ -8,7 +8,9 @@ import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
 import 'common/css/common.css'
+require('es6-promise').polyfill();//解决axios ie9不兼容问题
 import axios from 'axios'
+
 
 
 /*全局方法和配置挂载*/
@@ -26,7 +28,8 @@ Vue.use(ElementUI);
 
 
 /*polyfill插件*/
-require('../static/ie9-oninput-polyfill');//解决ie9输入框绑不响应删除键bug
+require('./common/js/ie9-oninput-polyfill');//解决ie9输入框绑不响应删除键bug
+require('./common/js/jsApiPolyfill');
 
 //请求根地址配置
 // axios.defaults.baseURL = config.BASE_URL;
@@ -45,6 +48,7 @@ Vue.prototype.$formRules = formRules;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
+  //console.log(sessionData)
   return {
     token:sessionData.sessionPmphUserToken,
     sessionId:sessionData.userSessionId,
@@ -76,18 +80,19 @@ router.beforeEach((to, from, next) => {
 
 //添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
+  var currentLocation = window.location.hash.replace('#','');
   var userdata = getUserData();
   //请求发送之前的钩子
   if(userdata.token){
      config.headers.Authorization=userdata.token;
   }else{
-    router.push('/login');
+    router.push({name:'登录',query:{f:currentLocation}});
 
   }
 
      /* 解决IE缓存添加一个随机时间戳 */
   if (config.params){
-    config.params._timer=''
+
   }else{
     config.params={};
   }
@@ -102,10 +107,11 @@ axios.interceptors.request.use(function (config) {
 
 //添加一个返回拦截器
 axios.interceptors.response.use(function (response) {
+  var currentLocation = window.location.hash.replace('#','');
   //对返回的数据进行一些处理
   if (response.data.code == 30 ){
     ElementUI.Message.error('当前登录已过期，请重新登录');
-    router.push('/login');
+    router.push({name:'登录',query:{f:currentLocation}});
   }
   return response;
 }, function (error) {
@@ -127,6 +133,9 @@ Vue.use(myUpload);
 String.prototype.msgTrim=function() {
   return this.replace(/(\S*)===>/g, '');
 };
+String.prototype.replaceAll = function(s1,s2){
+  return this.replace(new RegExp(s1,"gm"),s2);
+}
 
 /* eslint-disable no-new */
 new Vue({
@@ -135,6 +144,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 });
-
-
 

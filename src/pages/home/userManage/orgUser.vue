@@ -1,7 +1,7 @@
 <template>
   <div class="orgUser">
     <el-tabs type="border-card">
-  <el-tab-pane label="机构用户">
+  <el-tab-pane label="学校/医院用户">
        <div class="clearfix" >
     </div>
       <div class="clearfix">
@@ -23,8 +23,26 @@
             <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
           </div>
         </div>
+        <div class="searchBox-wrapper">
+          <!--申报职务搜索-->
+          <div class="searchName">机构类型：
+            <span></span>
+          </div>
+          <div class="searchInput">
+            <el-select v-model="params.orgTypeName" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
+              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="searchBox-wrapper searchBox-radio">
+          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="orgSearch">
+            <el-radio :label="true">医院</el-radio>
+            <el-radio :label="false">学校</el-radio>
+          </el-radio-group>
+        </div>
         <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="refreshTableData">搜索</el-button>
+          <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
         </div>
         <!--操作按钮-->
         <div class="pull-right">
@@ -353,7 +371,7 @@
 					</el-table-column>
 					<el-table-column prop="title" label="职称" width="80">
 					</el-table-column>
-					<el-table-column label="手机号" width="160">
+					<el-table-column label="手机号" >
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
@@ -402,6 +420,7 @@
 			:visible.sync="schoolDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
 			<img :src="imgsrc" width="100%" alt="委托书">
 		</el-dialog>
@@ -479,23 +498,23 @@ export default {
       // 表单校验规则
       rules: {
         username: [
-          { required: true, message: "请输入用户代码", trigger: "blur" },
+          { required: true, message: "请输入机构账号", trigger: "blur" },
           { pattern: /^[A-Za-z0-9]+$/, message: '只能输入英文和数字' },
-          { min: 1, max: 20, message: "请输入1~20个英文数字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "机构账号不能超过20个字符", trigger: "change,blur" }
         ],
         orgName: [
           { required: true, message: "请输入机构名称", trigger: "blur" },
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "机构名称不能超过20个字符", trigger: "change,blur" }
           ],
         email: [
-          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式错误", trigger: "blur" }
         ],
         realname:[
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "管理员姓名不能超过20个字符", trigger: "change,blur" }
         ],
         handphone: [
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
+          { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
         ],
         orgTypeId: [
             { required: true, message: '请选择院校类型', trigger: 'blur' },
@@ -506,6 +525,20 @@ export default {
           {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
       },
+      //机构类型数据
+      orgoptions: [{
+          value:1,
+          label:'本科'
+        },{
+          value:2,
+          label:'医院'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科、职教'
+        }],
       //搜索所属机构用户
       OrgNameList: [],
       loading: false,
@@ -515,7 +548,9 @@ export default {
         pageNumber: 1,
         // username: "",
         orgName: "",
-        name: ""
+        name: "",
+        orgTypeName:'',
+        isHospital: false
       },
       totalPages: 0,// 数据总量
 			visible1: false,
@@ -532,6 +567,7 @@ export default {
       pageSize:10,
       pageNumber:1,
       // 机构类型
+      orgniztionType: 1,
       orgTypeList: [],
       // 新增机构类型弹窗表单
       // addOrgTypeForm:{
@@ -674,6 +710,43 @@ export default {
           console.error(error);
         });
     },
+
+    /**
+     * 搜索医院、本科、职教、本科&职教
+     */
+    specialSearch(){
+      if (this.params.orgTypeName == '医院') {
+        this.params.isHospital = true;
+        this.refreshTableData();
+      } else {
+        this.params.isHospital = false;
+        this.refreshTableData();
+      }
+
+    },
+
+    /**
+     * 按医院和学校查询
+     */
+    orgSearch(){
+      if (this.params.isHospital) {
+        this.params.orgTypeName = '医院';
+        this.refreshTableData();
+      } else {
+        this.params.orgTypeName = '';
+        this.orgoptions = [{
+          value:1,
+          label:'本科'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科、职教'
+        }]
+        this.refreshTableData();
+      }
+    },
     /**
        * 获取所属部门信息
        */
@@ -727,18 +800,17 @@ export default {
         url: "/pmpheep/users/org/add/orgAndUser",
         data: this.$initPostData(this.form)
       })
-        .then(function(response) {
+        .then((response)=> {
           let res = response.data;
-          let data = res.data.rows;
           //修改成功
-          if (res.code === 1) {
+          if (res.code == 1) {
             self.refreshTableData();
             self.dialogVisible = false;
             self.$message({
               type: "success",
               message: "添加成功"
             });
-          }else {
+          } else {
             self.$message.error(res.msg.msgTrim());
           }
         })
@@ -770,11 +842,8 @@ export default {
               type: "success",
               message: "修改成功"
             });
-          } else if (code === 3) {
-            self.$message({
-              type: "error",
-              message: "机构账号不能修改"
-            });
+          } else {
+            self.$message.error(res.msg.msgTrim());
           }
         })
         .catch(function(error) {
@@ -840,7 +909,14 @@ export default {
      * 搜索
      */
     search() {
+      this.pageSize = 10;
+      this.pageNumber = 1;
       this.getOrgsList();
+    },
+    searchOrg(){
+      this.params.pageSize = 10;
+      this.params.pageNumber = 1;
+      this.refreshTableData()
     },
     /**
 		 *审核
@@ -928,18 +1004,8 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
     preview(proxy) {
-      this.$axios
-        .get("/pmpheep/image/" + proxy)
-        .then(response => {
-          let res = response.data;
-          if (res.code == "1") {
-            this.dialogVisible = true;
-            console.log(res);
-          }
-        })
-        .catch(error => {
-          console.log(error.msg);
-        });
+      this.schoolDialogVisible = true
+      this.imgsrc = "/pmpheep/image/"+proxy;
     },
     /**
      * 查看详情
@@ -969,6 +1035,12 @@ export default {
         username:"",
         isDisabled: false
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {
@@ -990,18 +1062,13 @@ export default {
 .title{
   cursor: pointer;
 }
-/* .detail-info-box .detail-info-item>div{
-  display: inline-block;
-  font-size: 16px;
+.searchBox-radio {
+  width: 150px;
 }
-.detail-info-box .detail-info-item{
-  display: inline-block;
-  height: 36px;
-  width: 50%;
-  max-width: 410px;
-  line-height: 36px;
-  vertical-align: middle;
-} */
+.radio-group {
+  margin-top: 9px;
+  margin-left: 5px;
+}
 .detail-info-box{
   display: flex;
   font-size: 16px;

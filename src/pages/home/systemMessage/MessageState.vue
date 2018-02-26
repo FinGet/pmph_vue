@@ -86,9 +86,10 @@
       return {
         input: '',
         isRead: 0,
-        currentPage: 4, // 分页当前页
+        currentPage: 1, // 分页当前页
         tableData: [],
-        msgId: '',
+        materialId: '',
+        msgId:'',
         pageNumber: 1,
         pageSize: 20,
         name: '',
@@ -98,6 +99,7 @@
     mounted() {
       //console.log(this.$route.query.id)
       // 获取当前消息id
+      this.materialId = this.$route.query.materialId
       this.msgId = this.$route.query.msgId
       console.log(this.$route,this.msgId)
       this.getMessageState()
@@ -107,11 +109,12 @@
        * 初始化数据
        */
       getMessageState() {
-        this.$axios.get("/pmpheep/messages/message/"+this.msgId+"/state", {
+        this.$axios.get("/pmpheep/messages/message/state", {
           params: {
             name: this.name,
             sessionId: this.$getUserData().sessionId,
             msgId: this.msgId,
+            materialId: this.materialId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
             isRead: this.isRead==0?'':this.isRead==1?true:false
@@ -154,6 +157,7 @@
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
         this.pageSize = val
+        this.pageNumber=1
         this.getMessageState()
       },
       /**

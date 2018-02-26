@@ -1,12 +1,13 @@
 <template>
     <div class="teachMaterial chief">
-      <p class="bookTitle">医学心理学与精神病学（第4版）</p>
+      <p class="bookTitle" v-if="formData.bookName">《 {{formData.bookName}} 》</p>
 
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)" :disabled="!hasPermission([2,3])||tableData.length==0">发布</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0">确认</el-button>
-          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])">重置</el-button>
+          <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
@@ -18,7 +19,7 @@
           border
           stripe
           tooltip-effect="dark"
-          max-height="750"
+          :row-class-name="setRowClassName"
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
@@ -29,16 +30,16 @@
           <el-table-column label="申报单位"  prop="reportName"></el-table-column>
 
           <!--<el-table-column label="工作单位" prop="orgName"></el-table-column>-->
-          <el-table-column label="申请职位" prop="presetPosition"></el-table-column>
+          <el-table-column label="申请职位" prop="strPresetPosition"></el-table-column>
           <el-table-column label="学校审核" width="100" prop="onlineProgress"></el-table-column>
-          <el-table-column label="出版社审核" width="110" prop="offlineProgress"></el-table-column>
+          <el-table-column label="出版社审核" width="120" prop="offlineProgress"></el-table-column>
 
           <el-table-column label="是否主编" width="100" align="center" >
             <template scope="scope">
               <el-checkbox
                 v-model="scope.row.isZhubian"
                 @change="checkboxChange(1,scope.row)"
-                :disabled="scope.row.disabled_zb||!hasPermission(2)"
+                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -50,7 +51,7 @@
                   class="border-radius-4"
                   :class="{'border-red':scope.row.isZhubian&&!scope.row.zhubianSortIsOk}"
                   v-model.trim="scope.row.zhubianSort"
-                  :disabled="scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isZhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
                   @blur="sortChange(1,scope.row)"
                   @change="sortChange(1,scope.row)"
                   size="mini"
@@ -67,7 +68,7 @@
               <el-checkbox
                 v-model="scope.row.isFuzhubian"
                 @change="checkboxChange(2,scope.row)"
-                :disabled="scope.row.disabled_zb||!hasPermission(2)"
+                :disabled="(scope.row.disabled_zb||!hasPermission(2))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
@@ -79,7 +80,7 @@
                   class="border-radius-4"
                   :class="{'border-red':!scope.row.fuzhubianSortIsOk}"
                   v-model.trim="scope.row.fuzhubianSort"
-                  :disabled="scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian"
+                  :disabled="(scope.row.disabled_zb||!hasPermission(2)||!scope.row.isFuzhubian)||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
                   @blur="sortChange(2,scope.row)"
                   @change="sortChange(2,scope.row)"
                   size="mini"
@@ -94,14 +95,14 @@
               <el-checkbox
                 v-model="scope.row.isBianwei"
                 @change="checkboxChange(3,scope.row)"
-                :disabled="scope.row.disabled_bw||!hasPermission(3)"
+                :disabled="(scope.row.disabled_bw||!hasPermission(3))||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"
               ></el-checkbox>
             </template>
           </el-table-column>
 
-          <el-table-column label="是否数字编委" width="120" align="center">
+          <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])"></el-checkbox>
+              <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>
@@ -112,16 +113,15 @@
         :visible.sync="dialogVisible">
         <div class="history-box timeLine">
           <ul v-if="historyLog.length>0">
-            <li v-for="(iterm,index) in historyLog" :key="iterm.id">
+            <li v-for="(iterm,index) in historyLog" :key="index">
               <b></b>
-              <p>{{iterm.detail}}</p>
+              <p v-for="(item,index) in iterm.detail">{{item}}</p>
             </li>
           </ul>
           <p v-else>暂无历史消息</p>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
         </span>
       </el-dialog>
     </div>
@@ -129,6 +129,7 @@
 
 <script type="text/ecmascript-6">
   export default {
+    props:['materialInfo'],
     data() {
       return {
         type:'zb',
@@ -143,22 +144,57 @@
         formData:{
           materialId:'',
           textbookId:'',
+          bookName:'',
         },
         dialogVisible:false,
         tableData:[],
         zhubianSelectSortNumber:[],
         fuzhubianSelectSortNumber:[],
         historyLog:[],
+        IsDigitalEditorOptional:false,
+        myPower:'00000000',
+        optionsType:'edit',
       }
     },
     computed:{
+      hasZhubian(){
+        var flag = false;
+        this.tableData.forEach(iterm=>{
+          if(iterm.isZhubian){
+            flag=true;
+          }
+        })
+        return flag;
+      },
+      showPublishBtn(){
+        //是否是选择主编的界面
+        const is_select_zhubian_view =  this.type=='zb';
+        //教材是否结束
+        const no_end = !(this.materialInfo.isForceEnd||this.materialInfo.isAllTextbookPublished);
+        //是否是遴选操作（分为查看和遴选）
+        const is_select_operation = this.optionsType!='view';
 
+        return is_select_zhubian_view && no_end && is_select_operation;
+      },
+      disabledPublishBtn(){
+        //是否有主编
+        const hasZhubian =  this.hasZhubian;
+        //是否有遴选权限
+        const hasPermission = this.hasPermission([2,3]);
+        //是否有后选人员
+        const select_length = this.tableData.length>0;
+
+        return !(hasZhubian&&hasPermission&&select_length);
+      }
     },
     created(){
       this.formData.materialId = this.$route.params.materialId;
       this.formData.textbookId = this.$route.query.bookid;
+      this.formData.bookName = this.$route.query.bookname;
       this.searchParams.textbookId = this.formData.textbookId;
       this.type = this.$route.query.type;
+      this.myPower = this.$route.query.q;
+      this.optionsType = this.$route.query.opt;
       //如果没有教材id则跳转到通知列表
       if(!this.formData.materialId){
         this.$router.push({name:'通知列表'});
@@ -169,6 +205,10 @@
       }
 
       this.getTableData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/press-chief']);
+      }
     },
     methods:{
       //获取table数据
@@ -180,30 +220,37 @@
           materialId:this.formData.materialId,
         }})
           .then(response=>{
+
             var res = response.data;
             this.getHistoryLog();
             if(res.code==1){
-              var onlineProgress = ['未提交','已提交','被退回','通过'];
-              var offlineProgress = ['未收到','被退回','已收到'];
+              var onlineProgress = ['未提交','待审核','被退回','已审核'];
+              var offlineProgress = ['未提交纸质表','未收到纸质表','已收到纸质表'];
               var positionList = ['','主编','副主编','编委'];
-              res.data.map(iterm=>{
+              res.data.DecPositionEditorSelectionVO.map(iterm=>{
                 iterm.onlineProgress = onlineProgress[iterm.onlineProgress];
-                iterm.offlineProgress = onlineProgress[iterm.offlineProgress];
-                iterm.presetPosition = positionList[iterm.presetPosition];
+                iterm.offlineProgress = offlineProgress[iterm.offlineProgress];
 
-                iterm.isZhubian = iterm.chosenPosition==1;
+                iterm.isZhubian = (iterm.chosenPosition%8)==4;
                 iterm.zhubianSort = iterm.isZhubian?iterm.rank:'';
                 iterm.zhubianSortIsOk = true;
-                iterm.isFuzhubian = iterm.chosenPosition==2;
+                iterm.isFuzhubian = (iterm.chosenPosition%8)==2;
                 iterm.fuzhubianSort = iterm.isFuzhubian?iterm.rank:'';
                 iterm.fuzhubianSortIsOk = true;
-                iterm.isBianwei = iterm.chosenPosition==3;
+                iterm.isBianwei = (iterm.chosenPosition%8)==1;
+                iterm.isDigitalEditor = iterm.chosenPosition>=8;
+
 
                 iterm.disabled_zb = this.type=='bw'||iterm.isBianwei;
                 iterm.disabled_bw = this.type=='zb'||(iterm.isZhubian||iterm.isFuzhubian);
 
               });
-              this.tableData = res.data;
+              this.tableData = res.data.DecPositionEditorSelectionVO;
+              /* 排序 */
+              for(var k in this.tableData){
+
+              }
+              this.IsDigitalEditorOptional = res.data.IsDigitalEditorOptional;
             }
           })
           .catch(e=>{
@@ -215,10 +262,15 @@
       getHistoryLog(){
         this.$axios.get(this.api_log,{params:{
           textbookId:this.formData.textbookId,
+          pageNumber:1,
+          pageSize:1000
         }})
           .then(response=>{
             var res = response.data;
             if(res.code==1){
+              res.data.rows.forEach(iterm=>{
+                iterm.detail = iterm.detail.split(';');
+              });
               this.historyLog = res.data.rows;
             }
           })
@@ -268,12 +320,16 @@
           .then(()=>{
             let jsonDecPosition = [];
             for(let i = 0, len = this.tableData.length; i < len; i++){
+              this.tableData[i].chosenPosition = (this.tableData[i].isDigitalEditor?8:0)+(this.tableData[i].isZhubian?4:0)+(this.tableData[i].isFuzhubian?2:0)+(this.tableData[i].isBianwei?1:0);
               let tempObj = {
                 id:this.tableData[i].id,
                 textbookId:this.searchParams.textbookId,
                 chosenPosition:this.tableData[i].chosenPosition,
-                rank:this.tableData[i].chosenPosition==1?this.tableData[i].zhubianSort:(this.tableData[i].chosenPosition==2?this.tableData[i].fuzhubianSort:''),
-                isDigitalEditor:this.tableData[i].isDigitalEditor,
+                declarationId:this.tableData[i].declarationId,
+                presetPosition:this.tableData[i].presetPosition,
+                syllabusId:this.tableData[i].syllabusId,
+                syllabusName:this.tableData[i].syllabusName,
+                rank:(this.tableData[i].chosenPosition%8)==4?this.tableData[i].zhubianSort:((this.tableData[i].chosenPosition%8)==2?this.tableData[i].fuzhubianSort:'')
               };
               if(this.tableData[i].isZhubian||this.tableData[i].isFuzhubian||this.tableData[i].isBianwei||this.tableData[i].isDigitalEditor){
                 jsonDecPosition.push(tempObj);
@@ -282,7 +338,8 @@
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
-              selectionType:type?type:1
+              selectionType:type?type:1,
+              editorOrEditorialPanel:this.type=='zb'?1:2,
             }))
               .then(response=>{
                 var res = response.data;
@@ -367,7 +424,23 @@
 
       },
       hasPermission(index){
-        return this.$commonFun.materialPower(index);
+        return this.$commonFun.materialPower(index,this.myPower);
+      },
+      /**
+       * 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。
+       * @param row
+       * @param index
+       */
+      setRowClassName(row, index){
+        if(row.isZhubian){
+          return 'row-zhubian'
+        }else if(row.isFuzhubian){
+          return 'row-fuzhubian'
+        }else if(row.isBianwei){
+          return 'row-bianwei'
+        }else{
+          return ''
+        }
       }
     }
   }
@@ -388,5 +461,14 @@
     bottom: 7px;
     height: 12px;
     left: 0;
+  }
+  .row-zhubian,.row-zhubian>td{
+    background-color: rgba(76, 175, 80, 0.2) !important;
+  }
+  .row-fuzhubian ,.row-fuzhubian>td{
+    background-color: rgba(76, 175, 80, 0.1) !important;
+  }
+  .row-bianwei,.row-bianwei>td{
+    background-color: rgba(26, 177, 148, 0.06) !important;
   }
 </style>

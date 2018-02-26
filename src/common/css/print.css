@@ -23,11 +23,11 @@
 
 
   /*重置表格样式*/
-  .el-table__header{
-    width: 100% !important;
-  }
-  .el-table__header colgroup col{
-    width: auto !important;
+
+
+  /* 专家信息页面 */
+  .expert_info{
+    zoom: 0.9;
   }
 }
 

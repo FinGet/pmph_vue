@@ -8,7 +8,7 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
     <div class="searchBox-wrapper" >
@@ -16,7 +16,7 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
+        <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
           <div class="searchBox-wrapper">
@@ -25,14 +25,14 @@
         <span></span>
       </div>
       <div class="searchInput">
-        <el-select v-model="params.rank" placeholder="全部" @change="refreshTableData" clearable>
+        <el-select v-model="params.rank" placeholder="全部" @change="searchWriter" clearable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </div>
     </div>
     <div class="searchBox-wrapper searchBtn">
-      <el-button type="primary" icon="search" @click="refreshTableData">搜索</el-button>
+      <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
     </div>
             <!--操作按钮-->
     <!-- <div class="pull-right" style="margin-right:10px;">
@@ -103,14 +103,14 @@
         </el-table-column>
         <el-table-column prop="rankName" label="用户类型" width="120">
         </el-table-column>
-        <el-table-column label="启用标识" width="95" align="center">
+        <el-table-column label="启用标识" width="" align="center">
           <template scope="scope">
             {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
 
         <el-table-column label="操作"
-          align="center">
+          align="center" width="110">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text">登录</el-button>
@@ -281,37 +281,65 @@
 				<el-table ref="multipleTable" :data="teachTableData" border tooltip-effect="dark" style="width: 100%;margin:10px 0;" @selection-change="handleSelectionChange">
 					<el-table-column type="selection" width="55">
 					</el-table-column>
-					<el-table-column label="教师姓名" prop="realname" width="120">
+					<el-table-column label="教师姓名" prop="realname" width="100">
 					</el-table-column>
-					<el-table-column prop="username" label="账号" width="150">
+					<el-table-column prop="username" label="账号" width="120">
 					</el-table-column>
-          <el-table-column prop="orgName" label="所属机构">
+          <el-table-column prop="orgName" label="所属机构" min-width="120">
 					</el-table-column>
-          <el-table-column prop="position" label="职务">
+          <el-table-column prop="position" label="职务" v-if="screenWidth_lg">
 					</el-table-column>
-					<el-table-column prop="title" label="职称" width="80">
+					<el-table-column prop="title" label="职称" width="80" v-if="screenWidth_lg">
 					</el-table-column>
-					<el-table-column label="手机号" width="160">
+          <el-table-column v-if="!screenWidth_lg" label="职务/职称" width="160">
+            <template scope="scope">
+              <el-tooltip class="item" effect="dark" :content="'职务:'+scope.row.position" placement="top">
+                <p>
+                  <i class="fa fa-tags"></i>
+                  {{scope.row.position}}
+                </p>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" :content="'职称:'+scope.row.title" placement="top">
+                <p>
+                  <i class="fa fa-graduation-cap"></i>
+                  {{scope.row.title}}
+                </p>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+					<el-table-column label="手机号" width="160" v-if="screenWidth_lg">
             <template scope="scope">
               <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
               {{scope.row.handphone}}
             </template>
           </el-table-column>
-          <el-table-column label="邮箱" width="220">
+          <el-table-column label="邮箱" width="220" v-if="screenWidth_lg">
             <template scope="scope">
               <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
               {{scope.row.email}}
             </template>
           </el-table-column>
-          <el-table-column prop="idcard" label="身份证" width="190">
+          <el-table-column v-if="!screenWidth_lg" label="联系方式" width="220">
+            <template scope="scope">
+              <p>
+                <i class="fa fa-phone fa-fw" v-if="scope.row.handphone"></i>
+                {{scope.row.handphone}}
+              </p>
+              <p>
+                <i class="fa fa-envelope fa-fw" v-if="scope.row.email"></i>
+                {{scope.row.email}}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="idcard" label="身份证" width="190" v-if="screenWidth_lg">
 					</el-table-column>
-					<el-table-column label="教师资格证" width="110" align="center">
+					<el-table-column label="教师资格证" width="" align="center">
 						<template scope="scope">
 							<a href="javascript:;" v-if="scope.row.cert&&scope.row.cert!='DEFAULT'" style="color:#0000ff;" @click="preview(scope.row.cert)">预览</a>
 							<el-tag type="danger" v-if="!scope.row.cert||scope.row.cert=='DEFAULT'">未上传</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="progress" label="审核状态" width="100" align="center">
+					<el-table-column prop="progress" label="审核状态" width="" align="center">
 						<template scope="scope">
               <el-tag type="danger" v-if="scope.row.progress=='0'">未提交</el-tag>
 							<el-tag type="warning" v-if="scope.row.progress=='1'">待审核</el-tag>
@@ -339,8 +367,10 @@
 			:visible.sync="previewDialogVisible"
 			size="small"
 			top="5%"
+      @close="clearImgSrc"
 			>
-			<img :src="imgsrc" width="100%" alt="教师资格证">
+      <img :src="imgsrc" width="100%" alt="教师资格证">
+
 		</el-dialog>
 	</div>
   </el-tab-pane>
@@ -425,14 +455,14 @@ export default {
         ],
         realname: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
-          { min: 1, max: 20, message: "请输入1~20个字", trigger: "change,blur" }
+          { min: 1, max: 20, message: "姓名不能超过20个字符", trigger: "change,blur" }
           ],
         email: [
-          { min: 1, max: 40, message: "邮箱长度过长", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
+          { type: "email", message: "邮箱格式错误", trigger: "blur" }
           ],
         handphone: [
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码' }
+          { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
           ],
         orgId: [{ validator:departmentIdChecked, trigger: "change,blur" }],
         isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
@@ -764,7 +794,14 @@ export default {
      * 搜索
      */
     search() {
+      this.pageSize = 10;
+      this.pageNumber = 1;
       this.getWritersList()
+    },
+    searchWriter(){
+      this.params.pageSize = 10;
+      this.params.pageNumber = 1;
+      this.refreshTableData();
     },
 		/**@argument val 当选中项 */
 		handleSelectionChange(val) {
@@ -783,15 +820,18 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
 		preview(cert) {
-			this.$axios.get("/pmpheep/image/"+cert).then(response => {
-				let res = response.data
-				if (res.code == '1'){
-					this.dialogVisible = true
-					console.log(res)
-				}
-			}).catch((error) => {
-        console.log(error.msg)
-      })
+      this.previewDialogVisible = true
+		  this.imgsrc = "/pmpheep/image/"+cert;
+      console.log(this.imgsrc);
+//			this.$axios.get("/pmpheep/image/"+cert).then(response => {
+//				let res = response.data
+//				if (res.code == '1'){
+//					this.dialogVisible = true
+//					console.log(res)
+//				}
+//			}).catch((error) => {
+//        console.log(error.msg)
+//      })
     },
     /**
      * 点击查看详情
@@ -820,6 +860,12 @@ export default {
         isDisabled:"",
         note:""
       }
+    },
+    /**
+     * 预览关闭，清除图片路径
+     */
+    clearImgSrc(){
+      this.imgsrc = '';
     }
   },
   created() {

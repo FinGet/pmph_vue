@@ -23,9 +23,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width="220">
                     <template scope="scope">
-                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='编辑'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='编辑'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
                         <el-button type="text" @click="openSeeDialog(scope.row)">查看权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
@@ -127,19 +127,19 @@ export default {
         id: [{type:'number' ,required: true, message: "请输入角色代码", trigger: "blur" }],
         roleName: [
              { required: true, message: "请输入角色名称", trigger: "blur" },
-            {min:0,max:20,message:'名称不能超过20字符',trigger: "change,blur"}
+            {min:0,max:20,message:'角色名称不能超过20个字符',trigger: "change,blur"}
             ],
         isDisabled: [{type:'boolean', required: true, message: "请选择", trigger: "change" }],
         sort: [
-            {min:1,max:10, message: "显示顺序长度不能超过10位", trigger: "change,blur" }, 
+            {min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
             {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
         note:[
-            {min:0,max:20,message:'备注不能超过20字符',trigger: "change,blur"}
+            {min:0,max:20,message:'备注不能超过20个字符',trigger: "change,blur"}
         ]
       },
       powerTreeVisible: false,
-      defaultCheckedData: [1, 2],
+      defaultCheckedData: [],
       defaultTeachData:[],
       revisePowerId: "", //更新角色的id
       teachTreeData:[
@@ -185,7 +185,6 @@ export default {
         {
           label: "教材申报",
           id: 2,
-          children:[]
         },
         {
           label: "我的小组",
@@ -201,15 +200,19 @@ export default {
           children: [
             {
               label: "文章管理",
-              id: 9
+              id: 15
             },
             {
               label: "信息快报管理",
-              id: 10
+              id: 16
             },
             {
               label: "公告管理",
-              id: 11
+              id: 17
+            },
+            {
+              label: "广告管理",
+              id: 18
             }
           ]
         },
@@ -219,54 +222,136 @@ export default {
           children: [
             {
               label: "图书管理",
-              id: 13
+              id: 19
             },
             {
               label: "评论审核",
-              id: 14
+              id: 20
             }
           ]
         },
+        {
+          label: "选题申报",
+          id: 7,
+          children:[
+            {
+              label: "选题申报审核",
+              id: 21
+            },
+            {
+              label: "选题申报查看",
+              id: 22
+            }
+          ]
+        },
+        {
+          label: "图书纠错",
+          id: 8,
+          children:[
+            {
+              label: "图书纠错审核",
+              id: 23
+            },
+            {
+              label: "图书纠错跟踪",
+              id: 24
+            }
+          ]
+        },
+        {
+          label: "积分管理",
+          id: 9,
+          children:[
+            {
+              label: "积分规则管理",
+              id: 25
+            },
+            {
+              label: "用户积分看板",
+              id: 26
+            },
+            {
+              label: "积分兑换规则",
+              id: 27
+            },
+          ]
+        },
+        {
+          label: "数据分析",
+          id: 10,
+          children:[
+            {
+              label: "流量概况",
+              id: 28
+            },
+            {
+              label: "流量地图",
+              id: 29
+            },
+            {
+              label: "图书流量概况",
+              id: 30
+            },
+            {
+              label: "用户图书偏好分析",
+              id: 31
+            },
+          ]
 
+        },
         {
           label: "用户管理",
-          id: 7,
+          id: 11,
           children: [
             {
               label: "社内用户",
-              id: 15
+              id: 32
             },
             {
-              label: "作家用户",
-              id: 16
+              label: "个人用户",
+              id: 33
             },
             {
-              label: "机构用户",
-              id: 17
+              label: "学校/医院用户",
+              id: 34
             }
           ]
         },
         {
           label: "系统设置",
-          id: 8,
+          id: 12,
           children: [
             {
               label: "角色权限",
-              id: 18
-            },
-            {
-              label: "地区",
-              id: 19
-            },
-            {
-              label: "院校机构",
-              id: 20
+              id: 35
             },
             {
               label: "社内部门",
-              id: 21
+              id: 36
             }
           ]
+        },
+        {
+          label: "问卷调查",
+          id: 13,
+          children:[
+            {
+              label: "调查问卷模板设置",
+              id: 37
+            },
+            {
+              label: "调查问卷结果统计",
+              id: 38
+            },
+            {
+              label: "调查问卷回收",
+              id: 39
+            },
+          ]
+        },
+        {
+          label: "系统日志",
+          id: 14,
         }
       ],
       defaultProps: {
@@ -359,10 +444,10 @@ export default {
           arr.push(item.id);
         }
       });
-      this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
+      /* this.$refs.teachTree.getCheckedNodes().forEach(function(item) {
         teachArr[item.id]=1;
         console.log(teachArr);
-      });
+      }); */
       var _this = this;
       this.$axios({
         method: "POST",
@@ -370,7 +455,7 @@ export default {
         data: _this.$initPostData({
           roleId: _this.revisePowerId,
           permissionIds: arr.join(","),
-          materialId:teachArr.join().replace(/,/g,'')
+         // materialId:teachArr.join().replace(/,/g,'')
         })
       })
         .then(function(res) {

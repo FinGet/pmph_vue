@@ -8,8 +8,6 @@
           placeholder="小组搜索"
           icon="search"
           v-model.trim="inputSearchGroup"
-          :on-icon-click="getGroupData"
-          @keyup.enter.native="getGroupData"
           >
         </el-input>
       </div>
@@ -21,6 +19,7 @@
                :class="{active:item.id===currentActiveGroupId,firstIterm:index===0}"
                :key="index"
                @click="clickGroup(item)"
+               v-show="!item.no_matchSearch"
           >
             <div class="groupHead-inner">
             <span class="groupHeadImg">
@@ -52,7 +51,7 @@
           <el-form label-width="120px" :model="newGroupData" :rules="rules" ref="ruleForm">
             <el-form-item label="小组头像：">
               <div class="headImageWrapper">
-                <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start">
+                <el-tooltip class="item" effect="dark" content="点击上传头像" placement="top-start" v-if="!isIe9">
                   <div class="headImageWrapper-bg"><i class="el-icon-plus avatar-uploader-icon"></i></div>
                 </el-tooltip>
                 <!--上传文件按钮-->
@@ -61,17 +60,15 @@
                 <my-upload
                   class="fileInput"
                   ref="upload"
-                  action="/pmpheep/group/add"
-                  :data="creadGroupPostData"
-                  :on-change="filechange"
+                  :action="groupImgFile"
+                  :before-upload="beforeUpload"
                   :on-success="upLoadFileSuccess"
                   :on-error="uploadError"
-                  :show-file-list="false"
-                  :auto-upload="false">
+                  :show-file-list="false">
                   <el-button class="fileInput">上传</el-button>
                 </my-upload>
                 <div ref="headImageWrapper" v-show="newGroupData.filename">
-                  <img :src="DEFAULT_USER_IMAGE" class="avatar">
+                  <img :src="newGroupData.imgUrl" class="avatar">
                 </div>
                 <div v-show="!newGroupData.filename">
                   <img :src="DEFAULT_USER_IMAGE" class="avatar">
@@ -99,6 +96,7 @@
       var _this = this;
        return {
          groupListUrl:'/pmpheep/group/list/pmphGroup',
+         groupImgFile:'/pmpheep/group/files',
          dialogVisible:false,
          DEFAULT_USER_IMAGE:_this.$config.DEFAULT_USER_IMAGE,
          currentActiveGroupId:undefined,
@@ -107,7 +105,8 @@
          newGroupData:{
            filename:undefined,
            name:'',
-           currentFile:undefined
+           currentFile:undefined,
+           imgUrl:undefined,
          },
          rules:{
            name:[this.$formRules.required('小组名不能为空','blur'),this.$formRules.name()]
@@ -119,6 +118,9 @@
         let obj = {};
         obj.groupName = this.newGroupData.name?this.newGroupData.name:'';
         return obj
+      },
+      isIe9(){
+        return this.$commonFun.Browser.ie==9
       }
     },
     components:{
@@ -137,7 +139,7 @@
         this.dialogVisible = !this.dialogVisible
       },
       /* 初始化小组列表 */
-      getGroupData(){
+      getGroupData(onlySearch){
         var _this=this;
         this.$axios.get(this.groupListUrl,{
           params:{
@@ -148,9 +150,10 @@
           if(res.data.code==1){
             res.data.data.map(iterm=>{
               iterm.groupImage=_this.$config.DEFAULT_BASE_URL+iterm.groupImage;
+              iterm.filesNumber = iterm.files||0;
             });
             _this.groupListData=res.data.data;
-            if(res.data.data.length){
+            if(!onlySearch&&res.data.data.length){
               var hasCurrentGroup = false;
               res.data.data.forEach(iterm=>{
                 if(iterm.id == _this.currentActiveGroupId){
@@ -178,48 +181,42 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(file){
+      beforeUpload(file){
         let self=this;
         let prevDiv = this.$refs.headImageWrapper;
         let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
-        if(!ext){return;}
+        if(!ext){return false;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
           this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
-          return;
+        if(file.name.length>50){
+          this.$message.error("文件名称不能超过50个字符");
+          return false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("图片大小不能小于1bt");
+          this.$message.error("文件大小不能为0kb");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
+        }
+        if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
+          this.$message.error('请勿上传可执行文件!');
+          return false;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
           this.$message.error("图片大小不能大于10M");
           self.newGroupData.filename=undefined;
-          return;
+          return false;
         }
-        self.newGroupData.currentFile = file;
-        if(window.FileReader){
-          let reader = new FileReader();
-          reader.onload = function(evt) {
-            self.newGroupData.filename=file.name;
-            prevDiv.innerHTML = '<img src="' + evt.target.result + '" class="avatar" style="display:block;width: 100%;height: 100%;" />';
-          }
-          reader.readAsDataURL(file.raw);
-        }else{
-          self.newGroupData.filename=file.name;
-          prevDiv.innerHTML='<div class="avatar" style="display:block;width: 100%;height: 100%;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.raw.value + '\'"></div>';
-          prevDiv.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
-          prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
-        }
+
+        return true;
+
+
 
       },
       PreviewImg(imgFile){
@@ -237,9 +234,9 @@
        */
       upLoadFileSuccess(response, file, fileList){
         if (response.code == '1') {
-          this.$message.success('创建小组成功');
-          this.getGroupData();
-          this.dialogVisible=false;
+          this.newGroupData.filename=file.name;
+          this.newGroupData.imgUrl='/pmpheep/'+response.data;
+          this.newGroupData.currentFile=file.file;
         }else{
           this.$message.error(response.msg.msgTrim());
         }
@@ -248,7 +245,7 @@
        * 创建小组请求失败的回调
        */
       uploadError(err, file, fileList){
-        this.$message.error('创建小组失败');
+
       },
       /**
        * 创建小组
@@ -262,27 +259,23 @@
         let self= this;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            if(this.newGroupData.currentFile) {
-              this.newGroupData.currentFile.upload();
-            }else{
-              this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
-                file:'',
-                groupName:this.newGroupData.name
-              }))
-                .then((response) => {
-                  let res = response.data;
-                  if (res.code == '1') {
-                    self.$message.success('创建小组成功');
-                    self.getGroupData();
-                    self.dialogVisible=false;
-                  }else{
-                    self.$message.error(res.msg.msgTrim());
-                  }
-                })
-                .catch((error) => {
-                  self.$message.error('创建小组失败');
-                });
-            }
+            this.$axios.post('/pmpheep/group/add',this.$commonFun.initPostData({
+              file:this.newGroupData.imgUrl?this.newGroupData.imgUrl.replace('/pmpheep/',''):'',
+              groupName:this.newGroupData.name
+            }))
+              .then((response) => {
+                let res = response.data;
+                if (res.code == '1') {
+                  self.$message.success('创建小组成功');
+                  self.getGroupData();
+                  self.dialogVisible=false;
+                }else{
+                  self.$message.error(res.msg.msgTrim());
+                }
+              })
+              .catch((error) => {
+                self.$message.error('创建小组失败');
+              });
           } else {
             self.$message.error('请完善表单后再添加！');
             return false;
@@ -330,8 +323,23 @@
         this.newGroupData.name=null;
       },
     },
+    watch:{
+      inputSearchGroup(){
+        this.groupListData.map((iterm)=>{
+          if(iterm.groupName.includes(this.inputSearchGroup)){
+            iterm.no_matchSearch=false;
+          }else{
+            iterm.no_matchSearch=true;
+          }
+        })
+      }
+    },
     created(){
        this.getGroupData();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/group/group-list']);
+      }
     },
     mounted(){
       this.$refs.beautyScroll.refresh(300);

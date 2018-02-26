@@ -15,14 +15,23 @@
               :value="item.textBookId">
             </el-option>
           </el-select> -->
-          <el-input placeholder="请输入" v-model="searchForm.bookName" @keyup.enter.native="search"></el-input>
+          <!-- <el-input placeholder="请输入" v-model="searchForm.bookName" @keyup.enter.native="search"></el-input> -->
+          <el-autocomplete
+            class="inline-input input"
+            :props="defaultProp"
+            v-model="searchForm.bookName"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+          ></el-autocomplete>
         </div>
       </div>
       <!--进度搜索-->
       <div class="searchBox-wrapper">
         <div class="searchName">进度：<span></span></div>
         <div class="searchInput">
-          <el-select v-model="currentState" placeholder="全部">
+          <el-select v-model="searchForm.state" placeholder="全部" @change="search">
             <el-option
               v-for="item in currentStateList"
               :key="item.value"
@@ -38,10 +47,11 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button type="primary" :disabled="!hasAccess(6,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isSelected || !hasAccess(3,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary">批量导出Excel</el-button>
+        <el-button type="primary" :disabled="allTextbookPublished || !hasAccess(7,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
+        <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <el-button type="primary" :disabled="isPublished || !hasAccess(5,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -88,38 +98,36 @@
               <span v-else>
                 {{scope.row.planningEditorName}}
               </span>
-              <el-tooltip class="item" effect="dark" content="点击选择策划编辑" placement="top">
-                <el-button type="text" :disabled="!hasAccess(1,scope.row.myPower) || forceEnd">
-                  <i class="fa fa-pencil fa-fw" @click="showEditor(scope.row)"></i>
-                </el-button>
-              </el-tooltip>
+              <el-button type="text" v-if="!(!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished || (scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)))" @click="showEditor(scope.row)">
+                <i class="fa fa-pencil fa-fw"></i>
+              </el-button>
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          label="遴选主编/副主编" width="170">
+          label="遴选主编/副主编" min-width="170">
           <template scope="scope">
-            <span v-if="scope.row.editorsAndAssociateEditors">{{scope.row.editorsAndAssociateEditors}}</span>
+            <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
             <span v-else>待遴选</span>
-            <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'zb',q:scope.row.myPower}}">
-                <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd">
-                  <i class="fa fa-pencil fa-fw"></i>
-                </el-button>
-              </router-link>
-            </el-tooltip>
+            <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',q:scope.row.myPower,opt:((scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1))?'view':'edit')}}">
+              <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
+                <i v-if="(scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)&&!hasAccess(2,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
+                <i v-else class="fa fa-pencil fa-fw"></i>
+              </el-button>
+            </router-link>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="遴选编委" width="170">
+          label="遴选编委" min-width="170">
           <template scope="scope">
-            <span v-if="scope.row.bianWeis">{{scope.row.bianWeis}}</span>
+            <span v-if="scope.row.bianWeis" v-html="scope.row.bianWeis"></span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',q:scope.row.myPower}}">
-                <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd">
-                  <i class="fa fa-pencil fa-fw"></i>
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,opt:((scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1))?'view':'edit')}}">
+                <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
+                  <i v-if="(scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)&&!hasAccess(3,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
+                  <i v-else class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
             </el-tooltip>
@@ -128,17 +136,17 @@
         <!--主任 end-->
 
         <el-table-column
-          label="操作">
+          label="操作" min-width="170">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
-            <el-button type="text" :disabled=" forceEnd || scope.row.isLocked || !hasAccess(3,scope.row.myPower)"  @click="showDialog(1,scope.row)">名单确认</el-button>
+            <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row)" :disabled=" forceEnd || scope.row.isPublished || !hasAccess(4,scope.row.myPower)">最终结果公布</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.republishTimes!=0&&scope.row.revisionTimes!=0&&scope.row.revisionTimes==scope.row.republishTimes) || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">{{(scope.row.republishTimes>0&&scope.row.revisionTimes>0&&scope.row.revisionTimes==scope.row.republishTimes)?'已公布':(scope.row.revisionTimes>0&&scope.row.republishTimes>0&&scope.row.revisionTimes!=scope.row.republishTimes)?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
-            <el-button type="text">导出Excel</el-button>
+            <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" :disabled="!hasAccess(5,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
+            <el-button type="text" :disabled="!hasAccess(6,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">{{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
@@ -149,7 +157,7 @@
         v-if="totalNum>30"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-sizes="[10,20,30,40]"
         :page-size="searchForm.pageSize"
         :current-page="searchForm.pageNumber"
         layout="total, sizes, prev, pager, next, jumper"
@@ -186,38 +194,41 @@
         <el-table-column
           prop="realname"
           label="姓名"
-          width="180">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="orgName"
           label="工作单位">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="presetPosition"
           label="申报职位">
           <template scope="scope">
             <p></p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
-          prop="presetPosition"
           label="遴选职位">
           <template scope="scope">
-            <p>{{scope.row.presetPosition==1?'主编':scope.row.presetPosition==2?'副主编':'编委'}}</p>
+            <p>
+              {{positionList[scope.row.chosenPosition]}}
+              </p>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="presetPosition"
           label="是否数字编委">
           <template scope="scope">
             <p>{{scope.row.isDigitalEditor?'是':'否'}}</p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop=""
+          width="80"
+          align="center"
           label="操作">
           <template scope="scope">
-            <el-button type="danger" size="mini" icon="delete" @click="deleteMember(scope.$index,groupData)">删除</el-button>
+            <el-button type="text"  class="delete"  @click="deleteMember(scope.$index,groupData)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -231,7 +242,9 @@
 <script type="text/javascript">
   // import Departments from 'components/departments'
   import userPmph from 'components/user-pmph'
+  import bus from 'common/eventBus/bus.js'
   export default{
+    props:['materialInfo'],
     data(){
       return{
         api_position_list:'/pmpheep/position/list',
@@ -244,10 +257,9 @@
           bookName:''
         },
         tableData: [],
-        forceEnd:false,
+        forceEnd:false, // 是否强制结束
         booksChooseValue5:'',
         booksChooseOptions: [],
-        currentState:0,
         currentStateList:[{
           value:0,
           label:'全部'
@@ -260,9 +272,6 @@
         },{
           value:3,
           label:'结果已公布'
-        },{
-          value:4,
-          label:'强制结束'
         }],
         dialogVisible:false,
         chooseVisiable2:false,
@@ -270,25 +279,64 @@
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
         totalNum: 0,
-        selectedIds:'',
+        selectedIds:'', // 选择项的ids
+        materialId:'', // 教材id
+        selected:'', // 选中项
         method:'',
-        currentId: '',
+        currentId: '', // 当前id
         planningEditor: '',
         selectedBookId:'',
         groupData: [], // 小组名单
-        myPower:'' // 权限码
+        myPower:'', // 权限码
+        defaultProp:{
+          value: 'textbookName',
+          label: 'textbookName'
+        },
+        bookNames:[],
+        allTextbookPublished: false, // 是否所有书籍都公布
+        positionList:['','编委','副主编','副主编，编委','主编','主编，编委','主编，副主编','主编，副主编，编委','数组编委','编委，数组编委','副主编，数组编委','副主编，编委，数组编委','主编，数组编委','主编，编委，数组编委','主编，副主编，数组编委','主编，副主编，编委，数组编委'],
       }
     },
     computed:{
       /**
-       * 判断当前是否有选中项来设置删除按钮是否可以点击
+       * 判断当前是否有选中项来是否可以点击
        * @returns {boolean}
        */
-      isSelected() {
-        if (this.selectedIds.length > 0) {
-          return false
+       isSelected() {
+        if (this.selected.length > 0) {
+          return false;
         } else {
-          return true
+          return true;
+        }
+      },
+      isPublished() {
+        let arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isPublished);
+            arr.push(item.isPublished);
+          });
+          return arr.some(x=>{
+            return x == true;
+          })
+        } else {
+          console.log(3);
+          return true;
+        }
+      },
+      isLocked() {
+        let arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isLocked);
+            arr.push(item.isLocked);
+          });
+          return arr.some(x=>{
+            return x == true;
+          })
+        } else {
+          console.log(3);
+          return true;
         }
       }
     },
@@ -298,7 +346,7 @@
        * @param type 0代表通过按钮，1代表点击结果公布按钮
        * @param data 数据，当为空时代表批量导出或公布
        */
-      showDialog(type,data){
+      showDialog(type,data,isLocked){
         var html = '';
         if(data) {
           this.currentId = data.textBookId
@@ -307,8 +355,13 @@
           this.method = 'pass'
           html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单通过后，除您以外的其他编辑和主编将无法继续变动名单`
         }else{
-          this.method = 'result'
-          html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+          if (isLocked) {
+            this.method = 'result'
+            html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+          } else {
+            this.$message.error('还未进行名单确认，不能公布！');
+            return;
+          }
         }
         this.dialogContent = html;
 
@@ -317,7 +370,22 @@
       add(){
         this.chooseVisiable2=false;
       },
-
+      /**获取书籍名称 */
+      getBookName(){
+         this.$axios.get('/pmpheep/position/getTextbookName',{params:{
+           materialId:this.searchForm.materialId
+         }}).then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.bookNames = res.data;
+            } else if (res.code == 2) {
+              this.$message.error(res.msg.msgTrim())
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
       /**
        * 获取表格数据
        */
@@ -333,8 +401,12 @@
                 iterm.deadline = this.$commonFun.formatDate(iterm.deadline).split(' ')[0];
               });
               this.tableData = res.data.rows;
-              this.forceEnd = this.tableData[0].forceEnd
-              this.myPower = this.tableData[0].myPower
+              if(this.tableData.length){
+                this.forceEnd = this.tableData[0].forceEnd;
+                this.allTextbookPublished = this.tableData[0].allTextbookPublished;
+                console.log(this.allTextbookPublished);
+                this.myPower = this.tableData[0].myPower;
+              }
             } else if (res.code == 2) {
               this.$message.error(res.msg.msgTrim())
             }
@@ -343,21 +415,40 @@
             console.log(e);
           })
       },
+      /**远程搜索 */
+      querySearch(queryString,cb){
+        var restaurants = this.bookNames;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.textbookName.indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      /**选中远程搜索项，则触发搜索 */
+      handleSelect(item) {
+       this.getTableData();
+      },
       /**
        * 搜索
        */
       search(){
-        this.getTableData()
+        this.searchForm.pageSize = 30;
+        this.searchForm.pageNumber = 1;
+        this.getTableData();
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        this.searchForm.pageSize = val
-        this.search()
+        this.searchForm.pageSize = val;
+        console.log(this.searchForm.pageSize);
+        this.getTableData();
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
-        this.search()
+        this.getTableData();
       },
       /**强制结束 */
       isForceEnd(){
@@ -385,6 +476,7 @@
                 this.$message.success('已恢复')
               }
               this.getTableData()
+              bus.$emit('material:update-info');
             }
           })
         })
@@ -395,7 +487,8 @@
         val.forEach(item => {
           arr.push(item.textBookId)
         })
-        this.selectedIds = arr.toString()
+        this.selectedIds = arr.toString();
+        this.selected = val;
       },
       /**
        * 批量通过
@@ -443,15 +536,18 @@
       },
       putApi(url,ids){
         this.$axios.put(url,this.$initPostData({
-          ids: ids || this.selectedIds
+          ids: ids || this.selectedIds,
+          materialId: this.materialId
         })).then(response => {
           let res = response.data
           if(res.code == 1){
             this.dialogVisible = false
             this.$message.success('操作成功')
             this.getTableData()
-          } else if(res.code == 3){
-            this.$message.success(res.msg.msgTrim())
+            //更新教材信息
+            bus.$emit('material:update-info');
+          } else{
+            this.$message.error(res.msg.msgTrim())
           }
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
@@ -476,27 +572,36 @@
         this.$refs.userPmph.clear()
       },
       /**显示小组名单 */
-      showGroup(id){
+      showGroup(id,type){
         this.currentId = id
-        this.groupVisiable = true
+        if(!type){
+          this.groupVisiable = true
+          this.$axios.get('/pmpheep/position/editorList',{
+            params:{
+              textbookId: id,
+              pageSize: 20,
+              pageNumber: 1
+            }
+          }).then(response => {
+            let res = response.data
+            if (res.code == 1) {
+              this.groupData = res.data.rows
+            }
+          }).catch(err => {
+            this.$message.error('操作失败，请稍后再试')
+          })
+        } else {
+          this.addEditor();
+        }
         // console.log(id)
-        this.$axios.get('/pmpheep/position/editorList',{
-          params:{
-            textbookId: id,
-            pageSize: 20,
-            pageNumber: 1
-          }
-        }).then(response => {
-          let res = response.data
-          if (res.code == 1) {
-            this.groupData = res.data.rows
-          }
-        }).catch(err => {
-          this.$message.error('操作失败，请稍后再试')
-        })
+
       },
       /**提交小组名单 */
       submitGroup(){
+        if(this.groupData.length==0){
+          this.$message.error('小组名单不能为空');
+          return ;
+        }
         this.groupData.forEach(item => {
           item.isWriter = true
         })
@@ -514,6 +619,34 @@
           this.$message.error('操作失败，请稍后再试')
         })
       },
+      /**更新小组 */
+      addEditor(){
+        this.$axios.post('/pmpheep/group/addEditors',this.$initPostData({
+          textbookId: this.currentId,
+          // pmphGroupMembers: JSON.stringify(this.groupData),
+          sessionId: this.$getUserData().sessionId
+        })).then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+            this.$message.success('更新成功！');
+          }else {
+            this.$message.error('更新失败！');
+          }
+        })
+      },
+      /** 导出Excel */
+      exportExcel(id){
+        // console.log(id,this.selectedIds)
+        let url = '/pmpheep/chosenPosition/exportExcel/?textbookIds='+ (id || this.selectedIds);
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
+      },
+      /**批量导出主编 */
+      exportEditor(){
+        let url = '/pmpheep/position/exportEditors/?textbookIds=' + this.selectedIds;
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
+      },
       /**删除成员 */
       deleteMember(index, rows){
         rows.splice(index, 1);
@@ -521,11 +654,17 @@
     },
     created(){
       this.searchForm.materialId = this.$route.params.materialId;
+      this.materialId = this.$route.params.materialId;
       //如果没有教材id则跳转到通知列表
       if(!this.searchForm.materialId){
         this.$router.push({name:'通知列表'});
       }
       this.getTableData();
+      this.getBookName();
+
+      if(window._hmt){
+        _hmt.push(['_trackPageview', '/material-application/1v3']);
+      }
     },
     components:{
       userPmph
@@ -547,5 +686,11 @@
   .scopeSpan3{
     display: inline-block;
     vertical-align: middle;
+  }
+  .delete{
+    color:red;
+  }
+  .input{
+    width: 100%;
   }
 </style>

@@ -20,6 +20,7 @@
                     class="ChatInputFileBtn"
                     ref="upload"
                     :action="api_upload"
+                    :data="{materialId:formData.materialId}"
                     :before-upload="beforeUploadFile"
                     :on-success="upLoadFileSuccess"
                     :on-error="uploadError"
@@ -32,9 +33,9 @@
               <!--表格-->
               <div class="table-wrapper book-list-catalogue">
                 <div class="pull-right">
-                  <el-button type="primary" size="small" @click="sortByBookNum">按书序排序</el-button>
+                  <el-button type="primary" size="small" @click="sortByBookNum" :disabled="extendListData.length<2">按书序排序</el-button>
                   <!--<el-button type="primary" size="small" @click="sortByPreNum">按版次排序</el-button>-->
-                  <el-button type="primary" size="small" @click="autoSetBookNum">自动设置书序</el-button>
+                  <el-button type="primary" size="small" @click="autoSetBookNum" :disabled="extendListData.length<2">自动设置书序</el-button>
                 </div>
                 <el-table
                   ref="multipleTable"
@@ -57,7 +58,6 @@
                           v-model.trim="scope.row.sort"
                           @blur="sortChange(scope.row)"
                           @change="sortChange(scope.row)"
-                          :key="Math.random()"
                         ></el-input>
                         <span class="error fontsize-sm table-input-tips" v-if="!scope.row.sortIsOk">请输入正确数字</span>
                       </div>
@@ -163,18 +163,21 @@ export default {
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              this.formData.materialName = res.data.materialName;
-              this.formData.materialType = res.data.materialType;
-              this.formData.materialRound = res.data.materialRound;
-              this.formData.isPublic = !!res.data.isPublic;
-              res.data.textbooks = JSON.parse(res.data.textbooks);
-              res.data.textbooks.map(iterm=>{
-                iterm.sortIsOk = true;
-                iterm.nameIsOk = true;
-                iterm.roundIsOk = true;
+              this.formData.materialName = res.data[0].materialName;
+              this.formData.materialType = res.data[0].materialType;
+              this.formData.materialRound = res.data[0].materialRound;
+              this.formData.isPublic = !!!res.data[0].isPublic;
+              var bookList =[];
+              res.data.map(iterm=>{
+                if(!!iterm.textbook){
+                  iterm.textbook.sortIsOk = true;
+                  iterm.textbook.nameIsOk = true;
+                  iterm.textbook.roundIsOk = true;
+                  bookList.push(iterm.textbook);
+                }
               });
-              if(res.data.textbooks.length>0){
-                this.extendListData = res.data.textbooks;
+              if(bookList.length>0){
+                this.extendListData = bookList;
               }
             }
           })
@@ -258,6 +261,9 @@ export default {
         }else{
           temp = this.$commonFun.checkType(row.sort,'number');
         }
+        if(row.sort.length>9){
+          temp=false;
+        }
         row.sortIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
           row.nameIsOk=true;
@@ -296,6 +302,9 @@ export default {
           }
         }else{
           temp = this.$commonFun.checkType(row.textbookRound,'number');
+        }
+        if(row.textbookRound.length>9){
+          temp=false;
         }
         row.roundIsOk=temp;
         if(row.textbookName==''&&row.textbookRound==''&&row.sort==''){
@@ -336,23 +345,29 @@ export default {
         var bookList = [];
         if(!this.checkDataIsOk()){
           this.$message.error('请正确填写每本书籍数据');
+          return;
         }
         this.extendListData.map(iterm=>{
           let tempObj = {
             id:iterm.id?iterm.id:null,
             materialId:this.formData.materialId,
-            textbookName:iterm.textbookName,
-            textbookRound:iterm.textbookRound,
-            sort:iterm.sort,
+            textbookName:iterm.textbookName?iterm.textbookName:null,
+            textbookRound:iterm.textbookRound?iterm.textbookRound:null,
+            sort:iterm.sort?iterm.sort:null,
             founderId:this.currentUserId
+          };
+          if(!tempObj.sort&&!tempObj.textbookName&&!tempObj.textbookRound){
+            //空数据给过滤掉
+          }else{
+            bookList.push(tempObj);
           }
-          bookList.push(tempObj);
         })
         //提交
         this.$confirm("确认保存修改？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
+
         })
           .then(()=>{
             this.$axios.post(this.api_save,this.$commonFun.initPostData({
@@ -360,7 +375,7 @@ export default {
               materialName:this.formData.materialName,
               materialRound:this.formData.materialRound,
               materialType:this.formData.materialType,
-              isPublic:this.formData.isPublic,
+              isPublic:!this.formData.isPublic,
               textbooks:JSON.stringify(bookList),
             }))
               .then((response) => {
@@ -371,6 +386,7 @@ export default {
                     this.$router.push({name:'教材申报选择学校'});
                   }else{
                     this.$message.success('保存成功！');
+                    this.getBookList();
                   }
                 }else{
                   this.$message.error(res.msg.msgTrim());
@@ -423,7 +439,7 @@ export default {
           this.extendListData=[];
           res.data.forEach(iterm=>{
             this.extendListData.push({
-              id:'',
+              id:iterm.id,
               sort: iterm.sort,
               textbookName: iterm.textbookName,
               textbookRound: iterm.textbookRound,
@@ -443,7 +459,7 @@ export default {
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error('上传文件失败，请重试');
+        this.$message.error(err.msg.msgTrim());
         this.uploadLoading = false;
       },
     },
