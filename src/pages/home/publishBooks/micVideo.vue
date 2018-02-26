@@ -25,7 +25,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="leftPageTotal">
             </el-pagination>
-        </div>      
+        </div>
     </div>
     <div class="right_table_box">
        <h4>微视频列表</h4>
@@ -37,12 +37,15 @@
            @selection-change="videoSelectionChange"
        >
           <el-table-column type="selection" width="45"></el-table-column>
-         <el-table-column label="视频标题" prop="fileName"></el-table-column>
+         <el-table-column label="视频标题" prop="origFileName"></el-table-column>
          <el-table-column label="创建人" prop="writer" width="78"></el-table-column>
          <el-table-column label="创建时间" width="108">
              <template scope="scope">
                  {{$commonFun.formatDate(scope.row.gmtCreate,"yyyy-MM-dd")}}
-             </template>   
+             </template>
+         </el-table-column>
+         <el-table-column label="状态" width="78">
+           <template scope="scope">{{scope.row.isAuth?'通过':'不通过'}}</template>
          </el-table-column>
          <el-table-column label="操作" width="70">
              <template scope="scope">
@@ -73,7 +76,7 @@
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
-                  action="/pmpheep/pmph_vedio/vedio/fileUpOnly"
+                  action="http://120.76.221.250:11000/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
@@ -87,7 +90,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="addVideoSubmit">确 定</el-button>
-            </span>       
+            </span>
     </el-dialog>
 
     <el-dialog title="审核" :visible.sync="examDialogVisible" width="25%" size="tiny">
@@ -96,7 +99,7 @@
                 <el-button @click="examDialogVisible = false">取 消</el-button>
                 <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
                 <el-button type="primary" @click="examSubmit(true)">通过</el-button>
-            </span>           
+            </span>
     </el-dialog>
   </div>
 </template>
@@ -137,7 +140,7 @@
                    { type: 'array', required: true, message: '请上传视频内容', trigger: 'change' }
                ]
 
-           }  
+           }
          }
      },
      created(){
@@ -179,12 +182,12 @@
          leftSizeChange(val){
            this.leftParams.pageSize=val;
            this.leftParams.pageNumber=1;
-           this.getList(); 
+           this.getList();
          },
          /* 分页页数改变 */
          leftCurrentChange(val){
            this.leftParams.pageNumber=val;
-           this.getList(); 
+           this.getList();
          },
          /* 审核微视频 */
          examVideo(val){
@@ -200,6 +203,7 @@
           })).then((res)=>{
               console.log(res);
               if(res.data.code==1){
+                  this.getList();
                   this.$message.success('操作成功');
                   this.examDialogVisible=false;
               }else{
@@ -241,14 +245,14 @@
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });          
-                });          
+                });
+                });
          },
          /* 添加上传视频图片 */
          imgUploadRemove(file, fileList){
            console.log(file, fileList);
             this.dialogForm.imgList=fileList;
-            this.$refs.dialogForm.validateField('imgList');    
+            this.$refs.dialogForm.validateField('imgList');
          },
          /* 视频不图片验证 */
          imgBeforeUpload(file){
@@ -273,13 +277,13 @@
                 this.$message.error('图片名称不能超过80个字符！');
                 //this.material.noticeFiles.pop();
                 return false;
-            } 
+            }
          },
          /* 上传成功 */
          imgUploadSuccess(res,file,fileList){
            this.dialogForm.imgList=[];
            this.dialogForm.imgList.push(file);
-           this.$refs.dialogForm.validateField('imgList');   
+           this.$refs.dialogForm.validateField('imgList');
          },
          /* 添加上传视频 */
          videoUploadRemove(file,fileList){
@@ -299,14 +303,14 @@
          addVideoSubmit(){
              this.$refs.dialogForm.validate((valid)=>{
                  if(valid){
-                     
+
                  }else{
                      return ;
                  }
              })
          }
      }
- }   
+ }
 </script>
 <style>
 .mic_video{
@@ -314,7 +318,7 @@
 
 }
 .mic_video .left_table_box{
- width:58%;
+ width:50%;
  float:left;
  padding-right:15px;
  box-sizing: border-box;
@@ -338,7 +342,7 @@
     margin-right:10px;
 }
 .mic_video .right_table_box{
-    width:42%;
+    width:50%;
     padding-left: 15px;
     float:left;
     box-sizing: border-box;

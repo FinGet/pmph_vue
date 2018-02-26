@@ -14,7 +14,7 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgNameOne=='人民卫生出版社'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
+        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
           <!--{{'通过'}}-->
         <!--</el-button>-->
         <el-button type="primary" @click="print">打印</el-button>
@@ -292,7 +292,7 @@
       </div>
 
       <!--主要学术兼职-->
-      <div class="expert-info-box" v-if="material.isAcadeRequired">
+      <div class="expert-info-box" v-if="material.isAcadeUsed">
         <p class="info-box-title">学术兼职</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -314,7 +314,7 @@
       </div>
 
       <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
-      <div class="expert-info-box" v-if="material.isLastPositionRequired">
+      <div class="expert-info-box" v-if="material.isLastPositionUsed">
         <p class="info-box-title">上版教材参编情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -480,7 +480,7 @@
       </div>
 
       <!--SCI论文投稿及影响因子情况-->
-      <div class="expert-info-box" v-if="material.isSciRequired">
+      <div class="expert-info-box" v-if="material.isSciUsed">
         <p class="info-box-title">SCI论文投稿及影响因子情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -505,7 +505,7 @@
       </div>
 
       <!--临床医学获奖情况-->
-      <div class="expert-info-box" v-if="material.isClinicalRewardRequired">
+      <div class="expert-info-box" v-if="material.isClinicalRewardUsed">
         <p class="info-box-title">临床医学获奖情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">

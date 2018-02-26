@@ -45,9 +45,9 @@
         </p>
         <p class="material-notice-time text-center" v-if="materialData.materialName">截止日期：{{$commonFun.formatDate(materialData.materialName.deadline).split(' ')[0]}}</p>
         <div class="material-notice-conten paddingT30" v-html="formData.content"></div>
-        <div class="material-notice-image text-center">
-          <div class="material-notice-image-iterm" v-for="(iterm,index) in formData.image" :key="index"><img class="img" :src="iterm.attachment" alt=""></div>
-        </div>
+        <!--<div class="material-notice-image text-center">-->
+          <!--<div class="material-notice-image-iterm" v-for="(iterm,index) in formData.image" :key="index"><img class="img" :src="iterm.attachment" alt=""></div>-->
+        <!--</div>-->
         <div class="clearfix" v-if="formData.files.length">
           <p class="width40 paddingR20 pull-left text-right">附件 : </p>
           <div class="marginL60 paddingT1">
@@ -135,7 +135,7 @@
            /*  /* 底部图片 */
             for(var i in this.formData.image){
               content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
-            } 
+            }
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
 

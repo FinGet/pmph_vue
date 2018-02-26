@@ -38,7 +38,7 @@
           label="是否置顶"
           width="94">
           <template scope="scope">
-            {{scope.row.scope?'是':'否'}}
+            {{scope.row.isStick?'是':'否'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -46,7 +46,7 @@
           label="是否精选"
           width="94">
           <template scope="scope">
-            {{scope.row.scope?'是':'否'}}
+            {{scope.row.isPromote?'是':'否'}}
           </template>
         </el-table-column>
         <el-table-column
