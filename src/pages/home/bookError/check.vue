@@ -22,7 +22,7 @@
 							</div>
 						</el-form-item>
             <el-form-item label="附件:">
-              <a type="text" :href="ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
+              <a type="text" :href="'/pmpheep/file/cms/download/'+ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
             </el-form-item>
 						<el-form-item label="纠错人:">
 							<p>{{ruleForm.realname}}</p>
@@ -100,6 +100,7 @@ export default {
       this.$axios
         .get("/pmpheep/bookCorrection/detail?id="+this.id)
         .then(response => {
+          console.log(response);
           let res = response.data;
           if (res.code == 1) {
             this.ruleForm = res.data;
