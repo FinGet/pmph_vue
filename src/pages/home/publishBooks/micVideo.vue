@@ -73,7 +73,7 @@
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
-                  action="/pmpheep/pmph_vedio/vedio/fileUpOnly"
+                  action="http://120.76.221.250:11000/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
@@ -107,6 +107,7 @@
            bookListUrl:'/pmpheep/bookVedio/getList',   //书籍视频列表url
            examVideoUrl:'/pmpheep/bookVedio/audit', //  审核视频url
            deleteVideoUrl:'/pmpheep/bookVedio/deleteBookVedio',    //删除视频url
+           addNewVideoUrl:'/pmpheep/vedio/fileUp',   //添加提交视频url           
            leftTableData:[],
            leftPageTotal:1002,
            leftParams:{
@@ -289,6 +290,24 @@
          /* 视频验证 */
          videoBeforeUpload(file,fileList){
           console.log(file,fileList)
+            var exStr=file.name.split('.').pop().toLowerCase();
+            var exSize=file.size?file.size:1;
+            /* if(exSize/ 1024 / 1024 > 20){
+                this.$message.error('图片的大小不能超过20MB！');
+                return false;
+            } */
+            if(exSize==0){
+                this.$message.error('请勿上传空文件！');
+                return false;
+            }
+            if(exStr!='avi'&&exStr!='mpg'&&exStr!='wmv'&&exStr!='3gp'&&exStr!='mov'&&exStr!='mp4'&&exStr!='asf'&&exStr!='asx'&&exStr!='flv'){
+                this.$message.error('图片的格式必须为以下格式之一：avi,mpg,wmv,3gp,mov,mp4,asf,asx或flv！');
+                return false;
+            }
+            if(file.name.length>80){
+                this.$message.error('视频名称不能超过80个字符！');
+                return false;
+            }           
          },
          /* 视频上传成功 */
          videoUploadSuccess(res,file,fileList){
@@ -299,7 +318,11 @@
          addVideoSubmit(){
              this.$refs.dialogForm.validate((valid)=>{
                  if(valid){
-                     
+                     this.$axios.post(this.addNewVideoUrl,this.$commonFun.initPostData()).then((res)=>{
+                      
+                     }).catch((error)=>{
+                                
+                     })
                  }else{
                      return ;
                  }
