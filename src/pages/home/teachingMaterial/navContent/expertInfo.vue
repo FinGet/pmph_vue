@@ -14,7 +14,7 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
