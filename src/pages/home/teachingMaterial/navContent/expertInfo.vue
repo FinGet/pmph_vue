@@ -14,9 +14,9 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
-        <!--<el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">-->
-          <!--{{'通过'}}-->
-        <!--</el-button>-->
+        <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
+          {{'通过'}}
+        </el-button>
         <el-button type="primary" @click="print">打印</el-button>
         <el-button type="primary">登录</el-button>
       </div>
@@ -742,7 +742,7 @@
             return flag&&!l;
           },
           onlineProgressBtn_Pass(){
-            var l = [0,2,3];
+            var l = [0,2,3,4,5];
             return (l.includes(this.expertInfoData.onlineProgress))
           }
         },
