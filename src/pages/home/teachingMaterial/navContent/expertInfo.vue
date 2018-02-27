@@ -137,7 +137,7 @@
           </div>
           <div class="info-iterm-text">
             <div>职务：<span></span></div>
-            <div>{{expertInfoData.position}}</div>
+            <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
           </div>
           <div class="info-iterm-text">
             <div>传真：<span></span></div>
@@ -161,7 +161,7 @@
           </div>
           <div class="info-iterm-text">
             <div>地址：<span></span></div>
-            <div class="lineheight-normal paddingT10">{{expertInfoData.address}}</div>
+            <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
           </div>
           <div class="info-iterm-text">
             <div>Email：<span></span></div>
@@ -1230,6 +1230,13 @@
   }
   .user-info-wrapper .info-iterm-text{
     padding-bottom: 8px;
+  }
+  .user-info-wrapper .info-iterm-text .one_line_limit{
+    white-space: nowrap;
+    width:100%;
+    text-overflow:ellipsis;
+    overflow: hidden; 
+    display: inline-block;
   }
   .info-iterm-text>div:nth-of-type(1){
     display: inline-block;
