@@ -31,9 +31,15 @@
 							<p>{{ruleForm.gmtCreate}}</p>
 						</el-form-item>
 						<el-form-item label="主编回复:">
-							<div class="messageBox">
-								<p>{{ruleForm.authorReply}}</p>
-							</div>
+							<!--<div class="messageBox">-->
+								<!--<p>{{ruleForm.authorReply}}</p>-->
+							<!--</div>-->
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8}"
+                placeholder="请输入内容"
+                v-model="ruleForm.authorReply">
+              </el-input>
 						</el-form-item>
 						<el-form-item label="检查结果:" prop="result">
 							<el-radio-group v-model="ruleForm.result" class="radio-group">
