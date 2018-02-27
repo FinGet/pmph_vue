@@ -98,7 +98,7 @@
               <span v-else>
                 {{scope.row.planningEditorName}}
               </span>
-              <el-button type="text" v-if="!(!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished || (scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)))" @click="showEditor(scope.row)">
+              <el-button type="text" v-if="!(!hasAccess(1,scope.row.myPower) || forceEnd || scope.row.allTextbookPublished || (scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1))" @click="showEditor(scope.row)">
                 <i class="fa fa-pencil fa-fw"></i>
               </el-button>
             </p>
@@ -109,9 +109,9 @@
           <template scope="scope">
             <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
             <span v-else>待遴选</span>
-            <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',q:scope.row.myPower,opt:((scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1))?'view':'edit')}}">
+            <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',q:scope.row.myPower,opt:((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)?'view':'edit')}}">
               <el-button type="text" :disabled="!hasAccess(2,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
-                <i v-if="(scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)&&!hasAccess(2,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
+                <i v-if="(scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1&&!hasAccess(2,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
                 <i v-else class="fa fa-pencil fa-fw"></i>
               </el-button>
             </router-link>
@@ -124,9 +124,9 @@
             <span v-if="scope.row.bianWeis" v-html="scope.row.bianWeis"></span>
             <span v-else>待遴选</span>
             <el-tooltip class="item" effect="dark" content="点击进入遴选策划编辑" placement="top" v-if="scope.row.state!=2">
-              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,opt:((scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1))?'view':'edit')}}">
+              <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,opt:((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)?'view':'edit')}}">
                 <el-button type="text" :disabled="!hasAccess(3,scope.row.myPower)||forceEnd || scope.row.allTextbookPublished">
-                  <i v-if="(scope.row.isLocked&&(materialInfo.role!==2||materialInfo.role!==1)&&!hasAccess(3,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
+                  <i v-if="(scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1&&!hasAccess(3,scope.row.myPower))" class="fa fa-eye fa-fw"></i>
                   <i v-else class="fa fa-pencil fa-fw"></i>
                 </el-button>
               </router-link>
@@ -653,6 +653,7 @@
       }
     },
     created(){
+      // console.log(this.materialInfo);
       this.searchForm.materialId = this.$route.params.materialId;
       this.materialId = this.$route.params.materialId;
       //如果没有教材id则跳转到通知列表
