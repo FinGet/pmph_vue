@@ -4,11 +4,12 @@
       <span>敏感词内容：</span>
       <el-input class="input" placeholder="请输入" v-model="searchParams.word" @keyup.enter.native="search"></el-input>
       <el-button type="primary" icon="search" @click="search">搜索</el-button>
-      <el-button type="danger" style="float:right;">删除</el-button>
+      <el-button type="danger" style="float:right;" @click="deleteSensitive">删除</el-button>
       <el-button type="primary" style="float:right;" @click="openEditDialog(false)">增加</el-button>
-      <el-button type="primary" style="float:right;">一键过滤</el-button>
     </p>
-    <el-table :data="tableData" class="table-wrapper" border style="width:100%;">
+    <el-table :data="tableData" class="table-wrapper" border style="width:100%;"
+     @selection-change="handleSelectionChange"
+    >
       <el-table-column
       type="selection"
       width="45">
@@ -92,7 +93,8 @@
           sensitiveListUrl:'/pmpheep/sensitive/list' ,  //敏感词列表url
           editSensitiveUrl:'/pmpheep/sensitive/update',   //修改敏感词url
           addSensitiveUrl:'/pmpheep/sensitive/add' ,  //新增敏感词url
-          tableData:[{}],
+          deleteSensitiveUrl:'/pmpheep/sensitive/isDeleted',   //删除敏感词url
+          tableData:[],
           pageTotal:100,
           searchParams:{
              pageSize:10,
@@ -105,6 +107,7 @@
               note:'',
               isDisabled:''
           },
+          deleteIds:[],
           dialogVisible:false,
           isEdit:false,
           rules:{
@@ -159,7 +162,7 @@
                     word:'',
                     sort:'',
                     note:'',
-                    isDisabled:''
+                    isDisabled:false
                     }
           }
           this.dialogVisible=true;
@@ -199,11 +202,48 @@
             }
           })
         },
+        deleteSensitive(){
+         if(this.deleteIds.length!=0){
+            this.$confirm('确定删除选中的敏感词吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+              }).then(() => {
+                 this.$axios.put(this.deleteSensitiveUrl,this.$commonFun.initPostData({
+                   ids:this.deleteIds
+                 })).then((res)=>{
+                   if(res.data.code==1){
+                     this.$message.success('已成功删除');
+                     this.getList();
+                   }else{
+                     this.$message.error(res.data.msg.msgTrim());
+                   }
+                 }) 
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消操作'
+                });          
+            });  
+         }else{
+           this.$message.error('请至少选中一个敏感词');
+         }
+        },
+        /*table选中切换  */
+        handleSelectionChange(val){
+          this.deleteIds=[];
+            for(var i in val){
+              this.deleteIds.push(val[i].id);
+            }
+
+        },
         HandleSizeChange(val){
-         
+         this.searchParams.pageSize=val;
+         this.searchParams.pageNumber=1;
+         this.getList();
         },
         HandleCurrentChange(val){
-
+          this.searchParams.pageNumber=val; 
+          this.getList(); 
         }
       }
     }
