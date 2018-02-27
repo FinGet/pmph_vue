@@ -210,7 +210,7 @@
       </div>
 
       <!--主要学习经历-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="learnExperience.length!=0">
         <p class="info-box-title">学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -221,7 +221,7 @@
               <th><div>学历</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in learnExperience">
+            <tr v-for="(iterm,index) in learnExperience" :key="index">
               <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.major}}</div></td>
