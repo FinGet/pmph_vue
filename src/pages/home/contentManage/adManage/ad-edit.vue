@@ -346,9 +346,12 @@
           disable:disableIds.join(',')
         }))
           .then(response=>{
+            console.log(response);
             let res = response.data;
             if (res.code == '1') {
+              console.log(111111);
               this.$message.success('修改成功！');
+              this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
             }

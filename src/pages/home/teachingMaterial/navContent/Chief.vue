@@ -44,7 +44,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="排位" width="90" align="center">
+          <el-table-column label="排序" width="90" align="center">
             <template scope="scope">
               <div class="paddingB15 paddingT10 relative">
                 <el-input
@@ -73,7 +73,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="排位" width="90" align="center">
+          <el-table-column label="排序" width="90" align="center">
             <template scope="scope">
               <div class="paddingB15 paddingT10 relative">
                 <el-input
