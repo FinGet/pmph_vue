@@ -658,10 +658,11 @@
        * @param id
        */
       linkToExpertInfo(id){
-        var searParams = { declarationId: id };
+        var searParams = {};
         for(let key in this.searchParams){
           searParams[key] = this.searchParams[key];
         }
+        searParams = { declarationId: id };
         this.$router.push({
           name:'专家信息',
           query: searParams,

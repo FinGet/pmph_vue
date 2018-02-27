@@ -4,7 +4,7 @@
       <h4>书籍列表</h4>
       <p class="header_p">
           <span>书籍名称：</span>
-          <el-input placeholder="请输入书籍名称" class="input" v-model.trim="leftParams.bookName"></el-input>
+          <el-input placeholder="请输入书籍名称" class="input" v-model.trim="leftParams.bookName" @keyup.enter.native="search"></el-input>
           <el-button type="primary" style="float:right;" @click="search">查询</el-button>
       </p>
       <el-table :data="leftTableData" style="width:100%;margin-bottom:10px;" ref="leftTable" highlight-current-row @current-change="tableCurrentChange"  border>
@@ -31,7 +31,7 @@
        <h4>微视频列表</h4>
        <p class="header_p">
           <el-button type="danger" style="float:right;margin-left:10px;" @click="deleteVideoSubmit">删除</el-button>
-          <el-button type="primary" style="float:right" @click="dialogVisible=true">添加微视频</el-button>
+          <el-button type="primary" style="float:right" @click="openAddVideoDialog">添加微视频</el-button>
        </p>
        <el-table :data="rightTableData" border style="width:100%;margin-bottom:10px;"
            @selection-change="videoSelectionChange"
@@ -73,7 +73,7 @@
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
-                  action="http://192.168.200.154:7070/pmph_vedio/vedio/fileUpOnly"
+                  action="http://120.76.221.250:11000/pmph_vedio/vedio/fileUpOnly"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
@@ -107,6 +107,7 @@
            bookListUrl:'/pmpheep/bookVedio/getList',   //书籍视频列表url
            examVideoUrl:'/pmpheep/bookVedio/audit', //  审核视频url
            deleteVideoUrl:'/pmpheep/bookVedio/deleteBookVedio',    //删除视频url
+           addNewVideoUrl:' /pmpheep/bookVedio/addBookVedio',   //添加提交视频url           
            leftTableData:[],
            leftPageTotal:1002,
            leftParams:{
@@ -289,17 +290,66 @@
          /* 视频验证 */
          videoBeforeUpload(file,fileList){
           console.log(file,fileList)
+            var exStr=file.name.split('.').pop().toLowerCase();
+            var exSize=file.size?file.size:1;
+            /* if(exSize/ 1024 / 1024 > 20){
+                this.$message.error('图片的大小不能超过20MB！');
+                return false;
+            } */
+            if(exSize==0){
+                this.$message.error('请勿上传空文件！');
+                return false;
+            }
+            if(exStr!='avi'&&exStr!='mpg'&&exStr!='wmv'&&exStr!='3gp'&&exStr!='mov'&&exStr!='mp4'&&exStr!='asf'&&exStr!='asx'&&exStr!='flv'){
+                this.$message.error('图片的格式必须为以下格式之一：avi,mpg,wmv,3gp,mov,mp4,asf,asx或flv！');
+                return false;
+            }
+            if(file.name.length>80){
+                this.$message.error('视频名称不能超过80个字符！');
+                return false;
+            }           
          },
          /* 视频上传成功 */
          videoUploadSuccess(res,file,fileList){
            this.dialogForm.videoList=[];
            this.dialogForm.videoList.push(file);
            this.$refs.dialogForm.validateField('videoList');
+           console.log(this.dialogForm)
          },
+         /* 打开添加视频弹窗 */
+         openAddVideoDialog(){
+           if(this.activeBookIndex){
+               this.dialogVisible=true;
+           }else{
+              this.$message.error('请先选择一本书籍'); 
+           }
+         },
+         /* 微视频对话框提交 */
          addVideoSubmit(){
              this.$refs.dialogForm.validate((valid)=>{
                  if(valid){
-                     
+                    var submitObj={
+                           bookId:this.leftTableData[this.activeBookIndex].bookId, //图书Id
+                           title:this.dialogForm.videoName,  //标题
+                           origPath:this.dialogForm.videoList[0].response.data, //原始视频存放路径
+                           userId:this.$getUserData().userInfo.id, //上传者id
+                           cover:this.dialogForm.imgList[0].response.data[0]   //封面图片Id
+                             };
+                     this.$axios.post(this.addNewVideoUrl,this.$commonFun.initPostData(submitObj))
+                     .then((res)=>{
+                      console.log(res); 
+                      if(res.data.code==1){
+                          this.getList();
+                          this.$message.success('添加成功');
+                          this.dialogVisible=false;
+                          this.$refs.dialogForm.resetFields();
+                        }
+                        else{
+                         this.$message.error(res.data.msg.msgTrim());
+                        }
+                     }).catch((error)=>{
+                                
+                     })
                  }else{
                      return ;
                  }
