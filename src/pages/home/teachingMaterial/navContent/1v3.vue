@@ -141,7 +141,9 @@
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.republishTimes!=0&&scope.row.revisionTimes!=0&&scope.row.revisionTimes==scope.row.republishTimes) || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">{{(scope.row.republishTimes>0&&scope.row.revisionTimes>0&&scope.row.revisionTimes==scope.row.republishTimes)?'已公布':(scope.row.revisionTimes>0&&scope.row.republishTimes>0&&scope.row.revisionTimes!=scope.row.republishTimes)?'再次公布':'最终结果公布'}}</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.republishTimes!=0&&scope.row.revisionTimes!=0&&scope.row.revisionTimes==scope.row.republishTimes) || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">
+              {{(scope.row.republishTimes>0&&scope.row.revisionTimes>0&&scope.row.revisionTimes==scope.row.republishTimes)?'已公布'
+              :(scope.row.revisionTimes>0&&scope.row.republishTimes>0&&scope.row.revisionTimes!=scope.row.republishTimes)?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
