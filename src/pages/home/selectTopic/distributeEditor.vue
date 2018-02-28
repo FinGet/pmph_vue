@@ -5,7 +5,7 @@
        <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"  @keyup.enter.native="search"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.data"
+            v-model="searchParams.date"
             class="input"
             type="date"
             placeholder="选择日期">
@@ -153,7 +153,7 @@ export default {
     return {
       searchParams: {
 				name:'',
-        data: "",
+        date: "",
         pageSize: 10,
         pageNumber: 1
       },
@@ -201,11 +201,12 @@ export default {
      },
 		/**获取表格数据 */
 		getTableData(){
+      this.searchParams.date = this.$commonFun.formatDate(+new Date(this.searchParams.date)).substring(0,10);
 			this.$axios.get('/pmpheep/topic/listDirector',{
 				params:{
 					bookname: this.searchParams.name,
 					sessionId: this.$getUserData().sessionId,
-					submitTime: this.$commonFun.formatDate(this.searchParams.data),
+					submitTime: this.searchParams.date,
 					pageSize: this.searchParams.pageSize,
 					pageNumber: this.searchParams.pageNumber
 				}
