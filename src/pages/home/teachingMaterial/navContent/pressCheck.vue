@@ -279,7 +279,7 @@
 
   import bus from 'common/eventBus/bus.js'
   export default {
-    props:['materialInfo','pressCheckSearchParams'],
+    props:['materialInfo','pressCheckSearchParams','declareHistory'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
@@ -385,7 +385,6 @@
         stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
       }
     },
-    props:['declareHistory'],
     watch:{
      powerSearchValue(val){
        this.cleanSearchInput();

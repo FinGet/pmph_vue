@@ -21,7 +21,7 @@
                     v-model="searchParams.endDate"
                     type="date"
                     placeholder="选择日期"
-                    style="margin-right:10px;"
+                    style="margin-right:5px;"
                     >
                 </el-date-picker> 
           <el-button icon="search" type="primary">搜索</el-button>        
@@ -93,7 +93,7 @@
   margin-bottom:15px;
 }
 .mic_video .header_p .input {
-  width: 190px;
+  width: 188px;
   margin-right: 10px;
 }
 </style>
