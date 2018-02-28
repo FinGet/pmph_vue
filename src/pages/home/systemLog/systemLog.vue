@@ -12,10 +12,10 @@
                 <div class="searchInput">
                     <el-date-picker
                     v-model="startTime"
-                    type="datetime"
+                    type="date"
                     placeholder="选择日期时间"
-                    value-format="yyyy-MM-dd HH:mm:ss">
-                    </el-date-picker>  
+                    value-format="yyyy-MM-dd">
+                    </el-date-picker>
                 </div>
             </div>
             <div class="searchBox-wrapper">
@@ -23,9 +23,9 @@
                 <div class="searchInput">
                     <el-date-picker
                     v-model="endTime"
-                    type="datetime"
+                    type="date"
                     placeholder="选择日期时间"
-                    format="yyyy-MM-dd HH:mm:ss">
+                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </div>
             </div>
@@ -87,8 +87,8 @@ export default {
                 params:{
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber,
-                    startTime: this.$commonFun.formatDate(this.startTime),
-                    endTime: this.$commonFun.formatDate(this.endTime),
+                    startTime: +new Date(this.startTime+''),
+                    endTime: +new Date(this.endTime+''),
                     userName: this.title
                 }
             }).then(response =>{
@@ -97,7 +97,7 @@ export default {
                     this.tableData = res.data.rows
                     this.total = res.data.total
                     this.tableData.forEach(item => {
-                        item.operateDate = this.$commonFun.formatDate(item.operateDate);                    
+                        item.operateDate = this.$commonFun.formatDate(item.operateDate);
                     })
                 }
             })
@@ -109,7 +109,7 @@ export default {
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
-            this.pageSize = val 
+            this.pageSize = val
             this.getLogs()
         },
         handleCurrentChange(val) {
