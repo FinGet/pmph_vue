@@ -344,7 +344,11 @@
               .then(response=>{
                 var res = response.data;
                 if(res.code==1){
-                  this.getTableData();
+                  if(type===2){
+                    this.$router.go(-1);
+                  }else{
+                    this.getTableData();
+                  }
                   this.$message.success('提交成功！');
                 }else{
                   this.$message.error(res.msg.msgTrim());

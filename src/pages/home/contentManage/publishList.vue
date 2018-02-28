@@ -631,10 +631,9 @@ export default {
       )).then((res)=>{
         console.log(res);
         if(res.data.code==1){
-          this.$message.success('同步成功');
           this.getPublicList();
           setTimeout(() => {
-                      this.syncCheckDetail(res.data.data);
+            this.syncCheckDetail(res.data.data);
           }, 3000);
 //          this.syncDialogVisible1 = true;
           this.syncDialogVisible=false;
@@ -660,7 +659,7 @@ export default {
 
            }else{
              /* 有值的时候 */
-
+             this.$message.success('同步成功!');
              return;
            }
        }else{
