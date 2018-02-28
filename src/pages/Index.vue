@@ -21,17 +21,17 @@
         </router-link>
       </li>
       <li>
-        <router-link :to="{name:'用户管理',params:{}}">
+        <router-link :to="{name:'个人用户',params:{activeName:'second'}}">
           <span><i class="fa fa-home fa-fw"></i></span>
           教师认证
-          <span class="orange">({{isShowSide(33)?orgUserCount:'0'}})</span>
+          <span class="orange">({{isShowSide(11)||isShowSide(33)?orgUserCount:'0'}})</span>
         </router-link>
       </li>
       <li>
-        <router-link :to="{name:'学校 / 医院用户',params:{}}">
+        <router-link :to="{name:'学校 / 医院用户',params:{activeName:'second'}}">
           <span><i class="fa fa-home fa-fw"></i></span>
           机构认证
-          <span class="orange">({{isShowSide(34)?writerUserCount:'0'}})</span>
+          <span class="orange">({{isShowSide(11)||isShowSide(34)?writerUserCount:'0'}})</span>
         </router-link>
       </li>
     </ul>
@@ -191,6 +191,7 @@
                   </router-link>
                 </li>
               </ul>
+              <p   class="no_conact_data">您暂未加入任何小组</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
@@ -204,6 +205,7 @@
                   </router-link>
                 </li>
               </ul>
+              <p   class="no_conact_data">您暂未加入任何小组</p>
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list">
@@ -217,6 +219,7 @@
                   </router-link>
                 </li>
               </ul>
+              <p   class="no_conact_data">您暂未加入任何小组</p>
             </el-tab-pane>
             <!-- <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
@@ -375,7 +378,9 @@ export default {
     //将四个面板设为等高
   },
   created() {
+    this.initUserInfo();
     this.getPageData();
+    
   }
 };
 </script>
