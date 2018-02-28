@@ -213,7 +213,11 @@ export default {
             {
               label: "广告管理",
               id: 18
-            }
+            },
+            {
+              label: "敏感词管理",
+              id: 40
+            },
           ]
         },
         {
@@ -227,7 +231,11 @@ export default {
             {
               label: "评论审核",
               id: 20
-            }
+            },
+            {
+              label: "微视频管理",
+              id: 41
+            },
           ]
         },
         {

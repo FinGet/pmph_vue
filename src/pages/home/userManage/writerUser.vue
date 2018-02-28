@@ -2,7 +2,7 @@
   <div class="writerUser">
     <el-tabs type="border-card">
   <el-tab-pane label="个人用户">
-  <div class="clearfix">
+   <div class="clearfix">
     <div class="searchBox-wrapper">
       <div class="searchName">姓名/账号：
         <span></span>

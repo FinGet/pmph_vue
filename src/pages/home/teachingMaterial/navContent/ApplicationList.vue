@@ -26,7 +26,7 @@
             <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
-                    <p class="link" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</p>
+                    <el-button type="text" style="color:#337ab7;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
@@ -330,6 +330,10 @@ export default {
       }
     },
     created() {
+      /* 是否从首页跳转过来 */
+      if(this.$route.params.materialName){
+        this.searchForm.materialName=this.$route.params.materialName;
+      }
       this.getTableData();
     }
 }

@@ -10,28 +10,28 @@
         <router-link :to="{name:'通知列表'}">
           <span><i class="fa fa-home fa-fw"></i></span>
           教材申报
-          <span class="orange">({{materialListTotal}})</span>
+          <span class="orange">({{isShowSide(2)?materialListTotal:'0'}})</span>
         </router-link>
       </li>
       <li>
-        <router-link to="/404">
+        <router-link :to="{name:'选题申报审核'}">
           <span><i class="fa fa-home fa-fw"></i></span>
           选题申报
-          <span class="orange">({{topicList.total}})</span>
+          <span class="orange">({{isShowSide(7)?topicList.total:'0'}})</span>
         </router-link>
       </li>
       <li>
-        <router-link to="/404">
+        <router-link :to="{name:'用户管理',params:{}}">
           <span><i class="fa fa-home fa-fw"></i></span>
           教师认证
-          <span class="orange">({{orgUserCount}})</span>
+          <span class="orange">({{isShowSide(33)?orgUserCount:'0'}})</span>
         </router-link>
       </li>
       <li>
-        <router-link to="/404">
+        <router-link :to="{name:'学校 / 医院用户',params:{}}">
           <span><i class="fa fa-home fa-fw"></i></span>
           机构认证
-          <span class="orange">({{writerUserCount}})</span>
+          <span class="orange">({{isShowSide(34)?writerUserCount:'0'}})</span>
         </router-link>
       </li>
     </ul>
@@ -42,10 +42,10 @@
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">教材申报</p>
           <el-tabs v-model="activeName1" @tab-click="materialListChange">
             <el-tab-pane label="全部" name="first">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
                   <router-link :to="{name:'通知列表'}">
@@ -54,12 +54,13 @@
                   </router-link>
                 </li>
               </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
             <el-tab-pane label="已发布" name="second">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -68,12 +69,13 @@
                   </router-link>
                 </li>
               </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -82,6 +84,7 @@
                   </router-link>
                 </li>
               </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -89,14 +92,14 @@
       <li>
         <div>
           <p class="fontsize-lg fontBold panel-title paddingR30">小组</p>
-          <div class="panel-iterm">
+          <div class="panel-iterm" >
             <!--小组头像-->
             <router-link class="groupHead"
                          :to="{name:'小组管理'}"
                  v-for="(item,index) in groupList.rows"
                  :key="index"
                  @click="clickGroup(item.id,item)"
-                         v-if="index<3"
+                         v-if="index<3&&groupList.rows.length!=0"
             >
               <div class="groupHead-inner">
                 <span class="groupHeadImg">
@@ -109,13 +112,15 @@
                 <span class="lastMessageTime">{{$commonFun.getDateDiff(item.gmtLastMessage)}}</span>
               </div>
             </router-link>
-            <div class="panel-more-btn" v-if="groupList.total>4">
+            <div class="panel-more-btn" v-if="groupList.total>4&&groupList.rows.length!=0">
               <router-link :to="{name:'小组管理'}">
                 查看更多
                 <i class="el-icon-d-arrow-right"></i>
               </router-link>
             </div>
+            <p v-if="groupList.rows.length==0"  class="no_conact_data">您暂未加入任何小组</p>
           </div>
+          
         </div>
       </li>
     </ul>
@@ -174,10 +179,10 @@
       <li>
         <div>
           <el-tabs v-model="activeName3">
-            <el-tab-pane label="文章审核" name="first">
+            <el-tab-pane label="文章审核" name="first" >
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
-                  <router-link :to="{name:'文章管理'}">{{iterm.title}}</router-link>
+                  <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="cmsContent.total>limit_size">
                   <router-link :to="{name:'文章管理'}">
@@ -190,7 +195,7 @@
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'纠错审核',query:{id:iterm.id}}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
+                  <router-link :to="{name:'图书纠错审核',params:iterm.bookname}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
                   <router-link :to="{name:'图书纠错审核'}">
@@ -244,9 +249,11 @@ export default {
       activeName3: "first",
       materialList: {
         loading:true,
+        rows:[]
       },
       groupList:{
         loading:true,
+        rows:[]
       },
       topicList:{},
       cmsContent:{},
@@ -256,6 +263,8 @@ export default {
       orgUserCount:'',
       writerUserCount:'',
       materialListTotal:0,
+      PermissionIds:[]
+
     };
   },
   computed: {
@@ -325,7 +334,7 @@ export default {
       this.$axios.get('/pmpheep/material/list',{params:{
         pageSize:5,
         pageNumber:1,
-        isMy:false,
+        isMy:true,
         state:state,
         contactUserName:'',
         materialName:'',
@@ -341,6 +350,23 @@ export default {
         })
 
     },
+      //用户信息级别初始化
+    initUserInfo(){
+         if(this.$mySessionStorage.get('currentUser')){
+          // console.log(this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds);
+           this.PermissionIds = this.$mySessionStorage.get('currentUser','json').pmphUserPermissionIds;
+         }
+       },
+       //判断是否具有权限
+    isShowSide(num){
+         var isShow=false;
+         this.PermissionIds.forEach(function(item) {
+           if(item==num){
+             isShow=true;
+           }
+         });
+         return isShow;
+       },    
   },
   mounted() {
     //将四个面板设为等高
@@ -473,5 +499,10 @@ export default {
 
 .ellipsis {
   height: 25px;
+}
+.index .no_conact_data{
+  color:rgb(94, 112, 130);
+  text-align:center;
+  margin-top:50px;
 }
 </style>
