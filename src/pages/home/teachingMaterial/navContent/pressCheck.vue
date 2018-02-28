@@ -303,7 +303,7 @@
 
   import bus from 'common/eventBus/bus.js'
   export default {
-    props:['materialInfo','pressCheckSearchParams'],
+    props:['materialInfo','pressCheckSearchParams','declareHistory'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
@@ -351,7 +351,8 @@
 
         ],
         powerSearchValue:0,
-        positionValue:[{
+        positionValue:[
+          {
           value:'',
           label:'全部'
         },{
@@ -713,9 +714,13 @@
       },
     },
     created(){
+      /* 搜索记录赋值 */
+      if(this.declareHistory){
+        this.powerSearchValue=this.declareHistory.powerSearchValue;
+         this.searchParams=this.declareHistory.searchParams;
+         this.powerSearch=this.declareHistory.powerSearch;
+      } 
       this.searchParams.materialId = this.$route.params.materialId;
-
-
       for(let key in this.pressCheckSearchParams){
         this.searchParams[key] = this.pressCheckSearchParams[key];
       }
@@ -730,6 +735,16 @@
         _hmt.push(['_trackPageview', '/material-application/pressCheck']);
       }
     },
+    /* 离开当前页面记录搜索数据 */
+    beforeRouteLeave(to,from,next){
+      var obj={
+        searchParams:this.searchParams,
+        powerSearchValue:this.powerSearchValue,
+        powerSearch:this.powerSearch
+      }
+      this.$emit('selectHistory',obj,1)
+      next();
+    }
   }
 
 </script>

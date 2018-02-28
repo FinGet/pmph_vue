@@ -26,7 +26,7 @@
                 label="文章标题"
                 >
                 <template scope="scope">
-                    <p class="link" @click="contentDetail(scope.row)">{{scope.row.title}}</p>
+                    <el-button type="text" style="color:#337ab7;" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
             <!-- 管理员才予以显示 -->
@@ -200,7 +200,7 @@
                 prop="title"
                 >
                 <template scope="scope">
-                    <p class="link" @click="commentDetail(scope.row)">{{scope.row.title}}</p>
+                    <el-button type="text" style="color:#337ab7;" @click="commentDetail(scope.row)">{{scope.row.title}}</el-button>
                 </template>
             </el-table-column>
             <el-table-column

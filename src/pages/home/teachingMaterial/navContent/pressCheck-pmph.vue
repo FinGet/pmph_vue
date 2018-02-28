@@ -418,6 +418,7 @@
         wordUrl:'',
       }
     },
+    props:['pressHistory'],
     watch:{
       powerSearchValue(val){
         this.cleanSearchInput();
@@ -709,6 +710,12 @@
       },
     },
     created(){
+      /* 搜索记录赋值 */
+      if(this.pressHistory){
+        this.powerSearchValue=this.pressHistory.powerSearchValue;
+         this.searchParams=this.pressHistory.searchParams;
+         this.powerSearch=this.pressHistory.powerSearch;
+      }       
       this.searchParams.materialId = this.$route.params.materialId;
 
       for(let key in this.pressCheckSearchParams){
@@ -726,6 +733,15 @@
         _hmt.push(['_trackPageview', '/material-application/pressCheck']);
       }
     },
+    beforeRouteLeave(to,from,next){
+     var obj={
+        searchParams:this.searchParams,
+        powerSearchValue:this.powerSearchValue,
+        powerSearch:this.powerSearch
+      }
+      this.$emit('selectHistory',obj,0)
+     next();
+    }
   }
 
 </script>

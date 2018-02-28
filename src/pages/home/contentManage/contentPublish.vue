@@ -18,7 +18,7 @@
           </el-cascader>
       </el-form-item>
       <el-form-item label="所属教材：">
-          <el-select v-model="formData.materialId" placeholder="请选择" class="input">
+          <el-select v-model="formData.materialId" clearable placeholder="请选择" class="input">
             <el-option
               v-for="item in bookOptions"
               :key="item.id"
