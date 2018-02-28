@@ -191,17 +191,19 @@ export default {
   methods: {
     /* 获取列表数据 */
     getListData() {
+//    console.log(this.$commonFun.formatDate(+new Date(this.searchParams.submitTime)).substring(0,10));
+      this.searchParams.submitTime = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime)).substring(0,10);
       this.$axios
-        .get(this.listDataUrl, {
-          params: this.searchParams
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.code == 1) {
-            this.pageTotal = res.data.data.total;
-            this.tableData = res.data.data.rows;
-          }
-        });
+      .get(this.listDataUrl, {
+        params: this.searchParams
+      })
+      .then(res => {
+        console.log(res);
+        if (res.data.code == 1) {
+          this.pageTotal = res.data.data.total;
+          this.tableData = res.data.data.rows;
+        }
+      });
     },
     /* 获取对话框列表 */
     getDialogData() {
