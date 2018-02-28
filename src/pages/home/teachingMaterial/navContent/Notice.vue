@@ -72,7 +72,7 @@ export default {
             content+=contactsHtml;
             content += `<p></p>`;
             //备注
-            content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
+            content+=`<p>备注：${res.data.materialExtra?(res.data.materialExtra.note?res.data.materialExtra.note:''):''}</p>`;
           }
           this.formData.content = content;
 

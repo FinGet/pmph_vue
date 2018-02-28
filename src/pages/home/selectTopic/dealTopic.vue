@@ -42,7 +42,7 @@
                 <el-form-item
                 label="预计交稿日期："
               >
-              <p>{{data.deadline}}</p>
+              <p>{{$commonFun.formatDate(data.deadline,'yyyy-MM-dd')}}</p>
               </el-form-item>
           </div>
           <div class="percent50">

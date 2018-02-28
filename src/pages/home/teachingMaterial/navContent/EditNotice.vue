@@ -131,7 +131,7 @@
             content+=contactsHtml;
             content += `<p></p>`;
             //备注
-            content+=`<p>备注：${res.data.materialExtra?res.data.materialExtra.note:''}</p>`;
+            content+=`<p>备注：${res.data.materialExtra?(res.data.materialExtra.note?res.data.materialExtra.note:''):''}</p>`;
            /*  /* 底部图片 */
             for(var i in this.formData.image){
               content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'

@@ -17,7 +17,6 @@
     </div>
     <div class="app-main" ref="main">
       <div class="app-main-inner"  :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
-
         <transition name="fade" mode="out-in">
           <router-view></router-view>
         </transition>
@@ -81,7 +80,7 @@
             var str=this.$router.currentRoute.fullPath.split('/')[1];
             this.isShowBorder=true;
             this.isPadding=false;
-        if(str=='materialrouter'||str=='groupmanage'||str=='auth' || str == 'bookerror'){
+        if(str=='materialrouter'||str=='groupmanage'||str=='auth' ||this.$router.currentRoute.name=='评论审核'){
           this.isShowBorder=false;
         }
         if(str=='user'&&this.$router.currentRoute.name!='社内用户'||this.$router.currentRoute.name=='文章管理'||str=="topic"||this.$router.currentRoute.name=='问卷模板新增'||this.$router.currentRoute.name=='结果明细'||this.$router.currentRoute.name=='发起调查'||this.$router.currentRoute.name=='问卷回收结果'){

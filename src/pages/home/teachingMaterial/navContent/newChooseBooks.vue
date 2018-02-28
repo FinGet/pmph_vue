@@ -1,8 +1,8 @@
 <template>
     <div class="newChoose">
-      <el-row>
-        <el-col>
           <el-form :model="material" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
+            <el-row>
+              <el-row>
             <el-col :span="16">
             <el-form-item label="教材名称：" prop="materialName" >
                 <el-input v-model="material.materialName" ></el-input>
@@ -13,6 +13,7 @@
                 <el-input v-model="material.materialRound" ></el-input>
             </el-form-item>
             </el-col>
+            </el-row>
             <el-col :span="8">
             <el-form-item label="实际结束日期：" prop="actualDeadline" >
               <el-date-picker type="date" placeholder="选择日期" v-model="material.actualDeadline" @change="actDatePickGetTime" :picker-options="pickOptionsAct" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
@@ -28,7 +29,7 @@
               <el-date-picker type="date" placeholder="选择日期" v-model="material.ageDeadline" @change="ageDatePickGetTime" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
             </el-form-item>
             </el-col>
-            <div class="clearfix"></div>
+            </el-row>
                 <el-form-item label="教材分类："  prop="materialType">
                    <el-cascader
                       :options="chooseBookData"
@@ -39,8 +40,6 @@
                       @change="materialHandleChange">
                     </el-cascader>
                 </el-form-item>
-            <div class="clearfix"></div>
-
 
             <el-form-item label="联系人：" prop="materialContacts">
               <el-col :span="24">
@@ -302,8 +301,6 @@
             </el-form-item>
 
           </el-form>
-        </el-col>
-      </el-row>
 
       <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
           <user-pmph select :radio="!Multichoice" :clearTableSelect.sync="clearTableSelect"  @selection-change="conactPersonChange">

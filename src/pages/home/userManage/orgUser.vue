@@ -2,55 +2,23 @@
   <div class="orgUser">
     <el-tabs type="border-card">
   <el-tab-pane label="学校/医院用户">
-       <div class="clearfix" >
-    </div>
-      <div class="clearfix">
-        <div class="searchBox-wrapper">
-          <div class="searchName">姓名/账号：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
-          </div>
-        </div>
-        <!-- <div class="searchBox-wrapper">
-          <div class="searchName">机构账号：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.username" @keyup.enter.native="refreshTableData"></el-input>
-          </div>
-        </div> -->
-        <div class="searchBox-wrapper">
-          <div class="searchName">机构名称：<span></span></div>
-          <div class="searchInput">
-            <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
-          </div>
-        </div>
-        <div class="searchBox-wrapper">
-          <!--申报职务搜索-->
-          <div class="searchName">机构类型：
-            <span></span>
-          </div>
-          <div class="searchInput">
-            <el-select v-model="params.orgTypeName" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
+    <p class="header_p">
+      <span>姓名/账号：</span>
+      <el-input placeholder="请输入" class="input" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
+      <span>机构名称：</span>
+      <el-input placeholder="请输入" class="input" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
+      <span>机构类型：</span>
+      <el-select v-model="params.orgTypeName" class="input" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="searchBox-wrapper searchBox-radio" style="height:36px;">
-          <el-radio-group v-model="params.isHospital" class="radio-group" @change ="orgSearch">
+      </el-select>
+      <el-radio-group v-model="params.isHospital"  @change ="orgSearch">
             <el-radio :label="true">医院</el-radio>
             <el-radio :label="false">学校</el-radio>
-          </el-radio-group>
-        </div>
-        <div class="searchBox-wrapper searchBtn">
-          <el-button  type="primary" icon="search" @click="searchOrg">搜索</el-button>
-        </div>
-        <!--操作按钮-->
-        <div class=" pull-right">
-          <!-- <el-button type="primary" @click="addBtn(false)">添加管理员</el-button> -->
-          <!-- <el-button type="primary" @click="setOrgsType">机构类型设置</el-button> -->
-          <el-button type="primary" @click="addBtn(true)">新建机构用户</el-button>
-        </div>
-      </div>
+      </el-radio-group>
+      <el-button  type="primary" icon="search" style="margin-left:10px;margin-bottom:10px;" @click="searchOrg">搜索</el-button>
+      <el-button type="primary" style="float:right;" @click="addBtn(true)">新建机构用户</el-button>
+    </p>
       <!--表格-->
       <div class="table-wrapper">
         <el-table
@@ -1055,6 +1023,13 @@ export default {
 };
 </script>
 <style scoped>
+.orgUser .header_p {
+  overflow: hidden;
+}
+.orgUser .header_p .input {
+  width: 190px;
+  margin-right: 10px;
+}
 .orgUser .el-tabs--border-card{
   border:0;
   box-shadow: none;
@@ -1062,6 +1037,7 @@ export default {
 .title{
   cursor: pointer;
 }
+
 .searchBox-radio {
   width: 150px;
 }

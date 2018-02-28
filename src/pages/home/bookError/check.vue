@@ -22,7 +22,7 @@
 							</div>
 						</el-form-item>
             <el-form-item label="附件:">
-              <a type="text" :href="ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
+              <a type="text" :href="'/pmpheep/file/download/'+ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
             </el-form-item>
 						<el-form-item label="纠错人:">
 							<p>{{ruleForm.realname}}</p>
@@ -31,9 +31,15 @@
 							<p>{{ruleForm.gmtCreate}}</p>
 						</el-form-item>
 						<el-form-item label="主编回复:">
-							<div class="messageBox">
-								<p>{{ruleForm.authorReply}}</p>
-							</div>
+							<!--<div class="messageBox">-->
+								<!--<p>{{ruleForm.authorReply}}</p>-->
+							<!--</div>-->
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8}"
+                placeholder="请输入内容"
+                v-model="ruleForm.authorReply">
+              </el-input>
 						</el-form-item>
 						<el-form-item label="检查结果:" prop="result">
 							<el-radio-group v-model="ruleForm.result" class="radio-group">
@@ -100,6 +106,7 @@ export default {
       this.$axios
         .get("/pmpheep/bookCorrection/detail?id="+this.id)
         .then(response => {
+          console.log(response);
           let res = response.data;
           if (res.code == 1) {
             this.ruleForm = res.data;

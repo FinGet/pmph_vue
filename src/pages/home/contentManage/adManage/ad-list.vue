@@ -41,7 +41,8 @@
         <el-table-column label="备注"  prop="note"></el-table-column>
         <el-table-column label="操作" width="100" align="center">
           <template scope="scope">
-            <router-link :to="{name:'广告编辑',params:{id:scope.row.id,adData:scope.row}}">编辑</router-link>
+            <router-link v-if="scope.row.isPlay" :to="{name:'广告编辑',params:{id:scope.row.id,adData:scope.row}}">编辑</router-link>
+            <span v-else>不可编辑</span>
           </template>
         </el-table-column>
       </el-table>
