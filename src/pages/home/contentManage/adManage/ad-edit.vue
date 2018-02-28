@@ -85,7 +85,7 @@
           class="ad-image-manage inline-block"
           v-model="checkedImage"
           :min="1"
-          :max="10">
+          :max="4">
           <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index">
             <div class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
@@ -346,9 +346,12 @@
           disable:disableIds.join(',')
         }))
           .then(response=>{
+            console.log(response);
             let res = response.data;
             if (res.code == '1') {
+              console.log(111111);
               this.$message.success('修改成功！');
+              this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
             }

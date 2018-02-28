@@ -11,7 +11,7 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
@@ -137,7 +137,7 @@
           </div>
           <div class="info-iterm-text">
             <div>职务：<span></span></div>
-            <div>{{expertInfoData.position}}</div>
+            <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
           </div>
           <div class="info-iterm-text">
             <div>传真：<span></span></div>
@@ -161,7 +161,7 @@
           </div>
           <div class="info-iterm-text">
             <div>地址：<span></span></div>
-            <div class="lineheight-normal paddingT10">{{expertInfoData.address}}</div>
+            <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
           </div>
           <div class="info-iterm-text">
             <div>Email：<span></span></div>
@@ -210,7 +210,7 @@
       </div>
 
       <!--主要学习经历-->
-      <div class="expert-info-box">
+      <div class="expert-info-box" v-if="learnExperience.length!=0">
         <p class="info-box-title">学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -221,7 +221,7 @@
               <th><div>学历</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in learnExperience">
+            <tr v-for="(iterm,index) in learnExperience" :key="index">
               <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.major}}</div></td>
@@ -728,7 +728,7 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,1,2,4,5].includes(this.expertInfoData.onlineProgress);
+            let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
               return !l;
             }
@@ -1230,6 +1230,13 @@
   }
   .user-info-wrapper .info-iterm-text{
     padding-bottom: 8px;
+  }
+  .user-info-wrapper .info-iterm-text .one_line_limit{
+    white-space: nowrap;
+    width:100%;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    display: inline-block;
   }
   .info-iterm-text>div:nth-of-type(1){
     display: inline-block;

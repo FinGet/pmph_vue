@@ -16,7 +16,13 @@
 		<div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
 
       <transition name="fade" mode="out-in">
-        <router-view :materialInfo="materialInfo" :pressCheckSearchParams="pressCheckSearchParams"></router-view>
+        <router-view
+         :materialInfo="materialInfo" 
+         :pressCheckSearchParams="pressCheckSearchParams" 
+         @selectHistory='RememberHistory'
+         :declareHistory='declareHistory'
+         :pressHistory='pressHistory'
+          ></router-view>
       </transition>
 		</div>
 	</div>
@@ -38,6 +44,8 @@ export default {
       materialInfo:{
         materialName:'新建通知',
       },
+      declareHistory:false,   //申报表审核搜索记录
+      pressHistory:false,   //提交到出版社搜索记录
       pressCheckSearchParams:{},
 		}
 	},
@@ -73,7 +81,15 @@ export default {
           console.log(e);
         })
     },
-
+    /* 记住申报表审核 搜索记录 */
+    RememberHistory(obj,type){
+      if(type==1){
+         this.declareHistory=obj;
+      }else{
+         this.pressHistory=obj;
+      }
+       
+    }
   },
   watch:{
     activeTagName(newval,old){

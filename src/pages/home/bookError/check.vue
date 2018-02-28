@@ -22,7 +22,7 @@
 							</div>
 						</el-form-item>
             <el-form-item label="附件:">
-              <a type="text" :href="'/pmpheep/file/cms/download/'+ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
+              <a type="text" :href="'/pmpheep/file/download/'+ruleForm.attachment" style="color:#337ab7">{{ruleForm.attachmentName}}</a>
             </el-form-item>
 						<el-form-item label="纠错人:">
 							<p>{{ruleForm.realname}}</p>

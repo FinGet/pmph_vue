@@ -44,7 +44,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="排位" width="90" align="center">
+          <el-table-column label="排序" width="90" align="center">
             <template scope="scope">
               <div class="paddingB15 paddingT10 relative">
                 <el-input
@@ -73,7 +73,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="排位" width="90" align="center">
+          <el-table-column label="排序" width="90" align="center">
             <template scope="scope">
               <div class="paddingB15 paddingT10 relative">
                 <el-input
@@ -344,7 +344,11 @@
               .then(response=>{
                 var res = response.data;
                 if(res.code==1){
-                  this.getTableData();
+                  if(type===2){
+                    this.$router.go(-1);
+                  }else{
+                    this.getTableData();
+                  }
                   this.$message.success('提交成功！');
                 }else{
                   this.$message.error(res.msg.msgTrim());

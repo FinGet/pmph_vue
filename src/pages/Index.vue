@@ -2,8 +2,8 @@
   <div class="index">
     <div class="paddingB10 border-dashed-B">
       <span class="fontsize-20 fontBold orange marginR20">{{userInfo.realname}}，欢迎您！</span>
-      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{userType}}</span></span>
-      <span class="blue">最近登录：{{lastLoginTime}}</span>
+      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{pmphRole.roleName || userType}}</span></span>
+      <span class="blue">最近登录：{{lastLoginTime || currentTime}}</span>
     </div>
     <ul class="backlogList paddingT20 paddingB20 clearfix">
       <li>
@@ -45,7 +45,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
                   <router-link :to="{name:'通知列表'}">
@@ -59,7 +59,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -73,7 +73,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -213,7 +213,7 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="图书附件审核" name="four">
+            <!-- <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in bookFiles.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
@@ -225,7 +225,7 @@
                   </router-link>
                 </li>
               </ul>
-            </el-tab-pane>
+            </el-tab-pane> -->
           </el-tabs>
         </div>
       </li>
@@ -256,6 +256,8 @@ export default {
       orgUserCount:'',
       writerUserCount:'',
       materialListTotal:0,
+      pmphRole:{},
+      lastLoginTime:undefined,
     };
   },
   computed: {
@@ -275,7 +277,7 @@ export default {
         return '学校机构用户'
       }
     },
-    lastLoginTime(){
+    currentTime(){
       let time = +new Date();
       return this.$commonFun.formatDate(time);
     },
@@ -309,6 +311,8 @@ export default {
             this.writerUserCount = res.data.writerUserCount;
 
             this.materialListTotal=this.materialList.total;
+            this.pmphRole = res.data.pmphRole[0];
+            this.lastLoginTime = res.data.lastLoginTime;
           }
         })
         .catch(e=>{
