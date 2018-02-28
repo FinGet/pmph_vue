@@ -191,7 +191,7 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">您暂未加入任何小组</p>
+              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
@@ -205,7 +205,7 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">您暂未加入任何小组</p>
+              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list">
@@ -219,7 +219,7 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">您暂未加入任何小组</p>
+              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <!-- <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
