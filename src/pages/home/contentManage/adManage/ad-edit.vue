@@ -31,9 +31,10 @@
         当前广告
       </div>
       <!--单选图片-->
-      <div class="section-content section-content-arrow" v-if="formData.type===0">
+      <div class="section-content section-content-arrow" v-if="formData.type===0||formData.type===2">
         <div class="carousel carousel-1" :style="{width:adWHobj.width+'px',height:adWHobj.height}">
-          <img :src="currentPlayAd.image" alt="" v-if="imageLibs.length>0">
+          <img :src="currentPlayAd.image" alt="" v-if="imageLibs.length>0&&formData.type===0">
+          <img v-for="(iterm,index) in currentPlayAdList" :key="index" :src="iterm.image" alt="" v-if="imageLibs.length>0&&formData.type===2" class="inline-block marginB10 marginR10">
         </div>
       </div>
       <!--多选图片-->
@@ -61,6 +62,7 @@
     <div class="page-section">
       <div class="section-title">
         图片管理
+        <span class="inline-block marginL10 orange">(当前广告图片最佳尺寸为{{basetSize}},请上传{{basetSize}}尺寸的图片，或者与最佳尺寸宽高比相同的图片)</span>
         <div class="paddingL20 inline-block">
           <!--<el-button type="primary" size="mini">增加</el-button>-->
         </div>
@@ -116,7 +118,7 @@
       </div>
     </div>
 
-    <div class="page-section"  v-if="!(formData.type===0)">
+    <div class="page-section"  v-if="formData.type===1">
       <div class="section-title">
         全局设置
       </div>
@@ -141,6 +143,8 @@
 </template>
 
 <script>
+  //  广告尺寸写死 对应广告id     当id=1时广告尺寸为adSize[1]
+  var adSize = ['',[815,400],[280,80],[400,400],[815,400]];
 	export default {
 		data() {
 			return {
@@ -156,9 +160,10 @@
         checkedImage:[],
         num:3,
         hasTitle:false,
+        adId:0,
         formData:{
           advertId:'',
-			    id:'',
+			    id:0,
           adname:'',
           url:'',
           isDisabled:false,
@@ -214,7 +219,15 @@
           width:whObj[0]*scale,
           height:whObj[1]*scale
         }
-      }
+      },
+      basetSize(){
+        let id = this.adId;
+        console.log(this.adId)
+        if(id===0||id>4){
+          return '';
+        }
+        return adSize[id][0]+'*'+adSize[id][1]
+      },
     },
     methods:{
       change(){
@@ -256,6 +269,7 @@
       upLoadFileSuccess(response,file,filelist){
         this.uploadBtnLoading=false;
         this.imageLibs.push(response.data);
+        this.checkAdSizeIsOk(this.adId, response.data.image)
       },
       uploadError(){
         this.$message.error('上传失败，请重试！');
@@ -370,6 +384,32 @@
           carousel.pauseTimer();
           carousel.startTimer();
         }
+      },
+      /**
+       * 判断是否是最佳尺寸
+       * @param id
+       * @param sizeArray
+       */
+      checkAdSizeIsOk(id,imageUrl){
+        if(id===0||id>4){
+          return;
+        }
+        let sizeArray = [0,0];
+        let image = new Image();
+        image.onload=()=>{
+          sizeArray[0] = image.width;
+          sizeArray[1] = image.height;
+          let bestSize = adSize[id];
+
+          console.log(id,imageUrl,adSize,sizeArray)
+          if((bestSize[0]===sizeArray[0]&&bestSize[1]===sizeArray[1])||(bestSize[0]/bestSize[1]===sizeArray[0]/sizeArray[1])){
+            return;
+          }else{
+            this.$message.warning('请上传'+bestSize[0]+'*'+bestSize[1]+'尺寸，或者同样宽高比的图片!');
+          }
+        };
+        image.src= imageUrl;
+
       }
     },
     created(){
@@ -379,6 +419,7 @@
       }else{
 
         this.formData=this.currentAdData;
+        this.adId = this.currentAdData.id;
         this.imageLibs = this.formData.image||[];
       }
 

@@ -11,12 +11,8 @@
         <el-table-column label="广告位置"  prop="adname" min-width="100"></el-table-column>
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
-            <div v-if="scope.row.type===0">
-              <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index" :style="scope.row.wh" v-if="!iterm.isDisabled">
-                <img :src="iterm.image" alt="">
-              </div>
-            </div>
-            <div v-else>
+
+            <div v-if="scope.row.type===1">
               <div class="ad-list-preview-img" :style="scope.row.wh">
                 <el-carousel
                   :height="scope.row.wh.height"
@@ -29,6 +25,11 @@
                     <img :src="iterm.image" alt="">
                   </el-carousel-item>
                 </el-carousel>
+              </div>
+            </div>
+            <div v-else>
+              <div class="ad-list-preview-img"  v-for="(iterm,index) in scope.row.image" :key="index" :style="scope.row.wh" v-if="!iterm.isDisabled">
+                <img :src="iterm.image" alt="">
               </div>
             </div>
           </template>
