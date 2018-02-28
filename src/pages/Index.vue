@@ -45,7 +45,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
                   <router-link :to="{name:'通知列表'}">
@@ -59,7 +59,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -73,7 +73,7 @@
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'通知列表'}">{{iterm.materialName}}</router-link>
+                  <router-link :to="{name:'申报表审核',params:{materialId:iterm.id}}">{{iterm.materialName}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="!materialList.last">
                   <router-link :to="{name:'通知列表'}">
@@ -213,7 +213,7 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="图书附件审核" name="four">
+            <!-- <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in bookFiles.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'通知列表'}">《{{iterm.title}}》：{{iterm.file}}</router-link>
@@ -225,7 +225,7 @@
                   </router-link>
                 </li>
               </ul>
-            </el-tab-pane>
+            </el-tab-pane> -->
           </el-tabs>
         </div>
       </li>
