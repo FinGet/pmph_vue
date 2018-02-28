@@ -40,7 +40,7 @@
           </el-table-column>
           <el-table-column label="状态" width="100">
           </el-table-column>
-          <el-table-column label="操作" width="120">
+          <el-table-column label="操作" width="110">
               <template scope="scope">
                <el-button type="text" style="color:#337ab7;">下载</el-button>
                <el-button type="text" style="color:#337ab7;">审核</el-button>

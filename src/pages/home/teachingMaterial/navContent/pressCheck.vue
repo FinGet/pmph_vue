@@ -324,7 +324,8 @@
 
         ],
         powerSearchValue:0,
-        positionValue:[{
+        positionValue:[
+          {
           value:'',
           label:'全部'
         },{
@@ -384,6 +385,7 @@
         stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
       }
     },
+    props:['declareHistory'],
     watch:{
      powerSearchValue(val){
        this.cleanSearchInput();
@@ -673,9 +675,13 @@
       },
     },
     created(){
+      /* 搜索记录赋值 */
+      if(this.declareHistory){
+        this.powerSearchValue=this.declareHistory.powerSearchValue;
+         this.searchParams=this.declareHistory.searchParams;
+         this.powerSearch=this.declareHistory.powerSearch;
+      } 
       this.searchParams.materialId = this.$route.params.materialId;
-
-
       for(let key in this.pressCheckSearchParams){
         this.searchParams[key] = this.pressCheckSearchParams[key];
       }
@@ -690,6 +696,16 @@
         _hmt.push(['_trackPageview', '/material-application/pressCheck']);
       }
     },
+    /* 离开当前页面记录搜索数据 */
+    beforeRouteLeave(to,from,next){
+      var obj={
+        searchParams:this.searchParams,
+        powerSearchValue:this.powerSearchValue,
+        powerSearch:this.powerSearch
+      }
+      this.$emit('selectHistory',obj,1)
+      next();
+    }
   }
 
 </script>
