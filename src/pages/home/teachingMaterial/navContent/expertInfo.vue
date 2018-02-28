@@ -11,7 +11,7 @@
         <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">
@@ -728,7 +728,7 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,1,2,4,5].includes(this.expertInfoData.onlineProgress);
+            let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
               return !l;
             }
@@ -1235,7 +1235,7 @@
     white-space: nowrap;
     width:100%;
     text-overflow:ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     display: inline-block;
   }
   .info-iterm-text>div:nth-of-type(1){

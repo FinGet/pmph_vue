@@ -2,8 +2,8 @@
   <div class="index">
     <div class="paddingB10 border-dashed-B">
       <span class="fontsize-20 fontBold orange marginR20">{{userInfo.realname}}，欢迎您！</span>
-      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{userType}}</span></span>
-      <span class="blue">最近登录：{{lastLoginTime}}</span>
+      <span class="marginR20">您的身份是：<span class="fontsize-lg orange">{{pmphRole.roleName || userType}}</span></span>
+      <span class="blue">最近登录：{{lastLoginTime || currentTime}}</span>
     </div>
     <ul class="backlogList paddingT20 paddingB20 clearfix">
       <li>
@@ -256,6 +256,8 @@ export default {
       orgUserCount:'',
       writerUserCount:'',
       materialListTotal:0,
+      pmphRole:{},
+      lastLoginTime:undefined,
     };
   },
   computed: {
@@ -275,7 +277,7 @@ export default {
         return '学校机构用户'
       }
     },
-    lastLoginTime(){
+    currentTime(){
       let time = +new Date();
       return this.$commonFun.formatDate(time);
     },
@@ -309,6 +311,8 @@ export default {
             this.writerUserCount = res.data.writerUserCount;
 
             this.materialListTotal=this.materialList.total;
+            this.pmphRole = res.data.pmphRole[0];
+            this.lastLoginTime = res.data.lastLoginTime;
           }
         })
         .catch(e=>{
