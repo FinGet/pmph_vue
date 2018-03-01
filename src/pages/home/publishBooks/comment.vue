@@ -3,8 +3,8 @@
 
 
 
-    <el-tabs type="border-card" @tab-click="tabClick">
-      <el-tab-pane label="短评管理">
+    <el-tabs type="border-card" v-model="activeIndex"  @tab-click="tabClick">
+      <el-tab-pane label="短评管理" name="first">
         <TableShort :data="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
@@ -53,7 +53,7 @@
           </div>
         </TableShort>
       </el-tab-pane>
-      <el-tab-pane label="长评管理">
+      <el-tab-pane label="长评管理" name="second">
         <TableLong :data="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
@@ -136,6 +136,7 @@
 	export default {
 		data() {
 			return {
+        activeIndex:'first',
         tableData:[],
         selectData:[],
         searchForm:{
@@ -170,6 +171,11 @@
       }
 		},
     created(){
+      /* 是否从首页跳转过来 */
+      if(this.$route.params.bookname){
+        this.activeIndex=this.$route.params.isLong?'second':'first';
+        this.searchForm.name=this.$route.params.bookname;
+      }
       this.getTableData();
     },
     components:{

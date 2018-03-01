@@ -2,10 +2,10 @@
   <div class="topic_check">
   <el-tabs v-model="activeName" type="border-card" >
     <el-tab-pane label="已提交的申报" name="first">
-     <submit-apply></submit-apply>
+     <submit-apply :searchInput="searchInput"></submit-apply>
     </el-tab-pane>
     <el-tab-pane label="已完成的申报" name="second">
-      <completed-apply></completed-apply>
+      <completed-apply :searchInput="searchInput"></completed-apply>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -17,10 +17,16 @@
        data(){
          return{
            activeName:'first',
+           searchInput:''
          }
        },
        components:{
          submitApply,completedApply
+       },
+       created(){
+         if(this.$route.params.activeIndex){
+             this.activeName=this.$route.params.activeIndex;
+         }
        }
     }
 </script>
