@@ -244,7 +244,7 @@
         </el-table-column>
         <el-table-column label="出版社审核">
           <template scope="scope">
-            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==0" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
 
             <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p>
 
@@ -299,7 +299,7 @@
 
 <script>
   export default {
-    props:['materialInfo','pressCheckSearchParams'],
+    props:['materialInfo','pressCheckSearchParams','declareHistory'],
     data() {
       return {
         api_confirm_paper:'/pmpheep/declaration/list/declaration/confirmPaperList',
@@ -719,7 +719,7 @@
         this.powerSearchValue=this.pressHistory.powerSearchValue;
          this.searchParams=this.pressHistory.searchParams;
          this.powerSearch=this.pressHistory.powerSearch;
-      }       
+      }
       this.searchParams.materialId = this.$route.params.materialId;
 
       for(let key in this.pressCheckSearchParams){
@@ -732,10 +732,6 @@
       }
       this.getTableData();
       this.getBookList();
-
-      if(window._hmt){
-        _hmt.push(['_trackPageview', '/material-application/pressCheck']);
-      }
     },
     beforeRouteLeave(to,from,next){
      var obj={

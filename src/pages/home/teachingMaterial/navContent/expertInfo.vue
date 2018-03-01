@@ -8,10 +8,10 @@
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
         <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
         <el-button type="primary" :disabled="onlineProgressBtn_Pass" v-if="expertInfoData.orgId===0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" @click="onlineCheckPass(3)">

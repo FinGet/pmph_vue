@@ -17,8 +17,8 @@
 
       <transition name="fade" mode="out-in">
         <router-view
-         :materialInfo="materialInfo" 
-         :pressCheckSearchParams="pressCheckSearchParams" 
+         :materialInfo="materialInfo"
+         :pressCheckSearchParams="pressCheckSearchParams"
          @selectHistory='RememberHistory'
          :declareHistory='declareHistory'
          :pressHistory='pressHistory'
@@ -88,7 +88,7 @@ export default {
       }else{
          this.pressHistory=obj;
       }
-       
+
     }
   },
   watch:{
