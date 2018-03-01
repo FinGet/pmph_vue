@@ -266,7 +266,7 @@
           </el-form-item>
 
           <el-form-item label="所属教材">
-            <el-select v-model="form.materialId" filterable placeholder="请选择">
+            <el-select v-model="form.materialId" clearable filterable placeholder="请选择">
               <el-option
                 v-for="item in materialList"
                 :key="item.id"

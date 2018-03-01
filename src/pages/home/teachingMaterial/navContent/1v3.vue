@@ -355,7 +355,7 @@
         }
         if(type==1){
           this.method = 'pass'
-          html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单通过后，除您以外的其他编辑和主编将无法继续变动名单`
+          html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单确认后，只有当前教材指定的主任可以修改`
         }else{
           if (isLocked) {
             this.method = 'result'

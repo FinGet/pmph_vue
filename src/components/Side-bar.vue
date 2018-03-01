@@ -34,7 +34,7 @@
         <el-menu-item index="/content/notice" v-if="isShowSide(5)||isShowSide(17)">公告管理</el-menu-item>
         <!-- <el-menu-item index="/content/set" v-if="isShowSide(12)">栏目设置</el-menu-item> -->
         <el-menu-item index="/content/ad" v-if="isShowSide(5)||isShowSide(18)">广告管理</el-menu-item>
-        <el-menu-item index="/content/sensitive" v-if="isShowSide(5)||isShowSide(18)">敏感词管理</el-menu-item>
+        <el-menu-item index="/content/sensitive" v-if="isShowSide(5)||isShowSide(40)">敏感词管理</el-menu-item>
       </el-submenu>
       <el-submenu index="/book" v-if="isShowSide(6)||isShowSide(19)||isShowSide(20)">
         <template slot="title">
@@ -43,7 +43,7 @@
         </template>
         <el-menu-item index="/book/manage" v-if="isShowSide(6)||isShowSide(19)">图书管理</el-menu-item>
         <el-menu-item index="/book/comment" v-if="isShowSide(6)||isShowSide(20)">评论审核</el-menu-item>
-        <el-menu-item index="/book/video" v-if="isShowSide(6)||isShowSide(20)">微视频管理</el-menu-item>
+        <el-menu-item index="/book/video" v-if="isShowSide(6)||isShowSide(41)">微视频管理</el-menu-item>
       </el-submenu>
 
       <el-submenu index="/topic"  v-if="isShowSide(7)||isShowSide(21)||isShowSide(22)">

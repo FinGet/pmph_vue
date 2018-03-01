@@ -208,7 +208,7 @@ export default new Router({
               { path: 'new', name: '添加内容', component: ContentPublish },
             { path: 'info', name: '信息快报管理', meta: { authorityId: 16 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
-            { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 17 }},
+            { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 40 }},
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
             { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },
             { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 18 }, component: adEdit }
@@ -219,7 +219,7 @@ export default new Router({
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
           { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 }},
           { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}},
-          { path: 'video', name: '微视频管理', component: MicVideo, meta: { authorityId: 20 } }
+          { path: 'video', name: '微视频管理', component: MicVideo, meta: { authorityId: 41 } }
           
           ]
         },

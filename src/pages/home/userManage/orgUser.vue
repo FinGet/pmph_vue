@@ -1,7 +1,7 @@
 <template>
   <div class="orgUser">
-    <el-tabs type="border-card">
-  <el-tab-pane label="学校/医院用户">
+    <el-tabs type="border-card" v-model="activeName">
+  <el-tab-pane label="学校/医院用户" name="first">
     <p class="header_p">
       <span>姓名/账号：</span>
       <el-input placeholder="请输入" class="input" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
@@ -283,7 +283,7 @@
       </el-dialog>
   </el-tab-pane>
   <!-- 学校审核 -->
-  <el-tab-pane label="审核管理员">
+  <el-tab-pane label="审核管理员" name="second">
       <el-row>
 			<el-col>
 				<div class="searchBox-wrapper">
@@ -394,7 +394,6 @@
 		</el-dialog>
   </el-tab-pane>
 </el-tabs>
-
   </div>
 </template>
 <script>
@@ -404,6 +403,7 @@ export default {
   data() {
     return {
       screenWidth_lg_computed: true,
+      activeName:'first',
       isNew: true, // 判断是否是新增
       // isAddSchool:true,
       area:[], // 所属地区
@@ -1012,6 +1012,9 @@ export default {
     }
   },
   created() {
+    if(this.$route.params.activeName){
+      this.activeName=this.$route.params.activeName;
+    }
     this.refreshTableData();
     this.getOrgsList();
     this.getAreaData();
