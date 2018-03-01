@@ -416,12 +416,16 @@
         handleExportWordtimer:null,
         downloadWordDialog:false,
         wordUrl:'',
+        noWatchFirst:false,//做浏览记录 第一次watch不生效
       }
     },
     props:['pressHistory'],
     watch:{
       powerSearchValue(val){
-        this.cleanSearchInput();
+        if(this.noWatchFirst){
+           this.cleanSearchInput();    
+        }
+        this.noWatchFirst=true;
       }
     },
     methods:{
