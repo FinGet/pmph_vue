@@ -38,7 +38,7 @@
       width="170"
      >
      <template scope="scope">
-      {{$commonFun.formatDate(scope.row.deadline)}}
+      {{$commonFun.formatDate(scope.row.deadline).substring(0,10)}}
      </template>
      </el-table-column>
      <el-table-column
@@ -53,7 +53,7 @@
       width="170"
      >
      <template scope="scope">
-      {{$commonFun.formatDate(scope.row.submitTime)}}
+      {{$commonFun.formatDate(scope.row.submitTime).substring(0,10)}}
      </template>
      </el-table-column>
      <el-table-column
