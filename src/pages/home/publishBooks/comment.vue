@@ -83,7 +83,7 @@
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
-              <el-button type="warning" :disabled="!selectData.length" @click="audit(0)">审核不通过</el-button>
+              <el-button type="warning" :disabled="!selectData.length" @click="audit(2)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
             </div>
           </div>

@@ -25,7 +25,7 @@
         <el-table-column label="备注" prop="note"></el-table-column>  
         <el-table-column label="启用标志" width="100" >
           <template scope="scope">
-            {{scope.row.isDisabled?'停用':'启用'}}
+            {{scope.row.isDisabled?'禁用':'启用'}}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="80" >

@@ -143,36 +143,34 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <!--<el-tab-pane label="已发布" name="second">-->
-              <!--<ul class="panel-min-list">-->
-                <!--<li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">-->
-                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
-                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
-                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
-                <!--</li>-->
-                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
-                  <!--<router-link to="/404">-->
+            <el-tab-pane label="进行中" name="second">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state=='通过'">
+                  <el-tag type="success" >通过</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                  <router-link to="/404">
                     <!--查看更多-->
-                    <!--<i class="el-icon-d-arrow-right"></i>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</el-tab-pane>-->
-            <!--<el-tab-pane label="已结束" name="fourth">-->
-              <!--<ul class="panel-min-list">-->
-                <!--<li v-for="(iterm,index) in topicList.rows" :key="index">-->
-                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
-                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
-                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
-                <!--</li>-->
-                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
-                  <!--<router-link to="/404">-->
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
+            <el-tab-pane label="已结束" name="fourth">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'">
+                  <el-tag type="gray" >不通过</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                  <router-link to="/404">
                     <!--查看更多-->
-                    <!--<i class="el-icon-d-arrow-right"></i>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</el-tab-pane>-->
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </li>
@@ -180,7 +178,7 @@
         <div>
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first" >
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0">
                 <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
                   <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
@@ -191,12 +189,12 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
+              <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'图书纠错审核',params:iterm.bookname}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
+                  <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
                   <router-link :to="{name:'图书纠错审核'}">
@@ -258,8 +256,12 @@ export default {
         loading:true,
         rows:[]
       },
-      topicList:{},
-      cmsContent:{},
+      topicList:{
+        rows:[]
+      },
+      cmsContent:{
+        rows:[]
+      },
       bookUserComment:{},
       bookCorrectionAudit:{},
       bookFiles:{},
@@ -305,7 +307,7 @@ export default {
         bookname:'',
         name:'',
         title:'',
-        authProgress:'2,3',
+        authProgress:'1,2,3',
         topicBookname:'',
       };
       this.$axios.get('/pmpheep/users/pmph/personal/center',{params:params})

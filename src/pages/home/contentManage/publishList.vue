@@ -669,6 +669,10 @@ export default {
     }
   },
   created() {
+    /* 是否从首页跳转过来 */
+    if(this.$route.params.searchInput){
+      this.searchTitle=this.$route.params.searchInput;
+    }
     this.getPublicList();
     this.initIsAdmin();
     this.getCommentList();
