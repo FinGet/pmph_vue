@@ -113,7 +113,7 @@
             <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',
               q:scope.row.myPower,opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
-                <i v-if="(scope.row.isLocked||(materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(2,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
+                <i v-if="((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(2,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
                 <i v-else class="fa fa-pencil fa-fw"></i>
               </el-button>
             </router-link>
@@ -128,7 +128,7 @@
             <router-link v-if="!forceEnd" :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,
             opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
-                <i v-if="(scope.row.isLocked||(materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(3,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
+                <i v-if="((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(3,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
                 <i v-else class="fa fa-pencil fa-fw"></i>
               </el-button>
             </router-link>
