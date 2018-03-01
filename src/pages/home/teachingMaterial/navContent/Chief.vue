@@ -5,7 +5,7 @@
       <div class="teachingMaterial-search clearfix">
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasZhubian||(!hasPermission([2,3])||tableData.length==0)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="(!hasZhubian||(!hasPermission([2,3])||tableData.length==0))||isChiefPublished" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
@@ -154,6 +154,8 @@
         IsDigitalEditorOptional:false,
         myPower:'00000000',
         optionsType:'edit',
+        isChiefPublished:false,
+        hasChanged:false,
       }
     },
     computed:{
@@ -184,8 +186,16 @@
         //是否有后选人员
         const select_length = this.tableData.length>0;
 
-        return !(hasZhubian&&hasPermission&&select_length);
-      }
+        //isChiefPublished 主编副主编是否已经发布
+        const isChiefPublished = this.isChiefPublished;
+
+        //用户进来是否有更改
+        const hasChanged = this.hasChanged;
+
+        //3、发布后，确认、发布按钮置灰，再次更改人员名单后，发布按钮置为可用
+
+        return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
+      },
     },
     created(){
       this.formData.materialId = this.$route.params.materialId;
@@ -195,6 +205,7 @@
       this.type = this.$route.query.type;
       this.myPower = this.$route.query.q;
       this.optionsType = this.$route.query.opt;
+      this.isChiefPublished = !!this.$route.query.isChiefPublished;
       //如果没有教材id则跳转到通知列表
       if(!this.formData.materialId){
         this.$router.push({name:'通知列表'});
@@ -284,6 +295,7 @@
        * @param row 数据
        */
       checkboxChange(type,row) {
+        this.hasChanged=true;
         if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
           row.isZhubian = false;
           row.isFuzhubian = false;
@@ -292,6 +304,8 @@
           row.fuzhubianSort = '';
           row.zhubianSortIsOk = true;
           row.fuzhubianSortIsOk = true;
+
+
           return;
         }
         row.chosenPosition = type;
@@ -371,6 +385,7 @@
           type: "warning"
         })
           .then(()=>{
+            this.hasChanged=false;
             this.getTableData();
           })
           .catch(e=>{})
@@ -397,6 +412,7 @@
             row.fuzhubianSortIsOk=true;
           }
         }
+        this.hasChanged=true;
       },
       checkSortIsOk(){
         var zhubianSortList = [];
