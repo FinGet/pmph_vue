@@ -1,8 +1,8 @@
 <template>
   <div class="writerUser">
-    <el-tabs type="border-card">
-  <el-tab-pane label="个人用户">
-  <div class="clearfix">
+    <el-tabs type="border-card" v-model="activeName">
+  <el-tab-pane label="个人用户" name="first">
+   <div class="clearfix">
     <div class="searchBox-wrapper">
       <div class="searchName">姓名/账号：
         <span></span>
@@ -238,7 +238,7 @@
         </div>
       </el-dialog>
   </el-tab-pane>
-  <el-tab-pane label="审核教师">
+  <el-tab-pane label="审核教师" name="second">
     	<div class="teacher_check">
 		<el-row>
 			<el-col>
@@ -392,6 +392,7 @@ export default {
     }
     return {
       isNew: true,
+      activeName:'first',
       //用户类型数据
       options: [
         {
@@ -869,6 +870,9 @@ export default {
     }
   },
   created() {
+    if(this.$route.params.activeName){
+      this.activeName=this.$route.params.activeName;
+    }
     this.refreshTableData();
     this.getWritersList();
   },

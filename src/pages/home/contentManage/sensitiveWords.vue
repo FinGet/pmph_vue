@@ -74,7 +74,7 @@
         <el-form-item label="启用：" prop="isDisabled">
            <el-select v-model="dialogForm.isDisabled" placeholder="请选择">
               <el-option label="启用" :value="false"></el-option>
-              <el-option label="不启用" :value="true"></el-option>
+              <el-option label="禁用" :value="true"></el-option>
             </el-select>
         </el-form-item>
         </el-form> 

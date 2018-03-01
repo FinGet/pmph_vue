@@ -141,9 +141,8 @@
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished || scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
-            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.republishTimes!=0&&scope.row.revisionTimes!=0&&scope.row.revisionTimes==scope.row.republishTimes) || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">
-              {{(scope.row.republishTimes>0&&scope.row.revisionTimes>0&&scope.row.revisionTimes==scope.row.republishTimes)?'已公布'
-              :(scope.row.revisionTimes>0&&scope.row.republishTimes>0&&scope.row.revisionTimes!=scope.row.republishTimes)?'再次公布':'最终结果公布'}}</el-button>
+            <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.isPublished && !scope.row.repub) || !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">
+              {{(scope.row.isPublished && !scope.row.repub)?'已公布':(scope.row.isPublished && scope.row.repub)?'再次公布':'最终结果公布'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" v-else  v-if="(scope.row.state!=0&&scope.row.state!=2)&&scope.row.state<5">最终结果公布</el-button> -->
             <span class="vertical-line"></span>
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
@@ -355,7 +354,7 @@
         }
         if(type==1){
           this.method = 'pass'
-          html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单通过后，除您以外的其他编辑和主编将无法继续变动名单`
+          html = `您要通过${data?'《'+data.textbookName+'》':'所有选中'}的名单吗？<br/>名单确认后，只有当前教材指定的主任可以修改`
         }else{
           if (isLocked) {
             this.method = 'result'

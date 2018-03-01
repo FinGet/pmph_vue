@@ -87,8 +87,8 @@ export default {
                 params:{
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber,
-                    startTime: +new Date(this.startTime+''),
-                    endTime: +new Date(this.endTime+''),
+                    startTime: +new Date(this.startTime+'') || '',
+                    endTime: +new Date(this.endTime+'')||'',
                     userName: this.title
                 }
             }).then(response =>{

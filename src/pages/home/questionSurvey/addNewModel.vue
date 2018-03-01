@@ -118,7 +118,7 @@
 
          <div class="bottom_box" v-if="surveyForm.questionAnswerJosn.length!=0">
              <div class="button_box">
-                 <el-button >返回</el-button>
+                 <el-button @click="$router.go(-1)">返回</el-button>
                  <el-button type="primary" @click="submitTemplate">确定</el-button>
              </div>
          </div>

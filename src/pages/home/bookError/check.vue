@@ -141,7 +141,7 @@ export default {
     submit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.ruleForm.isAuthorReplied) {
+//          if (this.ruleForm.isAuthorReplied) {
             this.$axios
               .put(
                 "/pmpheep/bookCorrection/replyWriter",
@@ -156,16 +156,18 @@ export default {
                 if (res.code == 1) {
                   this.$message.success("提交成功！");
                   this.back();
+                } else {
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch(err => {
                 this.$message.error("提交失败，请稍后再试！");
               });
-          } else {
-            this.$message.error("主编没有回复，不能提交！");
-          }
+//          } else {
+//            this.$message.error("主编没有回复，不能提交！");
+//          }
         } else {
-          console.log("error submit!!");
+          console.log("错误提交，请检查输入内容!!");
           return false;
         }
       });
