@@ -143,7 +143,7 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="通过" name="second">
+            <el-tab-pane label="进行中" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state=='通过'">
                   <el-tag type="success" >通过</el-tag>
@@ -157,7 +157,7 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <el-tab-pane label="不通过" name="fourth">
+            <el-tab-pane label="已结束" name="fourth">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'">
                   <el-tag type="gray" >不通过</el-tag>
@@ -178,7 +178,7 @@
         <div>
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first" >
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0">
                 <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
                   <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
@@ -189,12 +189,12 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
+              <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'图书纠错审核',params:iterm.bookname}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
+                  <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
                   <router-link :to="{name:'图书纠错审核'}">
@@ -259,7 +259,9 @@ export default {
       topicList:{
         rows:[]
       },
-      cmsContent:{},
+      cmsContent:{
+        rows:[]
+      },
       bookUserComment:{},
       bookCorrectionAudit:{},
       bookFiles:{},
@@ -305,7 +307,7 @@ export default {
         bookname:'',
         name:'',
         title:'',
-        authProgress:'2,3',
+        authProgress:'1,2,3',
         topicBookname:'',
       };
       this.$axios.get('/pmpheep/users/pmph/personal/center',{params:params})
