@@ -130,9 +130,24 @@
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">选题申报</p>
           <el-tabs v-model="activeName2">
             <el-tab-pane label="全部" name="first">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="topicList.rows.length!=0">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='不通过'?'gray':'success'">{{ iterm.state }}</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                  <router-link :to="{name:'选题申报审核'}">
+                    查看更多
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的选题</p>
+            </el-tab-pane>
+            <el-tab-pane label="进行中" name="second">
+              <ul class="panel-min-list"  v-if="topicList.rows.length!=0">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state!='通过'&&iterm.state!='不通过'">
+                  <el-tag type="success" >{{iterm.state}}</el-tag>
                   <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
@@ -142,34 +157,22 @@
                   </router-link>
                 </li>
               </ul>
-            </el-tab-pane>
-            <el-tab-pane label="进行中" name="second">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state=='通过'">
-                  <el-tag type="success" >通过</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
-                </li>
-                <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link to="/404">
-                    <!--查看更多-->
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
-                </li>
-              </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的选题</p>
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
-              <ul class="panel-min-list">
-                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'">
-                  <el-tag type="gray" >不通过</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+              <ul class="panel-min-list" v-if="topicList.rows.length!=0">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'||iterm.state=='通过'">
+                  <el-tag :type="iterm.state=='不通过'?'gray':'success'" >{{iterm.state}}</el-tag>
+                  <router-link :to="{name:'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link to="/404">
-                    <!--查看更多-->
+                  <router-link :to="{name:'选题申报查看',params:{searchInput:'',activeIndex:'second'}}">
+                    查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
                 </li>
               </ul>
+              <p v-else  class="no_conact_data">暂无需要您处理的选题</p>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -208,10 +211,10 @@
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0">
                 <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'通知列表'}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
+                  <router-link :to="{name:'评论审核',params:{bookname:iterm.bookname,isLong:iterm.isLong}}"><p class="comment">《{{iterm.bookname}}》：<span v-html="iterm.content"></span></p></router-link>
                 </li>
                 <li class="panel-more-btn" v-if="bookUserComment.total>limit_size">
-                  <router-link :to="{name:'通知列表'}">
+                  <router-link :to="{name:'评论审核'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -390,15 +393,15 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style >
 /*待办事项*/
-.backlogList > li {
+.index .backlogList > li {
   float: left;
 }
-.backlogList > li + li {
+.index .backlogList > li + li {
   margin-left: 20px;
 }
-.backlogList > li > span:nth-of-type(1) {
+.index .backlogList > li > span:nth-of-type(1) {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -410,50 +413,50 @@ export default {
 }
 
 /*面板*/
-.panel-box {
+.index .panel-box {
   /*max-width: 1200px;*/
   /*margin: 0 auto;*/
   overflow: hidden;
 }
-.panel-box > li {
+.index .panel-box > li {
   float: left;
   width: 50%;
   padding-bottom: 2000px;
   margin-bottom: -2000px;
   line-height: 24px;
 }
-.panel-box > li:nth-of-type(2n + 1) > div {
+.index .panel-box > li:nth-of-type(2n + 1) > div {
   margin: 10px 30px 10px 0;
 }
-.panel-box > li:nth-of-type(2n) > div {
+.index .panel-box > li:nth-of-type(2n) > div {
   margin: 10px 0 10px 30px;
 }
-.panel-box > li > div {
+.index .panel-box > li > div {
   min-height: 200px;
   padding: 4px 0 0;
   border-top: 4px solid #e7eaec;
 }
-.panel-box > li > div > p {
+.index .panel-box > li > div > p {
   line-height: 40px;
 }
-.panel-iterm {
+.index .panel-iterm {
   border-top: 1px solid rgb(209, 217, 229);
 }
 
-.panel-min-list > li {
+.index .panel-min-list > li {
   margin: 4px 0;
   padding: 5px;
 }
-.panel-min-list > li:nth-of-type(2n + 1) {
+.index .panel-min-list > li:nth-of-type(2n + 1) {
   background: #f7f7f7;
 }
-.panel-min-list > li:hover {
+.index .panel-min-list > li:hover {
   background: #f1f1f1;
 }
-.panel-more-btn {
+.index .panel-more-btn {
   text-align: center;
 }
-.panel-more-btn > a {
+.index .panel-more-btn > a {
   font-weight: 600;
   font-size: 14px;
   line-height: 1.42;
@@ -463,25 +466,25 @@ export default {
   margin: 8px 0;
 }
 /*小组*/
-.groupHead {
+.index .groupHead {
   height: 68px;
   border-radius: 4px;
   cursor: pointer;
 }
-.groupHead:hover {
+.index .groupHead:hover {
   background: rgba(255, 255, 255, 0.15);
 }
-.groupHead.active {
+.index .groupHead.active {
   background: rgba(255, 255, 255, 0.2);
 }
-.groupHead.firstIterm {
+.index .groupHead.firstIterm {
   /*background: rgba(255,255,255,.1);*/
 }
-.groupHead-inner {
+.index .groupHead-inner {
   position: relative;
   padding: 10px 32px 10px 68px;
 }
-.groupHeadImg {
+.index .groupHeadImg {
   position: absolute;
   left: 10px;
   top: 8px;
@@ -490,11 +493,11 @@ export default {
   overflow: hidden;
   border-radius: 50%;
 }
-.groupHeadImg > img {
+.index .groupHeadImg > img {
   display: block;
   width: 100%;
 }
-.lastMessageTime {
+.index .lastMessageTime {
   position: absolute;
   right: 4px;
   top: 20px;
@@ -503,7 +506,7 @@ export default {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
 }
-.groupHeadName {
+.index .groupHeadName {
   font-size: 14px;
   line-height: 40px;
   overflow: hidden;
@@ -511,8 +514,11 @@ export default {
   text-overflow: ellipsis;
 }
 
-.ellipsis {
+.index .ellipsis {
   height: 25px;
+}
+.index .ellipsis .comment span p{
+  display:inline;
 }
 .index .no_conact_data{
   color:rgb(94, 112, 130);

@@ -23,7 +23,7 @@
      prop="bookname"
      >
         <template scope="scope">
-         <p class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookname}}</p>
+         <el-button type="text" style="color: #337ab7;" class="link" @click="$router.push({name:'选题受理',query:{id:scope.row.id,active:'second',type:'detail'}})">{{scope.row.bookname}}</el-button>
          </template>
      </el-table-column>
      <el-table-column
