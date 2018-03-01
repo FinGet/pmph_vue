@@ -100,8 +100,8 @@
           <div class="searchInput">
             <el-select v-model="searchParams.haveFile" placeholder="请选择" @change="handleSearchCLick">
               <el-option
-                v-for="item in haveFileList"
-                :key="item.value"
+                v-for="(item,index ) in haveFileList"
+                :key="index"
                 :label="item.label"
                 :value="item.value">
               </el-option>
@@ -421,11 +421,15 @@
         downloadWordDialog:false,
         wordUrl:'',
         stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
+        noWatchFirst:false,//做浏览记录 第一次watch不生效
       }
     },
     watch:{
      powerSearchValue(val){
-       this.cleanSearchInput();
+       if(this.noWatchFirst){
+           this.cleanSearchInput();    
+        }
+        this.noWatchFirst=true;
      }
     },
     methods:{
@@ -462,6 +466,7 @@
        * 获取表格数据
        */
       getTableData(){
+        console.log('11111',this.searchParams.haveFile);
         this.$axios.get(this.api_declaration_list,{params:{
           pageNumber:this.searchParams.pageNumber,
           pageSize:this.searchParams.pageSize,
@@ -714,8 +719,9 @@
       },
     },
     created(){
-      /* 搜索记录赋值 */
+                  /* 搜索记录赋值 */
       if(this.declareHistory){
+        console.log(this.declareHistory);
         this.powerSearchValue=this.declareHistory.powerSearchValue;
          this.searchParams=this.declareHistory.searchParams;
          this.powerSearch=this.declareHistory.powerSearch;

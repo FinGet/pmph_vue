@@ -143,36 +143,34 @@
                 </li>
               </ul>
             </el-tab-pane>
-            <!--<el-tab-pane label="已发布" name="second">-->
-              <!--<ul class="panel-min-list">-->
-                <!--<li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">-->
-                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
-                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
-                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
-                <!--</li>-->
-                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
-                  <!--<router-link to="/404">-->
+            <el-tab-pane label="通过" name="second">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state=='通过'">
+                  <el-tag type="success" >通过</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                  <router-link to="/404">
                     <!--查看更多-->
-                    <!--<i class="el-icon-d-arrow-right"></i>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</el-tab-pane>-->
-            <!--<el-tab-pane label="已结束" name="fourth">-->
-              <!--<ul class="panel-min-list">-->
-                <!--<li v-for="(iterm,index) in topicList.rows" :key="index">-->
-                  <!--<el-tag type="success" v-if="iterm.state==0">进行中</el-tag>-->
-                  <!--<el-tag type="warning" v-else>已结束</el-tag>-->
-                  <!--<router-link :to="{name:'选题申报审核'}">{{iterm.title}}</router-link>-->
-                <!--</li>-->
-                <!--<li class="panel-more-btn" v-if="topicList.total>limit_size">-->
-                  <!--<router-link to="/404">-->
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
+            <el-tab-pane label="不通过" name="fourth">
+              <ul class="panel-min-list">
+                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'">
+                  <el-tag type="gray" >不通过</el-tag>
+                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                </li>
+                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                  <router-link to="/404">
                     <!--查看更多-->
-                    <!--<i class="el-icon-d-arrow-right"></i>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</el-tab-pane>-->
+                    <i class="el-icon-d-arrow-right"></i>
+                  </router-link>
+                </li>
+              </ul>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </li>
@@ -258,7 +256,9 @@ export default {
         loading:true,
         rows:[]
       },
-      topicList:{},
+      topicList:{
+        rows:[]
+      },
       cmsContent:{},
       bookUserComment:{},
       bookCorrectionAudit:{},
