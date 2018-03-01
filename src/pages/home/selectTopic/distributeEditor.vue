@@ -38,7 +38,7 @@
       width="170"
      >
      <template scope="scope">
-      {{$commonFun.formatDate(scope.row.deadline)}}
+      {{$commonFun.formatDate(scope.row.deadline).substring(0,10)}}
      </template>
      </el-table-column>
      <el-table-column
@@ -219,7 +219,7 @@ export default {
              this.getListEditors();
           }
 					this.tableData.forEach(item => {
-							item.submitTime = this.$commonFun.formatDate(item.submitTime);
+							item.submitTime = this.$commonFun.formatDate(item.submitTime).substring(0,10);
 					})
 					this.pageTotal = res.pageTotal;
 				}
