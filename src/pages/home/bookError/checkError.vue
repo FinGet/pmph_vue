@@ -77,6 +77,10 @@ export default {
     };
   },
   created() {
+    /* 是否从首页跳转过来 */
+    if(this.$route.params.searchInput){
+      this.title=this.$route.params.searchInput;
+    }
     this.getBooks();
   },
   methods: {

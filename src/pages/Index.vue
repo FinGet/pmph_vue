@@ -192,9 +192,9 @@
               <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
-                  <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
+                  <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》</router-link>
                 </li>
                 <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
                   <router-link :to="{name:'图书纠错审核'}">
@@ -203,10 +203,10 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
+              <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
-              <ul class="panel-min-list">
+              <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0">
                 <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'通知列表'}">《{{iterm.bookname}}》：{{iterm.content}}</router-link>
                 </li>
@@ -217,7 +217,7 @@
                   </router-link>
                 </li>
               </ul>
-              <p v-if="false"  class="no_conact_data">暂无待处理的事项</p>
+              <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <!-- <el-tab-pane label="图书附件审核" name="four">
               <ul class="panel-min-list">
@@ -262,8 +262,12 @@ export default {
       cmsContent:{
         rows:[]
       },
-      bookUserComment:{},
-      bookCorrectionAudit:{},
+      bookUserComment:{
+        rows:[]
+      },
+      bookCorrectionAudit:{
+        rows:[]
+      },
       bookFiles:{},
       orgUserCount:'',
       writerUserCount:'',
