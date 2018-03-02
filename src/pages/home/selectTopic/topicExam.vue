@@ -2,13 +2,13 @@
   <div class="topic_exam">
   <el-tabs v-model="activeName" type="border-card"  @tab-click="handleClick">
     <el-tab-pane label="转发部门" name="first" v-if="Identity.isAdmin || Identity.isOpts">
-      <forward-depart :activeName.sync='activeName' @changeActive='changeActive'></forward-depart>
+      <forward-depart :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></forward-depart>
     </el-tab-pane>
     <el-tab-pane label="分配编辑" name="second" v-if="Identity.isAdmin || Identity.isDirector">
-      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive'></distribute-editor>
+      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></distribute-editor>
     </el-tab-pane>
     <el-tab-pane label="受理" name="third" v-if="Identity.isAdmin || Identity.isEditor">
-      <acceptance :activeName.sync='activeName' @changeActive='changeActive'></acceptance>
+      <acceptance :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></acceptance>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -21,12 +21,16 @@ import acceptance from './acceptance.vue'
    data(){
      return{
        activeName:'',        //不要改成计算属性  计算属性无法触发更改
-       Identity:{}
+       Identity:{},
+       searchInput:''
      }
    },
    computed:{
    },
    created(){
+     if(this.$route.params.searchInput){
+       this.searchInput=this.$route.params.searchInput;
+     }
      this.activeName = this.$route.query.active || 'first';
      this.identity();
    },

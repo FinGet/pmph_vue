@@ -85,6 +85,7 @@
 </template>
 <script type="text/javascript">
     export default{
+      props:['searchInput'],
         data(){
             return{
               api_get_list:'pmpheep/topic/list/checkTopic',
@@ -154,6 +155,7 @@
 
         },
       created(){
+         this.searchParams.bookname=this.searchInput;
           this.getData();
       },
     }
