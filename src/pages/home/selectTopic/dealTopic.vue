@@ -98,6 +98,13 @@
               <p>{{data.accountNumber}}</p>
               </el-form-item>
           </div>
+         <div class="percent50">
+           <el-form-item
+             label="开户银行："
+           >
+             <p>{{data.bank}}</p>
+           </el-form-item>
+         </div>
        </el-form-item>
    </el-form>
 
