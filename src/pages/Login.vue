@@ -53,31 +53,34 @@ export default {
       var _this=this;
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          //验证成功
-          this.$axios.get(this.loginUrl, {
-              params:this.loginForm
-          }).then(function(res) {
-                if(res&&res.data.code==1){
-                  _this.$mySessionStorage.set('currentUser',res.data.data,'json');
-                  _this.$message.success('登录成功');
-                  //将session放到cookie里
-                  _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
-                  _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
-                  _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
-                }else{
-                  _this.$message.error('账号/密码错误');
-                }
-          }).catch(function(err) {
-            console.log(err)
-                 _this.$message.error('登录失败');
-          })
+          this.doLogin()
         } else {
           //验证未通过
           console.log('error submit!!');
           return false;
         }
       })
-    }
+    },
+    doLogin(){
+      //验证成功
+      this.$axios.get(this.loginUrl, {
+        params:this.loginForm
+      }).then(function(res) {
+        if(res&&res.data.code==1){
+          _this.$mySessionStorage.set('currentUser',res.data.data,'json');
+          _this.$message.success('登录成功');
+          //将session放到cookie里
+          _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
+          _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
+          _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
+        }else{
+          _this.$message.error('账号/密码错误');
+        }
+      }).catch(function(err) {
+        console.log(err)
+        _this.$message.error('登录失败');
+      })
+    },
   },
   created(){
     let wechatUserId = this.$route.query.wechatUserId||'';
