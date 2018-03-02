@@ -62,6 +62,7 @@ export default {
       })
     },
     doLogin(){
+      var _this=this;
       //验证成功
       this.$axios.get(this.loginUrl, {
         params:this.loginForm
