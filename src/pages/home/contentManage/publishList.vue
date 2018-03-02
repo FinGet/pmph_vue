@@ -534,7 +534,7 @@ export default {
             this.$router.push({
               name: "添加内容",
               params: res.data.data,
-              query: { type: "edit", columnId: 1 }
+              query: { type: "edit", columnId: 1 ,isShowCover:true}
             });
           }
         });
