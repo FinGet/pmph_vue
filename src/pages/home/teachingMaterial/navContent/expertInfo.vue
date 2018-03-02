@@ -315,7 +315,7 @@
 
       <!--上版教材参编情况（未参编请在教材名称栏填无)(必填)-->
       <div class="expert-info-box" v-if="material.isLastPositionUsed">
-        <p class="info-box-title">上版教材参编情况</p>
+        <p class="info-box-title">本套上版教材参编情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -378,15 +378,41 @@
         </div>
       </div>
 
-      <!--教材编写情况-->
-      <div class="expert-info-box" v-if="material.isTextbookUsed">
-        <p class="info-box-title">教材编写情况</p>
+
+      <!--人卫社教材编写情况-->
+      <div class="expert-info-box" v-if="material.isPmphTextbookUsed">
+        <p class="info-box-title">人卫社教材编写情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
               <th><div>教材名称</div></th>
               <th><div>级别</div></th>
-              <th><div>职务</div></th>
+              <th><div>编写职务</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in rwtextbook">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+        </div>
+      </div>
+
+
+      <!--其他社教材编写情况-->
+      <div class="expert-info-box" v-if="material.isTextbookUsed">
+        <p class="info-box-title">其他社教材编写情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>级别</div></th>
+              <th><div>编写职务</div></th>
               <th><div>出版社</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
@@ -403,6 +429,17 @@
             </tr>
           </table>
           <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+        </div>
+      </div>
+
+
+      <!--参加人卫慕课、数字教材编写情况-->
+      <div class="expert-info-box" v-if="material.isMoocDigitalUsed">
+        <p class="info-box-title">个人成就</p>
+        <div>
+          <p class="achievements">
+            {{decMoocDigital}}
+          </p>
         </div>
       </div>
 
@@ -550,6 +587,18 @@
         </div>
       </div>
 
+      <!--编写内容意向-->
+      <div class="expert-info-box" v-if="material.isIntentionUsed">
+        <p class="info-box-title">个人成就</p>
+        <div>
+          <p class="achievements">
+            {{decIntention}}
+          </p>
+        </div>
+      </div>
+
+
+
       <div v-if="decExtensionList.length">
         <!--扩展项-->
         <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
@@ -670,9 +719,12 @@
               decCourseConstruction:[],
               nationalPlan:[],
               textbook:[],
+              rwtextbook: [],
               researchData:[],
               decExtensionList:[],
               personalAchievements:'',
+              decMoocDigital: '',
+              decIntention:'',
               monograph:[],//出版行业获奖情况
               publish_reward:[],//出版行业获奖情况表
               sci:[],//SCI论文投稿及影响因子情况
@@ -971,9 +1023,17 @@
                 //精品课程建设情况
                 this.decCourseConstruction = res.data.decCourseConstruction
 
+                // 参加人卫慕课、数字教材编写情况
+                this.decMoocDigital = (!!!res.data.decMoocDigital)?'':res.data.decMoocDigital.content;
+
+                // 编写意向
+                this.decIntention = (!!!res.data.decIntention)?'':res.data.decIntention.content;
+
                 //作家主编国家级规划教材情况表
                 this.nationalPlan = res.data.decNationalPlanList;
-                //作家教材编写情况表
+                //人卫社教材编写情况
+                this.rwtextbook = res.data.decTextbookPmphList;
+                //其他社教材编写情况
                 this.textbook = res.data.decTextbookList;
                 //作家科研情况表
                 this.researchData = res.data.decResearchList;
