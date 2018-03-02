@@ -180,7 +180,7 @@ export default {
       ]
     };
   },
-  props:['activeName'],
+  props:['activeName','searchInput'],
   watch:{
    activeName(val){
     if(val=='first'){
@@ -288,6 +288,7 @@ export default {
     }
   },
   created() {
+    this.searchParams.bookname=this.searchInput;
     this.getListData();
     this.getDialogData();
   }

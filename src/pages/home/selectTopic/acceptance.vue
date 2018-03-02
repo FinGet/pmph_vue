@@ -111,7 +111,7 @@ export default {
 			reasonEditor: '' // 部门编辑退回原因
     };
 	},
-  props:['activeName'],
+  props:['activeName','searchInput'],
   watch:{
    activeName(val){
    if(val=='third'){
@@ -120,6 +120,7 @@ export default {
    }
   },
 	created(){
+    this.searchParams.name=this.searchInput;
 		this.getTableData();
 	},
   methods: {

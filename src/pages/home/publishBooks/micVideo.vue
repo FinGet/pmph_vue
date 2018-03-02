@@ -42,11 +42,13 @@
               </template>
           </el-table-column>
           <el-table-column label="文件大小" width="120">
-              {{scope.row.gmtCreate/1024/1024}}M
+              <template scope="scope">
+              {{scope.row.fileSize/1024/1024}}M          
+              </template>
           </el-table-column>
           <el-table-column label="状态" width="100" >
               <template scope="scope">
-                {{scope.row.state==1?'待审核':(scope.row.state==2?'通过':'未通过')}} 
+                {{scope.row.state==1?'待审核':(scope.row.state==2?'已通过':'未通过')}} 
               </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
@@ -76,7 +78,7 @@
         data(){
             return{
               videoListUrl:'/pmpheep/bookVedio/getVedioList',  //视频列表url
-              tableData:[{}],
+              tableData:[],
               pageTotal:100,
               searchParams:{
                   state:'',

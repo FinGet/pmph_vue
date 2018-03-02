@@ -237,7 +237,7 @@
 
 
       <!--主要工作经历-->
-      <div class="expert-info-box" v-if="material.isEduExpUsed">
+      <div class="expert-info-box" v-if="material.isWorkExpUsed">
         <p class="info-box-title">工作经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
