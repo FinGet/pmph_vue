@@ -34,15 +34,16 @@
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
       <el-form-item label="文章封面：" v-if="$route.query.isShowCover">
-        <el-upload
+        <my-upload
           class="upload-demo"
           :action="fileUploadUrl"
           :on-success="coverUploadSuccess"
           :on-remove="coverUploadRemove"
           :before-upload="coverBeforeUpload"
+           :file-list="imgList"
            >
           <el-button size="small" type="primary">添加封面图片</el-button>
-        </el-upload>
+        </my-upload>
         </el-form-item>       
       <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
@@ -112,6 +113,8 @@ export default {
         sort:'',
         content: "",
         file: [],
+        imgFile:[],
+        imgAttachment:'',
         scheduledTime:'',
         isPublished: "",
         path:'0',
@@ -121,6 +124,7 @@ export default {
       preventContent:'',
       isEditContent:false,
       fileList: [],
+      imgList:[],
       formRules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
@@ -477,6 +481,10 @@ export default {
           obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
           this.fileList.push(obj);                   
           }
+          /* 填充封面图片 */
+          if(this.$route.query.isShowCover){
+            this.imgList.push({name:editData.imgFileName,url:editData.imgFilePath});
+          }
          /* editData.cmsExtras.forEach((item)=>{
           
           obj.name=item.attachmentName;
@@ -518,13 +526,40 @@ export default {
       return formData;
     },
     coverUploadSuccess(res, file, filelist){
-
+     console.log(res,file, filelist);
+      this.imgList=[];
+      this.formData.imgFile='';
+      this.imgList.push({name:file.name,url:res.data});
+      this.formData.imgFile='['+JSON.stringify({imgFileName:file.name,imgFilePath:res.data})+']';
     },
     coverUploadRemove(file, flielist){
-
+      if(file.url){
+        this.formData.imgAttachment=file.url.split('/').pop();
+      } 
     },
     coverBeforeUpload(file){
-
+      var exStr=file.name.split('.').pop().toLowerCase();
+      var exSize=file.size?file.size:1;
+      if(exSize/ 1024 / 1024 > 20){
+        this.$message.error('图片的大小不能超过20MB！');
+       // this.material.noticeFiles.pop();
+        return false;
+      }
+      if(exSize==0){
+        this.$message.error('请勿上传空文件！');
+       // this.material.noticeFiles.pop();
+        return false;
+      }
+      if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+        this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+       // this.material.noticeFiles.pop();
+        return false;
+      }
+      if(file.name.length>80){
+        this.$message.error('图片名称不能超过80个字符！');
+        //this.material.noticeFiles.pop();
+        return false;
+      }      
     }
   },
   created() {
