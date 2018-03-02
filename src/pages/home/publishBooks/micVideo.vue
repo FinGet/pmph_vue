@@ -26,7 +26,8 @@
                     style="margin-right:5px;"
                     >
                 </el-date-picker> 
-          <el-button icon="search" type="primary" @click="search">搜索</el-button>        
+          <el-button icon="search" type="primary" style="margin-bottom:10px;"  @click="search">搜索</el-button>  
+          <el-button type="primary"  style="float:right;">添加微视频</el-button>      
       </p>
       <!-- 列表 -->
       <el-table :data="tableData" border style="width:100%;margin-bottom:10px;">
@@ -70,7 +71,9 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageTotal">
       </el-pagination>
-    </div>      
+    </div>
+
+
   </div>
 </template>
 <script type="text/javascript">
@@ -119,11 +122,15 @@
             endDateChange(val){
             this.searchParams.upLoadTimeEnd=val;
             },
-            handleSizeChange(){
-
+            /* 列表分页改变 */
+            handleSizeChange(val){
+              this.searchParams.pageSize=val;
+              this.searchParams.pageNumber=1;
+              this.getList();
             },
-            handleCurrentChange(){
-                
+            handleCurrentChange(val){
+              this.searchParams.pageSize=val;
+              this.getList();
             }
         }
     }
@@ -131,7 +138,7 @@
 <style scoped>
 .mic_video .header_p {
   overflow: hidden;
-  margin-bottom:15px;
+  margin-bottom:5px;
 }
 .mic_video .header_p .input {
   width: 188px;

@@ -183,7 +183,7 @@
         <div>
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first" >
-              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0">
+              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0&&(isShowSide(5)||isShowSide(15))">
                 <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
                   <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
@@ -197,7 +197,7 @@
               <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
-              <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0">
+              <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0&&(isShowSide(8)||isShowSide(23))">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》</router-link>
                 </li>
@@ -211,7 +211,7 @@
               <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
-              <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0">
+              <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0&&(isShowSide(6)||isShowSide(20))">
                 <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <router-link :to="{name:'评论审核',params:{bookname:iterm.bookname,isLong:iterm.isLong}}"><p class="comment">《{{iterm.bookname}}》：<span v-html="iterm.content"></span></p></router-link>
                 </li>

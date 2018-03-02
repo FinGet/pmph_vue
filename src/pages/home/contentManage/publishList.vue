@@ -263,7 +263,7 @@
         <h5 class="previewTitle text-center">{{commentDetailData.cmsContent.title}}</h5>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{commentDetailData.listObj.username}}</span>
-      <span>{{$commonFun.formatDate(commentDetailData.listObj.gmtCreate)}}</span>
+      <span>{{commentDetailData.listObj.authDate}}</span>
        </p>
        <el-form label-width="55px">
 
@@ -480,6 +480,7 @@ export default {
     },
     /**展示评论详情 */
     commentDetail(obj){
+      console.log(obj);
       this.$axios
         .get(this.editContentUrl + obj.id + "/detail", {})
         .then(res => {
