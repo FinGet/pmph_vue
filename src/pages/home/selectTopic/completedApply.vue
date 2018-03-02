@@ -2,7 +2,7 @@
   <div class="completed_apply">
     <p class="header_p">
       <span>选题名称：</span>
-      <el-input class="input" @keyup.enter.native="search" v-model="searchParams.bookName" placeholder="请输入选题名称"></el-input>
+      <el-input class="input" @keyup.enter.native="search" v-model="searchParams.bookname" placeholder="请输入选题名称"></el-input>
       <span>提交日期：</span>
       <el-date-picker
         v-model="date"
@@ -94,6 +94,7 @@
 </template>
 <script type="text/javascript">
   export default{
+    props:['searchInput'],
     data(){
       return{
         api_get_list:'pmpheep/topic/list/checkTopic',
@@ -102,7 +103,7 @@
           pageNumber:1,
           authProgress:'2,3',
           submitTime:'',
-          bookName:''
+          bookname:''
         },
         typeList:['专著','基础理论','论文集','科普','应用技术','工具书','其他'],
         date:'',
@@ -159,9 +160,16 @@
       },
 
     },
-    created(){
+    watch:{
+
+    },
+    created(){ 
+      this.searchParams.bookname=this.searchInput;
       this.getData();
     },
+    mounted () {
+      
+    }
   }
 </script>
 <style scoped>

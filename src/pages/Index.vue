@@ -133,10 +133,12 @@
               <ul class="panel-min-list" v-if="topicList.rows.length!=0">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='不通过'?'gray':'success'">{{ iterm.state }}</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+
+                  <router-link  v-if="iterm.state=='通过'||iterm.state=='不通过'"  :to="{name:'选题申报查看',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
+                  <router-link v-else :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'first'}}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link :to="{name:'选题申报审核'}">
+                  <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -148,10 +150,10 @@
               <ul class="panel-min-list"  v-if="topicList.rows.length!=0">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state!='通过'&&iterm.state!='不通过'">
                   <el-tag type="success" >{{iterm.state}}</el-tag>
-                  <router-link :to="{name:'选题申报审核'}">{{iterm.bookname}}</router-link>
+                  <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'first'}}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
-                  <router-link to="/404">
+                  <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
                   </router-link>
@@ -163,7 +165,7 @@
               <ul class="panel-min-list" v-if="topicList.rows.length!=0">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'||iterm.state=='通过'">
                   <el-tag :type="iterm.state=='不通过'?'gray':'success'" >{{iterm.state}}</el-tag>
-                  <router-link :to="{name:'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
+                  <router-link :to="{name:'选题申报查看',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
                   <router-link :to="{name:'选题申报查看',params:{searchInput:'',activeIndex:'second'}}">

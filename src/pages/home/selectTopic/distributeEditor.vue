@@ -181,8 +181,9 @@ export default {
 			reasonDirector: '' // 主任退回原因
     };
 	},
-  props:['activeName'],
+  props:['activeName','searchInput'],
 	created(){
+    this.searchParams.name=this.searchInput;
 		this.getTableData();
 	},
   watch:{

@@ -26,6 +26,7 @@
        created(){
          if(this.$route.params.activeIndex){
              this.activeName=this.$route.params.activeIndex;
+             this.searchInput=this.$route.params.searchInput;
          }
        }
     }
