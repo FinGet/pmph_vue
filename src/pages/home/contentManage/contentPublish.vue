@@ -530,7 +530,7 @@ export default {
       this.imgList=[];
       this.formData.imgFile='';
       this.imgList.push({name:file.name,url:res.data});
-      this.formData.imgFile='['+JSON.stringify({imgFileName:file.name,imgFilePath:res.data})+']';
+      this.formData.imgFile='['+res.data+']';
     },
     coverUploadRemove(file, flielist){
       if(file.url){

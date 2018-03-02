@@ -106,6 +106,7 @@
                  console.log(res);
                  if(res.data.code==1){
                   this.tableData=res.data.data.rows;
+                  this.pageTotal=res.data.data.total;
                  }
              })
             },
