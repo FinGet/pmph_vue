@@ -268,7 +268,7 @@
        <el-form label-width="55px">
 
          <el-form-item label="" label-width="0">
-             <p v-html="commentDetailData.content"></p>
+             <p v-html="commentDetailData.content.content"></p>
          </el-form-item>
        </el-form>
         </div>
