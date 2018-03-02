@@ -239,7 +239,7 @@
         </el-table-column>
         <el-table-column label="学校审核">
           <template scope="scope">
-            <p>{{scope.row.onlineProgress==1?'待审核':'已审核'}}</p>
+            <p>{{stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
         <el-table-column label="出版社审核">
@@ -417,13 +417,14 @@
         downloadWordDialog:false,
         wordUrl:'',
         noWatchFirst:false,//做浏览记录 第一次watch不生效
+        stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
       }
     },
     props:['pressHistory'],
     watch:{
       powerSearchValue(val){
         if(this.noWatchFirst){
-           this.cleanSearchInput();    
+           this.cleanSearchInput();
         }
         this.noWatchFirst=true;
       }
