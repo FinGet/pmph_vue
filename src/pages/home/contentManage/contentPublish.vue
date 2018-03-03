@@ -34,16 +34,18 @@
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
       <el-form-item label="文章封面：" v-if="$route.query.isShowCover">
-        <my-upload
+        <el-upload
           class="upload-demo"
+          style="float:left"
           :action="fileUploadUrl"
           :on-success="coverUploadSuccess"
           :on-remove="coverUploadRemove"
+          :on-preview="checkCoverUpload"
           :before-upload="coverBeforeUpload"
            :file-list="imgList"
            >
           <el-button size="small" type="primary">添加封面图片</el-button>
-        </my-upload>
+        </el-upload>
         </el-form-item>       
       <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
@@ -560,6 +562,9 @@ export default {
         //this.material.noticeFiles.pop();
         return false;
       }      
+    },
+    checkCoverUpload(file){
+    console.log(file);
     }
   },
   created() {

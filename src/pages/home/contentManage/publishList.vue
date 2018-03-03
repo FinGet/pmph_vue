@@ -504,7 +504,8 @@ export default {
           if (res.data.code == 1) {
             this.contentDetailData = res.data.data;
             this.contentDetailData.listObj = obj;
-            this.commentDetailData.content = res.data.content
+            console.log(res);
+           // this.commentDetailData.content = res.data.content;
             this.showContentDetail = true;
             console.log(this.contentDetailData);
           }

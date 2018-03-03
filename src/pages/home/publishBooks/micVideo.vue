@@ -73,7 +73,17 @@
       </el-pagination>
     </div>
     <!-- 选择书籍弹框  -->
-
+        <el-dialog
+        title="选择书籍"
+        :visible.sync="bookDialogVisible"
+        size="tiny"
+        >
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="bookDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="bookDialogVisible = false">确 定</el-button>
+        </span>
+        </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -82,6 +92,7 @@
             return{
               videoListUrl:'/pmpheep/bookVedio/getVedioList',  //视频列表url
               tableData:[],
+              bookDialogVisible:false,
               pageTotal:100,
               searchParams:{
                   state:'',
