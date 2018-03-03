@@ -27,13 +27,16 @@
                     >
                 </el-date-picker> 
           <el-button icon="search" type="primary" style="margin-bottom:10px;"  @click="search">搜索</el-button>  
-          <el-button type="primary"  style="float:right;">添加微视频</el-button>      
+          <el-button type="primary"  style="float:right;" @click="selectBook">添加微视频</el-button>      
       </p>
       <!-- 列表 -->
       <el-table :data="tableData" border style="width:100%;margin-bottom:10px;">
           <el-table-column label="图书名称" prop="bookName">
           </el-table-column>
-          <el-table-column label="微视频" prop="origFileName">
+          <el-table-column label="微视频" >
+              <template scope="scope">
+                 {{scope.row.title}}
+              </template>
           </el-table-column>
           <el-table-column label="上传人" width="90" prop="userName">
           </el-table-column>
@@ -55,7 +58,7 @@
           <el-table-column label="操作" width="110">
               <template scope="scope">
                <el-button type="text" style="color:#337ab7;">下载</el-button>
-               <el-button type="text" style="color:#337ab7;">审核</el-button>
+               <el-button type="text" style="color:#337ab7;" @click="examVideo(scope.row)">审核</el-button>
               </template>
           </el-table-column>
       </el-table>
@@ -73,26 +76,108 @@
       </el-pagination>
     </div>
     <!-- 选择书籍弹框  -->
-        <el-dialog
+    <el-dialog
         title="选择书籍"
         :visible.sync="bookDialogVisible"
+        class='book_dialog'
         size="tiny"
         >
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="bookDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="bookDialogVisible = false">确 定</el-button>
-        </span>
-        </el-dialog>
+        <p class="header_p"><span>书籍名称：</span>
+          <el-input class="input" v-model="bookParams.name" placeholder="请输入书籍名称"></el-input>
+          <el-button type="primary" icon="search" @click="bookSearch">搜索</el-button>
+        </p>
+        <el-table :data="bookListData" border style="width:100%;margin:10px 0;">
+          <el-table-column prop="bookname" label="书籍名称">
+           </el-table-column>
+          <el-table-column label="书籍类型" prop="typeName" width="130">
+          </el-table-column>
+          <el-table-column label="操作" width="80">
+            <template scope="scope">
+                <el-button type="text" style="color:#337ab7;" @click="openAddVideoDialog(scope.row)">选择</el-button>
+            </template> 
+          </el-table-column>
+        </el-table>
+          <!--分页-->
+            <div class="pagination-wrapper">
+            <el-pagination
+                v-if="bookTotal>bookParams.pageSize"
+                @size-change="bookSizeChange"
+                @current-change="bookCurrentChange"
+                :current-page.sync="bookParams.pageNumber"
+                :page-sizes="[10,20,30,50]"
+                :page-size="bookParams.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="bookTotal">
+            </el-pagination>
+            </div>        
+    </el-dialog>
+    <!-- 上传视频对话框 -->
+    <el-dialog title="添加微视频" :visible.sync="dialogVisible" size="tiny" >
+       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogRules"  label-width="100px">
+           <el-form-item label="视频名称：" prop="videoName">
+               <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
+           </el-form-item>
+           <el-form-item label="视频封面：" prop="imgList">
+               <el-upload
+                  style="float:left;"
+                  action="/pmpheep/material/upTempFile"
+                  name="files"
+                  :auto-upload="true"
+                  :on-remove="imgUploadRemove"
+                  :before-upload="imgBeforeUpload"
+                  :on-success="imgUploadSuccess"
+                  :file-list="dialogForm.imgList">
+                  <el-button size="small" type="primary" >点击上传</el-button>
+                </el-upload>
+           </el-form-item>
+           <el-form-item label="视频内容：" prop="videoList">
+               <el-upload
+                  style="float:left;"
+                  action="http://120.76.221.250:11000/v/vedio/fileUpOnly"
+                  name="file"
+                  :auto-upload="true"
+                  :on-remove="videoUploadRemove"
+                  :before-upload="videoBeforeUpload"
+                  :on-success="videoUploadSuccess"
+                  :file-list="dialogForm.videoList">
+                  <el-button size="small" type="primary" >点击上传</el-button>
+                </el-upload>
+           </el-form-item>
+       </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addVideoSubmit">确 定</el-button>
+            </span>       
+    </el-dialog>
+    <!-- 审核视频弹框 -->
+        <el-dialog title="审核" :visible.sync="examDialogVisible" width="25%" size="tiny">
+        <span style="font-size:15px;">确定审核该视频吗？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="examDialogVisible = false">取 消</el-button>
+                <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
+                <el-button type="primary" @click="examSubmit(true)">通过</el-button>
+            </span>           
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
     export default{
         data(){
             return{
-              videoListUrl:'/pmpheep/bookVedio/getVedioList',  //视频列表url
+              videoListUrl:'/pmpheep/bookVideo/getVideoList',  //视频列表url
+              examVideoUrl:'/pmpheep/bookVideo/audit', //  审核视频url
+              dialogBookUrl:'/pmpheep/books/list',      //书籍列表
+              addNewVideoUrl:' /pmpheep/bookVideo/addBookVideo',   //添加提交视频url 
               tableData:[],
+              bookListData:[],
               bookDialogVisible:false,
+              dialogVisible:false,
+              examDialogVisible:false,
+              dialogForm:{
+               videoName:'',
+               videoList:[],
+               imgList:[]
+               },
               pageTotal:100,
               searchParams:{
                   state:'',
@@ -101,7 +186,28 @@
                   upLoadTimeEnd:'',
                   pageSize:10,
                   pageNumber:1,     
-              }
+              },
+              currentBook:{},
+              currentExamId:'',
+              bookParams:{
+                 name:'',
+                 pageSize:10,
+                 pageNumber:1,  
+              },
+              bookTotal:20,
+                dialogRules:{
+                    videoName:[
+                        {required: true, message: '请输入视频名称', trigger: 'blur' },
+                        { min: 1, max: 50, message: '视频名称不能超过50个字符', trigger: 'blur,change' }
+                    ],
+                    imgList:[
+                        { type: 'array', required: true, message: '请上传视频封面', trigger: 'change' }
+                    ],
+                    videoList:[
+                        { type: 'array', required: true, message: '请上传视频内容', trigger: 'change' }
+                    ]
+
+                }                
             }
         },
         created(){
@@ -143,11 +249,169 @@
             handleCurrentChange(val){
               this.searchParams.pageSize=val;
               this.getList();
+            },
+            /* 选择书籍 */
+            selectBook(){
+                this.$axios.get(this.dialogBookUrl,{
+                    params:this.bookParams
+                }).then((res)=>{
+                    if(res.data.code==1){
+                        this.bookListData=res.data.data.rows;
+                        this.bookTotal=res.data.data.total;
+                        this.bookDialogVisible=true;
+                    }
+                })
+            },
+            /* 书籍列表 搜索 */
+            bookSearch(){
+             this.bookParams.pageNumber=1;
+             this.selectBook();
+            },
+            bookSizeChange(val){
+             this.bookParams.pageSize=val;
+             this.bookParams.pageNumber=1;
+             this.selectBook();
+            },
+            bookCurrentChange(val){
+             this.bookParams.pageNumber=val;
+             this.selectBook();
+            },
+            /* 选择一本书籍 */
+            openAddVideoDialog(obj){
+                 console.log(obj);
+                 this.currentBook=obj;
+                 this.dialogVisible=true;
+            },
+         /* 审核微视频 */
+         examVideo(val){
+             console.log(val);
+            this.examDialogVisible=true;
+            this.currentExamId=val.id;
+         },
+                  /* 审核 */
+         examSubmit(bool){
+          this.$axios.put(this.examVideoUrl,this.$commonFun.initPostData({
+              id:this.currentExamId,
+              isAuth:bool
+          })).then((res)=>{
+              console.log(res);
+              if(res.data.code==1){
+                  this.$message.success('操作成功');
+                  this.getList();
+                  this.examDialogVisible=false;
+              }else{
+                  this.$message.error(res.data.msg.msgTrim());
+              }
+          })
+         },   
+         /* 添加上传视频图片 */
+         imgUploadRemove(file, fileList){
+           console.log(file, fileList);
+            this.dialogForm.imgList=fileList;
+            this.$refs.dialogForm.validateField('imgList');    
+         },
+         /* 视频不图片验证 */
+         imgBeforeUpload(file){
+            var exStr=file.name.split('.').pop().toLowerCase();
+            var exSize=file.size?file.size:1;
+            if(exSize/ 1024 / 1024 > 20){
+                this.$message.error('图片的大小不能超过20MB！');
+            // this.material.noticeFiles.pop();
+                return false;
             }
+            if(exSize==0){
+                this.$message.error('请勿上传空文件！');
+            // this.material.noticeFiles.pop();
+                return false;
+            }
+            if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+                this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+            // this.material.noticeFiles.pop();
+                return false;
+            }
+            if(file.name.length>80){
+                this.$message.error('图片名称不能超过80个字符！');
+                //this.material.noticeFiles.pop();
+                return false;
+            } 
+         },
+         /* 上传成功 */
+         imgUploadSuccess(res,file,fileList){
+           this.dialogForm.imgList=[];
+           this.dialogForm.imgList.push(file);
+           this.$refs.dialogForm.validateField('imgList');   
+         },
+         /* 添加上传视频 */
+         videoUploadRemove(file,fileList){
+           this.dialogForm.videoList=fileList;
+           this.$refs.dialogForm.validateField('videoList');
+         },
+         /* 视频验证 */
+         videoBeforeUpload(file,fileList){
+          console.log(file,fileList)
+            var exStr=file.name.split('.').pop().toLowerCase();
+            var exSize=file.size?file.size:1;
+            /* if(exSize/ 1024 / 1024 > 20){
+                this.$message.error('图片的大小不能超过20MB！');
+                return false;
+            } */
+            if(exSize==0){
+                this.$message.error('请勿上传空文件！');
+                return false;
+            }
+            if(exStr!='avi'&&exStr!='mpg'&&exStr!='wmv'&&exStr!='3gp'&&exStr!='mov'&&exStr!='mp4'&&exStr!='asf'&&exStr!='asx'&&exStr!='flv'){
+                this.$message.error('图片的格式必须为以下格式之一：avi,mpg,wmv,3gp,mov,mp4,asf,asx或flv！');
+                return false;
+            }
+            if(file.name.length>80){
+                this.$message.error('视频名称不能超过80个字符！');
+                return false;
+            }           
+         },
+         /* 视频上传成功 */
+         videoUploadSuccess(res,file,fileList){
+           this.dialogForm.videoList=[];
+           this.dialogForm.videoList.push(file);
+           this.$refs.dialogForm.validateField('videoList');
+           console.log(this.dialogForm)
+         }, 
+         /* 微视频对话框提交 */
+         addVideoSubmit(){
+             console.log(this.dialogForm);
+             this.$refs.dialogForm.validate((valid)=>{
+                 if(valid){
+                    var submitObj={
+                           bookId:this.currentBook.id, //图书Id
+                           title:this.dialogForm.videoName,  //标题
+                           origPath:this.dialogForm.videoList[0].response.data, //原始视频存放路径
+                           userId:this.$getUserData().userInfo.id, //上传者id
+                           cover:this.dialogForm.imgList[0].response.data[0]   //封面图片Id
+                             };
+                     this.$axios.post(this.addNewVideoUrl,this.$commonFun.initPostData(submitObj))
+                     .then((res)=>{
+                      console.log(res); 
+                      if(res.data.code==1){
+                          this.getList();
+                          this.$message.success('添加成功');
+                          this.dialogVisible=false;
+                          this.bookDialogVisible=false;
+                          this.$refs.dialogForm.resetFields();
+                        }
+                        else{
+                         this.$message.error(res.data.msg.msgTrim());
+                        }
+                     }).catch((error)=>{
+                                
+                     })
+                 }else{
+                     return ;
+                 }
+             })
+         }                    
         }
     }
 </script>
-<style scoped>
+<style>
 .mic_video .header_p {
   overflow: hidden;
   margin-bottom:5px;
@@ -155,5 +419,11 @@
 .mic_video .header_p .input {
   width: 188px;
   margin-right: 10px;
+}
+.mic_video .book_dialog .el-dialog{
+min-width: 660px;
+}
+.mic_video .book_dialog .el-dialog .el-dialog__body{
+    overflow:hidden;
 }
 </style>

@@ -575,9 +575,11 @@ export default {
       }      
     },
     checkCoverUpload(file){
-    console.log(file);
-        this.coverImgUrl=file.url;
+    if(file.url.indexOf('/')!=-1){
+           this.coverImgUrl=file.url;
     this.coverDialogVislble=true;
+    }
+
     }
   },
   created() {
