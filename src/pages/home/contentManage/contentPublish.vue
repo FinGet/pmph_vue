@@ -539,7 +539,9 @@ export default {
       return formData;
     },
     coverUploadSuccess(res, file, filelist){
-     console.log(res,file, filelist);
+     if(!filelist[0].response){
+      this.formData.imgAttachment=filelist[0].url.split('/').pop();
+     }
       this.imgList=[];
       this.formData.imgFile='';
       this.imgList.push({name:file.name,url:res.data});
