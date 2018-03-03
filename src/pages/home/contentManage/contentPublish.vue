@@ -85,6 +85,15 @@
        </el-form>
         </div>
     </el-dialog>
+    
+    <!-- 查看封面图片弹框 -->
+    <el-dialog
+     :visible.sync="coverDialogVislble"
+     :show-close="false"
+     class="cover_dialog"
+     title="">
+     <img :src="coverImgUrl" />  
+    </el-dialog>
 
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
@@ -122,11 +131,13 @@ export default {
         path:'0',
         materialId:''
       },
+      coverDialogVislble:false,
       showPreventDialog:false,
       preventContent:'',
       isEditContent:false,
       fileList: [],
       imgList:[],
+      coverImgUrl:'',
       formRules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
@@ -565,6 +576,8 @@ export default {
     },
     checkCoverUpload(file){
     console.log(file);
+        this.coverImgUrl=file.url;
+    this.coverDialogVislble=true;
     }
   },
   created() {
@@ -576,7 +589,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style >
 .content_publish .input {
   width: 500px;
 }
@@ -602,4 +615,14 @@ export default {
     border: 0;
     box-shadow: none;
   }
+  .content_publish .cover_dialog .el-dialog{
+    background: none;
+    width:auto;
+  }
+  .content_publish .cover_dialog .el-dialog .el-dialog__header{
+    padding:0;
+  }
+   .content_publish .cover_dialog .el-dialog .el-dialog__body{
+     padding:0;
+   }
 </style>
