@@ -68,7 +68,7 @@
                 width="190"
                 >
                 <template scope="scope">
-                    <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
+                    <!-- <el-tooltip class="item" effect="dark" content="赞" placement="bottom">
                         <i class="fa fa-thumbs-o-up table_i" >{{scope.row.likes}}</i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="阅" placement="bottom">
@@ -79,7 +79,11 @@
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="藏" placement="bottom">
                         <i class="fa fa-star-o table_i">{{scope.row.bookmarks}}</i>
-                    </el-tooltip>
+                    </el-tooltip> -->
+                    <i class="fa fa-thumbs-o-up table_i"  title="赞">{{scope.row.likes}}</i>
+                    <i class="fa fa-book table_i" title="阅">{{scope.row.clicks}}</i>
+                     <i class="fa fa-comment table_i" title="评">{{scope.row.comments}}</i>
+                     <i class="fa fa-star-o table_i" title="藏">{{scope.row.bookmarks}}</i>
                 </template>
             </el-table-column>
             <el-table-column
