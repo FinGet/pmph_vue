@@ -47,7 +47,7 @@
           </el-table-column>
           <el-table-column label="文件大小" width="120">
               <template scope="scope">
-              {{scope.row.fileSize/1024/1024}}M          
+              {{(scope.row.fileSize/1024/1024).toFixed(2)}}M          
               </template>
           </el-table-column>
           <el-table-column label="状态" width="100" >
@@ -119,13 +119,12 @@
            </el-form-item>
            <el-form-item label="视频封面：" prop="imgList">
                <el-upload
+                  action="#"
                   style="float:left;"
-                  action="/pmpheep/material/upTempFile"
                   name="files"
-                  :auto-upload="true"
                   :on-remove="imgUploadRemove"
-                  :before-upload="imgBeforeUpload"
-                  :on-success="imgUploadSuccess"
+                  :auto-upload="false"
+                  :on-change="imgUploadChange"
                   :file-list="dialogForm.imgList">
                   <el-button size="small" type="primary" >点击上传</el-button>
                 </el-upload>
@@ -133,7 +132,7 @@
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
                   style="float:left;"
-                  action="http://120.76.221.250:11000/v/vedio/fileUpOnly"
+                  action="/v/upload"
                   name="file"
                   :auto-upload="true"
                   :on-remove="videoUploadRemove"
@@ -146,7 +145,7 @@
        </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addVideoSubmit">确 定</el-button>
+                <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo">{{isUploadVideo?'转码中':'确 定'}}</el-button>
             </span>       
     </el-dialog>
     <!-- 审核视频弹框 -->
@@ -167,16 +166,19 @@
               videoListUrl:'/pmpheep/bookVideo/getVideoList',  //视频列表url
               examVideoUrl:'/pmpheep/bookVideo/audit', //  审核视频url
               dialogBookUrl:'/pmpheep/books/list',      //书籍列表
-              addNewVideoUrl:' /pmpheep/bookVideo/addBookVideo',   //添加提交视频url 
+              addNewVideoUrl:'/pmpheep/bookVideo/addBookVideo',   //添加提交视频url 
+              transCodingUrl:"/v/query",   //查询视频转码地址
               tableData:[],
               bookListData:[],
               bookDialogVisible:false,
               dialogVisible:false,
               examDialogVisible:false,
+              isUploadVideo:false,
               dialogForm:{
                videoName:'',
                videoList:[],
-               imgList:[]
+               imgList:[],
+               transCoding:[]
                },
               pageTotal:100,
               searchParams:{
@@ -310,36 +312,36 @@
             this.dialogForm.imgList=fileList;
             this.$refs.dialogForm.validateField('imgList');    
          },
-         /* 视频不图片验证 */
-         imgBeforeUpload(file){
+         /* 图片改变 */
+         imgUploadChange(file,fileList){
+            this.dialogForm.imgList=fileList;
             var exStr=file.name.split('.').pop().toLowerCase();
             var exSize=file.size?file.size:1;
             if(exSize/ 1024 / 1024 > 20){
                 this.$message.error('图片的大小不能超过20MB！');
-            // this.material.noticeFiles.pop();
+                this.dialogForm.imgList.pop();
                 return false;
             }
             if(exSize==0){
                 this.$message.error('请勿上传空文件！');
-            // this.material.noticeFiles.pop();
+                this.dialogForm.imgList.pop();
                 return false;
             }
             if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
-                this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
-            // this.material.noticeFiles.pop();
+                this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！')
+                this.dialogForm.imgList.pop();
                 return false;
             }
             if(file.name.length>80){
-                this.$message.error('图片名称不能超过80个字符！');
-                //this.material.noticeFiles.pop();
+                this.$message.error('图片名称不能超过80个字符！'); 
+                this.dialogForm.imgList.pop();
                 return false;
-            } 
-         },
-         /* 上传成功 */
-         imgUploadSuccess(res,file,fileList){
-           this.dialogForm.imgList=[];
-           this.dialogForm.imgList.push(file);
-           this.$refs.dialogForm.validateField('imgList');   
+            }
+            this.dialogForm.imgList=[] ;
+            this.dialogForm.imgList.push(file);
+            console.log(this.dialogForm.imgList);
+            this.$refs.dialogForm.validateField('imgList');
+
          },
          /* 添加上传视频 */
          videoUploadRemove(file,fileList){
@@ -370,11 +372,43 @@
          },
          /* 视频上传成功 */
          videoUploadSuccess(res,file,fileList){
+           this.isUploadVideo=true;
+           this.videoTransCoding(res.data);
            this.dialogForm.videoList=[];
            this.dialogForm.videoList.push(file);
            this.$refs.dialogForm.validateField('videoList');
            console.log(this.dialogForm)
          }, 
+         /* 视频转码 */
+         videoTransCoding(str){
+           this.$axios.get(this.transCodingUrl,{
+               params:{key:str}
+           }).then((res)=>{
+               console.log(res);
+               if(res.data.code==1){
+                var obj=res.data.data;
+                 if(obj.done){
+                     if(!obj.error){
+                         /* 转码成功 */
+                        this.isUploadVideo=false;
+                        this.dialogForm.transCoding=res.data.data;
+                     }else{
+                         /* 转码失败 */
+                        this.$message.error('视频转码失败，请检查视频格式后再重新上传');
+                        this.dialogForm.videoList=[];
+                        this.isUploadVideo=false;
+                     }
+                 }else{
+                     /* 正在转码 */
+                     setTimeout(() => {
+                         this.videoTransCoding(str);
+                     }, 1000);     
+                 }
+               }else{
+                   this.$message.error(res.data.msg);
+               }
+           })
+         },
          /* 微视频对话框提交 */
          addVideoSubmit(){
              console.log(this.dialogForm);
@@ -383,11 +417,24 @@
                     var submitObj={
                            bookId:this.currentBook.id, //图书Id
                            title:this.dialogForm.videoName,  //标题
-                           origPath:this.dialogForm.videoList[0].response.data, //原始视频存放路径
-                           userId:this.$getUserData().userInfo.id, //上传者id
-                           cover:this.dialogForm.imgList[0].response.data[0]   //封面图片Id
+                           cover:this.dialogForm.imgList[0].raw,   //封面图片Id
+                           origPath:this.dialogForm.transCoding.origPath,  //原始视频存放路径
+                           origFileName: this.dialogForm.transCoding.origFileName,  // 原始文件名
+                           origFileSize:this.dialogForm.transCoding.origFileSize,  //原始文件大小
+                           path:this.dialogForm.transCoding.path,  //转码后存放路径
+                           fileName:this.dialogForm.transCoding.fileName, //转码后文件名
+                           fileSize:this.dialogForm.transCoding.fileSize  //转码后大小
                              };
-                     this.$axios.post(this.addNewVideoUrl,this.$commonFun.initPostData(submitObj))
+                     let config = {
+                         headers: {
+                            'Content-Type': 'multipart/form-data'
+                            }
+                      }
+                      let formData=new FormData();
+                      for(var i in submitObj){
+                          formData.append(i,submitObj[i]);
+                      }
+                     this.$axios.post(this.addNewVideoUrl,formData,config)
                      .then((res)=>{
                       console.log(res); 
                       if(res.data.code==1){
