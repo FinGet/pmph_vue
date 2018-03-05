@@ -158,7 +158,7 @@ export default {
   data() {
     return {
       writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
-      orgUserUrl:'/pmpheep/users/org/list/orgUser',  //获取机构用户url
+      orgUserUrl:'/pmpheep/users/org/list/allOrgUser',  //获取机构用户url
       clubSelectData:[], //社内用户选中
       writerSelectData:[],//作家用户选择
       orgSelectData:[], //机构用户选中
@@ -176,7 +176,7 @@ export default {
         name:'',
         orgName:'',
         pageSize:10,
-        pageNumber:1
+        pageNumber:1,
       },
       orgTableData:[],
       orgPageTotal:0,
