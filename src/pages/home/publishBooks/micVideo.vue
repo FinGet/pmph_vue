@@ -159,7 +159,7 @@
     </el-dialog>
     <!-- 查看视频弹框 -->
     <el-dialog :visible.sync="isShowVideoPlayer" size="tiny" :show-close="false" class="video_player_dialog" >
-      <video :src="videoSrc" controls="controls" autoplay>
+      <video :src="videoSrc" controls="controls" autoplay v-if="isShowVideoPlayer">
         您的浏览器不支持 video 标签。
         </video>
     </el-dialog>
@@ -498,6 +498,7 @@ min-width: 660px;
 }
 .mic_video .video_player_dialog video{
     width:100%;
-    min-height:300px;
+    vertical-align: bottom;
+    min-height:400px;
 }
 </style>
