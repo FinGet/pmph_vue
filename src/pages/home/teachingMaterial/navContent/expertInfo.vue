@@ -435,7 +435,7 @@
 
       <!--参加人卫慕课、数字教材编写情况-->
       <div class="expert-info-box" v-if="material.isMoocDigitalUsed">
-        <p class="info-box-title">个人成就</p>
+        <p class="info-box-title">参加人卫慕课、数字教材编写情况</p>
         <div>
           <p class="achievements">
             {{decMoocDigital}}
@@ -589,7 +589,7 @@
 
       <!--编写内容意向-->
       <div class="expert-info-box" v-if="material.isIntentionUsed">
-        <p class="info-box-title">个人成就</p>
+        <p class="info-box-title">编写内容意向</p>
         <div>
           <p class="achievements">
             {{decIntention}}

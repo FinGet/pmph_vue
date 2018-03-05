@@ -19,7 +19,7 @@
               <el-date-picker type="date" placeholder="选择日期" v-model="material.actualDeadline" @change="actDatePickGetTime" :picker-options="pickOptionsAct" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
             </el-form-item>
             </el-col>
-            <el-col :span="8">     
+            <el-col :span="8">
             <el-form-item label="展示结束日期："  prop="deadline">
               <el-date-picker type="date" placeholder="选择日期" v-model="material.deadline" @change="showDatePickGetTime"  :picker-options="pickOptionsShow" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
             </el-form-item>
@@ -61,7 +61,7 @@
                         <el-form-item prop="contactUserName" >
                           <el-input v-model="scope.row.contactUserName"   ></el-input>
                         </el-form-item>
-                      </el-form> 
+                      </el-form>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -76,8 +76,8 @@
                        <el-form-item prop="contactPhone" style="margin:18px 0;">
                           <el-input v-model="scope.row.contactPhone"   ></el-input>
                         </el-form-item>
-                       </el-form> 
-                      
+                       </el-form>
+
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -217,7 +217,7 @@
                       <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'extensionName'+scope.$index" :rules="rules" style="margin:18px 0;">
                        <el-form-item prop="extensionName" style="margin:18px 0;">
-                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" ></el-input> 
+                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" ></el-input>
                        </el-form-item>
                       </el-form>
                     </template>
@@ -420,7 +420,7 @@ export default {
           requiredKey:'material.isAchievementRequired',
           usecheck: false,
           needcheck: false
-        },        
+        },
         {
           name: "主要学术兼职",
           key:'material.isAcadeUsed',
@@ -471,6 +471,13 @@ export default {
           needcheck: false
         },
         {
+          name: "人卫社教材编写情况",
+          key:'material.isPmphTextbookUsed',
+          requiredKey:'material.isPmphTextbookRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
           name: "主编学术专著情况",
           key:'material.isMonographUsed',
           requiredKey:'material.isMonographRequired',
@@ -478,9 +485,16 @@ export default {
           needcheck: false
         },
         {
-          name: "教材编写情况",
+          name: "其他社教材编写情况",
           key:'material.isTextbookUsed',
           requiredKey:'material.isTextbookRequired',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "参加人卫慕课、数字教材编写情况",
+          key:'material.isMoocDigitalUsed',
+          requiredKey:'material.isMoocDigitalRequired',
           usecheck: false,
           needcheck: false
         },
@@ -519,6 +533,13 @@ export default {
           usecheck: false,
           needcheck: false
         },
+        {
+          name: "编写内容意向",
+          key:'material.isIntentionUsed',
+          requiredKey:'material.isIntentionRequired',
+          usecheck: false,
+          needcheck: false
+        },
       ],
       material:{
          materialName:'',
@@ -543,7 +564,7 @@ export default {
         "material.materialRound": "",
         deadline: "",
         actualDeadline: "",
-        ageDeadline: "", 
+        ageDeadline: "",
         "material.mailAddress": "",
          materialContacts:[],     //联系人
         "material.director": "",   //主任
@@ -589,7 +610,7 @@ export default {
          {min:1,max:20,message:'姓名不能超过20个字符',trigger:'change,blur'}
         ],
         contactPhone:[
-         {required: true, message: "请填写手机号码", trigger: "blur" }, 
+         {required: true, message: "请填写手机号码", trigger: "blur" },
          {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
         ],
         contactEmail:[
@@ -618,7 +639,7 @@ export default {
       },
       pickOptionsAct:{
          disabledDate(time) {
-          
+
            //console.log(material.deadline);
           // return time.getTime() < Date.now() - 8.64e7;
         }
@@ -627,7 +648,7 @@ export default {
          disabledDate(time) {
          //  return time.getTime() < Date.now() - 8.64e7;
         }
-      },      
+      },
     };
   },
   computed:{
@@ -686,15 +707,15 @@ export default {
                for(var i in this.listTableData){
                     this.listTableData[i].usecheck=res.data.data.material[this.listTableData[i].key.split('.')[1]];
                   if(this.listTableData[i].requiredKey){
-                    this.listTableData[i].needcheck=res.data.data.material[this.listTableData[i].requiredKey.split('.')[1]];   
-                  } 
-               }   
+                    this.listTableData[i].needcheck=res.data.data.material[this.listTableData[i].requiredKey.split('.')[1]];
+                  }
+               }
              //material对象赋值
                for(var m in this.material){
                  if(res.data.data.material[m]){
                    if(m=='actualDeadline'||m=='ageDeadline'||m=='deadline'){
                      this.material[m]=new Date(res.data.data.material[m]);
-                     this.ruleForm[m]=new Date(res.data.data.material[m]); 
+                     this.ruleForm[m]=new Date(res.data.data.material[m]);
                    }else if(m=='materialType'){}
                    else{
                      this.material[m]=m=='materialRound'?res.data.data.material[m]+'':res.data.data.material[m];
@@ -747,7 +768,7 @@ export default {
                    id:noteArr[i].id,
                     name:noteArr[i].attachmentName,
                     url:noteArr[i].attachment
-                 })  
+                 })
               }
               //this.material.noteFiles=this.ruleForm.materialNoteAttachments;
               //this.noteFiles=this.ruleForm.materialNoteAttachments;
@@ -765,18 +786,18 @@ export default {
                   if(projectArr[i]==1){
                     this.material.projectEditorPowers.push(parseInt(i));
                   }
-               } 
+               }
              }
            })
         }
       },
       /* 字符串转数组 */
       stringToArray(str){
-        var arr=str.replace(/\[|\]/g,'').split('},'); 
+        var arr=str.replace(/\[|\]/g,'').split('},');
         var result=[];
         if(arr[0]!=''){
             for(var j=0;j<arr.length;j++){
-           result.push((j==arr.length-1)?(JSON.parse(arr[j])):(JSON.parse(arr[j]+'}'))); 
+           result.push((j==arr.length-1)?(JSON.parse(arr[j])):(JSON.parse(arr[j]+'}')));
           }
         }
         return result;
@@ -792,13 +813,13 @@ export default {
         this.ruleForm.materialContacts[num][str]=!this.ruleForm.materialContacts[num][str];
         var arr=this.ruleForm.materialContacts;
         this.ruleForm.materialContacts=[];
-        this.ruleForm.materialContacts=arr;  
+        this.ruleForm.materialContacts=arr;
         if(this.ruleForm.materialContacts[num][str]){
-          //聚焦 
+          //聚焦
           this.$nextTick(_ => {
                 this.$refs[str+num].$refs.input.focus()
           })
-          
+
         }
       },
       /* 联系人选择 */
@@ -819,7 +840,7 @@ export default {
           for(var j in val){
             arr[val[j]]=1;
           }
-          this.ruleForm.cehuaPowers=arr.join().replace(/,/g,'');        
+          this.ruleForm.cehuaPowers=arr.join().replace(/,/g,'');
       },
       /* 增加 */
       addCheckedConact(){
@@ -847,8 +868,8 @@ export default {
                   );
                }
            }
-           
-          console.log('12312',this.ruleForm.materialContacts);          
+
+          console.log('12312',this.ruleForm.materialContacts);
          }
          else if(this.classify == "director"){
                  this.projectDirectorData=[];
@@ -856,7 +877,7 @@ export default {
                 // this.ruleForm['material.director']=this.projectDirectorData[0].id;
                  this.material.director=this.projectDirectorData[0].id;
                  this.$refs.ruleForm.validateField('director');
-           console.log('主任',this.projectDirectorData,this.material.director)              
+           console.log('主任',this.projectDirectorData,this.material.director)
          }
          else if(this.classify == 'editor'){
           for(var i in this.checkedConactPersonData){
@@ -867,7 +888,7 @@ export default {
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
-           console.log('项目编辑',typeof(this.material.materialProjectEditors));           
+           console.log('项目编辑',typeof(this.material.materialProjectEditors));
          }
        this.$message({
         message: `添加成功！`,
@@ -889,7 +910,7 @@ export default {
      for(var i in this.listTableData){
           this.ruleForm[this.listTableData[i].key]=this.listTableData[i].usecheck;
         if(this.listTableData[i].requiredKey){
-          this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;   
+          this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;
          /*  console.log(this.listTableData[i].needcheck) */
         }
      }
@@ -933,7 +954,7 @@ export default {
            return false;
          }
        }
-          
+
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
@@ -955,10 +976,10 @@ export default {
         this.$message.error('图片名称不能超过80个字符！');
         //this.material.noticeFiles.pop();
         return false;
-      }  
+      }
     },
     imgUploadSuccess(res,file,filelist){
-      console.log(res,file,filelist); 
+      console.log(res,file,filelist);
       this.material.noticeFiles=filelist;   //表单验证用
       this.ruleForm.materialNoticeAttachments=[];
       filelist.forEach((item)=>{
@@ -988,7 +1009,7 @@ export default {
            return false;
          }
        }
-          
+
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
@@ -1013,7 +1034,7 @@ export default {
      }
     },
     fileUploadSuccess(res,file,filelist){
-     console.log(res,file,filelist); 
+     console.log(res,file,filelist);
      this.material.noteFiles=filelist;   //表单验证用
       this.ruleForm.materialNoteAttachments=[];
       filelist.forEach((item)=>{
@@ -1035,7 +1056,7 @@ export default {
        */
     handleEditorClose(val) {
       console.log(1111,val);
-      
+
       this.ruleForm.materialProjectEditors.splice(val, 1);
       this.material.materialProjectEditors.splice(val, 1);
       this.$refs.ruleForm.validateField('materialProjectEditors');
@@ -1154,7 +1175,7 @@ export default {
            }else{
                paramdata.append(i,obj[i])
            }
-           
+
          }
          console.log(paramdata);
          return paramdata;
@@ -1168,7 +1189,7 @@ export default {
           if(!valid){
              checked=false;
           }
-        })  
+        })
         this.$refs['contactPhone'+i].validate((valid)=>{
           if(!valid){
              checked=false;
@@ -1201,7 +1222,7 @@ export default {
               this.$message.error('实际结束日期应大于展示结束日期');
                return false;
                 }
-            
+
               this.isloading=true;
                //提交
                   this.$axios.post(this.$router.currentRoute.params.materialId=='new'?this.addNewmaterialUrl:this.updateMaterialUrl,
@@ -1214,14 +1235,14 @@ export default {
                     }else{
                       this.$message.error(res.data.msg.msgTrim());
                     }
-                  })  
+                  })
 
 
           } else {
             this.$message.error('输入的内容不正确，请正确填写');
             return false;
           }
-        });       
+        });
     }
   },
   components: {
