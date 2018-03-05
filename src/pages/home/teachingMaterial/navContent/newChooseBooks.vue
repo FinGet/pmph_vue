@@ -584,7 +584,7 @@ export default {
       rules: {
         materialName: [
           { required: true, message: "请输入教材名称", trigger: "blur" },
-          {min:1,max:40,message:'教材名称不能超过40个字符',trigger:'change,blur'}
+          {min:1,max:50,message:'教材名称不能超过50个字符',trigger:'change,blur'}
           ],
         materialRound: [
           { required: true, message: "请输入教材轮次", trigger: "blur" },
