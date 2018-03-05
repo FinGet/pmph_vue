@@ -151,7 +151,7 @@
     >
       <el-input placeholder="请输入链接地址" v-model="syncInputUrl"></el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="syncGetArticle" type="primary">确定</el-button>
+        <el-button @click="syncGetArticle" type="primary" :loading="isSyncLoading">{{isSyncLoading?'同步中':'确 定'}}</el-button>
       </span>
     </el-dialog>
 
@@ -332,6 +332,7 @@ export default {
       ],
       showContentDetail: false,
       syncDialogVisible:false,
+      isSyncLoading:false,
       syncInputUrl:'',
       contentDetailData: {
         cmsContent: "",
@@ -630,6 +631,7 @@ export default {
     },
     /* 同步弹框确定按钮 */
     syncGetArticle(){
+      this.isSyncLoading=true;
       this.$axios.post('/pmpheep/cms/wechat/article/getArticle',this.$commonFun.initPostData(
         {
           url:this.syncInputUrl
@@ -637,12 +639,12 @@ export default {
       )).then((res)=>{
         console.log(res);
         if(res.data.code==1){
-          this.getPublicList();
+         // this.getPublicList();
           setTimeout(() => {
             this.syncCheckDetail(res.data.data);
           }, 3000);
 //          this.syncDialogVisible1 = true;
-          this.syncDialogVisible=false;
+          
         }else{
           this.$message.error(res.data.msg.msgTrim());
         }
@@ -665,10 +667,15 @@ export default {
 
            }else{
              /* 有值的时候 */
+             this.getPublicList();
+             this.isSyncLoading=false;
              this.$message.success('同步成功!');
+             this.syncDialogVisible=false;
+             this.syncInputUrl='';
              return;
            }
        }else{
+         this.isSyncLoading=false;
          this.$message.error(res.data.msg.msgTrim());
        }
      })
