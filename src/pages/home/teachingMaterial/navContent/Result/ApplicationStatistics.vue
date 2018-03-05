@@ -68,7 +68,7 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
             </div>
-            <el-button type="primary" class="pull-right">
+            <el-button type="primary" class="pull-right" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
               导出
             </el-button>
@@ -164,7 +164,7 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
-            <el-button type="primary" class="pull-right marginL10">
+            <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
               导出
             </el-button>
@@ -595,6 +595,17 @@ export default {
      }else{
        this.getSchoolTableData();
      }
+    },
+    /** 导出Excel */
+    exportBookExcel(){
+      let url = '/pmpheep/result/exportSituationBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.stBooks;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
+    exportSchoolExcel(){
+      let url = '/pmpheep/result/exportSituationSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.stSchools + '&state=' + (this.sortType?1:2) ;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
     }
   },
   mounted() {
