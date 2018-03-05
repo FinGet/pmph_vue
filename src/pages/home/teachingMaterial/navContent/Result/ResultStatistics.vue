@@ -1,6 +1,6 @@
 <template>
   <div class="applicationStatistics">
-    
+
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="按书名统计" name="bookName">
         <div class="applicationStatistics-byBookName">
@@ -15,7 +15,7 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getBooksTableData">搜索</el-button>
             </div>
-            <el-button type="primary" class="pull-right marginL10">
+            <el-button type="primary" class="pull-right marginL10" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
               导出
             </el-button>
@@ -86,7 +86,7 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
             </div>
-            <el-button type="primary" class="pull-right marginL10">
+            <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
               导出
             </el-button>
@@ -172,44 +172,10 @@ export default {
       },
       booksTotal:0, // 按书名统计 - 分页数据总数
       schoolTotal:0, // 按学校统计 - 分页数据总数
-      schoolTableData: [
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: "王磊,冀敏",
-          p2: "李晓春,吴杰",
-          p3: "陈月明,张延芳,辛学刚,吉强,刘东华,郭嘉泰,王章金,聂娅,杨中芹,王岚,盖志刚,王昌军,童家明,盖立平,莫华"
-        },
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: "王磊,冀敏",
-          p2: "李晓春,吴杰",
-          p3: "陈月明,张延芳,辛学刚,吉强,刘东华,郭嘉泰,王章金,聂娅,杨中芹,王岚,盖志刚,王昌军,童家明,盖立平,莫华"
-        },
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: "王磊,冀敏",
-          p2: "李晓春,吴杰",
-          p3: "陈月明,张延芳,辛学刚,吉强,刘东华,郭嘉泰,王章金,聂娅,杨中芹,王岚,盖志刚,王昌军,童家明,盖立平,莫华"
-        },
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: "王磊,冀敏",
-          p2: "李晓春,吴杰",
-          p3: "陈月明,张延芳,辛学刚,吉强,刘东华,郭嘉泰,王章金,聂娅,杨中芹,王岚,盖志刚,王昌军,童家明,盖立平,莫华"
-        },
-        {
-          xuhao: 1,
-          bookName: "三峡大学医学院",
-          p1: "王磊,冀敏",
-          p2: "李晓春,吴杰",
-          p3: "陈月明,张延芳,辛学刚,吉强,刘东华,郭嘉泰,王章金,聂娅,杨中芹,王岚,盖志刚,王昌军,童家明,盖立平,莫华"
-        }
-      ],
-      bookTableData: []
+      schoolTableData: [],
+      bookTableData: [],
+      books:[],
+      schools:[]
     };
   },
   watch:{
@@ -235,6 +201,9 @@ export default {
           var resData = res.data.data;
           this.schoolTotal=resData.total;
           this.schoolTableData=resData.rows;
+          resData.rows.forEach(item => {
+           this.schools.push(item.schoolName)
+         })
        }
      })
     },
@@ -248,6 +217,9 @@ export default {
           var resData = res.data.rows;
           this.booksTotal=res.data.total;
           this.bookTableData=resData;
+          resData.rows.forEach(item => {
+            this.books.push(item.schoolName)
+          })
        }
       })
     },
@@ -278,6 +250,17 @@ export default {
        }else{
          this.getSchoolTableData();
        }
+    },
+    /** 导出Excel */
+    exportBookExcel(){
+      let url = '/pmpheep/result/exportResultBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.books;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
+    exportSchoolExcel(){
+      let url = '/pmpheep/result/exportResultSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.schools + '&state=' + (this.sortType?1:2) ;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
     }
   },
   mounted() {}
