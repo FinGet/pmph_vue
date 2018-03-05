@@ -499,6 +499,6 @@ min-width: 660px;
 .mic_video .video_player_dialog video{
     width:100%;
     vertical-align: bottom;
-    min-height:400px;
+    min-height:300px;
 }
 </style>
