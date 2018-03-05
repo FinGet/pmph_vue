@@ -30,7 +30,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -43,6 +43,7 @@
       return {
         api_export_excel:'/pmpheep/excel/published/org',
         type:'new',
+        able: false,
         reissueFormData:{
           id:'',
           title:'',
@@ -92,6 +93,7 @@
        * 确认提交表单
        */
       submit(){
+        this.able = true;
         this.$axios.post('/pmpheep/material/extra/published',this.$initPostData({
           materialId: this.materialId,
           orgIds: this.orgIds,
