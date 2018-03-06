@@ -321,11 +321,13 @@
             <tr>
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
+              <th><div>是否数字编委</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in lastPositionList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
