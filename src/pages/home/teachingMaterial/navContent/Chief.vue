@@ -100,7 +100,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional">
+          <el-table-column label="是否数字编委" width="120" align="center" v-if="IsDigitalEditorOptional&&type=='bw'">
             <template scope="scope">
               <el-checkbox v-model="scope.row.isDigitalEditor" :disabled="!hasPermission([2,3])||(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)||optionsType==='view'"></el-checkbox>
             </template>
