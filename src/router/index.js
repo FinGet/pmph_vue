@@ -105,8 +105,7 @@ const PersonalSetting = () => import('pages/home/personal/Setting');
 import questionSurveyRouter from '../pages/home/questionSurvey/questionSurveyRouter';
 const addNewModel = () =>import('../pages/home/questionSurvey/addNewModel');
 const addNewSurvey = () => import('../pages/home/questionSurvey/addNewSurvey');
-/* const reIssue = () => import('../pages/home/questionSurvey/reIssue'); */
-import reIssue from '../pages/home/questionSurvey/reIssue.vue'
+const reIssue = () => import('../pages/home/questionSurvey/reIssue');
 const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet');
 const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
