@@ -211,7 +211,7 @@
 
       <!--主要学习经历-->
       <div class="expert-info-box" v-if="learnExperience.length!=0">
-        <p class="info-box-title">学习经历</p>
+        <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -238,7 +238,7 @@
 
       <!--主要工作经历-->
       <div class="expert-info-box" v-if="material.isWorkExpUsed">
-        <p class="info-box-title">工作经历</p>
+        <p class="info-box-title">主要工作经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -260,7 +260,7 @@
 
       <!--主要教学经历-->
       <div class="expert-info-box" v-if="material.isEduExpUsed">
-        <p class="info-box-title">教学经历</p>
+        <p class="info-box-title">主要教学经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -293,7 +293,7 @@
 
       <!--主要学术兼职-->
       <div class="expert-info-box" v-if="material.isAcadeUsed">
-        <p class="info-box-title">学术兼职</p>
+        <p class="info-box-title">主要学术兼职</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -321,11 +321,13 @@
             <tr>
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
+              <th><div>是否数字编委</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in lastPositionList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -461,14 +463,13 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
       </div>
 
       <!--主编学术专著情况表-->
       <div class="expert-info-box" v-if="material.isMonographUsed">
-        <p class="info-box-title">主编学术专著情况表</p>
+        <p class="info-box-title">主编学术专著情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -487,7 +488,6 @@
               <td><div>{{iterm.publishDate}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
-          </table>
           </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
@@ -511,14 +511,13 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
       </div>
 
       <!--SCI论文投稿及影响因子情况-->
       <div class="expert-info-box" v-if="material.isSciUsed">
-        <p class="info-box-title">SCI论文投稿及影响因子情况</p>
+        <p class="info-box-title">SCI论文投稿及影响因子</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -535,7 +534,6 @@
               <td><div>{{iterm.publishDate}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
-          </table>
           </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
@@ -559,7 +557,6 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>
       </div>
@@ -581,7 +578,6 @@
               <td><div>{{rankList[iterm.awardUnit]}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
-          </table>
           </table>
           <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
         </div>

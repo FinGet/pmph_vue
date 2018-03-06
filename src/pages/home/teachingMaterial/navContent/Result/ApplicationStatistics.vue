@@ -5,51 +5,51 @@
             <div class="num-chart-iterm">
               <div>
                 <br>
-                <span><span class="gray">总数/</span>{{situationCount.schoolDeclarationCount}}</span>
+                <span><span class="gray">总数/</span>{{situationCount.schoolDeclarationCount || 0}}</span>
                 <br>
-                <span><span class="gray">当选数/</span>{{situationCount.schoolDeclarationChosenCount}}</span>
+                <span><span class="gray">当选数/</span>{{situationCount.schoolDeclarationChosenCount || 0}}</span>
               </div>
               <p>院校申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
-                <span class="marginspan"><span class="gray">平均数/</span> {{situationCount.schoolDeclarationAverage}}</span>
+                <span class="marginspan"><span class="gray">平均数/</span> {{situationCount.schoolDeclarationAverage || 0}}</span>
               </div>
               <p>院校申报平均数</p>
             </div>
             <div class="num-chart-iterm">
               <div>
                 <br>
-                <span><span class="gray">总数/</span>{{situationCount.editorCount}}</span>
+                <span><span class="gray">总数/</span>{{situationCount.editorCount || 0}}</span>
                 <br>
-                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorCount}}</span>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorCount || 0}}</span>
               </div>
               <p>主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
                 <br>
-                <span><span class="gray">总数/</span>{{situationCount.subEditorCount}}</span>
+                <span><span class="gray">总数/</span>{{situationCount.subEditorCount || 0}}</span>
                 <br>
-                <span><span class="gray">当选数/</span>{{situationCount.chosenSubeditorCount}}</span>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenSubeditorCount || 0}}</span>
               </div>
               <p>副主编申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
                 <br>
-                <span><span class="gray">总数/</span>{{situationCount.editorialCount}}</span>
+                <span><span class="gray">总数/</span>{{situationCount.editorialCount || 0}}</span>
                 <br>
-                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorialCount}}</span>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenEditorialCount || 0}}</span>
               </div>
               <p>编委申报</p>
             </div>
             <div class="num-chart-iterm">
               <div>
                 <br>
-                <span><span class="gray">总数/</span>{{situationCount.digitalCount}}</span>
+                <span><span class="gray">总数/</span>{{situationCount.digitalCount || 0}}</span>
                 <br>
-                <span><span class="gray">当选数/</span>{{situationCount.chosenDigitalCount}}</span>
+                <span><span class="gray">当选数/</span>{{situationCount.chosenDigitalCount || 0}}</span>
               </div>
               <p>数字编委申报</p>
             </div>
@@ -598,12 +598,12 @@ export default {
     },
     /** 导出Excel */
     exportBookExcel(){
-      let url = '/pmpheep/result/exportSituationBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.stBooks;
+      let url = '/pmpheep/result/exportSituationBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.bookParmas.bookName;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     },
     exportSchoolExcel(){
-      let url = '/pmpheep/result/exportSituationSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.stSchools + '&state=' + (this.sortType?1:2) ;
+      let url = '/pmpheep/result/exportSituationSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.schoolParams.schoolName + '&state=' + (this.sortType?1:2) ;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     }

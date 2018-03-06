@@ -429,7 +429,7 @@ export default {
           needcheck: false
         },
         {
-          name: "上版教材参编情况",
+          name: "本套上版教材参编情况",
           key:'material.isLastPositionUsed',
           requiredKey:'material.isLastPositionRequired',
           usecheck: false,
