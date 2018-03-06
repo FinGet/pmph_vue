@@ -184,7 +184,7 @@
                     align="center"
                     >
                     <template scope="scope">
-                      <el-checkbox v-model="scope.row.usecheck"></el-checkbox>
+                      <el-checkbox v-model="scope.row.usecheck" @change="optionChange(scope.row)"></el-checkbox>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -820,6 +820,12 @@ export default {
                 this.$refs[str+num].$refs.input.focus()
           })
 
+        }
+      },
+      /* 选项checkbox改变 */
+      optionChange(obj){
+        if(!obj.usecheck){
+          obj.needcheck=false;
         }
       },
       /* 联系人选择 */
