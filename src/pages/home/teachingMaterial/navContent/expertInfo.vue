@@ -210,7 +210,7 @@
       </div>
 
       <!--主要学习经历-->
-      <div class="expert-info-box" v-if="learnExperience.length!=0">
+      <div class="expert-info-box" v-if="material.isEduExpUsed">
         <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -259,7 +259,7 @@
       </div>
 
       <!--主要教学经历-->
-      <div class="expert-info-box" v-if="material.isEduExpUsed">
+      <div class="expert-info-box" v-if="material.isTeachExpUsed">
         <p class="info-box-title">主要教学经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -369,14 +369,14 @@
               <th><div>教材级别</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in lastPositionList">
+            <tr v-for="(iterm,index) in nationalPlan">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
         </div>
       </div>
 
@@ -401,7 +401,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!rwtextbook.length">暂无数据</div>
         </div>
       </div>
 
@@ -489,7 +489,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>
         </div>
       </div>
 
@@ -511,7 +511,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!publish_reward.length">暂无数据</div>
         </div>
       </div>
 
@@ -535,7 +535,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!sci.length">暂无数据</div>
         </div>
       </div>
 
@@ -557,7 +557,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!clinical_reward.length">暂无数据</div>
         </div>
       </div>
 
@@ -579,7 +579,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!acade_reward.length">暂无数据</div>
         </div>
       </div>
 
