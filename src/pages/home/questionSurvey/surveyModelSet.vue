@@ -63,10 +63,12 @@
      </el-table-column>
      <el-table-column
       label="操作"
-      width="210"
+      width="270"
      >
      <template scope="scope">
        <el-button type="text" :disabled="scope.row.status!=0"  @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
+       <span>|</span>
+       <el-button type="text" :disabled="scope.row.status==0" >补发消息</el-button>
        <span>|</span>
        <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id,surverData:scope.row}})">发起调查</el-button>
        <span>|</span>
