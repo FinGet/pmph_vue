@@ -256,6 +256,7 @@
           this.$message.error('请输入小组名称');
           return false;
         }
+        console.log(this.newGroupData);
         let self= this;
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
@@ -320,7 +321,9 @@
        */
       handleClose(){
         this.newGroupData.filename=undefined;
+        this.newGroupData.imgUrl = undefined;
         this.newGroupData.name=null;
+        console.log(this.newGroupData);
       },
     },
     watch:{
