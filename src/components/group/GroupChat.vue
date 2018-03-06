@@ -116,7 +116,7 @@
           userId:this.currentUserdata.userInfo.id,
           userType:this.currentUserdata.userInfo.loginType,
           header:this.$config.DEFAULT_BASE_URL + this.currentUserdata.userInfo.avatar,
-          username:this.currentUserdata.userInfo.username,
+          username:this.currentUserdata.userInfo.realname,
           messageData:undefined,
           time:this.$commonFun.getNowFormatDate()
         };
