@@ -210,7 +210,7 @@
       </div>
 
       <!--主要学习经历-->
-      <div class="expert-info-box" v-if="learnExperience.length!=0">
+      <div class="expert-info-box" v-if="material.isEduExpUsed">
         <p class="info-box-title">主要学习经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -259,7 +259,7 @@
       </div>
 
       <!--主要教学经历-->
-      <div class="expert-info-box" v-if="material.isEduExpUsed">
+      <div class="expert-info-box" v-if="material.isTeachExpUsed">
         <p class="info-box-title">主要教学经历</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
