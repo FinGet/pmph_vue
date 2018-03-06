@@ -34,7 +34,6 @@
                 prop="username"
                 label="作者"
                 width="90"
-                v-if="isAdmin"
                 >
             </el-table-column>
             <el-table-column
@@ -341,7 +340,6 @@ export default {
         content: ""
       },
       tableData: [],
-      isAdmin: false,
       contentUsername:'',
       selectValue: "",
       currentPage: 1,
@@ -496,10 +494,6 @@ export default {
             // console.log(this.contentDetailData);
           }
         });
-    },
-    /* 初始化是否管理员 */
-    initIsAdmin() {
-      this.isAdmin = this.$getUserData().userInfo.isAdmin;
     },
     /* 查看详情 */
     contentDetail(obj) {
@@ -688,7 +682,6 @@ export default {
       this.searchTitle=this.$route.params.searchInput;
     }
     this.getPublicList();
-    this.initIsAdmin();
     this.getCommentList();
   }
 };
