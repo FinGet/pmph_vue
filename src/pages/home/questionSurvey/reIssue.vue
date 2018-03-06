@@ -64,7 +64,7 @@
 
 <script>
   import Editor from 'components/Editor.vue'
-  import {teachPicUrl} from '../../../../common/config.js'
+  import {teachPicUrl} from '../../../common/config.js'
 	export default {
 		data() {
 			return {
