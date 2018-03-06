@@ -362,7 +362,7 @@
         }else{
           if (isLocked) {
             this.method = 'result'
-            html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后您仍然可以修改名单并再次公布`
+            html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后，只有当前教材指定的主任可以修改名单并再次公布`
           } else {
             this.$message.error('还未进行名单确认，不能公布！');
             return;
