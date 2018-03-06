@@ -41,7 +41,7 @@
            </el-form-item>
            <el-form-item label="">
              <p style="margin-top:10px;">
-             <el-button type="primary" icon="arrow-left">返回</el-button>
+             <el-button type="primary" icon="arrow-left" @click="$router.push({name:'调查问卷模板设置'})">返回</el-button>
              <el-button type="primary" @click="submitSurvery">发起问卷调查</el-button>
              </p>
              </el-form-item>

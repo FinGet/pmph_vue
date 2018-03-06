@@ -105,6 +105,8 @@ const PersonalSetting = () => import('pages/home/personal/Setting');
 import questionSurveyRouter from '../pages/home/questionSurvey/questionSurveyRouter';
 const addNewModel = () =>import('../pages/home/questionSurvey/addNewModel');
 const addNewSurvey = () => import('../pages/home/questionSurvey/addNewSurvey');
+/* const reIssue = () => import('../pages/home/questionSurvey/reIssue'); */
+import reIssue from '../pages/home/questionSurvey/reIssue.vue'
 const surveyModelSet = () => import('../pages/home/questionSurvey/surveyModelSet');
 const surveyRecovery = () => import('../pages/home/questionSurvey/surveyRecovery');
 const surveryResultStatistic = () => import('../pages/home/questionSurvey/surveyResultStatistic')
@@ -246,6 +248,7 @@ export default new Router({
           path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 13}, children:[
             { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 37 }},
             { path: 'launch', name: '发起调查', component: launchSurvey},
+            { path: 'reissue', name: '补发消息', component: reIssue },
             { path: 'newmodel', name: '问卷模板新增', component: addNewModel,  },
             { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey,  },
             { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 38 } },
