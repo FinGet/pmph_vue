@@ -88,6 +88,7 @@
        */
       selectChange(list){
         this.hasCheckedOrgList = list;
+        this.able=false;
       },
       /**
        * 确认提交表单
