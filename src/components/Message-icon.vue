@@ -59,7 +59,7 @@
             let res = response.data;
             if(res.code==1){
               res.data.rows.map(iterm=>{
-                iterm.senderAvatar = this.$config.DEFAULT_BASE_URL+iterm.senderAvatar;
+                iterm.senderAvatar =iterm.senderAvatar?(this.$config.DEFAULT_BASE_URL+iterm.senderAvatar):'../../static/default_image.png';
                 iterm.title = iterm.title.length>18?iterm.title.substring(0,18)+'...':iterm.title;
                 iterm.content=this.$commonFun.getHTMLText(iterm.content).substring(0,42)+'...';
               });
