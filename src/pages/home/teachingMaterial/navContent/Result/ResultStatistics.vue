@@ -173,9 +173,7 @@ export default {
       booksTotal:0, // 按书名统计 - 分页数据总数
       schoolTotal:0, // 按学校统计 - 分页数据总数
       schoolTableData: [],
-      bookTableData: [],
-      books:[],
-      schools:[]
+      bookTableData: []
     };
   },
   watch:{
@@ -201,9 +199,6 @@ export default {
           var resData = res.data.data;
           this.schoolTotal=resData.total;
           this.schoolTableData=resData.rows;
-          resData.rows.forEach(item => {
-           this.schools.push(item.schoolName)
-         })
        }
      })
     },
@@ -217,9 +212,6 @@ export default {
           var resData = res.data.rows;
           this.booksTotal=res.data.total;
           this.bookTableData=resData;
-          resData.rows.forEach(item => {
-            this.books.push(item.schoolName)
-          })
        }
       })
     },
@@ -253,12 +245,12 @@ export default {
     },
     /** 导出Excel */
     exportBookExcel(){
-      let url = '/pmpheep/result/exportResultBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.books;
+      let url = '/pmpheep/result/exportResultBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.bookParams.bookName;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     },
     exportSchoolExcel(){
-      let url = '/pmpheep/result/exportResultSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.schools + '&state=' + (this.sortType?1:2) ;
+      let url = '/pmpheep/result/exportResultSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.schoolParams.schoolName + '&state=' + (this.sortType?1:2) ;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     }

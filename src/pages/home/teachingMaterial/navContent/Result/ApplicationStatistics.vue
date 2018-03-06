@@ -598,12 +598,12 @@ export default {
     },
     /** 导出Excel */
     exportBookExcel(){
-      let url = '/pmpheep/result/exportSituationBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.stBooks;
+      let url = '/pmpheep/result/exportSituationBook/?materialId='+ this.schoolParams.materialId + '&bookName=' + this.bookParmas.bookName;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     },
     exportSchoolExcel(){
-      let url = '/pmpheep/result/exportSituationSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.stSchools + '&state=' + (this.sortType?1:2) ;
+      let url = '/pmpheep/result/exportSituationSchool/?materialId='+ this.schoolParams.materialId + '&schoolName=' + this.schoolParams.schoolName + '&state=' + (this.sortType?1:2) ;
       // console.log(url)
       this.$commonFun.downloadFile(url);
     }
