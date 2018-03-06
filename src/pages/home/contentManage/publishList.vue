@@ -646,6 +646,7 @@ export default {
 //          this.syncDialogVisible1 = true;
           
         }else{
+          this.isSyncLoading=false;
           this.$message.error(res.data.msg.msgTrim());
         }
       })

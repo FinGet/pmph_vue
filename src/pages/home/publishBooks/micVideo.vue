@@ -6,8 +6,8 @@
           <span>状态：</span>
             <el-select v-model="searchParams.state" clearable style="width:150px;margin-right:10px;" placeholder="请选择">
               <el-option label="待审核" value="1"></el-option>
-              <el-option label="已通过" value="2"></el-option>
-              <el-option label="未通过" value="0"></el-option>
+              <el-option label="已通过" value="3"></el-option>
+              <el-option label="未通过" value="2"></el-option>
             </el-select>
             <span>上传时间：</span>
                 <el-date-picker
@@ -35,29 +35,29 @@
           </el-table-column>
           <el-table-column label="微视频" >
               <template scope="scope">
-                 {{scope.row.title}}
+                 <el-button type="text" style="color: #337ab7;" @click="playVideo(scope.row)">{{scope.row.title}}</el-button>
               </template>
           </el-table-column>
-          <el-table-column label="上传人" width="90" prop="userName">
+          <el-table-column label="上传人" width="110" prop="userName">
           </el-table-column>
           <el-table-column label="上传时间" width="120" >
               <template scope="scope">
                  {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}
               </template>
           </el-table-column>
-          <el-table-column label="文件大小" width="120">
+          <el-table-column label="文件大小" width="110">
               <template scope="scope">
               {{(scope.row.fileSize/1024/1024).toFixed(2)}}M          
               </template>
           </el-table-column>
-          <el-table-column label="状态" width="100" >
+          <el-table-column label="状态" width="90" >
               <template scope="scope">
-                {{scope.row.state==1?'待审核':(scope.row.state==2?'已通过':'未通过')}} 
+                {{scope.row.state==1?'待审核':(scope.row.state==2?'未通过':'已通过')}} 
               </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
               <template scope="scope">
-               <el-button type="text" style="color:#337ab7;">下载</el-button>
+               <a  style="color:#337ab7;margin-right:5px;" :href="videoDownLoad(scope.row)">下载</a>
                <el-button type="text" style="color:#337ab7;" @click="examVideo(scope.row)">审核</el-button>
               </template>
           </el-table-column>
@@ -157,6 +157,12 @@
                 <el-button type="primary" @click="examSubmit(true)">通过</el-button>
             </span>           
     </el-dialog>
+    <!-- 查看视频弹框 -->
+    <el-dialog :visible.sync="isShowVideoPlayer" size="tiny" :show-close="false" class="video_player_dialog" >
+      <video :src="videoSrc" controls="controls" autoplay v-if="isShowVideoPlayer">
+        您的浏览器不支持 video 标签。
+        </video>
+    </el-dialog>
   </div>
 </template>
 <script type="text/javascript">
@@ -171,6 +177,7 @@
               tableData:[],
               bookListData:[],
               bookDialogVisible:false,
+              isShowVideoPlayer:false,
               dialogVisible:false,
               examDialogVisible:false,
               isUploadVideo:false,
@@ -180,6 +187,7 @@
                imgList:[],
                transCoding:[]
                },
+               videoSrc:'',
               pageTotal:100,
               searchParams:{
                   state:'',
@@ -454,6 +462,14 @@
                      return ;
                  }
              })
+         },
+         /* 下载按钮链接 */
+         videoDownLoad(obj){
+           return 'v/play/'+obj.path.split('\\').pop();
+         },
+         playVideo(obj){
+          this.videoSrc='v/play/'+obj.path.split('\\').pop();
+          this.isShowVideoPlayer=true;
          }                    
         }
     }
@@ -472,5 +488,17 @@ min-width: 660px;
 }
 .mic_video .book_dialog .el-dialog .el-dialog__body{
     overflow:hidden;
+}
+.mic_video .video_player_dialog  .el-dialog__body{
+ padding:0;
+ background: none;
+}
+.mic_video .video_player_dialog .el-dialog__header{
+    padding:0;
+}
+.mic_video .video_player_dialog video{
+    width:100%;
+    vertical-align: bottom;
+    min-height:300px;
 }
 </style>
