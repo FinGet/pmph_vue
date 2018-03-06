@@ -5,7 +5,7 @@
 
     <el-tabs type="border-card" v-model="activeIndex"  @tab-click="tabClick">
       <el-tab-pane label="短评管理" name="first">
-        <TableShort :data="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
+        <TableShort :data.sync="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
@@ -41,12 +41,12 @@
 
           <div slot="pagination"  class="pagination-wrapper">
             <el-pagination
-              v-if="totalNum > searchForm.pageSize"
+              v-if="totalNum > searchForm.pageSize&&!searchForm.isLong"
               :page-sizes="[30,50,100, 200, 300, 400]"
               :page-size="searchForm.pageSize"
               :current-page="searchForm.pageNumber"
               @size-change="paginationSizeChange"
-              @current-change="getTableData"
+              @current-change="paginationCurrentChange"
               layout="total, sizes, prev, pager, next, jumper"
               :total="totalNum">
             </el-pagination>
@@ -54,7 +54,7 @@
         </TableShort>
       </el-tab-pane>
       <el-tab-pane label="长评管理" name="second">
-        <TableLong :data="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
+        <TableLong :data.sync="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
@@ -90,12 +90,12 @@
 
           <div slot="pagination"  class="pagination-wrapper">
             <el-pagination
-              v-if="totalNum > searchForm.pageSize"
+              v-if="totalNum > searchForm.pageSize&&searchForm.isLong"
               :page-sizes="[30,50,100, 200, 300, 400]"
               :page-size="searchForm.pageSize"
-              :current-page="searchForm.pageNumber"
+              :current-page.sync="searchForm.pageNumber"
               @size-change="paginationSizeChange"
-              @current-change="getTableData"
+              @current-change="paginationCurrentChange"
               layout="total, sizes, prev, pager, next, jumper"
               :total="totalNum">
             </el-pagination>
@@ -196,6 +196,7 @@
                 iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
                 iterm.state=list[iterm.isAuth];
               });
+              console.log(11111);
               this.totalNum = res.data.total;
               this.tableData = res.data.rows;
             }
@@ -337,6 +338,10 @@
       paginationSizeChange(val){
         this.searchForm.pageSize=val;
         this.searchForm.pageNumber=1;
+        this.getTableData();
+      },
+      paginationCurrentChange(val){
+        this.searchForm.pageNumber=val;
         this.getTableData();
       },
       /**
