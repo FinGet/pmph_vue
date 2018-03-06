@@ -401,7 +401,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!rwtextbook.length">暂无数据</div>
         </div>
       </div>
 
@@ -489,7 +489,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>
         </div>
       </div>
 
@@ -511,7 +511,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!publish_reward.length">暂无数据</div>
         </div>
       </div>
 
@@ -535,7 +535,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!sci.length">暂无数据</div>
         </div>
       </div>
 
@@ -557,7 +557,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!clinical_reward.length">暂无数据</div>
         </div>
       </div>
 
@@ -579,7 +579,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!acade_reward.length">暂无数据</div>
         </div>
       </div>
 
