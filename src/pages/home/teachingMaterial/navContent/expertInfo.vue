@@ -369,14 +369,14 @@
               <th><div>教材级别</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in lastPositionList">
+            <tr v-for="(iterm,index) in nationalPlan">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
+          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
         </div>
       </div>
 
