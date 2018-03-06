@@ -51,6 +51,10 @@
       /* 点击发送 */
       reIssueSubmit(){
          this.formData.content=this.$refs.editor.getContent();
+         if(!this.formData.content){
+           this.$message.error("消息内容不能为空");
+           return ;
+         }
         this.$axios.post(this.reIssueUrl,this.$commonFun.initPostData(this.formData))
         .then((res)=>{
           console.log(res);
