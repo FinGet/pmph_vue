@@ -1,8 +1,8 @@
 <template>
   <div class="school-query">
     <choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="materialId">
-      <el-button type="primary" @click="exportExcel"  size="large">导出学校名单</el-button>
-
+      <el-button type="primary" @click="exportExcel"  size="large">导出已发布学校名单</el-button>
+      
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
