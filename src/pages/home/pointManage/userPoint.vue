@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <el-pagination
-					v-if="total>pageSize"
+					v-if="usertotal>pageSize"
 					class="pull-right marginT10"
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
@@ -47,10 +47,10 @@
 					:page-sizes="[10, 20, 30, 40]"
 					:page-size="pageSize"
 					layout="total, sizes, prev, pager, next, jumper"
-					:total="total">
+					:total="usertotal">
         </el-pagination>
 
-				<!-- 积分规则修改 -->
+				<!-- 积分记录 -->
 				<el-dialog title="积分记录" :visible.sync="dialogFormVisible" size="tiny">
 					<el-row>
             <el-col>
@@ -84,11 +84,11 @@ export default {
     return {
       username: "", // 用户代码
       realname: "", // 用户姓名
-      pageSize: 20, 
+      pageSize: 20,
       pageNumber: 1, // 当前页
-      diaPageSize: 20, 
+      diaPageSize: 20,
       diaPageNumber: 1, // 当前页
-      total: 100,
+      usertotal: 0,
       diaTotal: 0,
       tableData: [{name:'11',id:'11'}],
       diaTableData: [],
@@ -117,9 +117,9 @@ export default {
         }
       }).then(response => {
         let res = response.data;
+        this.usertotal = res.data.total;
         if (res.code == '1') {
           this.tableData = res.data.rows;
-          this.total=res.total;
         }
       })
     },
@@ -134,6 +134,7 @@ export default {
         }
       }).then(response => {
         let res = response.data;
+        this.diaTotal = res.data.total;
         if (res.code == '1') {
           this.diaTableData = res.data.rows;
         }
