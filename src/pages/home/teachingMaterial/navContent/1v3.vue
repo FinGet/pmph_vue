@@ -661,7 +661,7 @@
           if (res.code == 1) {
             this.$message.success('更新成功！');
           }else {
-            this.$message.error('更新失败！');
+            this.$message.error(res.msg.msgTrim());
           }
         })
       },
