@@ -233,7 +233,7 @@ export default {
 					id : this.form.id,
 					ruleName: this.form.ruleName,
 					ruleCode: this.form.ruleCode,
-          point: this.form.ruleCode,
+          point: this.form.point,
           exchangePoint: this.form.exchangePoint,
           thirdName: this.form.thirdName,
 					isExchange: this.form.isExchange,
