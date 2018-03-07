@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <el-pagination
-					v-if="usertotal>20"
+					v-if="usertotal>pageSize"
 					class="pull-right marginT10"
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
@@ -65,7 +65,7 @@
             </el-col>
           </el-row>
           <el-pagination
-            v-if="diaTotal>20"
+            v-if="total>diaPageSize"
             class="pull-right marginT10"
             @size-change="handleDiaSizeChange"
             @current-change="handleDiaCurrentChange"
@@ -143,18 +143,20 @@ export default {
     // 分页查询
 		handleSizeChange(val){
 			this.pageSize = val;
+      this.pageNumber=1;
 			this.getUserPoint();
 		},
-		handleSizeChange(val){
+		handleCurrentChange(val){
 			this.pageNumber = val;
 			this.getUserPoint();
     },
     // 分页查询
 		handleDiaSizeChange(val){
 			this.diaPageSize = val;
+      this.diaPageNumber = 1;
 			this.pointRecord();
 		},
-		handleDiaSizeChange(val){
+		handleDiaCurrentChange(val){
 			this.diaPageNumber = val;
 			this.pointRecord();
 		},

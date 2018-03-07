@@ -39,10 +39,10 @@
                         <p>{{scope.row.isDisabled?'是':'否'}}</p>
                       </template>
                     </el-table-column>
-										<el-table-column label="操作" width="110" align="center">
+										<el-table-column label="操作" width="80" align="center">
 											<template scope="scope">
 												<el-button type="text" class="link" @click="modifyRule(scope.$index)">修改</el-button>
-												<el-button type="text" class="link" @click="deleteRule(scope.row.id)">删除</el-button>
+												<!-- <el-button type="text" class="link" @click="deleteRule(scope.row.id)">删除</el-button> -->
 											</template>
                     </el-table-column>
                 </el-table>
