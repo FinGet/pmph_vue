@@ -53,7 +53,7 @@
         <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasAccess(2,myPower)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isPublished || !hasAccess(5,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
+        <el-button type="primary" :disabled="isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->

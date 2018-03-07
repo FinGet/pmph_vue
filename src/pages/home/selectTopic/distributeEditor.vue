@@ -99,7 +99,7 @@
           <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.realName"></el-input>
           <el-button type="primary" icon="search" @click="diaSearch">搜索</el-button>
       </p>
-      <el-table :data="dialogTableData"  border  class="table-wrapper">
+      <el-table :data="dialogTableData"  highlight-current-row border  class="table-wrapper">
           <el-table-column
           label="姓名"
           prop="realName"
