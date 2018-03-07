@@ -339,10 +339,9 @@ export default {
     /* 审核 */
     examineContent(obj,status){
       this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
-      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
+      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
       })
         .then(() => {
            this.formData.sessionId = this.$getUserData().sessionId;

@@ -272,6 +272,7 @@
         title="正在导出..."
         :visible.sync="exportDialog"
         size="tiny"
+        :close-on-click-modal="false"
         :before-close="handleExportDialogClose">
         <div class="paddingT50 paddingB50">
           <el-progress :text-inside="true" :stroke-width="18" :percentage="exportLoading" status="success"></el-progress>
