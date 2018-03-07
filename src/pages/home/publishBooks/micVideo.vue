@@ -6,8 +6,8 @@
           <span>状态：</span>
             <el-select v-model="searchParams.state" clearable style="width:150px;margin-right:10px;" placeholder="请选择">
               <el-option label="待审核" value="1"></el-option>
-              <el-option label="已通过" value="3"></el-option>
-              <el-option label="未通过" value="2"></el-option>
+              <el-option label="未通过" value="3"></el-option>
+              <el-option label="已通过" value="2"></el-option>
             </el-select>
             <span>上传时间：</span>
                 <el-date-picker
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column label="状态" width="90" >
               <template scope="scope">
-                {{scope.row.state==1?'待审核':(scope.row.state==2?'未通过':'已通过')}} 
+                {{scope.row.state==1?'待审核':(scope.row.state==2?'已通过':'未通过')}} 
               </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
