@@ -465,7 +465,7 @@
          },
          /* 下载按钮链接 */
          videoDownLoad(obj){
-           return 'v/play/'+obj.path.split('\\').pop();
+           return 'v/download?realname='+obj.path.split('\\').pop()+'&filename='+obj.title;
          },
          playVideo(obj){
           this.videoSrc='v/play/'+obj.path.split('\\').pop();

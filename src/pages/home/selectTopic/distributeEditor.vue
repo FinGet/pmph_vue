@@ -113,7 +113,7 @@
           width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="distributeSelect(1,obj)">选择</el-button>
+           <el-button type="text" @click="distributeSelect(1,scope.row)">选择</el-button>
           </template>
           </el-table-column>
       </el-table>
@@ -255,7 +255,7 @@ export default {
     },
 		/**分配部门编辑、退回运维人员 */
     distributeSelect(i,obj){
-        this.$confirm('确定分配给该编辑?', '提示', {
+        this.$confirm('确定分配给<'+obj.realName+'>?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(() => {
