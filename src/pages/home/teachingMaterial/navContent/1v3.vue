@@ -49,7 +49,7 @@
       <div class="operation-wrapper">
         <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasAccess(7,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
-        <el-button type="primary" :disabled="isSelected" @click="pushAllChecked()">批量发布主编/副主编</el-button>
+        <el-button type="primary" :disabled="isPublished || forceEnd || !hasAccess(2,myPower)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <el-button type="primary" :disabled="isPublished || !hasAccess(5,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
         <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
@@ -320,7 +320,6 @@
         let arr = [];
         if (this.selected.length > 0){
           this.selected.forEach(item => {
-            console.log(item.isPublished);
             arr.push(item.isPublished);
           });
           return arr.some(x=>{
@@ -518,7 +517,7 @@
           this.$message({
             type: 'info',
             message: '已取消操作'
-          });          
+          });
         });
       },
       /**
