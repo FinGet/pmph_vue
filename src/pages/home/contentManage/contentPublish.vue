@@ -37,7 +37,7 @@
         <el-upload
           class="upload-demo"
           style="float:left"
-          :action="fileUploadUrl"
+          :action="coverUploadUrl"
           :on-success="coverUploadSuccess"
           :on-remove="coverUploadRemove"
           :on-preview="checkCoverUpload"
@@ -161,6 +161,7 @@ export default {
       // },
       defaultCategoryId:[],
       uploadFileList: [],
+      coverUploadUrl:'/pmpheep/file/image/upload',
          fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
       /* fileUploadUrl:
         "http://192.168.200.109:8090/pmpheep/messages/message/file", */
@@ -543,6 +544,10 @@ export default {
      }
       this.imgList=[];
       this.formData.imgFile='';
+      if(this.formData.categoryId==1&&this.$router.currentRoute.query.type=='new'){
+        this.formData.cover='';
+        this.formData.cover=res.data;
+      }
       this.imgList.push({name:file.name,url:res.data});
       this.formData.imgFile=res.data;
     },
