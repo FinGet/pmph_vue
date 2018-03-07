@@ -275,7 +275,7 @@
                   this.$message.success('提交成功');
                   this.getTableData();
                 }else{
-                  this.$message.error('操作失败请重试！');
+                  this.$message.error(res.msg.msgTrim());
                 }
               })
               .catch(e=>{
