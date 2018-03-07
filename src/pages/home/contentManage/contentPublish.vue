@@ -581,11 +581,8 @@ export default {
       }      
     },
     checkCoverUpload(file){
-    if(file.url.indexOf('/')!=-1){
-           this.coverImgUrl=file.url;
-    this.coverDialogVislble=true;
-    }
-
+      this.coverImgUrl='pmpheep/image/'+file.url;
+      this.coverDialogVislble=true;
     }
   },
   created() {

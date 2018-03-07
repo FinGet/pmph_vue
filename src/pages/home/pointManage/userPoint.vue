@@ -24,7 +24,7 @@
                     </el-table-column>
                     <el-table-column prop="username" label="用户账号">
                     </el-table-column>
-                    <el-table-column prop="loss" label="消费总积分" >
+                    <el-table-column prop="loss" label="兑换总积分" >
                     </el-table-column>
                     <el-table-column prop="gain" label="获得总积分" >
                     </el-table-column>

@@ -255,7 +255,7 @@ export default {
     },
 		/**分配部门编辑、退回运维人员 */
     distributeSelect(i,obj){
-        this.$confirm('确定分配给<'+obj.realName+'>?', '提示', {
+        this.$confirm('确定分配到编辑：<'+obj.realName+'>?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(() => {

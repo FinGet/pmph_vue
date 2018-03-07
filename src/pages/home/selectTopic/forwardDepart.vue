@@ -221,7 +221,7 @@ export default {
     },
     /* 选择分配部门 */
     selectDepartment(obj) {
-        this.$confirm('确定分配到<'+obj.dpName+'>？', '提示', {
+        this.$confirm('确定分配到部门：<'+obj.dpName+'>？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(() => {

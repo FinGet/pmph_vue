@@ -86,7 +86,7 @@
           <el-input class="input" v-model="bookParams.name" placeholder="请输入书籍名称"></el-input>
           <el-button type="primary" icon="search" @click="bookSearch">搜索</el-button>
         </p>
-        <el-table :data="bookListData" border style="width:100%;margin:10px 0;">
+        <el-table :data="bookListData" border highlight-current-row style="width:100%;margin:10px 0;">
           <el-table-column prop="bookname" label="书籍名称">
            </el-table-column>
           <el-table-column label="书籍类型" prop="typeName" width="130">
@@ -465,7 +465,7 @@
          },
          /* 下载按钮链接 */
          videoDownLoad(obj){
-           return 'v/download?realname='+obj.path.split('\\').pop()+'&filename='+obj.title;
+           return 'v/download?realname='+obj.path.split('\\').pop().split('.')[0]+'&filename='+obj.title;
          },
          playVideo(obj){
           this.videoSrc='v/play/'+obj.path.split('\\').pop();
