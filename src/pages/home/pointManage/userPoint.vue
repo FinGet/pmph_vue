@@ -65,7 +65,7 @@
             </el-col>
           </el-row>
           <el-pagination
-            v-if="total>diaPageSize"
+            v-if="diaTotal>diaPageSize"
             class="pull-right marginT10"
             @size-change="handleDiaSizeChange"
             @current-change="handleDiaCurrentChange"
