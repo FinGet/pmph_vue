@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <el-pagination
-					v-if="total>20"
+					v-if="total>pageSize"
 					class="pull-right marginT10"
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
@@ -65,7 +65,7 @@
             </el-col>
           </el-row>
           <el-pagination
-            v-if="total>20"
+            v-if="total>diaPageSize"
             class="pull-right marginT10"
             @size-change="handleDiaSizeChange"
             @current-change="handleDiaCurrentChange"
@@ -88,7 +88,7 @@ export default {
       pageNumber: 1, // 当前页
       diaPageSize: 20, 
       diaPageNumber: 1, // 当前页
-      total: 0,
+      total: 100,
       diaTotal: 0,
       tableData: [{name:'11',id:'11'}],
       diaTableData: [],
@@ -119,6 +119,7 @@ export default {
         let res = response.data;
         if (res.code == '1') {
           this.tableData = res.data.rows;
+          this.total=res.total;
         }
       })
     },
@@ -141,18 +142,20 @@ export default {
     // 分页查询
 		handleSizeChange(val){
 			this.pageSize = val;
+      this.pageNumber=1;
 			this.getUserPoint();
 		},
-		handleSizeChange(val){
+		handleCurrentChange(val){
 			this.pageNumber = val;
 			this.getUserPoint();
     },
     // 分页查询
 		handleDiaSizeChange(val){
 			this.diaPageSize = val;
+      this.diaPageNumber = 1;
 			this.pointRecord();
 		},
-		handleDiaSizeChange(val){
+		handleDiaCurrentChange(val){
 			this.diaPageNumber = val;
 			this.pointRecord();
 		},
