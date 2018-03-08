@@ -48,7 +48,7 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasAccess(7,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
+        <el-button type="primary" :disabled="selected.length===0" @click="exportEditor">主编/副主编批量导出</el-button>
         <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || isSelected || allTextbookPublished" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasAccess(2,myPower)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>

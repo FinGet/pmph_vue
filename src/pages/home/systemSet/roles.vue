@@ -218,6 +218,10 @@ export default {
               label: "敏感词管理",
               id: 40
             },
+            {
+              label: "帮助管理",
+              id: 42
+            },
           ]
         },
         {
