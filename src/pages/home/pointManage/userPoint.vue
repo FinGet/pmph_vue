@@ -55,7 +55,7 @@
 					<el-row>
             <el-col>
                 <el-table :data="diaTableData" stripe border style="width: 100%">
-                    <el-table-column prop="ruleName" label="积分规则">
+                    <el-table-column prop="ruleName" label="积分规则名称">
                     </el-table-column>
                     <el-table-column prop="point" label="积分变化" >
                     </el-table-column>
