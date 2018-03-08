@@ -330,7 +330,7 @@ export default {
               iterm.sortIsOk=false;
               flag = false;
             }
-            if(!iterm.textbookName||iterm.textbookName.length>25){
+            if(!iterm.textbookName||iterm.textbookName.length>100){
               iterm.nameIsOk=false;
               flag = false;
             }
