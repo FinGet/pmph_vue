@@ -253,7 +253,13 @@
        * @param num 1为审核通过， 0为审核不通过
        */
       audit(num){
-        this.$confirm("确定审核通过所选评论？", "提示",{
+        var str = '';
+        if (num == 1) {
+          str = '通过';
+        } else if (num = 2) {
+          str = '不通过';
+        }
+        this.$confirm("确定审核"+str+"所选评论？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
