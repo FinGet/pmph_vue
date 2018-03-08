@@ -47,10 +47,11 @@ export function initPostData(obj, keyArr) {
 }
 /* 权限比对 */
 export function authorityComparison(matchArr, userArr) {
+  console.log(matchArr, userArr);
     var result = false;
     matchArr.forEach(function (elem) {
         userArr.forEach(function (num) {
-            if (num && num == elem.meta.authorityId) {
+          if (num && num == elem.meta.authorityId || elem.meta.authorityId===true) {
                 result = true;
             }
         })
