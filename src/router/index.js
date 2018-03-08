@@ -62,7 +62,8 @@ const ContentPublish = () => import('../pages/home/contentManage/contentPublish'
 const PublishList = () => import('../pages/home/contentManage/publishList');
 const noticeManage = () => import('../pages/home/contentManage/noticeManage');
 const infoExpertInfo = () => import('../pages/home/contentManage/infoExpressManage');
-const sensitiveWords = ()=> import('../pages/home/contentManage/sensitiveWords')
+const sensitiveWords = ()=> import('../pages/home/contentManage/sensitiveWords');
+const helpManage = () => import('../pages/home/contentManage/helpManage');
 //广告管理
 const adList = ()=> import('../pages/home/contentManage/adManage/ad-list');
 const adEdit= ()=> import('../pages/home/contentManage/adManage/ad-edit');
@@ -198,21 +199,23 @@ export default new Router({
         /*学校/ 教师审核 */
         {
           path: 'auth', name: '学校/教师审核', component: SchoolRouter, meta: { replaceName: false, authorityId: 3 }, children: [
-            { path: 'writers', name: '教师审核', component: TeacherCheck },
-            { path: 'orgs', name: '学校管理员审核', component: SchoolAdminCheck }
+            { path: 'writers', name: '教师审核', component: TeacherCheck, meta: { authorityId:true} },
+            { path: 'orgs', name: '学校管理员审核', component: SchoolAdminCheck, meta: { authorityId: true } }
           ]
         },
         /* 内容管理 */
         {
           path:'content',name:'内容管理',component:ContentRouter,meta: {replaceName: false, authorityId: 5 },children:[
             { path: 'list', name: '文章管理', meta: { authorityId: 15 }, component: PublishList },
-              { path: 'new', name: '添加内容', component: ContentPublish },
+            { path: 'new', name: '添加内容', component: ContentPublish, meta: { authorityId: true } },
             { path: 'info', name: '信息快报管理', meta: { authorityId: 16 }, component: infoExpertInfo },
             { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
             { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 40 }},
+            { path: 'help', name: '帮助管理', component: helpManage},
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
             { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },
             { path: 'ad/:id', name: '广告编辑', meta: { authorityId: 18 }, component: adEdit }
+
           ]
         },
         /* 出版图书 */
@@ -246,28 +249,28 @@ export default new Router({
         {
           path: 'survey', name: '问卷调查', component: questionSurveyRouter, meta: { replaceName: false,authorityId: 13}, children:[
             { path: 'setmodel', name: '调查问卷模板设置', component: surveyModelSet, meta: { authorityId: 37 }},
-            { path: 'launch', name: '发起调查', component: launchSurvey},
-            { path: 'reissue', name: '补发消息', component: reIssue },
-            { path: 'newmodel', name: '问卷模板新增', component: addNewModel,  },
-            { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey,  },
+            { path: 'launch', name: '发起调查', component: launchSurvey, meta: { authorityId: true }},
+            { path: 'reissue', name: '补发消息', component: reIssue, meta: { authorityId: true }},
+            { path: 'newmodel', name: '问卷模板新增', component: addNewModel, meta: { authorityId: true } },
+        { path: 'newsurvey', name: '新建调查问卷', component: addNewSurvey , meta: { authorityId: true }},
             { path: 'statistic', name: '调查问卷结果统计', component: surveryResultStatistic, meta: { authorityId: 38 } },
-            { path: 'detail', name:'结果明细', component: surveryResultDetail,  },
+            { path: 'detail', name: '结果明细', component: surveryResultDetail, meta: { authorityId: true }  },
             { path: 'recovery', name: '调查问卷回收', component: surveyRecovery, meta: { authorityId: 39 } },
-            { path: 'result', name: '问卷回收结果', component: recoveryResult, },
+            { path: 'result', name: '问卷回收结果', component: recoveryResult, meta: { authorityId: true } },
           ]
         },
 
         /* 我的消息 */
         {
           path: 'mymsg', name: '我的消息', component: MyMessageRouter, meta: { replaceName: false, authorityId: 1}, children: [
-            { path: 'msglist', name: '我的消息列表', component: MyMessageList },
-            { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails }
+            { path: 'msglist', name: '我的消息列表', component: MyMessageList, meta: { authorityId: true } },
+            { path: 'msgdetails', name: '我的消息详情', component: MyMessageDetails, meta: { authorityId: true } }
           ]
         },
         /*用户主页(个人设置)*/
         {
           path: 'personal', name: '个人资料', component: PersonalRouter, meta: {  replaceName: false, authorityId: 1}, children: [
-          { path: 'setting', name: '个人信息', component: PersonalSetting },
+            { path: 'setting', name: '个人信息', component: PersonalSetting, meta: { authorityId: true }},
         ]
         },
         /*用户主页(个人设置)*/
@@ -276,7 +279,7 @@ export default new Router({
         },
       ]
     },
-    { path: '/*', name: '404', component: NoFind }
+    { path: '/*', name: '404', component: NoFind, meta: { authorityId: true } }
 
   ]
 })
