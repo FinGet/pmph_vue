@@ -103,7 +103,7 @@
           <el-button type="primary" icon="search" @click="dialogSearch">搜索</el-button>
       </p>
       <div style="overflow:hidden">
-      <el-table :data="dialogTableData" border style="width:100%" class="table-wrapper">
+      <el-table :data="dialogTableData" border style="width:100%" highlight-current-row class="table-wrapper">
           <el-table-column
            label="部门名称"
            prop="dpName"
@@ -120,7 +120,7 @@
            width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="selectDepartment(scope.row.id)">选择</el-button>
+           <el-button type="text" @click="selectDepartment(scope.row)">选择</el-button>
           </template>
           </el-table-column>
       </el-table>
@@ -220,8 +220,8 @@ export default {
         });
     },
     /* 选择分配部门 */
-    selectDepartment(dId) {
-        this.$confirm('确定分配到该部门？', '提示', {
+    selectDepartment(obj) {
+        this.$confirm('确定分配到部门：<'+obj.dpName+'>？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(() => {
@@ -230,7 +230,7 @@ export default {
             url:this.distributeUrl,
             data:this.$commonFun.initPostData({
               id:this.distributeId,
-              departmentId:dId
+              departmentId:obj.id
             })
           }).then((res)=>{
            console.log(res);

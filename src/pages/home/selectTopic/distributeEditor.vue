@@ -99,7 +99,7 @@
           <el-input class="input" placeholder="请输入编辑姓名" v-model="dialogParams.realName"></el-input>
           <el-button type="primary" icon="search" @click="diaSearch">搜索</el-button>
       </p>
-      <el-table :data="dialogTableData"  border  class="table-wrapper">
+      <el-table :data="dialogTableData"  highlight-current-row border  class="table-wrapper">
           <el-table-column
           label="姓名"
           prop="realName"
@@ -113,7 +113,7 @@
           width="90"
           >
           <template scope="scope">
-           <el-button type="text" @click="distributeSelect(1,scope.row.id)">选择</el-button>
+           <el-button type="text" @click="distributeSelect(1,scope.row)">选择</el-button>
           </template>
           </el-table-column>
       </el-table>
@@ -254,12 +254,12 @@ export default {
         this.backDialogVislble=true;
     },
 		/**分配部门编辑、退回运维人员 */
-    distributeSelect(i,id){
-        this.$confirm('确定分配给该编辑?', '提示', {
+    distributeSelect(i,obj){
+        this.$confirm('确定分配到编辑：<'+obj.realName+'>?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.distributeParams.editorId=id;
+          this.distributeParams.editorId=obj.id;
           this.directorHandling(i);
         }).catch(() => {
           this.$message({
