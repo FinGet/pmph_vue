@@ -1,7 +1,7 @@
 <template>
 	<div class="applicationStatistics">
     <div class="total-chart paddingT30 paddingB30">
-          <p class="title">以下统计数据包含申报单位为人民出版社的作家:</p>
+          <p class="title">以下统计数据包含申报单位为人民卫生出版社的作家:</p>
             <div class="num-chart-iterm">
               <div>
                 <br>
