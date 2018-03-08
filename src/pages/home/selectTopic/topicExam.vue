@@ -5,7 +5,7 @@
       <forward-depart :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></forward-depart>
     </el-tab-pane>
     <el-tab-pane label="分配编辑" name="second" v-if="Identity.isAdmin || Identity.isDirector">
-      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></distribute-editor>
+      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive' @change="identity" :searchInput='searchInput'></distribute-editor>
     </el-tab-pane>
     <el-tab-pane label="受理" name="third" v-if="Identity.isAdmin || Identity.isEditor">
       <acceptance :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></acceptance>

@@ -280,7 +280,7 @@ export default {
 					this.$message.success(i==1?'分配成功！':'退回成功');
           this.dialogVisible=false;
           this.backDialogVislble=false;
-
+          this.$emit('change'); // 通知父组件 再次身份判断
 					this.getTableData();
 				} else {
 					this.$message.error(res.msg.msgTrim());

@@ -32,6 +32,7 @@
             <!--操作按钮-->
             <div class="pull-right">
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="warning" :disabled="!selectData.length" @click="setState(false)">取消置顶</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(2)">审核不通过</el-button>
@@ -81,6 +82,7 @@
             <!--操作按钮-->
             <div class="pull-right">
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
+              <el-button type="warning" :disabled="!selectData.length" @click="setState(false)">取消置顶</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(2)">审核不通过</el-button>
@@ -253,7 +255,13 @@
        * @param num 1为审核通过， 0为审核不通过
        */
       audit(num){
-        this.$confirm("确定审核通过所选评论？", "提示",{
+        var str = '';
+        if (num == 1) {
+          str = '通过';
+        } else if (num = 2) {
+          str = '不通过';
+        }
+        this.$confirm("确定审核"+str+"所选评论？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
