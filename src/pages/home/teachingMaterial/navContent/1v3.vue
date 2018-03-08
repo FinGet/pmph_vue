@@ -52,7 +52,7 @@
         <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || isSelected || allTextbookPublished" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selected)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
         <el-button type="primary" :disabled="isLocked || !hasPower(4,selected) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isPublished || !hasPower(5,selected) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="isPublished || !hasPower(5,selected) || forceEnd" @click="showDialog(0,null,isLocked)">批量结果公布</el-button>
         <el-button type="primary" :disabled="isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
