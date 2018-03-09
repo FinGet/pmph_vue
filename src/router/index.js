@@ -214,7 +214,7 @@ export default new Router({
             { path: 'notice', name: '公告管理', meta: { authorityId: 17 }, component: noticeManage },
             { path: 'sensitive', name: '敏感词管理', component: sensitiveWords, meta: { authorityId: 40 }},
             { path: 'help', name: '帮助管理', component: helpManage},
-            {path:'common',name:'常见问题维护',component:commonEdit},
+            {path:'common',name:'常见问题',component:commonEdit},
             {path:'operation',name:'操作手册上传',component:operationEdit},
            /*  { path: 'set', name: '栏目设置', meta: { authorityId: 12 }, component: ColumnSet }, */
             { path: 'ad', name: '广告管理', meta: { authorityId: 18 }, component: adList },

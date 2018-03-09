@@ -219,7 +219,7 @@
                 prop="gmtCreate"
                 label="评论时间"
                 >
-            </el-table-column>authDate
+            </el-table-column>
             <el-table-column
                 prop="authDate"
                 label="审核时间"
