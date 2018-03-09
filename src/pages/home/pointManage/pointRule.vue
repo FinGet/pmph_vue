@@ -36,7 +36,7 @@
                     </el-table-column>
                     <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
                       <template scope="scope">
-                        <p>{{scope.row.isDisabled?'是':'否'}}</p>
+                        <p>{{scope.row.isDisabled?'否':'是'}}</p>
                       </template>
                     </el-table-column>
 										<el-table-column label="操作" width="80" align="center">
@@ -80,8 +80,8 @@
 						</el-form-item> -->
 						<el-form-item label="启用状态:" prop="isDisabled">
 							<el-radio-group v-model="form.isDisabled">
-								<el-radio :label="true">启用</el-radio>
-								<el-radio :label="false">禁用</el-radio>
+								<el-radio :label="false">启用</el-radio>
+								<el-radio :label="true">禁用</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="规则描述:" prop="description">
