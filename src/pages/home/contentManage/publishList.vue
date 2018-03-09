@@ -130,7 +130,7 @@
              <p v-html="contentDetailData.content.content"></p>
          </el-form-item>
          <el-form-item label="封面图片：" v-if="contentDetailData.imgFilePath">
-           <img  :src="contentDetailData.imgFilePath" />
+           <img  :src="contentDetailData.imgFilePath.split('/').length>=2?contentDetailData.imgFilePath:'pmpheep/image/'+contentDetailData.imgFilePath" />
          </el-form-item>
          <el-form-item label="附件：" v-if="contentDetailData.cmsExtras.length!=0">
               <a type="text" :href="item.attachment" style="color:#337ab7;display:block;" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
@@ -219,7 +219,7 @@
                 prop="gmtCreate"
                 label="评论时间"
                 >
-            </el-table-column>authDate
+            </el-table-column>
             <el-table-column
                 prop="authDate"
                 label="审核时间"
