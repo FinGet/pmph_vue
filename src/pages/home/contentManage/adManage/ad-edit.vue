@@ -75,7 +75,7 @@
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i
                 class="cursor-pointer el-icon-close remove-btn"
-                @click.prevent="removeImage(iterm.advertId,iterm.image,index)"
+                @click.prevent="removeImage(iterm.id,iterm.image,index)"
                 v-if="!(index==radio2)"
               ></i>
             </div>
@@ -93,7 +93,7 @@
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i
                 class="cursor-pointer el-icon-close remove-btn"
-                @click.prevent="removeImage(iterm.advertId,iterm.image,index)"
+                @click.prevent="removeImage(iterm.id,iterm.image,index)"
                 v-if="!(checkedImage.includes(iterm.id))"
               ></i>
             </div>
@@ -183,7 +183,7 @@
         imageLibs:[],
         timer:null,
         deleteImages:[],
-        deleteImagesId:'',
+        deleteImagesIds:[],
       }
 		},
     computed:{
@@ -283,7 +283,7 @@
        */
       removeImage(id,image,index){
         this.deleteImages.push(image);
-        this.deleteImagesId = id;
+        this.deleteImagesIds.push(id);
         this.$confirm("确定删除该图片吗?", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -315,9 +315,9 @@
 //       真正删除图片
 //       * /
        deleteImg(id,image){
-        console.log(id,image);
+//        console.log(id,image);
          this.$axios.delete(this.api_image_delete,{params:{
-          id:id,
+          id:JSON.stringify(id),
           image:JSON.stringify(image)
         }})
          .then(response=>{
@@ -392,7 +392,7 @@
             if (res.code == '1') {
               console.log(111111);
               this.$message.success('修改成功！');
-              this.deleteImg(this.deleteImagesId,this.deleteImages);
+              this.deleteImg(this.deleteImagesIds,this.deleteImages);
               this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
