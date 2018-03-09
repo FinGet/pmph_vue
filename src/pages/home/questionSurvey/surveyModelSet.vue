@@ -92,13 +92,14 @@
     </div>
 
     <!--查看发送对象-->
-    <el-dialog title="已发送对象" size="tiny" :visible.sync="showSendVisible">
+    <el-dialog title="已发送对象"  :visible.sync="showSendVisible">
       <el-table :data="sendTable" border >
         <el-table-column property="orgName" label="机构名称"></el-table-column>
         <el-table-column property="username" label="管理员姓名" ></el-table-column>
         <el-table-column property="handphone" label="手机"></el-table-column>
       </el-table>
       <el-pagination
+        class="pull-right marginT10 marginB10"
         v-if="sendTotal>sendPageSize"
         @size-change="sendSizeChange"
         @current-change="sendCurrentChange"
@@ -199,6 +200,7 @@
             }).then(response => {
               let res = response.data;
               if (res.code == 1) {
+                this.sendTotal = res.data.total;
                 this.sendTable = res.data.rows;
               }
             }).catch(error => {
@@ -206,12 +208,12 @@
             })
           },
           /* 分页改变 */
-          handleSizeChange(val){
+          sendSizeChange(val){
             this.sendPageSize=val;
             this.sendPageNumber=1;
             this.showSend();
           },
-          handleCurrentChange(val){
+          sendCurrentChange(val){
             this.sendPageNumber=val;
             this.showSend();
           },
