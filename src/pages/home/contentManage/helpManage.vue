@@ -26,7 +26,7 @@
              <template scope="scope">
                  <el-button type="text" @click="editSearch(scope.row.id)">修改</el-button>
                  <span>|</span>
-                 <el-button type="text">删除</el-button>
+                 <el-button type="text" @click="deleteCommon(scope.row)">删除</el-button>
              </template>
          </el-table-column>
      </el-table>
@@ -120,7 +120,7 @@
             if(this.activeName=='first'){
                   this.getCommonList(); 
             }else{
-
+                 this.getOperationList();
             } 
         },
         methods:{
@@ -143,15 +143,43 @@
           },
           /* 修改查询 */
           editSearch(id){
-            this.$axios.get('/pmpheep/'+id+'/detail',)
+            this.$axios.get('/pmpheep/help/'+id+'/detail',)
             .then((res)=>{
                 if(res.data.code==1){
                     this.$router.push({name:'常见问题',params:{type:'edit',editData:res.data.data}});
                 }
             })
           },
+          /* 删除常见问题 */
+          deleteCommon(obj){
+            this.$confirm('确认删除问题：<'+obj.title+'>?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            }).then(() => {
+               this.$axios.delete('/pmpheep/cms/content/'+obj.id+'/delete')
+               .then((res)=>{
+                   console.log(res);
+                   if(res.data.code==1){
+                       this.$message.success('问题已删除');
+                       this.getCommonList();
+                   }else{
+                       this.$message.error(res.data.msg.msgTrim());
+                   }
+               }) 
+            }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+             });          
+            });
+          },
           handleClick(tab, event){
-
+              console.log(tab);
+              if(tab.name=='first'){
+                this.getCommonList();  
+              }else{
+                this.getOperationList();
+              }
           },
           /* 常见问题分页 */
           commonSizeChange(val){
@@ -162,6 +190,10 @@
           commonCurrentChange(val){
              this.commonParams.pageNumber=val;
              this.getCommonList();
+          },
+          /* 操作 */
+          getOperationList(){
+
           },
           operationSizeChange(val){
 

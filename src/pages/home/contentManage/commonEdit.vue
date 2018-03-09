@@ -30,6 +30,7 @@
         data(){
             return{
               addNewUrl:'/pmpheep/help/newHelp',   //添加常见问题url
+              editUrl:'/pmpheep/help/update',    //修改问题url
              formData:{
                title:'',
                content:''
@@ -49,15 +50,21 @@
           if(!this.$route.params.type){
                this.$router.push({name:'帮助管理'});
           }
+          if(this.$route.params.type=='edit'){
+            this.formData.mid=this.$route.params.editData.cmsContent.mid;
+            this.formData.id=this.$route.params.editData.cmsContent.id;
+            this.formData.content=this.$route.params.editData.content.content;
+            this.formData.title=this.$route.params.editData.cmsContent.title;
+          }
         },
         methods:{
           editSubmit(){
             this.$refs.formData.validate((valid) =>{
               if(valid){
+                /* 新增 */
                 if(this.$route.params.type=='new'){
                   this.$axios.post(this.addNewUrl,this.$commonFun.initPostData(this.formData))
                   .then((res)=>{
-                    console.log(res);
                     if(res.data.code==1){
                       this.$message.success('添加成功');
                       this.$router.push({name:'帮助管理'});
@@ -65,6 +72,17 @@
                       this.$message.error(res.data.msg.msgTrim());
                     }
                   })
+                  /* 修改 */
+                }else{
+                 this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.formData))
+                 .then((res)=>{
+                    if(res.data.code==1){
+                      this.$message.success('修改成功');
+                      this.$router.push({name:'帮助管理'});
+                    }else{
+                      this.$message.error(res.data.msg.msgTrim());
+                    }
+                 }) 
                 }
               }else{
                 return ;
