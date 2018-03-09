@@ -108,6 +108,12 @@
                 width="110">
               </el-table-column>
               <el-table-column
+                prop="presetDigitalEditor"
+                label="数字编委申报数"
+                align="center"
+                width="110">
+              </el-table-column>
+              <el-table-column
                 prop="chosenPositionEditor"
                 label="主编当选数"
                 align="center"
@@ -201,6 +207,12 @@
               <el-table-column
                 prop="presetPositionEditorial"
                 label="编委申报数"
+                align="center"
+                width="110">
+              </el-table-column>
+              <el-table-column
+                prop="presetDigitalEditor"
+                label="数字编委申报数"
                 align="center"
                 width="110">
               </el-table-column>
