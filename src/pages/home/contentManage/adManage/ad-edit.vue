@@ -75,7 +75,7 @@
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i
                 class="cursor-pointer el-icon-close remove-btn"
-                @click.prevent="removeImage(iterm.id,iterm.image,index)"
+                @click.prevent="removeImage(iterm.advertId,iterm.image,index)"
                 v-if="!(index==radio2)"
               ></i>
             </div>
@@ -93,7 +93,7 @@
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i
                 class="cursor-pointer el-icon-close remove-btn"
-                @click.prevent="removeImage(iterm.id,iterm.image,index)"
+                @click.prevent="removeImage(iterm.advertId,iterm.image,index)"
                 v-if="!(checkedImage.includes(iterm.id))"
               ></i>
             </div>
@@ -182,6 +182,8 @@
         uploadBtnLoading:false,
         imageLibs:[],
         timer:null,
+        deleteImages:[],
+        deleteImagesId:'',
       }
 		},
     computed:{
@@ -280,33 +282,58 @@
        * @param id 当前图id
        */
       removeImage(id,image,index){
+        this.deleteImages.push(image);
+        this.deleteImagesId = id;
         this.$confirm("确定删除该图片吗?", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         })
           .then(()=>{
-            this.$axios.delete(this.api_image_delete,{params:{
-              id:id,
-              image:image
-            }})
-              .then(response=>{
-                let res = response.data;
-                if (res.code == '1') {
+//            this.$axios.delete(this.api_image_delete,{params:{
+//              id:id,
+//              image:image
+//            }})
+//              .then(response=>{
+//                let res = response.data;
+//                if (res.code == '1') {
                   this.imageLibs.splice(index,1);
-                  if(index<this.radio2){
-                    this.radio2--;
-                  }
-                }else{
-                  this.$message.error(res.msg.msgTrim());
-                }
-              })
-              .catch(e=>{
-                this.$message.error('删除失败，请重试！');
-              })
+//                  if(index<this.radio2){
+//                    this.radio2--;
+//                  }
+//                }else{
+//                  this.$message.error(res.msg.msgTrim());
+//                }
+//              })
+//              .catch(e=>{
+//                this.$message.error('删除失败，请重试！');
+//              })
           })
           .catch(e=>{})
       },
+//      /**
+//       真正删除图片
+//       * /
+       deleteImg(id,image){
+        console.log(id,image);
+         this.$axios.delete(this.api_image_delete,{params:{
+          id:id,
+          image:JSON.stringify(image)
+        }})
+         .then(response=>{
+            let res = response.data;
+           if (res.code == '1') {
+
+            }else{
+             this.$message.error(res.msg.msgTrim());
+          }
+          })
+          .catch(e=>{
+            this.$message.error('删除失败，请重试！');
+          })
+       },
+
+
       /**
        * 保存广告
        */
@@ -365,6 +392,7 @@
             if (res.code == '1') {
               console.log(111111);
               this.$message.success('修改成功！');
+              this.deleteImg(this.deleteImagesId,this.deleteImages);
               this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
