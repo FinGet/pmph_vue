@@ -270,9 +270,9 @@ export default {
                this.$emit('refreshMange');
                this.$message.success('添加成功');
           }else{
-            this.$message.error('添加失败');
+            this.$message.error(res.data.msg.msgTrim());
           }
-             this.isLoadingUp=false;  
+             this.isLoadingUp=false;
      })
 
     },
