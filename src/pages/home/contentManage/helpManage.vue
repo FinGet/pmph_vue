@@ -53,7 +53,7 @@
          <span>操作手册名称：</span>
          <el-input class="input" placeholder="请输入操作手册名称" v-model="operationParams.manualName"></el-input>
          <span>创建人：</span>
-         <el-input class="input" placeholder="请输入创建人" v-model="operationParams.username"></el-input>
+         <el-input class="input" placeholder="请输入创建人" v-model="operationParams.userName"></el-input>
          <el-button type="primary" icon="search" @click="operationSearch">搜索</el-button>
 
          <el-button type="primary" style="float:right" @click="$router.push({name:'操作手册上传',params:{type:'new'}})">新增</el-button>
@@ -120,7 +120,7 @@
                    pageSize:10,
                    pageNumber:1,
                    manualName:'',
-                   username:''
+                   userName:''
                }
 
             }
