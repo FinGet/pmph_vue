@@ -208,8 +208,8 @@
               <el-radio :label="true">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注：" prop="note">
-            <el-input v-model="form.note"></el-input>
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="form.address"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -461,7 +461,7 @@ export default {
         email: "",
         areaId:'',
         isDisabled: true,
-        note: ""
+        address: ""
       },
       // 表单校验规则
       rules: {
@@ -489,7 +489,7 @@ export default {
         ],
         areaId: [{required: true, message: "请选择机构所属地区",trigger:"blur"}],
         isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
-        note:[
+        address:[
           {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
       },
@@ -844,7 +844,7 @@ export default {
         handphone: "",
         email: "",
         isDisabled: true,
-        note: ""
+        address: ""
       }
     },
       /**
