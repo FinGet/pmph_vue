@@ -125,9 +125,12 @@
       <span class="marginR10">{{contentDetailData.listObj.username}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
-       <el-form label-width="55px" v-if="contentDetailData.content">
+       <el-form label-width="90px" v-if="contentDetailData.content">
          <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
+         </el-form-item>
+         <el-form-item label="封面图片：" v-if="contentDetailData.imgFilePath">
+           <img  :src="contentDetailData.imgFilePath" />
          </el-form-item>
          <el-form-item label="附件：" v-if="contentDetailData.cmsExtras.length!=0">
               <a type="text" :href="item.attachment" style="color:#337ab7;display:block;" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
