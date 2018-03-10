@@ -19,7 +19,7 @@
      </div>
      <div class="overflow:hidden;">
    <div class="bottom_button">
-       <el-button type="primary" @click="editSubmit">发布</el-button>
+       <el-button type="primary" @click="editSubmit" v-if="$route.params.check!='check'">发布</el-button>
        <el-button type="primary" @click="$router.push({name:'帮助管理'})">返回</el-button>
     </div>   
    </div>

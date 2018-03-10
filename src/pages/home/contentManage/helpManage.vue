@@ -14,6 +14,9 @@
      <!-- 列表 -->
      <el-table :data="commonTableData" border class="table-wrapper" style="width:100%;margin-bottom:10px;">
          <el-table-column  label="问题标题" prop="title">
+             <template scope="scope">
+                <el-button type="text" @click="editSearch(scope.row.id,'check')" >{{scope.row.title}}</el-button>
+             </template>
          </el-table-column>
          <el-table-column  label="创建人"  width="110" prop="username">
          </el-table-column>
@@ -48,29 +51,34 @@
     <el-tab-pane label="操作手册上传" name="second">
      <p class="header_p">
          <span>操作手册名称：</span>
-         <el-input class="input" placeholder="请输入操作手册名称"></el-input>
+         <el-input class="input" placeholder="请输入操作手册名称" v-model="operationParams.manualName"></el-input>
          <span>创建人：</span>
-         <el-input class="input" placeholder="请输入创建人"></el-input>
-         <el-button type="primary" icon="search">搜索</el-button>
+         <el-input class="input" placeholder="请输入创建人" v-model="operationParams.userName"></el-input>
+         <el-button type="primary" icon="search" @click="operationSearch">搜索</el-button>
 
-         <el-button type="primary" style="float:right">新增</el-button>
+         <el-button type="primary" style="float:right" @click="$router.push({name:'操作手册上传',params:{type:'new'}})">新增</el-button>
      </p>
      <!-- 列表 -->
-     <el-table :data="operationTableData" border style="width:100%;margin-bottom:10px;">
-         <el-table-column  label="操作手册名称">
+     <el-table :data="operationTableData" border  class="table-wrapper" style="width:100%;margin-bottom:10px;">
+         <el-table-column  label="操作手册名称" prop="manualName">
+           <template scope="scope">
+             <a type="text" :href="'pmpheep/file/download/'+scope.row.attachment" style="color:#337ab7;display:block;"  >{{scope.row.manualName}}</a>
+           </template>
          </el-table-column>
-         <el-table-column  label="创建人"  width="110">
+         <el-table-column  label="创建人"  width="110" prop="userName">
          </el-table-column>
-         <el-table-column  label="创建时间"  width="120">
-             <template scope="scope"></template>
-         </el-table-column>
-         <el-table-column  label="备注">
-         </el-table-column>
-         <el-table-column  label="操作"  width="120">
+         <el-table-column  label="创建时间"  width="120" >
              <template scope="scope">
-                 <el-button type="text">修改</el-button>
-                 <span>|</span>
-                 <el-button type="text">删除</el-button>
+               {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}  
+             </template>
+         </el-table-column>
+         <el-table-column  label="备注" prop="note">
+         </el-table-column>
+         <el-table-column  label="操作"  width="80">
+             <template scope="scope">
+                <!--  <el-button type="text">下载</el-button>
+                 <span>|</span> -->
+                 <el-button type="text" @click="deleteOperation(scope.row)">删除</el-button>
              </template>
          </el-table-column>
      </el-table>
@@ -96,7 +104,7 @@
         data(){
             return{ 
                commonListUrl:'/pmpheep/help/list',      //常见问题列表url
-               operationListUrl:'',         //操作手册列表url
+               operationListUrl:'/pmpheep/cms/manual/list',         //操作手册列表url
                activeName:'first',
                commonTableData:[],
                commonTotal:100,
@@ -110,13 +118,15 @@
                operationTotal:100,
                operationParams:{
                    pageSize:10,
-                   pageNumber:1
+                   pageNumber:1,
+                   manualName:'',
+                   userName:''
                }
 
             }
         },
         created () {
-            this.activeName=this.$route.params.activeName||'first';
+            this.activeName=this.$route.params.activeName?this.$route.params.activeName:'first';
             if(this.activeName=='first'){
                   this.getCommonList(); 
             }else{
@@ -142,11 +152,12 @@
             this.getCommonList();
           },
           /* 修改查询 */
-          editSearch(id){
+          editSearch(id,str){
             this.$axios.get('/pmpheep/help/'+id+'/detail',)
             .then((res)=>{
                 if(res.data.code==1){
                     this.$router.push({name:'常见问题',params:{type:'edit',editData:res.data.data}});
+                    this.$router.push({name:'常见问题',params:{type:'edit',editData:res.data.data,check:str}});
                 }
             })
           },
@@ -191,15 +202,52 @@
              this.commonParams.pageNumber=val;
              this.getCommonList();
           },
-          /* 操作 */
+          /* 操作列表 */
           getOperationList(){
-
+              this.$axios.get(this.operationListUrl,{
+                  params:this.operationParams
+              }).then((res)=>{
+                if(res.data.code==1){
+                    this.operationTableData=res.data.data.rows;
+                    this.operationTotal=res.data.data.total;
+                }
+              })
           },
+          /* 操作搜索 */
+          operationSearch(){
+            this.operationParams.pageNumber=1;
+             this.getOperationList();
+          },
+          deleteOperation(obj){
+            this.$confirm('确认删除操作手册：<'+obj.manualName+'>?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                }).then(() => {
+                  this.$axios.delete('pmpheep/cms/manual/'+obj.id+'/delete')
+                  .then((res)=>{
+                      if(res.data.code==1){
+                          this.$message.success('成功删除');
+                          this.getOperationList();
+                      }else{
+                          this.$message.error(res.data.msg.msgTrim());
+                      }
+                  })
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+          },
+          /* 操作分页 */
           operationSizeChange(val){
-
+             this.operationParams.pageSize=val;
+             this.operationParams.pageNumber=1;
+             this.getOperationList();
           },
           operationCurrentChange(val){
-
+             this.operationParams.pageNumber=val;
+             this.getOperationList();
           }  
         }
     }
