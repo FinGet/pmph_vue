@@ -327,7 +327,7 @@
 	export default {
 		data() {
 			return {
-        api_upload: '/pmpheep//books/bookExcel',
+        api_upload: '/pmpheep/books/bookExcel',
 			  form:{
 			    bookId:'',
           isNew:true,
