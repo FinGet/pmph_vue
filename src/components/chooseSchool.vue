@@ -91,7 +91,7 @@ props: default-history-id 默认选中的历史记录
           <el-checkbox-group v-model="select_orgType.types" class="inline-block marginL20">
             <el-checkbox v-for="iterm in orgTypeList" :label="iterm.id" :key="iterm.id"  @change="_handleCheckedTypeChange()">{{iterm.name}}</el-checkbox>
           </el-checkbox-group>
-         <el-button type="primary" style="margin-left:20px;" @click="$commonFun.downloadFile('/pmpheep/excel/allOrg');">导出所有学校</el-button>          
+         <el-button type="primary" style="margin-left:20px;" @click="$commonFun.downloadFile('/pmpheep/excel/allOrg');">导出所有学校</el-button>
         </div>
       </div>
 
@@ -565,11 +565,13 @@ props: default-history-id 默认选中的历史记录
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        this.pageSize = val
+        this.pageSize = val;
+        this._getHistory();
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
-        this.currentPage = val
+        this.currentPage = val;
+        this._getHistory();
       },
       /**
        * 上传excel文件
