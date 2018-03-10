@@ -993,7 +993,8 @@
                 //初始化添加图书数据
                 this.hasBookListChanged=false;
                 this.addBookList = res.data.decPositionList;
-
+                // 获取当前专家账号
+                this.username = res.data.declaration.username;
                 //初始化专家身份信息
                 res.data.declaration.sex=res.data.declaration.sex?res.data.declaration.sex==1?'男':'女':'保密';
                 res.data.declaration.birthday = this.$commonFun.formatDate(res.data.declaration.birthday).split(' ')[0];
@@ -1235,7 +1236,6 @@
 
       },
       created(){
-          this.username = this.$route.params.username;
         this.searchFormData.declarationId = this.$route.query.declarationId;
         this.searchFormData.materialId = this.$route.params.materialId;
         if(this.$route.query.pageNumber||this.$route.query.pageSize){
