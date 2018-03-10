@@ -20,7 +20,7 @@
      </el-table-column>
      <el-table-column
      label="提交人"
-     prop="userName"
+     prop="realname"
      width="110"
      >
      </el-table-column>

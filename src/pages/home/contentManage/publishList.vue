@@ -18,7 +18,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1,type:'new'}})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1,type:'new',isShowCover:true}})">发布新内容</el-button>
          <el-button type="primary"   style="float:right;" @click="syncDialogVisible=true">同步</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -125,9 +125,12 @@
       <span class="marginR10">{{contentDetailData.listObj.username}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
-       <el-form label-width="55px" v-if="contentDetailData.content">
+       <el-form label-width="90px" v-if="contentDetailData.content">
          <el-form-item label="" label-width="0">
              <p v-html="contentDetailData.content.content"></p>
+         </el-form-item>
+         <el-form-item label="封面图片：" v-if="contentDetailData.imgFilePath">
+           <img  :src="contentDetailData.imgFilePath.split('/').length>=2?contentDetailData.imgFilePath:'pmpheep/image/'+contentDetailData.imgFilePath" />
          </el-form-item>
          <el-form-item label="附件：" v-if="contentDetailData.cmsExtras.length!=0">
               <a type="text" :href="item.attachment" style="color:#337ab7;display:block;" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</a>
@@ -216,7 +219,7 @@
                 prop="gmtCreate"
                 label="评论时间"
                 >
-            </el-table-column>authDate
+            </el-table-column>
             <el-table-column
                 prop="authDate"
                 label="审核时间"

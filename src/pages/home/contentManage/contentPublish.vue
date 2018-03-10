@@ -37,7 +37,7 @@
         <el-upload
           class="upload-demo"
           style="float:left"
-          :action="fileUploadUrl"
+          :action="coverUploadUrl"
           :on-success="coverUploadSuccess"
           :on-remove="coverUploadRemove"
           :on-preview="checkCoverUpload"
@@ -98,8 +98,8 @@
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
-          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">通过</el-button>
-          <el-button type="danger" v-if="formData.categoryId==1" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">{{$router.currentRoute.query.type!='new'?'通过':'发布'}}</el-button>
+          <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
           <el-button type="primary" @click="ContentSubmit(0)" >暂存</el-button>
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
@@ -161,6 +161,7 @@ export default {
       // },
       defaultCategoryId:[],
       uploadFileList: [],
+      coverUploadUrl:'/pmpheep/file/image/upload',
          fileUploadUrl:this.$config.BASE_URL+'messages/message/file',
       /* fileUploadUrl:
         "http://192.168.200.109:8090/pmpheep/messages/message/file", */
@@ -339,10 +340,9 @@ export default {
     /* 审核 */
     examineContent(obj,status){
       this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
-      this.$confirm(status==2?"通过后不能修改，确定审核通过该文章？":"确定退回该文章？", "提示", {
+      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
       })
         .then(() => {
            this.formData.sessionId = this.$getUserData().sessionId;
@@ -544,6 +544,10 @@ export default {
      }
       this.imgList=[];
       this.formData.imgFile='';
+      if(this.formData.categoryId==1&&this.$router.currentRoute.query.type=='new'){
+        this.formData.cover='';
+        this.formData.cover=res.data;
+      }
       this.imgList.push({name:file.name,url:res.data});
       this.formData.imgFile=res.data;
     },
@@ -577,11 +581,8 @@ export default {
       }      
     },
     checkCoverUpload(file){
-    if(file.url.indexOf('/')!=-1){
-           this.coverImgUrl=file.url;
-    this.coverDialogVislble=true;
-    }
-
+      this.coverImgUrl='pmpheep/image/'+file.url;
+      this.coverDialogVislble=true;
     }
   },
   created() {

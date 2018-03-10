@@ -113,7 +113,7 @@
           align="center" width="110">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
-            <el-button type="text">登录</el-button>
+            <el-button type="text" @click="login(scope.row.username)">登录</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
@@ -867,6 +867,26 @@ export default {
      */
     clearImgSrc(){
       this.imgsrc = '';
+    },
+    // 登录
+    login(userName){
+      console.log(userName);
+      this.$axios.get('pmpheep/pmph/keyToLand',{
+        params:{
+          userName: userName,
+          userType: 1
+        }
+      }).then(response => {
+        let res = response.data;
+        if (res.code == 1) {
+//          window.location.href = res.data;
+          window.open(res.data);
+        } else {
+          this.$message.error(res.msg.msgTrim());
+        }
+      }).catch(error => {
+        this.$message.error('登录失败，请稍后再试!');
+      })
     }
   },
   created() {

@@ -134,7 +134,7 @@
             </el-table>
             <div slot="footer" class="dialog-footer">
        <el-button @click="againDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addNewSubmit">确 定</el-button>
+        <el-button type="primary" @click="addNewSubmit" :loading="isLoadingUp">{{isLoadingUp?'正在提交':'确 定'}}</el-button>
   </div>
      </el-dialog>
   </div>
@@ -160,6 +160,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
+      isLoadingUp:false,
       writerPageTotal:0,
       addMemberArr:[],
       defaultImage: this.$config.DEFAULT_USER_IMAGE,
@@ -244,6 +245,7 @@ export default {
     },
     /* 添加小组成员 */
     addNewSubmit(){
+     this.isLoadingUp=true;
      var subArr=[];
      this.addTableData.forEach(function(item){
         var obj=new Object();
@@ -268,9 +270,11 @@ export default {
                this.$emit('refreshMange');
                this.$message.success('添加成功');
           }else{
-            this.$message.error('添加失败');
+            this.$message.error(res.data.msg.msgTrim());
           }
+             this.isLoadingUp=false;
      })
+
     },
 
     /* 作家用户切换分页条数 */

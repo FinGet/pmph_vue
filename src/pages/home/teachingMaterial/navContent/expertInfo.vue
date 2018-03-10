@@ -183,7 +183,7 @@
           </div>
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
-            <div>{{expertInfoData.orgName}}</div>
+            <div><span :title="expertInfoData.orgName" class="one_line_limit">{{expertInfoData.orgName}}</span>></div>
           </div>
           <div class="info-iterm-text">
             <div>联系电话：<span></span></div>

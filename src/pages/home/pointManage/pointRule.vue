@@ -36,13 +36,13 @@
                     </el-table-column>
                     <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
                       <template scope="scope">
-                        <p>{{scope.row.isDisabled?'是':'否'}}</p>
+                        <p>{{scope.row.isDisabled?'否':'是'}}</p>
                       </template>
                     </el-table-column>
-										<el-table-column label="操作" width="110" align="center">
+										<el-table-column label="操作" width="80" align="center">
 											<template scope="scope">
 												<el-button type="text" class="link" @click="modifyRule(scope.$index)">修改</el-button>
-												<el-button type="text" class="link" @click="deleteRule(scope.row.id)">删除</el-button>
+												<!-- <el-button type="text" class="link" @click="deleteRule(scope.row.id)">删除</el-button> -->
 											</template>
                     </el-table-column>
                 </el-table>
@@ -64,10 +64,10 @@
 				<el-dialog title="积分规则修改" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
 					<el-form :model="form" :rules="rules" ref="ruleForm" label-width="130px">
 						<el-form-item label="积分规则名称:" prop="ruleName">
-							<el-input  v-model="form.ruleName"></el-input>
+							<el-input :disabled="true" v-model="form.ruleName"></el-input>
 						</el-form-item>
 						<el-form-item label="积分规则标识:" prop="ruleCode">
-							<el-input  v-model="form.ruleCode"></el-input>
+							<el-input :disabled="true" v-model="form.ruleCode"></el-input>
 						</el-form-item>
 						<el-form-item label="积分值:" prop="point" >
 							<el-input v-model.number="form.point"></el-input>
@@ -80,8 +80,8 @@
 						</el-form-item> -->
 						<el-form-item label="启用状态:" prop="isDisabled">
 							<el-radio-group v-model="form.isDisabled">
-								<el-radio :label="true">启用</el-radio>
-								<el-radio :label="false">禁用</el-radio>
+								<el-radio :label="false">启用</el-radio>
+								<el-radio :label="true">禁用</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="规则描述:" prop="description">

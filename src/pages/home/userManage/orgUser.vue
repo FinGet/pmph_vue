@@ -142,7 +142,7 @@
             >
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
-              <el-button type="text">登录</el-button>
+              <el-button type="text" @click="login(scope.row.username)">登录</el-button>
               <!-- <el-button type="text">查看详情</el-button> -->
             </template>
           </el-table-column>
@@ -208,8 +208,8 @@
               <el-radio :label="true">禁用</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="备注：" prop="note">
-            <el-input v-model="form.note"></el-input>
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="form.address"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -461,7 +461,7 @@ export default {
         email: "",
         areaId:'',
         isDisabled: true,
-        note: ""
+        address: ""
       },
       // 表单校验规则
       rules: {
@@ -489,7 +489,7 @@ export default {
         ],
         areaId: [{required: true, message: "请选择机构所属地区",trigger:"blur"}],
         isDisabled: [{type: "boolean",required: true,message: "请选择是否启用",trigger: "change"}],
-        note:[
+        address:[
           {min:1,max:100,message:'备注不能超过100字符',trigger:'change,blur'}
         ]
       },
@@ -844,7 +844,7 @@ export default {
         handphone: "",
         email: "",
         isDisabled: true,
-        note: ""
+        address: ""
       }
     },
       /**
@@ -1009,6 +1009,26 @@ export default {
      */
     clearImgSrc(){
       this.imgsrc = '';
+    },
+    // 登录
+    login(userName){
+      console.log(userName);
+      this.$axios.get('pmpheep/pmph/keyToLand',{
+        params:{
+          userName: userName,
+          userType: 2
+        }
+      }).then(response => {
+        let res = response.data;
+        if (res.code == 1) {
+//          window.location.href = res.data;
+          window.open(res.data);
+        } else {
+          this.$message.error(res.msg.msgTrim());
+        }
+      }).catch(error => {
+        this.$message.error('登录失败，请稍后再试!');
+      })
     }
   },
   created() {

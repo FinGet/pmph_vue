@@ -6,8 +6,8 @@
           <span>状态：</span>
             <el-select v-model="searchParams.state" clearable style="width:150px;margin-right:10px;" placeholder="请选择">
               <el-option label="待审核" value="1"></el-option>
-              <el-option label="已通过" value="3"></el-option>
               <el-option label="未通过" value="2"></el-option>
+              <el-option label="已通过" value="3"></el-option>
             </el-select>
             <span>上传时间：</span>
                 <el-date-picker
@@ -86,7 +86,7 @@
           <el-input class="input" v-model="bookParams.name" placeholder="请输入书籍名称"></el-input>
           <el-button type="primary" icon="search" @click="bookSearch">搜索</el-button>
         </p>
-        <el-table :data="bookListData" border style="width:100%;margin:10px 0;">
+        <el-table :data="bookListData" border highlight-current-row style="width:100%;margin:10px 0;">
           <el-table-column prop="bookname" label="书籍名称">
            </el-table-column>
           <el-table-column label="书籍类型" prop="typeName" width="130">
@@ -465,7 +465,7 @@
          },
          /* 下载按钮链接 */
          videoDownLoad(obj){
-           return 'v/play/'+obj.path.split('\\').pop();
+           return 'v/download?realname='+obj.path.split('\\').pop().split('.')[0]+'&filename='+obj.title;
          },
          playVideo(obj){
           this.videoSrc='v/play/'+obj.path.split('\\').pop();

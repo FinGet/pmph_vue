@@ -50,7 +50,7 @@ export function authorityComparison(matchArr, userArr) {
     var result = false;
     matchArr.forEach(function (elem) {
         userArr.forEach(function (num) {
-            if (num && num == elem.meta.authorityId) {
+          if (num && num == elem.meta.authorityId || elem.meta.authorityId===true) {
                 result = true;
             }
         })

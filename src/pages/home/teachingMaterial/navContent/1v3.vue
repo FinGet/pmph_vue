@@ -47,12 +47,13 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasAccess(7,myPower)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="selected.length===0||forceEnd" @click="exportEditor">主编/副主编批量导出</el-button>
-        <el-button type="primary" :disabled="isPublished || forceEnd || !hasAccess(2,myPower)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
-        <el-button type="primary" :disabled="isLocked || !hasAccess(4,myPower) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled="isPublished || !hasAccess(5,myPower) || forceEnd" @click="showDialog(0)">批量结果公布</el-button>
-        <el-button type="primary" :disabled="forceEnd || isSelected" @click="exportExcel()">批量导出名单</el-button>
+        <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasPower(7,tableData)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
+        <el-button type="primary" :disabled="selected.length===0" @click="exportEditor">主编/副主编批量导出</el-button>
+        <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || isSelected || allTextbookPublished" @click="pushAllChecked()">批量发布主编/副主编</el-button>
+        <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selected)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
+        <el-button type="primary" :disabled="isLocked || !hasPower(4,selected) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <el-button type="primary" :disabled=" !hasPower(5,selected) || forceEnd" @click="showDialog(0,null,isLocked)">批量结果公布</el-button>
+        <el-button type="primary" :disabled="isSelected" @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -294,14 +295,14 @@
         planningEditor: '',
         selectedBookId:'',
         groupData: [], // 小组名单
-        myPower:'', // 权限码
+//        myPower:'', // 权限码
         defaultProp:{
           value: 'textbookName',
           label: 'textbookName'
         },
         bookNames:[],
         allTextbookPublished: false, // 是否所有书籍都公布
-        positionList:['','编委','副主编','副主编，编委','主编','主编，编委','主编，副主编','主编，副主编，编委','数组编委','编委，数组编委','副主编，数组编委','副主编，编委，数组编委','主编，数组编委','主编，编委，数组编委','主编，副主编，数组编委','主编，副主编，编委，数组编委'],
+        positionList:['','编委','副主编','副主编，编委','主编','主编，编委','主编，副主编','主编，副主编，编委','数字编委','编委，数字编委','副主编，数字编委','副主编，编委，数字编委','主编，数字编委','主编，编委，数字编委','主编，副主编，数字编委','主编，副主编，编委，数字编委'],
       }
     },
     computed:{
@@ -589,6 +590,27 @@
       hasAccess(index,list){
         return this.$commonFun.materialPower(index,list);
       },
+      hasPower(index,data){
+        var arr = [];
+        var list = '';
+        if (data.length > 0){
+          data.forEach(item => {
+            arr.push(item.myPower);
+          });
+          arr.forEach(item => {
+            if (item[index] == 1) {
+              list = item;
+            }
+          });
+          if (list == '') {
+            return false;
+          } else {
+            return this.$commonFun.materialPower(index,list);
+          }
+        } else {
+          return false;
+        }
+      },
       /* 选中社内用户*/
       selectChange(val){
         console.log(val)
@@ -660,7 +682,7 @@
           if (res.code == 1) {
             this.$message.success('更新成功！');
           }else {
-            this.$message.error('更新失败！');
+            this.$message.error(res.msg.msgTrim());
           }
         })
       },

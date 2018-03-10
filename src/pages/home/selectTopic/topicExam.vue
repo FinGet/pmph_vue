@@ -5,10 +5,13 @@
       <forward-depart :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></forward-depart>
     </el-tab-pane>
     <el-tab-pane label="分配编辑" name="second" v-if="Identity.isAdmin || Identity.isDirector">
-      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></distribute-editor>
+      <distribute-editor :activeName.sync='activeName' @changeActive='changeActive' @change="identity" :searchInput='searchInput'></distribute-editor>
     </el-tab-pane>
     <el-tab-pane label="受理" name="third" v-if="Identity.isAdmin || Identity.isEditor">
       <acceptance :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></acceptance>
+    </el-tab-pane>
+    <el-tab-pane label="受理" name="fourth" v-if="!Identity.isAdmin&&!Identity.isEditor&&!Identity.isDirector&&!Identity.isOpts">
+      <no-permission></no-permission>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -17,6 +20,7 @@
 import forwardDepart from './forwardDepart.vue'
 import distributeEditor from './distributeEditor.vue'
 import acceptance from './acceptance.vue'
+import noPermission from './noPermission.vue'
  export default{
    data(){
      return{
@@ -37,7 +41,7 @@ import acceptance from './acceptance.vue'
    watch:{
    },
    components: {
-     forwardDepart,distributeEditor,acceptance
+     forwardDepart,distributeEditor,acceptance,noPermission
    },
    methods:{
     changeActive(val){

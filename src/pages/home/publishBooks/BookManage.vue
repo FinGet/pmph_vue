@@ -136,7 +136,7 @@
         <el-tooltip class="item" effect="dark" content="请按照模板格式上传!" placement="top">
           <el-button type="primary">配套图书导入</el-button>
         </el-tooltip>
-        <el-button type="primary">模板下载.xlsx</el-button>
+        <el-button type="primary"><a href="/static/配套图书导入模版.xls">配套图书导入模板下载</a></el-button>
         <el-button type="primary" >图书全量同步</el-button>
         <el-button type="primary" @click="bookSyncVisible=true">图书增量同步</el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>

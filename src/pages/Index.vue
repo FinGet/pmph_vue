@@ -519,6 +519,12 @@ export default {
 .index .ellipsis {
   height: 25px;
 }
+.index .ellipsis .comment{
+  width:100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .index .ellipsis .comment span p{
   display:inline;
 }
