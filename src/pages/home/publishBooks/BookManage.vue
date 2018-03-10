@@ -134,11 +134,20 @@
       </div>
       <div class="operation-wrapper">
         <el-tooltip class="item" effect="dark" content="请按照模板格式上传!" placement="top">
-          <el-button type="primary">配套图书导入</el-button>
+          <my-upload
+            class="ChatInputFileBtn"
+            ref="upload"
+            :action="api_upload"
+            :before-upload="beforeUploadFile"
+            :on-success="upLoadFileSuccess"
+            :on-error="uploadError"
+            :show-file-list="false">
+            <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'配套图书导入'}}</el-button>
+          </my-upload>
         </el-tooltip>
         <el-button type="primary"><a href="/static/配套图书导入模版.xls">配套图书导入模板下载</a></el-button>
-        <el-button type="primary" >图书全量同步</el-button>
-        <el-button type="primary" @click="bookSyncVisible=true">图书增量同步</el-button>
+        <el-button type="primary" @click="syncBook(1)">图书全量同步</el-button>
+        <el-button type="primary" @click="syncBook(2)">图书增量同步</el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
@@ -284,33 +293,33 @@
     </el-dialog>
 
     <!-- 同步弹窗 -->
-    <el-dialog
-    title="图书同步"
-      :visible.sync="bookSyncVisible"
-      size="small">
-      <div>
-        <p style="margin-bottom:10px;">
-          <el-button type="primary" style="margin-right:10px">上传书目录</el-button>
-          请按照模板格式上传：
-          <el-button type="text" style="color:#337ab7">模板下载.xlsx</el-button>
-        </p>
-        <p style="margin-bottom:10px;color:#FF4949">（* ）Excel文档格式请按照模板格式，否则将导致导入失败，请确认后再操作！</p>
+    <!--<el-dialog-->
+    <!--title="图书同步"-->
+      <!--:visible.sync="bookSyncVisible"-->
+      <!--size="small">-->
+      <!--<div>-->
+        <!--<p style="margin-bottom:10px;">-->
+          <!--<el-button type="primary" style="margin-right:10px">上传书目录</el-button>-->
+          <!--请按照模板格式上传：-->
+          <!--<el-button type="text" style="color:#337ab7">模板下载.xlsx</el-button>-->
+        <!--</p>-->
+        <!--<p style="margin-bottom:10px;color:#FF4949">（* ）Excel文档格式请按照模板格式，否则将导致导入失败，请确认后再操作！</p>-->
 
-        <el-table :data="bookSyncData" border style="margin-bottom:10px">
-         <el-table-column label="本版号">
+        <!--<el-table :data="bookSyncData" border style="margin-bottom:10px">-->
+         <!--<el-table-column label="本版号">-->
 
-         </el-table-column>
-         <el-table-column label="书名">
+         <!--</el-table-column>-->
+         <!--<el-table-column label="书名">-->
 
-         </el-table-column>
-         <el-table-column label="作者" width="110">
+         <!--</el-table-column>-->
+         <!--<el-table-column label="作者" width="110">-->
 
-         </el-table-column>
-        </el-table>
+         <!--</el-table-column>-->
+        <!--</el-table>-->
 
-        <el-button type="primary">开始同步</el-button>
-      </div>
-    </el-dialog>
+        <!--<el-button type="primary">开始同步</el-button>-->
+      <!--</div>-->
+    <!--</el-dialog>-->
 	</div>
 </template>
 
@@ -318,6 +327,7 @@
 	export default {
 		data() {
 			return {
+        api_upload: '/pmpheep//books/bookExcel',
 			  form:{
 			    bookId:'',
           isNew:true,
@@ -383,6 +393,7 @@
         },
         bookTypeSelected:[],
         materialList:[],
+        uploadLoading:false
       }
 		},
     methods:{
@@ -616,6 +627,78 @@
             console.log(e);
           })
       },
+      /**
+       * 当上传按钮添加excel
+       * @param file
+       */
+      beforeUploadFile(file){
+        let flag = true;
+
+        var filedata = file.raw;
+        var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+        // 类型判断
+        if(!(ext=='xls'||ext=='xlsx')){
+          this.$message.error("请按照模板格式的文档上传文件");
+          return;
+        }
+        //文件名不超过40个字符
+        if(file.name.length>40){
+          this.$message.error("文件名不能超过40个字符");
+          return;
+        }
+        // 判断文件大小是否符合 文件不为0
+        if(file.size<1){
+          this.$message.error("文件大小不能小于1bt");
+          return;
+        }
+        // 判断文件大小是否符合 文件不大于100M
+        if(file.size/1024/1024 > 100){
+          this.$message.error("文件大小不能超过100M！");
+          return;
+        }
+
+        this.uploadLoading=flag;
+        return flag;
+      },
+      /**
+       * 上传文件请求成功的回调
+       */
+      upLoadFileSuccess(res, file, fileList){
+        if (res.code == '1') {
+          this.$message.success('上传成功!');
+        }else{
+          this.$message.error(res.msg.msgTrim());
+        }
+        this.uploadLoading = false;
+      },
+      /**
+       * 上传文件请求失败的回调
+       */
+      uploadError(err, file, fileList){
+        console.log(err);
+        this.$message.error(err.msg.msgTrim());
+        this.uploadLoading = false;
+      },
+      /**
+       * 图书同步
+       * @param type 1 - 全量同步 2- 增量同步
+       */
+      syncBook(type) {
+        this.$axios.get('/pmpheep/books/allsynchronization',{
+          params: {
+            type : type
+          }
+        }).then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+            this.$message.success('图书同步成功!');
+          } else {
+            this.$message.error(res.msg.msgTrim());
+          }
+        }).catch(error => {
+          this.$message.error('同步同步错误，请稍后再试!');
+        })
+      }
     },
     created(){
 		  this.getTableData();
@@ -658,5 +741,10 @@
   .form .bookType{
     width: 100% !important;
     max-width: 320px !important;
+  }
+  .ChatInputFileBtn{
+    position: relative;
+    top: 13px;
+    margin-right: 10px;
   }
 </style>
