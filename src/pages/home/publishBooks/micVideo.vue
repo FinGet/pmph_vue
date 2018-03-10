@@ -465,7 +465,7 @@
          },
          /* 下载按钮链接 */
          videoDownLoad(obj){
-           if (obj.path.indexOf('\\')) {
+           if ((obj.path.indexOf('\\')) > 0) {
              return 'v/download?realname='+obj.path.split('\\').pop().split('.')[0]+'&filename='+obj.title;
            } else {
              return 'v/download?realname='+obj.path.split("/").pop().split('.')[0]+'&filename='+obj.title;
@@ -473,7 +473,7 @@
 
          },
          playVideo(obj){
-           if (obj.path.indexOf('\\')) {
+           if ((obj.path.indexOf('\\')) > 0) {
              this.videoSrc='v/play/'+obj.path.split('\\').pop();
            } else {
              this.videoSrc='v/play/'+obj.path.split("/").pop();
