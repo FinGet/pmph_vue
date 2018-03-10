@@ -710,7 +710,7 @@
         searParams = { declarationId: id };
         this.$router.push({
           name:'专家信息',
-          query: searParams,
+          query: searParams
         })
       },
     },

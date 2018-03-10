@@ -428,7 +428,7 @@
     watch:{
      powerSearchValue(val){
        if(this.noWatchFirst){
-           this.cleanSearchInput();    
+           this.cleanSearchInput();
         }
         this.noWatchFirst=true;
      }
@@ -715,7 +715,7 @@
         searParams = { declarationId: id };
         this.$router.push({
           name:'专家信息',
-          query: searParams,
+          query: searParams
         })
       },
     },
@@ -726,7 +726,7 @@
         this.powerSearchValue=this.declareHistory.powerSearchValue;
          this.searchParams=this.declareHistory.searchParams;
          this.powerSearch=this.declareHistory.powerSearch;
-      } 
+      }
       this.searchParams.materialId = this.$route.params.materialId;
       for(let key in this.pressCheckSearchParams){
         this.searchParams[key] = this.pressCheckSearchParams[key];

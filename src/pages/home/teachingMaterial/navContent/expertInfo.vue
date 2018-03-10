@@ -18,7 +18,7 @@
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
-        <el-button type="primary">登录</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
       </div>
 
       <!--图书选择-->
@@ -746,6 +746,7 @@
               showOfflineProgress:false,
               offlineProgressText:'',
               offlineProgressType:4,
+              username: '', // 账号
             }
         },
         computed:{
@@ -992,7 +993,8 @@
                 //初始化添加图书数据
                 this.hasBookListChanged=false;
                 this.addBookList = res.data.decPositionList;
-
+                // 获取当前专家账号
+                this.username = res.data.declaration.username;
                 //初始化专家身份信息
                 res.data.declaration.sex=res.data.declaration.sex?res.data.declaration.sex==1?'男':'女':'保密';
                 res.data.declaration.birthday = this.$commonFun.formatDate(res.data.declaration.birthday).split(' ')[0];
@@ -1210,6 +1212,26 @@
         setOnlineCheckPassType(num){
           this.offlineProgressType = num||4;
           this.showOfflineProgress=true;
+        },
+        // 登录
+        login(){
+//          console.log(userName);
+          this.$axios.get('pmpheep/pmph/keyToLand',{
+            params:{
+              userName: this.username,
+              userType: 1
+            }
+          }).then(response => {
+            let res = response.data;
+            if (res.code == 1) {
+//          window.location.href = res.data;
+              window.open(res.data);
+            } else {
+              this.$message.error(res.msg.msgTrim());
+            }
+          }).catch(error => {
+            this.$message.error('登录失败，请稍后再试!');
+          })
         }
 
       },

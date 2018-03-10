@@ -17,7 +17,7 @@
                     placeholder="选择日期"
                     >
                 </el-date-picker>
-                <span>—</span> 
+                <span>—</span>
                 <el-date-picker
                     v-model="searchParams.upLoadTimeEnd"
                     type="date"
@@ -25,9 +25,9 @@
                     placeholder="选择日期"
                     style="margin-right:5px;"
                     >
-                </el-date-picker> 
-          <el-button icon="search" type="primary" style="margin-bottom:10px;"  @click="search">搜索</el-button>  
-          <el-button type="primary"  style="float:right;" @click="selectBook">添加微视频</el-button>      
+                </el-date-picker>
+          <el-button icon="search" type="primary" style="margin-bottom:10px;"  @click="search">搜索</el-button>
+          <el-button type="primary"  style="float:right;" @click="selectBook">添加微视频</el-button>
       </p>
       <!-- 列表 -->
       <el-table :data="tableData" border style="width:100%;margin-bottom:10px;">
@@ -47,12 +47,12 @@
           </el-table-column>
           <el-table-column label="文件大小" width="110">
               <template scope="scope">
-              {{(scope.row.fileSize/1024/1024).toFixed(2)}}M          
+              {{(scope.row.fileSize/1024/1024).toFixed(2)}}M
               </template>
           </el-table-column>
           <el-table-column label="状态" width="90" >
               <template scope="scope">
-                {{scope.row.state==1?'待审核':(scope.row.state==2?'未通过':'已通过')}} 
+                {{scope.row.state==1?'待审核':(scope.row.state==2?'未通过':'已通过')}}
               </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
@@ -94,7 +94,7 @@
           <el-table-column label="操作" width="80">
             <template scope="scope">
                 <el-button type="text" style="color:#337ab7;" @click="openAddVideoDialog(scope.row)">选择</el-button>
-            </template> 
+            </template>
           </el-table-column>
         </el-table>
           <!--分页-->
@@ -109,7 +109,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="bookTotal">
             </el-pagination>
-            </div>        
+            </div>
     </el-dialog>
     <!-- 上传视频对话框 -->
     <el-dialog title="添加微视频" :visible.sync="dialogVisible" size="tiny" >
@@ -146,7 +146,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo">{{isUploadVideo?'转码中':'确 定'}}</el-button>
-            </span>       
+            </span>
     </el-dialog>
     <!-- 审核视频弹框 -->
         <el-dialog title="审核" :visible.sync="examDialogVisible" width="25%" size="tiny">
@@ -155,7 +155,7 @@
                 <el-button @click="examDialogVisible = false">取 消</el-button>
                 <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
                 <el-button type="primary" @click="examSubmit(true)">通过</el-button>
-            </span>           
+            </span>
     </el-dialog>
     <!-- 查看视频弹框 -->
     <el-dialog :visible.sync="isShowVideoPlayer" size="tiny" :show-close="false" class="video_player_dialog" >
@@ -172,7 +172,7 @@
               videoListUrl:'/pmpheep/bookVideo/getVideoList',  //视频列表url
               examVideoUrl:'/pmpheep/bookVideo/audit', //  审核视频url
               dialogBookUrl:'/pmpheep/books/list',      //书籍列表
-              addNewVideoUrl:'/pmpheep/bookVideo/addBookVideo',   //添加提交视频url 
+              addNewVideoUrl:'/pmpheep/bookVideo/addBookVideo',   //添加提交视频url
               transCodingUrl:"/v/query",   //查询视频转码地址
               tableData:[],
               bookListData:[],
@@ -195,14 +195,14 @@
                   upLoadTimeStart:'',
                   upLoadTimeEnd:'',
                   pageSize:10,
-                  pageNumber:1,     
+                  pageNumber:1,
               },
               currentBook:{},
               currentExamId:'',
               bookParams:{
                  name:'',
                  pageSize:10,
-                 pageNumber:1,  
+                 pageNumber:1,
               },
               bookTotal:20,
                 dialogRules:{
@@ -217,11 +217,11 @@
                         { type: 'array', required: true, message: '请上传视频内容', trigger: 'change' }
                     ]
 
-                }                
+                }
             }
         },
         created(){
-           this.getList();   
+           this.getList();
         },
         methods:{
             /* 获取视频列表 */
@@ -313,12 +313,12 @@
                   this.$message.error(res.data.msg.msgTrim());
               }
           })
-         },   
+         },
          /* 添加上传视频图片 */
          imgUploadRemove(file, fileList){
            console.log(file, fileList);
             this.dialogForm.imgList=fileList;
-            this.$refs.dialogForm.validateField('imgList');    
+            this.$refs.dialogForm.validateField('imgList');
          },
          /* 图片改变 */
          imgUploadChange(file,fileList){
@@ -341,7 +341,7 @@
                 return false;
             }
             if(file.name.length>80){
-                this.$message.error('图片名称不能超过80个字符！'); 
+                this.$message.error('图片名称不能超过80个字符！');
                 this.dialogForm.imgList.pop();
                 return false;
             }
@@ -376,7 +376,7 @@
             if(file.name.length>80){
                 this.$message.error('视频名称不能超过80个字符！');
                 return false;
-            }           
+            }
          },
          /* 视频上传成功 */
          videoUploadSuccess(res,file,fileList){
@@ -386,7 +386,7 @@
            this.dialogForm.videoList.push(file);
            this.$refs.dialogForm.validateField('videoList');
            console.log(this.dialogForm)
-         }, 
+         },
          /* 视频转码 */
          videoTransCoding(str){
            this.$axios.get(this.transCodingUrl,{
@@ -410,7 +410,7 @@
                      /* 正在转码 */
                      setTimeout(() => {
                          this.videoTransCoding(str);
-                     }, 1000);     
+                     }, 1000);
                  }
                }else{
                    this.$message.error(res.data.msg);
@@ -444,7 +444,7 @@
                       }
                      this.$axios.post(this.addNewVideoUrl,formData,config)
                      .then((res)=>{
-                      console.log(res); 
+                      console.log(res);
                       if(res.data.code==1){
                           this.getList();
                           this.$message.success('添加成功');
@@ -456,7 +456,7 @@
                          this.$message.error(res.data.msg.msgTrim());
                         }
                      }).catch((error)=>{
-                                
+
                      })
                  }else{
                      return ;
@@ -465,12 +465,22 @@
          },
          /* 下载按钮链接 */
          videoDownLoad(obj){
-           return 'v/download?realname='+obj.path.split('\\').pop().split('.')[0]+'&filename='+obj.title;
+           if ((obj.path.indexOf('\\')) > 0) {
+             return 'v/download?realname='+obj.path.split('\\').pop().split('.')[0]+'&filename='+obj.title;
+           } else {
+             return 'v/download?realname='+obj.path.split("/").pop().split('.')[0]+'&filename='+obj.title;
+           }
+
          },
          playVideo(obj){
-          this.videoSrc='v/play/'+obj.path.split('\\').pop();
+           if ((obj.path.indexOf('\\')) > 0) {
+             this.videoSrc='v/play/'+obj.path.split('\\').pop();
+           } else {
+             this.videoSrc='v/play/'+obj.path.split("/").pop();
+           }
+
           this.isShowVideoPlayer=true;
-         }                    
+         }
         }
     }
 </script>
