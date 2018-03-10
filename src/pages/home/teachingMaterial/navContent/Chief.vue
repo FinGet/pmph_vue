@@ -23,7 +23,7 @@
           style="width: 100%">
           <el-table-column label="姓名">
             <template scope="scope">
-              <router-link :to="{name:'专家信息',query: { declarationId: scope.row.declarationId }}" class="table-link">{{scope.row.realname}}</router-link>
+              <router-link :to="{name:'专家信息',query: { declarationId: scope.row.declarationId },params:{username: scope.row.username}}" class="table-link">{{scope.row.realname}}</router-link>
             </template>
           </el-table-column>
 

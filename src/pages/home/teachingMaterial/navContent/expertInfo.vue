@@ -18,7 +18,7 @@
           {{'通过'}}
         </el-button>
         <el-button type="primary" @click="print">打印</el-button>
-        <el-button type="primary">登录</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
       </div>
 
       <!--图书选择-->
@@ -746,6 +746,7 @@
               showOfflineProgress:false,
               offlineProgressText:'',
               offlineProgressType:4,
+              username: '', // 账号
             }
         },
         computed:{
@@ -1210,10 +1211,31 @@
         setOnlineCheckPassType(num){
           this.offlineProgressType = num||4;
           this.showOfflineProgress=true;
+        },
+        // 登录
+        login(){
+//          console.log(userName);
+          this.$axios.get('pmpheep/pmph/keyToLand',{
+            params:{
+              userName: this.username,
+              userType: 1
+            }
+          }).then(response => {
+            let res = response.data;
+            if (res.code == 1) {
+//          window.location.href = res.data;
+              window.open(res.data);
+            } else {
+              this.$message.error(res.msg.msgTrim());
+            }
+          }).catch(error => {
+            this.$message.error('登录失败，请稍后再试!');
+          })
         }
 
       },
       created(){
+          this.username = this.$route.params.username;
         this.searchFormData.declarationId = this.$route.query.declarationId;
         this.searchFormData.materialId = this.$route.params.materialId;
         if(this.$route.query.pageNumber||this.$route.query.pageSize){
