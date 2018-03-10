@@ -205,7 +205,7 @@
           min-width="80"
         >
           <template scope="scope">
-            <el-button type="text" @click="linkToExpertInfo(scope.row.id,scope.row.username)">{{scope.row.realname}}</el-button>
+            <el-button type="text" @click="linkToExpertInfo(scope.row.id)">{{scope.row.realname}}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -707,7 +707,7 @@
        * 跳转到专家信息页面
        * @param id
        */
-      linkToExpertInfo(id,username){
+      linkToExpertInfo(id){
         var searParams = {};
         for(let key in this.searchParams){
           searParams[key] = this.searchParams[key];
@@ -715,8 +715,7 @@
         searParams = { declarationId: id };
         this.$router.push({
           name:'专家信息',
-          query: searParams,
-          params: {username: username}
+          query: searParams
         })
       },
     },
