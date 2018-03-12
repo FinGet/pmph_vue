@@ -146,8 +146,8 @@
           </my-upload>
         </el-tooltip>
         <el-button type="primary"><a href="/static/配套图书导入模版.xls">配套图书导入模板下载</a></el-button>
-        <el-button type="primary" @click="syncBook(1)">图书全量同步</el-button>
-        <el-button type="primary" @click="syncBook(2)">图书增量同步</el-button>
+        <el-button type="primary" @click="syncBook(1)" :disabled="isAllUpload">{{isAllUpload?'正在同步中...':'图书全量同步'}}<i v-if="isAllUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <el-button type="primary" @click="syncBook(2)" :disabled="isSomeUpload">{{isSomeUpload?'正在同步中...':'图书增量同步'}}<i v-if="isSomeUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
@@ -393,7 +393,9 @@
         },
         bookTypeSelected:[],
         materialList:[],
-        uploadLoading:false
+        uploadLoading:false,
+        isAllUpload: false, // 全部同步
+        isSomeUpload: false // 增量同步
       }
 		},
     methods:{
@@ -684,6 +686,11 @@
        * @param type 1 - 全量同步 2- 增量同步
        */
       syncBook(type) {
+        if (type == 1) {
+          this.isAllUpload = true;
+        } else {
+          this.isSomeUpload = true;
+        }
         this.$axios.get('/pmpheep/books/allsynchronization',{
           params: {
             type : type
@@ -691,7 +698,13 @@
         }).then(response => {
           let res = response.data;
           if (res.code == 1) {
-            this.$message.success('图书同步成功!');
+            if(type == 1) {
+              this.$message.success(`图书全量同步成功!`);
+            } else {
+              this.$message.success(`图书增量同步成功!`);
+            }
+            this.isAllUpload = false;
+            this.isSomeUpload = false;
           } else {
             this.$message.error(res.msg.msgTrim());
           }

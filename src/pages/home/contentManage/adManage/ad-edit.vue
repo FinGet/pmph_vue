@@ -184,6 +184,7 @@
         timer:null,
         deleteImages:[],
         deleteImagesIds:[],
+        isDelete: false
       }
 		},
     computed:{
@@ -298,6 +299,7 @@
 //                let res = response.data;
 //                if (res.code == '1') {
                   this.imageLibs.splice(index,1);
+                  this.isDelete = true;
 //                  if(index<this.radio2){
 //                    this.radio2--;
 //                  }
@@ -316,9 +318,17 @@
 //       * /
        deleteImg(id,image){
 //        console.log(id,image);
+         var ids = '';
+         var images = '';
+         for(var i = 0; i < id.length;i++) {
+           ids += id[i]+','
+         }
+         for(var i = 0; i < image.length;i++) {
+           images += image[i]+','
+         }
          this.$axios.delete(this.api_image_delete,{params:{
-          id:JSON.stringify(id),
-          image:JSON.stringify(image)
+          id:ids,
+          image:images
         }})
          .then(response=>{
             let res = response.data;
@@ -392,7 +402,9 @@
             if (res.code == '1') {
               console.log(111111);
               this.$message.success('修改成功！');
-              this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              if (this.isDelete) {
+                this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              }
               this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());

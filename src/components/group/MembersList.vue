@@ -103,7 +103,7 @@
         </el-tab-pane>
         <el-tab-pane label="社内用户" name="second">
           <!--社内用户组件-->
-          <user-pmph @selection-change="clubUserSelectChange" select ></user-pmph>
+          <user-pmph @selection-change="clubUserSelectChange" select :groupId="groupId" ></user-pmph>
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
@@ -154,6 +154,7 @@ export default {
       writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
       addMemberUrl:'/pmpheep/group/add/groupMember',  //添加小组成员url
       writerParams: {
+        groupId: this.groupId,
         orgName: '',
         name: '',
         rank: '',
