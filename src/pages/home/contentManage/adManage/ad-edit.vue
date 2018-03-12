@@ -68,8 +68,9 @@
         </div>
       </div>
       <div class="section-content section-content-arrow">
+        <el-row v-if="formData.type===0">
         <!--单选图片-->
-        <el-radio-group v-model="radio2" class="ad-image-manage inline-block" v-if="formData.type===0">
+        <el-radio-group v-model="radio2" class="ad-image-manage inline-block" >
           <el-radio v-for="(iterm,index) in imageLibs" :key="index" :label="iterm.id">
             <div  class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
@@ -81,9 +82,10 @@
             </div>
           </el-radio>
         </el-radio-group>
+        </el-row>
         <!--多选图片-->
+        <el-row v-else>
         <el-checkbox-group
-          v-else
           class="ad-image-manage inline-block"
           v-model="checkedImage"
           :min="1"
@@ -99,8 +101,7 @@
             </div>
           </el-checkbox>
         </el-checkbox-group>
-
-
+        </el-row>
         <my-upload
           class="fileInput"
           ref="upload"
@@ -115,6 +116,8 @@
             <i class="el-icon-loading add-img-btn" v-else></i>
           </div>
         </my-upload>
+
+        </el-row>
       </div>
     </div>
 
