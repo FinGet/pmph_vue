@@ -211,6 +211,11 @@ methods:
       clearTableSelect:{
         type: Boolean,
         required: false
+      },
+      groupId: {
+        type: Number,
+        default: '',
+        required: false
       }
     },
     data() {
@@ -220,6 +225,7 @@ methods:
         api_pmph_roles:'/pmpheep/role/pmph/list/role',
         api_pmph_departmentList:'/pmpheep/departments/list/department',
         searchForm:{
+          groupId: this.groupId,
           name:'',
           path:'',
           departmentId:'',
@@ -444,7 +450,7 @@ methods:
           });
       },
       /**搜索
-      
+
        */
       _search(){
         this.searchForm.pageSize = 30;

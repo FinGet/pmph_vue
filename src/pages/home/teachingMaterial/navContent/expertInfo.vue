@@ -422,7 +422,7 @@
             </tr>
             <tr v-for="(iterm,index) in textbook">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.publishDate}}</div></td>

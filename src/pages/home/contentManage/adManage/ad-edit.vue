@@ -68,8 +68,9 @@
         </div>
       </div>
       <div class="section-content section-content-arrow">
+        <el-row v-if="formData.type===0">
         <!--单选图片-->
-        <el-radio-group v-model="radio2" class="ad-image-manage inline-block" v-if="formData.type===0">
+        <el-radio-group v-model="radio2" class="ad-image-manage inline-block" >
           <el-radio v-for="(iterm,index) in imageLibs" :key="index" :label="iterm.id">
             <div  class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
@@ -81,9 +82,10 @@
             </div>
           </el-radio>
         </el-radio-group>
+        </el-row>
         <!--多选图片-->
+        <el-row v-else>
         <el-checkbox-group
-          v-else
           class="ad-image-manage inline-block"
           v-model="checkedImage"
           :min="1"
@@ -99,8 +101,7 @@
             </div>
           </el-checkbox>
         </el-checkbox-group>
-
-
+        </el-row>
         <my-upload
           class="fileInput"
           ref="upload"
@@ -115,6 +116,8 @@
             <i class="el-icon-loading add-img-btn" v-else></i>
           </div>
         </my-upload>
+
+        </el-row>
       </div>
     </div>
 
@@ -184,6 +187,7 @@
         timer:null,
         deleteImages:[],
         deleteImagesIds:[],
+        isDelete: false
       }
 		},
     computed:{
@@ -298,6 +302,7 @@
 //                let res = response.data;
 //                if (res.code == '1') {
                   this.imageLibs.splice(index,1);
+                  this.isDelete = true;
 //                  if(index<this.radio2){
 //                    this.radio2--;
 //                  }
@@ -316,9 +321,17 @@
 //       * /
        deleteImg(id,image){
 //        console.log(id,image);
+         var ids = '';
+         var images = '';
+         for(var i = 0; i < id.length;i++) {
+           ids += id[i]+','
+         }
+         for(var i = 0; i < image.length;i++) {
+           images += image[i]+','
+         }
          this.$axios.delete(this.api_image_delete,{params:{
-          id:JSON.stringify(id),
-          image:JSON.stringify(image)
+          id:ids,
+          image:images
         }})
          .then(response=>{
             let res = response.data;
@@ -392,7 +405,9 @@
             if (res.code == '1') {
               console.log(111111);
               this.$message.success('修改成功！');
-              this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              if (this.isDelete) {
+                this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              }
               this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
