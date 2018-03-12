@@ -178,7 +178,7 @@
       <p v-html="dialogContent"></p>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="makeSure">确 定</el-button>
+          <el-button type="primary" @click="makeSure" :isloading="isClickPublish">确 定</el-button>
         </span>
     </el-dialog>
 
@@ -266,6 +266,7 @@
         },
         tableData: [],
         forceEnd:false, // 是否强制结束
+        isClickPublish:false,
         booksChooseValue5:'',
         booksChooseOptions: [],
         currentStateList:[{
@@ -559,6 +560,7 @@
        * 弹窗确认触发的方法判断
        */
       makeSure(){
+        this.isClickPublish=true;
         if (this.method == 'pass') {
           this.pass(this.currentId)
         } else if(this.method == 'result') {
@@ -580,6 +582,7 @@
           } else{
             this.$message.error(res.msg.msgTrim())
           }
+          this.isClickPublish=false;
         }).catch(err => {
           this.$message.error('操作失败，请稍后再试')
         })
