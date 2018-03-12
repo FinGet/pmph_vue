@@ -184,6 +184,7 @@
         timer:null,
         deleteImages:[],
         deleteImagesIds:[],
+        isDelete: false
       }
 		},
     computed:{
@@ -298,6 +299,7 @@
 //                let res = response.data;
 //                if (res.code == '1') {
                   this.imageLibs.splice(index,1);
+                  this.isDelete = true;
 //                  if(index<this.radio2){
 //                    this.radio2--;
 //                  }
@@ -392,7 +394,9 @@
             if (res.code == '1') {
               console.log(111111);
               this.$message.success('修改成功！');
-              this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              if (this.isDelete) {
+                this.deleteImg(this.deleteImagesIds,this.deleteImages);
+              }
               this.$router.push({name:'广告管理'});
             }else{
               this.$message.error(res.msg.msgTrim());
