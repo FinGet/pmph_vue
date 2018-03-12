@@ -18,6 +18,7 @@
       </el-radio-group>
       <el-button  type="primary" icon="search" style="margin-left:10px;margin-bottom:10px;" @click="searchOrg">搜索</el-button>
       <el-button type="primary" style="float:right;" @click="addBtn(true)">新建机构用户</el-button>
+      <el-button type="primary" style="float:right;" @click="exportExcel">导出名单</el-button>
     </p>
       <!--表格-->
       <div class="table-wrapper">
@@ -578,6 +579,14 @@ export default {
     }
   },
   methods: {
+          /** 导出Excel */
+          exportExcel(){
+            let url = '/pmpheep/orgUserExportEcel?orgName='+this.params.orgName+'&name='+this.params.name 
+
+      +'&orgTypeName='+this.params.orgTypeName+'&isHospital='+this.params.isHospital;
+            // console.log(url)
+            this.$commonFun.downloadFile(url);
+          },
     //点击新增按钮
     addBtn(val) {
       // this.isAddSchool=val;
