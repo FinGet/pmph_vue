@@ -319,13 +319,16 @@
        deleteImg(id,image){
 //        console.log(id,image);
          var ids = '';
+         var images = '';
          for(var i = 0; i < id.length;i++) {
            ids += id[i]+','
-//           console.log(ids);
+         }
+         for(var i = 0; i < image.length;i++) {
+           images += image[i]+','
          }
          this.$axios.delete(this.api_image_delete,{params:{
           id:ids,
-          image:JSON.stringify(image)
+          image:images
         }})
          .then(response=>{
             let res = response.data;
