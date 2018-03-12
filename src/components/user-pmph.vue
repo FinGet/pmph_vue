@@ -213,7 +213,7 @@ methods:
         required: false
       },
       groupId: {
-        type: String,
+        type: Number,
         default: '',
         required: false
       }
