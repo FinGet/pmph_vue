@@ -342,7 +342,7 @@
           avatar: this.userInfo.avatar,
           handphone: this.formSetting.handphone || '',
           email: this.formSetting.email || '',
-          file: ''
+          file: this.userHeadImage.currentId
         }))
           .then((response)=> {
             let res = response.data;
@@ -413,7 +413,7 @@
     created(){
       this.activeName=this.$route.query.type||'setting';
       this.userInfo = this.$getUserData().userInfo;
-      this.userInfo.sex = this.userInfo.sex===undefined?1:this.userInfo.sex;
+      //this.userInfo.sex = this.userInfo.sex===undefined?1:this.userInfo.sex;
       this.getUserInfo();
     },
 	}
