@@ -9,10 +9,10 @@
         <div class="user-info">
           <p><span>账号：</span><span>{{userInfo.username}}</span></p>
           <p><span>姓名：</span><span>{{userInfo.realname}}</span></p>
-          <p><span>性别：</span><span>{{userInfo.sex?(userInfo.sex==1?'男':'女'):'保密'}}</span></p>
+          <!-- <p><span>性别：</span><span>{{userInfo.sex?(userInfo.sex==1?'男':'女'):'保密'}}</span></p> -->
           <p><span>手机号：</span><span>{{userInfo.handphone}}</span></p>
           <p><span>邮箱：</span><span>{{userInfo.email}}</span></p>
-          <p><span>地址：</span><span>{{userInfo.address}}</span></p>
+          <!-- <p><span>地址：</span><span>{{userInfo.address}}</span></p> -->
         </div>
       </div>
     </div>
@@ -53,22 +53,22 @@
                   <el-form-item label="姓名:" prop="realname">
                     <el-input v-model="formSetting.realname"></el-input>
                   </el-form-item>
-                  <el-form-item label="性别:" prop="sex">
+                  <!-- <el-form-item label="性别:" prop="sex">
                     <el-radio-group v-model="formSetting.sex">
                       <el-radio :label="1">男</el-radio>
                       <el-radio :label="2">女</el-radio>
                       <el-radio :label="0">保密</el-radio>
                     </el-radio-group>
-                  </el-form-item>
+                  </el-form-item> -->
                   <el-form-item label="手机号:" prop="handphone">
                     <el-input v-model="formSetting.handphone"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱:" prop="email">
                     <el-input v-model="formSetting.email"></el-input>
                   </el-form-item>
-                  <el-form-item label="地址:" prop="address">
+                  <!-- <el-form-item label="地址:" prop="address">
                     <el-input v-model="formSetting.address"></el-input>
-                  </el-form-item>
+                  </el-form-item> -->
                 </el-form>
                 <div class="text-right paddingT30">
                   <el-button type="primary" @click="updateUserInfoBtn">确认修改</el-button>
@@ -298,7 +298,7 @@
           console.log(response, file, fileList);
          this.userHeadImage.fileName=file.name;
          this.userHeadImage.currentId=response.data[0];
-         this.userHeadImage.imageUrl='/pmpheep/image/'+response.data[0];
+         this.userHeadImage.imageUrl='/pmpheep/material/getTempFile?tempFileId='+response.data[0];
          console.log(this.userHeadImage);
          this.$message.success('上传成功');
 
