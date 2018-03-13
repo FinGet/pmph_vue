@@ -370,7 +370,11 @@
             let res = response.data;
             if (res.code === 1) {
               this.userInfo = res.data;
-            }
+                for(let key in this.formSetting){
+                      console.log(key,this.userInfo[key]);
+                      this.formSetting[key] = this.userInfo[key];
+                            }
+                       }
           })
           .catch(function (error) {});
       },
@@ -410,9 +414,6 @@
       this.activeName=this.$route.query.type||'setting';
       this.userInfo = this.$getUserData().userInfo;
       this.userInfo.sex = this.userInfo.sex===undefined?1:this.userInfo.sex;
-      for(let key in this.formSetting){
-        this.formSetting[key] = this.userInfo[key];
-      }
       this.getUserInfo();
     },
 	}
