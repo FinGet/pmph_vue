@@ -89,8 +89,9 @@
           class="ad-image-manage inline-block"
           v-model="checkedImage"
           :min="1"
-          :max="4">
-          <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index" :disabled="checkedImage.length===4&&(!checkedImage.includes(iterm.id))">
+           >
+           <!-- :disabled="(!checkedImage.includes(iterm.id))" -->
+          <el-checkbox v-for="(iterm,index) in imageLibs" :label="iterm.id" :key="index" >
             <div class="imageList-iterm">
               <img :src="iterm.image" alt="" class="vertical-align-middle" />
               <i

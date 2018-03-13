@@ -314,8 +314,8 @@
           id: this.formSetting.id,
           realname: this.formSetting.realname,
           avatar: this.userInfo.avatar,
-          handphone: this.formSetting.handphone,
-          email: this.formSetting.email,
+          handphone: this.formSetting.handphone || '',
+          email: this.formSetting.email || '',
           file: ''
         }))
           .then(function (response) {

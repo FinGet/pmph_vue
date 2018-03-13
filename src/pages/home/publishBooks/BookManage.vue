@@ -146,8 +146,8 @@
           </my-upload>
         </el-tooltip>
         <el-button type="primary"><a href="/static/配套图书导入模版.xls">配套图书导入模板下载</a></el-button>
-        <el-button type="primary" @click="syncBook(1)" :disabled="isAllUpload">{{isAllUpload?'正在同步中...':'图书全量同步'}}<i v-if="isAllUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
-        <el-button type="primary" @click="syncBook(2)" :disabled="isSomeUpload">{{isSomeUpload?'正在同步中...':'图书增量同步'}}<i v-if="isSomeUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <el-button type="primary" @click="syncBook(1)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书全量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <el-button type="primary" @click="syncBook(2)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书增量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
@@ -394,6 +394,7 @@
         bookTypeSelected:[],
         materialList:[],
         uploadLoading:false,
+        isUpload: false, // 是否同步
         isAllUpload: false, // 全部同步
         isSomeUpload: false // 增量同步
       }
@@ -686,11 +687,8 @@
        * @param type 1 - 全量同步 2- 增量同步
        */
       syncBook(type) {
-        if (type == 1) {
-          this.isAllUpload = true;
-        } else {
-          this.isSomeUpload = true;
-        }
+        this.isUpload = true;
+        this.syncProgress();
         this.$axios.get('/pmpheep/books/allsynchronization',{
           params: {
             type : type
@@ -698,25 +696,67 @@
         }).then(response => {
           let res = response.data;
           if (res.code == 1) {
-            if(type == 1) {
-              this.$message.success(`图书全量同步成功!`);
-            } else {
-              this.$message.success(`图书增量同步成功!`);
-            }
-            this.isAllUpload = false;
-            this.isSomeUpload = false;
           } else {
             this.$message.error(res.msg.msgTrim());
           }
         }).catch(error => {
           this.$message.error('同步同步错误，请稍后再试!');
         })
+      },
+      syncProgress(){
+        this.progress();
+        this.isUpload = true;
+        var timeout = 3*60*1000;//设置3分钟超时
+        var useTime = 0;
+        this.handleExportWordtimer = setInterval(()=>{
+          useTime+=30000;
+          this.$axios.get('/pmpheep/books/isEnd')
+            .then(response=>{
+              let res = response.data;
+              if(res.code==1){
+                clearInterval(this.handleExportWordtimer);
+                if (res.data == 0) {
+                  this.isUpload = false;
+                }
+              }
+            })
+            .catch(e=>{
+              console.log(e);
+              if(this.isUpload){
+                this.$message.error('导出失败，请重试！');
+                clearInterval(this.handleExportWordtimer);
+              }
+            })
+          //超时提醒
+          if(useTime>timeout){
+            this.$message.error('导出请求超时，请重试！');
+            clearInterval(this.handleExportWordtimer);
+          }
+        },30000)
+      },
+      progress(){
+        this.$axios.get('/pmpheep/books/isEnd')
+          .then(response=>{
+            let res = response.data;
+            if(res.code==1){
+              if (res.data == 0) {
+                this.isUpload = false;
+              }
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            if(this.isUpload){
+              this.$message.error('导出失败，请重试！');
+            }
+          })
       }
     },
     created(){
 		  this.getTableData();
 		  this.getBookType();
       this.getMaterialList();
+      this.progress();
 		  if(window._hmt){
         _hmt.push(['_trackPageview', '/index']);
       }
