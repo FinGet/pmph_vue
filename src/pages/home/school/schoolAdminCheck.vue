@@ -132,7 +132,7 @@ export default {
       visible2: false,
       dialogVisible: false,
       selections: "",
-      imgsrc: require("./wts.jpg"),
+      imgsrc:'./wts.JPG',
       state: [
         {
           value: "0",
