@@ -32,7 +32,7 @@
     </div>
     <div class="ChatInput" :class="{active:textAreaIsFocus}">
       <div class="ChatInputTool">
-        <div v-if="user!=='admin'">
+        <div>
           <my-upload
             v-if="!fileUploading"
             class="ChatInputFileBtn"
@@ -55,10 +55,9 @@
           v-model="editingTextarea"
           @input="changeTextarea"
           @keyup.enter="sendMessage"
-          :disabled="user=='admin'"
         ></textarea>
         <p class="tip-text" v-if="250-editingTextarea.length<20">还可输入{{250-editingTextarea.length}}个字符</p>
-        <el-button @click="sendMessage"  :disabled="user=='admin'" size="small" class="btn">发送(S)</el-button>
+        <el-button @click="sendMessage" size="small" class="btn">发送(S)</el-button>
       </div>
     </div>
 	</div>
@@ -71,6 +70,7 @@
     props:['currentGroup'],
 		data() {
 			return {
+        groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
         messageLoading:true,
         showLoadingmoreBtn:true,
         isClickLoadingMore:false,
@@ -88,8 +88,7 @@
         fileUploading:false,
         supportWebsocket:true,
         startIntervalFetchMessagesList:true,
-        timer:undefined,
-        user:''
+        timer:undefined
       }
 		},
     computed:{
@@ -303,8 +302,6 @@
       ChatMessageIterm
     },
     created(){
-//      console.log(this.$getUserData());
-      this.user = this.$getUserData().userInfo.username;
       if(this.groupId){
         this.getHistoryMessage();
       }
