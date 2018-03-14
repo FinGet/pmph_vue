@@ -1170,7 +1170,7 @@
          *  type 5 标示退回给个人 4退回给学校 3 标示通过 2退回给单位
          */
         onlineCheckPass(type){
-          if (this.offlineProgressText == '') {
+          if ((type == 5||type==4)&&this.offlineProgressText == '') {
             this.$message.error('请输入退回原因!');
             return;
           }
