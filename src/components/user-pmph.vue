@@ -214,7 +214,6 @@ methods:
       },
       groupId: {
         type: Number,
-        default: '',
         required: false
       }
     },

@@ -1170,6 +1170,10 @@
          *  type 5 标示退回给个人 4退回给学校 3 标示通过 2退回给单位
          */
         onlineCheckPass(type){
+          if (this.offlineProgressText == '') {
+            this.$message.error('请输入退回原因!');
+            return;
+          }
           this.$axios.get(this.api_online_check,{params:{
             id:this.searchFormData.declarationId,
             onlineProgress:type,
