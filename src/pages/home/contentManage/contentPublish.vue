@@ -249,7 +249,7 @@ export default {
     if(num==0){
       this.ContentSubmit(num);
     }else{
-      this.$confirm('发布后将不能修改，确定发布？', '提示', {
+      this.$confirm('确定发布？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

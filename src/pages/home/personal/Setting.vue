@@ -9,10 +9,10 @@
         <div class="user-info">
           <p><span>账号：</span><span>{{userInfo.username}}</span></p>
           <p><span>姓名：</span><span>{{userInfo.realname}}</span></p>
-          <p><span>性别：</span><span>{{userInfo.sex?(userInfo.sex==1?'男':'女'):'保密'}}</span></p>
+          <!-- <p><span>性别：</span><span>{{userInfo.sex?(userInfo.sex==1?'男':'女'):'保密'}}</span></p> -->
           <p><span>手机号：</span><span>{{userInfo.handphone}}</span></p>
           <p><span>邮箱：</span><span>{{userInfo.email}}</span></p>
-          <p><span>地址：</span><span>{{userInfo.address}}</span></p>
+          <!-- <p><span>地址：</span><span>{{userInfo.address}}</span></p> -->
         </div>
       </div>
     </div>
@@ -34,16 +34,15 @@
                         v-if="!isIe9"
                         class="fileInput"
                         ref="upload"
-                        action="/pmpheep/group/add"
-                        :data="postData"
-                        :on-change="filechange"
+                        name="files"
+                        action="/pmpheep/material/upTempFile"
                         :on-success="upLoadFileSuccess"
-                        :on-error="uploadError"
+                        :before-upload="fileBeforeUpload"
                         :show-file-list="false"
-                        :auto-upload="false">
+                        :auto-upload="true">
                         <el-button class="fileInput">上传</el-button>
                       </my-upload>
-                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName||!isIe9">
+                      <div ref="headImageWrapper" v-show="!userHeadImage.fileName">
                         <img :src="userInfo.avatar?userInfo.avatar:'/static/default_image.png'" class="avatar">
                       </div>
                       <div v-show="userHeadImage.fileName">
@@ -54,22 +53,22 @@
                   <el-form-item label="姓名:" prop="realname">
                     <el-input v-model="formSetting.realname"></el-input>
                   </el-form-item>
-                  <el-form-item label="性别:" prop="sex">
+                  <!-- <el-form-item label="性别:" prop="sex">
                     <el-radio-group v-model="formSetting.sex">
                       <el-radio :label="1">男</el-radio>
                       <el-radio :label="2">女</el-radio>
                       <el-radio :label="0">保密</el-radio>
                     </el-radio-group>
-                  </el-form-item>
+                  </el-form-item> -->
                   <el-form-item label="手机号:" prop="handphone">
                     <el-input v-model="formSetting.handphone"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱:" prop="email">
                     <el-input v-model="formSetting.email"></el-input>
                   </el-form-item>
-                  <el-form-item label="地址:" prop="address">
+                  <!-- <el-form-item label="地址:" prop="address">
                     <el-input v-model="formSetting.address"></el-input>
-                  </el-form-item>
+                  </el-form-item> -->
                 </el-form>
                 <div class="text-right paddingT30">
                   <el-button type="primary" @click="updateUserInfoBtn">确认修改</el-button>
@@ -156,7 +155,8 @@
         userHeadImage:{
           fileName:'',
           imageUrl:'',
-          currentFile:''
+          currentFile:'',
+          currentId:''
         },
         userInfo:{
           id: '',
@@ -223,7 +223,7 @@
        * 上传头像input发生改变时触发
        * @param e input内置事件对象
        */
-      filechange(file){
+      /* filechange(file){
         let self=this;
         let prevDiv = this.$refs.headImageWrapper;
         let ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
@@ -266,31 +266,57 @@
           prevDiv.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = file.raw.value;
         }
 
+      }, */
+      fileBeforeUpload(file){
+        var exStr=file.name.split('.').pop().toLowerCase();
+        var exSize=file.size?file.size:1;
+        if(exSize/ 1024 / 1024 > 20){
+          this.$message.error('图片的大小不能超过20MB！');
+        // this.material.noticeFiles.pop();
+          return false;
+        }
+        if(exSize==0){
+          this.$message.error('请勿上传空文件！');
+        // this.material.noticeFiles.pop();
+          return false;
+        }
+        if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+          this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+        // this.material.noticeFiles.pop();
+          return false;
+        }
+        if(file.name.length>80){
+          this.$message.error('图片名称不能超过80个字符！');
+          //this.material.noticeFiles.pop();
+          return false;
+        } 
       },
       /**
        * 创建小组请求成功的回调
        */
       upLoadFileSuccess(response, file, fileList){
-        if (response.code == '1') {
-          this.$message.success('修改成功');
-        }else{
-          this.$message.error(response.msg.msgTrim());
-        }
+          console.log(response, file, fileList);
+         this.userHeadImage.fileName=file.name;
+         this.userHeadImage.currentId=response.data[0];
+         this.userHeadImage.imageUrl='/pmpheep/material/getTempFile?tempFileId='+response.data[0];
+         console.log(this.userHeadImage);
+         this.$message.success('上传成功');
+
       },
       /**
        * 创建小组请求失败的回调
        */
-      uploadError(err, file, fileList){
+      /* uploadError(err, file, fileList){
         this.$message.error('创建小组失败');
-      },
+      }, */
       /**
        * 点击修改按钮
        */
       updateUserInfoBtn(){
         //将post参数赋值给this.postData
-        for(let key in this.postData){
+        /* for(let key in this.postData){
           this.postData[key] = this.formSetting[key];
-        }
+        } */
 
         this.$refs.ruleForm.validate(valid => {
           if (valid) {
@@ -306,19 +332,19 @@
        * 修改个人信息
        */
       updateUserInfo() {
-        if (this.userHeadImage.filename) {
+        /* if (this.userHeadImage.filename) {
           this.userHeadImage.currentFile.upload();
           return;
-        }
+        } */
         this.$axios.put(this.api_update_userInfo, this.$commonFun.initPostData({
           id: this.formSetting.id,
           realname: this.formSetting.realname,
           avatar: this.userInfo.avatar,
           handphone: this.formSetting.handphone || '',
           email: this.formSetting.email || '',
-          file: ''
+          file: this.userHeadImage.currentId
         }))
-          .then(function (response) {
+          .then((response)=> {
             let res = response.data;
             //修改成功
             if (res.code === 1) {
@@ -328,7 +354,7 @@
               self.$message.error(res.msg.msgTrim());
             }
           })
-          .catch(function (error) {
+          .catch( (error)=> {
             console.log(error);
             this.$message.error('请求失败，请重试!');
           });
@@ -344,7 +370,11 @@
             let res = response.data;
             if (res.code === 1) {
               this.userInfo = res.data;
-            }
+                for(let key in this.formSetting){
+                      console.log(key,this.userInfo[key]);
+                      this.formSetting[key] = this.userInfo[key];
+                            }
+                       }
           })
           .catch(function (error) {});
       },
@@ -383,10 +413,7 @@
     created(){
       this.activeName=this.$route.query.type||'setting';
       this.userInfo = this.$getUserData().userInfo;
-      this.userInfo.sex = this.userInfo.sex===undefined?1:this.userInfo.sex;
-      for(let key in this.formSetting){
-        this.formSetting[key] = this.userInfo[key];
-      }
+      //this.userInfo.sex = this.userInfo.sex===undefined?1:this.userInfo.sex;
       this.getUserInfo();
     },
 	}

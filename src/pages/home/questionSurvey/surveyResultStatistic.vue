@@ -100,7 +100,7 @@
           },
           /* 复制 */
           copyAddress(id){
-            this.copyContent='http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+id;
+            this.copyContent='http://119.254.226.115/pmeph/survey/writeSurvey.action?surveyId='+id;
             var e="<input id='copyText' value='"+this.copyContent+"' />";
              document.getElementById('copyBox').innerHTML=e;
              var text=document.getElementById('copyText').select();

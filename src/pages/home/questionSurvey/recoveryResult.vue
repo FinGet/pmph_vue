@@ -26,7 +26,7 @@
          {{formTop.realname }}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         {{'http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
+         {{'http://119.254.226.115/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -87,7 +87,7 @@
                  <span></span>
              </p>
            </li> -->
-       </ul>                   
+       </ul>
   </div>
 </template>
 <script type="text/javascript">
@@ -155,7 +155,7 @@
 }
 .recovery_result .result_list{
     padding:20px;
-    box-sizing: border-box;   
+    box-sizing: border-box;
 }
 .recovery_result .result_list li{
   box-sizing: border-box;
