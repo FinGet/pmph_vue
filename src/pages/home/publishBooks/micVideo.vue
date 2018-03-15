@@ -257,7 +257,7 @@
               this.getList();
             },
             handleCurrentChange(val){
-              this.searchParams.pageSize=val;
+              this.searchParams.pageNumber=val;
               this.getList();
             },
             /* 选择书籍 */
