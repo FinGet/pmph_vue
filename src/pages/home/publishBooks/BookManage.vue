@@ -494,6 +494,7 @@
         var typelist = []
         this.form.bookId = row.id;
         this.form.isNew = row.isNew;
+        this.form.isKey=row.isKey;
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
         this.form.materialId = row.materialId;
