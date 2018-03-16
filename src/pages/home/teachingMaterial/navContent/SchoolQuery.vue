@@ -20,7 +20,7 @@
           stripe
           style="width: 100%">
           <el-table-column
-            label="学校名称">
+            label="学校/医院名称">
             <template scope="scope">
               <p class="bg-none" v-html="scope.row.name"></p>
             </template>

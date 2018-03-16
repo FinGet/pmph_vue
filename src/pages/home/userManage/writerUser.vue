@@ -141,10 +141,10 @@
         <el-form-item label="姓名：" prop="realname">
           <el-input v-model="form.realname" placeholder="请输入用户姓名"></el-input>
         </el-form-item>
-        <el-form-item label="职务：">
+        <el-form-item label="职务：" prop="position">
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
-        <el-form-item label="职称：">
+        <el-form-item label="职称：" prop="title">
           <el-input v-model="form.title" placeholder="请输入职称"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="handphone" >
@@ -462,6 +462,12 @@ export default {
           { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
           { type: "email", message: "邮箱格式错误", trigger: "blur" }
           ],
+        position: [
+          { min: 0, max: 36, message: "职务不能超过36个字符", trigger: "change,blur" }
+        ],
+        title: [
+          { min: 0, max: 30, message: "职称不能超过30个字符", trigger: "change,blur" }
+        ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
           ],
