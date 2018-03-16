@@ -645,7 +645,15 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(() => {
-        this.$axios.put()
+        this.$axios.put(this.resetPasswordUrl,this.$commonFun.initPostData({
+          id:obj.id
+        })).then((res)=>{
+           if(res.data.code==1){
+             this.$message.success('密码已重置');
+           }else{
+             this.$message.error(res.data.msg.msgTrim());
+           }
+        })
         }).catch(() => {
           this.$message({
             type: 'info',

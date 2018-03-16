@@ -138,12 +138,13 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="110"
+            width="180"
             align="center"
             >
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
               <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+              <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
               <!-- <el-button type="text">查看详情</el-button> -->
             </template>
           </el-table-column>
@@ -403,6 +404,7 @@ export default {
   mixins: [ScreenSize],
   data() {
     return {
+      resetPasswordUrl:'/pmpheep/users/org/resetPassword',  // 重置密码url
       screenWidth_lg_computed: true,
       activeName:'first',
       isNew: true, // 判断是否是新增
@@ -686,6 +688,28 @@ export default {
         .catch(function(error) {
           console.error(error);
         });
+    },
+    /* 重置密码 */
+    resetPassword(obj){
+        this.$confirm('确定重置机构<'+obj.orgName+'>的登录密码?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+        this.$axios.put(this.resetPasswordUrl,this.$commonFun.initPostData({
+          id:obj.id
+        })).then((res)=>{
+           if(res.data.code==1){
+             this.$message.success('密码已重置');
+           }else{
+             this.$message.error(res.data.msg.msgTrim());
+           }
+        })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });    
     },
 
     /**
