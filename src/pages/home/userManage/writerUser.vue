@@ -110,10 +110,11 @@
         </el-table-column>
 
         <el-table-column label="操作"
-          align="center" width="110">
+          align="center" width="180">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+            <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
@@ -393,6 +394,7 @@ export default {
     return {
       isNew: true,
       activeName:'first',
+      resetPasswordUrl:'/pmpheep/users/writer/resetPassword',  //重置密码url
       //用户类型数据
       options: [
         {
@@ -636,6 +638,20 @@ export default {
           return false;
         }
       });
+    },
+    /* 重置密码 */
+    resetPassword(obj){
+        this.$confirm('确定重置用户<'+obj.realname+'>的登录密码?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+        this.$axios.put()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });         
     },
     /**
      * 新增用户

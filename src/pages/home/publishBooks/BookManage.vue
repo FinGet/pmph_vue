@@ -252,6 +252,12 @@
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="是否重点学科：" required>
+            <el-radio-group v-model="form.isKey">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <!--没有书签字段，暂时先去掉-->
           <!--<el-form-item label="标签：">-->
             <!--<el-select v-model="form.tags" multiple placeholder="请选择" class="searchInputEle bookType">-->
@@ -333,6 +339,7 @@
           isNew:true,
           isPromote:true,
           isOnSale:true,
+          isKey:true,
           typeId:[],
           materialId:'',
         },
