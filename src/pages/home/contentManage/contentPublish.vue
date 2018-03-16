@@ -279,6 +279,7 @@ export default {
             }
             if(num==1){
               this.formData.isPublished=true;
+              this.formData.authStatus=2;
             }
           this.formData.sessionId = this.$getUserData().sessionId;
           /* 判断新增还是修改 */
