@@ -95,7 +95,7 @@
               </div>
             </div>
             <!--已有书籍-->
-            <div v-else>
+            <div >
               <div class="info-iterm-text">
                 <div>图书：<span></span></div>
                 <div class="lineheight-normal paddingT10">{{iterm.textbookName}}</div>
@@ -114,7 +114,7 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success" v-if="iterm.showChosenPosition">
+                  <el-tag type="success"  >
                     已被选为{{iterm.showChosenPosition}}
                   </el-tag>
                 </div>
@@ -840,14 +840,23 @@
          * @param index
          */
         deleteNew(index,hasChange){
-          if(this.addBookList.length==1&&!this.addBookList[0].isNew){
-            this.$message.error('至少要有一本书！');
-          }
-          this.addBookList.splice(index, 1);
-          if(hasChange){
-            this.hasBookListChanged=true;
-          }
-
+             if(this.addBookList.length==1&&!this.addBookList[0].isNew){
+                this.$message.error('至少要有一本书！');
+              }
+            this.$confirm('确定删除该图书?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(() => {
+              this.addBookList.splice(index, 1);
+              if(hasChange){
+                this.hasBookListChanged=true;
+              }
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });          
+            });          
         },
         /**
          * 保存图书，保存成功后就将图书isNew状态改为false
