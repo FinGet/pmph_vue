@@ -95,7 +95,7 @@
               </div>
             </div>
             <!--已有书籍-->
-            <div >
+            <div v-else>
               <div class="info-iterm-text">
                 <div>图书：<span></span></div>
                 <div class="lineheight-normal paddingT10">{{iterm.textbookName}}</div>
@@ -114,7 +114,7 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success"  >
+                  <el-tag type="success" style="font-size:14px;"   v-if="iterm.showChosenPosition">
                     已被选为{{iterm.showChosenPosition}}
                   </el-tag>
                 </div>

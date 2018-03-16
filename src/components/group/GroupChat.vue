@@ -57,7 +57,7 @@
           @keyup.enter="sendMessage"
         ></textarea>
         <p class="tip-text" v-if="250-editingTextarea.length<20">还可输入{{250-editingTextarea.length}}个字符</p>
-        <el-button @click="sendMessage" size="small" class="btn">发送(S)</el-button>
+        <el-button @click="sendMessage" size="small" class="btn" v-if="!this.$getUserData().userInfo.isAdmin">发送(S)</el-button>
       </div>
     </div>
 	</div>
@@ -302,6 +302,7 @@
       ChatMessageIterm
     },
     created(){
+      console.log(this.$getUserData().userInfo.isAdmin);
       if(this.groupId){
         this.getHistoryMessage();
       }

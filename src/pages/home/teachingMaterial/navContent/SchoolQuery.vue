@@ -76,7 +76,8 @@
        */
       publishBtn(){
         this.hasCheckedOrgList = this.$refs.chooseSchool.getSelectData();
-        var arr = this.$refs.chooseSchool.getSelectData()
+        var arr = this.$refs.chooseSchool.getSelectData();
+        this.orgIds=[];
         arr.forEach(item=>{
           this.orgIds.push(item.id)
         })
