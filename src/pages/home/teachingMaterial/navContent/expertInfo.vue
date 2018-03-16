@@ -32,7 +32,7 @@
                 <div class="searchBox-wrapper marginR20">
                   <div class="searchName">图书：<span></span></div>
                   <div class="searchInput">
-                    <el-select v-model="iterm.textbookId" placeholder="请选择" @change="selectBookChange(index)">
+                    <el-select v-model="iterm.textbookId" filterable placeholder="请选择" @change="selectBookChange(index)">
                       <el-option
                         v-for="(item,i) in bookList"
                         :key="i"
