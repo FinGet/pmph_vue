@@ -32,7 +32,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="95" align="center">
                         <template scope="scope">
-                            <p class="link" @click="pointRecord(scope.row.id)">积分记录</p>
+                            <p class="link" @click="pointRecord(scope.row)">积分记录</p>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -73,7 +73,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="diaTotal">
           </el-pagination> -->
-        <point-record></point-record>
+        <point-record :currentUser="currentUser"></point-record>
 				</el-dialog>
   </div>
 </template>
@@ -126,22 +126,9 @@ export default {
         }
       })
     },
-    pointRecord(id){
+    pointRecord(obj){
       this.dialogFormVisible = true;
-      this.$axios.get('/pmpheep/writerpointlog/list',{
-        params:{
-          sessionId:this.$getUserData().sessionId,
-          pageSize: this.diaPageSize,
-          pageNumber: this.diaPageNumber,
-          userId: id
-        }
-      }).then(response => {
-        let res = response.data;
-        this.diaTotal = res.data.total;
-        if (res.code == '1') {
-          this.diaTableData = res.data.rows;
-        }
-      })
+      this.currentUser=obj;
     },
     // 分页查询
 		handleSizeChange(val){

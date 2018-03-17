@@ -36,7 +36,7 @@
                     placeholder="请选择结束时间"
                     >
                 </el-date-picker>
-                <el-button type="primary" icon="search">搜索</el-button>
+                <el-button type="primary" icon="search" @click="getSearch">搜索</el-button>
                 <el-button type="primary" style="float:right" size="small">近一个月</el-button>
                 <el-button type="primary" style="float:right" size="small">近一周</el-button>
             </p>
@@ -79,7 +79,7 @@
                     placeholder="请选择结束时间"
                     >
                 </el-date-picker>
-                <el-button type="primary" icon="search">搜索</el-button>
+                <el-button type="primary" icon="search" @click="exchangeSearch">搜索</el-button>
                 <el-button type="primary" style="float:right" size="small">近一个月</el-button>
                 <el-button type="primary" style="float:right" size="small">近一周</el-button>
             </p>
@@ -108,22 +108,27 @@
 </template>
 <script type="text/javascript">
     export default{
+        props:['currentUser'],
         data(){
             return{
                activeName:'first',
+               getPointUrl:'/pmpheep/writerpointlog/list',  //积分获取记录url
+               exchangePointUrl:'/pmpheep/writerpointlog/listExchange',     //积分兑换url
                getParams:{
-                   start:'',
-                   end:'',
+                   startTime:'',
+                   endTime:'',
                    pageSize:10,
                    pageNumber:1,
+                   userId:this.currentUser.id
                },
                getPageTotal:100,
                getPointData:[],
                exchangeParams:{
-                   start:'',
-                   end:'',
+                   startTime:'',
+                   endTime:'',
                    pageSize:10,
                    pageNumber:1,
+                   userId:this.currentUser.id
                },
                exchangePageTotal:100,
                exchangePointData:[],
@@ -133,11 +138,33 @@
         methods:{
             /* 积分获取记录列表 */
             getPointList(){
-
+             this.$axios.get(this.getPointUrl,{
+                 params:this.getParams
+             }).then((res)=>{
+                 console.log(res);
+                 if(res.data.code==1){
+                     
+                 }
+             })
+            },
+            getSearch(){
+             this.getParams.pageNumber=1;   
+             this.getPointList();
+            },
+            exchangeSearch(){
+             this.exchangeParams.pageNumber=1;
+             this.exchangePointList()
             },
             /* 积分兑换记录列表 */
             exchangePointList(){
-
+             this.$axios.get(this.exchangePointUrl,{
+                 params:this.exchangeParams
+             }).then((res)=>{
+                 console.log(res);
+                 if(res.data.code==1){
+                     
+                 }
+             })
             },
             /* tab页切换 */
             tabChange(tab){
