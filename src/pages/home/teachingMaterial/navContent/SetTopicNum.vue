@@ -151,7 +151,6 @@
             let res = response.data
             if (res.code == 1) {
               this.$message.success('设置成功!');
-              this.$router.go(-1)
             } else {
               this.$message.error(res.msg.msgTrim());
             }

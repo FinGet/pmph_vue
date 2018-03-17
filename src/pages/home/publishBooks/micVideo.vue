@@ -158,7 +158,7 @@
             </span>
     </el-dialog>
     <!-- 查看视频弹框 -->
-    <el-dialog :visible.sync="isShowVideoPlayer" size="tiny" :show-close="false" class="video_player_dialog" >
+    <el-dialog :visible.sync="isShowVideoPlayer" size="tiny" :close-on-click-modal="false"  class="video_player_dialog" >
       <video :src="videoSrc" controls="controls" autoplay v-if="isShowVideoPlayer">
         您的浏览器不支持 video 标签。
         </video>
@@ -495,6 +495,7 @@
 }
 .mic_video .book_dialog .el-dialog{
 min-width: 660px;
+position: relative;
 }
 .mic_video .book_dialog .el-dialog .el-dialog__body{
     overflow:hidden;
@@ -504,7 +505,10 @@ min-width: 660px;
  background: none;
 }
 .mic_video .video_player_dialog .el-dialog__header{
-    padding:0;
+   padding:0;
+}
+.mic_video .video_player_dialog .el-dialog__header .el-dialog__headerbtn{
+    margin:3px;
 }
 .mic_video .video_player_dialog video{
     width:100%;
