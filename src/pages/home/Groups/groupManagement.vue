@@ -71,6 +71,7 @@
           textbook:'',
           id:null,
           filesNumber:0,
+          isMember:''
         },
         currentGroupList:[],
         crurrentMemberList:[],

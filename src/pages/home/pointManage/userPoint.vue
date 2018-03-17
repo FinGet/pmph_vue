@@ -32,7 +32,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="95" align="center">
                         <template scope="scope">
-                            <p class="link" @click="pointRecord(scope.row.id)">积分记录</p>
+                            <p class="link" @click="pointRecord(scope.row)">积分记录</p>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -51,8 +51,8 @@
         </el-pagination>
 
 				<!-- 积分记录 -->
-				<el-dialog title="积分记录" :visible.sync="dialogFormVisible" size="tiny">
-					<el-row>
+				<el-dialog title="积分记录" class="record_dialog"  :visible.sync="dialogFormVisible" size="small">
+<!-- 					<el-row>
             <el-col>
                 <el-table :data="diaTableData" stripe border style="width: 100%">
                     <el-table-column prop="ruleName" label="积分规则名称">
@@ -72,11 +72,13 @@
             :page-size="diaPageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="diaTotal">
-          </el-pagination>
+          </el-pagination> -->
+        <point-record :currentUser="currentUser"></point-record>
 				</el-dialog>
   </div>
 </template>
 <script>
+import pointRecord from './pointRecord.vue';
 export default {
   data() {
     return {
@@ -92,6 +94,9 @@ export default {
       diaTableData: [],
       dialogFormVisible: false,
     };
+  },
+  components:{
+    pointRecord
   },
   created(){
     this.getUserPoint();
@@ -121,22 +126,9 @@ export default {
         }
       })
     },
-    pointRecord(id){
+    pointRecord(obj){
       this.dialogFormVisible = true;
-      this.$axios.get('/pmpheep/writerpointlog/list',{
-        params:{
-          sessionId:this.$getUserData().sessionId,
-          pageSize: this.diaPageSize,
-          pageNumber: this.diaPageNumber,
-          userId: id
-        }
-      }).then(response => {
-        let res = response.data;
-        this.diaTotal = res.data.total;
-        if (res.code == '1') {
-          this.diaTableData = res.data.rows;
-        }
-      })
+      this.currentUser=obj;
     },
     // 分页查询
 		handleSizeChange(val){
@@ -162,5 +154,7 @@ export default {
 };
 </script>
 <style>
-
+.user_point .record_dialog .el-dialog {
+  min-width: 860px;
+}
 </style>

@@ -372,7 +372,8 @@
             <tr v-for="(iterm,index) in nationalPlan">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
-              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
+             <!--  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> -->
+              <td><div>{{iterm.rankText}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>

@@ -210,7 +210,7 @@
               }).then(() => {
                  this.$axios.delete(this.deleteSensitiveUrl,{
                    params:{
-                     ids:this.deleteIds.join('')
+                     ids:this.deleteIds.join(',')
                    }
                  }).then((res)=>{
                    if(res.data.code==1){
