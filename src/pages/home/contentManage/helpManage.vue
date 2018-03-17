@@ -4,9 +4,9 @@
     <el-tab-pane label="常见问题" name="first">
      <p class="header_p">
          <span>问题标题：</span>
-         <el-input class="input" v-model="commonParams.title" placeholder="请输入问题标题"></el-input>
+         <el-input class="input" v-model="commonParams.title" @keyup.enter.native="commonSearch" placeholder="请输入问题标题"></el-input>
          <span>创建人：</span>
-         <el-input class="input" v-model="commonParams.username" placeholder="请输入创建人"></el-input>
+         <el-input class="input" v-model="commonParams.username" @keyup.enter.native="commonSearch"  placeholder="请输入创建人"></el-input>
          <el-button type="primary" icon="search" @click="commonSearch">搜索</el-button>
 
          <el-button type="primary" style="float:right" @click="$router.push({name:'常见问题',params:{type:'new'}})">新增</el-button>
@@ -51,9 +51,9 @@
     <el-tab-pane label="操作手册上传" name="second">
      <p class="header_p">
          <span>操作手册名称：</span>
-         <el-input class="input" placeholder="请输入操作手册名称" v-model="operationParams.manualName"></el-input>
+         <el-input class="input" placeholder="请输入操作手册名称" @keyup.enter.native="operationSearch"  v-model="operationParams.manualName"></el-input>
          <span>创建人：</span>
-         <el-input class="input" placeholder="请输入创建人" v-model="operationParams.userName"></el-input>
+         <el-input class="input" placeholder="请输入创建人"  @keyup.enter.native="operationSearch" v-model="operationParams.userName"></el-input>
          <el-button type="primary" icon="search" @click="operationSearch">搜索</el-button>
 
          <el-button type="primary" style="float:right" @click="$router.push({name:'操作手册上传',params:{type:'new'}})">新增</el-button>
@@ -167,7 +167,7 @@
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             }).then(() => {
-               this.$axios.delete('/pmpheep/cms/content/'+obj.id+'/delete')
+               this.$axios.delete('/pmpheep/help/'+obj.id+'/delete')
                .then((res)=>{
                    console.log(res);
                    if(res.data.code==1){

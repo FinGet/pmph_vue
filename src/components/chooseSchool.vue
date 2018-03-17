@@ -433,6 +433,7 @@ props: default-history-id 默认选中的历史记录
        * @param iterm
        */
       _checkAllChange(iterm){
+        console.log(iterm);
         var index = this.area_school.indexOf(iterm);
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
@@ -610,6 +611,7 @@ props: default-history-id 默认选中的历史记录
        * 上传文件请求成功的回调
        */
       upLoadFileSuccess(res, file, fileList){
+        this._un_checkedAll();
         if (res.code == '1') {
           this.importExcelInfo={
             all:res.data.orgs.length+res.data.erros.length,

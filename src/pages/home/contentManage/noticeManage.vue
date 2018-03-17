@@ -246,7 +246,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .delete("/pmpheep/cms/notice/" + id + "/update")
+            .delete("/pmpheep/cms/notice/" + id + "/remove")
             .then(response => {
               let res = response.data;
               if (res.code == "1") {

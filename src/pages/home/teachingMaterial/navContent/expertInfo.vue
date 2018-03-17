@@ -32,7 +32,7 @@
                 <div class="searchBox-wrapper marginR20">
                   <div class="searchName">图书：<span></span></div>
                   <div class="searchInput">
-                    <el-select v-model="iterm.textbookId" placeholder="请选择" @change="selectBookChange(index)">
+                    <el-select v-model="iterm.textbookId" filterable placeholder="请选择" @change="selectBookChange(index)">
                       <el-option
                         v-for="(item,i) in bookList"
                         :key="i"
@@ -73,7 +73,7 @@
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -91,11 +91,11 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
             </div>
             <!--已有书籍-->
-            <div >
+            <div v-else>
               <div class="info-iterm-text">
                 <div>图书：<span></span></div>
                 <div class="lineheight-normal paddingT10">{{iterm.textbookName}}</div>
@@ -114,7 +114,7 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success"  >
+                  <el-tag type="success" style="font-size:14px;"   v-if="iterm.showChosenPosition">
                     已被选为{{iterm.showChosenPosition}}
                   </el-tag>
                 </div>
@@ -839,11 +839,11 @@
          * 点击删除按钮执行此方法
          * @param index
          */
-        deleteNew(index,hasChange){
+        deleteNew(index,hasChange,iterm){
              if(this.addBookList.length==1&&!this.addBookList[0].isNew){
                 this.$message.error('至少要有一本书！');
               }
-            this.$confirm('确定删除该图书?', '提示', {
+            this.$confirm(iterm?'确定删除图书：<'+iterm.textbookName+'>？':'您还未保存图书,确定删除吗？', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
             }).then(() => {
