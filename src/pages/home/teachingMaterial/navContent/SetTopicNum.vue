@@ -58,7 +58,11 @@
           label="选题号">
           <template scope="scope">
             <div class="width200">
-              <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNumber"></el-input>
+              <el-form :model="scope.row" :rules="inputRules" :ref="'inputRules'+scope.$index" style="margin:18px 0;">
+                <el-form-item prop="topicNumber">
+                  <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNumber"></el-input>
+                </el-form-item>
+              </el-form>
             </div>
           </template>
         </el-table-column>
@@ -84,7 +88,13 @@
           topicNumber: '', // 选题号
         },
         topicTextbooks:[],
-        uploadLoading:false
+        uploadLoading:false,
+        inputRules:{
+            topicNumber:[
+                        {type:'string',min:0,max:30,message:'选题号不能超过30个字符',trigger:'blur,change'},
+                        {validator:this.$formCheckedRules.numberChecked,trigger: "blur,change"},
+            ]
+        }
       }
 		},
     created(){
@@ -123,10 +133,11 @@
           for (var key in this.book) {
             this.book[key] = this.tableData[i][key]
           }
-          if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
+          /* if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
             this.$message.error('选题号只能为数字')
             return
-          }
+          } */
+
           // console.log(this.book)
           this.topicTextbooks.push(this.book)
           this.book={
@@ -138,7 +149,19 @@
             isPublished: false, // 是否发布
             topicNumber: '', // 选题号
           }
-        }
+      }
+      /* 验证规则是否通过 */
+        var isChecked=true;
+          for(var i in this.tableData){
+             this.$refs['inputRules'+i].validate((valid)=>{
+               if(!valid){
+                isChecked=false;   
+               }
+             })
+          }
+          if(!isChecked){
+            return ;
+          }
         // console.log(this.topicTextbooks)
         this.$confirm('确认提交选题号！', '提示', {
           confirmButtonText: '确定',
