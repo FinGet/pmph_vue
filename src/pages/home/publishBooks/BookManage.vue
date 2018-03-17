@@ -678,7 +678,7 @@
         if (res.code == '1') {
           this.$message.success('上传成功!');
         }else{
-          this.$message.error('请按模板上传!');
+          this.$message.error(res.data.msg.msgTrim());
         }
         this.uploadLoading = false;
       },
@@ -687,7 +687,7 @@
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error('请按模板上传!');
+        this.$message.error(err.msg.msgTrim());
         this.uploadLoading = false;
       },
       /**
