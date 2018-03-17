@@ -71,6 +71,7 @@ export default {
           _this.$mySessionStorage.set('currentUser',res.data.data,'json');
           _this.$message.success('登录成功');
           //将session放到cookie里
+          
           _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
           _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
           _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});

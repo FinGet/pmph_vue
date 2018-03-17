@@ -167,7 +167,7 @@
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             }).then(() => {
-               this.$axios.delete('/pmpheep/cms/content/'+obj.id+'/delete')
+               this.$axios.delete('/pmpheep/help/'+obj.id+'/delete')
                .then((res)=>{
                    console.log(res);
                    if(res.data.code==1){
