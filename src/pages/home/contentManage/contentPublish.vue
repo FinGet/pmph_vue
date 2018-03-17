@@ -141,7 +141,7 @@ export default {
       formRules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
-          { min: 1, max: 50, message: "标题不能超过50个字符", trigger: "change" }
+          { min: 1, max: 100, message: "标题不能超过100个字符", trigger: "change" }
         ],
         categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
         summary: [{ min: 1, max: 50, message: "摘要内容不能超过50个字符", trigger: "change" }],
