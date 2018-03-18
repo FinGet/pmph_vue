@@ -546,6 +546,7 @@
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
+          isKey:this.form.isKey,
           type:type,
           materialId:this.form.materialId||'',
         }))
