@@ -3,7 +3,7 @@
     <el-tabs type="border-card" v-model="activeName">
   <el-tab-pane label="学校/医院用户" name="first">
     <p class="header_p">
-      <span>姓名/账号：</span>
+      <span>管理员姓名/账户：</span>
       <el-input placeholder="请输入" class="input" v-model="params.name" @keyup.enter.native="refreshTableData"></el-input>
       <span>机构名称：</span>
       <el-input placeholder="请输入" class="input" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
@@ -13,12 +13,14 @@
               </el-option>
       </el-select>
       <el-radio-group v-model="params.isHospital"  @change ="orgSearch">
-            <el-radio :label="true">医院</el-radio>
-            <el-radio :label="false">学校</el-radio>
+          <el-radio :label="0">全选</el-radio>
+          <el-radio :label="1">医院</el-radio>
+          <el-radio :label="2">学校</el-radio>
       </el-radio-group>
       <el-button  type="primary" icon="search" style="margin-left:10px;margin-bottom:10px;" @click="searchOrg">搜索</el-button>
-      <el-button type="primary" style="float:right;" @click="addBtn(true)">新建机构用户</el-button>
-      <el-button type="primary" style="float:right;" @click="exportExcel">导出名单</el-button>
+      <el-button type="primary" @click="clearSearch">清空搜索</el-button>
+      <el-button type="primary" class="pull-right" @click="addBtn(true)">新建机构用户</el-button>
+      <el-button type="primary" class="pull-right" @click="exportExcel">导出名单</el-button>
     </p>
       <!--表格-->
       <div class="table-wrapper">
@@ -289,10 +291,10 @@
       <el-row>
 			<el-col>
 				<div class="searchBox-wrapper">
-					<div class="searchName">姓名/账号:
+					<div class="searchName searchName1">管理员姓名/账户：
 						<span></span>
 					</div>
-					<div class="searchInput">
+					<div class="searchInput searchInput1">
 						<el-input placeholder="请输入" v-model="realname" @keyup.enter.native="search" class="searchInputEle"></el-input>
 					</div>
 				</div>
@@ -318,8 +320,12 @@
 				<div class="searchBox-wrapper searchBtn">
 					<el-button type="primary" icon="search" @click="search">搜索</el-button>
 				</div>
+        <div class="searchBox-wrapper searchBtn">
+          <el-button type="primary" @click="clearSearch">清空搜索</el-button>
+        </div>
 				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">通过</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">退回</el-button>
+
 			</el-col>
 		</el-row>
 		<el-row>
@@ -521,7 +527,7 @@ export default {
         orgName: "",
         name: "",
         orgTypeName:'',
-        isHospital: false
+        isHospital: 0
       },
       totalPages: 0,// 数据总量
 			visible1: false,
@@ -583,7 +589,7 @@ export default {
   methods: {
           /** 导出Excel */
           exportExcel(){
-            let url = '/pmpheep/orgUserExportEcel?orgName='+this.params.orgName+'&name='+this.params.name 
+            let url = '/pmpheep/orgUserExportEcel?orgName='+this.params.orgName+'&name='+this.params.name
 
       +'&orgTypeName='+this.params.orgTypeName+'&isHospital='+this.params.isHospital;
             // console.log(url)
@@ -708,8 +714,8 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消操作'
-          });          
-        });    
+          });
+        });
     },
 
     /**
@@ -1062,6 +1068,23 @@ export default {
       }).catch(error => {
         this.$message.error('登录失败，请稍后再试!');
       })
+    },
+    /**
+     * 清空搜索条件
+     */
+    clearSearch(){
+      this.params = {
+        pageSize: 10,
+          pageNumber: 1,
+          // username: "",
+          orgName: "",
+          name: "",
+          orgTypeName:'',
+          isHospital: 0
+      };
+      this.realname = '';
+      this.orgName = '';
+      this.progress = '';
     }
   },
   created() {
@@ -1118,4 +1141,10 @@ export default {
 .detail-info-item .info{
   flex: 1;
 }
+  .orgUser .searchName1{
+    width: 120px;
+  }
+  .orgUser .searchInput1{
+    margin-left: 120px;
+  }
 </style>
