@@ -5,7 +5,7 @@
 
     <el-tabs type="border-card" v-model="activeIndex"  @tab-click="tabClick">
       <el-tab-pane label="短评管理" name="first">
-        <TableShort :data.sync="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
+        <TableShort :data.sync="tableData" @selection-change="handleSelectionChange" @audit="getTableData" @stateChange="getTableData" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
@@ -33,7 +33,7 @@
             <div class="pull-right">
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="setState('cancel')">取消置顶</el-button>
-              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
+              <!--<el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>-->
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(2)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -55,7 +55,7 @@
         </TableShort>
       </el-tab-pane>
       <el-tab-pane label="长评管理" name="second">
-        <TableLong :data.sync="tableData" @selection-change="handleSelectionChange" @show-comment-detail="showCommentDetail">
+        <TableLong :data.sync="tableData" @selection-change="handleSelectionChange" @audit="getTableData" @stateChange="getTableData" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
               <div class="searchName">书籍名称/ISBN：<span></span></div>
@@ -84,6 +84,7 @@
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="setState('cancel')">取消置顶</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromote')">设为精选</el-button>
+              <el-button type="primary" :disabled="!selectData.length" @click="setState('isPromoteF')">取消精选</el-button>
               <el-button type="danger" :disabled="!selectData.length" @click="deleteComment">删除</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="audit(2)">审核不通过</el-button>
               <el-button type="primary" :disabled="!selectData.length" @click="audit(1)">通过</el-button>
@@ -308,7 +309,7 @@
           ids:select.join(','),
           isStick:typeText==='isStick'?true:(typeText==='cancel'? false : ''),
           sort:'',
-          isPromote:typeText==='isPromote'?true:'',
+          isPromote:typeText==='isPromote'?true:(typeText==='isPromoteF'?false:''),
           isHot:typeText==='isHot'?true:'',
           SortHot:'',
         }))
