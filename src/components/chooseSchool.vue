@@ -95,7 +95,7 @@ props: default-history-id 默认选中的历史记录
         </div>
       </div>
 
-      <div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>
+      <!--<div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>-->
     </div>
     <!--地区详情区域-->
     <div class="border-T paddingT20">
