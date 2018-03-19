@@ -93,6 +93,7 @@ export default {
       tableData: [{name:'11',id:'11'}],
       diaTableData: [],
       dialogFormVisible: false,
+      currentUser:{}
     };
   },
   components:{
