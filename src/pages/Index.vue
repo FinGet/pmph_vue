@@ -351,7 +351,7 @@ export default {
       this.$axios.get('/pmpheep/material/list',{params:{
         pageSize:5,
         pageNumber:1,
-        isMy:true,
+        isMy:false,
         state:state,
         contactUserName:'',
         materialName:'',
