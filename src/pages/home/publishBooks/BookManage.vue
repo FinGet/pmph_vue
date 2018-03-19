@@ -732,13 +732,13 @@
             .catch(e=>{
               console.log(e);
               if(this.isUpload){
-                this.$message.error('导出失败，请重试！');
+                this.$message.error('同步失败，请重试！');
                 clearInterval(this.handleExportWordtimer);
               }
             })
           //超时提醒
           if(useTime>timeout){
-            this.$message.error('导出请求超时，请重试！');
+            this.$message.error('同步请求超时，请重试！');
             clearInterval(this.handleExportWordtimer);
           }
         },30000)
