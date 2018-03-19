@@ -15,7 +15,7 @@
          </p>
       </div>
     <!-- tab -->
-    <el-tabs type="border-card" @tab-click="tabChange" :active-name="activeName">
+    <el-tabs type="border-card" @tab-click="tabChange" v-model="activeName">
         <el-tab-pane label="积分获取记录" name="first">
             <p class="header_p">
              <span>
@@ -120,7 +120,7 @@
 </template>
 <script type="text/javascript">
     export default{
-        props:['currentUser'],
+        props:['currentUser','dialogFormVisible'],
         data(){
             return{
                activeName:'first',
@@ -149,6 +149,15 @@
         },
         created(){
            this.getPointList();
+        },
+        watch:{
+         dialogFormVisible(val){
+             if(val){
+                this.activeName='first'; 
+                this.getPointList();
+             }
+             
+         }
         },
         methods:{
             /* 积分获取记录列表 */
