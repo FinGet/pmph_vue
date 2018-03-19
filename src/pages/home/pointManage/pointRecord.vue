@@ -46,7 +46,7 @@
               <el-table-column label="获取行为" prop="ruleName"></el-table-column>
               <el-table-column label="时间" prop="gmtCreate">
                   <template scope="scope">
-                      {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}
+                      {{scope.row.gmtCreate}}
                   </template>
               </el-table-column>
               <el-table-column label="得分" prop="point"></el-table-column>
@@ -95,7 +95,7 @@
               <el-table-column label="获取行为" prop="ruleName"></el-table-column>
               <el-table-column label="时间">
                   <template scope="scope">
-                   {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}
+                   {{scope.row.gmtCreate}}
                   </template>
               </el-table-column>
               <el-table-column label="消费积分" prop="total"></el-table-column>
