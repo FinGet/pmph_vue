@@ -172,7 +172,7 @@
         <el-table-column
           prop="isbn"
           label="ISBN"
-          width="210">
+          width="230">
         </el-table-column>
         <el-table-column
           label="是否新书推荐"
@@ -435,7 +435,7 @@
               this.totalNum = res.data.total;
               res.data.rows.map(iterm=>{
                   iterm.path = iterm.path + '-' + iterm.type;
-                  iterm.isbn = iterm.isbn?iterm.isbn.replace('ISBN ',''):'';
+//                  iterm.isbn = iterm.isbn?iterm.isbn.replace('ISBN ',''):'';
               });
               this.tableData = res.data.rows;
             }
