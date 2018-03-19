@@ -27,7 +27,8 @@
 
   /* 专家信息页面 */
   .expert_info{
-    zoom: 0.9;
+    zoom: 1;
+    font-size: 16px;
   }
 }
 
