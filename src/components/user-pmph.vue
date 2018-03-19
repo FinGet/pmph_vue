@@ -101,7 +101,7 @@ methods:
               width="110">
               <template scope="scope">
                 <el-button type="text" @click="_openUpdateDialog(scope.$index)">修改</el-button>
-                <el-button type="text">登录</el-button>
+                <!--<el-button type="text">登录</el-button>-->
                 <!-- <el-button type="text">查看详情</el-button> -->
               </template>
             </el-table-column>
