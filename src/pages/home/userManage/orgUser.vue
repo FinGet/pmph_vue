@@ -206,12 +206,12 @@
             </el-option>
           </el-select>
         </el-form-item>
-          <el-form-item label="启用标识：" prop="isDisabled">
-            <el-radio-group v-model="form.isDisabled">
-              <el-radio :label="false">启用</el-radio>
-              <el-radio :label="true">禁用</el-radio>
-            </el-radio-group>
-          </el-form-item>
+          <!--<el-form-item label="启用标识：" prop="isDisabled">-->
+            <!--<el-radio-group v-model="form.isDisabled">-->
+              <!--<el-radio :label="false">启用</el-radio>-->
+              <!--<el-radio :label="true">禁用</el-radio>-->
+            <!--</el-radio-group>-->
+          <!--</el-form-item>-->
           <el-form-item label="地址：" prop="address">
             <el-input v-model="form.address"></el-input>
           </el-form-item>
