@@ -114,8 +114,8 @@ props: default-history-id 默认选中的历史记录
           </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small" @click="_sortByArea">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small" @click="_sortByOrg">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByArea">按省市排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByOrg">按学校和医院拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
