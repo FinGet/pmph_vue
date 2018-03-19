@@ -176,14 +176,14 @@
         </el-table-column>
         <el-table-column
           label="是否新书推荐"
-          width="120">
+          width="130">
           <template scope="scope">
             {{scope.row.isNew?'是':'否'}}
           </template>
         </el-table-column>
         <el-table-column
-          label="是否重磅推荐"
-          width="120">
+          label="是否重点推荐"
+          width="130">
           <template scope="scope">
             {{scope.row.isPromote?'是':'否'}}
           </template>
