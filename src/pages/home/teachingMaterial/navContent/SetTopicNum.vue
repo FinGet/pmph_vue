@@ -74,6 +74,20 @@
 <script>
 	export default {
 		data() {
+    //整数验证
+   var  numberChecked=(rule, value, callback)=>{
+        var reg = '^[0-9]*$';   //阿拉伯数字验证正则
+        if(!value){
+          callback()
+        }else{
+            if (!(value + '').match(reg)) {
+              callback('请输入正确的数字');
+            } else {
+              callback()
+            }
+        }
+
+    }      
 			return {
         api_upload: '/pmpheep/textBook/import/topicExcel',
         tableData:[],
@@ -92,7 +106,7 @@
         inputRules:{
             topicNumber:[
                         {type:'string',min:0,max:30,message:'选题号不能超过30个字符',trigger:'blur,change'},
-                        {validator:this.$formCheckedRules.numberChecked,trigger: "blur,change"},
+                        {validator:numberChecked,trigger: "blur,change"},
             ]
         }
       }
@@ -227,16 +241,17 @@
           for (var i =0;i<tableData.length;i++) {
             for (var j = 0; j<upLoad.length;j++) {
               if (tableData[i].sort == upLoad[j].sort && tableData[i].textbookName == upLoad[j].textbookName && tableData[i].textbokkRound== upLoad[j].textbokkRound) {
-                data.push(upLoad[j]);
+                /* data.push(upLoad[j]); */
+                tableData[i].topicNumber=upLoad[j].topicNumber;
               }
             }
           }
           /*将不同的数据加入其中*/
-          if (data.length < tableData.length) {
+          /* if (data.length < tableData.length) {
             data=[...data,...(tableData.slice(data.length))];
           }
 //          console.log(data);
-          this.tableData = data;
+          this.tableData = data; */
         }else{
           this.$message.error(res.msg.msgTrim());
         }
