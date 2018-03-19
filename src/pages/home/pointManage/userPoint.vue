@@ -52,28 +52,7 @@
 
 				<!-- 积分记录 -->
 				<el-dialog title="积分记录" class="record_dialog"  :visible.sync="dialogFormVisible" size="small">
-<!-- 					<el-row>
-            <el-col>
-                <el-table :data="diaTableData" stripe border style="width: 100%">
-                    <el-table-column prop="ruleName" label="积分规则名称">
-                    </el-table-column>
-                    <el-table-column prop="point" label="积分变化" >
-                    </el-table-column>
-                </el-table>
-            </el-col>
-          </el-row>
-          <el-pagination
-            v-if="diaTotal>diaPageSize"
-            class="pull-right marginT10"
-            @size-change="handleDiaSizeChange"
-            @current-change="handleDiaCurrentChange"
-            :current-page="diaPageNumber"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="diaPageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="diaTotal">
-          </el-pagination> -->
-        <point-record :currentUser="currentUser"></point-record>
+        <point-record :currentUser="currentUser" :dialogFormVisible="dialogFormVisible"></point-record>
 				</el-dialog>
   </div>
 </template>
@@ -86,12 +65,8 @@ export default {
       realname: "", // 用户姓名
       pageSize: 20,
       pageNumber: 1, // 当前页
-      diaPageSize: 20,
-      diaPageNumber: 1, // 当前页
       usertotal: 0,
-      diaTotal: 0,
       tableData: [{name:'11',id:'11'}],
-      diaTableData: [],
       dialogFormVisible: false,
       currentUser:{}
     };
@@ -141,16 +116,6 @@ export default {
 			this.pageNumber = val;
 			this.getUserPoint();
     },
-    // 分页查询
-		handleDiaSizeChange(val){
-			this.diaPageSize = val;
-      this.diaPageNumber = 1;
-			this.pointRecord();
-		},
-		handleDiaCurrentChange(val){
-			this.diaPageNumber = val;
-			this.pointRecord();
-		},
   }
 };
 </script>
