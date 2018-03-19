@@ -46,7 +46,7 @@
         <el-table-column
           prop="isStick"
           label="是否置顶"
-          width="94">
+          width="95">
           <template scope="scope">
             {{scope.row.scope?'是':'否'}}
           </template>
@@ -54,7 +54,7 @@
         <el-table-column
           prop="isPromote"
           label="是否精选"
-          width="94">
+          width="95">
           <template scope="scope">
             {{scope.row.scope?'是':'否'}}
           </template>

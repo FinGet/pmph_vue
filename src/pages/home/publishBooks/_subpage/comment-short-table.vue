@@ -44,7 +44,7 @@
         <el-table-column
           prop="isPromote"
           label="是否精选"
-          width="94">
+          width="95">
           <template scope="scope">
             {{scope.row.isPromote?'是':'否'}}
           </template>
