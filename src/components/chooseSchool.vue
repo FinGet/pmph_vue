@@ -95,7 +95,7 @@ props: default-history-id 默认选中的历史记录
         </div>
       </div>
 
-      <div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>
+      <!--<div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>-->
     </div>
     <!--地区详情区域-->
     <div class="border-T paddingT20">
@@ -114,8 +114,8 @@ props: default-history-id 默认选中的历史记录
           </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small" @click="_sortByArea">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small" @click="_sortByOrg">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByArea">按省市排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByOrg">按学校和医院拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"

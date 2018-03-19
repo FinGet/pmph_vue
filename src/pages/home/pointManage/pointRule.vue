@@ -98,6 +98,13 @@
 <script>
 export default {
   data() {
+    var checkNum = (rule, value, callback) => {
+      if (value > 99999999999999999999) {
+        callback(new Error('输入的数字过大!'));
+      } else {
+        callback();
+      }
+    };
 		return {
 			type: 'new', // new 新增，modify 修改
 			name: '', // 规则名称
@@ -118,6 +125,7 @@ export default {
 				isDisabled: false, // 是否禁用
 				description: '', // 规则描述
 			}, // 表单数据
+
 			rules: {
 				ruleName: [
 					{ required: true, message: '请输入积分规则名称', trigger: 'blur' },
@@ -129,7 +137,8 @@ export default {
 				],
 				point: [
 					{ required: true, message: '积分值不能为空'},
-          { type: 'number', message: '积分值必须为数字值'}
+          { type: 'number', message: '积分值必须为数字值'},
+          { validator: checkNum, trigger: 'change' }
 				],
 				// 是否禁用
 				isDisabled: [

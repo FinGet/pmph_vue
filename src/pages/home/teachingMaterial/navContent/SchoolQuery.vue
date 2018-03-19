@@ -2,7 +2,7 @@
   <div class="school-query">
     <choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="materialId">
       <el-button type="primary" @click="exportExcel"  size="large">导出已发布学校名单</el-button>
-      
+
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
@@ -14,6 +14,10 @@
     <el-dialog
       title="已选中机构"
       :visible.sync="dialogVisible">
+      <span class="pull-right marginB10">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
+      </span>
       <div class="table-wrapper">
         <el-table
           :data="hasCheckedOrgList"
@@ -28,10 +32,7 @@
         </el-table>
       </div>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
-      </span>
+
     </el-dialog>
   </div>
 </template>

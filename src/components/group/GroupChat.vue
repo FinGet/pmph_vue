@@ -57,7 +57,7 @@
           @keyup.enter="sendMessage"
         ></textarea>
         <p class="tip-text" v-if="250-editingTextarea.length<20">还可输入{{250-editingTextarea.length}}个字符</p>
-        <el-button @click="sendMessage" size="small" class="btn" v-if="!this.$getUserData().userInfo.isAdmin">发送(S)</el-button>
+        <el-button @click="sendMessage" size="small" class="btn" v-if="this.currentGroup.isMember">发送(S)</el-button>
       </div>
     </div>
 	</div>
@@ -67,7 +67,7 @@
   import ChatMessageIterm from './ChatMessageIterm.vue'
   import bus from 'common/eventBus/bus.js'
 	export default {
-    props:['currentGroup'],
+    props:['currentGroup','currentGroupList'],
 		data() {
 			return {
         groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
@@ -302,7 +302,7 @@
       ChatMessageIterm
     },
     created(){
-      console.log(this.$getUserData().userInfo.isAdmin);
+      console.log(this.currentGroup,this.currentGroupList);
       if(this.groupId){
         this.getHistoryMessage();
       }

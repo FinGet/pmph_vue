@@ -145,7 +145,7 @@
             <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'配套图书导入'}}</el-button>
           </my-upload>
         </el-tooltip>
-        <el-button type="primary"><a href="/static/配套图书导入模版.xls">配套图书导入模板下载</a></el-button>
+        <a href="/static/选题号模板下载.xlsx"><el-button type="primary">配套图书导入模板下载</el-button></a>
         <el-button type="primary" @click="syncBook(1)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书全量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" @click="syncBook(2)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书增量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
@@ -172,18 +172,18 @@
         <el-table-column
           prop="isbn"
           label="ISBN"
-          width="210">
+          width="230">
         </el-table-column>
         <el-table-column
           label="是否新书推荐"
-          width="120">
+          width="130">
           <template scope="scope">
             {{scope.row.isNew?'是':'否'}}
           </template>
         </el-table-column>
         <el-table-column
-          label="是否重磅推荐"
-          width="120">
+          label="是否重点推荐"
+          width="130">
           <template scope="scope">
             {{scope.row.isPromote?'是':'否'}}
           </template>
@@ -435,7 +435,7 @@
               this.totalNum = res.data.total;
               res.data.rows.map(iterm=>{
                   iterm.path = iterm.path + '-' + iterm.type;
-                  iterm.isbn = iterm.isbn?iterm.isbn.replace('ISBN ',''):'';
+//                  iterm.isbn = iterm.isbn?iterm.isbn.replace('ISBN ',''):'';
               });
               this.tableData = res.data.rows;
             }
@@ -546,6 +546,7 @@
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
+          isKey:this.form.isKey,
           type:type,
           materialId:this.form.materialId||'',
         }))
@@ -678,7 +679,7 @@
         if (res.code == '1') {
           this.$message.success('上传成功!');
         }else{
-          this.$message.error('请按模板上传!');
+          this.$message.error(res.data.msg.msgTrim());
         }
         this.uploadLoading = false;
       },
@@ -687,7 +688,7 @@
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error('请按模板上传!');
+        this.$message.error(err.msg.msgTrim());
         this.uploadLoading = false;
       },
       /**
@@ -731,13 +732,13 @@
             .catch(e=>{
               console.log(e);
               if(this.isUpload){
-                this.$message.error('导出失败，请重试！');
+                this.$message.error('同步失败，请重试！');
                 clearInterval(this.handleExportWordtimer);
               }
             })
           //超时提醒
           if(useTime>timeout){
-            this.$message.error('导出请求超时，请重试！');
+            this.$message.error('同步请求超时，请重试！');
             clearInterval(this.handleExportWordtimer);
           }
         },30000)
