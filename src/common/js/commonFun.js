@@ -226,6 +226,33 @@ export function getcurrentDate(nS) {
   return ''+year+mon+day;
 
 }
+/* 获取当前时间 格式YYYY-MM-DD */
+export function getnowDate() {
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var strDate = date.getDate();
+  return year + '-' + (month <= 9 ? '0' + month : month) + '-' + (strDate <= 9 ? '0' + strDate : strDate);
+
+}
+/* 获取一周前时间 格式YYYY-MM-DD */
+export function getoneWeekDate() {
+  var oneweekdate = new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
+  var y = oneweekdate.getFullYear();
+  var m = oneweekdate.getMonth() + 1;
+  var d = oneweekdate.getDate();
+  return y + '-' + (m<=9?'0'+m:m )+ '-' + (d<=9?'0'+d:d);
+
+}
+/* 获取一个月前时间 格式YYYY-MM-DD */
+export function getoneMonthDate() {
+  var nowdate = new Date();
+  nowdate.setMonth(nowdate.getMonth() - 1);
+  var y = nowdate.getFullYear();
+  var m = nowdate.getMonth() + 1;
+  var d = nowdate.getDate();
+  return  y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+}
 /**
  * 获取当前的日期时间 格式“yyyy-MM-dd HH:MM:SS”
  * @returns {string}
