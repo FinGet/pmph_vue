@@ -153,6 +153,8 @@
         watch:{
          dialogFormVisible(val){
              if(val){
+                this.getParams.userId=this.currentUser.id;
+                this.exchangeParams.userId= this.currentUser.id;
                 this.activeName='first'; 
                 this.getPointList();
              }
