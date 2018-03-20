@@ -195,7 +195,7 @@ props: default-history-id 默认选中的历史记录
     </el-dialog>
 
     <el-dialog
-      title="导入学校"
+      title="导入选题"
       :visible.sync="importExcelInfoView"
       size="tiny">
       <div class="text-center">
