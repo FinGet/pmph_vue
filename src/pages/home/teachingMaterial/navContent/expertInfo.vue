@@ -349,7 +349,7 @@
             <tr v-for="(iterm,index) in decCourseConstruction">
               <td><div>{{iterm.courseName}}</div></td>
               <td><div>{{iterm.classHour}}</div></td>
-              <td><div>{{courseConstructionList[iterm.type]}}</div></td>
+              <td><div>{{courseConstructionList[iterm.type]||'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -397,7 +397,7 @@
             </tr>
             <tr v-for="(iterm,index) in rwtextbook">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
