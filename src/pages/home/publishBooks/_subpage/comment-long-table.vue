@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column
           label="评论标题"
-          min-width="200">
+          >
           <template scope="scope">
             <div class="ellipsis cursor-pointer blue" @click="showCommentDetail(scope.row)">
               {{scope.row.title}}
@@ -31,22 +31,22 @@
         <el-table-column
           prop="writerName"
           label="评论人"
-          width="100">
+          >
         </el-table-column>
         <el-table-column
           prop="gmtCreate"
           label="评论时间"
-          width="168">
+          >
         </el-table-column>
         <el-table-column
           prop="score"
           label="评分"
-          width="70">
+          >
         </el-table-column>
         <el-table-column
           prop="isStick"
           label="是否置顶"
-          width="95">
+          >
           <template scope="scope">
             {{scope.row.isStick?'是':'否'}}
           </template>
@@ -54,7 +54,7 @@
         <el-table-column
           prop="isPromote"
           label="是否精选"
-          width="95">
+          >
           <template scope="scope">
             {{scope.row.isPromote?'是':'否'}}
           </template>
@@ -62,7 +62,7 @@
         <el-table-column
           prop="state"
           label="审核状态"
-          width="120">
+        >
         </el-table-column>
         <el-table-column
           label="操作"
