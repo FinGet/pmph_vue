@@ -26,7 +26,7 @@
                 label="文章标题"
                 >
                 <template scope="scope">
-                    <el-button type="text" style="color:#337ab7;" @click="contentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <!-- 管理员才予以显示 -->
@@ -120,7 +120,7 @@
      :visible.sync="showContentDetail"
      size="large">
        <div style="padding:0 10%;">
-        <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
+        <p class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</p>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.username}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
@@ -206,7 +206,7 @@
                 prop="title"
                 >
                 <template scope="scope">
-                    <el-button type="text" style="color:#337ab7;" @click="commentDetail(scope.row)">{{scope.row.title}}</el-button>
+                    <p class="link" @click="commentDetail(scope.row)">{{scope.row.title}}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -266,7 +266,7 @@
      :visible.sync="showCommentDetail"
      size="large">
        <div style="padding:0 10%;">
-        <h5 class="previewTitle text-center">{{commentDetailData.cmsContent.title}}</h5>
+        <p class="previewTitle text-center">{{commentDetailData.cmsContent.title}}</p>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{commentDetailData.listObj.username}}</span>
       <span>{{commentDetailData.listObj.authDate}}</span>
@@ -641,7 +641,7 @@ export default {
             this.syncCheckDetail(res.data.data);
           }, 3000);
 //          this.syncDialogVisible1 = true;
-          
+
         }else{
           this.isSyncLoading=false;
           this.$message.error(res.data.msg.msgTrim());

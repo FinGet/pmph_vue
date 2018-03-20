@@ -304,7 +304,7 @@
             </tr>
             <tr v-for="(iterm,index) in academicExperience">
               <td><div>{{iterm.orgName}}</div></td>
-              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
@@ -322,12 +322,16 @@
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
               <th><div>是否数字编委</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in lastPositionList">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -349,7 +353,7 @@
             <tr v-for="(iterm,index) in decCourseConstruction">
               <td><div>{{iterm.courseName}}</div></td>
               <td><div>{{iterm.classHour}}</div></td>
-              <td><div>{{courseConstructionList[iterm.type]}}</div></td>
+              <td><div>{{courseConstructionList[iterm.type]||'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -393,14 +397,16 @@
               <th><div>编写职务</div></th>
               <th><div>是否数字编委</div></th>
               <th><div>出版时间</div></th>
+              <th><div>标准书号</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in rwtextbook">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -427,7 +433,7 @@
             <tr v-for="(iterm,index) in textbook">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
