@@ -14,15 +14,24 @@
     <el-dialog
       title="已选中机构"
       :visible.sync="dialogVisible">
-      <span class="pull-right marginB10">
+      <div class=" marginB10">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
-      </span>
-      <div class="table-wrapper">
+      </div>
+      <div class="table-wrapper" style="height: 700px; overflow-y: scroll;">
         <el-table
           :data="hasCheckedOrgList"
           stripe
+          border
           style="width: 100%">
+          <el-table-column
+            label="序号"
+          width="100"
+          align="center">
+            <template scope="scope">
+              <p class="bg-none">{{scope.$index + 1}}</p>
+            </template>
+          </el-table-column>
           <el-table-column
             label="学校/医院名称">
             <template scope="scope">
