@@ -32,7 +32,7 @@
                 <div class="searchBox-wrapper marginR20">
                   <div class="searchName">图书：<span></span></div>
                   <div class="searchInput">
-                    <el-select v-model="iterm.textbookId" placeholder="请选择" @change="selectBookChange(index)">
+                    <el-select v-model="iterm.textbookId" filterable placeholder="请选择" @change="selectBookChange(index)">
                       <el-option
                         v-for="(item,i) in bookList"
                         :key="i"
@@ -73,7 +73,7 @@
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -91,7 +91,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
             </div>
             <!--已有书籍-->
@@ -114,7 +114,7 @@
               <div class="info-iterm-text">
                 <div>遴选状态：<span></span></div>
                 <div>
-                  <el-tag type="success" v-if="iterm.showChosenPosition">
+                  <el-tag type="success" style="font-size:14px;"   v-if="iterm.showChosenPosition">
                     已被选为{{iterm.showChosenPosition}}
                   </el-tag>
                 </div>
@@ -229,7 +229,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!learnExperience.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!learnExperience.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -254,7 +254,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!workExperience.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!workExperience.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -276,7 +276,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!teachExperience.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!teachExperience.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -304,12 +304,12 @@
             </tr>
             <tr v-for="(iterm,index) in academicExperience">
               <td><div>{{iterm.orgName}}</div></td>
-              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:''}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -322,16 +322,20 @@
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
               <th><div>是否数字编委</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in lastPositionList">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.publishDate}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!lastPositionList.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -349,11 +353,11 @@
             <tr v-for="(iterm,index) in decCourseConstruction">
               <td><div>{{iterm.courseName}}</div></td>
               <td><div>{{iterm.classHour}}</div></td>
-              <td><div>{{courseConstructionList[iterm.type]}}</div></td>
+              <td><div>{{courseConstructionList[iterm.type]||'无'}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!decCourseConstruction.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!decCourseConstruction.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -372,11 +376,12 @@
             <tr v-for="(iterm,index) in nationalPlan">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
-              <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td>
+             <!--  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> -->
+              <td><div>{{iterm.rankText}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -390,18 +395,22 @@
               <th><div>教材名称</div></th>
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
+              <th><div>是否数字编委</div></th>
               <th><div>出版时间</div></th>
+              <th><div>标准书号</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in rwtextbook">
               <td><div>{{iterm.materialName}}</div></td>
-              <td><div> {{iterm.rank?materialLevel[iterm.rank]:''}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
+              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!rwtextbook.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!rwtextbook.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -416,6 +425,7 @@
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
               <th><div>出版社</div></th>
+              <th><div>是否数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
@@ -423,14 +433,15 @@
             <tr v-for="(iterm,index) in textbook">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
-              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:''}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -463,7 +474,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!researchData.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -489,7 +500,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -511,7 +522,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!publish_reward.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!publish_reward.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -535,7 +546,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!sci.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!sci.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -557,7 +568,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!clinical_reward.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!clinical_reward.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -579,7 +590,7 @@
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
-          <div class="text-center lineheight-24" v-if="!acade_reward.length">暂无数据</div>
+          <!--<div class="text-center lineheight-24" v-if="!acade_reward.length">暂无数据</div>-->
         </div>
       </div>
 
@@ -835,15 +846,24 @@
          * 点击删除按钮执行此方法
          * @param index
          */
-        deleteNew(index,hasChange){
-          if(this.addBookList.length==1&&!this.addBookList[0].isNew){
-            this.$message.error('至少要有一本书！');
-          }
-          this.addBookList.splice(index, 1);
-          if(hasChange){
-            this.hasBookListChanged=true;
-          }
-
+        deleteNew(index,hasChange,iterm){
+             if(this.addBookList.length==1&&!this.addBookList[0].isNew){
+                this.$message.error('至少要有一本书！');
+              }
+            this.$confirm(iterm?'确定删除图书：<'+iterm.textbookName+'>？':'您还未保存图书,确定删除吗？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(() => {
+              this.addBookList.splice(index, 1);
+              if(hasChange){
+                this.hasBookListChanged=true;
+              }
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });
+            });
         },
         /**
          * 保存图书，保存成功后就将图书isNew状态改为false
@@ -1162,6 +1182,8 @@
          * 打印
          */
         print(){
+//          console.log(this.materialInfo);
+          document.title = this.materialInfo.materialName;
           window.print();
           return false;
         },
@@ -1420,4 +1442,5 @@
   .school-device{
     padding: 160px 0 0;
   }
+
 </style>

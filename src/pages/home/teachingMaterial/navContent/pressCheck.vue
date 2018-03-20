@@ -244,11 +244,11 @@
             <p>{{stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="出版社审核">
+        <el-table-column label="出版社审核" width="135">
           <template scope="scope">
-            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
-
-            <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,2)">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==2&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,0)">取消收到纸质表</p>
+            <!-- <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p> -->
 
           </template>
         </el-table-column>
@@ -540,16 +540,16 @@
       /**
        * 确认收到纸质表
        */
-      confirmPaperList(row){
+      confirmPaperList(row,num){
         this.$axios.get(this.api_confirm_paper,{params:{
           id:row.id,
-          offlineProgress:2
+          offlineProgress:num
         }})
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              this.$message.success('已确认收到纸质表！');
-              row.offlineProgress=2;
+              this.$message.success(num==2?'已确认收到纸质表！':'已取消收到纸质表！');
+              row.offlineProgress=num;
             }else{
               this.$message.error(res.msg.msgTrim())
             }

@@ -2,7 +2,7 @@
   <div class="school-query">
     <choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="materialId">
       <el-button type="primary" @click="exportExcel"  size="large">导出已发布学校名单</el-button>
-      
+
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
@@ -14,13 +14,26 @@
     <el-dialog
       title="已选中机构"
       :visible.sync="dialogVisible">
-      <div class="table-wrapper">
+      <div class=" marginB10">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
+      </div>
+      <div class="table-wrapper" style="height: 700px; overflow-y: scroll;">
         <el-table
           :data="hasCheckedOrgList"
           stripe
+          border
           style="width: 100%">
           <el-table-column
-            label="学校名称">
+            label="序号"
+          width="100"
+          align="center">
+            <template scope="scope">
+              <p class="bg-none">{{scope.$index + 1}}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="学校/医院名称">
             <template scope="scope">
               <p class="bg-none" v-html="scope.row.name"></p>
             </template>
@@ -28,10 +41,7 @@
         </el-table>
       </div>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
-      </span>
+
     </el-dialog>
   </div>
 </template>
@@ -76,7 +86,8 @@
        */
       publishBtn(){
         this.hasCheckedOrgList = this.$refs.chooseSchool.getSelectData();
-        var arr = this.$refs.chooseSchool.getSelectData()
+        var arr = this.$refs.chooseSchool.getSelectData();
+        this.orgIds=[];
         arr.forEach(item=>{
           this.orgIds.push(item.id)
         })

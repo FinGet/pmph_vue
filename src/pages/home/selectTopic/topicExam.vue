@@ -63,6 +63,8 @@ import noPermission from './noPermission.vue'
           this.activeName='second';
         } else if (this.Identity.isAdmin || this.Identity.isEditor) {
           this.activeName='third';
+        }else if(!this.Identity.isAdmin&&!this.Identity.isEditor&&!this.Identity.isDirector&&!this.Identity.isOpts){
+          this.activeName='fourth';
         }
         }
       })

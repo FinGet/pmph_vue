@@ -58,7 +58,11 @@
           label="选题号">
           <template scope="scope">
             <div class="width200">
-              <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNumber"></el-input>
+              <el-form :model="scope.row" :rules="inputRules" :ref="'inputRules'+scope.$index" style="margin:18px 0;">
+                <el-form-item prop="topicNumber">
+                  <el-input placeholder="请输入选题号" class="searchInputEle" icon="edit" v-model="scope.row.topicNumber"></el-input>
+                </el-form-item>
+              </el-form>
             </div>
           </template>
         </el-table-column>
@@ -70,6 +74,20 @@
 <script>
 	export default {
 		data() {
+    //整数验证
+   var  numberChecked=(rule, value, callback)=>{
+        var reg = '^[0-9]*$';   //阿拉伯数字验证正则
+        if(!value){
+          callback()
+        }else{
+            if (!(value + '').match(reg)) {
+              callback('请输入正确的数字');
+            } else {
+              callback()
+            }
+        }
+
+    }      
 			return {
         api_upload: '/pmpheep/textBook/import/topicExcel',
         tableData:[],
@@ -84,7 +102,13 @@
           topicNumber: '', // 选题号
         },
         topicTextbooks:[],
-        uploadLoading:false
+        uploadLoading:false,
+        inputRules:{
+            topicNumber:[
+                        {type:'string',min:0,max:30,message:'选题号不能超过30个字符',trigger:'blur,change'},
+                        {validator:numberChecked,trigger: "blur,change"},
+            ]
+        }
       }
 		},
     created(){
@@ -123,10 +147,11 @@
           for (var key in this.book) {
             this.book[key] = this.tableData[i][key]
           }
-          if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
+          /* if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
             this.$message.error('选题号只能为数字')
             return
-          }
+          } */
+
           // console.log(this.book)
           this.topicTextbooks.push(this.book)
           this.book={
@@ -138,7 +163,19 @@
             isPublished: false, // 是否发布
             topicNumber: '', // 选题号
           }
-        }
+      }
+      /* 验证规则是否通过 */
+        var isChecked=true;
+          for(var i in this.tableData){
+             this.$refs['inputRules'+i].validate((valid)=>{
+               if(!valid){
+                isChecked=false;   
+               }
+             })
+          }
+          if(!isChecked){
+            return ;
+          }
         // console.log(this.topicTextbooks)
         this.$confirm('确认提交选题号！', '提示', {
           confirmButtonText: '确定',
@@ -151,7 +188,6 @@
             let res = response.data
             if (res.code == 1) {
               this.$message.success('设置成功!');
-              this.$router.go(-1)
             } else {
               this.$message.error(res.msg.msgTrim());
             }
@@ -205,16 +241,17 @@
           for (var i =0;i<tableData.length;i++) {
             for (var j = 0; j<upLoad.length;j++) {
               if (tableData[i].sort == upLoad[j].sort && tableData[i].textbookName == upLoad[j].textbookName && tableData[i].textbokkRound== upLoad[j].textbokkRound) {
-                data.push(upLoad[j]);
+                /* data.push(upLoad[j]); */
+                tableData[i].topicNumber=upLoad[j].topicNumber;
               }
             }
           }
           /*将不同的数据加入其中*/
-          if (data.length < tableData.length) {
+          /* if (data.length < tableData.length) {
             data=[...data,...(tableData.slice(data.length))];
           }
 //          console.log(data);
-          this.tableData = data;
+          this.tableData = data; */
         }else{
           this.$message.error(res.msg.msgTrim());
         }

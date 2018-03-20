@@ -208,9 +208,11 @@
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
               }).then(() => {
-                 this.$axios.put(this.deleteSensitiveUrl,this.$commonFun.initPostData({
-                   ids:this.deleteIds
-                 })).then((res)=>{
+                 this.$axios.delete(this.deleteSensitiveUrl,{
+                   params:{
+                     ids:this.deleteIds.join(',')
+                   }
+                 }).then((res)=>{
                    if(res.data.code==1){
                      this.$message.success('已成功删除');
                      this.getList();

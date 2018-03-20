@@ -259,7 +259,8 @@ export default {
             sort:[
                 { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "change,blur" },
                 {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
-            ]
+            ],
+
         },
         dialogRules:{
              title:[
@@ -276,6 +277,9 @@ export default {
              optionContent:[
                  { required: true, message: '请输入选项', trigger: 'blur' },
                  {min:1,max:200,message:'选项不能超过200个字符',trigger:'change,blur'}
+             ],
+             direction:[
+                  {min:0,max:100,message:'备注不能超过100个字符',trigger:'change,blur'}
              ]
              
         }

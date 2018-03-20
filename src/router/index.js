@@ -225,10 +225,12 @@ export default new Router({
         /* 出版图书 */
         {
           path: 'book', name: '出版图书', component: BookRouter, meta: { replaceName: false, authorityId: 6}, children: [
-          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 }},
+          { path: 'manage', name: '图书管理', component: BookManage , meta: { authorityId: 19 },beforeRouteLeave:(to,from,next) => {
+            clearInterval(window.handleExportWordtimer);
+          }},
           { path: 'comment', name: '评论审核', component: CommentManage , meta: { authorityId: 20}},
           { path: 'video', name: '微视频管理', component: MicVideo, meta: { authorityId: 41 } }
-          
+
           ]
         },
         /*数据分析 */

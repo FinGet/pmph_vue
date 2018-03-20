@@ -95,7 +95,7 @@ props: default-history-id 默认选中的历史记录
         </div>
       </div>
 
-      <div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>
+      <!--<div class="queryTips text-center">* 如无工作单位请联系教务处进行认证</div>-->
     </div>
     <!--地区详情区域-->
     <div class="border-T paddingT20">
@@ -114,8 +114,8 @@ props: default-history-id 默认选中的历史记录
           </div>
         </div>
         <div class="pull-right">
-          <el-button  type="primary" size="small" @click="_sortByArea">按区域拼音排序</el-button>
-          <el-button  type="primary" size="small" @click="_sortByOrg">按机构拼音排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByArea">按省市排序</el-button>
+          <el-button  type="primary" size="small" @click="_sortByOrg">按学校和医院拼音排序</el-button>
         </div>
       </div>
       <div class="area-list"
@@ -195,7 +195,7 @@ props: default-history-id 默认选中的历史记录
     </el-dialog>
 
     <el-dialog
-      title="导入学校"
+      title="导入选题"
       :visible.sync="importExcelInfoView"
       size="tiny">
       <div class="text-center">
@@ -433,6 +433,7 @@ props: default-history-id 默认选中的历史记录
        * @param iterm
        */
       _checkAllChange(iterm){
+        console.log(iterm);
         var index = this.area_school.indexOf(iterm);
         this.area_school[index].checkedSchools=[];
         if(this.area_school[index].checkAll){
@@ -610,6 +611,7 @@ props: default-history-id 默认选中的历史记录
        * 上传文件请求成功的回调
        */
       upLoadFileSuccess(res, file, fileList){
+        this._un_checkedAll();
         if (res.code == '1') {
           this.importExcelInfo={
             all:res.data.orgs.length+res.data.erros.length,

@@ -110,10 +110,11 @@
         </el-table-column>
 
         <el-table-column label="操作"
-          align="center" width="110">
+          align="center" width="180">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+            <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
@@ -141,10 +142,10 @@
         <el-form-item label="姓名：" prop="realname">
           <el-input v-model="form.realname" placeholder="请输入用户姓名"></el-input>
         </el-form-item>
-        <el-form-item label="职务：">
+        <el-form-item label="职务：" prop="position">
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
-        <el-form-item label="职称：">
+        <el-form-item label="职称：" prop="title">
           <el-input v-model="form.title" placeholder="请输入职称"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="handphone" >
@@ -393,6 +394,7 @@ export default {
     return {
       isNew: true,
       activeName:'first',
+      resetPasswordUrl:'/pmpheep/users/writer/resetPassword',  //重置密码url
       //用户类型数据
       options: [
         {
@@ -462,6 +464,12 @@ export default {
           { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
           { type: "email", message: "邮箱格式错误", trigger: "blur" }
           ],
+        position: [
+          { min: 0, max: 36, message: "职务不能超过36个字符", trigger: "change,blur" }
+        ],
+        title: [
+          { min: 0, max: 30, message: "职称不能超过30个字符", trigger: "change,blur" }
+        ],
         handphone: [
           { pattern: /^1[34578]\d{9}$/, message: '手机号格式错误' }
           ],
@@ -630,6 +638,28 @@ export default {
           return false;
         }
       });
+    },
+    /* 重置密码 */
+    resetPassword(obj){
+        this.$confirm('确定重置用户<'+obj.realname+'>的登录密码?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+        this.$axios.put(this.resetPasswordUrl,this.$commonFun.initPostData({
+          id:obj.id
+        })).then((res)=>{
+           if(res.data.code==1){
+             this.$message.success('密码已重置');
+           }else{
+             this.$message.error(res.data.msg.msgTrim());
+           }
+        })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });         
     },
     /**
      * 新增用户

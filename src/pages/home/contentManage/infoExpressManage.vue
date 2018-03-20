@@ -46,7 +46,7 @@
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
                 </template>
-            </el-table-column>    
+            </el-table-column>
             <el-table-column
                 label="发布状态"
                 width="100"
@@ -54,7 +54,7 @@
                 <template scope="scope">
                    {{scope.row.isPublished?'已发布':'未发布'}}
                 </template>
-            </el-table-column>         
+            </el-table-column>
             <el-table-column
                 label="发布时间"
                 width="165"
@@ -62,7 +62,7 @@
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
                 </template>
-            </el-table-column> 
+            </el-table-column>
             <!-- <el-table-column
                 label="被查看次数"
                 width="120"
@@ -105,7 +105,7 @@
             :visible.sync="showContentDetail"
             size="large">
        <div style="padding:0 10%;">
-        <h5 class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</h5>
+        <p class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</p>
          <p class="senderInfo text-center paddingT10">
       <span class="marginR10">{{contentDetailData.listObj.categoryName}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.authDate)}}</span>
@@ -121,8 +121,8 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>  
-            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>  
+            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>
             </div>
         </div>
     </el-dialog>
@@ -294,7 +294,7 @@ export default {
             }else{
                 obj[item]=editData.cmsContent[item]==null?'':editData.cmsContent[item];
             }
-            } 
+            }
           }
          obj.categoryId=parseInt(obj.categoryId);
          obj.isPublished=true;
@@ -311,12 +311,12 @@ export default {
                 }else {
                 this.$message.error(res.data.msg);
               }
-            })    
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          });          
+          });
         });
     },
     /* 查看详情 */
