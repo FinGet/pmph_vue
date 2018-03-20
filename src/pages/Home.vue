@@ -41,12 +41,13 @@
         isShowBorder:true,
         isPadding:false,
         sidebarFlod:true,
+        userData: ''
       }
     },
     computed:{
-      userData(){
-        return this.$getUserData().userInfo;
-      },
+//      userData(){
+//        return this.$getUserData().userInfo;
+//      },
     },
     methods: {
       toggleSideBarBtnFold(){
@@ -90,7 +91,32 @@
           this.isShowBorder=true;
         }
 
-      }
+      },
+      /**
+       * 获取页面数据
+       */
+      getPageData(){
+        var params = {
+          state:'',
+          materialName:'',
+          groupName:'',
+          bookname:'',
+          name:'',
+          title:'',
+          authProgress:'1,2,3',
+          topicBookname:'',
+        };
+        this.$axios.get('/pmpheep/users/pmph/personal/center',{params:params})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.userData = res.data.pmphUser;
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
+      },
     },
     components:{
       SideBar,
@@ -99,7 +125,7 @@
       Breadcrumb,
     },
     created(){
-
+      this.getPageData();
     },
     mounted(){
 

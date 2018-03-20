@@ -120,7 +120,7 @@
             </div>
             <p v-if="groupList.rows.length==0"  class="no_conact_data">您暂未加入任何小组</p>
           </div>
-          
+
         </div>
       </li>
     </ul>
@@ -280,25 +280,26 @@ export default {
       PermissionIds:[],
       pmphRole:{},
       lastLoginTime:undefined,
+      userInfo:''
     };
   },
   computed: {
-    userInfo(){
-      return this.$getUserData().userInfo;
-    },
-    userType(){
-      let isAdmin = this.userInfo.isAdmin;
-      if(isAdmin){
-        return '超级管理员'
-      }
-
-      let loginType = this.userInfo.loginType;
-      if(loginType===1){
-        return '社内用户'
-      }else{
-        return '学校机构用户'
-      }
-    },
+//    userInfo(){
+//      return this.$getUserData().userInfo;
+//    },
+//    userType(){
+//      let isAdmin = this.userInfo.isAdmin;
+//      if(isAdmin){
+//        return '超级管理员'
+//      }
+//
+//      let loginType = this.userInfo.loginType;
+//      if(loginType===1){
+//        return '社内用户'
+//      }else{
+//        return '学校机构用户'
+//      }
+//    },
     currentTime(){
       let time = +new Date();
       return this.$commonFun.formatDate(time);
@@ -331,7 +332,7 @@ export default {
             this.bookCorrectionAudit = res.data.bookCorrectionAudit;
             this.orgUserCount = res.data.orgUserCount;
             this.writerUserCount = res.data.writerUserCount;
-
+            this.userInfo = res.data.pmphUser;
             this.materialListTotal=this.materialList.total;
             this.pmphRole = res.data.pmphRole[0];
             this.lastLoginTime = res.data.lastLoginTime;
@@ -383,7 +384,7 @@ export default {
            }
          });
          return isShow;
-       },    
+       },
   },
   mounted() {
     //将四个面板设为等高
@@ -391,7 +392,7 @@ export default {
   created() {
     this.initUserInfo();
     this.getPageData();
-    
+
   }
 };
 </script>
