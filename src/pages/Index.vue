@@ -499,6 +499,7 @@ export default {
 .index .groupHeadImg > img {
   display: block;
   width: 100%;
+  height:100%;
 }
 .index .lastMessageTime {
   position: absolute;
