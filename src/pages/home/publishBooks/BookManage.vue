@@ -146,8 +146,8 @@
           </my-upload>
         </el-tooltip>
         <a href="/static/配套图书导入模版.xls"><el-button type="primary">配套图书导入模板下载</el-button></a>
-        <el-button type="primary" @click="syncBook(1)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书全量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
-        <el-button type="primary" @click="syncBook(2)" :disabled="isUpload">{{isUpload?'正在同步中...':'图书增量同步'}}<i v-if="isUpload" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <el-button type="primary" @click="syncBook(1)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书全量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <el-button type="primary" @click="syncBook(2)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书增量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
@@ -217,7 +217,7 @@
     <div class="pagination-wrapper">
       <el-pagination
         v-if="totalNum > searchForm.pageSize"
-        :page-sizes="[30,50,100, 200, 300, 400]"
+        :page-sizes="[10,20,30, 40]"
         :page-size="searchForm.pageSize"
         :current-page.sync="searchForm.pageNumber"
         @size-change="paginationSizeChange"
@@ -298,34 +298,11 @@
       </span>
     </el-dialog>
 
-    <!-- 同步弹窗 -->
-    <!--<el-dialog-->
-    <!--title="图书同步"-->
-      <!--:visible.sync="bookSyncVisible"-->
-      <!--size="small">-->
-      <!--<div>-->
-        <!--<p style="margin-bottom:10px;">-->
-          <!--<el-button type="primary" style="margin-right:10px">上传书目录</el-button>-->
-          <!--请按照模板格式上传：-->
-          <!--<el-button type="text" style="color:#337ab7">模板下载.xlsx</el-button>-->
-        <!--</p>-->
-        <!--<p style="margin-bottom:10px;color:#FF4949">（* ）Excel文档格式请按照模板格式，否则将导致导入失败，请确认后再操作！</p>-->
-
-        <!--<el-table :data="bookSyncData" border style="margin-bottom:10px">-->
-         <!--<el-table-column label="本版号">-->
-
-         <!--</el-table-column>-->
-         <!--<el-table-column label="书名">-->
-
-         <!--</el-table-column>-->
-         <!--<el-table-column label="作者" width="110">-->
-
-         <!--</el-table-column>-->
-        <!--</el-table>-->
-
-        <!--<el-button type="primary">开始同步</el-button>-->
-      <!--</div>-->
-    <!--</el-dialog>-->
+     <!--同步弹窗-->
+    <div class="shade" v-if="bookSyncVisible">
+      <h1 class="text-center sync-title"><i class="fa fa-spinner fa-pulse loading"></i>正在同步……</h1>
+      <el-progress class="progress" :text-inside="true" :stroke-width="18" :percentage="progresspoint" status="success"></el-progress>
+    </div>
 	</div>
 </template>
 
@@ -402,8 +379,8 @@
         materialList:[],
         uploadLoading:false,
         isUpload: false, // 是否同步
-        isAllUpload: false, // 全部同步
-        isSomeUpload: false // 增量同步
+        progresspoint: 0,
+        handleExportWordtimer: ''
       }
 		},
     methods:{
@@ -697,6 +674,7 @@
        */
       syncBook(type) {
         this.isUpload = true;
+        this.bookSyncVisible = true;
         this.syncProgress();
         this.$axios.get('/pmpheep/books/allsynchronization',{
           params: {
@@ -709,38 +687,43 @@
             this.$message.error(res.msg.msgTrim());
           }
         }).catch(error => {
-          this.$message.error('同步同步错误，请稍后再试!');
+          this.$message.error('同步错误，请稍后再试!');
         })
       },
       syncProgress(){
-        this.progress();
+//        this.progress();
         this.isUpload = true;
+        this.continueSync();
+      },
+      continueSync(){
         var timeout = 3*60*1000;//设置3分钟超时
         var useTime = 0;
-        this.handleExportWordtimer = setInterval(()=>{
+        window.handleExportWordtimer = setInterval(()=>{
           useTime+=30000;
           this.$axios.get('/pmpheep/books/isEnd')
             .then(response=>{
               let res = response.data;
               if(res.code==1){
-                clearInterval(this.handleExportWordtimer);
                 if (res.data == 0) {
+                  clearInterval(window.handleExportWordtimer);
                   this.isUpload = false;
+                }else {
+                  this.progresspoint = res.data;
                 }
               }
             })
-            .catch(e=>{
-              console.log(e);
-              if(this.isUpload){
-                this.$message.error('同步失败，请重试！');
-                clearInterval(this.handleExportWordtimer);
-              }
-            })
-          //超时提醒
-          if(useTime>timeout){
-            this.$message.error('同步请求超时，请重试！');
-            clearInterval(this.handleExportWordtimer);
-          }
+//            .catch(e=>{
+//              console.log(e);
+//              if(this.isUpload){
+//                this.$message.error('同步失败，请重试！');
+//                clearInterval(this.handleExportWordtimer);
+//              }
+//            })
+//          //超时提醒
+//          if(useTime>timeout){
+//            this.$message.error('同步请求超时，请重试！');
+//            clearInterval(this.handleExportWordtimer);
+//          }
         },30000)
       },
       progress(){
@@ -749,17 +732,24 @@
             let res = response.data;
             if(res.code==1){
               if (res.data == 0) {
-                this.isUpload = false;
+                this.bookSyncVisible = false;
+              } else {
+                this.bookSyncVisible = true;
+                this.progresspoint = res.data;
+                this.continueSync();
               }
             }
           })
-          .catch(e=>{
-            console.log(e);
-            if(this.isUpload){
-              this.$message.error('导出失败，请重试！');
-            }
-          })
+//          .catch(e=>{
+//            console.log(e);
+//            if(this.isUpload){
+//              this.$message.error('导出失败，请重试！');
+//            }
+//          })
       }
+    },
+    destroyed () {
+      clearInterval(window.handleExportWordtimer);
     },
     created(){
 		  this.getTableData();
@@ -808,5 +798,26 @@
     position: relative;
     top: 13px;
     margin-right: 10px;
+  }
+  .shade{
+    position: absolute;
+    z-index:10000;
+    background: rgba(0,0,0,.5);
+    width: 100%;
+    height:200%;
+    top:0;
+    left:0;
+  }
+  .progress{
+    position: relative;
+    top:25%;
+    width: 80%;
+    margin:0 auto;
+    z-index: 10001;
+  }
+  .sync-title{
+    color: #ffffff;
+    position: relative;
+    top:24%;
   }
 </style>
