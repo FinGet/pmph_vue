@@ -287,19 +287,19 @@ export default {
 //    userInfo(){
 //      return this.$getUserData().userInfo;
 //    },
-//    userType(){
-//      let isAdmin = this.userInfo.isAdmin;
-//      if(isAdmin){
-//        return '超级管理员'
-//      }
-//
-//      let loginType = this.userInfo.loginType;
-//      if(loginType===1){
-//        return '社内用户'
-//      }else{
-//        return '学校机构用户'
-//      }
-//    },
+    userType(){
+      let isAdmin = this.userInfo.isAdmin;
+      if(isAdmin){
+        return '超级管理员'
+      }
+
+      let loginType = this.userInfo.loginType;
+      if(loginType===1){
+        return '社内用户'
+      }else{
+        return '学校机构用户'
+      }
+    },
     currentTime(){
       let time = +new Date();
       return this.$commonFun.formatDate(time);

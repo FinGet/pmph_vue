@@ -41,7 +41,7 @@
         isShowBorder:true,
         isPadding:false,
         sidebarFlod:true,
-        userData: ''
+        userData: undefined
       }
     },
     computed:{
