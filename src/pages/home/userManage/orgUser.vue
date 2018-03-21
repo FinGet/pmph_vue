@@ -8,7 +8,7 @@
       <span>机构名称：</span>
       <el-input placeholder="请输入" class="input" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
       <span>机构类型：</span>
-      <el-select v-model="params.orgTypeName" class="input" :disabled="params.isHospital" placeholder="全部"  clearable @change ="specialSearch">
+      <el-select v-model="params.orgTypeName" class="input" :disabled="params.isHospital==1" placeholder="全部"  clearable @change ="specialSearch">
               <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
               </el-option>
       </el-select>
@@ -145,7 +145,7 @@
             >
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
-              <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+              <el-button type="text" :disabled="scope.row.isDisabled" @click="login(scope.row.username)">登录</el-button>
               <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
               <!-- <el-button type="text">查看详情</el-button> -->
             </template>
@@ -469,7 +469,7 @@ export default {
         // orgTypeName:"",
         email: "",
         areaId:'',
-        isDisabled: true,
+        isDisabled: false,
         address: ""
       },
       // 表单校验规则
@@ -521,7 +521,7 @@ export default {
       loading: false,
       // 机构用户 搜索，传输参数
       params: {
-        pageSize: 10,
+        pageSize: 20,
         pageNumber: 1,
         // username: "",
         orgName: "",
@@ -723,10 +723,12 @@ export default {
      */
     specialSearch(){
       if (this.params.orgTypeName == '医院') {
-        this.params.isHospital = true;
+        this.params.isHospital = 1;
         this.refreshTableData();
-      } else {
-        this.params.isHospital = false;
+      } if (this.params.orgTypeName == ''){
+        this.params.isHospital = 0;
+      }else {
+        this.params.isHospital = 2;
         this.refreshTableData();
       }
 
@@ -736,10 +738,11 @@ export default {
      * 按医院和学校查询
      */
     orgSearch(){
-      if (this.params.isHospital) {
+      console.log(this.params.isHospital);
+      if (this.params.isHospital === 1) {
         this.params.orgTypeName = '医院';
         this.refreshTableData();
-      } else {
+      } else if(this.params.isHospital === 2){
         this.params.orgTypeName = '';
         this.orgoptions = [{
           value:1,
@@ -751,6 +754,22 @@ export default {
           value:4,
           label:'本科、职教'
         }]
+        this.refreshTableData();
+      } else {
+        this.orgoptions = [{
+          value:1,
+          label:'本科'
+        },{
+          value:2,
+          label:'医院'
+        },{
+          value:3,
+          label:'职教'
+        },{
+          value:4,
+          label:'本科、职教'
+        }]
+        this.params.orgTypeName = '';
         this.refreshTableData();
       }
     },
@@ -882,7 +901,7 @@ export default {
         areaId: "",
         handphone: "",
         email: "",
-        isDisabled: true,
+        isDisabled: false,
         address: ""
       }
     },

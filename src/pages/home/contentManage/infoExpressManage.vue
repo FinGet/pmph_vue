@@ -298,6 +298,7 @@ export default {
           }
          obj.categoryId=parseInt(obj.categoryId);
          obj.isPublished=true;
+         obj.authStatus=2;
          obj.content=editData.content.content;
          obj.attachment=[];
          obj.file=[];

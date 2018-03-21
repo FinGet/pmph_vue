@@ -113,7 +113,7 @@
           align="center" width="180">
           <template scope="scope">
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
-            <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+            <el-button type="text" :disabled="scope.row.isDisabled?true:false" @click="login(scope.row.username)">登录</el-button>
             <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
@@ -658,8 +658,8 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消操作'
-          });          
-        });         
+          });
+        });
     },
     /**
      * 新增用户

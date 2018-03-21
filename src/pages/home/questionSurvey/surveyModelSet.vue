@@ -34,6 +34,9 @@
      label="调查问卷名称"
      prop="title"
      >
+     <template scope="scope">
+       <el-button type="text" @click="updataTemplate(scope.row.templateId,scope.row.id,'check')">{{scope.row.title}}</el-button>
+     </template>
      </el-table-column>
       <el-table-column
      label="调查对象"
@@ -157,7 +160,7 @@
               this.getSurveyList();
             },
            /* 修改按钮 */
-           updataTemplate(tid,sid){
+           updataTemplate(tid,sid,str){
             this.$axios.get(this.editTemplateUrl,{
                 params:{
                     templateId:tid,
@@ -166,7 +169,7 @@
             }).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
-                   this.$router.push({name:'问卷模板新增',params:{surveryData:res.data.data}});
+                   this.$router.push({name:'问卷模板新增',params:{surveryData:res.data.data,type:str?str:''}});
                 }
             })
            },
