@@ -183,7 +183,7 @@
           </div>
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
-            <div><span :title="expertInfoData.orgName" class="one_line_limit">{{expertInfoData.orgName}}</span>></div>
+            <div><span :title="expertInfoData.orgName" class="one_line_limit">{{expertInfoData.orgName}}</span></div>
           </div>
           <div class="info-iterm-text">
             <div>联系电话：<span></span></div>
@@ -201,6 +201,10 @@
           <div class="info-iterm-text xl-label">
             <div>是否参与本科教学评估认证：<span></span></div>
             <div>{{expertInfoData.isUtec?'是':'否'}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>学历：<span></span></div>
+            <div>{{degree[expertInfoData.degree]}}</div>
           </div>
           <div class="info-iterm-text lg">
             <div>专业特长：<span></span></div>
@@ -749,6 +753,7 @@
               textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
               courseConstructionList:['无','国家','省部','学校'],
               materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
+              degree:['无','专科','本科','硕士','博士'],
               onlineProgressBtn:[],
               //教材信息
               material:{},
