@@ -240,7 +240,7 @@
           /*提取相同数据*/
           for (var i =0;i<tableData.length;i++) {
             for (var j = 0; j<upLoad.length;j++) {
-              if (tableData[i].sort == upLoad[j].sort && tableData[i].textbookName == upLoad[j].textbookName && tableData[i].textbokkRound== upLoad[j].textbokkRound) {
+              if (tableData[i].sort == upLoad[j].sort && tableData[i].textbookName == upLoad[j].textbookName && tableData[i].textbookRound== upLoad[j].textbookRound) {
                 /* data.push(upLoad[j]); */
                 tableData[i].topicNumber=upLoad[j].topicNumber;
               }
