@@ -145,7 +145,7 @@
             >
             <template scope="scope">
               <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
-              <el-button type="text" @click="login(scope.row.username)">登录</el-button>
+              <el-button type="text" :disabled="scope.row.isDisabled" @click="login(scope.row.username)">登录</el-button>
               <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
               <!-- <el-button type="text">查看详情</el-button> -->
             </template>
@@ -725,7 +725,9 @@ export default {
       if (this.params.orgTypeName == '医院') {
         this.params.isHospital = 1;
         this.refreshTableData();
-      } else {
+      } if (this.params.orgTypeName == ''){
+        this.params.isHospital = 0;
+      }else {
         this.params.isHospital = 2;
         this.refreshTableData();
       }
@@ -736,10 +738,11 @@ export default {
      * 按医院和学校查询
      */
     orgSearch(){
-      if (this.params.isHospital == 1) {
+      console.log(this.params.isHospital);
+      if (this.params.isHospital === 1) {
         this.params.orgTypeName = '医院';
         this.refreshTableData();
-      } else if(this.params.isHospital == 2){
+      } else if(this.params.isHospital === 2){
         this.params.orgTypeName = '';
         this.orgoptions = [{
           value:1,
@@ -753,7 +756,6 @@ export default {
         }]
         this.refreshTableData();
       } else {
-        this.params.orgTypeName = '';
         this.orgoptions = [{
           value:1,
           label:'本科'
@@ -767,6 +769,7 @@ export default {
           value:4,
           label:'本科、职教'
         }]
+        this.params.orgTypeName = '';
         this.refreshTableData();
       }
     },
@@ -898,7 +901,7 @@ export default {
         areaId: "",
         handphone: "",
         email: "",
-        isDisabled: true,
+        isDisabled: false,
         address: ""
       }
     },
