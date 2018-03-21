@@ -288,7 +288,7 @@ export default {
   },
   created(){
       this.initFormData();
-  this.getObjList();
+      this.getObjList();
   },
   methods:{
       /* 获取对象列表 */

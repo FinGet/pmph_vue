@@ -236,7 +236,7 @@ export default {
             console.log(res.data);
             res.data.rows.forEach((iterm,index)=>{
               iterm.index = index+1;
-              iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate);
+              /* iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate); */
             })
             this.dialogTableData = res.data.rows;
             this.pageTotal=res.data.total;
