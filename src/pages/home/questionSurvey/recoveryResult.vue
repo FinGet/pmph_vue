@@ -26,7 +26,7 @@
          {{formTop.realname }}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         {{'http://119.254.226.115/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
+         {{'http://'+currentIp+'/pmeph/survey/writeSurvey.action?surveyId='+$route.params.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -97,10 +97,12 @@
              surveryDetailUrl:'/pmpheep/survey/question/answer/recovery/detail',   //详情url
              formTop:{
              },
+             currentIp:'',
              questionList:[]
             }
         },
         created(){
+            this.currentIp=window.location.host;
           console.log(this.$route);
           this.getDetailData();
         },
