@@ -20,7 +20,7 @@
                     :value="item.id">
                     </el-option>
                 </el-select> 
-                <el-button type="text" style="margin-left:10px;color:#337ab7" @click="objDialogVisible=true">编辑调查对象</el-button>
+                <el-button type="text" style="margin-left:10px;color:#337ab7" v-if="$route.params.type!='check'"  @click="objDialogVisible=true">编辑调查对象</el-button>
           </el-form-item>
           <el-form-item label="调查概述:" prop="intro">
              <el-input type="textarea" :rows="3" v-model="surveyForm.intro"  placeholder="调查概述"></el-input> 
@@ -69,7 +69,7 @@
        <span></span>
        </p>
        </div>
-    <div class="question_list">
+    <div class="question_list" v-if="$route.params.type!='check'">
        <h4>题目控件</h4>
       <ul >
         <li>
@@ -111,12 +111,12 @@
                 <!-- 多行文本 -->
                 <el-input   type="textarea" :rows="3" class="form_input" v-if="item.type==5"></el-input>
                 <!-- 操作按钮 -->
-                <el-button type="text" class="form_button" style="margin-left:15px;" @click="editFormItem(item,index)">修改</el-button>
-                <el-button type="text" class="form_button" @click="deleteFormItem(index)">删除</el-button>
+                <el-button type="text" class="form_button" style="margin-left:15px;" v-if="$route.params.type!='check'"  @click="editFormItem(item,index)">修改</el-button>
+                <el-button type="text" class="form_button"  v-if="$route.params.type!='check'" @click="deleteFormItem(index)">删除</el-button>
             </el-form-item>
          </el-form>
 
-         <div class="bottom_box" v-if="surveyForm.questionAnswerJosn.length!=0">
+         <div class="bottom_box" v-if="surveyForm.questionAnswerJosn.length!=0&&$route.params.type!='check'">
              <div class="button_box">
                  <el-button @click="$router.go(-1)">返回</el-button>
                  <el-button type="primary" @click="submitTemplate">确定</el-button>
@@ -288,7 +288,7 @@ export default {
   },
   created(){
       this.initFormData();
-  this.getObjList();
+      this.getObjList();
   },
   methods:{
       /* 获取对象列表 */

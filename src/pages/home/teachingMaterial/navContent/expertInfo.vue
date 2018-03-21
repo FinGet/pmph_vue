@@ -136,44 +136,52 @@
             <div>{{expertInfoData.realname}}</div>
           </div>
           <div class="info-iterm-text">
-            <div>职务：<span></span></div>
-            <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
-          </div>
-          <div class="info-iterm-text">
-            <div>传真：<span></span></div>
-            <div>{{expertInfoData.fax}}</div>
-          </div>
-          <div class="info-iterm-text">
             <div>性别：<span></span></div>
             <div>{{expertInfoData.sex}}</div>
-          </div>
-          <div class="info-iterm-text">
-            <div> 职称：<span></span></div>
-            <div>{{expertInfoData.title}}</div>
-          </div>
-          <div class="info-iterm-text">
-            <div>手机：<span></span></div>
-            <div>{{expertInfoData.handphone}}</div>
           </div>
           <div class="info-iterm-text">
             <div>出生年月：<span></span></div>
             <div>{{expertInfoData.birthday}}</div>
           </div>
           <div class="info-iterm-text">
-            <div>地址：<span></span></div>
-            <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
-          </div>
-          <div class="info-iterm-text">
-            <div>Email：<span></span></div>
-            <div>{{expertInfoData.email}}</div>
-          </div>
-          <div class="info-iterm-text">
             <div>教龄(年)：<span></span></div>
             <div>{{expertInfoData.experience}}</div>
           </div>
           <div class="info-iterm-text">
+            <div>工作单位：<span></span></div>
+            <div><span :title="expertInfoData.orgName" class="one_line_limit">{{expertInfoData.orgName}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div>职务：<span></span></div>
+            <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div> 职称：<span></span></div>
+            <div>{{expertInfoData.title}}</div>
+          </div>
+          <div class="info-iterm-text">
             <div>邮编：<span></span></div>
             <div>{{expertInfoData.postcode}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>地址：<span></span></div>
+            <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div>联系电话：<span></span></div>
+            <div>{{expertInfoData.telephone}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>传真：<span></span></div>
+            <div>{{expertInfoData.fax}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>手机：<span></span></div>
+            <div>{{expertInfoData.handphone}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>Email：<span></span></div>
+            <div>{{expertInfoData.email}}</div>
           </div>
           <div class="info-iterm-text">
             <div>证件类型：<span></span></div>
@@ -182,18 +190,13 @@
             <div v-if="expertInfoData.idtype==2">军官证</div>
           </div>
           <div class="info-iterm-text">
-            <div>工作单位：<span></span></div>
-            <div><span :title="expertInfoData.orgName" class="one_line_limit">{{expertInfoData.orgName}}</span>></div>
-          </div>
-          <div class="info-iterm-text">
-            <div>联系电话：<span></span></div>
-            <div>{{expertInfoData.telephone}}</div>
-          </div>
-          <div class="info-iterm-text">
             <div>证件号码：<span></span></div>
             <div>{{expertInfoData.idcard}}</div>
           </div>
-
+          <div class="info-iterm-text">
+            <div>学历：<span></span></div>
+            <div>{{degree[expertInfoData.degree]}}</div>
+          </div>
           <div class="info-iterm-text lg-label">
             <div>是否服从调剂：<span></span></div>
             <div>{{expertInfoData.isDispensed?'是':'否'}}</div>
@@ -747,8 +750,9 @@
               rankList:['无','国际','国家','省部','其他'],
               national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
-              courseConstructionList:['无','国家','省部','学校'],
+              courseConstructionList:['无','国际','国家','省部'],
               materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
+              degree:['无','专科','本科','硕士','博士'],
               onlineProgressBtn:[],
               //教材信息
               material:{},

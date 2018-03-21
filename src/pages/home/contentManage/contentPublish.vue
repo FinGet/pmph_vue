@@ -276,6 +276,7 @@ export default {
 
             if(num==0){
                this.formData.isStaging=true;
+               this.formData.authStatus=0;
             }
             if(num==1){
               this.formData.isPublished=true;
