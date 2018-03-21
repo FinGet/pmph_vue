@@ -13,7 +13,9 @@
     <!--已选择院校预览-->
     <el-dialog
       title="已选中机构"
-      :visible.sync="dialogVisible">
+      :visible.sync="dialogVisible"
+      size="tiny"
+      >
       <div class=" marginB10">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>

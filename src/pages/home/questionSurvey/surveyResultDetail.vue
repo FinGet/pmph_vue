@@ -26,7 +26,7 @@
           {{surveyData.realname}}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         {{'http://119.254.226.115/pmeph/survey/writeSurvey.action?surveyId='+searchParams.surveyId}}
+         {{'http://'+currentIp+'/pmeph/survey/writeSurvey.action?surveyId='+searchParams.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -171,6 +171,7 @@ export default {
         surveyId:"",
         questionId:''
       },
+      currentIp:'',
       dialogVisible:false,
       dialogTableData:[],
       pageTotal:0,
@@ -258,6 +259,7 @@ export default {
   mounted() {
   },
   created(){
+    this.currentIp=window.location.host;
     this.searchParams.surveyId = this.$route.query.id;
     this.surveyData = this.$route.params.data||{};
     if(!this.searchParams.surveyId||!this.surveyData.surveyTitle){

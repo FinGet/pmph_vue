@@ -211,10 +211,10 @@
           return;
         }
         //文件名不超过40个字符
-        if(file.name.length>40){
+        /* if(file.name.length>40){
           this.$message.error("文件名不能超过40个字符");
           return;
-        }
+        } */
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
           this.$message.error("文件大小不能小于1bt");
