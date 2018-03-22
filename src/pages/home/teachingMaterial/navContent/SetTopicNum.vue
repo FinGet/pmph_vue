@@ -17,7 +17,8 @@
 
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <span class="grey_button">请按照模板格式导入（<a href="/static/选题号模板下载.xlsx">模板下载.xls</a> ）</span>
+        <span class="grey_button">请先选择导出，完善选题号后导入（<a href="/static/选题号模板下载.xlsx">模板下载.xls</a> ）</span>
+        <el-button type="primary" @click="exportExcel">导出</el-button>
         <my-upload
           class="ChatInputFileBtn"
           ref="upload"
@@ -28,7 +29,6 @@
           :show-file-list="false">
           <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击导入'}}</el-button>
         </my-upload>
-        <el-button type="primary" @click="exportExcel">导出</el-button>
         <el-button type="primary" @click="submit">确认</el-button>
       </div>
     </div>
