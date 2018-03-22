@@ -1,8 +1,22 @@
 <template>
     <div class="teachMaterial chief">
       <p class="bookTitle" v-if="formData.bookName">《 {{formData.bookName}} 》</p>
-
       <div class="teachingMaterial-search clearfix">
+        <div class="searchBox-wrapper">
+          <div class="searchName">姓名：<span></span></div>
+          <div class="searchInput">
+            <el-input v-model="realName" @keyup.enter.native="search" placeholder="请输入姓名"></el-input>
+          </div>
+        </div>
+        <div class="searchBox-wrapper">
+          <div class="searchName">申报单位：<span></span></div>
+          <div class="searchInput">
+            <el-input v-model="orgName" @keyup.enter.native="search" placeholder="请输入申报单位"></el-input>
+          </div>
+        </div>
+        <div class="searchBox-wrapper searchBtn">
+          <el-button  type="primary" icon="search" @click="search">搜索</el-button>
+        </div>
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0))||isChiefPublished" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
@@ -156,6 +170,8 @@
         optionsType:'edit',
         isChiefPublished:false,
         hasChanged:false,
+        realName:'',
+        orgName:''
       }
     },
     computed:{
@@ -226,8 +242,8 @@
       getTableData(){
         this.$axios.get(this.api_list,{params:{
           textbookId:this.formData.textbookId,
-          realName:'',
-          presetPosition:'',
+          realName:this.realName,
+          orgName:this.orgName,
           materialId:this.formData.materialId,
         }})
           .then(response=>{
@@ -270,6 +286,12 @@
           })
       },
       //获取历史记录
+      /**
+       * 搜索
+       */
+      search(){
+        this.getTableData();
+      },
       getHistoryLog(){
         this.$axios.get(this.api_log,{params:{
           textbookId:this.formData.textbookId,
