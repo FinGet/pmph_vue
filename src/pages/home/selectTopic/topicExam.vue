@@ -11,7 +11,7 @@
       <acceptance :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></acceptance>
     </el-tab-pane>
     <el-tab-pane label="受理" name="fourth" v-if="!Identity.isAdmin&&!Identity.isEditor&&!Identity.isDirector&&!Identity.isOpts">
-      <no-permission></no-permission>
+      <no-permission :activeName.sync='activeName'></no-permission>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -35,7 +35,8 @@ import noPermission from './noPermission.vue'
      if(this.$route.params.searchInput){
        this.searchInput=this.$route.params.searchInput;
      }
-     this.activeName = this.$route.query.active || 'first';
+     this.activeName = this.$route.query.active || 'third';
+     console.log(this.activeName)
      this.identity();
    },
    watch:{
@@ -48,9 +49,9 @@ import noPermission from './noPermission.vue'
       this.activeName=val;
     },
     handleClick(tab, event){
-      console.log(tab, event);
+//      console.log(tab, event);
       this.activeName=tab.name;
-      console.log(this.activeName);
+//      console.log(this.activeName);
     },
      identity(){
       this.$axios.get('/pmpheep/topic/identity').then(response=> {
