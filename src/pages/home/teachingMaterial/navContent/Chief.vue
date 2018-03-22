@@ -376,6 +376,7 @@
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
               selectionType:type?type:1,
+              textbookId: this.searchParams.textbookId,
               editorOrEditorialPanel:this.type=='zb'?1:2,
               unselectedHold:this.type=='zb'?1:(jsonDecPosition.length)>0?1:0
             }))
