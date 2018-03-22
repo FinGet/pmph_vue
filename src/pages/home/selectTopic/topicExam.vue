@@ -35,8 +35,7 @@ import noPermission from './noPermission.vue'
      if(this.$route.params.searchInput){
        this.searchInput=this.$route.params.searchInput;
      }
-     this.activeName = this.$route.query.active || 'third';
-     console.log(this.activeName)
+     this.activeName = this.$route.query.active || 'first';
      this.identity();
    },
    watch:{
@@ -49,9 +48,7 @@ import noPermission from './noPermission.vue'
       this.activeName=val;
     },
     handleClick(tab, event){
-//      console.log(tab, event);
       this.activeName=tab.name;
-//      console.log(this.activeName);
     },
      identity(){
       this.$axios.get('/pmpheep/topic/identity').then(response=> {
@@ -59,13 +56,21 @@ import noPermission from './noPermission.vue'
         if (res.code == '1') {
           this.Identity = res.data;
         if (this.Identity.isAdmin || this.Identity.isOpts) {
-          this.activeName='first';
+          if (this.activeName == ''){
+            this.activeName='first';
+          }
         } else if (this.Identity.isAdmin || this.Identity.isDirector) {
-          this.activeName='second';
+          if (this.activeName == ''){
+            this.activeName='second';
+          }
         } else if (this.Identity.isAdmin || this.Identity.isEditor) {
-          this.activeName='third';
+          if (this.activeName == ''){
+            this.activeName='third';
+          }
         }else if(!this.Identity.isAdmin&&!this.Identity.isEditor&&!this.Identity.isDirector&&!this.Identity.isOpts){
-          this.activeName='fourth';
+          if (this.activeName == ''){
+            this.activeName='fourth';
+          }
         }
         }
       })
