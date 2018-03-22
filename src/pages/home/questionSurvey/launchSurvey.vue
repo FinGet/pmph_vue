@@ -2,7 +2,7 @@
   <div class="launch_survey">
       <div style="width:100%;float:left;">
       <p class="left_header_p">
-         {{$route.params.surverData?$route.params.surverData.intro:'问卷信息'}}
+         {{$route.params.surverData?$route.params.surverData.title:'问卷信息'}}
        <span></span>
        </p>
        </div>
@@ -133,7 +133,7 @@
          submitSurvery(){
          this.$refs.leftFrom.validate((valid)=>{
            if(valid){
-                this.$confirm('是否确定发起问卷<'+this.$route.params.surverData.intro+'>的调查？', '提示', {
+                this.$confirm('是否确定发起问卷<'+this.$route.params.surverData.title+'>的调查？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                 }).then(() => {

@@ -28,7 +28,6 @@
           :show-file-list="false">
           <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击导入'}}</el-button>
         </my-upload>
-        <el-button type="primary" @click="exportExcel">导出</el-button>
         <el-button type="primary" @click="submit">确认</el-button>
       </div>
     </div>
