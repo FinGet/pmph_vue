@@ -17,7 +17,7 @@
 
       <!--操作按钮-->
       <div class="operation-wrapper">
-        <span class="grey_button">请按照模板格式导入（<a href="/static/选题号模板下载.xlsx">模板下载.xls</a> ）</span>
+        <span class="grey_button">请先选择导出，完善选题号后导入（<a href="/static/选题号模板下载.xlsx">模板下载.xls</a> ）</span>
         <my-upload
           class="ChatInputFileBtn"
           ref="upload"
@@ -87,7 +87,7 @@
             }
         }
 
-    }      
+    }
 			return {
         api_upload: '/pmpheep/textBook/import/topicExcel',
         tableData:[],
@@ -169,7 +169,7 @@
           for(var i in this.tableData){
              this.$refs['inputRules'+i].validate((valid)=>{
                if(!valid){
-                isChecked=false;   
+                isChecked=false;
                }
              })
           }
