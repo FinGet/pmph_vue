@@ -198,7 +198,7 @@ export default {
         params: this.searchParams
       })
       .then(res => {
-        console.log(res);
+//        console.log(res);
         if (res.data.code == 1) {
           this.pageTotal = res.data.data.total;
           this.tableData = res.data.data.rows;
@@ -212,7 +212,7 @@ export default {
           params: this.dialogParams
         })
         .then(res => {
-          console.log(res);
+//          console.log(res);
           if (res.data.code == 1) {
             this.dialogPageTotal = res.data.data.total;
             this.dialogTableData = res.data.data.rows;
@@ -233,7 +233,7 @@ export default {
               departmentId:obj.id
             })
           }).then((res)=>{
-           console.log(res);
+//           console.log(res);
            if(res.data.code==1){
              this.$message.success('分配成功');
              this.getListData();

@@ -8,8 +8,8 @@
       <span>机构名称：</span>
       <el-input placeholder="请输入" class="input" v-model="params.orgName" @keyup.enter.native="refreshTableData"></el-input>
       <span>机构类型：</span>
-      <el-select v-model="params.orgTypeName" class="input" :disabled="params.isHospital==1" placeholder="全部"  clearable @change ="specialSearch">
-              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label">
+      <el-select v-model="params.orgTypeName" class="input" :disabled="params.isHospital==1" placeholder="全部"  clearable >
+              <el-option v-for="item in orgoptions" :key="item.value" :label="item.label" :value="item.label" @click.native ="specialSearch">
               </el-option>
       </el-select>
       <el-radio-group v-model="params.isHospital"  @change ="orgSearch">
@@ -722,23 +722,22 @@ export default {
      * 搜索医院、本科、职教、本科&职教
      */
     specialSearch(){
-      if (this.params.orgTypeName == '医院') {
-        this.params.isHospital = 1;
+//      if (this.params.orgTypeName == '医院') {
+//        this.params.isHospital = 1;
         this.refreshTableData();
-      } if (this.params.orgTypeName == ''){
-        this.params.isHospital = 0;
-      }else {
-        this.params.isHospital = 2;
-        this.refreshTableData();
-      }
-
+//      } if (this.params.orgTypeName == ''){
+//        this.params.isHospital = 0;
+//      }else {
+//        this.params.isHospital = 2;
+//        this.refreshTableData();
+//      }
     },
 
     /**
      * 按医院和学校查询
      */
     orgSearch(){
-      console.log(this.params.isHospital);
+//      console.log(this.params.isHospital);
       if (this.params.isHospital === 1) {
         this.params.orgTypeName = '医院';
         this.refreshTableData();
