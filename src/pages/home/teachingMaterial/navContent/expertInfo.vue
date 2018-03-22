@@ -73,7 +73,7 @@
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <!--<el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>-->
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -91,7 +91,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <!--<el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>-->
               </div>
             </div>
             <!--已有书籍-->
@@ -122,7 +122,7 @@
             </div>
           </div>
           <div class="expert_info-buttonWrapper print-none">
-            <el-button type="primary" @click="addNewBook" v-if="(addBookList.length==0||expertInfoData.isMultiBooks)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">添加图书</el-button>
+            <el-button type="primary" @click="addNewBook">添加图书</el-button>
             <el-button type="primary" @click="saveBook" v-if="((hasNewAddbook||hasBookListChanged)&&addBookList.length)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">保存图书</el-button>
           </div>
         </div>
