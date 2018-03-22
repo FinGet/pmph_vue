@@ -1,7 +1,7 @@
 <template>
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="标题：" prop="title">
+      <el-form-item label="文章标题：" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
@@ -46,7 +46,7 @@
            >
           <el-button size="small" type="primary">添加封面图片</el-button>
         </el-upload>
-        </el-form-item>       
+        </el-form-item>
       <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <my-upload
@@ -85,14 +85,14 @@
        </el-form>
         </div>
     </el-dialog>
-    
+
     <!-- 查看封面图片弹框 -->
     <el-dialog
      :visible.sync="coverDialogVislble"
      :show-close="false"
      class="cover_dialog"
      title="">
-     <img :src="coverImgUrl" />  
+     <img :src="coverImgUrl" />
     </el-dialog>
 
     <div class="bottom_box">
@@ -289,7 +289,7 @@ export default {
             .post(this.addNewUrl, this.$commonFun.initPostData(this.initFormData(this.formData)))
             .then(res => {
               console.log(res);
-              if (res.data.code == 1) {            
+              if (res.data.code == 1) {
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -308,7 +308,7 @@ export default {
           }else{
             this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.initFormData(this.formData))).then((res)=>{
                 console.log(res);
-                if(res.data.code==1){               
+                if(res.data.code==1){
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -493,15 +493,15 @@ export default {
              var obj={};
           obj.name=editData.cmsExtras[i].attachmentName;
           obj.url=editData.cmsExtras[i].attachment;
-          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
-          this.fileList.push(obj);                   
+          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop();
+          this.fileList.push(obj);
           }
           /* 填充封面图片 */
           if(this.$route.query.isShowCover){
             this.imgList.push({name:editData.imgFileName,url:editData.imgFilePath});
           }
          /* editData.cmsExtras.forEach((item)=>{
-          
+
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();
@@ -537,7 +537,7 @@ export default {
         }else{
           formData[i]=obj[i];
         }
-      } 
+      }
       return formData;
     },
     coverUploadSuccess(res, file, filelist){
@@ -556,7 +556,7 @@ export default {
     coverUploadRemove(file, flielist){
       if(file.url){
         this.formData.imgAttachment=file.url.split('/').pop();
-      } 
+      }
     },
     coverBeforeUpload(file){
       var exStr=file.name.split('.').pop().toLowerCase();
@@ -580,7 +580,7 @@ export default {
         this.$message.error('图片名称不能超过80个字符！');
         //this.material.noticeFiles.pop();
         return false;
-      }      
+      }
     },
     checkCoverUpload(file){
       this.coverImgUrl='pmpheep/image/'+file.url;
