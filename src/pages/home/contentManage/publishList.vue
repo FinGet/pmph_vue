@@ -27,28 +27,28 @@
         <el-date-picker
           v-if="searchValue==3"
           v-model="startCreateDate"
-          type="date"
+          type="datetime"
           placeholder="选择创建开始时间"
           :picker-options="pickerOptions">
         </el-date-picker>
         <el-date-picker
           v-if="searchValue==3"
           v-model="endCreateDate"
-          type="date"
+          type="datetime"
           placeholder="选择创建结束时间"
           :picker-options="pickerOptions">
         </el-date-picker>
         <el-date-picker
           v-if="searchValue==4"
           v-model="startAuDate"
-          type="date"
+          type="datetime"
           placeholder="选择发布开始时间"
           :picker-options="pickerOptions">
         </el-date-picker>
         <el-date-picker
           v-if="searchValue==4"
           v-model="endAuDate"
-          type="date"
+          type="datetime"
           placeholder="选择发布结束时间"
           :picker-options="pickerOptions">
         </el-date-picker>
@@ -464,10 +464,10 @@ export default {
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
             pageNumber: this.currentPage,
-            startCreateDate: this.startCreateDate,
-            endCreateDate: this.endCreateDate,
-            startAuDate: this.startAuDate,
-            endAuDate: this.endAuDate,
+            startCreateDate: this.$commonFun.formatDate(+new Date(this.startCreateDate)),
+            endCreateDate: this.$commonFun.formatDate(+new Date(this.endCreateDate)),
+            startAuDate: this.$commonFun.formatDate(+new Date(this.startAuDate)),
+            endAuDate: this.$commonFun.formatDate(+new Date(this.endAuDate)),
             materialId: this.materialId
           }
         })

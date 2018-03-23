@@ -25,28 +25,28 @@
              <el-date-picker
                v-if="searchValue==3"
                v-model="contentParams.startCreateDate"
-               type="date"
+               type="datetime"
                placeholder="选择创建开始时间"
                :picker-options="pickerOptions">
              </el-date-picker>
              <el-date-picker
                v-if="searchValue==3"
                v-model="contentParams.endCreateDate"
-               type="date"
+               type="datetime"
                placeholder="选择创建结束时间"
                :picker-options="pickerOptions">
              </el-date-picker>
              <el-date-picker
                v-if="searchValue==4"
                v-model="contentParams.startAuDate"
-               type="date"
+               type="datetime"
                placeholder="选择发布开始时间"
                :picker-options="pickerOptions">
              </el-date-picker>
              <el-date-picker
                v-if="searchValue==4"
                v-model="contentParams.endAuDate"
-               type="date"
+               type="datetime"
                placeholder="选择发布结束时间"
                :picker-options="pickerOptions">
              </el-date-picker>
@@ -302,6 +302,10 @@ export default {
   methods: {
     /* 获取内容列表 */
     getOutContentList() {
+      this.contentParams.startCreateDate = this.$commonFun.formdata(+new Date(this.contentParams.startCreateDate));
+      this.contentParams.endCreateDate = this.$commonFun.formdata(+new Date(this.contentParams.endCreateDate));
+      this.contentParams.startAuDate = this.$commonFun.formdata(+new Date(this.contentParams.startAuDate));
+      this.contentParams.endAuDate = this.$commonFun.formdata(+new Date(this.contentParams.endAuDate));
       this.contentParams.sessionId = this.$getUserData().sessionId;
       this.$axios
         .get(this.outContentUrl, {
