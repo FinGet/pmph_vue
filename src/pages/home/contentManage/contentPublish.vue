@@ -27,7 +27,7 @@
             </el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="显示顺序：" prop="sort">
+      <el-form-item label="置顶：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
       <el-form-item label="内容：" required>
@@ -98,11 +98,26 @@
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
-          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">{{$router.currentRoute.query.type!='new'?'通过':'发布'}}</el-button>
-          <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
-          <el-button type="primary" @click="ContentSubmit(0)" >暂存</el-button>
+          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">发布</el-button>
+          <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="returnReasonFnc">退回</el-button>
+          <el-button type="primary" @click="ContentSubmit(0)" >撤销</el-button>
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
+    <!--退回理由-->
+    <el-dialog title="退回理由" :visible.sync="returnReasonVisible">
+      <el-input
+        type="textarea"
+        :rows="3"
+        placeholder="请输入退回理由"
+        v-model="formData.returnReason">
+      </el-input>
+
+      <div class="pull-right marginT10 marginB10">
+        <el-button type="primary" @click="returnReasonVisible==false">取消</el-button>
+        <el-button type="danger" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+      </div>
+    </el-dialog>
+    <!--examineContent($router.currentRoute.params.cmsContent,1)-->
   </div>
 </template>
 <script type="text/javascript">
@@ -129,7 +144,8 @@ export default {
         scheduledTime:'',
         isPublished: "",
         path:'0',
-        materialId:''
+        materialId:'',
+        returnReason: ''
       },
       coverDialogVislble:false,
       showPreventDialog:false,
@@ -190,8 +206,10 @@ export default {
           categoryName:'公告管理',
           children:null
         }
-        ],
-        bookOptions: []
+      ],
+      bookOptions: [],
+      returnReasonVisible: false, // 退回理由
+      returnReason:''
     };
   },
   computed: {
@@ -332,6 +350,10 @@ export default {
           return false;
         }
       });
+    },
+//    点击退回
+    returnReasonFnc(){
+      this.returnReasonVisible = true;
     },
     /* 预览 */
     openPreventDialog(){

@@ -13,19 +13,43 @@
         </el-select>
         <el-input placeholder="请输入文章标题" v-if="searchValue==0" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
         <el-input placeholder="请输入作者名称" v-if="searchValue==1" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
-        <el-input placeholder="请输入所属教材" v-if="searchValue==2" class="input" v-model.trim="materialName" @keyup.enter.native="searchPublic"></el-input>
+        <!--<el-input placeholder="请输入所属教材" v-if="searchValue==2" class="input" v-model.trim="materialName" @keyup.enter.native="searchPublic"></el-input>-->
+
+        <el-select v-model="materialId" clearable placeholder="请选择" v-if="searchValue==2" class="input">
+          <el-option
+            v-for="item in bookOptions"
+            :key="item.id"
+            :label="item.materialName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+
         <el-date-picker
           v-if="searchValue==3"
-          v-model="gmtCreate"
+          v-model="startCreateDate"
           type="date"
-          placeholder="选择创建时间"
+          placeholder="选择创建开始时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-date-picker
+          v-if="searchValue==3"
+          v-model="endCreateDate"
+          type="date"
+          placeholder="选择创建结束时间"
           :picker-options="pickerOptions">
         </el-date-picker>
         <el-date-picker
           v-if="searchValue==4"
-          v-model="authDate"
+          v-model="startAuDate"
           type="date"
-          placeholder="选择发布时间"
+          placeholder="选择发布开始时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-date-picker
+          v-if="searchValue==4"
+          v-model="endAuDate"
+          type="date"
+          placeholder="选择发布结束时间"
           :picker-options="pickerOptions">
         </el-date-picker>
           <span>审核状态：</span>
@@ -411,10 +435,12 @@ export default {
       commentName:'',
       commentTitle:'',
       commentSelect:'',
-      gmtCreate: '', // 创建时间
-      authDate: '',
-      materialName:''
-
+      startCreateDate: '', // 创建开始时间
+      endCreateDate:'',
+      startAuDate: '',
+      endAuDate:'',
+      bookOptions: [],
+      materialId:''
     };
   },
   computed: {
@@ -437,7 +463,12 @@ export default {
             authStatus: this.selectValue,
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
-            pageNumber: this.currentPage
+            pageNumber: this.currentPage,
+            startCreateDate: this.startCreateDate,
+            endCreateDate: this.endCreateDate,
+            startAuDate: this.startAuDate,
+            endAuDate: this.endAuDate,
+            materialId: this.materialId
           }
         })
         .then(res => {
@@ -452,6 +483,15 @@ export default {
       this.pageSize = 30;
       this.currentPage = 1;
       this.getPublicList()
+    },
+    /**获取教材列表 */
+    getBookLists(){
+      this.$axios.get('/pmpheep/material/published').then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.bookOptions=res.data;
+        }
+      })
     },
     /* 获取评论列表 */
     getCommentList(){
@@ -734,6 +774,7 @@ export default {
     }
     this.getPublicList();
     this.getCommentList();
+    this.getBookLists();
   }
 };
 </script>
