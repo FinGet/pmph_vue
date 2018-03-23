@@ -334,7 +334,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
