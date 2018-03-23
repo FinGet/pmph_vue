@@ -59,7 +59,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button icon="arrow-left" @click="back">返回</el-button>
-							<el-button type="primary" :disabled="ruleForm.result&&ruleForm.editorReply!=''" @click="submit('ruleForm')">提交</el-button>
+							<el-button type="primary" :disabled="type=='detail'"  @click="submit('ruleForm')">提交</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
