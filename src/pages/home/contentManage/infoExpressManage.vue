@@ -302,10 +302,10 @@ export default {
   methods: {
     /* 获取内容列表 */
     getOutContentList() {
-      this.contentParams.startCreateDate = this.$commonFun.formdata(+new Date(this.contentParams.startCreateDate));
-      this.contentParams.endCreateDate = this.$commonFun.formdata(+new Date(this.contentParams.endCreateDate));
-      this.contentParams.startAuDate = this.$commonFun.formdata(+new Date(this.contentParams.startAuDate));
-      this.contentParams.endAuDate = this.$commonFun.formdata(+new Date(this.contentParams.endAuDate));
+      this.contentParams.startCreateDate = this.$commonFun.formatDate(+new Date(this.contentParams.startCreateDate));
+      this.contentParams.endCreateDate = this.$commonFun.formatDate(+new Date(this.contentParams.endCreateDate));
+      this.contentParams.startAuDate = this.$commonFun.formatDate(+new Date(this.contentParams.startAuDate));
+      this.contentParams.endAuDate = this.$commonFun.formatDate(+new Date(this.contentParams.endAuDate));
       this.contentParams.sessionId = this.$getUserData().sessionId;
       this.$axios
         .get(this.outContentUrl, {
@@ -451,6 +451,7 @@ export default {
     }
   },
   created() {
+    alert(1);
     this.getOutContentList();
     this.getBookLists();
   }
