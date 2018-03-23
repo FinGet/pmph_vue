@@ -320,7 +320,7 @@ export default {
         var flag = true;
         this.extendListData.map(iterm=>{
           if(iterm.textbookName==''&&iterm.textbookRound==''&&iterm.sort==''){
-
+                flag = false;
           }else{
             if(!iterm.textbookRound || !this.$commonFun.checkType(iterm.textbookRound,'number')){
               iterm.roundIsOk=false;

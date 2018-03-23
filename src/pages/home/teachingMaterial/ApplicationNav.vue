@@ -97,6 +97,7 @@ export default {
     },
     $route () {
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
+      this.getMaterialData()
     }
   },
   created() {
