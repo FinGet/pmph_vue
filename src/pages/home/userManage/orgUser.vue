@@ -21,6 +21,16 @@
       <el-button type="primary" @click="clearSearch">清空搜索</el-button>
       <el-button type="primary" class="pull-right" @click="addBtn(true)">新建机构用户</el-button>
       <el-button type="primary" class="pull-right" @click="exportExcel">导出名单</el-button>
+      <my-upload
+        class="ChatInputFileBtn"
+        ref="upload"
+        :action="api_upload"
+        :before-upload="beforeUploadFile"
+        :on-success="upLoadFileSuccess"
+        :on-error="uploadError"
+        :show-file-list="false">
+        <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击导入'}}</el-button>
+      </my-upload>
     </p>
       <!--表格-->
       <div class="table-wrapper">
@@ -285,6 +295,40 @@
           </div>
         </div>
       </el-dialog>
+      <!--点击上传excel-->
+      <el-dialog
+        title="机构用户"
+        :visible.sync="excelVisible"
+      >
+        <el-table
+          :data="excelTableData"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="orgName"
+            label="机构名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="username"
+            label="机构账号"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="realname"
+            label="管理员名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="orgTypeName"
+            label="机构类型">
+          </el-table-column>
+        </el-table>
+        <div class="pull-right marginT10 marginB10">
+          <el-button type="warning" @click="excelVisible=false">取消</el-button>
+          <el-button type="primary" @click="importExcel">导出</el-button>
+        </div>
+      </el-dialog>
   </el-tab-pane>
   <!-- 学校审核 -->
   <el-tab-pane label="审核管理员" name="second">
@@ -410,6 +454,7 @@ export default {
   mixins: [ScreenSize],
   data() {
     return {
+      api_upload: '/pmpheep/users/org/importExcel',
       resetPasswordUrl:'/pmpheep/users/org/resetPassword',  // 重置密码url
       screenWidth_lg_computed: true,
       activeName:'first',
@@ -564,7 +609,10 @@ export default {
         title:"",
         username:"",
         isDisabled: false
-      } // 详情数据
+      }, // 详情数据
+      uploadLoading:false,
+      excelVisible: false,
+      excelTableData:[]
     };
   },
   computed:{
@@ -1103,6 +1151,65 @@ export default {
       this.realname = '';
       this.orgName = '';
       this.progress = '';
+    },
+    /**
+     * 当上传按钮添加excel
+     * @param file
+     */
+    beforeUploadFile(file){
+      let flag = true;
+
+      var filedata = file.raw;
+      var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
+      // 类型判断
+      if(!(ext=='xls'||ext=='xlsx')){
+        this.$message.error("请按照模板格式的文档上传文件");
+        return;
+      }
+      //文件名不超过40个字符
+      /* if(file.name.length>40){
+       this.$message.error("文件名不能超过40个字符");
+       return;
+       } */
+      // 判断文件大小是否符合 文件不为0
+      if(file.size<1){
+        this.$message.error("文件大小不能小于1bt");
+        return;
+      }
+      // 判断文件大小是否符合 文件不大于100M
+      if(file.size/1024/1024 > 100){
+        this.$message.error("文件大小不能超过100M！");
+        return;
+      }
+
+      this.uploadLoading=flag;
+      return flag;
+    },
+    /**
+     * 上传文件请求成功的回调
+     */
+    upLoadFileSuccess(res, file, fileList){
+      if (res.code == '1') {
+        this.excelVisible = true;
+        this.excelTableData = res.data;
+      }else{
+        this.$message.error(res.msg.msgTrim());
+      }
+      this.uploadLoading = false;
+    },
+    /**
+     * 上传文件请求失败的回调
+     */
+    uploadError(err, file, fileList){
+      console.log(err);
+      this.$message.error(err.msg.msgTrim());
+      this.uploadLoading = false;
+    },
+    importExcel(){
+      let url = '/pmpheep/org/exportOrgInfo?orgVOs='+this.excelTableData;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+      this.excelVisible=false;
     }
   },
   created() {
@@ -1165,4 +1272,7 @@ export default {
   .orgUser .searchInput1{
     margin-left: 120px;
   }
+.ChatInputFileBtn{
+  float: right;
+}
 </style>
