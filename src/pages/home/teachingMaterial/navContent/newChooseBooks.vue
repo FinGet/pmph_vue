@@ -616,7 +616,7 @@ export default {
         contactEmail:[
           {required: true, message: "请填写邮箱", trigger: "blur" },
           { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { type: "email", message: "邮箱格式不正确", trigger: "blur,change" }
         ],
         extensionName:[
           {required: true, message: "请填写名称", trigger: "blur" },
