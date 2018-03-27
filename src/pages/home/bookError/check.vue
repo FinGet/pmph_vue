@@ -36,13 +36,14 @@
 							<!--</div>-->
               <el-input
                 type="textarea"
+                :disabled="type=='detail'"
                 :autosize="{ minRows: 4, maxRows: 8}"
                 placeholder="请输入内容"
                 v-model="ruleForm.authorReply">
               </el-input>
 						</el-form-item>
 						<el-form-item label="检查结果:" prop="result">
-							<el-radio-group v-model="ruleForm.result" class="radio-group">
+							<el-radio-group v-model="ruleForm.result" class="radio-group" :disabled="type=='detail'">
 									<el-radio :label="true">存在问题</el-radio>
 									<el-radio :label="false">无问题</el-radio>
 								</el-radio-group>
@@ -50,6 +51,7 @@
 						<el-form-item label="回复用户:" prop="editorReply">
 							<el-input
 								type="textarea"
+                :disabled="type=='detail'"
 								:autosize="{ minRows: 4, maxRows: 8}"
 								placeholder="请输入内容"
 								v-model="ruleForm.editorReply">
@@ -57,7 +59,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button icon="arrow-left" @click="back">返回</el-button>
-							<el-button type="primary" :disabled="ruleForm.isEditorReplied" @click="submit('ruleForm')">提交</el-button>
+							<el-button type="primary" :disabled="type=='detail'"  @click="submit('ruleForm')">提交</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -79,6 +81,7 @@ export default {
         result: "",
         editorReply: ""
       },
+      type:'',
       rules: {
         editorReply: [
           {
@@ -97,6 +100,7 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
+    this.type = this.$route.query.type;
     // alert(this.$route.query);
     this.getBookError();
   },

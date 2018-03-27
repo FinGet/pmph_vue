@@ -1,7 +1,7 @@
 <template>
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="标题：" prop="title">
+      <el-form-item label="文章标题：" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
@@ -27,7 +27,7 @@
             </el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="显示顺序：" prop="sort">
+      <el-form-item label="置顶：" prop="sort">
           <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
       </el-form-item>
       <el-form-item label="内容：" required>
@@ -46,7 +46,7 @@
            >
           <el-button size="small" type="primary">添加封面图片</el-button>
         </el-upload>
-        </el-form-item>       
+        </el-form-item>
       <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <my-upload
@@ -85,24 +85,39 @@
        </el-form>
         </div>
     </el-dialog>
-    
+
     <!-- 查看封面图片弹框 -->
     <el-dialog
      :visible.sync="coverDialogVislble"
      :show-close="false"
      class="cover_dialog"
      title="">
-     <img :src="coverImgUrl" />  
+     <img :src="coverImgUrl" />
     </el-dialog>
 
     <div class="bottom_box">
           <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
-          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">{{$router.currentRoute.query.type!='new'?'通过':'发布'}}</el-button>
-          <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
-          <el-button type="primary" @click="ContentSubmit(0)" >暂存</el-button>
+          <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">发布</el-button>
+          <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="returnReasonFnc">退回</el-button>
+          <el-button type="primary" @click="ContentSubmit(0)" >撤销</el-button>
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
+    <!--退回理由-->
+    <el-dialog title="退回理由" :visible.sync="returnReasonVisible">
+      <el-input
+        type="textarea"
+        :rows="3"
+        placeholder="请输入退回理由"
+        v-model="formData.returnReason">
+      </el-input>
+
+      <div class="pull-right marginT10 marginB10">
+        <el-button type="primary" @click="returnReasonVisible==false">取消</el-button>
+        <el-button type="danger" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+      </div>
+    </el-dialog>
+    <!--examineContent($router.currentRoute.params.cmsContent,1)-->
   </div>
 </template>
 <script type="text/javascript">
@@ -129,7 +144,8 @@ export default {
         scheduledTime:'',
         isPublished: "",
         path:'0',
-        materialId:''
+        materialId:'',
+        returnReason: ''
       },
       coverDialogVislble:false,
       showPreventDialog:false,
@@ -190,8 +206,10 @@ export default {
           categoryName:'公告管理',
           children:null
         }
-        ],
-        bookOptions: []
+      ],
+      bookOptions: [],
+      returnReasonVisible: false, // 退回理由
+      returnReason:''
     };
   },
   computed: {
@@ -289,7 +307,7 @@ export default {
             .post(this.addNewUrl, this.$commonFun.initPostData(this.initFormData(this.formData)))
             .then(res => {
               console.log(res);
-              if (res.data.code == 1) {            
+              if (res.data.code == 1) {
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -308,7 +326,7 @@ export default {
           }else{
             this.$axios.put(this.editUrl,this.$commonFun.initPostData(this.initFormData(this.formData))).then((res)=>{
                 console.log(res);
-                if(res.data.code==1){               
+                if(res.data.code==1){
                 switch (num) {
                   case 0:
                     this.$message.success("暂存成功");
@@ -332,6 +350,10 @@ export default {
           return false;
         }
       });
+    },
+//    点击退回
+    returnReasonFnc(){
+      this.returnReasonVisible = true;
     },
     /* 预览 */
     openPreventDialog(){
@@ -493,15 +515,15 @@ export default {
              var obj={};
           obj.name=editData.cmsExtras[i].attachmentName;
           obj.url=editData.cmsExtras[i].attachment;
-          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop(); 
-          this.fileList.push(obj);                   
+          obj.attachment=editData.cmsExtras[i].attachment.split('/').pop();
+          this.fileList.push(obj);
           }
           /* 填充封面图片 */
           if(this.$route.query.isShowCover){
             this.imgList.push({name:editData.imgFileName,url:editData.imgFilePath});
           }
          /* editData.cmsExtras.forEach((item)=>{
-          
+
           obj.name=item.attachmentName;
           obj.url=item.attachment;
           obj.attachment=item.attachment.split('/').pop();
@@ -537,7 +559,7 @@ export default {
         }else{
           formData[i]=obj[i];
         }
-      } 
+      }
       return formData;
     },
     coverUploadSuccess(res, file, filelist){
@@ -556,7 +578,7 @@ export default {
     coverUploadRemove(file, flielist){
       if(file.url){
         this.formData.imgAttachment=file.url.split('/').pop();
-      } 
+      }
     },
     coverBeforeUpload(file){
       var exStr=file.name.split('.').pop().toLowerCase();
@@ -580,7 +602,7 @@ export default {
         this.$message.error('图片名称不能超过80个字符！');
         //this.material.noticeFiles.pop();
         return false;
-      }      
+      }
     },
     checkCoverUpload(file){
       this.coverImgUrl='pmpheep/image/'+file.url;

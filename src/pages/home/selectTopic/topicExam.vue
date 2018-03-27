@@ -11,7 +11,7 @@
       <acceptance :activeName.sync='activeName' @changeActive='changeActive' :searchInput='searchInput'></acceptance>
     </el-tab-pane>
     <el-tab-pane label="受理" name="fourth" v-if="!Identity.isAdmin&&!Identity.isEditor&&!Identity.isDirector&&!Identity.isOpts">
-      <no-permission></no-permission>
+      <no-permission :activeName.sync='activeName'></no-permission>
     </el-tab-pane>
   </el-tabs>
   </div>
@@ -48,9 +48,7 @@ import noPermission from './noPermission.vue'
       this.activeName=val;
     },
     handleClick(tab, event){
-      console.log(tab, event);
       this.activeName=tab.name;
-      console.log(this.activeName);
     },
      identity(){
       this.$axios.get('/pmpheep/topic/identity').then(response=> {
@@ -58,13 +56,21 @@ import noPermission from './noPermission.vue'
         if (res.code == '1') {
           this.Identity = res.data;
         if (this.Identity.isAdmin || this.Identity.isOpts) {
-          this.activeName='first';
+          if (this.activeName == ''){
+            this.activeName='first';
+          }
         } else if (this.Identity.isAdmin || this.Identity.isDirector) {
-          this.activeName='second';
+          if (this.activeName == ''){
+            this.activeName='second';
+          }
         } else if (this.Identity.isAdmin || this.Identity.isEditor) {
-          this.activeName='third';
+          if (this.activeName == ''){
+            this.activeName='third';
+          }
         }else if(!this.Identity.isAdmin&&!this.Identity.isEditor&&!this.Identity.isDirector&&!this.Identity.isOpts){
-          this.activeName='fourth';
+          if (this.activeName == ''){
+            this.activeName='fourth';
+          }
         }
         }
       })

@@ -1,16 +1,55 @@
 <template>
   <div class="content_exam">
            <p class="header_p">
-          <!-- <el-cascader
-            :options="options"
-            :props="defaultProp"
-            :clearable="true"
-            class="input"
-            placeholder="请选择栏目"
-            @change="handleChange">
-          </el-cascader> -->
-          <span>标题：</span>
-          <el-input placeholder="输入公告标题" v-model.trim="title" class="input" @keyup.enter.native="search"></el-input>
+             <el-select v-model="searchValue" class="searchName" placeholder="请选择">
+               <el-option
+                 v-for="item in searchList"
+                 :key="item.value"
+                 :label="item.label"
+                 :value="item.value">
+               </el-option>
+             </el-select>
+             <el-input placeholder="请输入公告标题" v-if="searchValue==0" class="input" v-model.trim="title" @keyup.enter.native="search"></el-input>
+             <el-input placeholder="请输入作者名称" v-if="searchValue==1" class="input" v-model.trim="contentUsername" @keyup.enter.native="search"></el-input>
+             <!--<el-input placeholder="请输入所属教材" v-if="searchValue==2" class="input" v-model.trim="materialName" @keyup.enter.native="searchPublic"></el-input>-->
+
+             <el-select v-model="materialId" clearable placeholder="请选择" v-if="searchValue==2" class="input">
+               <el-option
+                 v-for="item in bookOptions"
+                 :key="item.id"
+                 :label="item.materialName"
+                 :value="item.id">
+               </el-option>
+             </el-select>
+
+             <el-date-picker
+               v-if="searchValue==3"
+               v-model="startCreateDate"
+               type="datetime"
+               placeholder="选择创建开始时间"
+               :picker-options="pickerOptions">
+             </el-date-picker>
+             <el-date-picker
+               v-if="searchValue==3"
+               v-model="endCreateDate"
+               type="datetime"
+               placeholder="选择创建结束时间"
+               :picker-options="pickerOptions">
+             </el-date-picker>
+             <el-date-picker
+               v-if="searchValue==4"
+               v-model="startAuDate"
+               type="datetime"
+               placeholder="选择发布开始时间"
+               :picker-options="pickerOptions">
+             </el-date-picker>
+             <el-date-picker
+               v-if="searchValue==4"
+               v-model="endAuDate"
+               type="datetime"
+               placeholder="选择发布结束时间"
+               :picker-options="pickerOptions">
+             </el-date-picker>
           <span>发布状态：</span>
           <el-select v-model="status" style="width:186px"   class="input" placeholder="全部">
            <el-option
@@ -24,7 +63,7 @@
          <el-button type="primary" icon="search" @click="search">搜索</el-button>
 
             <!-- <el-button type="danger" style="float:right;" :disabled="!isContentSelected" @click="batchRemove">批量删除</el-button> -->
-            <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:3}})">新建公告</el-button>
+            <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:3}})">新增</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" @selection-change="contentSelectChange"  border style="margin:15px 0;">
             <el-table-column
@@ -158,6 +197,26 @@ export default {
         label:'未发布'
       }
       ],
+      searchValue:0,
+      searchList:[
+        {
+          value:0,
+          label:'公告标题'
+        },
+        {
+          value:1,
+          label:'作者'
+        },{
+          value:2,
+          label:'所属教材'
+        },{
+          value:3,
+          label:'创建时间'
+        },{
+          value:4,
+          label:'发布时间'
+        }
+      ],
       tableData: [],
       selectedOptions: [],
       contentSelectData: [],
@@ -179,7 +238,14 @@ export default {
         listObj: "",
         content: ""
       },
-      isDisabled: false
+      isDisabled: false,
+      contentUsername:'',
+      startCreateDate: '',
+      endCreateDate:'',
+      startAuDate: '',
+      endAuDate: '',
+      materialId: '',
+      bookOptions:[]
     };
   },
   computed: {
@@ -200,6 +266,7 @@ export default {
   },
   mounted() {
     this.getContentLists();
+    this.getBookLists();
   },
   methods: {
     /**
@@ -214,7 +281,12 @@ export default {
             pageSize: this.conPageSize,
             title: this.title,
             isPublished: this.status,
-            categoryId: this.menuId
+            categoryId: this.menuId,
+            startCreateDate: this.$commonFun.formatDate(+new Date(this.startCreateDate)),
+            endCreateDate: this.$commonFun.formatDate(+new Date(this.endCreateDate)),
+            startAuDate: this.$commonFun.formatDate(+new Date(this.startAuDate)),
+            endAuDate: this.$commonFun.formatDate(+new Date(this.endAuDate)),
+            materialId: this.materialId
           }
         })
         .then(response => {
@@ -234,6 +306,15 @@ export default {
         .catch(e => {
           // this.$message.error('内容列表请求失败，请重试');
         });
+    },
+    /**获取教材列表 */
+    getBookLists(){
+      this.$axios.get('/pmpheep/material/published').then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.bookOptions=res.data;
+        }
+      })
     },
     /**
      * 删除
@@ -421,6 +502,9 @@ export default {
   float: left;
   margin-left: 50%;
   transform: translateX(-50%);
+}
+.searchName{
+  width: 120px;
 }
 </style>
 

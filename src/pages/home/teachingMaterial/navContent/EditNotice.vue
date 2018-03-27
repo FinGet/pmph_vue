@@ -1,8 +1,9 @@
 <template>
   	<div class="edit-notice max-width-1300">
     <!--操作按钮-->
-    <div class="clearfix marginT30">
-      <div class="operation-wrapper">
+    <div class="clearfix marginT30" style="margin-bottom:10px;">
+      <div class="operation-wrapper" >
+        <el-button  type="primary" size="large" class="marginR20" @click="$router.push({name:'新建通知',params:{materialId:$route.params.materialId,type:'reEdit'}})">返回上一步</el-button>
         <el-button  type="primary" size="large" class="marginR20" @click="showPreview">预览</el-button>
         <el-button  type="primary" size="large" class="marginR20" @click="saveNextStep">保存，下一步</el-button>
       </div>

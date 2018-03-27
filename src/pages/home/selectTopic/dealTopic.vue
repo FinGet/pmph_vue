@@ -247,7 +247,7 @@
       <p>{{data.realname}}</p>
     </el-form-item>
     <el-form-item
-    label="审核意见："
+    label="选题会审核意见："
     prop="authFeedback"
     >
       <el-input type="textarea" v-if="type=='check'"  :rows="4" v-model="data.authFeedback"></el-input>

@@ -12,7 +12,7 @@
                 <div class="searchInput">
                     <el-date-picker
                     v-model="startTime"
-                    type="date"
+                    type="datetime"
                     placeholder="选择日期时间"
                     value-format="yyyy-MM-dd">
                     </el-date-picker>
@@ -23,7 +23,7 @@
                 <div class="searchInput">
                     <el-date-picker
                     v-model="endTime"
-                    type="date"
+                    type="datetime"
                     placeholder="选择日期时间"
                     value-format="yyyy-MM-dd">
                     </el-date-picker>
@@ -87,8 +87,8 @@ export default {
                 params:{
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber,
-                    startTime: +new Date(this.startTime+'') || '',
-                    endTime: +new Date(this.endTime+'')||'',
+                    startTime: this.$commonFun.formatDate(+new Date(this.startTime+'')),
+                    endTime: this.$commonFun.formatDate(+new Date(this.endTime+'')),
                     userName: this.title
                 }
             }).then(response =>{
