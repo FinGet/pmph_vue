@@ -25,6 +25,7 @@
             style="width:100%"
             placeholder="结束日期"
             @change="endTimeChange"
+            :picker-options="pickerOptions0"
             >
             </el-date-picker>
            </el-form-item>
@@ -114,7 +115,12 @@
               tableData:[
                 { type:'array',required: true, message: '发送学校不能为空', trigger: 'blur,change' },
               ]
-            }
+            },
+              pickerOptions0: {
+                disabledDate(time) {
+                  return time.getTime() < Date.now() - 8.64e7;
+                }
+              }
            }
        },
        created(){

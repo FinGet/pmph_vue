@@ -132,11 +132,13 @@
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="120"
+                width="190"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
                     <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="examineContent(scope.row,1)">退回</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0"  @click="examineContent(scope.row,2)">通过</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -633,38 +635,70 @@ export default {
     /* 审核内容 */
     examineContent(obj, status) {
       console.log(obj);
-      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$axios
-            .put(
-              this.examineUrl,
-              this.$commonFun.initPostData({
-                id: obj.id,
-                authStatus: status,
-                sessionId: this.$getUserData().sessionId
-              })
-            )
-            .then(res => {
-              console.log(res);
-              if (res.data.code == 1) {
-                this.$message.success("审核成功");
-                this.showContentDetail = false;
-                this.getPublicList();
-              } else {
-                this.$message.error(res.data.msg);
-              }
+      if(status==2){
+          this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(() => {
+              this.$axios
+                .put(
+                  this.examineUrl,
+                  this.$commonFun.initPostData({
+                    id: obj.id,
+                    authStatus: status,
+                    sessionId: this.$getUserData().sessionId
+                  })
+                )
+                .then(res => {
+                  console.log(res);
+                  if (res.data.code == 1) {
+                    this.$message.success("审核成功");
+                    this.showContentDetail = false;
+                    this.getPublicList();
+                  } else {
+                    this.$message.error(res.data.msg);
+                  }
+                });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消操作"
+              });
             });
-        })
-        .catch(() => {
+      }else{
+        this.$prompt('请输入退回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+              this.$axios
+                .put(
+                  this.examineUrl,
+                  this.$commonFun.initPostData({
+                    id: obj.id,
+                    returnReason:value,
+                    authStatus: status,
+                    sessionId: this.$getUserData().sessionId
+                  })
+                )
+                .then(res => {
+                  console.log(res);
+                  if (res.data.code == 1) {
+                    this.$message.success("退回成功");
+                    this.getPublicList();
+                  } else {
+                    this.$message.error(res.data.msg);
+                  }
+                });          
+        }).catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消操作"
-          });
+            type: 'info',
+            message: '已取消操作'
+          });       
         });
+      }
     },
     /* 删除内容 */
     deleteContent(obj) {{

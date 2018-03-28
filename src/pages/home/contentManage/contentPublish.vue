@@ -1,7 +1,7 @@
 <template>
   <div class="content_publish">
     <el-form :model="formData" :rules="formRules" ref="addForm" label-width="120px" style="margin:20px 30px 20px 0">
-      <el-form-item label="文章标题：" prop="title">
+      <el-form-item :label="$router.currentRoute.query.columnId==1?'文章标题：':($router.currentRoute.query.columnId==2?'信息快报标题：':'公告管理标题：')" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
@@ -27,8 +27,10 @@
             </el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="置顶：" prop="sort">
-          <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input>
+      <el-form-item label="置顶：" prop="isStick">
+          <!-- <el-input class="input" placeholder="请输入数字" v-model="formData.sort"></el-input> -->
+           <el-radio class="radio" v-model="formData.isStick" :label="true">是</el-radio>
+           <el-radio class="radio" v-model="formData.isStick" :label="false">否</el-radio>
       </el-form-item>
       <el-form-item label="内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
@@ -136,7 +138,7 @@ export default {
       formData: {
         title: "",
         categoryId: "",
-        sort:'',
+        isStick:true,
         content: "",
         file: [],
         imgFile:[],
@@ -162,9 +164,10 @@ export default {
         categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
         summary: [{ min: 1, max: 50, message: "摘要内容不能超过50个字符", trigger: "change" }],
         keyword: [{ min: 1, max: 50, message: "关键字不能超过50个字符", trigger: "change" }],
-        sort:[
-            {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
-            { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "blur" },
+        isStick:[
+            /* {validator:this.$formCheckedRules.numberChecked,trigger: "blur"},
+            { min:1,max:10, message: "显示顺序不能超过10个字符", trigger: "blur" }, */
+            {type:'boolean',message:'请选择是否置顶',trigger:'change'}
         ]
       },
       defaultType: {

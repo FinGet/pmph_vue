@@ -114,10 +114,11 @@
 
             <el-table-column
                 label="操作"
-                width="120"
+                width="150"
                 >
                 <template scope="scope">
                     <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isPublished" @click="tablePublishSubmit(scope.row)">发布</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -334,7 +335,7 @@ export default {
       this.getOutContentList();
     },
     /* 发布 */
-    publishSubmit(){
+    publishSubmit(obj){
        this.$confirm('确定发布该快报?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -388,6 +389,19 @@ export default {
           }
         });
       this.showContentDetail = true;
+    },
+    /* table发布 */
+    tablePublishSubmit(obj){
+      this.$axios
+        .get(this.outContentUrl + "/content/" + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            console.log(this.contentDetailData);
+            this.publishSubmit();
+          }
+        });  
     },
     /* 修改内容 */
     editContent(obj) {

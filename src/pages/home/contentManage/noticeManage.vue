@@ -115,11 +115,12 @@
             </el-table-column> -->
             <el-table-column
                 label="操作"
-                width="120"
+                width="150"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isMaterialEntry"  @click="editContent(scope.row)">修改</el-button> -->
                     <el-button type="text"  @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.isPublished" @click="tablePublishSubmit(scope.row)">发布</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -437,6 +438,20 @@ export default {
           }
         });
       this.showContentDetail = true;
+    },
+    /* table发布 */
+    tablePublishSubmit(obj){
+      this.isDisabled = obj.isMaterialEntry;
+      this.$axios
+        .get(this.editContentUrl + obj.id + "/detail", {})
+        .then(res => {
+          if (res.data.code == 1) {
+            this.contentDetailData = res.data.data;
+            this.contentDetailData.listObj = obj;
+            console.log(this.contentDetailData);
+            this.publishSubmit();
+          }
+        });
     },
     /* 修改内容 */
     editContent(obj) {

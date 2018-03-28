@@ -133,6 +133,7 @@
             size="small"
             v-model="formData.animationInterval"
             :min="0.1"
+            :max="3600"
             :step="0.1"
             @change="animationIntervalChange"
           ></el-input-number>
