@@ -1,13 +1,27 @@
 <template>
     <div class="teachMaterial chief">
       <p class="bookTitle" v-if="formData.bookName">《 {{formData.bookName}} 》</p>
-
       <div class="teachingMaterial-search clearfix">
+        <div class="searchBox-wrapper">
+          <div class="searchName">姓名：<span></span></div>
+          <div class="searchInput">
+            <el-input v-model="realName" @keyup.enter.native="search" placeholder="请输入姓名"></el-input>
+          </div>
+        </div>
+        <div class="searchBox-wrapper">
+          <div class="searchName">申报单位：<span></span></div>
+          <div class="searchInput">
+            <el-input v-model="orgName" @keyup.enter.native="search" placeholder="请输入申报单位"></el-input>
+          </div>
+        </div>
+        <div class="searchBox-wrapper searchBtn">
+          <el-button  type="primary" icon="search" @click="search">搜索</el-button>
+        </div>
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0))||isChiefPublished" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
-          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">重置</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">清空</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
@@ -156,6 +170,8 @@
         optionsType:'edit',
         isChiefPublished:false,
         hasChanged:false,
+        realName:'',
+        orgName:''
       }
     },
     computed:{
@@ -226,8 +242,8 @@
       getTableData(){
         this.$axios.get(this.api_list,{params:{
           textbookId:this.formData.textbookId,
-          realName:'',
-          presetPosition:'',
+          realName:this.realName,
+          orgName:this.orgName,
           materialId:this.formData.materialId,
         }})
           .then(response=>{
@@ -270,6 +286,13 @@
           })
       },
       //获取历史记录
+      /**
+       * 搜索
+       */
+      search(){
+        this.getTableData();
+      },
+      /* 获取历史记录 */
       getHistoryLog(){
         this.$axios.get(this.api_log,{params:{
           textbookId:this.formData.textbookId,
@@ -349,11 +372,14 @@
                 jsonDecPosition.push(tempObj);
               }
             }
+//            console.log(jsonDecPosition);
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
               selectionType:type?type:1,
+              textbookId: this.searchParams.textbookId,
               editorOrEditorialPanel:this.type=='zb'?1:2,
+              unselectedHold:this.type=='zb'?1:(jsonDecPosition.length)>0?1:0
             }))
               .then(response=>{
                 var res = response.data;

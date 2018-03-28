@@ -2,7 +2,7 @@
   <div class="launch_survey">
       <div style="width:100%;float:left;">
       <p class="left_header_p">
-         {{$route.params.surverData?$route.params.surverData.intro:'问卷信息'}}
+         {{$route.params.surverData?$route.params.surverData.title:'问卷信息'}}
        <span></span>
        </p>
        </div>
@@ -25,6 +25,7 @@
             style="width:100%"
             placeholder="结束日期"
             @change="endTimeChange"
+            :picker-options="pickerOptions0"
             >
             </el-date-picker>
            </el-form-item>
@@ -114,7 +115,12 @@
               tableData:[
                 { type:'array',required: true, message: '发送学校不能为空', trigger: 'blur,change' },
               ]
-            }
+            },
+              pickerOptions0: {
+                disabledDate(time) {
+                  return time.getTime() < Date.now() - 8.64e7;
+                }
+              }
            }
        },
        created(){
@@ -133,7 +139,7 @@
          submitSurvery(){
          this.$refs.leftFrom.validate((valid)=>{
            if(valid){
-                this.$confirm('是否确定发起问卷<'+this.$route.params.surverData.intro+'>的调查？', '提示', {
+                this.$confirm('是否确定发起问卷<'+this.$route.params.surverData.title+'>的调查？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                 }).then(() => {

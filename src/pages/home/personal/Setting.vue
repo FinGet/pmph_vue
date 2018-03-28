@@ -190,12 +190,12 @@
             { required: true, message: "用户名称不能为空", trigger: "change,blur" },
             { max: 20, message: "名称长度过长", trigger: "change,blur" }
           ],
-//          handphone:[
-//            this.$formRules.phone()
-//          ],
-//          email: [
-//            this.$formRules.email()
-//          ],
+          handphone:[
+            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "change,blur"}
+          ],
+          email: [
+           {type: 'email', message: '请输入正确的邮箱地址', trigger: 'change,blur' }
+          ]
 //          address: [
 //            { max: 250, message: "名称长度过长", trigger: "change,blur" }
 //          ],

@@ -91,7 +91,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <!--<el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>-->
               </div>
             </div>
             <!--已有书籍-->
@@ -122,7 +122,7 @@
             </div>
           </div>
           <div class="expert_info-buttonWrapper print-none">
-            <el-button type="primary" @click="addNewBook" v-if="(addBookList.length==0||expertInfoData.isMultiBooks)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">添加图书</el-button>
+            <el-button type="primary" @click="addNewBook">添加图书</el-button>
             <el-button type="primary" @click="saveBook" v-if="((hasNewAddbook||hasBookListChanged)&&addBookList.length)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">保存图书</el-button>
           </div>
         </div>
@@ -334,7 +334,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -1188,6 +1188,7 @@
         print(){
 //          console.log(this.materialInfo);
           document.title = this.materialInfo.materialName;
+          
           window.print();
           return false;
         },

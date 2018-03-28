@@ -59,7 +59,7 @@
                       <el-input v-model="scope.row.contactUserName"   :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactUserName'+scope.$index" :rules="rules" style="margin:18px 0;" >
                         <el-form-item prop="contactUserName" >
-                          <el-input v-model="scope.row.contactUserName"   ></el-input>
+                          <el-input v-model="scope.row.contactUserName"  ></el-input>
                         </el-form-item>
                       </el-form>
                     </template>
@@ -74,7 +74,7 @@
                       <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactPhone'+scope.$index" :rules="rules" style="margin:18px 0;">
                        <el-form-item prop="contactPhone" style="margin:18px 0;">
-                          <el-input v-model="scope.row.contactPhone"   ></el-input>
+                          <el-input v-model="scope.row.contactPhone"  ></el-input>
                         </el-form-item>
                        </el-form>
 
@@ -90,7 +90,7 @@
                       <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactEmail'+scope.$index" :rules="rules" style="margin:18px 0;">
                         <el-form-item prop="contactEmail"   style="margin:18px 0;">
-                          <el-input v-model="scope.row.contactEmail"   ></el-input>
+                          <el-input v-model="scope.row.contactEmail"  ></el-input>
                         </el-form-item>
                       </el-form>
                     </template>
@@ -616,7 +616,7 @@ export default {
         contactEmail:[
           {required: true, message: "请填写邮箱", trigger: "blur" },
           { min: 1, max: 40, message: "邮箱不能超过40个字符", trigger: "change,blur" },
-          { type: "email", message: "邮箱格式不正确", trigger: "blur" }
+          { type: "email", message: "邮箱格式不正确", trigger: "blur,change" }
         ],
         extensionName:[
           {required: true, message: "请填写名称", trigger: "blur" },
@@ -674,6 +674,13 @@ export default {
   created() {
     this.initEditData();
     this.getBookType();
+  },
+  mounted () {
+    document.onkeydown = function() {   
+      if(window.event.keyCode==13) {   
+  
+      }   
+      } 
   },
   methods: {
           /**

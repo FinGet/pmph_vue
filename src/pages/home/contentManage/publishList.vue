@@ -3,10 +3,55 @@
       <el-tabs type="border-card">
   <el-tab-pane label="内容">
       <p class="header_p">
-          <span>文章标题：</span>
-          <el-input placeholder="请输入" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
-         <span>作者：</span>
-          <el-input placeholder="作者名称" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
+        <el-select v-model="searchValue" class="searchName" placeholder="请选择">
+          <el-option
+            v-for="item in searchList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input placeholder="请输入文章标题" v-if="searchValue==0" class="input" v-model.trim="searchTitle" @keyup.enter.native="searchPublic"></el-input>
+        <el-input placeholder="请输入作者名称" v-if="searchValue==1" class="input" v-model.trim="contentUsername" @keyup.enter.native="searchPublic"></el-input>
+        <!--<el-input placeholder="请输入所属教材" v-if="searchValue==2" class="input" v-model.trim="materialName" @keyup.enter.native="searchPublic"></el-input>-->
+
+        <el-select v-model="materialId" clearable placeholder="请选择" v-if="searchValue==2" class="input">
+          <el-option
+            v-for="item in bookOptions"
+            :key="item.id"
+            :label="item.materialName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+
+        <el-date-picker
+          v-if="searchValue==3"
+          v-model="startCreateDate"
+          type="datetime"
+          placeholder="选择创建开始时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-date-picker
+          v-if="searchValue==3"
+          v-model="endCreateDate"
+          type="datetime"
+          placeholder="选择创建结束时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-date-picker
+          v-if="searchValue==4"
+          v-model="startAuDate"
+          type="datetime"
+          placeholder="选择发布开始时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-date-picker
+          v-if="searchValue==4"
+          v-model="endAuDate"
+          type="datetime"
+          placeholder="选择发布结束时间"
+          :picker-options="pickerOptions">
+        </el-date-picker>
           <span>审核状态：</span>
           <el-select v-model="selectValue" clearable  style="width:150px" class="input" placeholder="全部">
            <el-option
@@ -18,7 +63,7 @@
          </el-option>
          </el-select>
          <el-button type="primary" icon="search" @click="searchPublic">搜索</el-button>
-         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1,type:'new',isShowCover:true}})">发布新内容</el-button>
+         <el-button type="primary" style="float:right;" @click="$router.push({name:'添加内容',query:{columnId:1,type:'new',isShowCover:true}})">新增</el-button>
          <el-button type="primary"   style="float:right;" @click="syncDialogVisible=true">同步</el-button>
       </p>
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
@@ -87,13 +132,13 @@
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="120"
+                width="190"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text"
-
-                    @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="examineContent(scope.row,1)">退回</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus!=0"  @click="examineContent(scope.row,2)">通过</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -318,6 +363,11 @@ export default {
           label: "已通过"
         }
       ],
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       commentSelectOp: [
         {
           value: 0,
@@ -330,6 +380,26 @@ export default {
         {
           value: 2,
           label: "已通过"
+        }
+      ],
+      searchValue:0,
+      searchList:[
+        {
+          value:0,
+          label:'文章标题'
+        },
+        {
+          value:1,
+          label:'作者'
+        },{
+          value:2,
+          label:'所属教材'
+        },{
+          value:3,
+          label:'创建时间'
+        },{
+          value:4,
+          label:'发布时间'
         }
       ],
       showContentDetail: false,
@@ -366,7 +436,13 @@ export default {
       commentSelectData: [],
       commentName:'',
       commentTitle:'',
-      commentSelect:''
+      commentSelect:'',
+      startCreateDate: '', // 创建开始时间
+      endCreateDate:'',
+      startAuDate: '',
+      endAuDate:'',
+      bookOptions: [],
+      materialId:''
     };
   },
   computed: {
@@ -389,7 +465,12 @@ export default {
             authStatus: this.selectValue,
             sessionId: this.$getUserData().sessionId,
             pageSize: this.pageSize,
-            pageNumber: this.currentPage
+            pageNumber: this.currentPage,
+            startCreateDate: this.$commonFun.formatDate(+new Date(this.startCreateDate)),
+            endCreateDate: this.$commonFun.formatDate(+new Date(this.endCreateDate)),
+            startAuDate: this.$commonFun.formatDate(+new Date(this.startAuDate)),
+            endAuDate: this.$commonFun.formatDate(+new Date(this.endAuDate)),
+            materialId: this.materialId
           }
         })
         .then(res => {
@@ -404,6 +485,15 @@ export default {
       this.pageSize = 30;
       this.currentPage = 1;
       this.getPublicList()
+    },
+    /**获取教材列表 */
+    getBookLists(){
+      this.$axios.get('/pmpheep/material/published').then(response => {
+        let res = response.data;
+        if (res.code == '1') {
+          this.bookOptions=res.data;
+        }
+      })
     },
     /* 获取评论列表 */
     getCommentList(){
@@ -545,38 +635,70 @@ export default {
     /* 审核内容 */
     examineContent(obj, status) {
       console.log(obj);
-      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$axios
-            .put(
-              this.examineUrl,
-              this.$commonFun.initPostData({
-                id: obj.id,
-                authStatus: status,
-                sessionId: this.$getUserData().sessionId
-              })
-            )
-            .then(res => {
-              console.log(res);
-              if (res.data.code == 1) {
-                this.$message.success("审核成功");
-                this.showContentDetail = false;
-                this.getPublicList();
-              } else {
-                this.$message.error(res.data.msg);
-              }
+      if(status==2){
+          this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(() => {
+              this.$axios
+                .put(
+                  this.examineUrl,
+                  this.$commonFun.initPostData({
+                    id: obj.id,
+                    authStatus: status,
+                    sessionId: this.$getUserData().sessionId
+                  })
+                )
+                .then(res => {
+                  console.log(res);
+                  if (res.data.code == 1) {
+                    this.$message.success("审核成功");
+                    this.showContentDetail = false;
+                    this.getPublicList();
+                  } else {
+                    this.$message.error(res.data.msg);
+                  }
+                });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消操作"
+              });
             });
-        })
-        .catch(() => {
+      }else{
+        this.$prompt('请输入退回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+              this.$axios
+                .put(
+                  this.examineUrl,
+                  this.$commonFun.initPostData({
+                    id: obj.id,
+                    returnReason:value,
+                    authStatus: status,
+                    sessionId: this.$getUserData().sessionId
+                  })
+                )
+                .then(res => {
+                  console.log(res);
+                  if (res.data.code == 1) {
+                    this.$message.success("退回成功");
+                    this.getPublicList();
+                  } else {
+                    this.$message.error(res.data.msg);
+                  }
+                });          
+        }).catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消操作"
-          });
+            type: 'info',
+            message: '已取消操作'
+          });       
         });
+      }
     },
     /* 删除内容 */
     deleteContent(obj) {{
@@ -686,6 +808,7 @@ export default {
     }
     this.getPublicList();
     this.getCommentList();
+    this.getBookLists();
   }
 };
 </script>
@@ -736,5 +859,8 @@ export default {
   border: 0;
   box-shadow: none;
 }
+  .searchName{
+    width: 120px;
+  }
 </style>
 
