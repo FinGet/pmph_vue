@@ -1188,6 +1188,7 @@
         print(){
 //          console.log(this.materialInfo);
           document.title = this.materialInfo.materialName;
+          
           window.print();
           return false;
         },

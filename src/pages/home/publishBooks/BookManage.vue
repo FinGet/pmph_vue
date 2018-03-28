@@ -506,6 +506,7 @@
         this.bookTypeSelected=res;
       },
       bookTypeChange_form(res){
+        console.log(res);
         this.form.typeId=res;
       },
       /**
@@ -516,15 +517,15 @@
             this.$message.error('请选择书籍类别！');
             return;
         }
-        let type = this.form.typeId[this.form.typeId.length-1];
-        type=type?type:0;
+        /* let type = this.form.typeId[this.form.typeId.length-1];
+        type=type?type:0; */
         this.$axios.put('/pmpheep/books/update',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           isKey:this.form.isKey,
-          type:type,
+          type:this.form.typeId.pop(),
           materialId:this.form.materialId||'',
         }))
           .then(response=>{
