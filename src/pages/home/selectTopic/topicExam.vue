@@ -24,7 +24,7 @@ import noPermission from './noPermission.vue'
  export default{
    data(){
      return{
-       activeName:'',        //不要改成计算属性  计算属性无法触发更改
+       activeName:'first',        //不要改成计算属性  计算属性无法触发更改
        Identity:{},
        searchInput:''
      }
@@ -35,8 +35,8 @@ import noPermission from './noPermission.vue'
      if(this.$route.params.searchInput){
        this.searchInput=this.$route.params.searchInput;
      }
-     this.activeName = this.$route.query.active || 'first';
      this.identity();
+     
    },
    watch:{
    },
@@ -56,22 +56,15 @@ import noPermission from './noPermission.vue'
         if (res.code == '1') {
           this.Identity = res.data;
         if (this.Identity.isAdmin || this.Identity.isOpts) {
-          if (this.activeName == ''){
             this.activeName='first';
-          }
         } else if (this.Identity.isAdmin || this.Identity.isDirector) {
-          if (this.activeName == ''){
             this.activeName='second';
-          }
         } else if (this.Identity.isAdmin || this.Identity.isEditor) {
-          if (this.activeName == ''){
             this.activeName='third';
-          }
         }else if(!this.Identity.isAdmin&&!this.Identity.isEditor&&!this.Identity.isDirector&&!this.Identity.isOpts){
-          if (this.activeName == ''){
             this.activeName='fourth';
-          }
         }
+        this.activeName = this.$route.query.active?this.$route.query.active:this.activeName;
         }
       })
      }

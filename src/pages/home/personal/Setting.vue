@@ -191,10 +191,10 @@
             { max: 20, message: "名称长度过长", trigger: "change,blur" }
           ],
           handphone:[
-            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "blur"}
+            {validator:this.$formCheckedRules.phoneNumberChecked,trigger: "change,blur"}
           ],
           email: [
-           {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+           {type: 'email', message: '请输入正确的邮箱地址', trigger: 'change,blur' }
           ]
 //          address: [
 //            { max: 250, message: "名称长度过长", trigger: "change,blur" }

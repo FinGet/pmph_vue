@@ -43,7 +43,7 @@
           <div class="ad-preview-box">
             <el-carousel
               :height="adWHobj.height+'px'"
-              :interval="formData.animationInterval"
+              :interval="formData.animationInterval*1000"
               arrow="always"
               indicator-position="none"
               :autoplay="formData.autoPlay"
@@ -118,7 +118,6 @@
           </div>
         </my-upload>
 
-        </el-row>
       </div>
     </div>
 
@@ -127,15 +126,15 @@
         全局设置
       </div>
       <div class="section-content section-content-arrow">
-        <el-checkbox v-model.sync="formData.autoPlay" :true-label="1" :false-label="0" @change="change">自动播放</el-checkbox>
+        <el-checkbox v-model="formData.autoPlay" :true-label="1" :false-label="0" @change="change">自动播放</el-checkbox>
         <div class="inline-block paddingL10">
-          动画间隔（毫秒）
+          动画间隔（秒）
           <el-input-number
             size="small"
             v-model="formData.animationInterval"
-            :min="100"
-            :max="10000"
-            :step="100"
+            :min="0.1"
+            :max="3600"
+            :step="0.1"
             @change="animationIntervalChange"
           ></el-input-number>
         </div>
@@ -393,7 +392,7 @@
           autoPlay:this.formData.autoPlay||true,
           navigationColor:this.formData.navigationColor||'',
           isNavigation:this.formData.isNavigation||false,
-          animationInterval:this.formData.animationInterval||'',
+          animationInterval:this.formData.animationInterval*1000||'',
           animationEffect:this.formData.animationEffect||'',
           isShowHeading:this.formData.isShowHeading||false,
           isDisplay:false,
@@ -463,6 +462,8 @@
       }else{
 
         this.formData=this.currentAdData;
+
+         this.formData.animationInterval=this.formData.animationInterval/1000;
         this.adId = this.currentAdData.id;
         this.imageLibs = this.formData.image||[];
       }

@@ -29,7 +29,7 @@
         :on-success="upLoadFileSuccess"
         :on-error="uploadError"
         :show-file-list="false">
-        <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'正在上传解析中...':'点击导入'}}</el-button>
+        <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
       </my-upload>
     </p>
       <!--表格-->
@@ -300,8 +300,12 @@
         title="机构用户"
         :visible.sync="excelVisible"
       >
+      <p class="header_p">
+        <el-button type="primary" style="float:right;"  @click="importExcel">导出</el-button>
+      </p>
         <el-table
           :data="excelTableData"
+          class="table-wrapper"
           border
           style="width: 100%">
           <el-table-column
@@ -324,10 +328,10 @@
             label="机构类型">
           </el-table-column>
         </el-table>
-        <div class="pull-right marginT10 marginB10">
+        <!-- <div class="pull-right marginT10 marginB10">
           <el-button type="warning" @click="excelVisible=false">取消</el-button>
-          <el-button type="primary" @click="importExcel">导出</el-button>
-        </div>
+          
+        </div> -->
       </el-dialog>
   </el-tab-pane>
   <!-- 学校审核 -->
@@ -1206,8 +1210,12 @@ export default {
       this.uploadLoading = false;
     },
     importExcel(){
-      let url = '/pmpheep/org/exportOrgInfo?orgVOs='+this.excelTableData;
-      // console.log(url)
+      var arr=[];
+      for(var i in this.excelTableData){
+         arr.push(JSON.stringify(this.excelTableData[i]));
+      }
+      let url = '/pmpheep/org/exportOrgInfo?orgVOs=['+arr+']';
+       console.log(url);
       this.$commonFun.downloadFile(url);
       this.excelVisible=false;
     }

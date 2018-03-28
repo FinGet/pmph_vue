@@ -292,6 +292,7 @@
       search(){
         this.getTableData();
       },
+      /* 获取历史记录 */
       getHistoryLog(){
         this.$axios.get(this.api_log,{params:{
           textbookId:this.formData.textbookId,
