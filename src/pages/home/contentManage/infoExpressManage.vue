@@ -451,7 +451,6 @@ export default {
     }
   },
   created() {
-    alert(1);
     this.getOutContentList();
     this.getBookLists();
   }
