@@ -17,10 +17,10 @@
       <div class="input-text-wrapper marginT30 text-center">
         <el-button type="primary" @click="submit" class="loginBtn">登录</el-button>
       </div>
-      <div class="note marginT30">
+      <!-- <div class="note marginT30">
         <p>最高权限:admin </p>
         <p> 密码：123</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
