@@ -115,12 +115,14 @@
             </el-table-column> -->
             <el-table-column
                 label="操作"
-                width="150"
+                width="190"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isMaterialEntry"  @click="editContent(scope.row)">修改</el-button> -->
+                    <el-button type="text" @click="contentDetail(scope.row)" >查看</el-button>
                     <el-button type="text"  @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" :disabled="scope.row.isPublished" @click="tablePublishSubmit(scope.row)">发布</el-button>
+                    <el-button type="text" v-if="!scope.row.isPublished" @click="tablePublishSubmit(scope.row,true)">发布</el-button>
+                    <el-button type="text" v-if="scope.row.isPublished" @click="tablePublishSubmit(scope.row,false)">撤销</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -383,8 +385,8 @@ export default {
       this.getContentLists();
     },
     /* 发布 */
-    publishSubmit(){
-       this.$confirm('确定发布该公告?', '提示', {
+    publishSubmit(bool){
+       this.$confirm(bool?'确定发布该公告?':'确定撤销该公告？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -402,16 +404,16 @@ export default {
             }
           }
          obj.categoryId=parseInt(obj.categoryId);
-         obj.isPublished=true;
+         obj.isPublished=bool;
           obj.content=editData.content.content;
          obj.attachment=[];
          obj.file=[];
-         obj.authStatus=2;
+         obj.authStatus=bool?2:0;
          obj.scheduledTime='';
       this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
-                   this.$message.success("发布成功");
+                   this.$message.success(bool?"发布成功":'撤销成功');
                    this.getContentLists();
                    this.showContentDetail=false;
                 }else {
@@ -440,7 +442,7 @@ export default {
       this.showContentDetail = true;
     },
     /* table发布 */
-    tablePublishSubmit(obj){
+    tablePublishSubmit(obj,bool){
       this.isDisabled = obj.isMaterialEntry;
       this.$axios
         .get(this.editContentUrl + obj.id + "/detail", {})
@@ -449,7 +451,7 @@ export default {
             this.contentDetailData = res.data.data;
             this.contentDetailData.listObj = obj;
             console.log(this.contentDetailData);
-            this.publishSubmit();
+            this.publishSubmit(bool);
           }
         });
     },

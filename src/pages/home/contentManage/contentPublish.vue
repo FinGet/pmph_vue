@@ -102,7 +102,7 @@
           <el-button type="primary" @click="openPreventDialog">预览</el-button>
           <el-button type="primary" v-if="formData.categoryId==1"  @click="examineContent($router.currentRoute.params.cmsContent,2)">发布</el-button>
           <el-button type="danger" v-if="formData.categoryId==1&&$router.currentRoute.query.type!='new'" @click="returnReasonFnc">退回</el-button>
-          <el-button type="primary" @click="ContentSubmit(0)" >撤销</el-button>
+          <el-button type="primary" @click="ContentSubmit(0)" >暂存</el-button>
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
     <!--退回理由-->
