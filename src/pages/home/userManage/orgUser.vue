@@ -31,6 +31,7 @@
         :show-file-list="false">
         <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
       </my-upload>
+            <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/机构管理模板.xlsx">模板下载.xls</a></span>
     </p>
       <!--表格-->
       <div class="table-wrapper">
@@ -1239,6 +1240,7 @@ export default {
 }
 .orgUser .header_p .input {
   width: 190px;
+  margin-bottom:10px;
   margin-right: 10px;
 }
 .orgUser .el-tabs--border-card{

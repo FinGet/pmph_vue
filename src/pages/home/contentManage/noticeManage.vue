@@ -408,7 +408,7 @@ export default {
           obj.content=editData.content.content;
          obj.attachment=[];
          obj.file=[];
-         obj.authStatus=2;
+         obj.authStatus=bool?2:0;
          obj.scheduledTime='';
       this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
                 console.log(res);
