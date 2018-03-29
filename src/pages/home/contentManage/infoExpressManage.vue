@@ -119,7 +119,8 @@
                 <template scope="scope">
                     <el-button type="text" @click="contentDetail(scope.row)">查看</el-button>
                     <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" v-if="!scope.row.isPublished"  @click="tablePublishSubmit(scope.row)">发布</el-button>
+                    <el-button type="text" v-if="!scope.row.isPublished"  @click="tablePublishSubmit(scope.row,true)">发布</el-button>
+                    <el-button type="text" v-if="scope.row.isPublished"  @click="tablePublishSubmit(scope.row,false)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -336,8 +337,8 @@ export default {
       this.getOutContentList();
     },
     /* 发布 */
-    publishSubmit(obj){
-       this.$confirm('确定发布该快报?', '提示', {
+    publishSubmit(bool){
+       this.$confirm(bool?'确定发布该快报?':'确定撤销改快报', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -355,7 +356,7 @@ export default {
             }
           }
          obj.categoryId=parseInt(obj.categoryId);
-         obj.isPublished=true;
+         obj.isPublished=bool;
          obj.authStatus=2;
          obj.content=editData.content.content;
          obj.attachment=[];
@@ -364,7 +365,7 @@ export default {
       this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){
-                   this.$message.success("发布成功");
+                   this.$message.success(bool?"发布成功":'撤销成功');
                    this.getOutContentList();
                    this.showContentDetail=false;
                 }else {
@@ -392,7 +393,7 @@ export default {
       this.showContentDetail = true;
     },
     /* table发布 */
-    tablePublishSubmit(obj){
+    tablePublishSubmit(obj,bool){
       this.$axios
         .get(this.outContentUrl + "/content/" + obj.id + "/detail", {})
         .then(res => {
@@ -400,7 +401,7 @@ export default {
             this.contentDetailData = res.data.data;
             this.contentDetailData.listObj = obj;
             console.log(this.contentDetailData);
-            this.publishSubmit();
+            this.publishSubmit(bool);
           }
         });  
     },

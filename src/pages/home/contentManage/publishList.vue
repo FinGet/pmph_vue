@@ -139,7 +139,8 @@
                     <el-button type="text" @click="contentDetail(scope.row)">查看</el-button>
                     <el-button type="text" @click="editContent(scope.row)">编辑</el-button>
                     <el-button type="text" v-if="scope.row.authStatus==0"  @click="examineContent(scope.row,1)">退回</el-button>
-                    <el-button type="text" v-if="scope.row.authStatus==0"  @click="examineContent(scope.row,2)">发布</el-button>
+                    <el-button type="text" v-if="scope.row.authStatus==0||scope.row.authStatus==1"  @click="examineContent(scope.row,2)">发布</el-button>
+                    <el-button type="text" v-if="scope.row.authStatus==2||scope.row.authStatus==1"  @click="examineContent(scope.row,0)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -636,8 +637,8 @@ export default {
     /* 审核内容 */
     examineContent(obj, status) {
       console.log(obj);
-      if(status==2){
-          this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+      if(status!=1){
+          this.$confirm(status==2?"确定发布该文章？":'确定撤销该文章？', "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -655,7 +656,7 @@ export default {
                 .then(res => {
                   console.log(res);
                   if (res.data.code == 1) {
-                    this.$message.success("审核成功");
+                    this.$message.success(status==2?"发布成功":'撤销成功');
                     this.showContentDetail = false;
                     this.getPublicList();
                   } else {
