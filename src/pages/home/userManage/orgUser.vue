@@ -31,6 +31,7 @@
         :show-file-list="false">
         <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
       </my-upload>
+            <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/机构管理模板.xlsx">模板下载.xls</a></span>
     </p>
       <!--表格-->
       <div class="table-wrapper">
@@ -616,7 +617,8 @@ export default {
       }, // 详情数据
       uploadLoading:false,
       excelVisible: false,
-      excelTableData:[]
+      excelTableData:[],
+      uuid:''
     };
   },
   computed:{
@@ -1195,7 +1197,9 @@ export default {
     upLoadFileSuccess(res, file, fileList){
       if (res.code == '1') {
         this.excelVisible = true;
-        this.excelTableData = res.data;
+        this.excelTableData = res.data.list;
+        this.uuid=res.data.uuid;
+        console.log(res);
       }else{
         this.$message.error(res.msg.msgTrim());
       }
@@ -1210,11 +1214,7 @@ export default {
       this.uploadLoading = false;
     },
     importExcel(){
-      var arr=[];
-      for(var i in this.excelTableData){
-         arr.push(JSON.stringify(this.excelTableData[i]));
-      }
-      let url = '/pmpheep/org/exportOrgInfo?orgVOs=['+arr+']';
+      let url = '/pmpheep/org/exportOrgInfo?uuid='+this.uuid;
        console.log(url);
       this.$commonFun.downloadFile(url);
       this.excelVisible=false;
@@ -1240,6 +1240,7 @@ export default {
 }
 .orgUser .header_p .input {
   width: 190px;
+  margin-bottom:10px;
   margin-right: 10px;
 }
 .orgUser .el-tabs--border-card{

@@ -233,7 +233,7 @@
       :visible.sync="dialogVisible"
       size="tiny">
       <div>
-        <el-form ref="form" :model="form" label-width="140px" class="form">
+        <el-form ref="form" :model="form" :rules="dialogRules" label-width="140px" class="form">
           <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
@@ -269,18 +269,18 @@
               <!--</el-option>-->
             <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="书籍类别：" required>
+          <el-form-item label="书籍类别：">
             <el-cascader
               class="searchInputEle bookType"
               :options="bookTypeList"
-              :props="{ label: 'typeName', value:'id', children: 'childrenMaterialTypeVO' }"
+              :props="bookTypeProps"
               :value="form.typeId"
               @change="bookTypeChange_form"
-              :change-on-select="true"
+              change-on-select
             ></el-cascader>
           </el-form-item>
 
-          <el-form-item label="所属教材">
+          <el-form-item label="所属教材：">
             <el-select v-model="form.materialId" clearable filterable placeholder="请选择">
               <el-option
                 v-for="item in materialList"
@@ -371,16 +371,21 @@
         selectData:[],
         bookTypeList: [],
         bookTypeProps: {
-          label: 'typeName',
-          value:'path',
-          children: 'childrenMaterialTypeVO'
+        children: "childrenMaterialTypeVO",
+        label: "typeName",
+        value:'id'
         },
         bookTypeSelected:[],
         materialList:[],
         uploadLoading:false,
         isUpload: false, // 是否同步
         progresspoint: 0,
-        handleExportWordtimer: ''
+        handleExportWordtimer: '',
+        dialogRules:{
+            typeId:[
+              {type:'array',required:true,message:'请选择书籍类别',trigger:'change'}
+            ]
+        }
       }
 		},
     methods:{
@@ -479,8 +484,9 @@
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
         });
+        typelist.shift();
         this.form.typeId = typelist;
-        console.log(this.form.typeId);
+        console.log(row.path,this.form.typeId);
         this.dialogVisible=true;
       },
       /**
@@ -506,7 +512,7 @@
         this.bookTypeSelected=res;
       },
       bookTypeChange_form(res){
-        console.log(res);
+        console.log('11111',res);
         this.form.typeId=res;
       },
       /**
@@ -517,15 +523,16 @@
             this.$message.error('请选择书籍类别！');
             return;
         }
-        /* let type = this.form.typeId[this.form.typeId.length-1];
-        type=type?type:0; */
+        let type = this.form.typeId[this.form.typeId.length-1];
+        type=type?type:0;
+        console.log(this.form,type);
         this.$axios.put('/pmpheep/books/update',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           isKey:this.form.isKey,
-          type:this.form.typeId.pop(),
+          type:type,
           materialId:this.form.materialId||'',
         }))
           .then(response=>{
