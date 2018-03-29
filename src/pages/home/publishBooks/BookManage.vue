@@ -517,15 +517,16 @@
             this.$message.error('请选择书籍类别！');
             return;
         }
-        /* let type = this.form.typeId[this.form.typeId.length-1];
-        type=type?type:0; */
+        let type = this.form.typeId[this.form.typeId.length-1];
+        type=type?type:0;
+        console.log(this.form,type);
         this.$axios.put('/pmpheep/books/update',this.$commonFun.initPostData({
           ids:this.form.bookId,
           isNew:this.form.isNew,
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           isKey:this.form.isKey,
-          type:this.form.typeId.pop(),
+          type:type,
           materialId:this.form.materialId||'',
         }))
           .then(response=>{
