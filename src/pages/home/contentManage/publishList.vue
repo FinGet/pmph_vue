@@ -102,9 +102,9 @@
                 width="110"
                 >
                 <template scope="scope">
-                    <p v-if="scope.row.authStatus==0">待审核</p>
+                    <p v-if="scope.row.authStatus==0">未发布</p>
                     <p v-if="scope.row.authStatus==1">已退回</p>
-                    <p v-if="scope.row.authStatus==2">已通过</p>
+                    <p v-if="scope.row.authStatus==2">已发布</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -136,9 +136,10 @@
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
-                    <el-button type="text" @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" :disabled="scope.row.authStatus!=0" @click="examineContent(scope.row,1)">退回</el-button>
-                    <el-button type="text" :disabled="scope.row.authStatus!=0"  @click="examineContent(scope.row,2)">通过</el-button>
+                    <el-button type="text" @click="contentDetail(scope.row)">查看</el-button>
+                    <el-button type="text" @click="editContent(scope.row)">编辑</el-button>
+                    <el-button type="text" v-if="scope.row.authStatus==0"  @click="examineContent(scope.row,1)">退回</el-button>
+                    <el-button type="text" v-if="scope.row.authStatus==0"  @click="examineContent(scope.row,2)">发布</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
@@ -352,7 +353,7 @@ export default {
       selectOp: [
         {
           value: 0,
-          label: "待审核"
+          label: "未发布"
         },
         {
           value: 1,
@@ -360,7 +361,7 @@ export default {
         },
         {
           value: 2,
-          label: "已通过"
+          label: "已发布"
         }
       ],
       pickerOptions: {

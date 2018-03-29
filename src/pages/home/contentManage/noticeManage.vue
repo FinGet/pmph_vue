@@ -115,12 +115,13 @@
             </el-table-column> -->
             <el-table-column
                 label="操作"
-                width="150"
+                width="190"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isMaterialEntry"  @click="editContent(scope.row)">修改</el-button> -->
+                    <el-button type="text" @click="contentDetail(scope.row)" >查看</el-button>
                     <el-button type="text"  @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" :disabled="scope.row.isPublished" @click="tablePublishSubmit(scope.row)">发布</el-button>
+                    <el-button type="text" v-if="!scope.row.isPublished" @click="tablePublishSubmit(scope.row)">发布</el-button>
                     <el-button type="text" @click="deleted(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
