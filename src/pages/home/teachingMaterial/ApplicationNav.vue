@@ -95,8 +95,11 @@ export default {
     activeTagName(newval,old){
          this.initActiveTag(newval);
     },
-    $route () {
+    $route (to,from) {
       this.activeTagName = this.$router.currentRoute.meta.applicationName;
+      if(to.name=='专家信息'&&(from.name=='提交到出版社'||from.name=="申报表审核")){
+        this.activeTagName=from.name=='提交到出版社'?'presscheck-pmph':'presscheck';
+      }
       this.getMaterialData()
     }
   },
@@ -131,6 +134,7 @@ export default {
     this.contentH = windowH-100+'px';
 
   },
+
 }
 </script>
 

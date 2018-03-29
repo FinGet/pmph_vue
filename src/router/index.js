@@ -143,7 +143,7 @@ export default new Router({
                 { path: 'presscheck-pmph', name: '提交到出版社', component: PressCheck_pmph, meta: { applicationName: 'presscheck-pmph' } },
                 { path: 'newchoosebooks', name: '新建通知', component: NewChooseBooks, meta: { isShowTags: true  } },
                 { path: 'book-list', name: '设置书目录', component: BookList, meta: { isShowTags: true } },
-                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, meta: { applicationName: 'presscheck'}},
+                { path: 'expertinfo', name: '专家信息', component: ExpertInfo, },
                 { path: 'chief', name: '遴选主编/副主编', component: Chief, meta: { replaceName: '遴选', applicationName: '1v3'},},
                 { path: 'applicationschoolquery', name: '教材申报选择学校', component: ApplicationSchoolQuery, meta: { isShowTags: true } },
                 { path: 'set-topic', name: '设置选题号', component: SetTopicNum, meta: { isShowTags: true }  },

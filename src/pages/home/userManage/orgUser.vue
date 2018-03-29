@@ -616,7 +616,8 @@ export default {
       }, // 详情数据
       uploadLoading:false,
       excelVisible: false,
-      excelTableData:[]
+      excelTableData:[],
+      uuid:''
     };
   },
   computed:{
@@ -1195,7 +1196,9 @@ export default {
     upLoadFileSuccess(res, file, fileList){
       if (res.code == '1') {
         this.excelVisible = true;
-        this.excelTableData = res.data;
+        this.excelTableData = res.data.list;
+        this.uuid=res.data.uuid;
+        console.log(res);
       }else{
         this.$message.error(res.msg.msgTrim());
       }
@@ -1210,11 +1213,7 @@ export default {
       this.uploadLoading = false;
     },
     importExcel(){
-      var arr=[];
-      for(var i in this.excelTableData){
-         arr.push(JSON.stringify(this.excelTableData[i]));
-      }
-      let url = '/pmpheep/org/exportOrgInfo?orgVOs=['+arr+']';
+      let url = '/pmpheep/org/exportOrgInfo?uuid='+this.uuid;
        console.log(url);
       this.$commonFun.downloadFile(url);
       this.excelVisible=false;
