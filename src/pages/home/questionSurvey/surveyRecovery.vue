@@ -4,7 +4,7 @@
        <span>调查问卷名称：</span>
        <el-input class="input" placeholder="请输入调查问卷名称" v-model="searchParams.title"></el-input>
        <span>提交人：</span>
-        <el-input class="input" placeholder="提交人姓名" v-model="searchParams.username"></el-input>
+        <el-input class="input" placeholder="提交人姓名" v-model="searchParams.userName"></el-input>
         <el-button type="primary" icon="search" @click="search">查询</el-button>
     </p>
     <el-table
@@ -80,7 +80,7 @@
             return{
                 recoveryListUrl:'/pmpheep/survey/question/answer/recovery',   //回收列表url
                 searchParams:{
-                    username:'',
+                    userName:'',
                     title:'',
                     pageSize:10,
                     pageNumber:1

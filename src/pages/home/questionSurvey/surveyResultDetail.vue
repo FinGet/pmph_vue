@@ -26,7 +26,7 @@
           {{surveyData.realname}}
         </el-form-item>
         <el-form-item label="问卷地址：">
-         {{'http://'+currentIp+'/pmeph/survey/writeSurvey.action?surveyId='+searchParams.surveyId}}
+         {{'http://'+currentIp+'/medu/survey/writeSurvey.action?surveyId='+searchParams.surveyId}}
         </el-form-item>
       </el-form>
       <div style="width:100%;float:left;">
@@ -51,6 +51,9 @@
                       </div>
                       <el-table :data="iterm.choicesList" border class="question_table">
                         <el-table-column label="选项序号" width="100" prop="index">
+                          <template scope="scope">
+                              {{(parseInt(scope.$index)+1)}}
+                          </template>
                         </el-table-column>
                         <el-table-column label="选项标题" prop="title">
                         </el-table-column>
