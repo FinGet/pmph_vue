@@ -414,8 +414,8 @@
 					</el-table-column>
 					<el-table-column label="委托书" width="110" align="center">
 						<template scope="scope">
-							<a href="javascript:;" v-if="scope.row.proxy&&scope.row.proxy!='DEFAULT'" style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
-							<el-tag type="danger" v-if="!scope.row.proxy||scope.row.proxy=='DEFAULT'">未上传</el-tag>
+							<a href="javascript:;"  style="color:#0000ff;" @click="preview(scope.row.proxy)">预览</a>
+							<!-- <el-tag type="danger" v-if="!scope.row.proxy||scope.row.proxy=='DEFAULT'">未上传</el-tag> -->
 						</template>
 					</el-table-column>
 					<el-table-column prop="progress" label="审核状态" width="100" align="center">
@@ -1083,8 +1083,12 @@ export default {
 		 * 预览教师资格证
 		 * @argument index */
     preview(proxy) {
-      this.schoolDialogVisible = true
-      this.imgsrc = "/pmpheep/image/"+proxy;
+      this.schoolDialogVisible = true;
+      if(proxy&&proxy!='DEFAULT'){
+        this.imgsrc = "/pmpheep/image/"+proxy;
+      }else{
+        this.imgsrc='static/default_image.png';
+      }
     },
     /**
      * 查看详情
