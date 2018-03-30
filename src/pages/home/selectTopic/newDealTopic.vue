@@ -10,148 +10,258 @@
 
        <div class="table_box">
           <h3>图书选题申报表</h3>
-          <p class="table_top_p">选题号：<span>2312312</span></p>
+          <p class="table_top_p">选题号：<span></span></p>
           <!-- 12格总共  每格宽度约等于 8.4% -->
           <table border="1">
               
               <tr>
                   <td width="8.4%" rowspan="4" >图书书稿情况</td>
                   <td width="8.4%" >选题名称</td>
-                  <td colspan="5"> </td>
+                  <td colspan="5">{{data.bookname}}</td>
                   <td width="8.4%" >读者对象</td>
-                  <td width="20%" colspan="2"></td>
+                  <td width="20%" colspan="2">{{data.reader}}</td>
               </tr>
               <tr>
                   <td width="8.4%">选题来源</td>
                   <td colspan="10">
-                    <el-checkbox >社策划</el-checkbox>
-                    <el-checkbox >编辑策划</el-checkbox>
-                    <el-checkbox >修订</el-checkbox>
-                    <el-checkbox >离退休编审策划</el-checkbox>
-                    <el-checkbox >专家推荐</el-checkbox>
-                    <el-checkbox >上级交办</el-checkbox>
-                    <el-checkbox >作者投稿</el-checkbox>
+               <el-checkbox-group v-model="data.sourceType">       
+                    <el-checkbox label="社策划" ></el-checkbox>
+                    <el-checkbox label="编辑策划"></el-checkbox>
+                    <el-checkbox label="修订"></el-checkbox>
+                    <el-checkbox label="离退休编审策划"></el-checkbox>
+                    <el-checkbox label="专家推荐"></el-checkbox>
+                    <el-checkbox label="上级交办"></el-checkbox>
+                    <el-checkbox label="作者投稿"></el-checkbox>
+               </el-checkbox-group>
                   </td>
               </tr>
               <tr>
                   <td>估计字数</td>
-                  <td></td>
+                  <td width="8.4%">{{data.wordNumber}}</td>
                   <td width="8.4%">估计图数</td>
-                  <td></td>
+                  <td width="16.8%">{{data.pictureNumber}}</td>
                   <td width="8.4%">预计交稿时间</td>
-                  <td></td>
+                  <td>{{$commonFun.formatDate(data.deadline,'yyyy-MM-dd')}}</td>
                   <td width="8.4%">学科及专业</td>
-                  <td colspan="2"></td>
+                  <td colspan="2">{{data.subject}}</td>
               </tr>
               <tr>
                   <td>图书类别</td>
                   <td colspan="5">
-                      <el-checkbox >专著</el-checkbox>
-                      <el-checkbox >基础理论</el-checkbox>
-                      <el-checkbox >教材</el-checkbox>
-                      <el-checkbox >论文集</el-checkbox>
-                      <el-checkbox >图谱</el-checkbox>
-                      <el-checkbox >科普</el-checkbox>
-                      <el-checkbox >应用技术</el-checkbox>
-                      <el-checkbox >教辅</el-checkbox>
-                      <el-checkbox >工具书</el-checkbox>
-                      <el-checkbox >其他</el-checkbox>
+                   <el-checkbox-group v-model="data.typeName">   
+                      <el-checkbox label="专著"></el-checkbox>
+                      <el-checkbox label="基础理论"></el-checkbox>
+                      <el-checkbox label="教材"></el-checkbox>
+                      <el-checkbox label="论文集"></el-checkbox>
+                      <el-checkbox label="图谱"></el-checkbox>
+                      <el-checkbox label="科普"></el-checkbox>
+                      <el-checkbox label="应用技术"></el-checkbox>
+                      <el-checkbox label="教辅"></el-checkbox>
+                      <el-checkbox label="工具书"></el-checkbox>
+                      <el-checkbox label="其他"></el-checkbox>
+                   </el-checkbox-group>
                   </td>
                   <td>级别</td>
                   <td colspan="2">
-                      <el-checkbox >高</el-checkbox>
-                      <el-checkbox >中</el-checkbox>
-                      <el-checkbox >初</el-checkbox>
+                    <el-checkbox-group v-model="data.rankType">  
+                      <el-checkbox label="高"></el-checkbox>
+                      <el-checkbox label="中"></el-checkbox>
+                      <el-checkbox label="低"></el-checkbox>
+                    </el-checkbox-group>
                   </td>
               </tr>
               <tr>
                   <td rowspan="2">修订书稿</td>
                   <td>原书名</td>
-                  <td colspan="5"></td>
+                  <td colspan="5">{{data.revisionBookname}}</td>
                   <td>原编著者</td>
-                  <td></td>
+                  <td>{{data.revisionAuthor}}</td>
               </tr>
               <tr>
                   <td>上版出版时间</td>
-                  <td colspan="3"></td>
+                  <td colspan="3">{{data.revisionPublishDate}}</td>
                   <td>累计印数</td>
-                  <td></td>
+                  <td>{{data.revisionPrint}}</td>
                   <td>库存数</td>
-                  <td></td>
+                  <td>{{data.revisionStock}}</td>
               </tr>
               <tr>
                   <td rowspan="2">翻译书稿</td>
                   <td>译稿原文名</td>
-                  <td colspan="8"></td>
+                  <td colspan="8">{{data.originalBookname}}</td>
               </tr>
               <tr>
                   <td>原著者</td>
-                  <td></td>
+                  <td>{{data.originalAuthor}}</td>
                   <td>国籍</td>
-                  <td></td>
+                  <td>{{data.nation}}</td>
                   <td>原出版者</td>
-                  <td></td>
+                  <td>{{data.originalPublisher}}</td>
                   <td>出版年代及版次</td>
-                  <td></td>
+                  <td>{{data.edition}}</td>
               </tr>
               <tr>
                   <td rowspan="6">作(译)者简况</td>
                   <td>主编姓名</td>
-                  <td></td>
+                  <td>{{data.realname}}</td>
                   <td>性别</td>
                   <td width="12.6%">
-                     <el-checkbox >男</el-checkbox>
-                     <el-checkbox >女</el-checkbox> 
+                     <el-radio class="radio" v-model="data.sex" :label="0">男</el-radio>
+                     <el-radio class="radio" v-model="data.sex" :label="1">女</el-radio> 
                   </td>
                   <td>年龄</td>
-                  <td></td>
+                  <td>{{data.price}}</td>
                   <td>行政职务</td>
-                  <td></td>
+                  <td>{{data.position}}</td>
               </tr>
               <tr>
                   <td>专业职务</td>
                   <td colspan="5">
-                    <el-checkbox >中科院院士</el-checkbox>
-                    <el-checkbox >工程院院士</el-checkbox>
-                    <el-checkbox >博导</el-checkbox>
-                    <el-checkbox >硕导</el-checkbox>
-                    <el-checkbox >男</el-checkbox>
-                    <el-checkbox >正高</el-checkbox>
-                    <el-checkbox >副高</el-checkbox>
-                    <el-checkbox >中级</el-checkbox>
+                   <el-checkbox-group v-model="data.positionProfessionName">   
+                    <el-checkbox label="中科院院士" ></el-checkbox>
+                    <el-checkbox label="工程院院士"></el-checkbox>
+                    <el-checkbox label="博导"></el-checkbox>
+                    <el-checkbox label="硕导"></el-checkbox>
+                    <el-checkbox label="男" ></el-checkbox>
+                    <el-checkbox label="正高"></el-checkbox>
+                    <el-checkbox label="副高"></el-checkbox>
+                    <el-checkbox label="中级"></el-checkbox>
+                   </el-checkbox-group> 
                   </td>
                   <td>学历</td>
                   <td>
-                      <el-checkbox >博士</el-checkbox>
-                      <el-checkbox >硕士</el-checkbox>
-                      <el-checkbox >学士</el-checkbox>
-                      <el-checkbox >其他</el-checkbox>
+                    <el-checkbox-group v-model="data.degreeName">  
+                      <el-checkbox label="博士"></el-checkbox>
+                      <el-checkbox label="硕士"></el-checkbox>
+                      <el-checkbox label="学士"></el-checkbox>
+                      <el-checkbox label="其他"></el-checkbox>
+                    </el-checkbox-group>
                   </td>
               </tr>
               <tr>
                   <td>工作单位</td>
-                  <td colspan="5"></td>
+                  <td colspan="5">{{data.workplace}}</td>
                   <td>电话</td>
-                  <td></td>
+                  <td>{{data.phone}}</td>
               </tr>
               <tr>
                   <td>通讯地址</td>
-                  <td colspan="3"></td>
+                  <td colspan="3">{{data.address}}</td>
                   <td>邮编</td>
-                  <td></td>
+                  <td>{{data.postcode}}</td>
                   <td>e-mail</td>
-                  <td></td>
+                  <td>{{data.email}}</td>
               </tr>
               <tr height="150px">
                   <td >主要专业成就及学术地位</td>
-                  <td colspan="7"></td>
+                  <td colspan="7">{{topicExtra.achievement}}</td>
+              </tr>
+              <tr height="100px">
+                  <td>写作、外语水平</td>
+                  <td colspan="7">{{topicExtra.ability}}</td>
               </tr>
               <tr>
-                  <td>写作、外语水平</td>
-                  <td colspan="7"></td>
+                  <td :rowspan="writerData.length+1">主要参编者</td>
+                  <td>姓名</td>
+                  <td>性别</td>
+                  <td>年龄</td>
+                  <td colspan="2">工作单位</td>
+                  <td>电话</td>
+                  <td >职务职称</td>
+                  <td>学历</td>
               </tr>
+              <tr height="36px" v-for="(item,index) in writerData" :key="index">
+                  <td>{{item.realname}}</td>
+                  <td>{{item.sex==0?'男':'女'}}</td>
+                  <td>{{item.price}}</td>
+                  <td colspan="2">{{item.workplace}}</td>
+                  <td>{{item.phone}}</td>
+                  <td>{{item.position}}</td>
+                  <td>{{item.degree}}</td>
+              </tr>
+              <tr>
+                 <td rowspan="6">读者情况及印制预测</td> 
+                 <td>预计读者及购买力</td>
+                 <td colspan="3">{{data.readerQuantity}}</td>
+                 <td>作者购书</td>
+                 <td colspan="3">{{data.purchase}}</td>
+              </tr>
+              <tr>
+                 <td>可能的宣传方式</td>
+                 <td colspan="3">{{data.campaign}}</td>
+                 <td>可能的销售渠道</td>
+                 <td colspan="3">{{data.salesChannel}}</td>
+              </tr>        
+              <tr>
+                 <td>图书生命周期</td>
+                 <td colspan="3">{{data.lifecycle}}</td>
+                 <td>作者赞助</td>
+                 <td colspan="3">{{data.sponsorship}}</td>
+              </tr>
+              <tr>
+                 <td>印刷、用纸建议</td>
+                 <td colspan="3">{{data.printAdvise}}</td>
+                 <td>定价建议</td>
+                 <td colspan="3">{{data.priceAdvise}}</td>
+              </tr>
+              <tr>
+                 <td>预计印数</td>
+                 <td colspan="3">{{data.printNumber}}</td>
+                 <td>成本估算</td>
+                 <td colspan="3">{{data.cost}}</td>
+              </tr>
+              <tr>
+                 <td>保底印数</td>
+                 <td colspan="3">{{data.minPrintNumber}}</td>
+                 <td>效益估算</td>
+                 <td colspan="3">{{data.benefit}}</td>
+              </tr>
+              <tr>
+                  <td>选题理由出版价值</td>
+                  <td colspan="8">{{topicExtra.reason}}</td>
+              </tr>
+              <tr>
+                  <td>主要内容与特色</td>
+                  <td colspan="8">{{topicExtra.score}}</td>
+              </tr>
+              <tr>
+                  <td :rowspan="topicSimilarBooks.length+1">外设同类书情况</td>
+                  <td>书名</td>
+                  <td>版次</td>
+                  <td>作者</td>
+                  <td>出版单位</td>                  
+                  <td>开本</td>
+                  <td>印数</td>
+                  <td>定价</td>
+                  <td>出版时间</td>
+              </tr>
+              <tr height="36px" v-for="(item,index) in topicSimilarBooks" :key="index">
+                  <td>{{item.bookname}}</td>
+                  <td>{{item.edition}}</td>
+                  <td>{{item.author}}</td>
+                  <td>{{item.pulisher}}</td>
+                  <td>{{item.booksize}}</td>
+                  <td>{{item.printNumber}}</td>
+                  <td>{{item.price}}</td>
+                  <td>{{item.publishDate}}</td>
+              </tr>                                 
           </table>
+            <el-form label-width="140px" :model="data" :rules="formRules"  class="form_box">
+                    <el-form-item
+                    label="选题会审核意见："
+                    prop="authFeedback"
+                    >
+                    <el-input type="textarea" v-if="type=='check'"  :rows="4" v-model="data.authFeedback"></el-input>
+                    <p v-else>{{data.authFeedback}}</p>
+                    </el-form-item>
+        </el-form>
        </div>
+   <div class="bottom_box marginB50">
+       <el-button type="primary" icon="arrow-left" @click="goBack">返回</el-button>
+       <!-- <el-button type="danger" v-if="type!='check'" :disabled="isAccepted || isEditorHandling">退回分配人</el-button> -->
+       <el-button type="primary" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(3)">通过</el-button>
+       <el-button type="danger" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
+   </div>       
     </div>
 </template>
 <script type="text/javascript">
@@ -164,6 +274,7 @@ export default {
       routerName: "",
       data: {},
       writerData: [],
+      topicSimilarBooks:[],
       topicExtra:{}, // 选题申报额外信息
       //	authFeedback: '',  // 审核意见
       isDirectorHandling: true, //是否由主任受理
@@ -201,6 +312,9 @@ export default {
             this.data.authFeedback?this.data.authFeedback:'';
             this.topicExtra = res.data.topicExtra || {};
             this.writerData = res.data.topicWriters;
+            this.topicSimilarBooks=res.data.topicSimilarBooks;
+            //this.data.sourceType=['社策划']
+            console.log(this.data);
           }
         });
     },
@@ -308,7 +422,7 @@ export default {
 }
 .table_box table{
     width:100%;
-    margin-top:10px;
+    margin:10px 0;
 }
 .table_box table td{
     border:1px solid rgb(209, 217, 229);
@@ -316,5 +430,10 @@ export default {
     box-sizing: border-box;
     line-height: 26px;
     text-align: center;
+}
+.new_deal_topic .bottom_box {
+  margin-left: 50%;
+  float: left;
+  transform: translateX(-50%);
 }
 </style>

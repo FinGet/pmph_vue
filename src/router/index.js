@@ -248,8 +248,8 @@ export default new Router({
           path: 'topic', name: '选题申报', component: SelectTopicRouter, meta: { replaceName: false,authorityId: 7}, children:[
             { path: 'exam', name: '选题申报审核', component: TopicExam, meta: { authorityId: 21 }},
             { path: 'check', name: '选题申报查看', component: TopicCheck, meta: { authorityId: 22 }},
-            { path: 'deal', name: '选题受理', component: dealTopic,meta: { authorityId: true }},
-            { path: 'newdeal', name: '选题受理改', component: newDealTopic, meta: { authorityId: true }}
+           /*  { path: 'deal', name: '选题受理', component: dealTopic,meta: { authorityId: true }}, */
+            { path: 'deal', name: '选题受理', component: newDealTopic, meta: { authorityId: true }}
 
          ]
         },
