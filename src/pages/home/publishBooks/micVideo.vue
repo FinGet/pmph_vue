@@ -55,10 +55,11 @@
                 {{scope.row.state==1?'待审核':(scope.row.state==2?'未通过':'已通过')}}
               </template>
           </el-table-column>
-          <el-table-column label="操作" width="110">
+          <el-table-column label="操作" width="150">
               <template scope="scope">
                <a  style="color:#337ab7;margin-right:5px;" :href="videoDownLoad(scope.row)">下载</a>
                <el-button type="text" style="color:#337ab7;" @click="examVideo(scope.row)">审核</el-button>
+               <el-button type="text" style="color:#337ab7;" @click="deleteVideo(scope.row)">删除</el-button>
               </template>
           </el-table-column>
       </el-table>
@@ -170,6 +171,7 @@
         data(){
             return{
               videoListUrl:'/pmpheep/bookVideo/getVideoList',  //视频列表url
+              deleteVideoUrl:'/pmpheep/bookVideo/deleteBookVideo',   //删除微视频
               examVideoUrl:'/pmpheep/bookVideo/audit', //  审核视频url
               dialogBookUrl:'/pmpheep/books/list',      //书籍列表
               addNewVideoUrl:'/pmpheep/bookVideo/addBookVideo',   //添加提交视频url
@@ -313,6 +315,29 @@
                   this.$message.error(res.data.msg.msgTrim());
               }
           })
+         },
+         /* 删除微视频 */
+         deleteVideo(obj){
+             
+                this.$confirm('确定删除微视频：<'+obj.title+'>?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                  this.$axios.put(this.deleteVideoUrl,this.$commonFun.initPostData({
+                      id:obj.id
+                  })).then((res)=>{
+                      if(res.data.code==1){
+                          this.$message.success('删除成功');
+                          this.getList();
+                      }
+                  })
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+                });
          },
          /* 添加上传视频图片 */
          imgUploadRemove(file, fileList){
