@@ -161,7 +161,7 @@
                   <td colspan="7">{{topicExtra.ability}}</td>
               </tr>
               <tr>
-                  <td :rowspan="writerData.length+1">主要参编者</td>
+                  <td :rowspan="writerData.length==0?2:writerData.length+1">主要参编者</td>
                   <td>姓名</td>
                   <td>性别</td>
                   <td>年龄</td>
@@ -178,6 +178,15 @@
                   <td>{{item.phone}}</td>
                   <td>{{item.position}}</td>
                   <td>{{item.degree}}</td>
+              </tr>
+              <tr height="36px" v-if="writerData.length==0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td colspan="2"></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
               </tr>
               <tr>
                  <td rowspan="6">读者情况及印制预测</td> 
@@ -225,7 +234,7 @@
                   <td colspan="8">{{topicExtra.score}}</td>
               </tr>
               <tr>
-                  <td :rowspan="topicSimilarBooks.length+1">外设同类书情况</td>
+                  <td :rowspan="topicSimilarBooks.length==0?2:topicSimilarBooks.length+1">外设同类书情况</td>
                   <td>书名</td>
                   <td>版次</td>
                   <td>作者</td>
@@ -244,6 +253,16 @@
                   <td>{{item.printNumber}}</td>
                   <td>{{item.price}}</td>
                   <td>{{item.publishDate}}</td>
+              </tr>
+              <tr height="36px" v-if="topicSimilarBooks.length==0" >
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
               </tr>                                 
           </table>
             <el-form label-width="140px" :model="data" :rules="formRules"  class="form_box">
