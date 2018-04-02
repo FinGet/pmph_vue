@@ -792,7 +792,8 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
+           // let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
+            let l = [0,2,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
               return !l;
             }
