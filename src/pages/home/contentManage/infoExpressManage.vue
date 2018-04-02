@@ -118,9 +118,9 @@
                 >
                 <template scope="scope">
                     <el-button type="text" @click="contentDetail(scope.row)">查看</el-button>
-                    <el-button type="text"   @click="editContent(scope.row)">修改</el-button>
-                    <el-button type="text" v-if="!scope.row.isPublished"  @click="tablePublishSubmit(scope.row,true)">发布</el-button>
-                    <el-button type="text" v-if="scope.row.isPublished"  @click="tablePublishSubmit(scope.row,false)">撤销</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1"   @click="editContent(scope.row)">修改</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1" v-if="!scope.row.isPublished"  @click="tablePublishSubmit(scope.row,true)">发布</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1" v-if="scope.row.isPublished"  @click="tablePublishSubmit(scope.row,false)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>
