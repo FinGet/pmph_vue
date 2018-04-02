@@ -19,7 +19,7 @@
                   <td width="8.4%" >选题名称</td>
                   <td colspan="5">{{data.bookname}}</td>
                   <td width="8.4%" >读者对象</td>
-                  <td width="20%" colspan="2">{{data.reader}}</td>
+                  <td width="20%" colspan="2">{{data.readType}}</td>
               </tr>
               <tr>
                   <td width="8.4%">选题来源</td>
@@ -252,7 +252,7 @@
                   <td>{{item.booksize}}</td>
                   <td>{{item.printNumber}}</td>
                   <td>{{item.price}}</td>
-                  <td>{{item.publishDate}}</td>
+                  <td>{{$commonFun.formatDate(item.publishDate,'yyyy-MM-dd')}}</td>
               </tr>
               <tr height="36px" v-if="topicSimilarBooks.length==0" >
                   <td></td>

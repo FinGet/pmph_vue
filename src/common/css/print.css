@@ -1,37 +1,42 @@
-@media print{
-  .print-none{display: none !important;}
-  html,body{
-    max-width: 1366px;
-  }
-  html, body,.app-wrapper,.app-main,.app-main-inner{
-    height: auto !important;
-    width: auto !important;
-  }
-  .sidebar-wrapper,.controlSideBarBtn,.nav-top,.tab_nav_outbox,.header_title_tips{
-    display: none !important;
-  }
-  .app-main{
-    margin:0 !important;
-    padding: 0 !important;
-    overflow-y: auto !important;
-  }
-  .bottom_tab_content{
-    border: none !important;
-    padding: 0;
-    width: auto;
-  }
-
-
-  /*重置表格样式*/
-
-
-  /* 专家信息页面 */
-  .expert_info{
-    zoom: 1;
-    font-size: 16px;
-    width:1220px;
-  }
-
-
+@media print {
+    .print-none {
+        display: none !important;
+    }
+    html,
+    body {}
+    html,
+    body,
+    .app-wrapper,
+    .app-main,
+    .app-main-inner {
+        height: auto !important;
+        width: auto !important;
+    }
+    .sidebar-wrapper,
+    .controlSideBarBtn,
+    .nav-top,
+    .tab_nav_outbox,
+    .header_title_tips {
+        display: none !important;
+    }
+    .app-main {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+    }
+    .bottom_tab_content {
+        border: none !important;
+        padding: 0;
+        width: auto;
+    }
+    /*重置表格样式*/
+    /* 专家信息页面 */
+    .expert_info {
+        zoom: 1;
+        font-size: 16px;
+        width: 1160px;
+    }
+    .expert-info-box {
+        width: 1160px;
+    }
 }
-
