@@ -3,9 +3,7 @@
         display: none !important;
     }
     html,
-    body {
-        width: 1220px;
-    }
+    body {}
     html,
     body,
     .app-wrapper,
@@ -36,6 +34,9 @@
     .expert_info {
         zoom: 1;
         font-size: 16px;
-        width: 1220px;
+        width: 1160px;
+    }
+    .expert-info-box {
+        width: 1160px;
     }
 }

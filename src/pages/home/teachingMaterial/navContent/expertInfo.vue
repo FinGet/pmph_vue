@@ -1189,7 +1189,6 @@
         print(){
 //          console.log(this.materialInfo);
           document.title = this.materialInfo.materialName;
-          this.$commonFun.pagesetup_null();
           window.print();
           return false;
         },
