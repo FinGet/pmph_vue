@@ -35,7 +35,6 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        wechatUserId:'',
         token:'',
       },
       loginRules: {
@@ -71,7 +70,7 @@ export default {
           _this.$mySessionStorage.set('currentUser',res.data.data,'json');
           _this.$message.success('登录成功');
           //将session放到cookie里
-          
+
           _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
           _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
           _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
@@ -85,11 +84,9 @@ export default {
     },
   },
   created(){
-    let wechatUserId = this.$route.query.wechatUserId||'';
     let username = this.$route.query.username||'';
     let password = this.$route.query.password||'';
     let token = this.$route.query.token||'';
-    this.loginForm.wechatUserId=wechatUserId;
     this.loginForm.username=username;
     this.loginForm.password=password;
     this.loginForm.token=token;
