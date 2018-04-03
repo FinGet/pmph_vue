@@ -36,6 +36,7 @@ export default {
       loginForm: {
         username: '',
         password: '',
+        wechatUserId:'',
         token:'',
       },
       loginRules: {
@@ -85,11 +86,13 @@ export default {
     },
   },
   created(){
+    let wechatUserId = this.$route.query.wechatUserId||'';
     let username = this.$route.query.username||'';
     let password = this.$route.query.password||'';
     let token = this.$route.query.token||'';
     this.loginForm.username=username;
     this.loginForm.password=password;
+    this.loginForm.wechatUserId=wechatUserId;
     this.loginForm.token=token;
     if(this.loginForm.username&&this.loginForm.password&&this.loginForm.token){
       this.loginBySSO = true;//设置个标识位，预留自动登录体验效果优化字段（如加loading,隐藏原有登录dom元素等）
