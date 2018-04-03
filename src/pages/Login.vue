@@ -32,6 +32,7 @@ export default {
     return {
       loginUrl:'/pmpheep/pmph/login',
       from:null,
+      loginBySSO:false,
       loginForm: {
         username: '',
         password: '',
@@ -91,6 +92,7 @@ export default {
     this.loginForm.password=password;
     this.loginForm.token=token;
     if(this.loginForm.username&&this.loginForm.password&&this.loginForm.token){
+      this.loginBySSO = true;//设置个标识位，预留自动登录体验效果优化字段（如加loading,隐藏原有登录dom元素等）
       this.doLogin();
     }
   },
