@@ -13,6 +13,7 @@ import axios from 'axios'
 
 
 
+
 /*全局方法和配置挂载*/
 import * as config from 'common/config';
 import * as commonFun from './common/js/commonFun.js'
@@ -62,7 +63,11 @@ router.beforeEach((to, from, next) => {
   var userdata = getUserData();
   if (to.path != '/login'&&to.name!='404') {  // 判断是否登录
     if (!userdata.userInfo) {
-      next('/login')
+      if(config.IS_DEBUG){
+        next('/login')
+      }else{
+        window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
+      }
     }
     else if (commonFun.authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
       next();
@@ -111,7 +116,11 @@ axios.interceptors.response.use(function (response) {
   //对返回的数据进行一些处理
   if (response.data.code == 30 ){
     ElementUI.Message.error('当前登录已过期，请重新登录');
-    router.push({name:'登录',query:{f:currentLocation}});
+    if(config.IS_DEBUG){
+      router.push({name:'登录',query:{f:currentLocation}});
+    }else{
+      window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
+    }
   }
   return response;
 }, function (error) {
