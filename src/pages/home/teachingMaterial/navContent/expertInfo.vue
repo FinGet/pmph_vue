@@ -7,7 +7,7 @@
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
-        <!--</el-button>-->
+        <!--</el-button> &&expertInfoData.onlineProgress===1-->
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||(expertInfoData.orgId!=0)" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
@@ -1189,6 +1189,7 @@
         print(){
 //          console.log(this.materialInfo);
           document.title = this.materialInfo.materialName;
+
           window.print();
           return false;
         },
