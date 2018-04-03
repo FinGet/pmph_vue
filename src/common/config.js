@@ -17,4 +17,6 @@ export let BASE_URL = 'http://'+host+'/pmpheep/';
 export let DEFAULT_USER_IMAGE = 'http://'+host+'/static/default_image.png';
 export let DEFAULT_BASE_URL = 'http://'+host;
 //请求教材图片根路径地址
-export let teachPicUrl ='http://192.168.100.135'
+export let teachPicUrl ='http://192.168.100.135';
+
+export let IS_DEBUG = !host.includes('120.76.221.250');

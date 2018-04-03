@@ -32,6 +32,7 @@ export default {
     return {
       loginUrl:'/pmpheep/pmph/login',
       from:null,
+      loginBySSO:false,
       loginForm: {
         username: '',
         password: '',
@@ -71,7 +72,7 @@ export default {
           _this.$mySessionStorage.set('currentUser',res.data.data,'json');
           _this.$message.success('登录成功');
           //将session放到cookie里
-          
+
           _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
           _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
           _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
@@ -89,11 +90,12 @@ export default {
     let username = this.$route.query.username||'';
     let password = this.$route.query.password||'';
     let token = this.$route.query.token||'';
-    this.loginForm.wechatUserId=wechatUserId;
     this.loginForm.username=username;
     this.loginForm.password=password;
+    this.loginForm.wechatUserId=wechatUserId;
     this.loginForm.token=token;
     if(this.loginForm.username&&this.loginForm.password&&this.loginForm.token){
+      this.loginBySSO = true;//设置个标识位，预留自动登录体验效果优化字段（如加loading,隐藏原有登录dom元素等）
       this.doLogin();
     }
   },
