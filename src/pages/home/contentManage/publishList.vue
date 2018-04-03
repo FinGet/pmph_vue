@@ -137,10 +137,10 @@
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->
                     <el-button type="text" @click="contentDetail(scope.row)">查看</el-button>
-                    <el-button type="text" @click="editContent(scope.row)">编辑</el-button>
-                    <el-button type="text" v-if="scope.row.authStatus!=1"  @click="examineContent(scope.row,1)">退回</el-button>
-                    <el-button type="text" v-if="scope.row.authStatus!=2"  @click="examineContent(scope.row,2)">发布</el-button>
-                    <el-button type="text" v-if="scope.row.authStatus!=0"  @click="examineContent(scope.row,0)">撤销</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1"  @click="editContent(scope.row)">编辑</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1"  v-if="scope.row.authStatus!=1"  @click="examineContent(scope.row,1)">退回</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1" v-if="scope.row.authStatus!=2"  @click="examineContent(scope.row,2)">发布</el-button>
+                    <el-button type="text" :disabled="scope.row.authStatus==1" v-if="scope.row.authStatus!=0"  @click="examineContent(scope.row,0)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
                 </template>

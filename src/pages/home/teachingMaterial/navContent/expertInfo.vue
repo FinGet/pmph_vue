@@ -7,8 +7,8 @@
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
-        <!--</el-button>-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <!--</el-button> &&expertInfoData.onlineProgress===1-->
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back||(expertInfoData.orgId!=0)" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
@@ -747,7 +747,7 @@
               hasBookListChanged:false,
               showSendMsg:false,
               inputMsg:'',
-              rankList:['无','国际','国家','省部','其他'],
+              rankList:['无','国际','国家','省部','市'],
               national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
               courseConstructionList:['无','国际','国家','省部'],
@@ -792,7 +792,8 @@
             return flag;
           },
           onlineProgressBtn_Back(){
-            let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
+           // let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
+            let l = [0,2,5].includes(this.expertInfoData.onlineProgress);
             if(this.addBookList.length==0){
               return !l;
             }
@@ -1188,7 +1189,7 @@
         print(){
 //          console.log(this.materialInfo);
           document.title = this.materialInfo.materialName;
-          this.$commonFun.pagesetup_null();
+
           window.print();
           return false;
         },
