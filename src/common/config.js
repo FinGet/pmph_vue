@@ -19,4 +19,4 @@ export let DEFAULT_BASE_URL = 'http://'+host;
 //请求教材图片根路径地址
 export let teachPicUrl ='http://120.76.221.250';
 
-export let IS_DEBUG = !host.includes('120.76.221.250');
+export let IS_DEBUG = !host.includes('192.168.100.135');
