@@ -795,18 +795,19 @@
           onlineProgressBtn_Back(){
            // let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
             let l = [0,2,5].includes(this.expertInfoData.onlineProgress);
-            if(this.addBookList.length==0){
-              return !l;
-            }
-            let flag = true;
-            console.log(this.addBookList);
-            for(let iterm of this.addBookList){
-              if(iterm.isDigitalEditor||iterm.chosenPosition){
-                flag = false;
-                break;
-              };
-            }
-            return flag&&!l;
+//            if(this.addBookList.length==0){
+  //            return !l;
+    //        }
+          //  let flag = true;
+           // console.log(this.addBookList);
+           // for(let iterm of this.addBookList){
+          //    if(iterm.isDigitalEditor||iterm.chosenPosition){
+          //      flag = false;
+        //        break;
+         //     };
+       //     }
+          //  return flag&&!l;
+          return !l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3,4,5];
