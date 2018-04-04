@@ -28,7 +28,7 @@
      </el-table-column>
      <el-table-column
       label="作者"
-      prop="realName"
+      prop="submitName"
       width="100"
      >
      </el-table-column>
