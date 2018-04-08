@@ -138,7 +138,7 @@ export default new Router({
             { path: 'materials', name: '通知列表', component: ApplicationList, meta: { replaceName: false } },
             {
               path: 'materialnav/:materialId', name: '书目列表', component: ApplicationNav, meta: { replaceName: false }, children: [
-                { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '职位遴选' } },
+                { path: '1v3', name: '主任视图', component: BooksSelect_1v3, meta: { applicationName: '1v3', replaceName: '遴选' } },
                 { path: 'result', name: '结果统计', component: Result, meta: { applicationName: 'result' } },
                 { path: 'presscheck', name: '申报表审核', component: PressCheck, meta: { applicationName: 'presscheck', replaceName: false } },
                 { path: 'presscheck-pmph', name: '提交到出版社', component: PressCheck_pmph, meta: { applicationName: 'presscheck-pmph' } },

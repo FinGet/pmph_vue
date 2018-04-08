@@ -58,7 +58,7 @@ export function authorityComparison(matchArr, userArr) {
     return result;
 }
 /* 教材申报权限判断 */
-export function materialPower(num,powerList) {
+  export function materialPower(num,powerList) {
   if(!powerList||!(Object.prototype.toString.call(powerList)=='[object Array]'||(typeof powerList).toLowerCase()=='string')){
     return false;
   }

@@ -325,7 +325,7 @@
             <tr>
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版单位</div></th>
               <th><div>出版时间</div></th>
               <th><div>备注</div></th>
@@ -399,7 +399,7 @@
               <th><div>教材名称</div></th>
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
@@ -429,7 +429,7 @@
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
               <th><div>出版社</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
