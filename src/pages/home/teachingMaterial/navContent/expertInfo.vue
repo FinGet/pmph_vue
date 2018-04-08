@@ -7,10 +7,11 @@
         <el-button type="primary" @click="showSendMsg=true">发送私信</el-button>
         <!--<el-button type="primary" @click="confirmPaperList" :disabled="expertInfoData.offlineProgress!=0">-->
           <!--{{expertInfoData.offlineProgress==0?'确认收到纸质表':(expertInfoData.offlineProgress==1)?'纸质表已被退回':'已确认收到纸质表'}}-->
-        <!--</el-button> &&expertInfoData.onlineProgress===1-->
-        <el-button type="primary" :disabled="!onlineProgressBtn_Back||(expertInfoData.orgId!=0)" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
+        <!--</el-button>expertInfoData.orgId!=0 &&expertInfoData.onlineProgress===1-->
+        <el-button type="primary" :disabled="!onlineProgressBtn_Back" @click="setOnlineCheckPassType(5)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给个人
         </el-button>
+        <!--||expertInfoData.orgId===0||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)-->
         <el-button type="primary" :disabled="!onlineProgressBtn_Back||expertInfoData.orgId===0||(expertInfoData.orgId!=0&&expertInfoData.onlineProgress===1)" @click="setOnlineCheckPassType(4)" v-if="(expertInfoData.orgId!=0)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">
           退回给学校
         </el-button>
@@ -324,7 +325,7 @@
             <tr>
               <th><div>教材名称</div></th>
               <th><div>职务</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版单位</div></th>
               <th><div>出版时间</div></th>
               <th><div>备注</div></th>
@@ -398,7 +399,7 @@
               <th><div>教材名称</div></th>
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
@@ -428,7 +429,7 @@
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
               <th><div>出版社</div></th>
-              <th><div>是否数字编委</div></th>
+              <th><div>数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
@@ -794,17 +795,19 @@
           onlineProgressBtn_Back(){
            // let l = [0,2,4,5].includes(this.expertInfoData.onlineProgress);
             let l = [0,2,5].includes(this.expertInfoData.onlineProgress);
-            if(this.addBookList.length==0){
-              return !l;
-            }
-            let flag = true;
-            for(let iterm of this.addBookList){
-              if(iterm.isDigitalEditor||iterm.chosenPosition){
-                flag = false;
-                break;
-              };
-            }
-            return flag&&!l;
+//            if(this.addBookList.length==0){
+  //            return !l;
+    //        }
+          //  let flag = true;
+           // console.log(this.addBookList);
+           // for(let iterm of this.addBookList){
+          //    if(iterm.isDigitalEditor||iterm.chosenPosition){
+          //      flag = false;
+        //        break;
+         //     };
+       //     }
+          //  return flag&&!l;
+          return !l;
           },
           onlineProgressBtn_Pass(){
             var l = [0,2,3,4,5];
@@ -1210,7 +1213,8 @@
             .then(response=>{
               var res = response.data;
               if(res.code==1){
-                this.expertInfoData.onlineProgress=type;
+                this.$set(this.expertInfoData,"onlineProgress",type);
+                //this.expertInfoData.onlineProgress=type;
                 this.closeOfflineProgress();
                 this.$message.success(type==3?'已通过！':'已退回！')
               }else{
