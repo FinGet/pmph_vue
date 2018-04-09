@@ -7,7 +7,9 @@
 let host = window.location.host;
 
 //默认api请求头地址
+
 export let BASE_WS_URL = 'ws://39.107.80.79/pmpheep/';
+
 export let BASE_URL = 'http://'+host+'/pmpheep/';
 //
 // export const BASE_WS_URL = 'ws://192.168.200.126:8090/pmpheep/';
