@@ -42,6 +42,13 @@
                     </p>
                 </template>
             </el-table-column>
+          <el-table-column label="发布日期" width="122">
+            <template scope="scope">
+              <p>
+                {{scope.row.gmtCreate}}
+              </p>
+            </template>
+          </el-table-column>
             <el-table-column label="创建人" width="80">
                 <template scope="scope">
                     <p>
@@ -186,6 +193,7 @@ export default {
               res.data.rows.map(iterm=>{
                 iterm.actualDeadline = this.$commonFun.formatDate(iterm.actualDeadline).split(' ')[0];
                 iterm.deadline = this.$commonFun.formatDate(iterm.deadline).split(' ')[0];
+                iterm.gmtCreate = this.$commonFun.formatDate(iterm.gmtCreate).split(' ')[0];
               });
               this.tableData = res.data.rows;
             }
