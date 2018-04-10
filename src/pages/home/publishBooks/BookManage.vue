@@ -618,6 +618,7 @@
             var res = response.data;
             if(res.code==1){
               this.materialList = res.data;
+              console.log(this.materialList);
             }
           })
           .catch(e=>{
