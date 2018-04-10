@@ -348,6 +348,7 @@ export default {
       editContentUrl: "/pmpheep/cms/content/", //修改查询url
       deleteContentUrl: "/pmpheep/cms/content/", //删除内容url
       examineUrl: "/pmpheep/cms/content/check", //审核内容
+      backUrl:'/pmpheep/cms/content/update',
       commentListUrl:'/pmpheep/cms/comments',         //评论列表url
       syncGetUrl:'/pmpheep/cms/wechat/article/getArticle',         //同步地址url
       syncGetDetailUrl:'/pmpheep/cms/wechat/article/synchro',          //获取稿件详情detail
@@ -677,7 +678,7 @@ export default {
         }).then(({ value }) => {
               this.$axios
                 .put(
-                  this.examineUrl,
+                  this.backUrl,
                   this.$commonFun.initPostData({
                     id: obj.id,
                     returnReason:value,
