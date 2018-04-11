@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <script id="editor" type="text/plain" ref="editor"></script>
+    <script id="editor" type="text/plain" ref="editor" ></script>
   </div>
 </template>
 <script>
@@ -37,10 +37,12 @@
       const _this = this;
       this.editor = UE.getEditor('editor', this.editorConfig); // 初始化UE
       this.editor.addListener("ready", function () {
+
         if(_this.defaultMsg){
           _this.editor.setContent(_this.defaultMsg);
         }
         _this.editorHasReady=true;
+        _this.setHeight(400); //设置ue的固定高度
         _this.$emit('editor_ready');
       });
     },
@@ -77,5 +79,6 @@
 <style scoped>
 .editor{
   line-height: 1;
+  height:auto !important;height:600px;
 }
 </style>
