@@ -286,7 +286,7 @@
        * @param row
        */
       handleState(id, row) {
-        this.$router.push({path:'messagestate', query: {msgId: row.msgId}})  //将你的跳转写在这里。
+        this.$router.push({path:'messagestate', query: {msgId: row.msgId,senderId:row.senderId}})  //将你的跳转写在这里。
       },
       /**
        * 点击消息标题进入消息详情页面
