@@ -42,7 +42,7 @@
                     </p>
                 </template>
             </el-table-column>
-          <el-table-column label="发布日期" width="122">
+          <el-table-column label="发布日期" width="110">
             <template scope="scope">
               <p>
                 {{scope.row.gmtCreate}}
@@ -56,7 +56,14 @@
                     </p>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人" width="210">
+         <!-- <el-table-column label="创建部门" width="80">
+            <template scope="scope">
+              <p>
+                {{scope.row.dpName}}
+              </p>
+            </template>
+          </el-table-column>-->
+            <el-table-column label="联系人" width="120">
                 <template scope="scope">
                   <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>

@@ -255,7 +255,7 @@
                 </el-input>
               </el-col>
             </el-form-item>
-                <el-form-item label="上传图片：" prop="noticeFiles">
+                <el-form-item label="上传通知扫描图片：" prop="noticeFiles">
                   <my-upload
                     class="upload"
                     :auto-upload="true"
@@ -623,7 +623,7 @@ export default {
           {min:1,max:100,message:'不能超过100个字符',trigger:'change,blur'}
         ],
         noticeFiles:[
-          {type:'array',required: true, message: "请至少上传一张图片", trigger: "blur" },
+          {type:'array',required: false, message: "请至少上传一张图片", trigger: "blur" },
         ],
         noteFiles:[
           {type:'array',required: true, message: "请至少上传一个文件", trigger: "blur" },
@@ -676,11 +676,11 @@ export default {
     this.getBookType();
   },
   mounted () {
-    document.onkeydown = function() {   
-      if(window.event.keyCode==13) {   
-  
-      }   
-      } 
+    document.onkeydown = function() {
+      if(window.event.keyCode==13) {
+
+      }
+      }
   },
   methods: {
           /**
