@@ -12,7 +12,8 @@
                 <el-option label="全部" value=""></el-option>
                 <el-option label="已发布" value="已发布"></el-option>
                 <el-option label="未发布" value="未发布"></el-option>
-                <el-option label="已结束" value="已结束"></el-option>
+                <el-option label="遴选已结束" value="遴选已结束"></el-option>
+                <el-option label="报名已结束" value="报名已结束"></el-option>
             </el-select>
             <el-button type="primary" class="button" icon="search" @click="handleSearchCLick">搜索</el-button>
             <el-checkbox v-model="searchForm.isMy" class="check" @change="handleSearchCLick">仅查看我的</el-checkbox>
@@ -24,7 +25,7 @@
         <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper" stripe border>
             <!--<el-table-column type="selection" width="55">-->
             <!--</el-table-column>-->
-            <el-table-column label="教材名称">
+            <el-table-column label="教材名称" width="100">
                 <template scope="scope">
                     <el-button type="text" style="color:#337ab7;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
                     <p v-else>{{scope.row.materialName}}</p>
@@ -56,14 +57,14 @@
                     </p>
                 </template>
             </el-table-column>
-         <!-- <el-table-column label="创建部门" width="80">
+          <el-table-column label="创建部门" width="100">
             <template scope="scope">
               <p>
                 {{scope.row.dpName}}
               </p>
             </template>
-          </el-table-column>-->
-            <el-table-column label="联系人" width="120">
+          </el-table-column>
+            <el-table-column label="联系人" width="100">
                 <template scope="scope">
                   <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
@@ -73,7 +74,7 @@
                   </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="80">
+            <el-table-column prop="status" label="状态" width="70">
                 <template scope="scope">
                     {{scope.row.state}}
                 </template>

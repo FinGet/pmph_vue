@@ -423,7 +423,7 @@
         handleExportWordtimer:null,
         downloadWordDialog:false,
         wordUrl:'',
-        stateList:['未提交','待审核','被退回','已审核','待审核','被退回'],
+        stateList:['未提交','待审核','被学校退回','已审核','待审核','被出版社退回'],
         noWatchFirst:false,//做浏览记录 第一次watch不生效
       }
     },
