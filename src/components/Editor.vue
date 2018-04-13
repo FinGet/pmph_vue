@@ -42,7 +42,7 @@
           _this.editor.setContent(_this.defaultMsg);
         }
         _this.editorHasReady=true;
-        _this.setHeight(400); //设置ue的固定高度
+        //_this.setHeight(400); //设置ue的固定高度
         _this.$emit('editor_ready');
       });
     },
