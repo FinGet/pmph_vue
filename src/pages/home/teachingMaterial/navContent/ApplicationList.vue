@@ -10,10 +10,10 @@
             <span style="margin-left:25px;">状态：</span>
             <el-select v-model="searchForm.state" class="select_input" @change="handleSearchCLick" style="float:none;" placeholder="全部">
                 <el-option label="全部" value=""></el-option>
+              <el-option label="未发布" value="未发布"></el-option>
                 <el-option label="已发布" value="已发布"></el-option>
-                <el-option label="未发布" value="未发布"></el-option>
-                <el-option label="遴选已结束" value="遴选已结束"></el-option>
-                <el-option label="报名已结束" value="报名已结束"></el-option>
+                <el-option label="报名结束" value="报名结束"></el-option>
+              <el-option label="遴选结束" value="遴选结束"></el-option>
             </el-select>
             <el-button type="primary" class="button" icon="search" @click="handleSearchCLick">搜索</el-button>
             <el-checkbox v-model="searchForm.isMy" class="check" @change="handleSearchCLick">仅查看我的</el-checkbox>
@@ -22,21 +22,21 @@
             </router-link>
         </p>
 
-        <el-table :data="tableData" style="width: 100%" class="table_list table-wrapper" stripe border>
+        <el-table :data="tableData" style="width:100%" class="table_list table-wrapper" stripe border>
             <!--<el-table-column type="selection" width="55">-->
             <!--</el-table-column>-->
-            <el-table-column label="教材名称" width="100">
+            <el-table-column label="教材名称">
                 <template scope="scope">
-                    <el-button type="text" style="color:#337ab7;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
+                    <el-button type="text" style="color:#337ab7;white-space: normal;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="122">
+            <el-table-column label="显示结束日期" width="110" >
                 <template scope="scope">
                     <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="122">
+            <el-table-column label="实际结束日期" width="110">
                 <template scope="scope">
                     <p>
                         {{scope.row.actualDeadline}}
@@ -64,7 +64,7 @@
               </p>
             </template>
           </el-table-column>
-            <el-table-column label="联系人" width="100">
+            <el-table-column label="联系人" >
                 <template scope="scope">
                   <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
@@ -285,7 +285,7 @@ export default {
             this.$router.push({name:'通知详情',params:{materialId:materialData.id,type:'reEdit'}});
             break;
           case 'msgState':
-            this.$router.push({name:'消息状态',query:{materialId:materialData.id}});
+            this.$router.push({name:'消息状态',query:{materialId:materialData.id,senderId:materialData.founderId}});
             break;
           case 'setBookList':
             this.$router.push({name:'设置书目录',params:{materialId:materialData.id}});
@@ -385,6 +385,10 @@ export default {
 
 .header_search_p .right_button {
     float: right;
+}
+
+.table_list p{
+  text-align: center;
 }
 
 .table_list .contact_p {

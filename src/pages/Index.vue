@@ -42,12 +42,12 @@
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">教材申报</p>
           <el-tabs v-model="activeName1" @tab-click="materialListChange">
             <el-tab-pane label="全部" name="first">
-              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0" style="position: relative;height: 248px;">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading">
+                <li class="panel-more-btn" v-if="!materialList.last && !materialList.loading" style="position: absolute;bottom: 0;left:40%;">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -57,12 +57,12 @@
               <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
             <el-tab-pane label="已发布" name="second">
-              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0" style="position: relative;height: 248px;">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="!materialList.last">
+                <li class="panel-more-btn" v-if="!materialList.last" style="position: absolute;bottom: 0; left:40%;">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -71,13 +71,13 @@
               </ul>
               <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
-            <el-tab-pane label="已结束" name="fourth">
+            <el-tab-pane label="已结束" name="fourth" style="position: relative;height: 248px;">
               <ul class="panel-min-list" v-if="materialList.rows.length!=0">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="!materialList.last">
+                <li class="panel-more-btn" v-if="!materialList.last" style="position: absolute;bottom: 0;left:40%;">
                   <router-link :to="{name:'通知列表'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -92,7 +92,7 @@
       <li>
         <div>
           <p class="fontsize-lg fontBold panel-title paddingR30">小组</p>
-          <div class="panel-iterm" >
+          <div class="panel-iterm" style="height:263px;position: relative;">
             <!--小组头像-->
             <router-link class="groupHead"
                          :to="{name:'小组管理'}"
@@ -112,7 +112,7 @@
                 <span class="lastMessageTime">{{$commonFun.getDateDiff(item.gmtLastMessage)}}</span>
               </div>
             </router-link>
-            <div class="panel-more-btn" v-if="groupList.total>4&&groupList.rows.length!=0">
+            <div class="panel-more-btn" v-if="groupList.total>4&&groupList.rows.length!=0" style="position: absolute;bottom: 4px;left:40%;">
               <router-link :to="{name:'小组管理'}">
                 查看更多
                 <i class="el-icon-d-arrow-right"></i>
@@ -184,7 +184,7 @@
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first" >
               <ul class="panel-min-list" v-if="cmsContent.rows.length!=0&&(isShowSide(5)||isShowSide(15))">
-                <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size">
+                <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
                 <li class="panel-more-btn" v-if="cmsContent.total>limit_size">
@@ -198,7 +198,7 @@
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
               <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0&&(isShowSide(8)||isShowSide(23))">
-                <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis">
+                <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》</router-link>
                 </li>
                 <li class="panel-more-btn" v-if=" bookCorrectionAudit.total>limit_size">
@@ -212,7 +212,7 @@
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
               <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0&&(isShowSide(6)||isShowSide(20))">
-                <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis">
+                <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'评论审核',params:{bookname:iterm.bookname,isLong:iterm.isLong}}"><p class="comment">《{{iterm.bookname}}》：<span v-html="iterm.content"></span></p></router-link>
                 </li>
                 <li class="panel-more-btn" v-if="bookUserComment.total>limit_size">
