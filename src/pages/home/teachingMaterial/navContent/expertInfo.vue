@@ -1314,7 +1314,7 @@
   .expert-info-box .info-box-title{
     display: inline-block;
     padding: 0 20px;
-    background: #c8ceb2;
+    background: #1A806B;
     color:#fff;
   }
   .expert-info-box .info-box-title.operation{
