@@ -148,11 +148,11 @@
             </el-tab-pane>
             <el-tab-pane label="进行中" name="second">
               <ul class="panel-min-list"  v-if="topicList.rows.length!=0">
-                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size&&iterm.state!='通过'&&iterm.state!='不通过'">
+                <li v-for="(iterm,index) in topicListing.rows" :key="index" v-if="index<limit_size&&iterm.state!='通过'&&iterm.state!='不通过'">
                   <el-tag type="success" >{{iterm.state}}</el-tag>
                   <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'first'}}">{{iterm.bookname}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                <li class="panel-more-btn" v-if="topicing>limit_size">
                   <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核'}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -163,11 +163,11 @@
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
               <ul class="panel-min-list" v-if="topicList.rows.length!=0">
-                <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="iterm.state=='不通过'||iterm.state=='通过'">
+                <li v-for="(iterm,index) in topicListEnd.rows" :key="index" v-if="index<limit_size&&(iterm.state=='不通过'||iterm.state=='通过')">
                   <el-tag :type="iterm.state=='不通过'?'gray':'success'" >{{iterm.state}}</el-tag>
                   <router-link :to="{name:'选题申报查看',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
                 </li>
-                <li class="panel-more-btn" v-if="topicList.total>limit_size">
+                <li class="panel-more-btn" v-if="topicEnd>limit_size">
                   <router-link :to="{name:'选题申报查看',params:{searchInput:'',activeIndex:'second'}}">
                     查看更多
                     <i class="el-icon-d-arrow-right"></i>
@@ -264,6 +264,14 @@ export default {
       topicList:{
         rows:[]
       },
+      topicListing:{
+        rows:[]
+      },
+      topicListEnd:{
+        rows:[]
+      },
+      topicing:0,
+      topicEnd:0,
       cmsContent:{
         rows:[]
       },
@@ -326,6 +334,25 @@ export default {
           if(res.code==1){
             this.materialList = res.data.materialList;
             this.groupList = res.data.pmphGroup;
+            let $self = this;
+
+            res.data.topicList.rows.map(iterm=>{
+            //  if($self.topicing>5&&$self.topicEnd>5)  break;
+              /*let item ={
+                state:iterm.state,
+                bookname:iterm.bookname
+              }*/
+              if(iterm.state!='通过'&&iterm.state!='不通过'){
+                $self.topicing++;
+                $self.topicListing.rows.push(iterm);
+
+              }else if(iterm.state=='不通过'||iterm.state=='通过'){
+                $self.topicEnd++;
+                $self.topicListEnd.rows.push(iterm);
+              }
+
+
+            })
             this.topicList = res.data.topicList;
             this.cmsContent = res.data.cmsContent;
             this.bookUserComment = res.data.bookUserComment;
