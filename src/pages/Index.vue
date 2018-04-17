@@ -140,8 +140,7 @@
                 <li class="panel-more-btn" v-if="topicList.total>limit_size">
                   <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核'}">
                     查看更多
-                    <i class="el-icon-d-arrow-right"></i>
-                  </router-link>
+                    <i class="el-icon-d-arrow-right"></i>                  </router-link>
                 </li>
               </ul>
               <p v-else  class="no_conact_data">暂无需要您处理的选题</p>

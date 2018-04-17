@@ -101,7 +101,7 @@ methods:
               width="110">
               <template scope="scope">
                 <el-button type="text" @click="_openUpdateDialog(scope.$index)">修改</el-button>
-                <!--<el-button type="text">登录</el-button>-->
+                <el-button type="text" @click="doLogin(scope.$index)">登录</el-button>
                 <!-- <el-button type="text">查看详情</el-button> -->
               </template>
             </el-table-column>
@@ -223,6 +223,8 @@ methods:
         api_pmph_update:'/pmpheep/users/pmph/update/updateUser',
         api_pmph_roles:'/pmpheep/role/pmph/list/role',
         api_pmph_departmentList:'/pmpheep/departments/list/department',
+        loginUrl:'/pmpheep/pmph/login',
+        from:null,
         searchForm:{
           groupId: this.groupId,
           name:'',
@@ -287,6 +289,11 @@ methods:
         return this.clearTableSelect;
       }
     },
+  mounted() {
+    if(this.$route.query.f){
+      this.from = this.$route.query.f;
+    }
+  },
     watch:{
     clearTable(val){
       this.$refs.table.clearSelection();
@@ -311,6 +318,31 @@ methods:
             console.log(error);
           });
       },
+    doLogin(index){
+      var _this=this;
+      //验证成功
+      this.$axios.get(this.loginUrl, {
+        params:{password: this.tableData[index].password,username:this.tableData[index].username,wechatUserId:'pmphuserlogin'}
+      }).then(function(res) {
+        if(res&&res.data.code==1){
+          _this.$mySessionStorage.set('currentUser',res.data.data,'json');
+          _this.$message.success('登录成功');
+          //将session放到cookie里
+
+          _this.$commonFun.Cookie.set('sessionId',res.data.data.userSessionId,2);
+          _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
+          console.log(_this.from);
+          _this.$router.push({path: '/'});
+          location.reload();
+
+        }else{
+          _this.$message.error('账号/密码错误');
+        }
+      }).catch(function(err) {
+        console.log(err)
+        _this.$message.error('登录失败');
+      })
+    },
       /**
        * 获取用户角色
        */
