@@ -27,7 +27,7 @@
             <!--</el-table-column>-->
             <el-table-column label="教材名称">
                 <template scope="scope">
-                    <el-button type="text" style="color:#337ab7;white-space: normal;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
+                    <el-button type="text" style="color:#337ab7;white-space: normal;text-align:left;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
@@ -387,9 +387,9 @@ export default {
     float: right;
 }
 
-.table_list p{
-  text-align: center;
-}
+/*.table_list p{*/
+  /*text-align: center;*/
+/*}*/
 
 .table_list .contact_p {
 
