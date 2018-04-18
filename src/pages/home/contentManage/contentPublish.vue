@@ -4,6 +4,9 @@
       <el-form-item :label="$router.currentRoute.query.columnId==1?'文章标题：':($router.currentRoute.query.columnId==2?'信息快报标题：':'公告管理标题：')" prop="title">
            <el-input placeholder="请输入内容标题" class="input" v-model.trim="formData.title"></el-input>
       </el-form-item>
+      <el-form-item label="作者姓名：" prop="authorname" v-if="$router.currentRoute.query.columnId==1">
+        <el-input placeholder="请输入作者姓名" class="input" v-model.trim="formData.authorname"></el-input>
+      </el-form-item>
       <el-form-item label="所属栏目：" prop="categoryId">
           <el-cascader
             :options="options"
@@ -147,7 +150,8 @@ export default {
         isPublished: "",
         path:'0',
         materialId:'',
-        returnReason: ''
+        returnReason: '',
+        authorname:''
       },
       coverDialogVislble:false,
       showPreventDialog:false,
@@ -160,6 +164,10 @@ export default {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
           { min: 1, max: 100, message: "标题不能超过100个字符", trigger: "change" }
+        ],
+        authorname: [
+          { required: true, message: "作家姓名不能为空", trigger: "blur" },
+          { min: 1, max: 40, message: "作家姓名不能超过40个字符", trigger: "change" }
         ],
         categoryId: [{type:'number', required: true, message: "请选择所属栏目", trigger: "change,blur" }],
         summary: [{ min: 1, max: 50, message: "摘要内容不能超过50个字符", trigger: "change" }],
