@@ -694,12 +694,12 @@ export default {
                   } else {
                     this.$message.error(res.data.msg);
                   }
-                });          
+                });
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消操作'
-          });       
+          });
         });
       }
     },
