@@ -583,4 +583,41 @@ export function parseURL(url) {
     relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
     segments: a.pathname.replace(/^\//,'').split('/')
   };
+
+
+}
+
+/*
+ * 判断变量是否空值
+ * undefined, null, '', false, 0, [], {} 均返回true，否则返回false
+ */
+export function Empty(v) {
+  switch (typeof v) {
+    case 'undefined':
+      return true;
+      break;
+    case 'string':
+      if (v.length == 0)
+        return true;
+      break;
+    case 'boolean':
+      if (!v)
+        return true;
+      break;
+    case 'number':
+      if (0 === v)
+        return true;
+      break;
+    case 'object':
+      if (null == v)
+        return true;
+      if (undefined !== v.length && v.length == 0)
+        return true;
+      for (var k in v) {
+        return false;
+      }
+      return false;
+      break;
+  }
+  return false;
 }

@@ -239,7 +239,10 @@ export default {
             {
               label: "微视频管理",
               id: 41
-            },
+            },{
+              label: "读书反馈",
+              id: 43
+            }
           ]
         },
         {
