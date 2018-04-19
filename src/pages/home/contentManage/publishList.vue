@@ -76,11 +76,17 @@
             </el-table-column>
             <!-- 管理员才予以显示 -->
             <el-table-column
-                prop="username"
-                label="作者"
+                prop="authorname"
+                label="文章来源"
                 width="90"
                 >
             </el-table-column>
+        <el-table-column
+          prop="realname"
+          label="作者"
+          width="90"
+        >
+        </el-table-column>
             <el-table-column
                 label="创建时间"
                 width="168"
