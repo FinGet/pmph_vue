@@ -11,8 +11,8 @@
         <div class="searchName">状态:<span></span></div>
         <el-radio-group v-model="result" class="radio-group" @change="change">
           <el-radio :label="null">全部</el-radio>
-          <el-radio :label="true">审核</el-radio>
-          <el-radio :label="false">待审核</el-radio>
+          <el-radio :label="1">审核</el-radio>
+          <el-radio :label="0">未审核</el-radio>
         </el-radio-group>
       </div>
      <!-- <div class="searchBox-wrapper searchBtn">
@@ -22,24 +22,24 @@
     <el-row>
       <el-col>
         <el-table :data="tableData" stripe border style="width: 100%;text-align: center">
-          <el-table-column prop="bookname" label="书名" style="text-align: left;">
+          <el-table-column prop="bookname" label="书名"  align="left">
           </el-table-column>
-          <el-table-column prop="feedBackName" label="反馈人">
+          <el-table-column prop="feedBackName" label="反馈人" align="center">
           </el-table-column>
           <!--<el-table-column prop="content" label="反馈内容">
           </el-table-column>-->
-          <el-table-column prop="result" label="状态">
+          <el-table-column prop="result" label="状态" align="center">
             <template scope="scope">
               <p >{{scope.row.result == true?'已审核':'未审核'}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="authorname" label="审核人">
+          <el-table-column prop="authorname" label="审核人" align="center">
          <!-- </el-table-column>
           <el-table-column prop="authorReply" label="回复内容">-->
           </el-table-column>
-          <el-table-column prop="authDate" label="审核日期" width="180">
+          <el-table-column prop="authDate" label="审核日期" width="180" align="center">
           </el-table-column>
-          <el-table-column prop="gmtCreate" label="提交时间" width="180">
+          <el-table-column prop="gmtCreate" label="提交时间" width="180" align="center">
           </el-table-column>
          <!-- <el-table-column prop="result" label="核查结果" width="95" align="center">
             <template scope="scope">
@@ -48,7 +48,7 @@
           </el-table-column>-->
           <el-table-column label="操作" width="80" align="center">
             <template scope="scope">
-              <router-link type="text" class="link" size="small" :to="{name:'读书反馈详情',query:{id: scope.row.id,type:scope.row.authorReply!=''?'detail':'check'}}">{{scope.row.authorReply!=''?'查看':'审核'}}</router-link>
+              <router-link type="text" class="link" size="small" :to="{name:'读书反馈详情',query:{id: scope.row.id,type:scope.row.result?'detail':'check'}}">{{scope.row.result!=''?'查看':'审核'}}</router-link>
             </template>
           </el-table-column>
         </el-table>
