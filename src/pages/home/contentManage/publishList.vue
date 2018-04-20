@@ -175,12 +175,14 @@
        <div style="padding:0 10%;">
         <p class="previewTitle text-center">{{contentDetailData.cmsContent.title}}</p>
          <p class="senderInfo text-center paddingT10">
-      <span class="marginR10">{{contentDetailData.listObj.username}}</span>
+      <span class="marginR10">{{contentDetailData.listObj.authorname}}</span>
       <span>{{$commonFun.formatDate(contentDetailData.listObj.gmtCreate)}}</span>
        </p>
        <el-form label-width="90px" v-if="contentDetailData.content">
          <el-form-item label="" label-width="0">
+           <div style="margin:0 auto;width:800px;">
              <p v-html="contentDetailData.content.content"></p>
+           </div>
          </el-form-item>
          <el-form-item label="封面图片：" v-if="contentDetailData.imgFilePath">
            <img  :src="contentDetailData.imgFilePath.split('/').length>=2?contentDetailData.imgFilePath:'pmpheep/image/'+contentDetailData.imgFilePath" />
@@ -327,7 +329,9 @@
        <el-form label-width="55px">
 
          <el-form-item label="" label-width="0">
-             <p v-html="commentDetailData.content.content"></p>
+           <div style="margin:0 auto;width:800px;">
+           <p v-html="commentDetailData.content.content"></p>
+           </div>
          </el-form-item>
        </el-form>
         </div>

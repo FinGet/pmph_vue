@@ -1,6 +1,6 @@
 <template>
   <div>
-       <el-dialog 
+       <el-dialog
      title=""
      :visible.sync="contentDetailVisible"
      size="large">
@@ -18,7 +18,9 @@
              {{contentDetailData.cmsContent.keyword}}
          </el-form-item>
          <el-form-item label="内容：">
+           <div style="margin:0 auto;width:800px;">
              <p v-html="contentDetailData.content.content"></p>
+           </div>
          </el-form-item>
          <el-form-item label="附件：">
               <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
@@ -50,7 +52,7 @@ export default {
   },
   watch:{
     showContentDetail(val){
-        this.contentDetailVisible=val; 
+        this.contentDetailVisible=val;
     }
   },
   methods:{

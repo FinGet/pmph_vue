@@ -154,7 +154,9 @@
        </p>
        <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label-width="0">
+           <div style="margin:0 auto;width:800px;">
              <p v-html="contentDetailData.content.content"></p>
+           </div>
          </el-form-item>
          <p style="width:100%" v-for="item in contentDetailData.MaterialNoteAttachment" :key="item.id">
          <img :src="'/pmpheep/file/notice/download/'+item.attachment" alt="" style="margin-left:50%;transform:translateX(-50%);">

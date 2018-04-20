@@ -151,7 +151,7 @@ import {BASE_URL} from '../../src/common/config'
         //,theme:'default'
         //,themePath:URL +"themes/"
 
-        //,zIndex : 900     //编辑器层级的基数,默认是900
+        ,zIndex : 900     //编辑器层级的基数,默认是900
 
         //针对getAllHtml方法，会在对应的head标签中增加该编码设置。
         //,charset:"utf-8"
@@ -172,7 +172,7 @@ import {BASE_URL} from '../../src/common/config'
 
         //如果自定义，最好给p标签如下的行高，要不输入中文时，会有跳动感
         //,initialStyle:'p{line-height:1em}'//编辑器层级的基数,可以用来改变字体等
-
+      ,initialStyle:'img{text-indent: 0em;align:center;}'//编辑器层级的基数,可以用来改变字体等
         //,iframeCssUrl: URL + '/themes/iframe.css' //给编辑区域的iframe引入一个css文件
 
         //indentValue
@@ -193,7 +193,7 @@ import {BASE_URL} from '../../src/common/config'
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
-        //,imagePopup:true      //图片操作的浮层开关，默认打开
+        ,imagePopup:false      //图片操作的浮层开关，默认打开
 
         //,autoSyncData:true //自动同步编辑器要提交的数据
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹

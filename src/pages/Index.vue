@@ -42,7 +42,7 @@
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">教材申报</p>
           <el-tabs v-model="activeName1" @tab-click="materialListChange">
             <el-tab-pane label="全部" name="first">
-              <ul class="panel-min-list" v-if="materialList.rows.length!=0" style="position: relative;height: 248px;">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0&&materialAuthor>0" style="position: relative;height: 248px;">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" class="ellipsis">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
@@ -57,7 +57,7 @@
               <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
             <el-tab-pane label="已发布" name="second">
-              <ul class="panel-min-list" v-if="materialList.rows.length!=0" style="position: relative;height: 248px;">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0&&materialAuthor>0" style="position: relative;height: 248px;">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
@@ -72,7 +72,7 @@
               <p v-else  class="no_conact_data">暂无需要您处理的教材</p>
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth" style="position: relative;height: 248px;">
-              <ul class="panel-min-list" v-if="materialList.rows.length!=0">
+              <ul class="panel-min-list" v-if="materialList.rows.length!=0&&materialAuthor>0">
                 <li v-for="(iterm,index) in materialList.rows" :key="index" v-if="index<limit_size" >
                   <el-tag :type="iterm.state==='已发布'?'success':(iterm.state==='已结束'?'gray':'primary')">{{ iterm.state }}</el-tag>
                   <router-link :to="{name:'通知列表',params:{materialName:iterm.materialName}}">{{iterm.materialName}}</router-link>
@@ -99,7 +99,7 @@
                  v-for="(item,index) in groupList.rows"
                  :key="index"
                  @click="clickGroup(item.id,item)"
-                         v-if="index<3&&groupList.rows.length!=0"
+                         v-if="index<3&&groupList.rows.length!=0&&groupAuthor>0"
             >
               <div class="groupHead-inner">
                 <span class="groupHeadImg">
@@ -112,7 +112,7 @@
                 <span class="lastMessageTime">{{$commonFun.getDateDiff(item.gmtLastMessage)}}</span>
               </div>
             </router-link>
-            <div class="panel-more-btn" v-if="groupList.total>4&&groupList.rows.length!=0" style="position: absolute;bottom: 4px;left:40%;">
+            <div class="panel-more-btn" v-if="groupList.total>4&&groupList.rows.length!=0&&groupAuthor>0" style="position: absolute;bottom: 4px;left:40%;">
               <router-link :to="{name:'小组管理'}">
                 查看更多
                 <i class="el-icon-d-arrow-right"></i>
@@ -130,7 +130,7 @@
           <p class="fontsize-lg fontBold panel-title pull-left paddingR30">选题申报</p>
           <el-tabs v-model="activeName2">
             <el-tab-pane label="全部" name="first">
-              <ul class="panel-min-list" v-if="topicList.rows.length!=0">
+              <ul class="panel-min-list" v-if="topicList.rows.length!=0&&topicAuthor>0">
                 <li v-for="(iterm,index) in topicList.rows" :key="index" v-if="index<limit_size">
                   <el-tag :type="iterm.state==='不通过'?'gray':'success'">{{ iterm.state }}</el-tag>
 
@@ -146,7 +146,7 @@
               <p v-else  class="no_conact_data">暂无需要您处理的选题</p>
             </el-tab-pane>
             <el-tab-pane label="进行中" name="second">
-              <ul class="panel-min-list"  v-if="topicList.rows.length!=0">
+              <ul class="panel-min-list"  v-if="topicList.rows.length!=0&&topicAuthor>0">
                 <li v-for="(iterm,index) in topicListing.rows" :key="index" v-if="index<limit_size&&iterm.state!='通过'&&iterm.state!='不通过'">
                   <el-tag type="success" >{{iterm.state}}</el-tag>
                   <router-link :to="{name:isShowSide(22)||isShowSide(7)?'选题申报查看':'选题申报审核',params:{searchInput:iterm.bookname,activeIndex:'first'}}">{{iterm.bookname}}</router-link>
@@ -161,7 +161,7 @@
               <p v-else  class="no_conact_data">暂无需要您处理的选题</p>
             </el-tab-pane>
             <el-tab-pane label="已结束" name="fourth">
-              <ul class="panel-min-list" v-if="topicList.rows.length!=0">
+              <ul class="panel-min-list" v-if="topicList.rows.length!=0&&topicAuthor>0">
                 <li v-for="(iterm,index) in topicListEnd.rows" :key="index" v-if="index<limit_size&&(iterm.state=='不通过'||iterm.state=='通过')">
                   <el-tag :type="iterm.state=='不通过'?'gray':'success'" >{{iterm.state}}</el-tag>
                   <router-link :to="{name:'选题申报查看',params:{searchInput:iterm.bookname,activeIndex:'second'}}">{{iterm.bookname}}</router-link>
@@ -182,7 +182,7 @@
         <div>
           <el-tabs v-model="activeName3">
             <el-tab-pane label="文章审核" name="first" >
-              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0&&(isShowSide(5)||isShowSide(15))">
+              <ul class="panel-min-list" v-if="cmsContent.rows.length!=0&&(isShowSide(5)||isShowSide(15))&&publishAuthor>0">
                 <li v-for="(iterm,index) in cmsContent.rows" :key="index" v-if="index<limit_size" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'文章管理',params:{searchInput:iterm.title}}">{{iterm.title}}</router-link>
                 </li>
@@ -196,7 +196,7 @@
               <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书纠错审核" name="second">
-              <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0&&(isShowSide(8)||isShowSide(23))">
+              <ul class="panel-min-list" v-if="bookCorrectionAudit.rows.length!=0&&(isShowSide(8)||isShowSide(23))&&bookerrorAuthor>0">
                 <li v-for="(iterm,index) in bookCorrectionAudit.rows" :key="index" v-if="index<limit_size" class="ellipsis" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'图书纠错审核',params:{searchInput:iterm.bookname}}">《{{iterm.bookname}}》</router-link>
                 </li>
@@ -210,7 +210,7 @@
               <p v-else  class="no_conact_data">暂无待处理的事项</p>
             </el-tab-pane>
             <el-tab-pane label="图书评论审核" name="three">
-              <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0&&(isShowSide(6)||isShowSide(20))">
+              <ul class="panel-min-list" v-if="bookUserComment.rows.length!=0&&(isShowSide(6)||isShowSide(20))&&CommentManageAuthor>0">
                 <li v-for="(iterm,index) in bookUserComment.rows" :key="index" v-if="index<limit_size" class="ellipsis" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                   <router-link :to="{name:'评论审核',params:{bookname:iterm.bookname,isLong:iterm.isLong}}"><p class="comment">《{{iterm.bookname}}》：<span v-html="iterm.content"></span></p></router-link>
                 </li>
@@ -260,6 +260,12 @@ export default {
         loading:true,
         rows:[]
       },
+      materialAuthor:0,
+      groupAuthor:0,
+      topicAuthor:0,
+      publishAuthor:0,
+      bookerrorAuthor:0,
+      CommentManageAuthor:0,
       topicList:{
         rows:[]
       },
@@ -333,7 +339,27 @@ export default {
           if(res.code==1){
             this.materialList = res.data.materialList;
             this.groupList = res.data.pmphGroup;
+            let authorLength = res.data.userPermission.length;
+            console.log(authorLength);
             let $self = this;
+            switch (authorLength) {
+              case 1:
+            }
+            if(authorLength>0){
+              $self.materialAuthor = res.data.userPermission[0].materialAuthor;
+            }
+            if( authorLength>1){
+              $self.groupAuthor = res.data.userPermission[1].materialAuthor;
+            } if(authorLength>2){
+              $self.topicAuthor = res.data.userPermission[2].materialAuthor;
+            } if(authorLength>3){
+              $self.publishAuthor = res.data.userPermission[3].materialAuthor;
+            } if(authorLength>4){
+              $self.bookerrorAuthor = res.data.userPermission[4].materialAuthor;
+            } if(authorLength>5){
+              $self.CommentManageAuthor = res.data.userPermission[5].materialAuthor;
+            }
+
 
             res.data.topicList.rows.map(iterm=>{
             //  if($self.topicing>5&&$self.topicEnd>5)  break;
