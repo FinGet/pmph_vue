@@ -110,7 +110,7 @@
     <el-dialog
       title="评论详情"
       :visible.sync="commentDialogVisible">
-      <span>{{comment.content}}</span>
+      <p>{{comment.content}}</p>
       <span slot="footer" class="dialog-footer"> </span>
     </el-dialog>
 
