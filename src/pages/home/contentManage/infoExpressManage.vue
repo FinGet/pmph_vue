@@ -153,7 +153,7 @@
        </p>
        <el-form label-width="55px" v-if="contentDetailData.content">
          <el-form-item label-width="0">
-             <p v-html="contentDetailData.content.content"></p>
+           <div style="margin:0 auto;width:800px;"> <p v-html="contentDetailData.content.content"></p> </div>
          </el-form-item>
          <!-- <el-form-item label="附件：">
               <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
@@ -403,7 +403,7 @@ export default {
             console.log(this.contentDetailData);
             this.publishSubmit(bool);
           }
-        });  
+        });
     },
     /* 修改内容 */
     editContent(obj) {
