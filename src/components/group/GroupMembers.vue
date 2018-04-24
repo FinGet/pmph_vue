@@ -40,6 +40,12 @@
             prop="displayName"
             label="姓名"
             width="120">
+            <template scope="scope">
+              <input type="text" class="updateName" v-model="scope.row.displayName" v-on:change="getDisplayName(scope.row.displayName,scope.row.id,scope.row.userId,scope.row.groupId)" v-if="crurrentMemberInfo.isFounder||crurrentMemberInfo.isSystemAdmin"/>
+              <input type="text" class="updateName" v-model="scope.row.displayName" v-on:change="getDisplayName(scope.row.displayName,scope.row.id,scope.row.userId,scope.row.groupId)" v-else-if="(crurrentMemberInfo.isAdmin&&scope.row.identity=='成员')||$getUserData().userInfo.id==scope.row.userId">
+              <input type="text" class="updateName" v-model="scope.row.displayName" v-on:change="getDisplayName(scope.row.displayName,scope.row.id,scope.row.userId,scope.row.groupId)" v-else-if="crurrentMemberInfo.isWriter&&$getUserData().userInfo.id==scope.row.userId">
+              <span v-else>{{scope.row.displayName}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="username"
@@ -89,6 +95,7 @@ export default {
     return {
       memberManageUrl:'/pmpheep/group/list/manager',  //成员管理列表url
       changeAuthUrl:'/pmpheep/group/update/identity', //修改管理员权限url
+      updateNameUrl:'/pmpheep/group/update/displayName', //修改管理员权限url
       deleteMemberUrl:'/pmpheep/group/delete/pmphGroupMembers', //批量删除url
       tableData:[],
       searchValue:'',
@@ -209,6 +216,32 @@ export default {
             });
         })
         .catch(e=>{})
+    },
+    getDisplayName:function(value,id,userId,groupId){
+      //alert(value);
+      this.$axios({
+        method:'POST',
+        url:this.updateNameUrl,
+        data:this.$commonFun.initPostData({
+          id:id,
+          userId:userId,
+          sessionId:this.$getUserData().sessionId,
+          displayName:value,
+          groupId:groupId
+        })
+      }).then((res)=>{
+          if(res.data.code==1){
+            this.$message.success('修改成功')
+            // this.$emit('refeshMember');
+            // this.getMemberManageList();
+          }else{
+            this.$message.error('修改失败');
+          }
+        }).catch((error) => {
+          console.log(error);
+          this.$message.error('修改失败，请重试');
+        })
+
     }
   },
   watch:{
@@ -241,5 +274,9 @@ export default {
   }
   .textcolor{
     color: rgba(2, 2, 2, 0.29);
+  }
+  .updateName{
+      border: none;
+      min-width: 100px;
   }
 </style>
