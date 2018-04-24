@@ -82,7 +82,8 @@
        </p>
        <el-form label-width="55px">
          <el-form-item label="" label-width="0">
-             <p v-html="preventContent"></p>
+           <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
+
          </el-form-item>
          <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
               <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index">{{item.name}}</p>
@@ -623,6 +624,7 @@ export default {
   created() {
     this.initIsEdit();
     this.getBookLists();
+    //$(".p_content").parent.css({"width":"800px","margin":"0,auto"});
   },
   components: {
     Editor

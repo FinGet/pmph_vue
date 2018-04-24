@@ -7,9 +7,7 @@
 let host = window.location.host;
 
 //默认api请求头地址
-
 export let BASE_WS_URL = 'ws://192.168.100.135/pmpheep/';
-
 export let BASE_URL = 'http://'+host+'/pmpheep/';
 //
 // export const BASE_WS_URL = 'ws://192.168.200.126:8090/pmpheep/';
@@ -21,4 +19,4 @@ export let DEFAULT_BASE_URL = 'http://'+host;
 //请求教材图片根路径地址
 export let teachPicUrl ='http://192.168.100.135'
 
-export let IS_DEBUG = !host.includes('192.168.100.135');
+export let IS_DEBUG = !host.includes('39.107.80.79');

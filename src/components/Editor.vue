@@ -81,4 +81,11 @@
   line-height: 1;
   height:auto !important;height:600px;
 }
+p{
+  text-indent: 2em !important;
+}
+
+  p img{
+    text-indent: -2em !important;
+  }
 </style>
