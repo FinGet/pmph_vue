@@ -205,7 +205,7 @@ export default new Router({
           meta: {replaceName: false, authorityId: 8},
           children: [
             {path: 'check', name: '图书纠错审核', component: CheckError, meta: {authorityId: 23}},
-            {path: 'checkerror', name: '纠错审核', component: Check,meta: {authorityId: true}},
+            {path: 'checkerror', name: '纠错审核', component: Check,},
             {path: 'after', name: '图书纠错跟踪', component: AfterError, meta: {authorityId: 24}}
           ]
         },
