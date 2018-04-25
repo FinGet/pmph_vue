@@ -538,7 +538,7 @@ export default {
           { type: "email", message: "邮箱格式错误", trigger: "blur" }
         ],
         realname:[
-          { required: true, message: "请输入管理员姓名", trigger: "blur" },
+          { required: false, message: "请输入管理员姓名", trigger: "blur" },
           { min: 1, max: 20, message: "管理员姓名不能超过20个字符", trigger: "change,blur" }
         ],
         handphone: [
