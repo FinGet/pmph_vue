@@ -18,10 +18,10 @@
           <el-button  type="primary" icon="search" @click="search">搜索</el-button>
         </div>
         <div class="operation-wrapper">
-          <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0))||isChiefPublished" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">确认</el-button>
+          <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button><!--||isChiefPublished-->
+          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0)||isChiefPublished)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
-          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">清空</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">恢复到上次保存结果</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
@@ -171,7 +171,8 @@
         isChiefPublished:false,
         hasChanged:false,
         realName:'',
-        orgName:''
+        orgName:'',
+        iszhubian:[]
       }
     },
     computed:{
@@ -273,6 +274,7 @@
 
               });
               this.tableData = res.data.DecPositionEditorSelectionVO;
+              this.isZhubian = res.data.isZhuBian;
               /* 排序 */
               for(var k in this.tableData){
 
@@ -314,11 +316,23 @@
       },
       /**
        * checkbox实现单选功能
-       * @param type 类型
+       * @param type 类型book-list
        * @param row 数据
        */
       checkboxChange(type,row) {
         this.hasChanged=true;
+        let name = row.realname;
+        let self = this;
+        let title = '';
+        this.isZhubian.map(iterm => {
+          if(iterm.realname == name && row.isZhubian){
+            title =  '您已被选为'+iterm.textbookName+'的主编' ;
+          }
+        })
+        if(title.length>0){
+          self.$message.warning(title);
+        }
+
         if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
           row.isZhubian = false;
           row.isFuzhubian = false;
@@ -344,12 +358,12 @@
        * 提交遴选结果
        */
       submit(type){
-
+        let  title = type == 1?"确定保存当前名单?":"确定提交当前名单?";
         if(!this.checkSortIsOk()){
           return;
         }
 
-        this.$confirm("确认提交？", "提示",{
+        this.$confirm(title, "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -405,7 +419,7 @@
        * 点击重置按钮
        */
       reset(){
-        this.$confirm("放弃当前修改，重置数据？", "提示",{
+        this.$confirm("放弃当前修改，恢复到上次保存的结果？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

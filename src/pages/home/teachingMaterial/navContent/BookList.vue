@@ -166,7 +166,7 @@ export default {
               this.formData.materialName = res.data[0].materialName;
               this.formData.materialType = res.data[0].materialType;
               this.formData.materialRound = res.data[0].materialRound;
-              this.formData.isPublic = !!!res.data[0].isPublic;
+              this.formData.isPublic = res.data[0].isPublic;
               var bookList =[];
               res.data.map(iterm=>{
                 if(!!iterm.textbook){

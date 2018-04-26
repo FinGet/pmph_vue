@@ -13,7 +13,7 @@
           <p class="table_top_p">选题号：<span></span></p>
           <!-- 12格总共  每格宽度约等于 8.4% -->
           <table border="1">
-              
+
               <tr>
                   <td width="8.4%" rowspan="4" >图书书稿情况</td>
                   <td width="8.4%" >选题名称</td>
@@ -24,14 +24,14 @@
               <tr>
                   <td width="8.4%">选题来源</td>
                   <td colspan="10">
-               <el-checkbox-group v-model="data.sourceType">       
-                    <el-checkbox label="社策划" ></el-checkbox>
-                    <el-checkbox label="编辑策划"></el-checkbox>
-                    <el-checkbox label="修订"></el-checkbox>
-                    <el-checkbox label="离退休编审策划"></el-checkbox>
-                    <el-checkbox label="专家推荐"></el-checkbox>
-                    <el-checkbox label="上级交办"></el-checkbox>
-                    <el-checkbox label="作者投稿"></el-checkbox>
+               <el-checkbox-group v-model="data.sourceType" disabled="true">
+                    <el-checkbox label="社策划" disabled="true"></el-checkbox>
+                    <el-checkbox label="编辑策划" disabled="true"></el-checkbox>
+                    <el-checkbox label="修订"disabled="true" ></el-checkbox>
+                    <el-checkbox label="离退休编审策划" disabled="true"></el-checkbox>
+                    <el-checkbox label="专家推荐" disabled="true"></el-checkbox>
+                    <el-checkbox label="上级交办" disabled="true"></el-checkbox>
+                    <el-checkbox label="作者投稿" disabled="true"></el-checkbox>
                </el-checkbox-group>
                   </td>
               </tr>
@@ -48,25 +48,25 @@
               <tr>
                   <td>图书类别</td>
                   <td colspan="5">
-                   <el-checkbox-group v-model="data.typeName">   
-                      <el-checkbox label="专著"></el-checkbox>
-                      <el-checkbox label="基础理论"></el-checkbox>
-                      <el-checkbox label="教材"></el-checkbox>
-                      <el-checkbox label="论文集"></el-checkbox>
-                      <el-checkbox label="图谱"></el-checkbox>
-                      <el-checkbox label="科普"></el-checkbox>
-                      <el-checkbox label="应用技术"></el-checkbox>
-                      <el-checkbox label="教辅"></el-checkbox>
-                      <el-checkbox label="工具书"></el-checkbox>
-                      <el-checkbox label="其他"></el-checkbox>
+                   <el-checkbox-group v-model="data.typeName" disabled="true">
+                      <el-checkbox label="专著" disabled="true"></el-checkbox>
+                      <el-checkbox label="基础理论" disabled="true"></el-checkbox>
+                      <el-checkbox label="教材" disabled="true"></el-checkbox>
+                      <el-checkbox label="论文集" disabled="true"></el-checkbox>
+                      <el-checkbox label="图谱" disabled="true"></el-checkbox>
+                      <el-checkbox label="科普" disabled="true"></el-checkbox>
+                      <el-checkbox label="应用技术" disabled="true"></el-checkbox>
+                      <el-checkbox label="教辅" disabled="true"></el-checkbox>
+                      <el-checkbox label="工具书" disabled="true"></el-checkbox>
+                      <el-checkbox label="其他" disabled="true"></el-checkbox>
                    </el-checkbox-group>
                   </td>
                   <td>级别</td>
                   <td colspan="2">
-                    <el-checkbox-group v-model="data.rankType">  
-                      <el-checkbox label="高"></el-checkbox>
-                      <el-checkbox label="中"></el-checkbox>
-                      <el-checkbox label="低"></el-checkbox>
+                    <el-checkbox-group v-model="data.rankType">
+                      <el-checkbox label="高" disabled="true"></el-checkbox>
+                      <el-checkbox label="中" disabled="true"></el-checkbox>
+                      <el-checkbox label="低" disabled="true"></el-checkbox>
                     </el-checkbox-group>
                   </td>
               </tr>
@@ -106,8 +106,8 @@
                   <td>{{data.realname}}</td>
                   <td>性别</td>
                   <td width="12.6%">
-                     <el-radio class="radio" v-model="data.sex" :label="0">男</el-radio>
-                     <el-radio class="radio" v-model="data.sex" :label="1">女</el-radio> 
+                     <el-radio class="radio" v-model="data.sex" :label="0" disabled="true">男</el-radio>
+                     <el-radio class="radio" v-model="data.sex" :label="1" disabled="true">女</el-radio>
                   </td>
                   <td>年龄</td>
                   <td>{{data.price}}</td>
@@ -117,24 +117,24 @@
               <tr>
                   <td>专业职务</td>
                   <td colspan="5">
-                   <el-checkbox-group v-model="data.positionProfessionName">   
-                    <el-checkbox label="中科院院士" ></el-checkbox>
-                    <el-checkbox label="工程院院士"></el-checkbox>
-                    <el-checkbox label="博导"></el-checkbox>
-                    <el-checkbox label="硕导"></el-checkbox>
-                    <el-checkbox label="男" ></el-checkbox>
-                    <el-checkbox label="正高"></el-checkbox>
-                    <el-checkbox label="副高"></el-checkbox>
-                    <el-checkbox label="中级"></el-checkbox>
-                   </el-checkbox-group> 
+                   <el-checkbox-group v-model="data.positionProfessionName" disabled="true">
+                    <el-checkbox label="中科院院士" disabled="true"></el-checkbox>
+                    <el-checkbox label="工程院院士" disabled="true"></el-checkbox>
+                    <el-checkbox label="博导" disabled="true"></el-checkbox>
+                    <el-checkbox label="硕导" disabled="true"></el-checkbox>
+                    <el-checkbox label="男" disabled="true"></el-checkbox>
+                    <el-checkbox label="正高" disabled="true"></el-checkbox>
+                    <el-checkbox label="副高" disabled="true"></el-checkbox>
+                    <el-checkbox label="中级" disabled="true"></el-checkbox>
+                   </el-checkbox-group>
                   </td>
                   <td>学历</td>
                   <td>
-                    <el-checkbox-group v-model="data.degreeName">  
-                      <el-checkbox label="博士"></el-checkbox>
-                      <el-checkbox label="硕士"></el-checkbox>
-                      <el-checkbox label="学士"></el-checkbox>
-                      <el-checkbox label="其他"></el-checkbox>
+                    <el-checkbox-group v-model="data.degreeName" disabled="true">
+                      <el-checkbox label="博士" disabled="true"></el-checkbox>
+                      <el-checkbox label="硕士" disabled="true"></el-checkbox>
+                      <el-checkbox label="学士" disabled="true"></el-checkbox>
+                      <el-checkbox label="其他" disabled="true"></el-checkbox>
                     </el-checkbox-group>
                   </td>
               </tr>
@@ -189,7 +189,7 @@
                   <td></td>
               </tr>
               <tr>
-                 <td rowspan="6">读者情况及印制预测</td> 
+                 <td rowspan="6">读者情况及印制预测</td>
                  <td>预计读者及购买力</td>
                  <td colspan="3">{{data.readerQuantity}}</td>
                  <td>作者购书</td>
@@ -200,7 +200,7 @@
                  <td colspan="3">{{data.campaign}}</td>
                  <td>可能的销售渠道</td>
                  <td colspan="3">{{data.salesChannel}}</td>
-              </tr>        
+              </tr>
               <tr>
                  <td>图书生命周期</td>
                  <td colspan="3">{{data.lifecycle}}</td>
@@ -238,7 +238,7 @@
                   <td>书名</td>
                   <td>版次</td>
                   <td>作者</td>
-                  <td>出版单位</td>                  
+                  <td>出版单位</td>
                   <td>开本</td>
                   <td>印数</td>
                   <td>定价</td>
@@ -263,7 +263,7 @@
                   <td></td>
                   <td></td>
                   <td></td>
-              </tr>                                 
+              </tr>
           </table>
             <el-form label-width="140px" :model="data" :rules="formRules"  class="form_box">
                     <el-form-item
@@ -280,7 +280,7 @@
        <!-- <el-button type="danger" v-if="type!='check'" :disabled="isAccepted || isEditorHandling">退回分配人</el-button> -->
        <el-button type="primary" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(3)">通过</el-button>
        <el-button type="danger" v-if="type=='check'&&isDirectorHandling&&isEditorHandling" :disabled="!isAccepted" @click="check(2)">不通过</el-button>
-   </div>       
+   </div>
     </div>
 </template>
 <script type="text/javascript">
