@@ -171,7 +171,8 @@
         isChiefPublished:false,
         hasChanged:false,
         realName:'',
-        orgName:''
+        orgName:'',
+        iszhubian:[]
       }
     },
     computed:{
@@ -273,6 +274,7 @@
 
               });
               this.tableData = res.data.DecPositionEditorSelectionVO;
+              this.isZhubian = res.data.isZhuBian;
               /* 排序 */
               for(var k in this.tableData){
 
@@ -314,11 +316,23 @@
       },
       /**
        * checkbox实现单选功能
-       * @param type 类型
+       * @param type 类型book-list
        * @param row 数据
        */
       checkboxChange(type,row) {
         this.hasChanged=true;
+        let name = row.realname;
+        let self = this;
+        let title = '';
+        this.isZhubian.map(iterm => {
+          if(iterm.realname == name && row.isZhubian){
+            title =  '您已被选为'+iterm.textbookName+'的主编' ;
+          }
+        })
+        if(title.length>0){
+          self.$message.warning(title);
+        }
+
         if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
           row.isZhubian = false;
           row.isFuzhubian = false;
