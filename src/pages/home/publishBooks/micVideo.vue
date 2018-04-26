@@ -113,15 +113,15 @@
             </div>
     </el-dialog>
     <!-- 上传视频对话框 -->
-    <el-dialog title="添加微视频" :visible.sync="dialogVisible" size="tiny" >
-       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogRules"  label-width="100px">
+    <el-dialog title="添加微视频" :visible.sync="dialogVisible" size="tiny" width="100%">
+       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogRules"  label-width="100px" >
            <el-form-item label="视频名称：" prop="videoName">
                <el-input v-model="dialogForm.videoName" placeholder="请输入视频名称"></el-input>
            </el-form-item>
            <el-form-item label="视频封面：" prop="imgList">
                <el-upload
                   action="#"
-                  style="float:left;"
+                  style="float:left;width:260px;"
                   name="files"
                   :on-remove="imgUploadRemove"
                   :auto-upload="false"
@@ -146,7 +146,7 @@
        </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo">{{isUploadVideo?'转码中':'确 定'}}</el-button>
+                <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo" disabled="isdisabled">{{isUploadVideo?'转码中':'确 定'}}</el-button>
             </span>
     </el-dialog>
     <!-- 审核视频弹框 -->
@@ -190,6 +190,7 @@
                transCoding:[]
                },
                videoSrc:'',
+              isdisabled:false,
               pageTotal:100,
               searchParams:{
                   state:'',
@@ -318,7 +319,7 @@
          },
          /* 删除微视频 */
          deleteVideo(obj){
-             
+
                 this.$confirm('确定删除微视频：<'+obj.title+'>?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -336,7 +337,7 @@
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });          
+                });
                 });
          },
          /* 添加上传视频图片 */
@@ -447,6 +448,7 @@
              console.log(this.dialogForm);
              this.$refs.dialogForm.validate((valid)=>{
                  if(valid){
+                   this.isdisabled = true;
                     var submitObj={
                            bookId:this.currentBook.id, //图书Id
                            title:this.dialogForm.videoName,  //标题
@@ -470,18 +472,20 @@
                      this.$axios.post(this.addNewVideoUrl,formData,config)
                      .then((res)=>{
                       console.log(res);
+                       this.isdisabled = false;
                       if(res.data.code==1){
                           this.getList();
                           this.$message.success('添加成功');
                           this.dialogVisible=false;
                           this.bookDialogVisible=false;
                           this.$refs.dialogForm.resetFields();
+
                         }
                         else{
                          this.$message.error(res.data.msg.msgTrim());
                         }
                      }).catch((error)=>{
-
+                       this.isdisabled = true;
                      })
                  }else{
                      return ;
