@@ -27,7 +27,7 @@ props: default-history-id 默认选中的历史记录
           请按照模板格式上传（
           <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
-        </span>
+        </span><span class="grey_span lineheight-36 fastQuery_r_text" v-if="!$commonFun.Empty(uploadFileName)">{{uploadFileName}}</span>
           <my-upload
             class="ChatInputFileBtn lineheight-36 inline-block"
             ref="upload"
@@ -277,6 +277,7 @@ props: default-history-id 默认选中的历史记录
         total: 0,
         materialId: '',
         uploadLoading:false,
+        uploadFileName:'',
         importExcelInfo:{
           all:0,
           success:0,
@@ -624,6 +625,7 @@ props: default-history-id 默认选中的历史记录
        */
       upLoadFileSuccess(res, file, fileList){
         this._un_checkedAll();
+        this.uploadFileName = file.name;
         if (res.code == '1') {
           this.importExcelInfo={
             all:res.data.orgs.length+res.data.erros.length,
