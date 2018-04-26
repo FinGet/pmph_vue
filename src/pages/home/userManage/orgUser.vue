@@ -538,7 +538,7 @@ export default {
           { type: "email", message: "邮箱格式错误", trigger: "blur" }
         ],
         realname:[
-          { required: true, message: "请输入管理员姓名", trigger: "blur" },
+          { required: false, message: "请输入管理员姓名", trigger: "blur" },
           { min: 1, max: 20, message: "管理员姓名不能超过20个字符", trigger: "change,blur" }
         ],
         handphone: [
@@ -1014,43 +1014,63 @@ export default {
       var title='';
       if(progress==1) {
         title = "是否确认通过?"
-      } else {
-        title = "是否确认退回?"
-      }
-      this.$confirm(title, "提示",{
+        this.$confirm(title, "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-      this.$axios.put("/pmpheep/auth/orgCheck",
-          this.$initPostData({
+          let param = {
             progress: progress,
-            orgUserIds: orgUserIds
-          })
-        )
-        .then(response => {
-          let res = response.data;
-          console.log(res.code)
-          if (res.code == "1") {
-            //console.log(res)
-            this.getOrgsList();
-            this.$message({
-              showClose: true,
-              message: "审核成功!",
-              type: "success"
-            });
-          }else if (res.code == '2') {
-           this.$message({
-              showClose: true,
-              message: res.msg.msgTrim(),
-              type: "warning"
-            });
-          }
-          // console.log(res.code)
+            orgUserIds: orgUserIds,
+            backReason:''
+          };
+          this.passorback(param);
         })
-        .catch(error => {
-          console.log(error.msg);
-        });
+      }
+      else {
+      //  title = "是否确认退回?"
+        this.$prompt('请输入退回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          this.backReason = value;
+          let param = {
+            progress: progress,
+            orgUserIds: orgUserIds,
+            backReason:value
+          };
+          this.passorback(param);
+        })
+
+      }
+
+    },
+    passorback(param) {
+      this.$axios.put("/pmpheep/auth/orgCheck",
+      this.$initPostData(param)
+    )
+      .then(response => {
+        let res = response.data;
+        console.log(res.code)
+        if (res.code == "1") {
+          //console.log(res)
+          this.getOrgsList();
+          this.$message({
+            showClose: true,
+            message: "审核成功!",
+            type: "success"
+          });
+        }else if (res.code == '2') {
+          this.$message({
+            showClose: true,
+            message: res.msg.msgTrim(),
+            type: "warning"
+          });
+        }
+        // console.log(res.code)
+      })
+      .catch(error => {
+        console.log(error.msg);
       })
     },
     /**@argument val 当选中项 */
