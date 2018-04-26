@@ -27,7 +27,7 @@ props: default-history-id 默认选中的历史记录
           请按照模板格式上传（
           <a class="grey_button link" href="/static/学校导入Excel模板.xlsx">模板下载.xls</a>
           ）：
-        </span>
+        </span><span class="grey_span lineheight-36 fastQuery_r_text" v-if="!$commonFun.Empty(uploadFileName)">{{uploadFileName}}</span>
           <my-upload
             class="ChatInputFileBtn lineheight-36 inline-block"
             ref="upload"
@@ -91,7 +91,8 @@ props: default-history-id 默认选中的历史记录
           <el-checkbox-group v-model="select_orgType.types" class="inline-block marginL20">
             <el-checkbox v-for="iterm in orgTypeList" :label="iterm.id" :key="iterm.id"  @change="_handleCheckedTypeChange()">{{iterm.name}}</el-checkbox>
           </el-checkbox-group>
-         <el-button type="primary" style="margin-left:20px;" @click="$commonFun.downloadFile('/pmpheep/excel/allOrg');">导出所有学校</el-button>
+          <el-button type="primary" style="margin-left:20px;" @click="execlChooseOrg">导出所选院校</el-button>
+         <el-button type="primary" style="margin-left:20px;" @click="$commonFun.downloadFile('/pmpheep/excel/allOrg');">导出所有院校</el-button>
         </div>
       </div>
 
@@ -276,6 +277,7 @@ props: default-history-id 默认选中的历史记录
         total: 0,
         materialId: '',
         uploadLoading:false,
+        uploadFileName:'',
         importExcelInfo:{
           all:0,
           success:0,
@@ -498,6 +500,17 @@ props: default-history-id 默认选中的历史记录
           iterm.isIndeterminate=false;
         })
       },
+
+      execlChooseOrg(){
+        let orgIds=[] ;
+        let orgList = this.getSelectData();
+        orgList.forEach((iterm,index)=>{
+          orgIds.push(iterm.id);
+        })
+
+        let url = '/pmpheep/excel/allOrg?chooseOrg='+orgIds;
+        this.$commonFun.downloadFile(url)
+      },
       /**
        * 点击清空按钮
        */
@@ -612,6 +625,7 @@ props: default-history-id 默认选中的历史记录
        */
       upLoadFileSuccess(res, file, fileList){
         this._un_checkedAll();
+        this.uploadFileName = file.name;
         if (res.code == '1') {
           this.importExcelInfo={
             all:res.data.orgs.length+res.data.erros.length,

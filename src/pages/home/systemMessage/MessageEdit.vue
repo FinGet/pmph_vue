@@ -10,7 +10,7 @@
     <!--输入标题-->
     <el-form :model="messageForm" ref="messageForm" :rules="messageRules" label-width="110px">
       <el-form-item label="标题：" prop="title">
-           <el-input v-model="messageForm.title" placeholder="请输入文章标题" class="message-title-input"></el-input>
+           <el-input v-model="messageForm.title" placeholder="请输入标题" class="message-title-input"></el-input>
       </el-form-item>
       <el-form-item label="发送对象：" prop="sendType" v-if="currentMessageType!='edit'">
            <el-radio-group v-model="messageForm.sendType">
