@@ -203,9 +203,14 @@ export function getDateTimeStamp(dateStr){
  * @returns {string} formatTime 格式化后的时间 例如： 2017-05-05 12:09:22
  */
 export function formatDate(nS,str) {
-  if(!nS){
+  var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+  if(!nS||Empty(nS)){
     return "";
   }
+  if(!Empty(nS)&&reg.test(nS)){
+    return nS;
+  }
+
   if(parseInt(nS)===NaN){
     return nS;
   }
@@ -219,6 +224,8 @@ export function formatDate(nS,str) {
 
  if(str=='yyyy-MM-dd'){
    return year + '-' + (mon < 10 ? '0' + mon : mon) + '-' + (day < 10 ? '0' + day : day);
+ }else if(str=='yyyy.MM.dd'){
+   return year + '.' + (mon < 10 ? '0' + mon : mon) + '.' + (day < 10 ? '0' + day : day);
  }else{
    return year + '-' + (mon < 10 ? '0' + mon : mon) + '-' + (day < 10 ? '0' + day : day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minu < 10 ? '0' + minu : minu) + ':' + (sec < 10 ? '0' + sec : sec);
  }

@@ -226,7 +226,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in learnExperience" :key="index">
-              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.major}}</div></td>
               <td><div>{{iterm.degree}}</div></td>
@@ -252,7 +252,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in workExperience">
-              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.orgName}}</div></td>
               <td><div>{{iterm.position}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -274,7 +274,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in teachExperience">
-              <td><div> {{iterm.dateBegin}} &nbsp;-&nbsp; {{iterm.dateEnd}}</div></td>
+              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.subject}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -335,7 +335,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -409,7 +409,7 @@
               <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
-              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
@@ -440,7 +440,7 @@
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
-              <td><div>{{$commonFun.formatDate(iterm.publishDate).substring(0,10)}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
@@ -500,7 +500,7 @@
               <td><div>{{iterm.monographDate}}</div></td>
               <td><div>{{iterm.isSelfPaid?'自费':'公费'}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -521,7 +521,7 @@
             </tr>
             <tr v-for="(iterm,index) in publish_reward">
               <td><div>{{iterm.rewardName}}</div></td>
-              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.rewardDate,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.awardUnit}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
@@ -546,7 +546,7 @@
               <td><div>{{iterm.paperName}}</div></td>
               <td><div>{{iterm.journalName}}</div></td>
               <td><div>{{iterm.factor}}</div></td>
-              <td><div>{{iterm.publishDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
           </table>
@@ -567,7 +567,7 @@
             </tr>
             <tr v-for="(iterm,index) in clinical_reward">
               <td><div>{{iterm.rewardName}}</div></td>
-              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.rewardDate,'yyyy.MM.dd')}}</div></td>
               <td><div>{{rankList[iterm.awardUnit]}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
@@ -589,7 +589,7 @@
             </tr>
             <tr v-for="(iterm,index) in acade_reward">
               <td><div>{{iterm.rewardName}}</div></td>
-              <td><div>{{iterm.rewardDate}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.rewardDate,'yyyy.MM.dd')}}</div></td>
               <td><div>{{rankList[iterm.awardUnit]}}</div></td>
               <td><div>{{iterm.note}}</div></td>
             </tr>
