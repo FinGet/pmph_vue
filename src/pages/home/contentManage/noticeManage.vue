@@ -425,7 +425,7 @@ export default {
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消发布'
+            message: '已取消操作'
           });
         });
     },
