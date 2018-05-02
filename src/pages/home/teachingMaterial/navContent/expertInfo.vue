@@ -74,7 +74,7 @@
                     <span class="link" :title="iterm.syllabusName" v-if="iterm.syllabusName&&!iterm.fileUploading">{{iterm.syllabusName}}</span>
                   </div>
                 </div>
-                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,false)" v-if="(hasBookListChanged)||!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
               <div v-else>
                 <div class="info-iterm-text">
@@ -839,6 +839,7 @@
             file:undefined,
           }
           this.addBookList.push(initObj);
+          hasBookListChanged = true;
         },
         /**
          * 选择图书框发生改变时

@@ -115,7 +115,7 @@
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text" :disabled="scope.row.isDisabled?true:false" @click="login(scope.row.username)">登录</el-button>
             <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
-            <el-button type="text" @click="zhiTop(scope.row)">{{scope.row.isTop?'撤销':'置顶'}}</el-button>
+            <el-button type="text" @click="zhiTop(scope.$index,scope.row)">{{scope.row.isTop?'撤销':'置顶'}}</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
@@ -663,13 +663,15 @@ export default {
           });
         });
     },
-    zhiTop(obj){
+    zhiTop(index,obj){
+
       this.$axios.put(this.isTopUrl,this.$commonFun.initPostData({
         id:obj.id,
         isTop:obj.isTop
       })).then((res)=>{
         if(res.data.code==1){
           this.$message.success('操作成功');
+          this.tableData[index].isTop = !obj.isTop;
         }else{
           this.$message.error(res.data.msg.msgTrim());
         }
