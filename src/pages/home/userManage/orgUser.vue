@@ -1004,6 +1004,7 @@ export default {
     check(progress) {
       this.visible1 = false;
       this.visible2 = false;
+      let self = this;
       //console.log(this.selections)
       var orgUserIds = [];
       this.selections.forEach(item => {
@@ -1028,18 +1029,24 @@ export default {
         })
       }
       else {
+
       //  title = "是否确认退回?"
         this.$prompt('请输入退回原因', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          this.backReason = value;
-          let param = {
-            progress: progress,
-            orgUserIds: orgUserIds,
-            backReason:value
-          };
-          this.passorback(param);
+          if(value.length>40){
+            this.$message.warning('不能超过40个字');
+          }else{
+            this.backReason = value;
+            let param = {
+              progress: progress,
+              orgUserIds: orgUserIds,
+              backReason:value
+            };
+            this.passorback(param);
+          }
+
         })
 
       }

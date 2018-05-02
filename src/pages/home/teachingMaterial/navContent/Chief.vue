@@ -274,7 +274,7 @@
 
               });
               this.tableData = res.data.DecPositionEditorSelectionVO;
-              this.isZhubian = res.data.isZhuBian;
+              this.iszhubian = res.data.isZhuBian;
               /* 排序 */
               for(var k in this.tableData){
 
@@ -324,8 +324,9 @@
         let name = row.realname;
         let self = this;
         let title = '';
-        this.isZhubian.map(iterm => {
-          if(iterm.realname == name && row.isZhubian){
+        let isNotZhubian = row.isZhubian;
+        this.iszhubian.map(iterm => {
+          if(iterm.realname == name &&iterm.iszhubian && isNotZhubian){
             title =  '您已被选为'+iterm.textbookName+'的主编' ;
           }
         })

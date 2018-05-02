@@ -5,12 +5,12 @@
               <el-row>
             <el-col :span="16">
             <el-form-item label="教材名称：" prop="materialName" >
-                <el-input v-model="material.materialName" ></el-input>
+                <el-input v-model="material.materialName" @keyup.enter.native="submitForm"></el-input>
             </el-form-item>
             </el-col>
             <el-col :span="8">
             <el-form-item label="教材轮次：" prop="materialRound" >
-                <el-input v-model="material.materialRound" ></el-input>
+                <el-input v-model="material.materialRound" @keyup.enter.native="submitForm"></el-input>
             </el-form-item>
             </el-col>
             </el-row>
@@ -59,7 +59,7 @@
                       <el-input v-model="scope.row.contactUserName"   :ref="'isNameInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isNameInput')" v-if="scope.row.isNameInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactUserName'+scope.$index" :rules="rules" style="margin:18px 0;" >
                         <el-form-item prop="contactUserName" >
-                          <el-input v-model="scope.row.contactUserName"  ></el-input>
+                          <el-input v-model="scope.row.contactUserName" @keyup.enter.native="submitForm"></el-input>
                         </el-form-item>
                       </el-form>
                     </template>
@@ -74,7 +74,7 @@
                       <el-input v-model="scope.row.contactPhone" :ref="'isPhoneInput'+scope.$index" @blur="isShowEditInput(scope.$index,'isPhoneInput')" v-if="scope.row.isPhoneInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactPhone'+scope.$index" :rules="rules" style="margin:18px 0;">
                        <el-form-item prop="contactPhone" style="margin:18px 0;">
-                          <el-input v-model="scope.row.contactPhone"  ></el-input>
+                          <el-input v-model="scope.row.contactPhone"  @keyup.enter.native="submitForm"></el-input>
                         </el-form-item>
                        </el-form>
 
@@ -90,7 +90,7 @@
                       <el-input v-model="scope.row.contactEmail" :ref="'isEmailInput'+scope.$index"  @blur="isShowEditInput(scope.$index,'isEmailInput')" v-if="scope.row.isEmailInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'contactEmail'+scope.$index" :rules="rules" style="margin:18px 0;">
                         <el-form-item prop="contactEmail"   style="margin:18px 0;">
-                          <el-input v-model="scope.row.contactEmail"  ></el-input>
+                          <el-input v-model="scope.row.contactEmail"  @keyup.enter.native="submitForm"></el-input>
                         </el-form-item>
                       </el-form>
                     </template>
@@ -163,7 +163,7 @@
             </el-form-item>
             <el-form-item label="邮寄地址：" prop="mailAddress"  class="pull-left">
               <el-col>
-                <el-input v-model="material.mailAddress" style="width:600px"></el-input>
+                <el-input v-model="material.mailAddress" style="width:600px" @keyup.enter.native="submitForm"></el-input>
               </el-col>
             </el-form-item>
             <div class="clearfix"></div>
@@ -217,7 +217,7 @@
                       <el-input v-model="scope.row.extensionName" :ref="'extendIsNameInput'+scope.$index" @blur="extendShowInput(scope.$index,'extendIsNameInput')" v-if="ruleForm.materialExtensions[scope.$index].extendIsNameInput"></el-input> -->
                       <el-form :model="scope.row" :ref="'extensionName'+scope.$index" :rules="rules" style="margin:18px 0;">
                        <el-form-item prop="extensionName" style="margin:18px 0;">
-                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" ></el-input>
+                        <el-input v-model="ruleForm.materialExtensions[scope.$index].extensionName" placeholder="请输入名称" @keyup.enter.native="submitForm"></el-input>
                        </el-form-item>
                       </el-form>
                     </template>
@@ -251,7 +251,7 @@
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="material.notice">
+                  v-model="material.notice" @keyup.enter.native="submitForm">
                 </el-input>
               </el-col>
             </el-form-item>
@@ -274,7 +274,7 @@
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 12}"
                   placeholder="请输入内容"
-                  v-model="material.note">
+                  v-model="material.note" @keyup.enter.native="submitForm">
                 </el-input>
               </el-col>
             </el-form-item>
