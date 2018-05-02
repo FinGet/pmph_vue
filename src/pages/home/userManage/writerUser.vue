@@ -42,7 +42,7 @@
     <!--表格-->
     <div class="table-wrapper">
       <el-table :data="tableData" border style="width: 100%" >
-        <el-table-column prop="realname" label="姓名" width="110">
+        <el-table-column prop="realname" label="姓名" width="110" show-overflow-tooltip>
           <template scope="scope">
             <a class="name" @click="showDetail(scope.$index)">{{scope.row.realname}}</a>
           </template>
@@ -115,6 +115,7 @@
             <el-button type="text" @click="eidtInfoBtn(scope.$index)">修改</el-button>
             <el-button type="text" :disabled="scope.row.isDisabled?true:false" @click="login(scope.row.username)">登录</el-button>
             <el-button type="text" @click="resetPassword(scope.row)">重置密码</el-button>
+            <el-button type="text" @click="zhiTop(scope.$index,scope.row)">{{scope.row.isTop?'撤销':'置顶'}}</el-button>
             <!-- <el-button type="text">查看详情</el-button> -->
           </template>
         </el-table-column>
@@ -395,6 +396,7 @@ export default {
       isNew: true,
       activeName:'first',
       resetPasswordUrl:'/pmpheep/users/writer/resetPassword',  //重置密码url
+      isTopUrl:'/pmpheep/users/writer/isTop',  //置顶
       //用户类型数据
       options: [
         {
@@ -660,6 +662,22 @@ export default {
             message: '已取消操作'
           });
         });
+    },
+    zhiTop(index,obj){
+
+      this.$axios.put(this.isTopUrl,this.$commonFun.initPostData({
+        id:obj.id,
+        isTop:obj.isTop
+      })).then((res)=>{
+        if(res.data.code==1){
+          this.$message.success('操作成功');
+          this.tableData[index].isTop = !obj.isTop;
+        }else{
+          this.$message.error(res.data.msg.msgTrim());
+        }
+      }).catch(() => {
+
+      })
     },
     /**
      * 新增用户
