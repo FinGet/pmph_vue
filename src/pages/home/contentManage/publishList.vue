@@ -109,7 +109,7 @@
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">未发布</p>
-                    <p v-if="scope.row.authStatus==1">已退回</p>
+                    <p v-if="scope.row.authStatus==1">未通过</p>
                     <p v-if="scope.row.authStatus==2">已发布</p>
                 </template>
             </el-table-column>
@@ -286,7 +286,7 @@
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">待审核</p>
-                    <p v-if="scope.row.authStatus==1">已退回</p>
+                    <p v-if="scope.row.authStatus==1">未通过</p>
                     <p v-if="scope.row.authStatus==2">已通过</p>
                 </template>
             </el-table-column>
@@ -369,7 +369,7 @@ export default {
         },
         {
           value: 1,
-          label: "已退回"
+          label: "未通过"
         },
         {
           value: 2,
@@ -388,7 +388,7 @@ export default {
         },
         {
           value: 1,
-          label: "已退回"
+          label: "未通过"
         },
         {
           value: 2,
