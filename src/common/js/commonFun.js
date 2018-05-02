@@ -203,12 +203,15 @@ export function getDateTimeStamp(dateStr){
  * @returns {string} formatTime 格式化后的时间 例如： 2017-05-05 12:09:22
  */
 export function formatDate(nS,str) {
-  var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+  var reg = new RegExp("[\\u4E00-\\u9FFF]+","g"); //是否是汉字
   if(!nS||Empty(nS)){
     return "";
   }
   if(!Empty(nS)&&reg.test(nS)){
     return nS;
+  }
+  if((typeof(nS)=='string')&&nS.indexOf('-')&&str=='yyyy.MM.dd'){
+    return nS.replace(/-/g,'.');
   }
 
   if(parseInt(nS)===NaN){

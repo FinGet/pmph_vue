@@ -132,7 +132,7 @@
            </el-form-item>
            <el-form-item label="视频内容：" prop="videoList">
                <el-upload
-                  style="float:left;"
+                  style="float:left;width:260px;"
                   action="/v/upload"
                   name="file"
                   :auto-upload="true"
