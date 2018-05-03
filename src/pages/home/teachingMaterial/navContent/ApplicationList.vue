@@ -79,7 +79,7 @@
                     {{scope.row.state}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="278">
+            <el-table-column label="操作" width="178">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>
