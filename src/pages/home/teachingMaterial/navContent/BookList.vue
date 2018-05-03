@@ -113,7 +113,7 @@
 
                 <div class="out_bottom_box marginT60">
                   <div class="bottom_box">
-                    <!--<el-button type="primary" class="bottom_button" @click="save()">暂存</el-button>-->
+                   <!-- <el-button type="primary" class="bottom_button" @click="save()">暂存</el-button>-->
                     <el-button type="primary" class="bottom_button" @click="save(true)" >保存，下一步</el-button>
                     <el-checkbox class="marginL20" v-model="formData.isPublic">仅选中学校可见</el-checkbox>
                   </div>
@@ -136,7 +136,7 @@ export default {
               materialName: '',
               materialType: [],
               materialRound: undefined,
-              isPublic:false
+              isPublic:true
             },
             uploadLoading:false,
             extendListData: [{
@@ -166,7 +166,7 @@ export default {
               this.formData.materialName = res.data[0].materialName;
               this.formData.materialType = res.data[0].materialType;
               this.formData.materialRound = res.data[0].materialRound;
-              this.formData.isPublic = res.data[0].isPublic;
+              this.formData.isPublic = !res.data[0].isPublic;
               var bookList =[];
               res.data.map(iterm=>{
                 if(!!iterm.textbook){
@@ -375,7 +375,7 @@ export default {
               materialName:this.formData.materialName,
               materialRound:this.formData.materialRound,
               materialType:this.formData.materialType,
-              isPublic:this.formData.isPublic,
+              isPublic:!this.formData.isPublic,
               textbooks:JSON.stringify(bookList),
             }))
               .then((response) => {
