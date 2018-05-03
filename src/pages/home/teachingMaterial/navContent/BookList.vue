@@ -136,7 +136,7 @@ export default {
               materialName: '',
               materialType: [],
               materialRound: undefined,
-              isPublic:true
+              isPublic:false
             },
             uploadLoading:false,
             extendListData: [{
