@@ -146,7 +146,7 @@
        </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo" disabled="isdisabled">{{isUploadVideo?'转码中':'确 定'}}</el-button>
+                <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo" :disabled="isdisabled">{{isUploadVideo?'转码中':'确 定'}}</el-button>
             </span>
     </el-dialog>
     <!-- 审核视频弹框 -->
