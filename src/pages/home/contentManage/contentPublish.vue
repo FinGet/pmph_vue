@@ -572,6 +572,7 @@ export default {
           formData[i]=obj[i];
         }
       }
+
       return formData;
     },
     coverUploadSuccess(res, file, filelist){
