@@ -1038,7 +1038,7 @@ export default {
           if(value.length>40){
             this.$message.warning('不能超过40个字');
           }else{
-            this.backReason = value;
+           // this.backReason = value;
             let param = {
               progress: progress,
               orgUserIds: orgUserIds,
