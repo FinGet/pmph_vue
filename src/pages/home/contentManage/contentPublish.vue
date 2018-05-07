@@ -302,6 +302,7 @@ export default {
       }
       this.$refs["addForm"].validate(valid => {
         if (valid) {
+
             /* 判断暂存还是发布 */
 
             if(num==0){
@@ -357,9 +358,8 @@ export default {
           }
 
 
-
         } else {
-          return false;
+         return false;
         }
       });
     },
@@ -374,29 +374,31 @@ export default {
      this.showPreventDialog=true;
     },
     /* 审核 */
-    examineContent(obj,status){
-      this.formData.materialId = this.formData.materialId!=''?this.formData.materialId :'0';
-      this.$confirm(status==2?"确定审核通过该文章？":"确定退回该文章？", "提示", {
+    examineContent(obj,status) {
+      this.$refs["addForm"].validate(valid => {
+          if (valid) {
+            this.formData.materialId = this.formData.materialId != '' ? this.formData.materialId : '0';
+            this.$confirm(status == 2 ? "确定审核通过该文章？" : "确定退回该文章？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
       })
         .then(() => {
-           this.formData.sessionId = this.$getUserData().sessionId;
-           this.formData.authStatus=status;
-           this.formData.content=this.$refs.editor.getContent();
+          this.formData.sessionId = this.$getUserData().sessionId;
+          this.formData.authStatus = status;
+          this.formData.content = this.$refs.editor.getContent();
           this.$axios
-            ({
-              method:this.$route.query.type=='new'?'post':'put',
-              url:this.$route.query.type=='new'?this.addNewUrl:this.examineUrl,
-              data:this.$commonFun.initPostData(this.formData)
-            })
+          ({
+            method: this.$route.query.type == 'new' ? 'post' : 'put',
+            url: this.$route.query.type == 'new' ? this.addNewUrl : this.examineUrl,
+            data: this.$commonFun.initPostData(this.formData)
+          })
             .then(res => {
               console.log(res);
               if (res.data.code == 1) {
-                this.formData.materialId = this.formData.materialId=='0'?'' :this.formData.materialId;
+                this.formData.materialId = this.formData.materialId == '0' ? '' : this.formData.materialId;
                 this.$message.success("操作成功");
                 this.showContentDetail = false;
-                this.$router.push({name:'文章管理'})
+                this.$router.push({name: '文章管理'})
               } else {
                 this.$message.error(res.data.msg.msgTrim());
               }
@@ -408,6 +410,10 @@ export default {
             message: "已取消操作"
           });
         });
+          } else {
+            return false;
+          }
+      });
     },
     /* 栏目选择改变 */
     handleChange(value) {

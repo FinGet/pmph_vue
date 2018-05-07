@@ -79,7 +79,7 @@
               </tr>
               <tr>
                   <td>上版出版时间</td>
-                  <td colspan="3">{{data.revisionPublishDate}}</td>
+                  <td colspan="3">{{$commonFun.formatDate(data.revisionPublishDate,'yyyy-MM-dd')}}</td>
                   <td>累计印数</td>
                   <td>{{data.revisionPrint}}</td>
                   <td>库存数</td>
@@ -177,7 +177,7 @@
                   <td colspan="2">{{item.workplace}}</td>
                   <td>{{item.phone}}</td>
                   <td>{{item.position}}</td>
-                  <td>{{item.degree}}</td>
+                  <td>{{keySwitchVale(item.degree)}}</td>
               </tr>
               <tr height="36px" v-if="writerData.length==0">
                   <td></td>
@@ -336,6 +336,18 @@ export default {
             console.log(this.data);
           }
         });
+    },
+    keySwitchVale(key){
+      let ret = '';
+        switch(key) {
+          case 0:ret =  '博士';break;
+          case 1:ret = '硕士';break;
+          case 2:ret = '学士';break;
+          case 3:ret = '其他';break;
+          default: ret='';
+        }
+      return ret;
+
     },
     // 审核
     check(authProgress) {
