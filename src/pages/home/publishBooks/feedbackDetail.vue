@@ -32,7 +32,7 @@
                 :disabled="type=='detail'"
                 :autosize="{ minRows: 4, maxRows: 8}"
                 placeholder="请输入内容"
-                v-model="ruleForm.authorReply">
+                v-model="(ruleForm.authorReply==null||ruleForm.authorReply=='null')?'':ruleForm.authorReply">
               </el-input>
             </el-form-item>
             <el-form-item>
