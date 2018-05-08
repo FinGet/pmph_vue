@@ -807,38 +807,62 @@ export default {
 				console.log(userIds)
       })
       var title='';
+
       if(progress==3) {
         title = "是否确认通过?"
-      } else {
-        title = "是否确认退回?"
-      }
-      this.$confirm(title, "提示",{
+        this.$confirm(title, "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$axios.put("/pmpheep/auth/writerCheck",this.$initPostData({
+          let param = {
             progress: progress,
-            userIds: userIds.join(',')
-          })).then((response) => {
-            let res = response.data
-            if (res.code == "1") {
-              //console.log(res)
-              this.getWritersList()
-
-              this.$message({
-                  showClose: true,
-                  message: progress==3?'审核通过!':'已退回',
-                  type: 'success'
-                });
-            }else if(res.code ==2){
-              this.$message.error(res.msg.msgTrim());
-            }
-          }).catch(error => {
-            console.log(error.msg)
-          })
+            userIds: userIds.join(','),
+            backReason:''
+          }
+          this.passorback(param)
         })
+      } else {
+        //title = "是否确认退回?"
+        this.$prompt('请输入退回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          if(value.length>40){
+            this.$message.warning('不能超过40个字');
+          }else{
+            // this.backReason = value;
+            let param = {
+              progress: progress,
+              userIds: userIds.join(','),
+              backReason:value
+            };
+            this.passorback(param);
+          }
+
+        })
+      }
+
 		},
+    passorback(param){
+      this.$axios.put("/pmpheep/auth/writerCheck",this.$initPostData(param)).then((response) => {
+        let res = response.data
+        if (res.code == "1") {
+          //console.log(res)
+          this.getWritersList()
+
+          this.$message({
+            showClose: true,
+            message: progress==3?'审核通过!':'已退回',
+            type: 'success'
+          });
+        }else if(res.code ==2){
+          this.$message.error(res.msg.msgTrim());
+        }
+      }).catch(error => {
+        console.log(error.msg)
+      })
+    },
     /**
      * 搜索
      */

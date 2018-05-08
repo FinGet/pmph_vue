@@ -194,7 +194,7 @@
         </div>
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
-            <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
+            <el-button type="primary"   :disabled="contentDetailData.listObj.authStatus==1"  @click="editContent(contentDetailData.listObj)">修改</el-button>
             <el-button type="danger" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,1)" >退回</el-button>
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
@@ -691,6 +691,10 @@ export default {
                   this.backUrl,
                   this.$commonFun.initPostData({
                     id: obj.id,
+                    materialId:obj.materialId,
+                    categoryId:obj.categoryId,
+                    authorId:obj.authorId,
+                    authorType:0,
                     returnReason:value,
                     authStatus: status,
                     sessionId: this.$getUserData().sessionId
@@ -700,6 +704,7 @@ export default {
                   console.log(res);
                   if (res.data.code == 1) {
                     this.$message.success("退回成功");
+                    this.showContentDetail = false;
                     this.getPublicList();
                   } else {
                     this.$message.error(res.data.msg);

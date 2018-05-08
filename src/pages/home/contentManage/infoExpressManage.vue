@@ -163,7 +163,7 @@
         <div style="width:100%;overflow:hidden" class="marginT20">
             <div class="center_box">
             <el-button type="primary"   @click="editContent(contentDetailData.listObj)">修改</el-button>
-            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit">发布</el-button>
+            <el-button type="primary" :disabled="contentDetailData.listObj.isPublished" @click="publishSubmit(true)">发布</el-button>
             </div>
         </div>
     </el-dialog>
@@ -362,6 +362,9 @@ export default {
          obj.attachment=[];
          obj.file=[];
          obj.scheduledTime='';
+
+         console.log(obj);
+         console.log(JSON.stringify(obj));
       this.$axios.put(this.publishedUrl,this.$commonFun.initPostData(obj)).then((res)=>{
                 console.log(res);
                 if(res.data.code==1){

@@ -212,7 +212,7 @@ export default {
     background-color: #12806b;
     font-size:16px;
     padding:2px 20px 2px 15px;
-    max-width:545px;
+    max-width:530px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
