@@ -492,7 +492,8 @@ methods:
        * 修改用户信息
        */
       _updateUser() {
-        if(this.$refs.form.validate())
+        this.$refs["form"].validate(valid => {
+            if (valid) {
         this.$axios.put(this.api_pmph_update,this.$initPostData({
               username: this.form.username,
               id: this.form.id,
@@ -522,6 +523,10 @@ methods:
           .catch(e => {
             this.$message.error(e.msg);
           });
+            } else {
+              return false;
+            }
+        });
       },
       /**
        *  获取选中数据
