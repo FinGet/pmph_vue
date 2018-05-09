@@ -248,7 +248,7 @@
                   <td>{{item.bookname}}</td>
                   <td>{{item.edition}}</td>
                   <td>{{item.author}}</td>
-                  <td>{{item.pulisher}}</td>
+                  <td>{{item.publisher}}</td>
                   <td>{{item.booksize}}</td>
                   <td>{{item.printNumber}}</td>
                   <td>{{item.price}}</td>
