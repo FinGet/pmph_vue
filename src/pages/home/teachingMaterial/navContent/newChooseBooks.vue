@@ -678,7 +678,7 @@ export default {
   mounted () {
     document.onkeydown = function() {
       if(window.event.keyCode==13) {
-
+        return false;
       }
       }
   },
@@ -1225,6 +1225,7 @@ export default {
 
       return checked;
     },
+
     /* 提交表单 */
     submitForm(){
         this.optionMerge()  //选项合并
