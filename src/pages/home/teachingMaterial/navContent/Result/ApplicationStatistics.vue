@@ -384,8 +384,10 @@ export default {
               }
             },
             toolbox: {
+              show: true,
+              right: '5%',
               feature: {
-                dataView: { show: true, readOnly: false },
+                dataView: { show: true, readOnly: false},
                 magicType: { show: true, type: ["line", "bar"] },
                 restore: { show: true },
                 saveAsImage: { show: true }
@@ -502,8 +504,27 @@ export default {
               }
             },
             toolbox: {
+              show: true,
+              right: '5%',
               feature: {
-                dataView: { show: true, readOnly: false },
+                dataView: { show: true, readOnly: false,optionToContent: function(opt) {
+                    var axisData = opt.xAxis[0].data;
+                    var series = opt.series;
+                    var table = '<table border="1" style="width:50%;margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>'
+                      + '<td></td>'
+                      + '<td style="padding: 0 10px">' + series[0].name + '</td>'
+                      + '<td style="padding: 0 10px">' + series[1].name + '</td>'
+                      + '</tr>';
+                    for (var i = 0, l = axisData.length; i < l; i++) {
+                      table += '<tr>'
+                        + '<td style="padding: 0 10px">' + axisData[i] + '</td>'
+                        + '<td style="padding: 0 10px">' + series[0].data[i] + '</td>'
+                        + '<td style="padding: 0 10px">' + series[1].data[i] + '</td>'
+                        + '</tr>';
+                    }
+                    table += '</tbody></table>';
+                    return table;
+                  } },
                 magicType: { show: true, type: ["line", "bar"] },
                 restore: { show: true },
                 saveAsImage: { show: true }
