@@ -92,7 +92,7 @@
                     <span v-else>（无）</span>
                   </div>
                 </div>
-                <!--<el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>-->
+                <el-button class="print-none" type="danger" size="small" icon="delete" @click="deleteNew(index,true,iterm)" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">删除</el-button>
               </div>
             </div>
             <!--已有书籍-->
@@ -839,7 +839,7 @@
             file:undefined,
           }
           this.addBookList.push(initObj);
-          hasBookListChanged = true;
+          this.hasBookListChanged = true;
         },
         /**
          * 选择图书框发生改变时
@@ -867,6 +867,10 @@
               if(hasChange){
                 this.hasBookListChanged=true;
               }
+              if(iterm){
+                this.saveBook();
+              }
+
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -879,13 +883,21 @@
          */
         saveBook(){
           let dataIsReady = true;
+          console.log(this.addBookList);
           for(let iterm of this.addBookList){
             if(!iterm.textbookId){
               this.$message.error('请选择图书');
               return;
             }
-          }
 
+            if(!this.$commonFun.Empty(iterm.newCreated)){
+              if((this.$commonFun.Empty(iterm.presetPosition_temp)&&this.$commonFun.Empty(iterm.presetPosition_temp_multi))){
+                this.$message.error('职位必选');
+                return ;
+              }
+            }
+
+          }
           //准备上传数据
           let formData = {};
           this.addBookList.forEach((iterm,index)=>{
