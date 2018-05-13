@@ -330,7 +330,7 @@
         let n1= 0;
         let n2 =0;
         this.iszhubianList.map(iterm => {
-          if(iterm.realname == name &&iterm.iszhubian && (is_Zhubian || is_Fuzhubian)&&this.formData.textbookId != iterm.textbookId ){
+          if(iterm.realname == name &&iterm.iszhubian && (is_Zhubian || is_Fuzhubian)&&this.fexpertinfoormData.textbookId != iterm.textbookId ){
             title1 +=  "\""+iterm.textbookName+"\" " ;
             n1++;
           }
@@ -342,9 +342,9 @@
         if((n1+n2)>0&&!(type==2&&!row.isFuzhubian)&&!(type==2&&row.isZhubian)&&!(type==1&&row.isFuzhubian)){
           let flag = false;
           let title = name;
-          if(n1>0)title+='已被选为'+title1+'的主编';
+          if(n1>0)title+='已被选为'+title1+'的主编，';
           if(n2>0)title+='已被选为'+title2+'的副主编';
-          this.$confirm(title, "提示",{
+          this.$confirm(title, "是否继续",{
             confirmButtonText: "是",
             cancelButtonText: "否",
             type: "warning"
