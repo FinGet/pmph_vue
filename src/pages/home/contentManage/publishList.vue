@@ -694,7 +694,7 @@ export default {
                     materialId:obj.materialId,
                     categoryId:obj.categoryId,
                     authorId:obj.authorId,
-                    authorType:0,
+                    authorType:obj.authorType,
                     returnReason:value,
                     authStatus: status,
                     sessionId: this.$getUserData().sessionId

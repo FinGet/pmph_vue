@@ -19,7 +19,7 @@
         </div>
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button><!--||isChiefPublished-->
-          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0)||isChiefPublished)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0))" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
           <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
           <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">恢复到上次保存结果</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
@@ -172,7 +172,7 @@
         hasChanged:false,
         realName:'',
         orgName:'',
-        iszhubian:[]
+        iszhubianList:[]
       }
     },
     computed:{
@@ -274,7 +274,7 @@
 
               });
               this.tableData = res.data.DecPositionEditorSelectionVO;
-              this.iszhubian = res.data.isZhuBian;
+              this.iszhubianList = res.data.isZhuBian;
               /* 排序 */
               for(var k in this.tableData){
 
@@ -323,37 +323,87 @@
         this.hasChanged=true;
         let name = row.realname;
         let self = this;
-        let title = '';
-        let isNotZhubian = row.isZhubian;
-        this.iszhubian.map(iterm => {
-          if(iterm.realname == name &&iterm.iszhubian && isNotZhubian){
-            title =  '您已被选为'+iterm.textbookName+'的主编' ;
+        let title1 = '';
+        let title2 = '';
+        let is_Zhubian = row.isZhubian;
+        let is_Fuzhubian = row.isFuzhubian;
+        let n1= 0;
+        let n2 =0;
+        this.iszhubianList.map(iterm => {
+          if(iterm.realname == name &&iterm.iszhubian && (is_Zhubian || is_Fuzhubian)&&this.fexpertinfoormData.textbookId != iterm.textbookId ){
+            title1 +=  "\""+iterm.textbookName+"\" " ;
+            n1++;
+          }
+          if(iterm.realname == name &&iterm.isfubian && (is_Zhubian || is_Fuzhubian) &&this.formData.textbookId != iterm.textbookId){
+            title2 +=  "\""+iterm.textbookName+"\" " ;
+            n2++;
           }
         })
-        if(title.length>0){
-          self.$message.warning(title);
-        }
+        if((n1+n2)>0&&!(type==2&&!row.isFuzhubian)&&!(type==2&&row.isZhubian)&&!(type==1&&row.isFuzhubian)){
+          let flag = false;
+          let title = name;
+          if(n1>0)title+='已被选为'+title1+'的主编，';
+          if(n2>0)title+='已被选为'+title2+'的副主编';
+          this.$confirm(title, "是否继续",{
+            confirmButtonText: "是",
+            cancelButtonText: "否",
+            type: "warning"
+          })
+            .then((value)=>{
+             flag = true;
+              if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
+                row.isZhubian = false;
+                row.isFuzhubian = false;
+                row.isBianwei = false;
+                row.zhubianSort = '';
+                row.fuzhubianSort = '';
+                row.zhubianSortIsOk = true;
+                row.fuzhubianSortIsOk = true;
 
-        if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
-          row.isZhubian = false;
-          row.isFuzhubian = false;
-          row.isBianwei = false;
+
+                return;
+              }
+              row.chosenPosition = type;
+              row.isZhubian = type==1;
+              row.isFuzhubian = type==2;
+              row.isBianwei = type==3;
+              row.zhubianSort = '';
+              row.fuzhubianSort = '';
+              row.zhubianSortIsOk = true;
+              row.fuzhubianSortIsOk = true;
+            }).catch(e=>{
+            if(!flag){
+              if(type==1) row.isZhubian = false ;
+              if(type==2)  row.isFuzhubian = false ;
+
+            }
+          })
+
+        }else{
+
+          if((type==1&&!row.isZhubian)||(type==2&&!row.isFuzhubian)||(type==3&&!row.isBianwei)){
+            row.isZhubian = false;
+            row.isFuzhubian = false;
+            row.isBianwei = false;
+            row.zhubianSort = '';
+            row.fuzhubianSort = '';
+            row.zhubianSortIsOk = true;
+            row.fuzhubianSortIsOk = true;
+
+
+            return;
+          }
+          row.chosenPosition = type;
+          row.isZhubian = type==1;
+          row.isFuzhubian = type==2;
+          row.isBianwei = type==3;
           row.zhubianSort = '';
           row.fuzhubianSort = '';
           row.zhubianSortIsOk = true;
           row.fuzhubianSortIsOk = true;
-
-
-          return;
         }
-        row.chosenPosition = type;
-        row.isZhubian = type==1;
-        row.isFuzhubian = type==2;
-        row.isBianwei = type==3;
-        row.zhubianSort = '';
-        row.fuzhubianSort = '';
-        row.zhubianSortIsOk = true;
-        row.fuzhubianSortIsOk = true;
+
+
       },
       /**
        * 提交遴选结果

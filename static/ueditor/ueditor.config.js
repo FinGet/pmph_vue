@@ -98,7 +98,7 @@ import {BASE_URL} from '../../src/common/config'
         // 'scrawl',
         // 'insertvideo',
         // 'music',
-         'attachment',
+        // 'attachment',
         // 'map',
         // 'gmap',
         // 'insertframe',
