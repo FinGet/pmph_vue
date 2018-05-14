@@ -330,7 +330,7 @@
         let n1= 0;
         let n2 =0;
         this.iszhubianList.map(iterm => {
-          if(iterm.realname == name &&iterm.iszhubian && (is_Zhubian || is_Fuzhubian)&&this.fexpertinfoormData.textbookId != iterm.textbookId ){
+          if(iterm.realname == name &&iterm.iszhubian && (is_Zhubian || is_Fuzhubian)&&this.formData.textbookId != iterm.textbookId ){
             title1 +=  "\""+iterm.textbookName+"\" " ;
             n1++;
           }
@@ -339,6 +339,7 @@
             n2++;
           }
         })
+
         if((n1+n2)>0&&!(type==2&&!row.isFuzhubian)&&!(type==2&&row.isZhubian)&&!(type==1&&row.isFuzhubian)){
           let flag = false;
           let title = name;
