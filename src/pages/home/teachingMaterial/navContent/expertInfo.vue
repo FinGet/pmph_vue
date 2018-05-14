@@ -748,7 +748,7 @@
               hasBookListChanged:false,
               showSendMsg:false,
               inputMsg:'',
-              rankList:['无','国际','国家','省部','市'],
+              rankList:['无','国际','国家','省部','市级'],
               national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
               courseConstructionList:['无','国际','国家','省部'],
