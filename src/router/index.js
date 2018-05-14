@@ -163,9 +163,9 @@ export default new Router({
               children: [
                 {
                   path: '1v3',
-                  name: '主任视图',
+                  name: '角色遴选',
                   component: BooksSelect_1v3,
-                  meta: {applicationName: '1v3', replaceName: '遴选'}
+                  meta: {applicationName: '1v3'}
                 },
                 {path: 'result', name: '结果统计', component: Result, meta: {applicationName: 'result'}},
                 {
