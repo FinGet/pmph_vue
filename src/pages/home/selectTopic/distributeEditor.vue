@@ -222,7 +222,7 @@ export default {
 					this.tableData.forEach(item => {
 							item.submitTime = this.$commonFun.formatDate(item.submitTime).substring(0,10);
 					})
-					this.pageTotal = res.pageTotal;
+					this.pageTotal = res.data.total;
 				}
 			})
 		},
@@ -302,7 +302,8 @@ export default {
     },
 		/**分页查询 */
     handleSizeChange(val) {
-			this.searchParams.pageSize = val;
+      this.searchParams.pageSize=val;
+      this.searchParams.pageNumber=1;
 			this.getTableData();
 		},
     handleCurrentChange(val) {
@@ -312,6 +313,7 @@ export default {
 		/**分页查询 */
     dialogSizeChange(val) {
 			this.dialogParams.pageSize = val;
+      this.dialogParams.pageNumber = 1;
 			this.getListEditors();
 		},
     dialogCurrentChange(val) {
