@@ -14,7 +14,7 @@
           <div style="text-align: right; margin: 0;height: 160px">
             <qriously :value="initQCode" :size="160"/>
           </div>
-          <!--<el-button style="margin-right: 20px;" type="text" icon="el-icon-share" slot="reference">微信绑定</el-button>-->
+          <el-button style="margin-right: 20px;" type="text" icon="el-icon-share" slot="reference">微信绑定</el-button>
         </el-popover>
 
         <Message-icon></Message-icon>

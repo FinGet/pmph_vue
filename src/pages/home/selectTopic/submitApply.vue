@@ -90,7 +90,7 @@
             return{
               api_get_list:'pmpheep/topic/list/checkTopic',
               searchParams:{
-                pageSize:30,
+                pageSize:10,
                 pageNumber:1,
                 authProgress:1,
                 submitTime:'',
