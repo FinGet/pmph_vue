@@ -52,7 +52,7 @@
           <el-button size="small" type="primary">添加封面图片</el-button>
         </el-upload>
         </el-form-item>
-      <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
+      <el-form-item label="附件：" >
           <div class="col-content file-upload-wrapper" style="padding-left:0;" >
           <my-upload
             class="upload-demo"
@@ -85,7 +85,7 @@
            <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
 
          </el-form-item>
-         <el-form-item label="附件：" v-if="$router.currentRoute.query.columnId!=2">
+         <el-form-item label="附件：" >
               <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index">{{item.name}}</p>
          </el-form-item>
        </el-form>

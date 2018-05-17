@@ -67,7 +67,8 @@
         style="width: 100%">
         <el-table-column
           type="selection"
-          width="55">
+          width="55"  >
+
         </el-table-column>
         <el-table-column
           prop="sort"
@@ -112,7 +113,7 @@
           <template scope="scope">
             <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
             <span v-else>待遴选</span>
-            <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',
+            <router-link :to="{name:'遴选',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',
               q:scope.row.myPower,opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished||forceEnd)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
                 <i v-if="(forceEnd||(scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(2,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
@@ -127,7 +128,7 @@
           <template scope="scope">
             <span v-if="scope.row.bianWeis" v-html="scope.row.bianWeis"></span>
             <span v-else>待遴选</span>
-            <router-link :to="{name:'遴选主编/副主编',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,
+            <router-link :to="{name:'遴选',query:{bookid:scope.row.textBookId,type:'bw',bookname:scope.row.textbookName,q:scope.row.myPower,
             opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished||forceEnd)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
                 <i v-if="(forceEnd||(scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||!hasAccess(3,scope.row.myPower)||scope.row.allTextbookPublished)" class="fa fa-eye fa-fw"></i>
@@ -399,6 +400,7 @@
        */
       getTableData(){
         // console.log(this.searchForm)
+        let _this = this;
         this.$axios.get(this.api_position_list,{params:this.searchForm})
           .then(response=>{
             var res = response.data;
@@ -409,7 +411,9 @@
                 iterm.deadline = this.$commonFun.formatDate(iterm.deadline).split(' ')[0];
               });
               this.tableData = res.data.rows;
+
               if(this.tableData.length){
+                _this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
                 this.forceEnd = this.tableData[0].forceEnd;
                 this.allTextbookPublished = this.tableData[0].allTextbookPublished;
                 console.log(this.allTextbookPublished);
@@ -490,6 +494,13 @@
         })
 
       },
+      // checkboxInit(row,index){
+      //   if(index ==0){
+      //
+      //   }else{
+      //
+      //   }
+      // },
       handleSelectionChange(val){
         let arr = []
         val.forEach(item => {
@@ -707,6 +718,7 @@
         rows.splice(index, 1);
       }
     },
+
     created(){
       // console.log(this.materialInfo);
       this.searchForm.materialId = this.$route.params.materialId;
@@ -715,12 +727,28 @@
       if(!this.searchForm.materialId){
         this.$router.push({name:'通知列表'});
       }
-      this.getTableData();
-      this.getBookName();
+
+
 
       if(window._hmt){
         _hmt.push(['_trackPageview', '/material-application/1v3']);
       }
+    },
+    mounted(){
+    let _this = this;
+
+      setTimeout(function(){
+        _this.getTableData();
+        _this.getBookName();
+          setTimeout(function(){
+        _this.$nextTick(() => {
+          //alert(_this.tableData.length);
+          if(_this.tableData.length) {
+            _this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
+          }
+        })},1000)
+      },50)
+
     },
     components:{
       userPmph
