@@ -99,7 +99,7 @@
       return{
         api_get_list:'pmpheep/topic/list/checkTopic',
         searchParams:{
-          pageSize:30,
+          pageSize:10,
           pageNumber:1,
           authProgress:'2,3',
           submitTime:'',
@@ -112,11 +112,14 @@
       }
     },
     methods:{
-      handleSizeChange(){
-
+      handleSizeChange(val){
+        this.searchParams.pageSize=val;
+        this.searchParams.pageNumber=1;
+        this.getData();
       },
-      handleCurrentChange(){
-
+      handleCurrentChange(val){
+        this.searchParams.pageNumber=val;
+        this.getData();
       },
       /**
        * 获取数据
@@ -133,7 +136,7 @@
                 iterm.submitTime=this.$commonFun.formatDate(iterm.submitTime,'yyyy-MM-dd');
               });
               this.tableData = res.data.rows;
-              this.pageTotal = res.data.pageTotal;
+              this.pageTotal = res.data.total;
             }else{
               self.$message.error(res.msg.msgTrim());
             }
@@ -163,12 +166,12 @@
     watch:{
 
     },
-    created(){ 
+    created(){
       this.searchParams.bookname=this.searchInput;
       this.getData();
     },
     mounted () {
-      
+
     }
   }
 </script>

@@ -13,7 +13,7 @@
                 </el-table-column>
                 <el-table-column prop="sort" label="显示顺序">
                 </el-table-column>
-                <el-table-column prop="isDisabled" label="启用标识">
+                <el-table-column prop="isDisabled" label="启用标识" >
                     <template scope="scope">
                         <p v-if="!scope.row.isDisabled">启用</p>
                         <p v-if="scope.row.isDisabled">禁用</p>
@@ -23,9 +23,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width="220">
                     <template scope="scope">
-                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='编辑'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='sso登录默认角色'?true:false"  @click="reviseRoles(scope.row)">修改</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
-                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='编辑'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
+                        <el-button type="text" :disabled="scope.row.roleName=='系统管理员'||scope.row.roleName=='sso登录默认角色'?true:false" @click="updatePower(scope.row)">权限设置</el-button>
                         <el-button type="text" @click="openSeeDialog(scope.row)">查看权限</el-button>
                         <!-- <span style="line-height:16px">|</span> -->
                         <!-- <el-button type="text" @click="deleteRole(scope.row)">删除</el-button> -->
