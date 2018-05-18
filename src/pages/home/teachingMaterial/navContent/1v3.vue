@@ -140,11 +140,11 @@
         <!--主任 end-->
 
         <el-table-column
-          label="操作" min-width="170">
+          label="操作" min-width="190">
           <template scope="scope">
             <!-- <el-button type="text" :disabled="true" v-if="scope.row.state==0||scope.row.state==2||scope.row.state>4">名单确认</el-button> -->
             <el-button type="text" :disabled=" forceEnd || !hasAccess(4,scope.row.myPower) || scope.row.allTextbookPublished || scope.row.isPublished ||
-             scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'已确认':'名单确认'}}</el-button>
+             scope.row.isLocked"  @click="showDialog(1,scope.row)">{{scope.row.isLocked?'名单已确认':'名单确认'}}</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" @click="showDialog(0,scope.row,scope.row.isLocked)" :disabled=" forceEnd || (scope.row.isPublished && !scope.row.repub) ||
              !hasAccess(5,scope.row.myPower) || scope.row.allTextbookPublished">

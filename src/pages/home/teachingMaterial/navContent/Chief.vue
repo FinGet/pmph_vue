@@ -211,7 +211,8 @@
 
         //3、发布后，确认、发布按钮置灰，再次更改人员名单后，发布按钮置为可用
 
-        return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
+        //return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
+        return !(hasPermission) || (isChiefPublished&&!hasChanged);
       },
     },
     created(){
@@ -450,14 +451,19 @@
               .then(response=>{
                 var res = response.data;
                 if(res.code==1){
-                  if(type===2){
+                  //if(type===2){
                     this.$router.go(-1);
-                  }else{
-                    this.getTableData();
-                  }
+                  // }else{
+                  //   this.getTableData();
+                  // }
                   this.$message.success('提交成功！');
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  if(type===1&&res.msg.msgTrim()=='遴选职位为空'){
+                    this.$router.go(-1);
+                  }else{
+                    this.$message.error(res.msg.msgTrim());
+                  }
+
                 }
               })
               .catch(e=>{
