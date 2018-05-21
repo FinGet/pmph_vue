@@ -211,7 +211,8 @@
 
         //3、发布后，确认、发布按钮置灰，再次更改人员名单后，发布按钮置为可用
 
-        return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
+        //return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
+        return !(hasPermission) || (isChiefPublished&&!hasChanged);
       },
     },
     created(){
@@ -450,14 +451,19 @@
               .then(response=>{
                 var res = response.data;
                 if(res.code==1){
-                  if(type===2){
+                  //if(type===2){
                     this.$router.go(-1);
-                  }else{
-                    this.getTableData();
-                  }
+                  // }else{
+                  //   this.getTableData();
+                  // }
                   this.$message.success('提交成功！');
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  if(type===1&&res.msg.msgTrim()=='遴选职位为空'){
+                    this.$router.go(-1);
+                  }else{
+                    this.$message.error(res.msg.msgTrim());
+                  }
+
                 }
               })
               .catch(e=>{
@@ -525,11 +531,12 @@
         zhubianSortList = zhubianSortList.sort();
         fuzhubianSortList = fuzhubianSortList.sort();
 
-        let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-
+       // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
+       // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
+        let zhubianSortIsOk =zhubianSortList.length==0 || zhubianSortList[0]!=1;
+        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || fuzhubianSortList[0]!=1 ;
         if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
-          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的连续整数');
+          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的整数');
         }
 
         return zhubianSortIsOk&&fuzhubianSortIsOk

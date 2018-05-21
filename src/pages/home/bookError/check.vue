@@ -79,10 +79,20 @@ export default {
         realname: "", // 纠错人
         gmtCreate: "", // 提交时间
         result: "",
+        authorReply:"",
         editorReply: ""
       },
       type:'',
       rules: {
+        authorReply: [
+          {
+            type: "string",
+            required: true,
+            message: "请输入回复内容",
+            trigger: "blur"
+          },
+          { min: 1, max: 500, message: "不能超过500个字符", trigger: "change,blur" }
+        ],
         editorReply: [
           {
             type: "string",
@@ -152,6 +162,7 @@ export default {
                 this.$initPostData({
                   id: this.id,
                   result: this.ruleForm.result,
+                  authorReply: this.ruleForm.authorReply,
                   editorReply: this.ruleForm.editorReply
                 })
               )

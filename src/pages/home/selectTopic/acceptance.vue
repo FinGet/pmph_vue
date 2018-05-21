@@ -104,7 +104,7 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
-      pageTotal: 100,
+      pageTotal: 0,
       tableData: [],
 			id: '', // 选题id
 			dialogTableVisible: false,
@@ -139,7 +139,7 @@ export default {
 				let res = response.data;
 				if (res.code == '1') {
 					this.tableData = res.data.rows;
-					this.pageTotal = res.pageTotal;
+					this.pageTotal = res.data.total;
 				}
 			})
 		},
@@ -185,8 +185,16 @@ export default {
 			this.searchParams.pageNumber = 1;
 			this.getTableData();
 		},
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    /**分页查询 */
+    handleSizeChange(val) {
+      this.searchParams.pageSize=val;
+      this.searchParams.pageNumber=1;
+      this.getTableData();
+    },
+    handleCurrentChange(val) {
+      this.searchParams.pageNumber = val;
+      this.getTableData();
+    },
   }
 };
 </script>

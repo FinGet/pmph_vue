@@ -11,10 +11,17 @@
           <i class="fa fa-id-card-o fa-fw"></i>
         </el-button>
       </el-dropdown-item>
+
       <el-dropdown-item>
         <el-button type="text" @click="$router.push({name:'个人信息',query:{type:'password'}})">
           修改密码
           <i class="fa fa-key fa-fw"></i>
+        </el-button>
+      </el-dropdown-item>
+      <el-dropdown-item>
+        <el-button  type="text"  @click="wxClick">
+          微信绑定
+          <i class="fa fa-id-card-o fa-fw"></i>
         </el-button>
       </el-dropdown-item>
       <el-dropdown-item>
@@ -25,6 +32,8 @@
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
+
+
 </template>
 
 <script>
@@ -33,12 +42,17 @@
 	    userData: {
         type: Object,
         default: function () {
-          return {}
+          return {
+
+          }
         }
       }
     },
 		data() {
-			return {}
+
+			return {
+      showFlag:true
+      }
 		},
     computed:{
       headImage(){
@@ -65,6 +79,9 @@
             this.$message.error('退出登录失败，请重试');
           })
       },
+      wxClick(){
+        this.$parent.showWx();
+      }
     },
 	}
 </script>
