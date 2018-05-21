@@ -39,7 +39,7 @@
       size="300"
       top="5%"
     >
-      <el-input v-model="userId" placeholder="请输入用户id" @keyup.enter.native="submit"></el-input>
+      <el-input v-model="userId" placeholder="请输入微信企业号用户名" @keyup.enter.native="submit"></el-input>
        <span slot="footer" class="dialog-footer">
          <el-button type="primary" @click="close">取消</el-button>
           <el-button type="primary" @click="submit">确 定</el-button>
