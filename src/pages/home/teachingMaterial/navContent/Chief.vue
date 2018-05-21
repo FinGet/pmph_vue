@@ -531,11 +531,12 @@
         zhubianSortList = zhubianSortList.sort();
         fuzhubianSortList = fuzhubianSortList.sort();
 
-        let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-
+       // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
+       // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
+        let zhubianSortIsOk =zhubianSortList.length==0 || zhubianSortList[0]!=1;
+         let fuzhubianSortIsOk = fuzhubianSortList.length==0 || fuzhubianSortList[0]!=1 ;
         if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
-          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的连续整数');
+          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的整数');
         }
 
         return zhubianSortIsOk&&fuzhubianSortIsOk
