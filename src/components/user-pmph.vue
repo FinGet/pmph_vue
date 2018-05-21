@@ -492,7 +492,7 @@ methods:
        * 修改用户信息
        */
       _updateUser() {
-        this.$refs["form"].validate(valid => {
+        this.$refs.form.validate(valid => {
             if (valid) {
         this.$axios.put(this.api_pmph_update,this.$initPostData({
               username: this.form.username,
