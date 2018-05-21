@@ -1256,14 +1256,17 @@ export default {
           } else {
 
             this.$message.error('输入的内容不正确，请正确填写');
-            let _this = this;
-            setTimeout(function () {
-              console.log(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0]);
-             _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0].focus()
-            },1000)
+
+           this.$nextTick(this.focuFuntion)
             return false;
           }
         });
+    },
+    focuFuntion(){
+      let _this = this;
+      console.log(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
+      _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0?"":(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]).focus()
+
     }
   },
   components: {

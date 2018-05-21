@@ -744,7 +744,7 @@
         _this.$nextTick(() => {
           //alert(_this.tableData.length);
           if(_this.tableData.length) {
-            _this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
+            //_this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
           }
         })},1000)
       },50)
