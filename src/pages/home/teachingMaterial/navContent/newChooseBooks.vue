@@ -1230,6 +1230,7 @@ export default {
     submitForm(){
         this.optionMerge()  //选项合并
         this.mergeForms();   //表单合并
+
         this.$refs.ruleForm.validate((valid) => {
           if (valid&&this.formTableChecked()) {
             if(!this.dateOptionsChecked()){
@@ -1253,7 +1254,13 @@ export default {
 
 
           } else {
+
             this.$message.error('输入的内容不正确，请正确填写');
+            let _this = this;
+            setTimeout(function () {
+              console.log(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0]);
+             _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0].focus()
+            },1000)
             return false;
           }
         });

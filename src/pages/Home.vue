@@ -14,7 +14,7 @@
           <div style="text-align: right; margin: 0;height: 160px">
             <qriously :value="initQCode" :size="160"/>
           </div>
-          <el-button style="margin-right: 20px;" type="text" icon="el-icon-share" slot="reference">微信绑定</el-button>
+          <!--<el-button style="margin-right: 20px;" type="text" icon="el-icon-share" slot="reference">微信绑定</el-button>-->
         </el-popover>
 
         <Message-icon></Message-icon>
@@ -32,7 +32,21 @@
       </div>
       <div class="back_to_top" v-if="isShowBackTop" @click="backToTop"></div>
     </div>
+    <el-dialog
+      title="微信绑定"
+      :visible.sync="detailVisible"
+      @close=""
+      size="300"
+      top="5%"
+    >
+      <el-input v-model="userId" placeholder="请输入用户id" @keyup.enter.native="submit"></el-input>
+       <span slot="footer" class="dialog-footer">
+         <el-button type="primary" @click="close">取消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
+
 </template>
 
 <script>
@@ -52,11 +66,13 @@
     data() {
       return {
         isShowBackTop: false,
+        userId:'',
         isShowBorder: true,
         isPadding: false,
         sidebarFlod: true,
         userData: undefined,
-        initQCode: ''
+        initQCode: '',
+        detailVisible:false
       }
     },
     computed: {
@@ -146,6 +162,32 @@
             console.log(e);
           })
       },
+      showWx(){
+        this.detailVisible = true;
+      },
+      close(){
+        this.detailVisible = false;
+      },
+      submit(){
+        var params = {
+         userId:this.userId
+        };
+        this.$axios.get('/pmpheep/wx/findUserByUserId', {params: params})
+          .then(response => {
+            let res = response.data;
+            console.log(res);
+            if(res.data.errcode==0){
+              this.$message.success("绑定成功");
+              this.detailVisible = false;
+            }else{
+              this.$message.success("绑定失败");
+            }
+
+          })
+          .catch(e => {
+            console.log(e);
+          })
+      }
     },
     components: {
       SideBar,
