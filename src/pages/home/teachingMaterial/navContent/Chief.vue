@@ -440,14 +440,15 @@
                 jsonDecPosition.push(tempObj);
               }
             }
-//            console.log(jsonDecPosition);
+            console.log(jsonDecPosition);
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
               selectionType:type?type:1,
               textbookId: this.searchParams.textbookId,
               editorOrEditorialPanel:this.type=='zb'?1:2,
-              unselectedHold:this.type=='zb'?1:(jsonDecPosition.length)>0?1:0
+              unselectedHold:this.type=='zb'?0:(jsonDecPosition.length)>0?1:0
+              //unselectedHold:(jsonDecPosition.length)>0?1:0
             }))
               .then(response=>{
                 var res = response.data;
@@ -534,10 +535,12 @@
 
        // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
        // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-        let zhubianSortIsOk =zhubianSortList.length==0 || zhubianSortList[0]==1;
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || fuzhubianSortList[0]==1 ;
+
+        let zhubianSortIsOk =zhubianSortList.length==0 ;
+        let fuzhubianSortIsOk = fuzhubianSortList.length==0  ;
+
         if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
-          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的整数');
+          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是整数');
         }
 
         return zhubianSortIsOk&&fuzhubianSortIsOk
