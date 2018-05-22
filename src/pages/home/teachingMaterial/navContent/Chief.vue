@@ -413,9 +413,9 @@
        */
       submit(type){
         let  title = type == 1?"确定保存当前名单?":"确定提交当前名单?";
-        if(!this.checkSortIsOk()){
-          return;
-        }
+        // if(!this.checkSortIsOk()){
+        //   return;
+        // }
 
         this.$confirm(title, "提示",{
           confirmButtonText: "确定",
