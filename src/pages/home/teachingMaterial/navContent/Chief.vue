@@ -413,7 +413,7 @@
        */
       submit(type){
         let  title = type == 1?"确定保存当前名单?":"确定提交当前名单?";
-        if(!this.checkSortIsOk()){
+        if(!this.checkSortIsOk(type)){
           return;
         }
 
@@ -514,19 +514,22 @@
         }
         this.hasChanged=true;
       },
-      checkSortIsOk(){
+      checkSortIsOk(type){
         var zhubianSortList = [];
         var fuzhubianSortList = [];
         var zhubianData = [];
         var fuzhubianData =[];
-
+        let is_zhubianSort = false;
+        let  is_fuzhubianSort = false;
         this.tableData.forEach(iterm=>{
           if(iterm.isZhubian){
-            zhubianSortList.push(parseInt(iterm.zhubianSort));
+            if(!isNaN(parseInt(iterm.zhubianSort))) zhubianSortList.push(parseInt(iterm.zhubianSort));
+            is_zhubianSort = isNaN(parseInt(iterm.zhubianSort))?true:false;
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
-            fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
+            if(!isNaN(parseInt(iterm.fuzhubianSort))) fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
+            is_fuzhubianSort = isNaN(parseInt(iterm.fuzhubianSort))?true:false;
             fuzhubianData.push(iterm);
           }
         })
@@ -535,17 +538,17 @@
 
        // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
        // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-        console.log(zhubianSortList);
-        console.log(fuzhubianSortList);
-        let zhubianSortIsOk =(zhubianSortList.length==0||(zhubianSortList.length>0 &&!isNaN(zhubianSortList[0])));
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0||(fuzhubianSortList.length>0 &&!isNaN(fuzhubianSortList[0]));
-        console.log(zhubianSortIsOk);
-        console.log(fuzhubianSortIsOk);
-        if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
-          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是整数');
-        }
 
-        return (zhubianSortIsOk&&fuzhubianSortIsOk)
+        let sumbit_2 =  type==2 &&zhubianSortList.length==0 &&fuzhubianSortList.length==0?true:false;
+
+        if(is_zhubianSort||is_fuzhubianSort){
+          this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
+        }else if(sumbit_2){
+            this.$message.error("请选择一个"+((zhubianSortList.length==0)?'主编':'副主编')+'发布');
+          }
+
+      //  return (zhubianSortIsOk&&fuzhubianSortIsOk)
+        return (!sumbit_2)&&!(is_zhubianSort||is_fuzhubianSort)
 
       },
       hasPermission(index){
