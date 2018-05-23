@@ -7,7 +7,7 @@
       <el-col :span="chartColDefaultWidth" class="groupmanage-col" v-if="currentGroupId">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
+            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.bookName">({{currentGroup.bookName}})</span>  </p>
           </div>
           <ul class="grouptab clearfix">
             <li v-for="(tab,index) in tabs"
@@ -39,6 +39,7 @@
           :refreshMember.sync="isrefreshMember"
           @getGroupMemberList="getGroupMemberList"
           :groupId.sync="currentGroupId"
+          :bookId.sync = "currentGroup.bookId"
           :crurrentMemberInfo="crurrentMemberInfo"
         ></MembersList>
       </el-col>
@@ -68,7 +69,8 @@
         currentGroup:{
           groupImage: "",
           groupName:"",
-          textbook:'',
+          bookName:'',
+          bookId:'',
           id:null,
           filesNumber:0,
           isMember:''
