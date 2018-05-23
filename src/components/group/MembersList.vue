@@ -315,7 +315,7 @@ export default {
      var subArr=[];
      let _this = this;
      console.log(this.addTableData);
-      this.addTableData.uniq().forEach(function(item){
+      this.addTableData.distinct().forEach(function(item){
         var obj=new Object();
            obj.userId=item.id;
            obj.isWriter=item.isWriter?item.isWriter:false;

@@ -146,8 +146,24 @@ String.prototype.replaceAll = function(s1,s2){
   return this.replace(new RegExp(s1,"gm"),s2);
 }
 
-Array.prototype.uniq = function() {
-  return Array.from(new Set(this));
+// Array.prototype.uniq = function() {
+//   return Array.from(new Set(this));
+// }
+Array.prototype.distinct = function(){
+  var arr = this,
+    result = [],
+    i,
+    j,
+    len = arr.length;
+  for(i = 0; i < len; i++){
+    for(j = i + 1; j < len; j++){
+      if(arr[i] === arr[j]){
+        j = ++i;
+      }
+    }
+    result.push(arr[i]);
+  }
+  return result;
 }
 
 /* eslint-disable no-new */
