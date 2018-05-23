@@ -44,7 +44,7 @@
     <!--新增成员弹窗-->
     <el-dialog :visible.sync="dialogVisible" size="large" top="30px">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="本套教材用户" name="first">
+        <el-tab-pane label="本套书籍用户" name="first" v-if="bookId>0">
           <div class="tabsContainer">
 
             <div class="searchBox-wrapper">
@@ -189,7 +189,7 @@ import bus from 'common/eventBus/bus.js'
 
 import userPmph from 'components/user-pmph'
 export default {
-  props: ['groupId','refreshMember','crurrentMemberInfo'],
+  props: ['groupId','refreshMember','crurrentMemberInfo','bookId'],
   data() {
     return {
       dialogVisible: false,
@@ -220,7 +220,7 @@ export default {
       /**
        * 新增小组成员的弹窗数据
        */
-      activeName: 'first',
+      activeName: this.bookId>0?'first':'second',
       writerTableData: [],
       textBookTableData: [],
       selectValue: '',
@@ -399,10 +399,15 @@ export default {
     refreshMember(){
       console.log("refreshMember"+this.groupId);
       this.getGroupMember(this.groupId);
+    },
+    bookId(newVal, old){
+     this.activeName=this.bookId>0?'first':'second';
+      console.log("newVal: "+this.bookId);
     }
   },
   created(){
     console.log("created"+this.groupId);
+    console.log("currentGroupInfo: "+this.bookId);
     if(this.groupId){
       this.getGroupMember(this.groupId);
     }

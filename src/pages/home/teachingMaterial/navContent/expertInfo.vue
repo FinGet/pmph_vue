@@ -123,7 +123,7 @@
             </div>
           </div>
           <div class="expert_info-buttonWrapper print-none">
-            <el-button type="primary" @click="addNewBook">添加图书</el-button>
+            <el-button type="primary" v-if="expertInfoData.isMultiBooks" @click="addNewBook">添加图书</el-button>
             <el-button type="primary" @click="saveBook" v-if="((hasNewAddbook||hasBookListChanged)&&addBookList.length)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)">保存图书</el-button>
           </div>
         </div>
