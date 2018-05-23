@@ -170,6 +170,7 @@
       },
       setGroupName(group) {
         this.currentGroupId =group.id;
+        console.log(this.currentGroupId)
         for(let key in this.currentGroup){
           this.currentGroup[key] = group[key]
         }
@@ -184,6 +185,7 @@
       getGroupList(groupList){
         this.currentGroupList=groupList;
         this.currentGroupId=this.currentGroupList[0].id;
+        console.log("获取小组列表"+this.currentGroupId);
       },
       /**
        * 获取当前小组成员列表
@@ -206,6 +208,7 @@
       currentGroupId(){
         this.currentActive = 0;
         this.currentView = 'GroupChat';
+        console.log("当切换小组时，默认跳转到聊天窗口"+this.currentGroupId);
       },
     },
     components:{

@@ -44,7 +44,50 @@
     <!--新增成员弹窗-->
     <el-dialog :visible.sync="dialogVisible" size="large" top="30px">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="作家用户" name="first">
+        <el-tab-pane label="本套教材用户" name="first">
+          <div class="tabsContainer">
+
+            <div class="searchBox-wrapper">
+              <span>姓名/账号：</span>
+              <div>
+                <el-input placeholder="请输入内容" v-model.trim="textBookParams.searchParam" @keyup.enter.native="getTextBookUserList" class="searchInputEle"></el-input>
+              </div>
+            </div>
+
+            <div class="searchBtn-wrapper text-right">
+              <el-button type="primary" icon="search" @click="getTextBookUserList">搜索</el-button>
+            </div>
+            <div class="tableContainer groupmanageTable">
+              <el-table ref="textBookUserTable"
+                        :data="textBookTableData"
+                        border tooltip-effect="dark"
+                        @selection-change="writerCheckChange"
+                        style="width: 100%;margin-bottom:20px;">
+                <el-table-column type="selection" width="55">
+                </el-table-column>
+                <el-table-column prop="realname" label="姓名">
+                </el-table-column>
+                <el-table-column prop="username" label="账号">
+                </el-table-column>
+                <el-table-column prop="position" label="遴选职位">
+                </el-table-column>
+                <el-table-column prop="orgName" label="所属机构" show-overflow-tooltip>
+                </el-table-column>
+              </el-table>
+              <el-pagination class="pull-right"
+                             :page-sizes="[10, 20,30, 50, 100]"
+                             :current-page.sync="textBookParams.pageNumber"
+                             @size-change="textBookSizeChange"
+                             @current-change="textBookCurrentChange"
+                             v-if="textBookPageTotal>textBookParams.pageSize"
+                             :page-size="textBookParams.pageSize"
+                             layout="total, sizes, prev, pager, next, jumper"
+                             :total="textBookPageTotal">
+              </el-pagination>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="作家用户" name="second">
           <div class="tabsContainer">
 
             <div class="searchBox-wrapper">
@@ -101,7 +144,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="社内用户" name="second">
+        <el-tab-pane label="社内用户" name="third">
           <!--社内用户组件-->
           <user-pmph @selection-change="clubUserSelectChange" select :groupId="groupId" ></user-pmph>
         </el-tab-pane>
@@ -151,6 +194,7 @@ export default {
     return {
       dialogVisible: false,
       groupMemberUrl: '/pmpheep/group/list/pmphGroupMember',  //获取小组成员url
+      textbookMemberUrl:'/pmpheep/group/member/getMaterialMember', //获取本套教材成员
       writerUserUrl: '/pmpheep/users/writer/list/writerUser',  //获取作家用户url
       addMemberUrl:'/pmpheep/group/add/groupMember',  //添加小组成员url
       writerParams: {
@@ -161,8 +205,15 @@ export default {
         pageSize: 10,
         pageNumber: 1
       },
+      textBookParams:{
+        groupId: this.groupId,
+        searchParam:'',
+        pageSize: 10,
+        pageNumber: 1
+      },
       isLoadingUp:false,
       writerPageTotal:0,
+      textBookPageTotal:0,
       addMemberArr:[],
       defaultImage: this.$config.DEFAULT_USER_IMAGE,
       memberListData: [],
@@ -171,6 +222,7 @@ export default {
        */
       activeName: 'first',
       writerTableData: [],
+      textBookTableData: [],
       selectValue: '',
       options: [{
         value: '',
@@ -223,6 +275,19 @@ export default {
         }
       })
     },
+    /* 获取本套教材成员 */
+    getTextBookUserList() {
+      var _this = this;
+      this.$axios.get(this.textbookMemberUrl , {
+        params: this.textBookParams
+      }).then(function(res) {
+        if(res.data.code==1){
+          _this.textBookTableData=res.data.data.memberlist;
+          _this.textBookPageTotal= res.data.data.total;
+        }
+      })
+    },
+
     /* 切换作家用户选中状态时 */
     writerCheckChange(arr){
       var _this=this;
@@ -248,12 +313,15 @@ export default {
     addNewSubmit(){
      this.isLoadingUp=true;
      var subArr=[];
-     this.addTableData.forEach(function(item){
+     let _this = this;
+     console.log(this.addTableData);
+      this.addTableData.uniq().forEach(function(item){
         var obj=new Object();
            obj.userId=item.id;
            obj.isWriter=item.isWriter?item.isWriter:false;
            subArr.push(obj);
      })
+      console.log(subArr);
      this.$axios({
        method:'POST',
        url:this.addMemberUrl,
@@ -290,10 +358,22 @@ export default {
       this.writerParams.pageNumber=val;
       this.getWriterUserList();
     },
+    /* 教材所属用户切换分页条数 */
+    textBookSizeChange(val){
+
+      this.textBookParams.pageSize=val;
+      this.textBookParams.pageNumber=1;
+      this.getTextBookUserList();
+    },
+    /* 教材所属用户切换当前页数 */
+    textBookCurrentChange(val){
+      this.textBookParams.pageNumber=val;
+      this.getTextBookUserList();
+    },
     /* 点击新增成员按钮 */
     addNewMember(){
      this.dialogVisible=true;
-     this.getWriterUserList();
+     this.getWriterUserList();this.getTextBookUserList();
     },
     /**
      *  当页面左侧导航区域展开和收起时执行此方法
@@ -310,13 +390,19 @@ export default {
 
     /* 监测小组id的变化 */
     groupId(newVal, old) {
+      //this.groupId = newVal;
+      console.log(" 监测小组id的变化"+this.groupId);
+      this.writerParams.groupId = newVal;
+      this.textBookParams.groupId = newVal;
       this.getGroupMember(newVal);
     },
     refreshMember(){
+      console.log("refreshMember"+this.groupId);
       this.getGroupMember(this.groupId);
     }
   },
   created(){
+    console.log("created"+this.groupId);
     if(this.groupId){
       this.getGroupMember(this.groupId);
     }
