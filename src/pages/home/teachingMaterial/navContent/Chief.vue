@@ -413,9 +413,9 @@
        */
       submit(type){
         let  title = type == 1?"确定保存当前名单?":"确定提交当前名单?";
-        // if(!this.checkSortIsOk()){
-        //   return;
-        // }
+        if(!this.checkSortIsOk()){
+          return;
+        }
 
         this.$confirm(title, "提示",{
           confirmButtonText: "确定",
@@ -535,15 +535,17 @@
 
        // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
        // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-
-        let zhubianSortIsOk =zhubianSortList.length==0 ;
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0  ;
-
+        console.log(zhubianSortList);
+        console.log(fuzhubianSortList);
+        let zhubianSortIsOk =(zhubianSortList.length==0||(zhubianSortList.length>0 &&!isNaN(zhubianSortList[0])));
+        let fuzhubianSortIsOk = fuzhubianSortList.length==0||(fuzhubianSortList.length>0 &&!isNaN(fuzhubianSortList[0]));
+        console.log(zhubianSortIsOk);
+        console.log(fuzhubianSortIsOk);
         if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
           this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是整数');
         }
 
-        return zhubianSortIsOk&&fuzhubianSortIsOk
+        return (zhubianSortIsOk&&fuzhubianSortIsOk)
 
       },
       hasPermission(index){
