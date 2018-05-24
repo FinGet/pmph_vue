@@ -701,6 +701,7 @@ export default {
       initEditData(){
         if(this.$router.currentRoute.params.materialId!='new'){
           console.log('修改');
+          console.log(this.listTableData);
            this.$axios.get(this.editMaterialUrl,{
              params:{
                id:this.$router.currentRoute.params.materialId

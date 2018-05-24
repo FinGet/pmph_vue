@@ -756,6 +756,9 @@
   }
 </script>
 <style>
+  .editors_sql_label{
+    display:inline-block;
+  }
   .scopeSpan1{
     display: inline-block;
     vertical-align: middle;

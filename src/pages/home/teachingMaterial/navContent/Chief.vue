@@ -413,7 +413,7 @@
        */
       submit(type){
         let  title = type == 1?"确定保存当前名单?":"确定提交当前名单?";
-        if(!this.checkSortIsOk()){
+        if(!this.checkSortIsOk(type)){
           return;
         }
 
@@ -440,14 +440,15 @@
                 jsonDecPosition.push(tempObj);
               }
             }
-//            console.log(jsonDecPosition);
+            console.log(jsonDecPosition);
             //提交
             this.$axios.put(this.api_submit,this.$commonFun.initPostData({
               jsonDecPosition:JSON.stringify(jsonDecPosition),
               selectionType:type?type:1,
               textbookId: this.searchParams.textbookId,
               editorOrEditorialPanel:this.type=='zb'?1:2,
-              unselectedHold:this.type=='zb'?1:(jsonDecPosition.length)>0?1:0
+              unselectedHold:this.type=='zb'?0:(jsonDecPosition.length)>0?1:0
+              //unselectedHold:(jsonDecPosition.length)>0?1:0
             }))
               .then(response=>{
                 var res = response.data;
@@ -513,19 +514,22 @@
         }
         this.hasChanged=true;
       },
-      checkSortIsOk(){
+      checkSortIsOk(type){
         var zhubianSortList = [];
         var fuzhubianSortList = [];
         var zhubianData = [];
         var fuzhubianData =[];
-
+        let is_zhubianSort = false;
+        let  is_fuzhubianSort = false;
         this.tableData.forEach(iterm=>{
           if(iterm.isZhubian){
-            zhubianSortList.push(parseInt(iterm.zhubianSort));
+            if(!isNaN(parseInt(iterm.zhubianSort))) zhubianSortList.push(parseInt(iterm.zhubianSort));
+            is_zhubianSort = isNaN(parseInt(iterm.zhubianSort))?true:false;
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
-            fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
+            if(!isNaN(parseInt(iterm.fuzhubianSort))) fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
+            is_fuzhubianSort = isNaN(parseInt(iterm.fuzhubianSort))?true:false;
             fuzhubianData.push(iterm);
           }
         })
@@ -534,13 +538,17 @@
 
        // let zhubianSortIsOk =zhubianSortList.length==0 || (zhubianSortList[0]==1 && (zhubianSortList[zhubianSortList.length-1] - zhubianSortList[0] == zhubianSortList.length - 1 ? true : false));
        // let fuzhubianSortIsOk = fuzhubianSortList.length==0 || (fuzhubianSortList[0]==1 && (fuzhubianSortList[fuzhubianSortList.length-1] - fuzhubianSortList[0] == fuzhubianSortList.length - 1 ? true : false));
-        let zhubianSortIsOk =zhubianSortList.length==0 || zhubianSortList[0]==1;
-        let fuzhubianSortIsOk = fuzhubianSortList.length==0 || fuzhubianSortList[0]==1 ;
-        if(!(zhubianSortIsOk&&fuzhubianSortIsOk)){
-          this.$message.error((zhubianSortIsOk?'副主编':'主编')+'排序码必须是从1开始的整数');
-        }
 
-        return zhubianSortIsOk&&fuzhubianSortIsOk
+        let sumbit_2 =  type==2 &&zhubianSortList.length==0 &&fuzhubianSortList.length==0?true:false;
+
+        if(is_zhubianSort||is_fuzhubianSort){
+          this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
+        }else if(sumbit_2){
+            this.$message.error("请选择一个"+((zhubianSortList.length==0)?'主编':'副主编')+'发布');
+          }
+
+      //  return (zhubianSortIsOk&&fuzhubianSortIsOk)
+        return (!sumbit_2)&&!(is_zhubianSort||is_fuzhubianSort)
 
       },
       hasPermission(index){
