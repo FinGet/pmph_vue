@@ -11,6 +11,23 @@
         <el-input placeholder="请输入" class="searchInputEle" v-model="params.name" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
+     <div class="searchBox-wrapper" >
+       <div class="searchName">手机：
+         <span></span>
+       </div>
+       <div class="searchInput">
+         <el-input placeholder="请输入" class="searchInputEle" v-model="params.handphone" @keyup.enter.native="searchWriter"></el-input>
+       </div>
+     </div>
+     <div class="searchBox-wrapper">
+       <!--申报职务搜索-->
+       <div class="searchName">邮箱：
+         <span></span>
+       </div>
+       <div class="searchInput">
+         <el-input placeholder="请输入" class="searchInputEle" v-model="params.email" @keyup.enter.native="searchWriter"></el-input>
+       </div>
+     </div>
     <div class="searchBox-wrapper" >
       <div class="searchName">所属机构：
         <span></span>
@@ -19,7 +36,7 @@
         <el-input placeholder="请输入" class="searchInputEle" v-model="params.orgName" @keyup.enter.native="searchWriter"></el-input>
       </div>
     </div>
-          <div class="searchBox-wrapper">
+      <div class="searchBox-wrapper">
       <!--申报职务搜索-->
       <div class="searchName">用户类型：
         <span></span>
@@ -31,6 +48,7 @@
         </el-select>
       </div>
     </div>
+
     <div class="searchBox-wrapper searchBtn">
       <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
     </div>
@@ -489,7 +507,9 @@ export default {
         pageNumber: 1,
         name: "",
         rank: "",
-        orgName: ""
+        orgName: "",
+        handphone:"",
+        email:""
       },
       totalPages: 0,
 
