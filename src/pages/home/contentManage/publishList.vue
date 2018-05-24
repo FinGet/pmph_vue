@@ -694,6 +694,7 @@ export default {
                     materialId:obj.materialId,
                     categoryId:obj.categoryId,
                     authorId:obj.authorId,
+                    title:obj.title,
                     authorType:obj.authorType,
                     returnReason:value,
                     authStatus: status,

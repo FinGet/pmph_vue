@@ -7,7 +7,7 @@
       <el-col :span="chartColDefaultWidth" class="groupmanage-col" v-if="currentGroupId">
         <div class="groupmanageHead">
           <div class="currentGroupName">
-            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.textbook">({{currentGroup.textbook}})</span>  </p>
+            <p>{{currentGroup.groupName?currentGroup.groupName:'人卫社小组'}} <span v-if="currentGroup.bookName">({{currentGroup.bookName}})</span>  </p>
           </div>
           <ul class="grouptab clearfix">
             <li v-for="(tab,index) in tabs"
@@ -39,6 +39,7 @@
           :refreshMember.sync="isrefreshMember"
           @getGroupMemberList="getGroupMemberList"
           :groupId.sync="currentGroupId"
+          :bookId.sync = "currentGroup.bookId"
           :crurrentMemberInfo="crurrentMemberInfo"
         ></MembersList>
       </el-col>
@@ -68,7 +69,8 @@
         currentGroup:{
           groupImage: "",
           groupName:"",
-          textbook:'',
+          bookName:'',
+          bookId:'',
           id:null,
           filesNumber:0,
           isMember:''
@@ -170,6 +172,7 @@
       },
       setGroupName(group) {
         this.currentGroupId =group.id;
+        console.log(this.currentGroupId)
         for(let key in this.currentGroup){
           this.currentGroup[key] = group[key]
         }
@@ -184,6 +187,7 @@
       getGroupList(groupList){
         this.currentGroupList=groupList;
         this.currentGroupId=this.currentGroupList[0].id;
+        console.log("获取小组列表"+this.currentGroupId);
       },
       /**
        * 获取当前小组成员列表
@@ -206,6 +210,7 @@
       currentGroupId(){
         this.currentActive = 0;
         this.currentView = 'GroupChat';
+        console.log("当切换小组时，默认跳转到聊天窗口"+this.currentGroupId);
       },
     },
     components:{
