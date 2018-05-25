@@ -666,6 +666,7 @@
               let res = response.data;
               if(res.state==1){
                 clearInterval(this.handleExportWordtimer);
+                console.log("exportWordDownload  "+res.detail);
                 this.exportWordDownload(res.detail);
               }
             })
@@ -688,10 +689,12 @@
 
       },
       exportWordDownload(url){
+        console.log("url   "+url);
         //this.$commonFun.downloadFile('/pmpheep'+url);
         this.exportDialog=false;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
         this.downloadWordDialog=true;
+        console.log("url   /pmpheep"+url);
         this.wordUrl='/pmpheep'+url;
 
       },

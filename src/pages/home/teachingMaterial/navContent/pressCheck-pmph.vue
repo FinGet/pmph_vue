@@ -682,6 +682,7 @@
       },
       exportWordDownload(url){
         //this.$commonFun.downloadFile('/pmpheep'+url);
+        console.log("url   /pmpheep"+url);
         this.exportDialog=false;
         this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
         this.downloadWordDialog=true;
