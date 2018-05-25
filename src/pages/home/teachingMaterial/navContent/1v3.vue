@@ -48,12 +48,12 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
         <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasPower(7,tableData)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
-        <el-button type="primary" :disabled="selected.length===0" @click="exportEditor">主编/副主编批量导出</el-button>
-        <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || isSelected || allTextbookPublished" @click="pushAllChecked()">批量发布主编/副主编</el-button>
-        <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selected)" @click="pushAllChecked()">批量发布主编/副主编</el-button>
-        <el-button type="primary" :disabled="isLocked || !hasPower(4,selected) || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
-        <el-button type="primary" :disabled=" !hasPower(5,selected) || forceEnd" @click="showDialog(0,null,isLocked)">批量结果公布</el-button>
-        <el-button type="primary" :disabled="isSelected" @click="exportExcel()">批量导出名单</el-button>
+        <!-- :disabled="selected.length===0"--> <el-button type="primary"  @click="exportEditor">主编/副主编批量导出</el-button>
+        <!--|| isSelected-->  <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || allTextbookPublished" @click="pushAllChecked(1)">批量发布主编/副主编</el-button>
+        <!--|| !hasPower(2,selected)--> <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selected)" @click="pushAllChecked(2)">批量发布主编/副主编</el-button>
+        <!-- || !hasPower(4,selected)--> <el-button type="primary" :disabled="init_isLocked  || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
+        <!--!hasPower(5,selected) ||--> <el-button type="primary" :disabled="  forceEnd" @click="showDialog(0,null,isLocked)">批量结果公布</el-button>
+        <!--:disabled="isSelected"-->  <el-button type="primary"  @click="exportExcel()">批量导出名单</el-button>
       </div>
     </div>
     <!--表格-->
@@ -347,8 +347,25 @@
           console.log(3);
           return true;
         }
+      },
+      init_isLocked() {
+        let arr = [];
+        if (this.selected.length > 0){
+          this.selected.forEach(item => {
+            console.log(item.isLocked);
+            arr.push(item.isLocked);
+          });
+          return arr.some(x=>{
+            return x == true;
+          })
+        } else {
+          console.log(3);
+          return false;
+        }
       }
     },
+
+
     methods:{
       /**
        * 显示出取人弹出框，
@@ -356,6 +373,14 @@
        * @param data 数据，当为空时代表批量导出或公布
        */
       showDialog(type,data,isLocked){
+        if(type == 1 && !this.hasPower(4,this.selected)){
+          this.$message.error(this.selected.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
+          return ;
+        }
+        if(type == 0 && !this.hasPower(5,this.selected)){
+          this.$message.error(this.selected.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
+          return ;
+        }
         var html = '';
         if(data) {
           this.currentId = data.textBookId
@@ -510,7 +535,17 @@
         this.selected = val;
       },
       /* 批量发布主编副主编*/
-      pushAllChecked(){
+      pushAllChecked(type){
+        if(type == 1 && this.isSelected){
+          this.$message.error("您未选择任何名单");
+          return false;
+        }
+        if(type == 2 && !this.hasPower(2,this.selected)){
+
+          this.$message.error(this.selected.length>0?"您选择的复选框中包含已发布的主编/副主编":"您未选择任何名单");
+          return false;
+        }
+
         this.$confirm('确定批量发布主编/副主编?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -703,12 +738,20 @@
       /** 导出Excel */
       exportExcel(id){
         // console.log(id,this.selectedIds)
+        if(this.isSelected){
+          this.$message.error('您未选择任何名单');
+          return;
+        }
         let url = '/pmpheep/chosenPosition/exportExcel/?textbookIds='+ (id || this.selectedIds);
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
       /**批量导出主编 */
       exportEditor(){
+        if(this.selected.length===0){
+          this.$message.error("您未选择任何名单");
+          return false;
+        }
         let url = '/pmpheep/position/exportEditors/?textbookIds=' + this.selectedIds;
         // console.log(url)
         this.$commonFun.downloadFile(url);
