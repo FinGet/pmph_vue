@@ -61,6 +61,7 @@
       <el-table
         ref="multipleTable"
         border
+        @select-all = "handleSelectAll"
         @selection-change="handleSelectionChange"
         :data="tableData"
         tooltip-effect="dark"
@@ -162,7 +163,7 @@
     </div>
     <div class="pagination-wrapper">
       <el-pagination
-        v-if="totalNum>30"
+        v-if="totalNum"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :page-sizes="[10,20,30,40]"
@@ -259,12 +260,14 @@
         api_pushAll_check:'/pmpheep/declaration/batchPublishEditor',    //批量发布主编副主编url
         searchForm:{
           pageNumber:1,
-          pageSize:30,
+          pageSize:10,
           materialId:'',
           state:'',
           textBookIds: '',
           bookName:''
         },
+        selectAll:false,
+        dataChange:false,
         tableData: [],
         forceEnd:false, // 是否强制结束
         isClickPublish:false,
@@ -481,12 +484,23 @@
         this.searchForm.pageSize = val;
         console.log(this.searchForm.pageSize);
         this.getTableData();
+        this.$nextTick(() => {
+          this.toggleSelection(this.tableData)
+        })
+
+
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
         this.getTableData();
+        this.$nextTick(() => {
+          this.toggleSelection(this.tableData)
+        })
+
+
       },
+
       /**强制结束 */
       isForceEnd(){
         var title = ''
@@ -526,6 +540,9 @@
       //
       //   }
       // },
+      handleSelectAll(val){
+        this.selectAll = true;
+      },
       handleSelectionChange(val){
         let arr = []
         val.forEach(item => {
@@ -759,7 +776,16 @@
       /**删除成员 */
       deleteMember(index, rows){
         rows.splice(index, 1);
-      }
+      },
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
     },
 
     created(){
@@ -770,29 +796,28 @@
       if(!this.searchForm.materialId){
         this.$router.push({name:'通知列表'});
       }
-
+      this.getTableData();
+      this.getBookName();
 
 
       if(window._hmt){
         _hmt.push(['_trackPageview', '/material-application/1v3']);
       }
     },
-    mounted(){
-    let _this = this;
+    watch:{
 
-      setTimeout(function(){
-        _this.getTableData();
-        _this.getBookName();
-          setTimeout(function(){
-        _this.$nextTick(() => {
-          //alert(_this.tableData.length);
-          if(_this.tableData.length) {
-            //_this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
-          }
-        })},1000)
-      },50)
+      tableData:{
 
+        //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
+        handler:function(newValue,oldVal){
+          console.log(this);
+          this.toggleSelection(newValue);
+
+        },
+        deep:true
+      }
     },
+
     components:{
       userPmph
     }
