@@ -156,7 +156,7 @@
            <div style="margin:0 auto;width:800px;"> <p v-html="contentDetailData.content.content"></p> </div>
          </el-form-item>
             <el-form-item label="附件：">
-                <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id">{{item.attachmentName}}</p>
+                <p type="text" style="color:#337ab7" v-for="item in contentDetailData.cmsExtras" :key="item.id" @click="download(item.attachment)">{{item.attachmentName}}</p>
            </el-form-item>
        </el-form>
         </div>
@@ -335,6 +335,10 @@ export default {
       this.contentParams.pageSize = 30;
       this.contentParams.pageNumber = 1;
       this.getOutContentList();
+    },
+    download(attachment){
+      console.log("11111111111111"+attachment)
+      this.$commonFun.downloadFile(attachment);
     },
     /* 发布 */
     publishSubmit(bool){

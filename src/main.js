@@ -61,13 +61,13 @@ Vue.prototype.$getUserData=getUserData;
 
 router.beforeEach((to, from, next) => {
   var userdata = getUserData();
-  if (to.path != '/login'&&to.name!='404') {  // 判断是否登录
+  if (to.path != '/login'&&to.name!='404'&&to.path!='/indexSSO') {  // 判断是否登录
     if (!userdata.userInfo) {
       if(config.IS_DEBUG){
         next('/login')
       }else{
         window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
-      }
+      } n
     }
     else if (commonFun.authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
       next();

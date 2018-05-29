@@ -148,6 +148,7 @@ export default new Router({
       redirect: {name: '个人中心'},
       children: [
         {path: 'index', name: '个人中心', component: Index, meta: {replaceName: false, authorityId: 1}},
+        {path: 'indexSSO', name: '', component: Index, meta: {replaceName: '个人中心', authorityId: 1}},
         {
           path: 'materialrouter',
           name: '教材申报',
