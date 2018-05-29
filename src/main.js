@@ -67,7 +67,7 @@ router.beforeEach((to, from, next) => {
         next('/login')
       }else{
         window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
-      } n
+      }
     }
     else if (commonFun.authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
       next();
