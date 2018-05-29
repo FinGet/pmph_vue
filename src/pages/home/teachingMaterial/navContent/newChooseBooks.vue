@@ -1265,8 +1265,18 @@ export default {
     },
     focuFuntion(){
       let _this = this;
+
+
+      if(this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0){
+        var ss= _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+
+          ss.focus();
+        
+      }
+
+
       console.log(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
-      _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0?"":(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]).focus()
+      //_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required").length>0?"":_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0?"":(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]).focus()
 
     }
   },

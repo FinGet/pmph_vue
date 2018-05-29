@@ -155,7 +155,7 @@
             <el-button type="text" @click="exportExcel(scope.row.textBookId)">导出名单</el-button>
             <span class="vertical-line"></span>
             <el-button type="text" :disabled="!hasAccess(6,scope.row.myPower) || forceEnd" @click="showGroup(scope.row.textBookId,scope.row.groupId)">
-              {{scope.row.groupId==null?'创建小组':'更新成员'}}</el-button>
+              {{scope.row.groupId==null?'创建小组':'更新小组成员'}}</el-button>
             <!-- <el-button type="text" :disabled="forceEnd" >创建小组</el-button> -->
           </template>
         </el-table-column>
@@ -376,11 +376,11 @@
        * @param data 数据，当为空时代表批量导出或公布
        */
       showDialog(type,data,isLocked){
-        if(type == 1 && !this.hasPower(4,this.selected)){
+        if(type == 1 && !this.hasPower(4,this.selected)&&this.$commonFun.Empty(data)){
           this.$message.error(this.selected.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
           return ;
         }
-        if(type == 0 && !this.hasPower(5,this.selected)){
+        if(type == 0 && !this.hasPower(5,this.selected)&&this.$commonFun.Empty(data)){
           this.$message.error(this.selected.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
           return ;
         }
@@ -541,7 +541,10 @@
       //   }
       // },
       handleSelectAll(val){
-        this.selectAll = true;
+        if(val.length>0){
+          this.selectAll = true;
+        }
+
       },
       handleSelectionChange(val){
         let arr = []
@@ -755,7 +758,7 @@
       /** 导出Excel */
       exportExcel(id){
         // console.log(id,this.selectedIds)
-        if(this.isSelected){
+        if(this.isSelected&&this.$commonFun.Empty(id)){
           this.$message.error('您未选择任何名单');
           return;
         }
@@ -780,7 +783,7 @@
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
+            this.$refs.multipleTable.toggleRowSelection(row,true);
           });
         } else {
           this.$refs.multipleTable.clearSelection();
@@ -811,7 +814,10 @@
         //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
         handler:function(newValue,oldVal){
           console.log(this);
-          this.toggleSelection(newValue);
+          if(this.selectAll){
+            //this.toggleSelection(newValue);
+          }
+
 
         },
         deep:true
