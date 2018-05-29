@@ -108,6 +108,20 @@
             </el-select>
           </div>
         </div>
+        <!--教材大纲-->
+        <div class="searchBox-wrapper">
+          <div class="searchName">是否被遴选：<span></span></div>
+          <div class="searchInput">
+            <el-select v-model="searchParams.isSelect" placeholder="请选择" @change="handleSearchCLick">
+              <el-option
+                v-for="(item,index ) in isSelectList"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
@@ -170,6 +184,14 @@
             <el-select v-model="searchParams.haveFile" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===9">
               <el-option
                 v-for="item in haveFileList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-select v-model="searchParams.isSelect" placeholder="请选择" @change="handleSearchCLick" v-else-if="powerSearchValue===10">
+              <el-option
+                v-for="item in isSelectList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -399,6 +421,16 @@
           value:false,
           label:'无'
         }],
+        isSelectList:[{
+          value:'',
+          label:'全部'
+        },{
+          value:true,
+          label:'被遴选'
+        },{
+          value:false,
+          label:'未被遴选'
+        }],
         offlineProgress:['未收到纸质表','已退回纸质表','已收到纸质表'],
         searchParams:{
           pageNumber:1,
@@ -413,7 +445,8 @@
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
-          haveFile:''
+          haveFile:'',
+          isSelect:''
         },
         tableData: [],
         totalNum:0,
@@ -461,7 +494,8 @@
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
-          haveFile:''
+          haveFile:'',
+         isSelect:''
        }
 
       },
@@ -484,6 +518,7 @@
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
           haveFile:this.searchParams.haveFile,
+            isSelect:this.searchParams.isSelect
         }})
           .then(response=>{
             var res = response.data;
@@ -588,6 +623,7 @@
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
+          isSelect:this.searchParams.isSelect
         };
         let excelUrl = this.api_export_excel;
         for(let key in params){
@@ -643,6 +679,7 @@
           positionType:this.searchParams.positionType,
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
+            isSelect:this.searchParams.isSelect
         }})
           .then(response=>{
             this.exportWordProgress(response.data);
