@@ -86,7 +86,7 @@
 
          </el-form-item>
          <el-form-item label="附件：" >
-              <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index">{{item.name}}</p>
+              <p type="text" style="color:#337ab7" v-for="(item,index) in fileList" :key="index" @click="download(item.url)">{{item.name}}</p>
          </el-form-item>
        </el-form>
         </div>
@@ -363,6 +363,10 @@ export default {
         }
       });
     },
+    download(url){
+      console.log("url"+url);
+      this.$commonFun.downloadFile(url);
+    },
 //    点击退回
     returnReasonFnc(){
       this.returnReasonVisible = true;
@@ -535,6 +539,8 @@ export default {
           obj.url=editData.cmsExtras[i].attachment;
           obj.attachment=editData.cmsExtras[i].attachment.split('/').pop();
           this.fileList.push(obj);
+            console.log("fileList")
+          console.log(this.fileList);
           }
           /* 填充封面图片 */
           if(this.$route.query.isShowCover){
