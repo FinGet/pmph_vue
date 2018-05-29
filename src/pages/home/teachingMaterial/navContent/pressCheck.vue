@@ -426,10 +426,10 @@
           label:'全部'
         },{
           value:true,
-          label:'被遴选'
+          label:'是'
         },{
           value:false,
-          label:'未被遴选'
+          label:'否'
         }],
         offlineProgress:['未收到纸质表','已退回纸质表','已收到纸质表'],
         searchParams:{
