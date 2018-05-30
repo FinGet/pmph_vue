@@ -49,7 +49,8 @@ Vue.prototype.$formRules = formRules;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};
-  //console.log(sessionData)
+ // console.log(sessionData)
+  //debugger;
   return {
     token:sessionData.sessionPmphUserToken,
     sessionId:sessionData.userSessionId,
@@ -60,8 +61,19 @@ var getUserData=function () {
 Vue.prototype.$getUserData=getUserData;
 
 router.beforeEach((to, from, next) => {
-  var userdata = getUserData();
-  if (to.path != '/login'&&to.name!='404'&&to.path!='/indexSSO') {  // 判断是否登录
+  // console.log("    from ");
+  // console.log(from);
+  // console.log("    to ");
+  // console.log(to);
+
+  if (to.path != '/login'&&to.name!='404') {  // 判断是否登录
+    if(to.path == '/index'&&to.query.sessionId&&to.query.currentUser&&to.query.token&&to.query.permissionIds){
+      commonFun.Cookie.set('sessionId',to.query.sessionId,2)
+      commonFun.Cookie.set('token',to.query.token,2);
+      commonFun.mySessionStorage.set('currentUser',to.query.currentUser)
+    }
+    var userdata = getUserData();
+    //debugger;
     if (!userdata.userInfo) {
       if(config.IS_DEBUG){
         next('/login')
@@ -70,6 +82,7 @@ router.beforeEach((to, from, next) => {
       }
     }
     else if (commonFun.authorityComparison(to.matched, getUserData().permissionIds)) {  //判断当前登录角色是否有即将进入的路由权限
+      //debugger;
       next();
     } else {
       ElementUI.Message.error('抱歉，您没有进入该模块的权限');
@@ -114,6 +127,8 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   var currentLocation = window.location.hash.replace('#','');
   //对返回的数据进行一些处理
+  // console.log("response.data  ")
+  // console.log(response.data);
   if (response.data.code == 30 ){
     ElementUI.Message.error('当前登录已过期，请重新登录');
     if(config.IS_DEBUG){
