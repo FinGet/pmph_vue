@@ -547,7 +547,7 @@
 
         if(is_zhubianSort||is_fuzhubianSort){
          if((is_zhubianSort&&zhubianLength==0)||(is_fuzhubianSort&&fubianLength==0)) {
-           this.$message.error(zhubianLength==0?'请输入主编排序':'请输入副主编排序');
+           this.$message.error((is_zhubianSort&&zhubianLength==0)?'请输入主编排序':'请输入副主编排序');
          }else{
            this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
          }

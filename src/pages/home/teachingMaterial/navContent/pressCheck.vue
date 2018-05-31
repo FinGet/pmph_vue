@@ -261,12 +261,12 @@
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
         </el-table-column>
-        <el-table-column label="学校审核">
+        <el-table-column label="审核状态">
           <template scope="scope">
-            <p>{{stateList[scope.row.onlineProgress]}}</p>
+            <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="出版社审核" width="135">
+        <el-table-column label="是否收到纸质表" width="135">
           <template scope="scope">
             <p type="text" v-if="scope.row.offlineProgress==0&&!hasback(scope.row)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,2)">确认收到纸质表</p>
             <p type="text" v-if="scope.row.offlineProgress==0&&!hasback(scope.row)&&(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" style="color:#f2f2f2;">确认收到纸质表</p>
@@ -456,7 +456,7 @@
         handleExportWordtimer:null,
         downloadWordDialog:false,
         wordUrl:'',
-        stateList:['未提交','待审核','被学校退回','已审核','待审核','被出版社退回'],
+        stateList:['未提交','待学校审核','被学校退回','已审核','待学校审核','被出版社退回'],
         noWatchFirst:false,//做浏览记录 第一次watch不生效
       }
     },
