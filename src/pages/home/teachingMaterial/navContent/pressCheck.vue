@@ -263,7 +263,7 @@
         </el-table-column>
         <el-table-column label="审核状态">
           <template scope="scope">
-            <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":stateList[scope.row.onlineProgress]}}</p>
+            <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":(scope.row.orgId==0&&scope.row.onlineProgress==3?"出版社已审核":stateList[scope.row.onlineProgress])}}</p>
           </template>
         </el-table-column>
         <el-table-column label="是否收到纸质表" width="135">
@@ -456,7 +456,7 @@
         handleExportWordtimer:null,
         downloadWordDialog:false,
         wordUrl:'',
-        stateList:['未提交','待学校审核','被学校退回','已审核','待学校审核','被出版社退回'],
+        stateList:['未提交','待学校审核','被学校退回','学校已审核','待学校审核','被出版社退回'],
         noWatchFirst:false,//做浏览记录 第一次watch不生效
       }
     },
