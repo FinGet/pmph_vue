@@ -174,7 +174,9 @@ export default {
         id:'',
         editorId:'',
         isRejectedByDirector:'',
-        reasonDirector:''
+        reasonDirector:'',
+        openid:'',
+        bookname:''
       },
 			id: '', // 选题申报id
 			isRejectedByDirector: '', //是否被主任退回
@@ -245,6 +247,7 @@ export default {
 		allot(obj){
       this.dialogParams.departmentId=obj.departmentId;
       this.distributeParams.id=obj.id;
+      this.distributeParams.bookname = obj.bookname;
       this.getListEditors(true);
 
 		},
@@ -260,6 +263,7 @@ export default {
           cancelButtonText: '取消',
         }).then(() => {
           this.distributeParams.editorId=obj.id;
+          this.distributeParams.openid = obj.openid;
           this.directorHandling(i);
         }).catch(() => {
           this.$message({
@@ -271,6 +275,8 @@ export default {
 		directorHandling(i){
       this.distributeParams.isRejectedByDirector=(i==2?true:false);
       this.distributeParams.editorId=(i==1?this.distributeParams.editorId:'');
+      this.distributeParams.openid=(i==1?this.distributeParams.openid:'');
+      this.distributeParams.bookname =(i==1?this.distributeParams.bookname:'');
 			this.$axios.put('/pmpheep/topic/put/directorHandling',
       this.$initPostData(
         this.distributeParams
