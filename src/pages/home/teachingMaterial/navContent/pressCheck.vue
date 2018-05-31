@@ -268,10 +268,10 @@
         </el-table-column>
         <el-table-column label="出版社审核" width="135">
           <template scope="scope">
-            <p type="text" v-if="scope.row.offlineProgress==0&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,2)">确认收到纸质表</p>
-            <p type="text" v-if="scope.row.offlineProgress==0&&(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" style="color:#f2f2f2;">确认收到纸质表</p>
-            <p type="text" v-if="scope.row.offlineProgress==2&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,0)">取消收到纸质表</p>
-            <p type="text" v-if="scope.row.offlineProgress==2&&(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" style="color:#f2f2f2;">取消收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!hasback(scope.row)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,2)">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==0&&!hasback(scope.row)&&(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" style="color:#f2f2f2;">确认收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==2&&!hasback(scope.row)&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" @click="confirmPaperList(scope.row,0)">取消收到纸质表</p>
+            <p type="text" v-if="scope.row.offlineProgress==2&&!hasback(scope.row)&&(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)" class="link" style="color:#f2f2f2;">取消收到纸质表</p>
             <!-- <p v-else>{{offlineProgress[scope.row.offlineProgress]}}</p> -->
 
           </template>
@@ -469,6 +469,12 @@
      }
     },
     methods:{
+      hasback(row){
+        if(row.onlineProgress=='2'||row.onlineProgress=='4'||row.onlineProgress=='5'){
+          return true;
+        }
+        return false;
+      },
       /**
        * 此方法用于展开与收起高级搜索区域
        */
