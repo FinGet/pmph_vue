@@ -31,12 +31,12 @@
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="110" >
+            <el-table-column label="显示结束日期" width="120" >
                 <template scope="scope">
                     <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="110">
+            <el-table-column label="实际结束日期" width="120">
                 <template scope="scope">
                     <p>
                         {{scope.row.actualDeadline}}
