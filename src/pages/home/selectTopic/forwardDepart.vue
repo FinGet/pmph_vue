@@ -77,7 +77,7 @@
       width="120"
      >
      <template scope="scope">
-       <el-button type="text" @click="distributeDepartment(scope.row.id)">分配到部门</el-button>
+       <el-button type="text" @click="distributeDepartment(scope.row.id,scope.row.bookname)">分配到部门</el-button>
      </template>
      </el-table-column>
     </el-table>
@@ -155,6 +155,7 @@ export default {
         pageNumber: 1,
         submitTime: ""
       },
+      bookname:'',
       pageTotal: 0,
       dialogVisible: false,
       dialogPageTotal: 0,
@@ -230,7 +231,9 @@ export default {
             url:this.distributeUrl,
             data:this.$commonFun.initPostData({
               id:this.distributeId,
-              departmentId:obj.id
+              departmentId:obj.id,
+              openid:obj.openid,
+              bookname:this.bookname
             })
           }).then((res)=>{
 //           console.log(res);
@@ -271,8 +274,9 @@ export default {
       this.getListData();
     },
     /* 分配到部门 */
-    distributeDepartment(id) {
+    distributeDepartment(id,bookname) {
       this.distributeId = id;
+      this.bookname = bookname;
       this.dialogVisible = true;
 			this.getDialogData();
     },

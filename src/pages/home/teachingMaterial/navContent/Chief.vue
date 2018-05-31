@@ -521,13 +521,17 @@
         var fuzhubianData =[];
         let is_zhubianSort = false;
         let  is_fuzhubianSort = false;
+        let zhubianLength = 0;
+        let fubianLength = 0;
         this.tableData.forEach(iterm=>{
           if(iterm.isZhubian){
+            if(!this.$commonFun.Empty(iterm.zhubianSort))zhubianLength++;
             if(!isNaN(parseInt(iterm.zhubianSort))) zhubianSortList.push(parseInt(iterm.zhubianSort));
             is_zhubianSort = isNaN(parseInt(iterm.zhubianSort))?true:false;
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
+            if(!this.$commonFun.Empty(iterm.fuzhubianSort))fubianLength++;
             if(!isNaN(parseInt(iterm.fuzhubianSort))) fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
             is_fuzhubianSort = isNaN(parseInt(iterm.fuzhubianSort))?true:false;
             fuzhubianData.push(iterm);
@@ -542,7 +546,12 @@
         let sumbit_2 =  type==2 &&zhubianSortList.length==0 &&fuzhubianSortList.length==0?true:false;
 
         if(is_zhubianSort||is_fuzhubianSort){
-          this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
+         if((is_zhubianSort&&zhubianLength==0)||(is_fuzhubianSort&&fubianLength==0)) {
+           this.$message.error((is_zhubianSort&&zhubianLength==0)?'请输入主编排序':'请输入副主编排序');
+         }else{
+           this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
+         }
+
         }else if(sumbit_2){
             this.$message.error("请选择一个"+((zhubianSortList.length==0)?'主编':'副主编')+'发布');
           }
