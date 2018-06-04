@@ -96,6 +96,8 @@
           <div class="table-wrapper">
             <el-table
               :data="schoolTableData"
+
+              :span-method="objectSpanMethod"
               border
               style="width: 100%">
               <el-table-column
@@ -106,7 +108,11 @@
               </el-table-column>
               <el-table-column
                 prop="schoolName"
-                label="申报单位">
+                label="申报单位" >
+              </el-table-column>
+              <el-table-column
+                prop="bookname"
+                label="书籍名称" >
               </el-table-column>
               <el-table-column
                 prop="editorList"
@@ -154,6 +160,8 @@ import echarts from "../../../../../../static/echarts/echarts.common.min";
 export default {
   data() {
     return {
+      rowlength:0,
+      flag_schoolName:'',
       activeName: "bookName",
       schoolResultUrl:'/pmpheep/decPosition/list',  //学校结果统计URL
       bookResultUrl: '/pmpheep/decPosition/list/bookList', // 书籍结果统计url
@@ -187,6 +195,31 @@ export default {
     this.getBooksTableData()
   },
   methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      console.log(xxxx111111);
+      if (columnIndex === 1) {
+       // let flag_schoolName = row.schoolName
+        console.log(column);
+        let m = 0;
+        if ((rowIndex>= this.rowlength)) {
+          for(let i = 0;i<this.schoolTableData.length;i++){
+            if(this.schoolTableData[i].schoolName==row.schoolName){
+              this.rowlength++;
+              m++;
+            }
+          }
+          return {
+            rowspan: m,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
+    },
     /**
        * 按学校统计获取表格数据
        */
