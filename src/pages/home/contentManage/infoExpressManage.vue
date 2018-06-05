@@ -66,6 +66,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 label="信息快报标题"
+                align="center"
                 >
                 <template scope="scope">
                   <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
@@ -75,11 +76,13 @@
                 prop="username"
                 label="作者"
                 width="90"
+                align="center"
                 >
             </el-table-column>
            <el-table-column
                 label="创建时间"
-                width="168"
+                align="center"
+                width="180"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
@@ -87,6 +90,7 @@
             </el-table-column>
             <el-table-column
                 label="发布状态"
+                align="center"
                 width="100"
                 >
                 <template scope="scope">
@@ -95,7 +99,8 @@
             </el-table-column>
             <el-table-column
                 label="发布时间"
-                width="165"
+                align="center"
+                width="180"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
@@ -114,6 +119,7 @@
 
             <el-table-column
                 label="操作"
+                align="center"
                 width="190"
                 >
                 <template scope="scope">
