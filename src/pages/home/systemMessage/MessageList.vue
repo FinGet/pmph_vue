@@ -42,10 +42,12 @@
         </el-table-column>
         <el-table-column
           prop="sendName"
+          align="center"
           label="发送者">
         </el-table-column>
         <el-table-column
           prop="sendTime"
+          align="center"
           label="发送时间"
           width="200"
         >
@@ -53,14 +55,14 @@
         <el-table-column
           prop="isWithdraw"
           label="状态"
-          width="80"
+          width="80"  align="center"
         >
           <template scope="scope">
             {{scope.row.isWithdraw?'已撤回':'已发送'}}
           </template>
         </el-table-column>
         <el-table-column label="操作"
-        width="300">
+        width="300"  align="center">
           <template scope="scope">
             <el-button
               size="small"

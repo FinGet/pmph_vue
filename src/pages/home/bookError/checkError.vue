@@ -22,16 +22,16 @@
         <el-row>
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
-                    <el-table-column prop="bookname" label="书名" >
+                    <el-table-column prop="bookname" label="书名"  align="center">
                     </el-table-column>
-                    <el-table-column prop="content" label="纠错信息">
+                    <el-table-column prop="content" label="纠错信息" align="center">
 											<template scope="scope">
 												<p>页码：{{scope.row.page}} 行数：{{scope.row.line}}</p>
 											</template>
                     </el-table-column>
-                    <el-table-column prop="realname" label="纠错人">
+                    <el-table-column prop="realname" label="纠错人" align="center">
                     </el-table-column>
-                    <el-table-column prop="gmtCreate" label="提交时间">
+                    <el-table-column prop="gmtCreate" label="提交时间" align="center">
                     </el-table-column>
                     <el-table-column prop="authorReply" label="主编回复"  align="center">
                     </el-table-column>

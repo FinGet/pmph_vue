@@ -255,6 +255,7 @@ export default {
       let subEditorList_array = [];
       let editorialList_array = [];
       let isDigitalEditorList_array = [] ;
+
       for (let rowIndex = 0; rowIndex <= data.length; rowIndex++) {
         if(data.length<=0) break;
         if(rowIndex >= data.length){
