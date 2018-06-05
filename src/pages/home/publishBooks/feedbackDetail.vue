@@ -26,13 +26,13 @@
             <el-form-item label="提交时间:">
               <p>{{ruleForm.gmtCreate}}</p>
             </el-form-item>
-            <el-form-item label="回复:">
+            <el-form-item label="回复:" >
               <el-input
                 type="textarea"
                 :disabled="type=='detail'"
                 :autosize="{ minRows: 4, maxRows: 8}"
                 placeholder="请输入内容"
-                v-model="(ruleForm.authorReply==null||ruleForm.authorReply=='null')?'':ruleForm.authorReply">
+                v-model="ruleForm.authorReply">
               </el-input>
             </el-form-item>
             <el-form-item>
@@ -89,6 +89,7 @@
             if (res.code == 1) {
               this.ruleForm = res.data;
 //            this.id = this.ruleForm.id;
+              this.ruleForm.authorReply = (this.ruleForm.authorReply==null||this.ruleForm.authorReply=='null')?'':this.ruleForm.authorReply;
               this.ruleForm.gmtCreate = this.$commonFun.formatDate(
                 this.ruleForm.gmtCreate
               );
@@ -99,7 +100,9 @@
 
       /**提交 */
       submit(formName) {
+        let _this = this;
         this.$refs[formName].validate(valid => {
+          console.log(_this.ruleForm.authorReply);
           if (valid) {
 //          if (this.ruleForm.isAuthorReplied) {
             this.$axios
