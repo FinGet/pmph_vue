@@ -292,9 +292,10 @@
         Multichoice:'', // 是否可以多选，传递给Departments子组件
         dialogContent:'',
         totalNum: 0,
-        selectedIds:'', // 选择项的ids
+        selectedIds:'', // 所有页选择项的ids
+        selectedIdsSet:new Set(),//所有页选择项的ids的集合
         materialId:'', // 教材id
-        selected:'', // 选中项
+        selected:'', // 当前页选中项
         method:'',
         currentId: '', // 当前id
         planningEditor: '',
@@ -306,6 +307,7 @@
           label: 'textbookName'
         },
         bookNames:[],
+        isGetTableDataDone:false,
         allTextbookPublished: false, // 是否所有书籍都公布
         positionList:['','编委','副主编','副主编，编委','主编','主编，编委','主编，副主编','主编，副主编，编委','数字编委','编委，数字编委','副主编，数字编委','副主编，编委，数字编委','主编，数字编委','主编，编委，数字编委','主编，副主编，数字编委','主编，副主编，编委，数字编委'],
       }
@@ -368,6 +370,9 @@
       }
     },
 
+    mounted(){
+
+    },
 
     methods:{
       /**
@@ -427,6 +432,7 @@
        * 获取表格数据
        */
       getTableData(){
+        this.isGetTableDataDone = false;
         // console.log(this.searchForm)
         let _this = this;
         this.$axios.get(this.api_position_list,{params:this.searchForm})
@@ -441,11 +447,23 @@
               this.tableData = res.data.rows;
 
               if(this.tableData.length){
-                _this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
+                //_this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
                 this.forceEnd = this.tableData[0].forceEnd;
                 this.allTextbookPublished = this.tableData[0].allTextbookPublished;
                 console.log(this.allTextbookPublished);
                 this.myPower = this.tableData[0].myPower;
+
+                //回填翻页前的选中
+                _this.$nextTick(function() {
+                  _this.tableData.forEach(item=>{
+                    if(_this.selectedIdsSet.has(item.textBookId)){
+                      _this.$refs.multipleTable.toggleRowSelection(item,true);
+                    }
+                  })
+                  this.isGetTableDataDone = true;
+                })
+
+
               }
             } else if (res.code == 2) {
               this.$message.error(res.msg.msgTrim())
@@ -484,9 +502,9 @@
         this.searchForm.pageSize = val;
         console.log(this.searchForm.pageSize);
         this.getTableData();
-        this.$nextTick(() => {
-          this.toggleSelection(this.tableData)
-        })
+        // this.$nextTick(() => {
+        //   this.toggleSelection(this.tableData)
+        // })
 
 
       },
@@ -494,9 +512,10 @@
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
         this.getTableData();
-        this.$nextTick(() => {
-          this.toggleSelection(this.tableData)
-        })
+
+        // this.$nextTick(() => {
+        //   this.toggleSelection(this.tableData)
+        // })
 
 
       },
@@ -547,12 +566,23 @@
 
       },
       handleSelectionChange(val){
-        let arr = []
-        val.forEach(item => {
-          arr.push(item.textBookId)
+        this.selected = val
+        var _this = this;
+        this.selectedIdsSet;
+
+        if(this.isGetTableDataDone) { //若为页面重新加载数据 如翻页 则不删除所进入页面的数据id 若不是 则是手动操作的 就删除当前页数据 按照val重置当前选中
+          _this.tableData.forEach(t => {
+            _this.selectedIdsSet.delete(t.textBookId);
+          })
+        }
+        _this.selected.forEach(item => {
+
+          _this.selectedIdsSet.add(item.textBookId);
+
         })
-        this.selectedIds = arr.toString();
-        this.selected = val;
+        this.selectedIds = Array.from(this.selectedIdsSet).toString();
+        console.log(_this.selectedIdsSet)
+        console.log(val)
       },
       /* 批量发布主编副主编*/
       pushAllChecked(type){
