@@ -47,10 +47,12 @@
       </div>
       <!--操作按钮-->
       <div class="operation-wrapper">
+
+        <el-button type="primary" circle  @click="allPageSelectSwitch(true)" id="select_all_btn" :disabled="!isGetTableDataDone" :title="allPageSelected?'取消全选':'全分页选中'" ><i :class="allPageSelected?'el-icon-check':'css-not-pageSelected'"></i></el-button>
         <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasPower(7,tableData)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <!-- :disabled="selected.length===0"--> <el-button type="primary"  @click="exportEditor">主编/副主编批量导出</el-button>
         <!--|| isSelected-->  <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || allTextbookPublished" @click="pushAllChecked(1)">批量发布主编/副主编</el-button>
-        <!--|| !hasPower(2,selected)--> <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selected)" @click="pushAllChecked(2)">批量发布主编/副主编</el-button>
+        <!--|| !hasPower(2,selected)--> <el-button type="primary" v-else :disabled="isPublished || forceEnd || !hasPower(2,selectedPowerSet)" @click="pushAllChecked(2)">批量发布主编/副主编</el-button>
         <!-- || !hasPower(4,selected)--> <el-button type="primary" :disabled="init_isLocked  || forceEnd" @click="showDialog(1)">批量名单确认</el-button>
         <!--!hasPower(5,selected) ||--> <el-button type="primary" :disabled="  forceEnd" @click="showDialog(0,null,isLocked)">批量结果公布</el-button>
         <!--:disabled="isSelected"-->  <el-button type="primary"  @click="exportExcel()">批量导出名单</el-button>
@@ -258,6 +260,7 @@
       return{
         api_position_list:'/pmpheep/position/list',
         api_pushAll_check:'/pmpheep/declaration/batchPublishEditor',    //批量发布主编副主编url
+        api_position_list_ids:'/pmpheep/position/listAllIdList',
         searchForm:{
           pageNumber:1,
           pageSize:10,
@@ -294,8 +297,11 @@
         totalNum: 0,
         selectedIds:'', // 所有页选择项的ids
         selectedIdsSet:new Set(),//所有页选择项的ids的集合
+        selectedPowerSet:new Set(),// 由selectedPowersMap转换为set对象 元素形如{textBookId: 557, myPower: "11111111", isLocked: false, isPublished: false}
+        selectedPowersMap:new Map(),//从后台查询得的所选项需校验的属性集合 key为书籍id value形如{myPower: "11111111", isLocked: false, isPublished: false}
+        allPageSelected:false, //是否全页选中
         materialId:'', // 教材id
-        selected:'', // 当前页选中项
+        selected:[], // 当前页选中项
         method:'',
         currentId: '', // 当前id
         planningEditor: '',
@@ -318,7 +324,7 @@
        * @returns {boolean}
        */
        isSelected() {
-        if (this.selected.length > 0) {
+        if (this.selectedIds.length > 0) {
           return false;
         } else {
           return true;
@@ -334,7 +340,7 @@
             return x == true;
           })
         } else {
-          console.log(3);
+          //console.log(3);
           return true;
         }
       },
@@ -342,29 +348,31 @@
         let arr = [];
         if (this.selected.length > 0){
           this.selected.forEach(item => {
-            console.log(item.isLocked);
+            //console.log(item.isLocked);
             arr.push(item.isLocked);
           });
           return arr.some(x=>{
             return x == true;
           })
         } else {
-          console.log(3);
+          //console.log(3);
           return true;
         }
       },
       init_isLocked() {
         let arr = [];
-        if (this.selected.length > 0){
-          this.selected.forEach(item => {
+        this.selected
+        if (this.selectedPowerSet){
+          this.selectedPowerSet.forEach(item => {
             console.log(item.isLocked);
+
             arr.push(item.isLocked);
           });
           return arr.some(x=>{
             return x == true;
           })
         } else {
-          console.log(3);
+          //console.log(3);
           return false;
         }
       }
@@ -381,12 +389,12 @@
        * @param data 数据，当为空时代表批量导出或公布
        */
       showDialog(type,data,isLocked){
-        if(type == 1 && !this.hasPower(4,this.selected)&&this.$commonFun.Empty(data)){
-          this.$message.error(this.selected.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
+        if(type == 1 && !this.hasPower(4,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
+          this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
           return ;
         }
-        if(type == 0 && !this.hasPower(5,this.selected)&&this.$commonFun.Empty(data)){
-          this.$message.error(this.selected.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
+        if(type == 0 && !this.hasPower(5,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
+          this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
           return ;
         }
         var html = '';
@@ -431,7 +439,7 @@
       /**
        * 获取表格数据
        */
-      getTableData(){
+      getTableData(isPageRefresh){
         this.isGetTableDataDone = false;
         // console.log(this.searchForm)
         let _this = this;
@@ -450,7 +458,7 @@
                 //_this.$refs.multipleTable.toggleRowSelection(_this.tableData[0],true);
                 this.forceEnd = this.tableData[0].forceEnd;
                 this.allTextbookPublished = this.tableData[0].allTextbookPublished;
-                console.log(this.allTextbookPublished);
+                //console.log(this.allTextbookPublished);
                 this.myPower = this.tableData[0].myPower;
 
                 //回填翻页前的选中
@@ -461,6 +469,10 @@
                     }
                   })
                   this.isGetTableDataDone = true;
+                  if(!isPageRefresh){
+                    _this.allPageSelectSwitch(false);
+                  }
+
                 })
 
 
@@ -472,6 +484,59 @@
           .catch(e=>{
             console.log(e);
           })
+      },
+      allPageSelectSwitch(is_switch){ //全页选中的ids刷新 is_switch为true时同时切换全选状态
+        let _this = this;
+        if(is_switch){
+          _this.allPageSelected = !_this.allPageSelected;
+        }
+        this.isGetTableDataDone =false;
+
+        if(_this.allPageSelected){
+          this.$axios.get(this.api_position_list_ids,{params:this.searchForm})
+            .then(response=>{
+              var res = response.data;
+
+              if(res.code==1){
+                _this.selectedIdsSet.clear();
+                res.data.forEach(id =>{
+                  _this.selectedIdsSet.add(id.textBookId)
+                  _this.selectedPowersMap.set(id.textBookId,{'myPower':id.myPower,'isLocked':id.isLocked,'isPublished':id.isPublished})
+                })
+                afSetFun()
+              }
+              else if (res.code == 2) {
+                this.$message.error(res.msg.msgTrim())
+              }
+            })
+        }else{
+          _this.selectedIdsSet.clear();
+          _this.selectedPowersMap.clear();
+          afSetFun()
+        }
+        // 等待axios请求返回并更新完selectedIdsSet后执行的内部方法
+        function afSetFun(){
+
+          _this.selectedIds = Array.from(_this.selectedIdsSet).toString();
+          _this.$refs.multipleTable.clearSelection();
+          _this.tableData.forEach(item => {
+            if (_this.selectedIdsSet.has(item.textBookId)) {
+              _this.$refs.multipleTable.toggleRowSelection(item, true);
+            }
+          })
+
+          _this.isGetTableDataDone =true;
+
+          _this.selectedPowerSet.clear();
+          _this.selectedPowersMap.forEach(function (value, key, map) {
+            _this.selectedPowerSet.add({'textBookId':key,'myPower':value.myPower,'isLocked':value.isLocked,'isPublished':value.isPublished})
+          });
+
+        }
+
+
+
+
       },
       /**远程搜索 */
       querySearch(queryString,cb){
@@ -500,8 +565,8 @@
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
         this.searchForm.pageSize = val;
-        console.log(this.searchForm.pageSize);
-        this.getTableData();
+        //console.log(this.searchForm.pageSize);
+        this.getTableData(true);
         // this.$nextTick(() => {
         //   this.toggleSelection(this.tableData)
         // })
@@ -511,7 +576,7 @@
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.searchForm.pageNumber = val
-        this.getTableData();
+        this.getTableData(true);
 
         // this.$nextTick(() => {
         //   this.toggleSelection(this.tableData)
@@ -566,23 +631,38 @@
 
       },
       handleSelectionChange(val){
-        this.selected = val
         var _this = this;
+        this.selected = val
+
         this.selectedIdsSet;
 
         if(this.isGetTableDataDone) { //若为页面重新加载数据 如翻页 则不删除所进入页面的数据id 若不是 则是手动操作的 就删除当前页数据 按照val重置当前选中
           _this.tableData.forEach(t => {
             _this.selectedIdsSet.delete(t.textBookId);
+            _this.selectedPowersMap.delete(t.textBookId)
           })
+          /*if(_this.selected.length<_this.tableData.length){
+            _this.allPageSelected = false;
+          }*/
+
+
+          //console.log(_this.selectedIdsSet)
+          //console.log(val)
         }
-        _this.selected.forEach(item => {
+        val.forEach(item => {
 
           _this.selectedIdsSet.add(item.textBookId);
-
+          _this.selectedPowersMap.set(item.textBookId,{'myPower':item.myPower,'isLocked':item.isLocked,'isPublished':item.isPublished})
         })
+
         this.selectedIds = Array.from(this.selectedIdsSet).toString();
-        console.log(_this.selectedIdsSet)
-        console.log(val)
+        _this.selectedPowerSet.clear();
+        _this.selectedPowersMap.forEach(function (value, key, map) {
+          _this.selectedPowerSet.add({'textBookId':key,'myPower':value.myPower,'isLocked':value.isLocked,'isPublished':value.isPublished})
+        });
+        console.log(_this.selectedPowersMap)
+        console.log(_this.selectedPowerSet)
+
       },
       /* 批量发布主编副主编*/
       pushAllChecked(type){
@@ -590,9 +670,9 @@
           this.$message.error("您未选择任何名单");
           return false;
         }
-        if(type == 2 && !this.hasPower(2,this.selected)){
+        if(type == 2 && !this.hasPower(2,this.selectedPowerSet)){
 
-          this.$message.error(this.selected.length>0?"您选择的复选框中包含已发布的主编/副主编":"您未选择任何名单");
+          this.$message.error(this.selectedIds.length>0?"您选择的复选框中包含已发布的主编/副主编":"您未选择任何名单");
           return false;
         }
 
@@ -604,7 +684,7 @@
               textbookIds:this.selectedIds
             }))
             .then((res)=>{
-              console.log(res);
+              //console.log(res);
               if(res.data.code==1){
                       this.$message.success('发布成功');
               }else{
@@ -692,7 +772,7 @@
       hasPower(index,data){
         var arr = [];
         var list = '';
-        if (data.length > 0){
+        if (data.length || data.size){
           data.forEach(item => {
             arr.push(item.myPower);
           });
@@ -712,11 +792,11 @@
       },
       /* 选中社内用户*/
       selectChange(val){
-        console.log(val)
+        //console.log(val)
         if (val[0]) {
           this.planningEditor = val[0].id
         }
-        console.log(this.planningEditor)
+        //console.log(this.planningEditor)
       },
       /** 清空 选中项 */
       cleartable(){
@@ -798,7 +878,7 @@
       },
       /**批量导出主编 */
       exportEditor(){
-        if(this.selected.length===0){
+        if(this.selectedIds.length===0){
           this.$message.error("您未选择任何名单");
           return false;
         }
@@ -843,7 +923,7 @@
 
         //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
         handler:function(newValue,oldVal){
-          console.log(this);
+          //console.log(this);
           if(this.selectAll){
             //this.toggleSelection(newValue);
           }
@@ -883,5 +963,30 @@
   }
   .input{
     width: 100%;
+  }
+</style>
+<style scoped>
+  .operation-wrapper {
+    text-align: right;
+    width: 100%;
+    float: right;
+  }
+  #select_all_btn {
+    float: left;
+    border-radius: 100%;
+    width: 36px !important;
+    padding: 10px 3px;
+    margin-left: 5px;
+  }
+  .el-button{
+    min-width: 20px;
+  }
+  .css-not-pageSelected {
+    width: 14px;
+    height: 14px;
+    display: block;
+    margin: auto;
+    background-color: #ffff;
+    border-radius: 100%;
   }
 </style>
