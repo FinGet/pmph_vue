@@ -32,6 +32,7 @@
           @selection-change="handleSelectionChange">
           <el-table-column
             label="姓名"
+            align="center"
             width="120"
             prop="name"
             show-overflow-tooltip>
@@ -39,20 +40,24 @@
           <el-table-column
             prop="dptname"
             label="机构名称"
+            align="center"
             width="200">
           </el-table-column>
           <el-table-column
             prop="sendTime"
+            align="center"
             label="发送时间"
           >
           </el-table-column>
           <el-table-column
             prop="reciveTime"
+            align="center"
             label="接收时间"
           >
           </el-table-column>
           <el-table-column
             prop="handphone"
+            align="center"
             label="联系方式"
           >
           </el-table-column>

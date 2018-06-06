@@ -43,6 +43,7 @@
         </el-table-column>
         <el-table-column
           label="信息标题"
+
           show-overflow-tooltip>
           <template scope="scope">
             <el-button type="text" @click="gotoMsgDetaile(scope.row)">{{scope.row.title}}</el-button>
@@ -51,16 +52,19 @@
         <el-table-column
           prop="senderName"
           label="发送者"
+          align="center"
           width="160">
         </el-table-column>
         <el-table-column
           prop="sendTime"
           label="发送时间"
+          align="center"
           width="180"
         >
         </el-table-column>
         <el-table-column
           label="状态"
+          align="center"
           width="120"
         >
           <template scope="scope">

@@ -69,6 +69,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 label="文章标题"
+                align="center"
                 >
                 <template scope="scope">
                     <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
@@ -78,18 +79,21 @@
             <el-table-column
                 prop="authorname"
                 label="文章来源"
+                align="center"
                 width="90"
                 >
             </el-table-column>
         <el-table-column
           prop="realname"
           label="作者"
+          align="center"
           width="90"
         >
         </el-table-column>
             <el-table-column
                 label="创建时间"
-                width="168"
+                align="center"
+                width="180"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
@@ -97,7 +101,8 @@
             </el-table-column>
             <el-table-column
                 label="审核时间"
-                width="168"
+                align="center"
+                width="180"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
@@ -105,6 +110,7 @@
             </el-table-column>
             <el-table-column
                 label="审核状态"
+                align="center"
                 width="110"
                 >
                 <template scope="scope">
@@ -115,6 +121,7 @@
             </el-table-column>
             <el-table-column
                 label="相关统计"
+                align="center"
                 width="190"
                 >
                 <template scope="scope">
@@ -138,7 +145,8 @@
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="190"
+                align="center"
+                min-width="160"
                 >
                 <template scope="scope">
                     <!-- <el-button type="text" :disabled="scope.row.isPublished"  @click="publishContent(scope.row)">发布</el-button> -->

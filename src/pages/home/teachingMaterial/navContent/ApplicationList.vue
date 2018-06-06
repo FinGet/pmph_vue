@@ -57,14 +57,14 @@
                     </p>
                 </template>
             </el-table-column>
-          <el-table-column label="创建部门" width="100">
+          <el-table-column label="创建部门" min-width="100" align="center">
             <template scope="scope">
               <p>
                 {{scope.row.dpName}}
               </p>
             </template>
           </el-table-column>
-            <el-table-column label="联系人" >
+            <el-table-column label="联系人" align="center">
                 <template scope="scope">
                   <div class="contact_p" v-if="scope.row.contacts&&scope.row.contacts.length">
                       <span>{{scope.row.contacts[0].contactUserName}}</span>
