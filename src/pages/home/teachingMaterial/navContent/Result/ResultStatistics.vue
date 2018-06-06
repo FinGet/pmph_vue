@@ -30,6 +30,7 @@
                 prop="row"
                 label="序号"
                 align="center"
+                style = "padding-right:0;padding-left: 0;"
                 width="68">
               </el-table-column>
               <el-table-column
@@ -106,25 +107,35 @@
                 <!--align="center"-->
                 <!--width="68">-->
               <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--type="index"-->
+                <!--label="序号"-->
+                <!--align="center"-->
+                <!--width="68"-->
+                <!--&gt;-->
+              <!--</el-table-column>-->
               <el-table-column
-                type="index"
+                type="rownnum"
                 label="序号"
                 align="center"
                 width="68"
-                >
+              >
+                <template scope="scope">
+                <div class="content-rowspan">
+                <div v-for="value in scope.row.rownnum">{{ value.rownnum }}</div>
+                </div>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="schoolName"
+                align="center"
                 label="申报单位" >
-                <!--<template scope="scope">-->
-                <!--<div class="content-rowspan">-->
-                  <!--<div v-for="value in scope.row.schoolName">{{ value.schoolName }}</div>-->
-                <!--</div>-->
-                <!--</template>-->
+
               </el-table-column>
               <el-table-column
                 prop="bookname"
-                label="书籍名称" >
+                label="书籍名称"
+              align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
                     <div v-for="value in scope.row.bookname">{{ value.bookname }}</div>
@@ -248,8 +259,10 @@ export default {
   methods: {
     // 拿到数据 重新进行组装
     dataArray(data){
+      debugger;
       let  schoolN = data.length>0?data[0].schoolName:"";
       let  returnData = [];
+      let index_array = [];
       let bookname_array = [];
       let editorList_array = [];
       let subEditorList_array = [];
@@ -261,6 +274,7 @@ export default {
         if(rowIndex >= data.length){
           returnData.push({
             "schoolName":schoolN,
+            "rownnum":index_array,
             "bookname":bookname_array,
             "editorList":editorList_array,
             "subEditorList": subEditorList_array,
@@ -273,19 +287,30 @@ export default {
         if(iterm.schoolName!=schoolN){
           returnData.push({
             "schoolName":schoolN,
+              "rownnum":index_array,
             "bookname":bookname_array,
             "editorList":editorList_array,
             "subEditorList": subEditorList_array,
             "editorialList":editorialList_array,
             "isDigitalEditorList":isDigitalEditorList_array
           });
+          index_array=[];
+          index_array.length =0;
+          bookname_array =[];
           bookname_array.length = 0;
+          editorList_array =[];
           editorList_array.length = 0;
+          subEditorList_array=[];
            subEditorList_array.length = 0;
+          editorialList_array =[];
            editorialList_array.length = 0;
+          isDigitalEditorList_array=[];
            isDigitalEditorList_array.length = 0;
           schoolN = iterm.schoolName;
         }
+        index_array.push({
+          "rownnum":rowIndex
+        })
         bookname_array.push({
           "bookname":iterm.bookname
         })
@@ -412,10 +437,20 @@ export default {
 </script>
 
 <style scoped>
+ /*.el-table__body-wrapper td div:first-child{*/
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+    /*text-align: center;*/
+  /*}*/
   .content-rowspan div {
-    padding-left: 13px;
+    /*padding-left: 13px;*/
     line-height: 46px;
+    white-space:nowrap;
     border-bottom: 1px solid #ECEDEE;
+
+    text-align: center;
+      /*margin-left: 18px;*/
+      /*margin-right: 18px;*/
   }
   .content-rowspan div:last-child {
     border-bottom: 0;
