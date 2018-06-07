@@ -110,7 +110,7 @@
                 "/pmpheep/bookCorrection/replyBookFeedBackWriter",
                 this.$initPostData({
                   id: this.id,
-                  authorReply: this.ruleForm.authorReply
+                  authorReply: this.ruleForm.authorReply==null?'':this.ruleForm.authorReply
                 })
               )
               .then(response => {
