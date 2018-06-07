@@ -674,10 +674,17 @@
           v-model="offlineProgressText">
         </el-input>
         <p class="tip-text" v-if="100-offlineProgressText.length<20">还可输入{{100-offlineProgressText.length}}个字符</p>
+        <div class="choosenWarning" v-if="expertChoosen">
+          提示:该作者已被遴选为:
+          <div class="chooenWarningPosition" v-for="(iterm,index) in addBookList" :key="index">
+            <span v-if="iterm.chosenPosition">《{{iterm.textbookName}}》的{{iterm.showChosenPosition}}</span>
+          </div>
+          退回将会同时 <font color="red" >撤销遴选</font>，是否确认退回？
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeOfflineProgress">取 消</el-button>
-        <el-button type="primary" @click="onlineCheckPass(offlineProgressType)">确 定</el-button>
+        <el-button :type="expertChoosen?'danger':'primary'" @click="onlineCheckPass(offlineProgressType)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -812,7 +819,15 @@
           onlineProgressBtn_Pass(){
             var l = [0,2,3,4,5];
             return (l.includes(this.expertInfoData.onlineProgress))
+          },
+          expertChoosen(){
+            let flag = false
+            this.addBookList.forEach(book =>{
+              flag = flag || (book.chosenPosition>0)
+            })
+            return flag
           }
+
         },
         created(){
           this.$emit('hideTab')
@@ -1230,6 +1245,8 @@
                 //this.expertInfoData.onlineProgress=type;
                 this.closeOfflineProgress();
                 this.$message.success(type==3?'已通过！':'已退回！')
+                this.getTableData();
+                this.getBookList();
               }else{
                 this.$message.error(res.msg.msgTrim())
               }
@@ -1419,12 +1436,13 @@
   .info-iterm-text a:hover{
     color: #23527c;
   }
-  .tip-text{
+  .el-textarea{
+    margin-bottom: 10px;
+  }
+  .tip-text {
     color: #ccc;
     text-align: right;
-    position: absolute;
-    right: 0;
-    bottom: -20px;
+
   }
 
   .info-wrapper table{
@@ -1464,6 +1482,11 @@
   }
   .school-device{
     padding: 160px 0 0;
+  }
+
+  .choosenWarning {
+    line-height: 24px;
+    word-break: break-all;
   }
 
 </style>
