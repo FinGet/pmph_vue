@@ -65,7 +65,7 @@
         label="退回理由"
       >
         <template scope="scope">
-          <span>{{scope.row.reasonEditor || '-'}}</span>
+          <span>{{scope.row.reasonEditor || ''}}</span>
         </template>
       </el-table-column>
      <el-table-column
@@ -289,7 +289,12 @@ export default {
           this.$emit('change'); // 通知父组件 再次身份判断
 					this.getTableData();
 				} else {
-					this.$message.error(res.msg.msgTrim());
+					this.$confirm(res.msg.msgTrim(), "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err=>{
 

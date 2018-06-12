@@ -271,7 +271,12 @@ export default {
        */
     addNew() {
       if (!this[this.objKey][0]) {
-        this.$message.error("请选中一个节点之后再新增");
+        this.$confirm("请选中一个节点之后再新增", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.dialogVislble = false;
         return false;
       }
@@ -295,7 +300,12 @@ export default {
             });
             this.dialogVislble = false;
           } else if (res.data.code == 2) {
-            this.$message.error("地区名称已存在");
+            this.$confirm("地区名称已存在", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         });
     },

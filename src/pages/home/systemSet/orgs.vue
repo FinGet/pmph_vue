@@ -338,11 +338,21 @@
               this.tableData = data.rows;
               this.totalNum = data.total;
             } else {
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
-            this.$message.error('获取表格数据失败');
+            this.$confirm('获取表格数据失败', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       /**
@@ -362,12 +372,22 @@
                 this.form.orgTypeId = this.orgTypeList[0].id;
               }
             } else {
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('获取机构类型数据失败');
+            this.$confirm('获取机构类型数据失败', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       /**
@@ -384,12 +404,22 @@
               });
               this.area = data;
             } else {
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('获取机构类型数据失败');
+            this.$confirm('获取机构类型数据失败', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       handleSizeChange(val){
@@ -420,12 +450,22 @@
                   this.$message.success('删除成功！');
                   this.getOrgTableData();
                 }else if(res.code==2){
-                  this.$message.error('该机构内还有用户，请先将用户删除');
+                  this.$confirm('该机构内还有用户，请先将用户删除', "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('删除机构用户失败，请重试');
+                this.$confirm('删除机构用户失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})
@@ -448,12 +488,22 @@
               this.dialogVisible = false;
               this.$message.success('修改成功!');
             }else{
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('修改失败，请重试');
+            this.$confirm('修改失败，请重试', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       /**
@@ -475,13 +525,23 @@
             }else{
              // console.log(response);
              //加上+ '' 转化成字符串
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
 
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('添加失败，请重试');
+            this.$confirm('添加失败，请重试', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       /**
@@ -522,15 +582,30 @@
                   this.dialogVisible3 = false;
                   this.$message.success('添加成功!');
                 }else{
-                  this.$message.error(res.msg);
+                  this.$confirm(res.msg, "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('添加失败，请重试');
+                this.$confirm('添加失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
           } else {
-            this.$message.error('请正确填写表单!!');
+            this.$confirm('请正确填写表单!!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
         });
@@ -555,12 +630,22 @@
                   this.getOrgTypeData();
                   this.$message.success('删除成功！');
                 }else{
-                  this.$message.error(res.msg);
+                  this.$confirm(res.msg, "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('删除失败，请重试');
+                this.$confirm('删除失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})

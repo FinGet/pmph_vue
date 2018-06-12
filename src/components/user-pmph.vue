@@ -336,11 +336,21 @@ methods:
           location.reload();
 
         }else{
-          _this.$message.error('账号/密码错误');
+          _this.$confirm('账号/密码错误', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(function(err) {
         console.log(err)
-        _this.$message.error('登录失败');
+        _this.$confirm('登录失败', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
       /**
@@ -411,7 +421,12 @@ methods:
         if(this.radio){
           this.$refs.table.clearSelection();
           this.selectData = [];
-          this.$message.error('只能选择一个用户');
+          this.$confirm('只能选择一个用户', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       },
       /**
@@ -427,7 +442,7 @@ methods:
         this.dialogVisible = true;
         this.DepartmentNameList = [{
             id: this.tableData[index].departmentId,
-            name: this.tableData[index].departmentName || "-"
+            name: this.tableData[index].departmentName || " "
           }];
         for (var key in this.tableData[index]) {
           this.form[key] =this.tableData[index][key];
@@ -517,11 +532,21 @@ methods:
                 type: "success"
               });
             } else {
-              this.$message.error(res.msg);
+              this.$confirm(res.msg, "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e => {
-            this.$message.error(e.msg);
+            this.$confirm(e.msg, "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
             } else {
               return false;

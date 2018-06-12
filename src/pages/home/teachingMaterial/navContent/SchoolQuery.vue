@@ -118,10 +118,20 @@
             this.$message.success('发布成功！');
             this.$router.push({name:'通知列表'});
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         }).catch(err => {
-          this.$message.error('发布失败，请稍后再试！');
+          this.$confirm('发布失败，请稍后再试！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         })
       },
       /**

@@ -677,12 +677,22 @@ export default {
               this.form.orgTypeId = this.orgTypeList[0].id;
             }
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('获取机构类型数据失败');
+          this.$confirm('获取机构类型数据失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         });
     },
     //点击修改按钮执行方法
@@ -762,7 +772,12 @@ export default {
            if(res.data.code==1){
              this.$message.success('密码已重置');
            }else{
-             this.$message.error(res.data.msg.msgTrim());
+             this.$confirm(res.data.msg.msgTrim(), "提示",{
+             	confirmButtonText: "确定",
+             	cancelButtonText: "取消",
+             	showCancelButton: false,
+             	type: "error"
+             });
            }
         })
         }).catch(() => {
@@ -842,12 +857,22 @@ export default {
             this.area = data;
             // console.log(this.area)
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('获取机构类型数据失败');
+          this.$confirm('获取机构类型数据失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         });
     },
     /**
@@ -891,7 +916,12 @@ export default {
               message: "添加成功"
             });
           } else {
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(function(error) {
@@ -923,7 +953,12 @@ export default {
               message: "修改成功"
             });
           } else {
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(function(error) {
@@ -1167,10 +1202,20 @@ export default {
 //          window.location.href = res.data;
           window.open(res.data);
         } else {
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(error => {
-        this.$message.error('登录失败，请稍后再试!');
+        this.$confirm('登录失败，请稍后再试!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**
@@ -1201,22 +1246,42 @@ export default {
       var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
       // 类型判断
       if(!(ext=='xls'||ext=='xlsx')){
-        this.$message.error("请按照模板格式的文档上传文件");
+        this.$confirm("请按照模板格式的文档上传文件", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
       //文件名不超过40个字符
       /* if(file.name.length>40){
-       this.$message.error("文件名不能超过40个字符");
+       this.$confirm("文件名不能超过40个字符", "提示",{
+       	confirmButtonText: "确定",
+       	cancelButtonText: "取消",
+       	showCancelButton: false,
+       	type: "error"
+       });
        return;
        } */
       // 判断文件大小是否符合 文件不为0
       if(file.size<1){
-        this.$message.error("文件大小不能小于1bt");
+        this.$confirm("文件大小不能小于1bt", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
       // 判断文件大小是否符合 文件不大于100M
       if(file.size/1024/1024 > 100){
-        this.$message.error("文件大小不能超过100M！");
+        this.$confirm("文件大小不能超过100M！", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
 
@@ -1233,7 +1298,12 @@ export default {
         this.uuid=res.data.uuid;
         console.log(res);
       }else{
-        this.$message.error(res.msg.msgTrim());
+        this.$confirm(res.msg.msgTrim(), "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       this.uploadLoading = false;
     },
@@ -1242,7 +1312,12 @@ export default {
      */
     uploadError(err, file, fileList){
       console.log(err);
-      this.$message.error(err.msg.msgTrim());
+      this.$confirm(err.msg.msgTrim(), "提示",{
+      	confirmButtonText: "确定",
+      	cancelButtonText: "取消",
+      	showCancelButton: false,
+      	type: "error"
+      });
       this.uploadLoading = false;
     },
     importExcel(){

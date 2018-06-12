@@ -215,7 +215,12 @@ export default {
             this.choiceQuestionData=res.data.questionOne;
             this.writeQuestionData = res.data.questionMore;
           }else{
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
@@ -244,7 +249,12 @@ export default {
             this.dialogTableData = res.data.rows;
             this.pageTotal=res.data.total;
           }else{
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{

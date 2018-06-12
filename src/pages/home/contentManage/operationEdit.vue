@@ -23,18 +23,18 @@
             :file-list="formData.fileList"
             >
             <el-button size="small" type="primary">选择文件</el-button>
-          </el-upload>           
+          </el-upload>
          </el-form-item >
          <el-form-item label="备注："  prop="note">
              <el-input  type="textarea" :rows="4" v-model="formData.note"></el-input>
          </el-form-item>
-      </el-form>  
+      </el-form>
      </div>
      <div class="overflow:hidden;">
    <div class="bottom_button">
        <el-button type="primary" @click="submit">发布</el-button>
        <el-button type="primary" @click="$router.push({name:'帮助管理',params:{activeName:'second'}})">返回</el-button>
-    </div>   
+    </div>
    </div>
   </div>
 </template>
@@ -85,7 +85,12 @@
                    this.$message.success('添加成功');
                    this.$router.push({name:'帮助管理',params:{activeName:'second'}});
                  }else{
-                   this.$message.error(res.data.msg.msgTrim());
+                   this.$confirm(res.data.msg.msgTrim(), "提示",{
+                   	confirmButtonText: "确定",
+                   	cancelButtonText: "取消",
+                   	showCancelButton: false,
+                   	type: "error"
+                   });
                  }
                })
             }else{
@@ -107,20 +112,40 @@
           fileBeforeUpload(file){
             const isLt100M = file.size / 1024 / 1024 <= 100;
             if (!isLt100M) {
-                this.$message.error('上传文件大小不能超过 100MB!');
+                this.$confirm('上传文件大小不能超过 100MB!', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
               if(file.size==0){
-                this.$message.error('请勿上传大小为0kb的空文件');
+                this.$confirm('请勿上传大小为0kb的空文件', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
               }
               /* .com .bat .exe */
               if((file.name.indexOf('.bat')!=-1||file.name.indexOf('.exe')!=-1||file.name.indexOf('.com'))!=-1){
                 console.log()
-                this.$message.error('请勿上传可执行文件');
+                this.$confirm('请勿上传可执行文件', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
               }
               if(file.name.length>80){
-                this.$message.error('附件名称长度过长');
+                this.$confirm('附件名称长度过长', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
               }
               return isLt100M;

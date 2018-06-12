@@ -95,28 +95,54 @@
         if(!ext){return false;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          this.$confirm("图片的格式必须为png或者jpg或者jpeg或者gif格式！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           self.groupData.filename=undefined;
           return false;
         }
         //文件名不超过40个字符
         if(file.name.length>50){
-          this.$message.error("文件名称不能超过50个字符");
+          this.$confirm("文件名称不能超过50个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("文件大小不能为0kb");
+          this.$confirm("文件大小不能为0kb", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.groupData.filename=undefined;
           return false;
         }
         if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-          this.$message.error('请勿上传可执行文件!');
+          this.$confirm('请勿上传可执行文件!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
-          this.$message.error("图片大小不能大于10M");
+          this.$confirm("图片大小不能大于10M", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.groupData.filename=undefined;
           return false;
         }
@@ -135,7 +161,12 @@
           .then(()=>{
             //小组名称不能为空
             if(!this.groupData.groupName||this.groupData.groupName.length>20){
-              this.$message.error('请输入正确的小组名称');
+              this.$confirm('请输入正确的小组名称', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               return false;
             }
             let self= this;
@@ -152,11 +183,21 @@
                   //修改成功通过vue bus派发一个事件
                   bus.$emit('group:info-change')
                 }else{
-                  self.$message.error(res.msg.msgTrim());
+                  self.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch((error) => {
-                self.$message.error('修改小组失败，请重试');
+                self.$confirm('修改小组失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
 
           })
@@ -172,7 +213,12 @@
           this.groupData.imgUrl='/pmpheep/'+response.data;
           this.groupData.currentFile=file.file;
         }else{
-          this.$message.error(response.msg.msgTrim());
+          this.$confirm(response.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       },
       /**
@@ -180,7 +226,12 @@
        */
       uploadError(err, file, fileList){
         this.groupData.filename=undefined;
-        this.$message.error('修改小组失败，请重试');
+        this.$confirm('修改小组失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       },
       /**
        * 解散小组
@@ -203,11 +254,21 @@
                   //修改成功通过vue bus派发一个事件
                   bus.$emit('group:info-change')
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch((error) => {
-                this.$message.error('删除小组失败，请重试');
+                this.$confirm('删除小组失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
           })
           .catch(e=>{})

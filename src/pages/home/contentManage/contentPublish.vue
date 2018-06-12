@@ -297,7 +297,12 @@ export default {
     ContentSubmit(num) {
       this.formData.content = this.$refs.editor.getContent();
       if (!this.formData.content) {
-        this.$message.error("内容不能为空");
+        this.$confirm("内容不能为空", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return false;
       }
       this.$refs["addForm"].validate(valid => {
@@ -333,7 +338,12 @@ export default {
                 }
                 this.$router.push({ name: this.routerName });
               } else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
           }else{
@@ -352,7 +362,12 @@ export default {
                 }
                   this.$router.push({ name: this.routerName });
                 }else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
           }
@@ -404,7 +419,12 @@ export default {
                 this.showContentDetail = false;
                 this.$router.push({name: '文章管理'})
               } else {
-                this.$message.error(res.data.msg.msgTrim());
+                this.$confirm(res.data.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
         })
@@ -431,20 +451,40 @@ export default {
       console.log(typeof file);
       const isLt100M = file.size / 1024 / 1024 <= 100;
        if (!isLt100M) {
-          this.$message.error('上传文件大小不能超过 100MB!');
+          this.$confirm('上传文件大小不能超过 100MB!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
         if(file.size==0){
-           this.$message.error('请勿上传大小为0kb的空文件');
+           this.$confirm('请勿上传大小为0kb的空文件', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
         }
         /* .com .bat .exe */
         if((file.name.indexOf('.bat')!=-1||file.name.indexOf('.exe')!=-1||file.name.indexOf('.com'))!=-1){
           console.log()
-           this.$message.error('请勿上传可执行文件');
+           this.$confirm('请勿上传可执行文件', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
         }
         if(file.name.length>80){
-          this.$message.error('附件名称长度过长');
+          this.$confirm('附件名称长度过长', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         return isLt100M;
@@ -557,7 +597,12 @@ export default {
          this.formData.attachment=[];
         } else {
           var _this=this;
-          _this.$message.error('文章内容为空');
+          _this.$confirm('文章内容为空', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         setTimeout(function() {
              _this.$router.go(-1);
         }, 1000);
@@ -609,22 +654,42 @@ export default {
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
-        this.$message.error('图片的大小不能超过20MB！');
+        this.$confirm('图片的大小不能超过20MB！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(exSize==0){
-        this.$message.error('请勿上传空文件！');
+        this.$confirm('请勿上传空文件！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
-        this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+        this.$confirm('图片的格式必须为png或者jpg或者jpeg格式！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(file.name.length>80){
-        this.$message.error('图片名称不能超过80个字符！');
+        this.$confirm('图片名称不能超过80个字符！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         //this.material.noticeFiles.pop();
         return false;
       }

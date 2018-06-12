@@ -239,11 +239,21 @@
                 this.$message.success('成功撤销此消息');
                 row.isWithdraw=true;
             }else{
-                this.$message.error(res.msg.msgTrim());
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
             }
           })
           .catch(e=>{
-            this.$message.error('撤销失败，请重试');
+            this.$confirm('撤销失败，请重试', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
         })
       },

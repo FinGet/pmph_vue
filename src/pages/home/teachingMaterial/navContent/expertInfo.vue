@@ -872,7 +872,12 @@
          */
         deleteNew(index,hasChange,iterm){
              if(this.addBookList.length==1&&!this.addBookList[0].isNew){
-                this.$message.error('至少要有一本书！');
+                this.$confirm('至少要有一本书！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             this.$confirm(iterm?'确定删除图书：<'+iterm.textbookName+'>？':'您还未保存图书,确定删除吗？', '提示', {
               confirmButtonText: '确定',
@@ -901,13 +906,23 @@
           console.log(this.addBookList);
           for(let iterm of this.addBookList){
             if(!iterm.textbookId){
-              this.$message.error('请选择图书');
+              this.$confirm('请选择图书', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               return;
             }
 
             if(!this.$commonFun.Empty(iterm.newCreated)){
               if((this.$commonFun.Empty(iterm.presetPosition_temp)&&this.$commonFun.Empty(iterm.presetPosition_temp_multi))){
-                this.$message.error('职位必选');
+                this.$confirm('职位必选', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return ;
               }
             }
@@ -940,7 +955,12 @@
                 this.$message.success('保存成功！');
                 this.hasBookListChanged=false;
               }else{
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
             })
             .catch(e=>{
@@ -965,22 +985,42 @@
           }
           //文件名不超过40个字符
           if(file.name.length>60){
-            this.$message.error("文件名不能超过60个字符");
+            this.$confirm("文件名不能超过60个字符", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
           // 类型判断
           if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-            this.$message.error("请勿上传可执行文件！");
+            this.$confirm("请勿上传可执行文件！", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
           // 判断文件大小是否符合 文件不为0
           if(file.size<1){
-            this.$message.error("文件大小不能小于1bt");
+            this.$confirm("文件大小不能小于1bt", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
           // 判断文件大小是否符合 文件不大于100M
           if(file.size/1024/1024 > 100){
-            this.$message.error("文件大小不能超过100M！");
+            this.$confirm("文件大小不能超过100M！", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             self.newGroupData.syllabusName=undefined;
             return;
           }
@@ -998,23 +1038,48 @@
           const nameLen = file.name.length <= 60;
           //文件名不超过40个字符
           if(file.name.length>60){
-            this.$message.error("文件名不能超过60个字符");
+            this.$confirm("文件名不能超过60个字符", "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
           if (file.size / 1024 / 1024==0) {
-            this.$message.error('上传文件大小不能小于 0kb!');
+            this.$confirm('上传文件大小不能小于 0kb!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
           if (file.size / 1024 / 1024>100) {
-            this.$message.error('文件大小不能超过100M！');
+            this.$confirm('文件大小不能超过100M！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
           if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-            this.$message.error('请勿上传可执行文件!');
+            this.$confirm('请勿上传可执行文件!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
           if (!nameLen) {
-            this.$message.error('上传文件名字长度不能超过80个字符!');
+            this.$confirm('上传文件名字长度不能超过80个字符!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
           return isLt0M&&nameLen&&!(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif')
@@ -1110,7 +1175,12 @@
                 this.material = res.data.material;
 
               }else{
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
             })
             .catch(e=>{
@@ -1130,7 +1200,12 @@
               if(res.code==1){
                 this.bookList = res.data
               }else{
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
             })
             .catch(e=>{
@@ -1156,7 +1231,12 @@
                 if(res.code==1){
                   this.$message.success('已确认！')
                 }else{
-                  this.$message.error(res.msg.msgTrim())
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  })
                 }
               })
                 .catch(e=>{
@@ -1170,7 +1250,12 @@
          */
         sendmsg(){
           if(!this.inputMsg){
-            this.$message.error('发送内容不能为空！');
+            this.$confirm('发送内容不能为空！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
           this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
@@ -1183,13 +1268,23 @@
               if(res.code==1){
                 this.$message.success('已发送！')
               }else{
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
               this.closeInputMsg();
             })
             .catch(e=>{
               console.log(e);
-              this.$message.error('发送失败，请重试！');
+              this.$confirm('发送失败，请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               this.closeInputMsg();
             })
         },
@@ -1230,7 +1325,12 @@
          */
         onlineCheckPass(type){
           if ((type == 5||type==4)&&this.offlineProgressText == '') {
-            this.$message.error('请输入退回原因!');
+            this.$confirm('请输入退回原因!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
           this.$axios.get(this.api_online_check,{params:{
@@ -1248,12 +1348,22 @@
                 this.getTableData();
                 this.getBookList();
               }else{
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
             })
             .catch(e=>{
               console.log(e);
-              this.$message.error('请求失败，请重试！');
+              this.$confirm('请求失败，请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             })
 
         },
@@ -1293,10 +1403,20 @@
 //          window.location.href = res.data;
               window.open(res.data);
             } else {
-              this.$message.error(res.msg.msgTrim());
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           }).catch(error => {
-            this.$message.error('登录失败，请稍后再试!');
+            this.$confirm('登录失败，请稍后再试!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
         }
 

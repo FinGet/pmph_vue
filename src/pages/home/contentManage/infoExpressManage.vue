@@ -382,7 +382,12 @@ export default {
                    this.getOutContentList();
                    this.showContentDetail=false;
                 }else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
         }).catch(() => {
@@ -427,7 +432,12 @@ export default {
           let res = response.data
           if (res.code == 1) {
             if(res.data.content == null) {
-              this.$message.error('此快报内容为空，错误数据，不能调转！');
+              this.$confirm('此快报内容为空，错误数据，不能调转！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               return;
             } else {
               this.$router.push({
@@ -454,7 +464,12 @@ export default {
                 this.getOutContentList();
                 this.$message.success("内容已删除");
               } else {
-                tthis.$message.error(res.data.msg);
+                tthis.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
         })

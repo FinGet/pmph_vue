@@ -52,7 +52,12 @@
       reIssueSubmit(){
          this.formData.content=this.$refs.editor.getContent();
          if(!this.formData.content){
-           this.$message.error("消息内容不能为空");
+           this.$confirm("消息内容不能为空", "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return ;
          }
         this.$axios.post(this.reIssueUrl,this.$commonFun.initPostData(this.formData))
@@ -62,7 +67,12 @@
             this.$message.success('消息补发成功');
             this.$router.push({name:'调查问卷模板设置'});
           }else{
-            this.$message.error(res.data.msg.msgTrim());
+            this.$confirm(res.data.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
       }

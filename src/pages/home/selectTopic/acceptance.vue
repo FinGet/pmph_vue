@@ -175,7 +175,12 @@ export default {
             this.$emit('changeActive','second');
           }
 				} else {
-					this.$message.error(res.msg.msgTrim());
+					this.$confirm(res.msg.msgTrim(), "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
 			})

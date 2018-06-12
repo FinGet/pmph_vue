@@ -211,7 +211,12 @@ export default {
           // console.log(this.tableData)
         }
       }).catch(e => {
-        this.$message.error('栏目数请求失败，请重试');
+        this.$confirm('栏目数请求失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
 
     },
@@ -254,7 +259,12 @@ export default {
           this.type = ''
         }
       }).catch(e => {
-        this.$message.error('增加失败，请重试');
+        this.$confirm('增加失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**
@@ -286,7 +296,12 @@ export default {
         }
         // console.log(this.authOptions)
       }).catch(e => {
-        this.$message.error('数据加载失败，请重试')
+        this.$confirm('数据加载失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        })
       })
     },
     /**
@@ -317,7 +332,12 @@ export default {
           this.dialogForm.path = this.dialogForm.path.split('-')
         }
       }).catch(e => {
-        this.$message.error('请求失败，请重试');
+        this.$confirm('请求失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**
@@ -359,7 +379,12 @@ export default {
           this.dialogVisible = false
         }
       }).catch(e => {
-        this.$message.error('请求失败，请重试');
+        this.$confirm('请求失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     affirm() {
@@ -395,10 +420,20 @@ export default {
           this.$message.success('删除成功');
           this.getMenuLists()
         } else {
-          this.$message.error('删除失败');
+          this.$confirm('删除失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(e => {
-        this.$message.error('请求失败，请重试');
+        this.$confirm('请求失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**
@@ -411,12 +446,27 @@ export default {
           this.$message.success('删除成功');
           this.getMenuLists()
         } else if (res.code == '3') {
-          this.$message.error('该栏目下存在发布内容，不能删除！');
+          this.$confirm('该栏目下存在发布内容，不能删除！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         } else {
-          this.$message.error('删除失败');
+          this.$confirm('删除失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(e => {
-        this.$message.error('请求失败，请重试');
+        this.$confirm('请求失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**

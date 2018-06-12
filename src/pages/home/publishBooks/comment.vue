@@ -242,7 +242,12 @@
                   this.$message.success('删除成功!');
                   this.getTableData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
@@ -284,12 +289,22 @@
                   this.$message.success('提交成功');
                   this.getTableData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('操作失败请重试！');
+                this.$confirm('操作失败请重试！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})
@@ -319,12 +334,22 @@
               this.$message.success('提交成功');
               this.getTableData();
             }else{
-              this.$message.error('操作失败请重试！');
+              this.$confirm('操作失败请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('操作失败请重试！');
+            this.$confirm('操作失败请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       /**

@@ -158,7 +158,12 @@
         this.formData.content = this.$refs.editor.getContent();
         //验证表单是否正确
         if(!(this.formData.title&&this.formData.title.length<50&&this.formData.content)){
-          this.$message.error('标题和内容都不能为空');
+          this.$confirm('标题和内容都不能为空', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
 
         this.$confirm("确定保存通知详情？", "提示",{

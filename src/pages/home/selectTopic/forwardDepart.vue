@@ -69,7 +69,7 @@
         label="退回理由"
       >
         <template scope="scope">
-          <span>{{scope.row.reasonDirector || '-'}}</span>
+          <span>{{scope.row.reasonDirector || ''}}</span>
         </template>
       </el-table-column>
      <el-table-column
@@ -242,7 +242,12 @@ export default {
              this.getListData();
              this.dialogVisible=false;
            }else{
-             this.$message.error(res.data.msg.msgTrim());
+             this.$confirm(res.data.msg.msgTrim(), "提示",{
+             	confirmButtonText: "确定",
+             	cancelButtonText: "取消",
+             	showCancelButton: false,
+             	type: "error"
+             });
            }
           })
         }).catch(() => {

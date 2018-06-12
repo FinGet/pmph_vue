@@ -390,11 +390,21 @@
        */
       showDialog(type,data,isLocked){
         if(type == 1 && !this.hasPower(4,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
-          this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
+          this.$confirm(this.selectedIds.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return ;
         }
         if(type == 0 && !this.hasPower(5,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
-          this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
+          this.$confirm(this.selectedIds.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return ;
         }
         var html = '';
@@ -409,7 +419,12 @@
             this.method = 'result'
             html = `您要公布${data?'《'+data.textbookName+'》':'所有选中'}的遴选结果吗？<br/>结果公布后，只有当前教材指定的主任可以修改名单并再次公布`
           } else {
-            this.$message.error('还未进行名单确认，不能公布！');
+            this.$confirm('还未进行名单确认，不能公布！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
           }
         }
@@ -429,7 +444,12 @@
             if(res.code==1){
               this.bookNames = res.data;
             } else if (res.code == 2) {
-              this.$message.error(res.msg.msgTrim())
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              })
             }
           })
           .catch(e=>{
@@ -478,7 +498,12 @@
 
               }
             } else if (res.code == 2) {
-              this.$message.error(res.msg.msgTrim())
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              })
             }
           })
           .catch(e=>{
@@ -506,7 +531,12 @@
                 afSetFun()
               }
               else if (res.code == 2) {
-                this.$message.error(res.msg.msgTrim())
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
               }
             })
         }else{
@@ -667,12 +697,22 @@
       /* 批量发布主编副主编*/
       pushAllChecked(type){
         if(type == 1 && this.isSelected){
-          this.$message.error("您未选择任何名单");
+          this.$confirm("您未选择任何名单", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         if(type == 2 && !this.hasPower(2,this.selectedPowerSet)){
 
-          this.$message.error(this.selectedIds.length>0?"您选择的复选框中包含已发布的主编/副主编":"您未选择任何名单");
+          this.$confirm(this.selectedIds.length>0?"您选择的复选框中包含已发布的主编/副主编":"您未选择任何名单", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
 
@@ -688,7 +728,12 @@
               if(res.data.code==1){
                       this.$message.success('发布成功');
               }else{
-                 this.$message.error(res.data.msg.msgTrim());
+                 this.$confirm(res.data.msg.msgTrim(), "提示",{
+                 	confirmButtonText: "确定",
+                 	cancelButtonText: "取消",
+                 	showCancelButton: false,
+                 	type: "error"
+                 });
               }
             })
         }).catch(() => {
@@ -723,7 +768,12 @@
             this.getTableData()
           }
         }).catch(err => {
-          this.$message.error('操作失败，请稍后再试')
+          this.$confirm('操作失败，请稍后再试', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          })
         })
       },
       /**
@@ -756,11 +806,21 @@
             //更新教材信息
             bus.$emit('material:update-info');
           } else{
-            this.$message.error(res.msg.msgTrim())
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
           }
           this.isClickPublish=false;
         }).catch(err => {
-          this.$message.error('操作失败，请稍后再试')
+          this.$confirm('操作失败，请稍后再试', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          })
         })
       },
       /**@augments index
@@ -819,7 +879,12 @@
               this.groupData = res.data.rows
             }
           }).catch(err => {
-            this.$message.error('操作失败，请稍后再试')
+            this.$confirm('操作失败，请稍后再试', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
           })
         } else {
           this.addEditor();
@@ -830,7 +895,12 @@
       /**提交小组名单 */
       submitGroup(){
         if(this.groupData.length==0){
-          this.$message.error('小组名单不能为空');
+          this.$confirm('小组名单不能为空', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return ;
         }
         this.groupData.forEach(item => {
@@ -847,7 +917,12 @@
             this.$router.push({name: '小组管理'})
           }
         }).catch(err => {
-          this.$message.error('操作失败，请稍后再试')
+          this.$confirm('操作失败，请稍后再试', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          })
         })
       },
       /**更新小组 */
@@ -861,7 +936,12 @@
           if (res.code == 1) {
             this.$message.success('更新成功！');
           }else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
       },
@@ -869,7 +949,12 @@
       exportExcel(id){
         // console.log(id,this.selectedIds)
         if(this.isSelected&&this.$commonFun.Empty(id)){
-          this.$message.error('您未选择任何名单');
+          this.$confirm('您未选择任何名单', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         let url = '/pmpheep/chosenPosition/exportExcel/?textbookIds='+ (id || this.selectedIds);
@@ -879,7 +964,12 @@
       /**批量导出主编 */
       exportEditor(){
         if(this.selectedIds.length===0){
-          this.$message.error("您未选择任何名单");
+          this.$confirm("您未选择任何名单", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         let url = '/pmpheep/position/exportEditors/?textbookIds=' + this.selectedIds;

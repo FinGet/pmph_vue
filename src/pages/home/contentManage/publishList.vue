@@ -589,7 +589,12 @@ export default {
             this.$message.success('删除成功!');
             this.getCommentList()
           }else{
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
       })
@@ -634,7 +639,12 @@ export default {
             this.$message.success("文章已发布");
             this.getPublicList();
           } else {
-            this.$message.error(res.data.msg);
+            this.$confirm(res.data.msg, "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         });
     },
@@ -679,7 +689,12 @@ export default {
                     this.showContentDetail = false;
                     this.getPublicList();
                   } else {
-                    this.$message.error(res.data.msg);
+                    this.$confirm(res.data.msg, "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                   }
                 });
             })
@@ -716,7 +731,12 @@ export default {
                     this.showContentDetail = false;
                     this.getPublicList();
                   } else {
-                    this.$message.error(res.data.msg);
+                    this.$confirm(res.data.msg, "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                   }
                 });
         }).catch(() => {
@@ -744,7 +764,12 @@ export default {
                 this.getPublicList();
                 this.$message.success("删除操作成功");
               } else {
-                this.$message.error(res.data.msg.msgTrim());
+                this.$confirm(res.data.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
         })
@@ -793,7 +818,12 @@ export default {
 
         }else{
           this.isSyncLoading=false;
-          this.$message.error(res.data.msg.msgTrim());
+          this.$confirm(res.data.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       })
     },
@@ -823,7 +853,12 @@ export default {
            }
        }else{
          this.isSyncLoading=false;
-         this.$message.error(res.data.msg.msgTrim());
+         this.$confirm(res.data.msg.msgTrim(), "提示",{
+         	confirmButtonText: "确定",
+         	cancelButtonText: "取消",
+         	showCancelButton: false,
+         	type: "error"
+         });
        }
      })
     }

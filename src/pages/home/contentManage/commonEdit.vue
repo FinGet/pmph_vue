@@ -15,13 +15,13 @@
          <el-form-item label="问题解决方案：" prop="content">
              <el-input  type="textarea" v-model="formData.content" :rows="4"></el-input>
          </el-form-item>
-      </el-form>  
+      </el-form>
      </div>
      <div class="overflow:hidden;">
    <div class="bottom_button">
        <el-button type="primary" @click="editSubmit" v-if="$route.params.check!='check'">发布</el-button>
        <el-button type="primary" @click="$router.push({name:'帮助管理'})">返回</el-button>
-    </div>   
+    </div>
    </div>
   </div>
 </template>
@@ -69,7 +69,12 @@
                       this.$message.success('添加成功');
                       this.$router.push({name:'帮助管理'});
                     }else{
-                      this.$message.error(res.data.msg.msgTrim());
+                      this.$confirm(res.data.msg.msgTrim(), "提示",{
+                      	confirmButtonText: "确定",
+                      	cancelButtonText: "取消",
+                      	showCancelButton: false,
+                      	type: "error"
+                      });
                     }
                   })
                   /* 修改 */
@@ -80,9 +85,14 @@
                       this.$message.success('修改成功');
                       this.$router.push({name:'帮助管理'});
                     }else{
-                      this.$message.error(res.data.msg.msgTrim());
+                      this.$confirm(res.data.msg.msgTrim(), "提示",{
+                      	confirmButtonText: "确定",
+                      	cancelButtonText: "取消",
+                      	showCancelButton: false,
+                      	type: "error"
+                      });
                     }
-                 }) 
+                 })
                 }
               }else{
                 return ;
