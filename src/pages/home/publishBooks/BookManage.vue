@@ -234,6 +234,12 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" :rules="dialogRules" label-width="140px" class="form">
+          <el-form-item label="是否分类置顶：" required>
+            <el-radio-group v-model="form.isStick">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
@@ -313,6 +319,7 @@
         api_upload: '/pmpheep/books/bookExcel',
 			  form:{
 			    bookId:'',
+          isStick:true,
           isNew:true,
           isPromote:true,
           isOnSale:true,
@@ -480,6 +487,7 @@
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
         this.form.materialId = row.materialId;
+        this.form.isStick = row.stick;
         typelist = row.path?row.path.split('-'):[];
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
@@ -502,6 +510,7 @@
         this.form.isNew = true;
         this.form.isOnSale = true;
         this.form.isPromote = true;
+        this.form.isStick = true;
         this.form.typeId = [];
       },
       /**
@@ -532,6 +541,7 @@
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           isKey:this.form.isKey,
+          isStick:this.form.isStick,
           type:type,
           materialId:this.form.materialId||'',
         }))
