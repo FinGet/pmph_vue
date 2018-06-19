@@ -598,22 +598,42 @@ props: default-history-id 默认选中的历史记录
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
-          this.$message.error("请按照模板格式的文档上传文件");
+          this.$confirm("请按照模板格式的文档上传文件", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+          this.$confirm("文件名不能超过40个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$confirm("文件大小不能小于1bt", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$confirm("文件大小不能超过100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
 
@@ -649,7 +669,12 @@ props: default-history-id 默认选中的历史记录
             })
           });
         }else{
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
         console.log(12312312);
         this.uploadLoading = false;
@@ -658,7 +683,12 @@ props: default-history-id 默认选中的历史记录
        * 上传文件请求失败的回调
        */
       uploadError(err, file, fileList){
-        this.$message.error('上传文件失败，请重试');
+        this.$confirm('上传文件失败，请重试', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.uploadLoading = false;
       },
     },

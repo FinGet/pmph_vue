@@ -151,7 +151,12 @@
                         this.$message.success('发起调查成功');
                         this.$router.push({name:'调查问卷模板设置'});
                       }else{
-                        this.$message.error(res.data.msg.msgTrim());
+                        this.$confirm(res.data.msg.msgTrim(), "提示",{
+                        	confirmButtonText: "确定",
+                        	cancelButtonText: "取消",
+                        	showCancelButton: false,
+                        	type: "error"
+                        });
                       }
                     })
                 }).catch(() => {

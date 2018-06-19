@@ -137,7 +137,12 @@
             })
           }
         }).catch(err => {
-          this.$message.error(err)
+          this.$confirm(err, "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          })
         })
       },
       submit(){
@@ -148,7 +153,12 @@
             this.book[key] = this.tableData[i][key]
           }
           /* if ( this.tableData[i].topicNumber && !re.test(this.tableData[i].topicNumber)) {
-            this.$message.error('选题号只能为数字')
+            this.$confirm('选题号只能为数字', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
             return
           } */
 
@@ -189,10 +199,20 @@
             if (res.code == 1) {
               this.$message.success('设置成功!');
             } else {
-              this.$message.error(res.msg.msgTrim());
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           }).catch(err => {
-            this.$message.error('提交失败，请稍后再试！')
+            this.$confirm('提交失败，请稍后再试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
           })
         }).catch(() => {});
       },
@@ -207,22 +227,42 @@
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
-          this.$message.error("请按照模板格式的文档上传文件");
+          this.$confirm("请按照模板格式的文档上传文件", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         //文件名不超过40个字符
         /* if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+          this.$confirm("文件名不能超过40个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         } */
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$confirm("文件大小不能小于1bt", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$confirm("文件大小不能超过100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
 
@@ -253,7 +293,12 @@
 //          console.log(data);
           this.tableData = data; */
         }else{
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
         this.uploadLoading = false;
       },
@@ -262,7 +307,12 @@
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error(err.msg.msgTrim());
+        this.$confirm(err.msg.msgTrim(), "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.uploadLoading = false;
       },
       /** 导出Excel */

@@ -175,7 +175,12 @@ export default {
                  this.$emit('refeshMember');
                  this.getMemberManageList();
                }else{
-                 this.$message.error(res.data.msg.msgTrim());
+                 this.$confirm(res.data.msg.msgTrim(), "提示",{
+                 	confirmButtonText: "确定",
+                 	cancelButtonText: "取消",
+                 	showCancelButton: false,
+                 	type: "error"
+                 });
                }
          })
     },
@@ -207,12 +212,22 @@ export default {
               this.$emit('refeshMember');
               this.getMemberManageList();
             }else{
-              this.$message.error(res.data.msg.msgTrim())
+              this.$confirm(res.data.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              })
             }
           })
             .catch((error) => {
               console.log(error);
-              this.$message.error('删除失败，请重试');
+              this.$confirm('删除失败，请重试', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             });
         })
         .catch(e=>{})
@@ -235,11 +250,21 @@ export default {
             // this.$emit('refeshMember');
             // this.getMemberManageList();
           }else{
-            this.$message.error('修改失败');
+            this.$confirm('修改失败', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         }).catch((error) => {
           console.log(error);
-          this.$message.error('修改失败，请重试');
+          this.$confirm('修改失败，请重试', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         })
 
     }

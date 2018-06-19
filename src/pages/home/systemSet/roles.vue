@@ -410,7 +410,12 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 } else {
-                  _this.$message.error(res.data.msg.msgTrim());
+                  _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(function(err) {
@@ -436,7 +441,12 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 }else{
-                   _this.$message.error(res.data.msg.msgTrim());
+                   _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                   	confirmButtonText: "确定",
+                   	cancelButtonText: "取消",
+                   	showCancelButton: false,
+                   	type: "error"
+                   });
                 }
               })
               .catch(function(err) {
@@ -479,7 +489,12 @@ export default {
             _this.getListData();
             _this.$message.success("更新成功");
           } else {
-            _this.$message.error(res.data.msg.msgTrim());
+            _this.$confirm(res.data.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
           _this.powerTreeVisible = false;
         })

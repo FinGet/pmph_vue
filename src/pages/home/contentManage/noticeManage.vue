@@ -339,11 +339,21 @@ export default {
                 this.$message.success("删除成功");
                 this.getContentLists();
               } else {
-                this.$message.error("删除失败");
+                this.$confirm("删除失败", "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
             .catch(e => {
-              this.$message.error("请求失败，请重试");
+              this.$confirm("请求失败，请重试", "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             });
         })
         .catch(() => {
@@ -419,7 +429,12 @@ export default {
                    this.getContentLists();
                    this.showContentDetail=false;
                 }else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
         }).catch(() => {

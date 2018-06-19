@@ -254,7 +254,12 @@ export default {
             self.$message.success('发送成功！');
             self.$router.push({name: '消息列表'});
           }else{
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
           this.submiting=false;
         })
@@ -354,7 +359,12 @@ export default {
     var routerQuery = this.$route.query;
     console.log(routerParams);
     if((!routerParams.content&&!routerParams.title)&&!routerParams.msgId){
-      this.$message.error('页面未收到发送消息内容');
+      this.$confirm('页面未收到发送消息内容', "提示",{
+      	confirmButtonText: "确定",
+      	cancelButtonText: "取消",
+      	showCancelButton: false,
+      	type: "error"
+      });
       this.$router.push({name: '编辑消息'});
     }
     if(routerQuery.type=='reissue'){

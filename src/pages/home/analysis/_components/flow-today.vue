@@ -56,7 +56,12 @@
               let data = JSON.parse(res.data);
               callback&&callback(data);
             }else{
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{

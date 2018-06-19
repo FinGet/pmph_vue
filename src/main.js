@@ -46,6 +46,7 @@ Vue.prototype.$config = config;
 Vue.prototype.$commonFun = commonFun;
 Vue.prototype.$formCheckedRules = formCheckedRules;
 Vue.prototype.$formRules = formRules;
+//Vue.prototype.$message.alert = commonFun.myAlert;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};

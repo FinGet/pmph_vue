@@ -22,7 +22,7 @@
             {{$commonFun.formatDate(scope.row.gmtCreate)}}
           </template>
         </el-table-column>
-        <el-table-column label="备注" prop="note"></el-table-column>  
+        <el-table-column label="备注" prop="note"></el-table-column>
         <el-table-column label="启用标志" width="100" >
           <template scope="scope">
             {{scope.row.isDisabled?'禁用':'启用'}}
@@ -30,7 +30,7 @@
         </el-table-column>
         <el-table-column label="操作" width="80" >
           <template scope="scope">
-             <el-button type="text" @click="openEditDialog(true,scope.row)">修改</el-button>   
+             <el-button type="text" @click="openEditDialog(true,scope.row)">修改</el-button>
           </template>
         </el-table-column>
     </el-table>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- 增加修改弹框 -->
-    <el-dialog 
+    <el-dialog
     :title="isEdit?'修改':'新增'"
     :visible.sync="dialogVisible"
       size="tiny">
@@ -77,7 +77,7 @@
               <el-option label="禁用" :value="true"></el-option>
             </el-select>
         </el-form-item>
-        </el-form> 
+        </el-form>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -99,7 +99,7 @@
           searchParams:{
              pageSize:10,
              pageNumber:1,
-             word:''  
+             word:''
           },
           dialogForm:{
               word:'',
@@ -119,7 +119,7 @@
               {validator:this.$formCheckedRules.numberChecked,trigger: "blur"}
             ],
             note:[
-              
+
             ],
             isDisabled:[
               {required:'true',type:'boolean',message:'请选择是否启用',trigger:'change'}
@@ -181,7 +181,12 @@
                        this.getList();
                        this.dialogVisible=false;
                    }else{
-                     this.$message.error(res.data.msg.msgTrim());
+                     this.$confirm(res.data.msg.msgTrim(), "提示",{
+                     	confirmButtonText: "确定",
+                     	cancelButtonText: "取消",
+                     	showCancelButton: false,
+                     	type: "error"
+                     });
                    }
                 }).catch((error)=>{})
               }else{
@@ -193,10 +198,15 @@
                      this.getList();
                      this.dialogVisible=false;
                    }else{
-                     this.$message.error(res.data.msg.msgTrim());
-                   }      
+                     this.$confirm(res.data.msg.msgTrim(), "提示",{
+                     	confirmButtonText: "确定",
+                     	cancelButtonText: "取消",
+                     	showCancelButton: false,
+                     	type: "error"
+                     });
+                   }
                 }).catch((error)=>{})
-              }  
+              }
             }else{
               return;
             }
@@ -217,17 +227,27 @@
                      this.$message.success('已成功删除');
                      this.getList();
                    }else{
-                     this.$message.error(res.data.msg.msgTrim());
+                     this.$confirm(res.data.msg.msgTrim(), "提示",{
+                     	confirmButtonText: "确定",
+                     	cancelButtonText: "取消",
+                     	showCancelButton: false,
+                     	type: "error"
+                     });
                    }
-                 }) 
+                 })
               }).catch(() => {
                 this.$message({
                   type: 'info',
                   message: '已取消操作'
-                });          
-            });  
+                });
+            });
          }else{
-           this.$message.error('请至少选中一个敏感词');
+           this.$confirm('请至少选中一个敏感词', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
          }
         },
         /*table选中切换  */
@@ -244,8 +264,8 @@
          this.getList();
         },
         HandleCurrentChange(val){
-          this.searchParams.pageNumber=val; 
-          this.getList(); 
+          this.searchParams.pageNumber=val;
+          this.getList();
         }
       }
     }

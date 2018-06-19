@@ -152,7 +152,12 @@ methods: refresh 刷新当前树状图
                 this.dialogVisible = false;
                 this.$message.success("添加成功");
               } else {
-                this.$message.error(res.data.msg.msgTrim());
+                this.$confirm(res.data.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
               .catch((e)=>{
@@ -186,7 +191,12 @@ methods: refresh 刷新当前树状图
                   this._getTree();
                   this.$emit('delete-node');
                 }else{
-                  this.$message.error(res.data.msg.msgTrim());
+                  this.$confirm(res.data.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{console.log(e)})

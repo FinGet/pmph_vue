@@ -89,8 +89,9 @@
 				placeholder="请输入内容"
 				v-model="reasonEditor">
 			</el-input>
+            <el-button class="pull-right marginB10 marginT10">取消</el-button>
 			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
-			<el-button class="pull-right marginB10 marginT10">取消</el-button>
+
 		</el-dialog>
   </div>
 </template>
@@ -175,7 +176,12 @@ export default {
             this.$emit('changeActive','second');
           }
 				} else {
-					this.$message.error(res.msg.msgTrim());
+					this.$confirm(res.msg.msgTrim(), "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
 			})
