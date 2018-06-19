@@ -146,8 +146,8 @@
           </my-upload>
         </el-tooltip>
         <a href="/static/配套图书导入模版.xls"><el-button type="primary">配套图书导入模板下载</el-button></a>
-        <el-button type="primary" @click="syncBook(1)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书全量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
-        <el-button type="primary" @click="syncBook(2)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书增量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
+      <!--  <el-button type="primary" @click="syncBook(1)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书全量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>  -->
+        <el-button type="primary" @click="syncBook(2)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书数据同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
       </div>
     </div>
