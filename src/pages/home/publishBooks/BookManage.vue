@@ -206,6 +206,7 @@
           label="操作"
           width="120">
           <template scope="scope">
+            <el-button type="text" @click="recommend(scope.row)">推荐</el-button>
             <el-button type="text" @click="editInfo(scope.row)">修改</el-button>
             <el-button type="text" @click="deleteBook(scope.row)">删除</el-button>
           </template>
@@ -298,6 +299,69 @@
       </span>
     </el-dialog>
 
+
+    <el-dialog
+
+      :visible.sync="recommendDialogVisible"
+      fullscreen = "true"
+      width="100%"
+     >
+      <span slot="title" class="el-dialog__title">{{recommendBookName}}</span>
+      <div class="searchBox-wrapper" style="display:inline-block;">
+        <div class="searchName">书籍名称/ISBN：<span></span></div>
+        <div class="searchInput" >
+          <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="recommendSearch" v-model.trim="recommendSearchForm.name"></el-input>
+        </div>
+
+      </div>
+      <div style="display:inline-block;line-height: 36px;">
+        <el-checkbox-group v-model="recommendSearchForm.checkList">
+          <el-checkbox label="教材关联图书"></el-checkbox>
+          <el-checkbox label="相关推荐"></el-checkbox>
+          <el-checkbox label="人卫推荐"></el-checkbox>
+        </el-checkbox-group>
+      </div>
+
+
+
+      <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
+       <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
+        <el-button  @keyup.enter.native="recommendSearch"  type="primary" icon="search" >搜索</el-button>
+      </div>
+      <el-table :data="recommendData" border>
+        <el-table-column property="bookname" label="书籍名称" width="150" align="center"></el-table-column>
+        <el-table-column property="isbn" label="ISBN" width="150" align="center"></el-table-column>
+        <el-table-column   label="教材关联图书" width="150" align="center">
+          <template scope="scope">
+          <el-checkbox v-model="scope.row.ischeckteachbook" @change="checkboxChange(1,scope.row)"></el-checkbox>
+        </template>
+        </el-table-column>
+        <el-table-column   label="相关推荐"width="200" align="center">
+          <template scope="scope">
+            <el-checkbox v-model="scope.row.ischeckxgcommend" @change="checkboxChange(2,scope.row)"></el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column     label="人卫推荐" align="center" >
+          <template scope="scope">
+          <el-checkbox  v-model="scope.row.ischeckrwcommend" @change="checkboxChange(3,scope.row)"></el-checkbox>
+        </template>
+        </el-table-column>
+      </el-table>
+      <!--分页-->
+      <div class="pagination-wrapper">
+        <el-pagination
+          v-if="recommendTotalNum "
+          :page-sizes="[10,20,30, 40]"
+          :page-size="recommendSearchForm.recommendPageSize"
+          :current-page.sync="recommendSearchForm.recommendPageNumber"
+          @size-change="recommendPaginationSizeChange"
+          @current-change="getRecommendTableData"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="recommendTotalNum">
+        </el-pagination>
+      </div>
+    </el-dialog>
+
      <!--同步弹窗-->
     <div class="shade" v-if="bookSyncVisible">
       <h1 class="text-center sync-title"><i class="fa fa-spinner fa-pulse loading"></i>正在同步……</h1>
@@ -320,10 +384,18 @@
           typeId:[],
           materialId:'',
         },
+        recommendData: [],
+        recommendSearchForm:{
+          currentBookId:0,
+          checkList:[],
+          name:'',
+          recommendPageSize:30,
+          recommendPageNumber:1
+        },
+        checkNameArray:['教材关联图书','相关推荐','人卫推荐'],
         bookSyncVisible:false,
         bookSyncData:[],
 			  searchForm:{
-          name:'',
           typeId:[],
           isNew:'',
           isPromote:'',
@@ -332,6 +404,9 @@
           pageNumber:1
         },
         totalNum:0,
+        recommendTotalNum:0,
+        recommendDialogVisible:false,
+        recommendBookName:'',
         dialogVisible:false,
         powerSearch:true,
         powerSearchValue:1,
@@ -389,6 +464,87 @@
       }
 		},
     methods:{
+		  typeZh(val){
+		    switch(typeof(val)){
+          case 'boolean':
+            return val;
+          case 'String':
+            if(val='true'){
+              return true;
+            }else{
+              return false;
+            }
+        }
+        return false;
+      },
+      recommendPaginationSizeChange(val){
+        this.recommendSearchForm.recommendPageSize=val;
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.getRecommendTableData();
+      },
+      checkboxChange(selectType,row){
+        this.$axios.get('/pmpheep/books/recommendcheck',{params:{
+            currentBookId:this.recommendSearchForm.currentBookId,
+            selectType:selectType,
+            recommendBookId:row.id,
+            ischeckteachbook:row.ischeckteachbook,
+            ischeckxgcommend:row.ischeckxgcommend,
+            ischeckrwcommend:row.ischeckrwcommend
+          }}).then(response=>{
+          var res = response.data;
+          if(res.code==1){ // 返回数据没有异常 回显数据 避免重复点击 数据操作异常
+            switch (selectType) {
+              case 1:
+                row.ischeckteachbook = res.data;break;
+              case 2:
+                row.ischeckxgcommend = res.data; break;
+              case 3:
+                row.ischeckrwcommend = res.data;break;
+            }
+          }
+
+        })
+      },
+      getRecommendTableData(){
+        console.log(this.recommendSearchForm.checkList);
+        let ischeckteachbook ;
+        let ischeckxgcommend ;
+        let ischeckrwcommend ;
+        //debugger;
+       if(this.recommendSearchForm.checkList.find((n)=>n='教材关联图书') != undefined){
+         ischeckteachbook = true;
+       }
+       if(this.recommendSearchForm.checkList.find((n)=>n='相关推荐') != undefined){
+         ischeckxgcommend = true;
+       }
+        if(this.recommendSearchForm.checkList.find((n)=>n='人卫推荐') != undefined){
+          ischeckrwcommend = true;
+        }
+        this.$axios.get('/pmpheep/books/recommendlist',{params:{
+          name:this.recommendSearchForm.name,
+            currentBookId:this.recommendSearchForm.currentBookId,
+            recommendPageSize:this.recommendSearchForm.recommendPageSize,
+            recommendPageNumber:this.recommendSearchForm.recommendPageNumber,
+            ischeckteachbook:ischeckteachbook,
+            ischeckxgcommend:ischeckxgcommend,
+            ischeckrwcommend:ischeckrwcommend
+          }})
+          .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.recommendTotalNum = res.data.total;
+                this.recommendData = res.data.rows;
+
+              }
+
+          }).catch(e=>{
+          console.log(e);
+        })
+      },
+      recommendSearch(){
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.getRecommendTableData();
+      },
       /**
        * 获取表格数据
        */
@@ -467,6 +623,14 @@
        */
       handleSelectionChange(val) {
         this.selectData = val;
+      },
+
+      recommend(row){
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.recommendBookName = row.bookname;
+        this.recommendSearchForm.currentBookId = row.id;
+        this.recommendDialogVisible = true;
+        this.getRecommendTableData();
       },
       /**
        * 点击表格中的修改按钮
@@ -837,9 +1001,16 @@
 	}
 </script>
 
-<style scoped>
+<style>
+  .el-dialog--small {
+    width: 60% !important;
+  }
+</style>
+<style   scoped>
+
   .searchBox-wrapper{
       width: 340px;
+    padding-left:0px;
     }
   .searchBox-wrapper .searchName{
     width: 110px;

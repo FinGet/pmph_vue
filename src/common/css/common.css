@@ -546,3 +546,20 @@ a.table-link:hover{
 @import "responsive.css";
 /*打印样式*/
 @import "print.css";
+
+
+
+.el-message-box__btns {
+  padding: 10px 20px 15px;
+  text-align: right;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.el-message-box__btns button:nth-child(1) {
+  margin-left: 10px;
+}
+
+.el-message-box__btns button:nth-child(2) {
+  margin-left: 0px;
+}
