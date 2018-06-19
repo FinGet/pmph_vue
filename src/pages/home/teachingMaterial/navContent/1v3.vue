@@ -389,11 +389,11 @@
        * @param data 数据，当为空时代表批量导出或公布
        */
       showDialog(type,data,isLocked){
-        if(type == 1 && !this.hasPower(4,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
+        if(type == 1 && !this.hasPower(4,this.selectedPowerSet)&&this.$commonFun.Empty(data)){ //
           this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已确认的名单':'您未选择任何名单');
           return ;
         }
-        if(type == 0 && !this.hasPower(5,this.selectedPowerSet)){ //&&this.$commonFun.Empty(data)
+        if(type == 0 && !this.hasPower(5,this.selectedPowerSet)&&this.$commonFun.Empty(data)){ //
           this.$message.error(this.selectedIds.length>0?'您选择的复选框中包含已公布名单':'您未选择任何名单');
           return ;
         }
