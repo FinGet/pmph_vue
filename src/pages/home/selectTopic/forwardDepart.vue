@@ -233,6 +233,7 @@ export default {
               id:this.distributeId,
               departmentId:obj.id,
               openid:obj.openid,
+              adminId:obj.adminId,
               bookname:this.bookname
             })
           }).then((res)=>{

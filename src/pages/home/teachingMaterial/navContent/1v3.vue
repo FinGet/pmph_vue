@@ -773,7 +773,7 @@
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          })
+        })
         })
       },
       /**
@@ -820,7 +820,7 @@
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          })
+        })
         })
       },
       /**@augments index
@@ -884,7 +884,7 @@
             	cancelButtonText: "取消",
             	showCancelButton: false,
             	type: "error"
-            })
+          })
           })
         } else {
           this.addEditor();
@@ -922,7 +922,7 @@
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          })
+        })
         })
       },
       /**更新小组 */

@@ -277,6 +277,7 @@ export default {
       this.distributeParams.editorId=(i==1?this.distributeParams.editorId:'');
       this.distributeParams.openid=(i==1?this.distributeParams.openid:'');
       this.distributeParams.bookname =(i==1?this.distributeParams.bookname:'');
+      this.distributeParams.adminId =(i==1?this.distributeParams.editorId:'');
 			this.$axios.put('/pmpheep/topic/put/directorHandling',
       this.$initPostData(
         this.distributeParams
