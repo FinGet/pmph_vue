@@ -326,7 +326,7 @@
 
       <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
        <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
-        <el-button  @keyup.enter.native="recommendSearch"  type="primary" icon="search" >搜索</el-button>
+        <el-button  @click="recommendSearch"  type="primary" icon="search" >搜索</el-button>
       </div>
       <el-table :data="recommendData" border>
         <el-table-column property="bookname" label="书籍名称" width="150" align="center"></el-table-column>
