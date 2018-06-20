@@ -517,14 +517,15 @@
         let ischeckteachbook ;
         let ischeckxgcommend ;
         let ischeckrwcommend ;
-        //debugger;
-       if(this.recommendSearchForm.checkList.find((n)=>n='教材关联图书') != undefined){
+        debugger;
+       if(this.recommendSearchForm.checkList.find((n)=>n=='教材关联图书') != undefined){
          ischeckteachbook = true;
        }
-       if(this.recommendSearchForm.checkList.find((n)=>n='相关推荐') != undefined){
+       if(this.recommendSearchForm.checkList.find((n)=>n=='相关推荐') != undefined){
          ischeckxgcommend = true;
        }
-        if(this.recommendSearchForm.checkList.find((n)=>n='人卫推荐') != undefined){
+
+        if(this.recommendSearchForm.checkList.find((n)=>n=='人卫推荐') != undefined){
           ischeckrwcommend = true;
         }
         this.$axios.get('/pmpheep/books/recommendlist',{params:{
@@ -1013,7 +1014,7 @@
 
 <style>
   .el-dialog--small {
-    width: 60% !important;
+    width: 70% !important;
   }
 </style>
 <style   scoped>
