@@ -332,7 +332,7 @@
 
       <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
        <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
-        <el-button  @keyup.enter.native="recommendSearch"  type="primary" icon="search" >搜索</el-button>
+        <el-button  @click="recommendSearch"  type="primary" icon="search" >搜索</el-button>
       </div>
       <el-table :data="recommendData" border>
         <el-table-column property="bookname" label="书籍名称" width="150" align="center"></el-table-column>
@@ -517,14 +517,15 @@
         let ischeckteachbook ;
         let ischeckxgcommend ;
         let ischeckrwcommend ;
-        //debugger;
-       if(this.recommendSearchForm.checkList.find((n)=>n='教材关联图书') != undefined){
+        debugger;
+       if(this.recommendSearchForm.checkList.find((n)=>n=='教材关联图书') != undefined){
          ischeckteachbook = true;
        }
-       if(this.recommendSearchForm.checkList.find((n)=>n='相关推荐') != undefined){
+       if(this.recommendSearchForm.checkList.find((n)=>n=='相关推荐') != undefined){
          ischeckxgcommend = true;
        }
-        if(this.recommendSearchForm.checkList.find((n)=>n='人卫推荐') != undefined){
+
+        if(this.recommendSearchForm.checkList.find((n)=>n=='人卫推荐') != undefined){
           ischeckrwcommend = true;
         }
         this.$axios.get('/pmpheep/books/recommendlist',{params:{
@@ -1013,7 +1014,7 @@
 
 <style>
   .el-dialog--small {
-    width: 60% !important;
+    width: 70% !important;
   }
 </style>
 <style   scoped>
