@@ -31,6 +31,13 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
+            label="用户名"
+            align="center"
+            width="120"
+            prop="username"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
             label="姓名"
             align="center"
             width="120"
