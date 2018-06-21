@@ -21,7 +21,7 @@ methods: refresh 刷新当前树状图
                :expand-on-click-node=false
                :props="defaultProps"
                @node-click="_handleNodeClick"
-               :lazy="false"
+               :lazy="true"
                :load="_loadNode"
                node-key="id"
                :default-expanded-keys="default_expanded_keys"
@@ -72,6 +72,7 @@ methods: refresh 刷新当前树状图
         default_expanded_keys:[0],//默认展开层
         hasSelected: false,
         dialogVisible: false,
+        currentClickedParentId:"",
         dialogForm: {
           typeName: "",
           sort: "",
@@ -98,6 +99,7 @@ methods: refresh 刷新当前树状图
        * 请求组织树
        */
       _getTree(id='',callback) {
+        let _this = this;
         this.$axios.get(this.api_pmph_list,{params:{
             parentId:id
         }})
@@ -110,10 +112,15 @@ methods: refresh 刷新当前树状图
               if(id!=''){
                 return;
               }
-              this.treeData = [res.data];
-              if(this.treeData.length>0){
-                this.default_expanded_keys = [this.treeData[0].id];
+              if(id!=0){
+
+                _this.treeData = [res.data];
+
+                if(_this.treeData.length>0){
+                  _this.default_expanded_keys = [_this.treeData[0].id];
+                }
               }
+
             }
           })
           .catch(error => {
@@ -128,6 +135,7 @@ methods: refresh 刷新当前树状图
         this.dialogForm.path = data.path;
         this.dialogForm.parentId = data.id;
         this.dialogForm.isLeaf=data.isLeaf;
+        this.currentClickedParentId = data.parentId;
         this.$emit('node-click',data)
       },
       /**
@@ -135,13 +143,16 @@ methods: refresh 刷新当前树状图
        */
       _loadNode(node, resolve){
         this._getTree(node.key,(data)=>{
+
           resolve(data.childrenMaterialTypeVO);
+
         })
       },
       /**
        * 添加子分类
        */
       _add(){
+        let _this = this;
         this.$refs.dialogForm.validate(valid => {
           if (valid) {
             this.$axios({
@@ -150,6 +161,8 @@ methods: refresh 刷新当前树状图
               data: this.$initPostData(this.dialogForm)
             }).then(res => {
               if (res.data.code == 1) {
+                _this.default_expanded_keys.push(_this.dialogForm.parentId);
+
                 this._getTree();
                 this.dialogVisible = false;
                 this.$message.success("添加成功");
@@ -174,6 +187,7 @@ methods: refresh 刷新当前树状图
        * 删除子节点
        */
       _del(){
+        let _this = this;
         this.$confirm("确定删除选中分类吗?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -190,7 +204,9 @@ methods: refresh 刷新当前树状图
                 console.log(res);
                 if (res.data.code == 1) {
                   this.$message.success("删除成功");
-                  this._getTree();
+                  _this.default_expanded_keys=[this.currentClickedParentId];
+
+                  _this._getTree();
                   this.$emit('delete-node');
                 }else{
                   this.$confirm(res.data.msg.msgTrim(), "提示",{
