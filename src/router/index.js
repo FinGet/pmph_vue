@@ -95,6 +95,7 @@ const ConvertibleRule = () => import('../pages/home/pointManage/convertibleRule'
 import BookRouter from 'pages/home/publishBooks/BookRouter'
 
 const BookManage = () => import('pages/home/publishBooks/BookManage');
+const materialType = () => import('pages/home/publishBooks/materialType');
 const CommentManage = () => import('pages/home/publishBooks/comment');
 const MicVideo = () => import('../pages/home/publishBooks/micVideo');
 const FeedBack = () => import('../pages/home/publishBooks/feedback');
@@ -299,6 +300,7 @@ export default new Router({
                 clearInterval(window.handleExportWordtimer);
               }
             },
+            {path: 'materialType', name: '图书分类', component: materialType, meta: {authorityId: 44}},
             {path: 'comment', name: '评论审核', component: CommentManage, meta: {authorityId: 20}},
             {path: 'video', name: '微视频管理', component: MicVideo, meta: {authorityId: 41}},
             {path: 'feedback', name: '读书反馈', component: FeedBack, meta: {authorityId: 43}},
