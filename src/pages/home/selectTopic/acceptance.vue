@@ -89,8 +89,9 @@
 				placeholder="请输入内容"
 				v-model="reasonEditor">
 			</el-input>
-            <el-button class="pull-right marginB10 marginT10">取消</el-button>
-			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
+      <el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
+      <el-button class="pull-right marginB10 marginT10">取消</el-button>
+
 
 		</el-dialog>
   </div>

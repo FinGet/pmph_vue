@@ -79,6 +79,16 @@
                 align="center"
                 >
             </el-table-column>
+        <el-table-column
+          prop="apporpc"
+          label="应用类型"
+          align="center"
+          width="90"
+        >
+          <template scope="scope">
+            {{applyType[scope.row.apporpc]}}
+          </template>
+        </el-table-column>
            <el-table-column
                 label="创建时间"
                 align="center"
@@ -246,6 +256,7 @@ export default {
         startAuDate: '',
         endAuDate:''
       },
+      applyType:['全部','PC端','移动端'],
       bookOptions:[],
       totalPage: 10,
       options: [],
@@ -309,6 +320,7 @@ export default {
     };
   },
   methods: {
+
     /* 获取内容列表 */
     getOutContentList() {
       this.contentParams.startCreateDate = this.$commonFun.formatDate(+new Date(this.contentParams.startCreateDate));

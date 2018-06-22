@@ -60,8 +60,9 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
                 <el-button @click="resetDialogForm()">取 消</el-button>
-                <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
+
             </span>
         </el-dialog>
         <!-- 权限树弹框 -->

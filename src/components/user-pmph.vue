@@ -181,8 +181,9 @@ methods:
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="_updateUser">保存</el-button>
           <el-button @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="_updateUser">保存</el-button>
+
         </span>
     </el-dialog>
   </div>

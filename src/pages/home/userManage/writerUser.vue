@@ -190,8 +190,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button @click="dialogVisible=false">取消</el-button>
+
       </span>
     </el-dialog>
     <!-- 查看详情 -->
