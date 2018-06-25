@@ -235,7 +235,7 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" :rules="dialogRules" label-width="140px" class="form">
-          <el-form-item label="是否分类置顶：" required>
+          <el-form-item label="是否首页置顶：" required>
             <el-radio-group v-model="form.isStick">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>

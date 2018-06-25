@@ -5,10 +5,18 @@
       <el-input class="input" @keyup.enter.native="search" v-model="searchParams.bookname" placeholder="请输入选题名称"></el-input>
       <span>提交日期：</span>
       <el-date-picker
-        v-model="date"
+        v-model="date1"
         class="input"
         type="date"
-        @change="dateChange"
+        @change="dateChange1"
+        placeholder="选择日期">
+      </el-date-picker>
+      <span>至：</span>
+      <el-date-picker
+        v-model="date2"
+        class="input"
+        type="date"
+        @change="dateChange2"
         placeholder="选择日期">
       </el-date-picker>
       <el-button type="primary" icon="search" @click="search">搜索</el-button>
@@ -106,7 +114,8 @@
           bookname:''
         },
         typeList:['专著','基础理论','论文集','科普','应用技术','工具书','其他'],
-        date:'',
+        date1:'',
+        date2:'',
         tableData:[],
         pageTotal:0,
       }
@@ -158,11 +167,23 @@
        * 时间变化
        * @param val
        */
-      dateChange(val){
+      dateChange1(val){
         if(val){
-          this.searchParams.submitTime=val+' 00:00:00';
+          this.searchParams.submitTime1=val+' 00:00:00';
         }else{
-          this.searchParams.submitTime='';
+          this.searchParams.submitTime1='';
+        }
+        this.search();
+      },
+      /**
+       * 时间变化
+       * @param val
+       */
+      dateChange2(val){
+        if(val){
+          this.searchParams.submitTime2=val+' 00:00:00';
+        }else{
+          this.searchParams.submitTime2='';
         }
         this.search();
       },
@@ -185,7 +206,7 @@
   overflow: hidden;
 }
 .completed_apply .header_p .input {
-  width: 217px;
+  width: 130px;
   margin-right: 10px;
 }
 </style>

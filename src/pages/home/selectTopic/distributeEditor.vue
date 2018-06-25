@@ -5,11 +5,18 @@
        <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"  @keyup.enter.native="search"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.date"
+            v-model="searchParams.submitTime1"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
+      <span>至：</span>
+      <el-date-picker
+        v-model="searchParams.submitTime2"
+        class="input"
+        type="date"
+        placeholder="选择日期">
+      </el-date-picker>
         <el-button type="primary" icon="search" @click="search()">搜索</el-button>
     </p>
     <el-table
@@ -154,7 +161,8 @@ export default {
     return {
       searchParams: {
 				name:'',
-        date: "",
+        submitTime1: "",
+        submitTime2:"",
         pageSize: 10,
         pageNumber: 1
       },
@@ -205,12 +213,14 @@ export default {
      },
 		/**获取表格数据 */
 		getTableData(){
-      this.searchParams.date = this.$commonFun.formatDate(+new Date(this.searchParams.date)).substring(0,10);
-			this.$axios.get('/pmpheep/topic/listDirector',{
+      this.searchParams.submitTime1 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime1)).substring(0,10);
+      this.searchParams.submitTime2 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime2)).substring(0,10);
+      this.$axios.get('/pmpheep/topic/listDirector',{
 				params:{
 					bookname: this.searchParams.name,
 					sessionId: this.$getUserData().sessionId,
-					submitTime: this.searchParams.date,
+					submitTime1: this.searchParams.submitTime1,
+          submitTime2: this.searchParams.submitTime2,
 					pageSize: this.searchParams.pageSize,
 					pageNumber: this.searchParams.pageNumber
 				}
@@ -341,7 +351,7 @@ export default {
   overflow: hidden;
 }
 .distribute_editor .header_p .input {
-  width: 217px;
+  width: 130px;
   margin-right: 10px;
 }
 .distribute_editor .dialog .el-dialog {
