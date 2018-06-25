@@ -35,6 +35,19 @@
            <el-radio class="radio" v-model="formData.isStick" :label="true">是</el-radio>
            <el-radio class="radio" v-model="formData.isStick" :label="false">否</el-radio>
       </el-form-item>
+      <el-form-item  label="应用类型：">
+      <el-select v-model="formData.apporpc"  placeholder="请选择">
+        <el-option label="全部" value="0"></el-option>
+        <el-option label="pc端" value="1"></el-option>
+        <el-option label="移动端" value="2"></el-option>
+       <!-- <el-option
+          v-for="item in applyOptions"
+          :key="item.apporpc"
+          :label="item.label"
+          :value="item.apporpc">
+        </el-option>-->
+      </el-select>
+      </el-form-item>
       <el-form-item label="内容：" required>
               <Editor ref="editor" :config="editorConfig"></Editor>
       </el-form-item>
@@ -110,7 +123,7 @@
           <el-button type="primary" @click="publishSubmit(1)"  v-if="formData.categoryId!=1">发布</el-button>
     </div>
     <!--退回理由-->
-    <el-dialog title="退回理由" :visible.sync="returnReasonVisible">
+    <el-dialog title="退回理由" :visible.sync="returnReasonVisible" width="50%">
       <el-input
         type="textarea"
         :rows="3"
@@ -119,7 +132,7 @@
       </el-input>
 
       <div class="pull-right marginT10 marginB10">
-        <el-button type="primary" @click="returnReasonVisible==false">取消</el-button>
+        <el-button type="primary" @click="returnReasonqx ">取消</el-button>
         <el-button type="danger" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
       </div>
     </el-dialog>
@@ -143,6 +156,7 @@ export default {
         title: "",
         categoryId: "",
         isStick:true,
+        apporpc:0,
         content: "",
         file: [],
         imgFile:[],
@@ -154,6 +168,17 @@ export default {
         returnReason: '',
         authorname:''
       },
+      applyOptions: [{
+        apporpc: 0,
+        label: '全部'
+      }, {
+        apporpc: 1,
+        label: 'PC端'
+      }, {
+        apporpc: 2,
+        label: '移动端'
+      }],
+
       coverDialogVislble:false,
       showPreventDialog:false,
       preventContent:'',
@@ -385,6 +410,9 @@ export default {
 //    点击退回
     returnReasonFnc(){
       this.returnReasonVisible = true;
+    },
+    returnReasonqx(){
+      this.returnReasonVisible = false;
     },
     /* 预览 */
     openPreventDialog(){

@@ -25,6 +25,10 @@
         <el-table :data="tableData" style="width:100%" class="table_list table-wrapper" stripe border>
             <!--<el-table-column type="selection" width="55">-->
             <!--</el-table-column>-->
+          <el-table-column
+            type="index" label="序号" align="center"
+            width="70">
+          </el-table-column>
             <el-table-column label="教材名称">
                 <template scope="scope">
                     <el-button type="text" style="color:#337ab7;white-space: normal;text-align:left;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>

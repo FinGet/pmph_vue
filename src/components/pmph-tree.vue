@@ -43,8 +43,9 @@ methods: refresh 刷新当前树状图
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="_add">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+
       </div>
     </el-dialog>
 	</div>

@@ -78,6 +78,16 @@
             label="作者"
             width="110">
             </el-table-column>
+        <el-table-column
+          prop="apporpc"
+          label="应用类型"
+          align="center"
+          width="90"
+        >
+          <template scope="scope">
+            {{applyType[scope.row.apporpc]}}
+          </template>
+        </el-table-column>
             <el-table-column
                 prop="gmtCreate"
                 label="创建时间"
@@ -222,6 +232,7 @@ export default {
           label:'发布时间'
         }
       ],
+      applyType:['全部','PC端','移动端'],
       tableData: [],
       selectedOptions: [],
       contentSelectData: [],
@@ -303,6 +314,7 @@ export default {
               res.data.rows[i].gmtCreate = this.$commonFun.formatDate(
                 res.data.rows[i].gmtCreate
               );
+              //res.data.rows[i].apporpc = this.applyType[res.data.rows[i].apporpc]
             }
             this.tableData = res.data.rows;
             // console.log(this.tableData)

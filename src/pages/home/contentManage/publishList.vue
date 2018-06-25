@@ -90,10 +90,20 @@
           width="90"
         >
         </el-table-column>
+          <el-table-column
+        prop="apporpc"
+        label="应用类型"
+        align="center"
+        width="90"
+      >
+            <template scope="scope">
+              {{applyType[scope.row.apporpc]}}
+            </template>
+      </el-table-column>
             <el-table-column
                 label="创建时间"
                 align="center"
-                width="180"
+                width="140"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
@@ -102,7 +112,7 @@
             <el-table-column
                 label="审核时间"
                 align="center"
-                width="180"
+                width="140"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
@@ -111,7 +121,7 @@
             <el-table-column
                 label="审核状态"
                 align="center"
-                width="110"
+                width="100"
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">未发布</p>
@@ -250,7 +260,7 @@
 
       </el-table>
       <!--分页-->
-      <div class="pagination-wrapper">
+      <div class="pagination-wrapper" style="padding-top:10px;padding-bottom:10px;">
         <el-pagination
           v-if="recommendTotalNum "
           :page-sizes="[10,20,30, 40]"
@@ -478,6 +488,7 @@ export default {
           label:'发布时间'
         }
       ],
+      applyType:['全部','PC端','移动端'],
       showContentDetail: false,
       syncDialogVisible:false,
       isSyncLoading:false,
@@ -495,7 +506,7 @@ export default {
         relationCms:null,
         cmsTitle:'',
         cmsAuthorName:'',
-        recommendPageSize:30,
+        recommendPageSize:10,
         recommendPageNumber:1
       },
       recommendTotalNum:0,

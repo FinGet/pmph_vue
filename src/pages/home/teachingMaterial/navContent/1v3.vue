@@ -181,8 +181,9 @@
       size="tiny">
       <p v-html="dialogContent"></p>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="makeSure" :loading="isClickPublish">{{isClickPublish?'加载中':'确 定'}}</el-button>
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="makeSure" :loading="isClickPublish">{{isClickPublish?'加载中':'确 定'}}</el-button>
+
         </span>
     </el-dialog>
 
