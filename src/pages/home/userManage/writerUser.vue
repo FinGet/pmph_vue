@@ -49,7 +49,8 @@
       </div>
     </div>
 
-    <div class="searchBox-wrapper searchBtn">
+     <div class="searchBox-wrapper searchBtn " >
+      <el-button type="primary"  @click="exportExcel">导出</el-button>
       <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
     </div>
             <!--操作按钮-->
@@ -683,10 +684,10 @@ export default {
            }
         })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
     },
     zhiTop(index,obj){
@@ -912,6 +913,13 @@ export default {
       this.pageNumber = 1;
       this.getWritersList()
     },
+    exportExcel(){
+      /** 导出Excel */
+
+      let url = '/pmpheep/users/writer/list/exportWriterUser?name='+this.params.name+'&rank='+this.params.rank+"&orgName="+this.params.orgName+"&handphone="+this.params.handphone+"&email="+this.params.email;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
     searchWriter(){
       this.params.pageSize = 10;
       this.params.pageNumber = 1;
@@ -1025,6 +1033,9 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    width:200px;
+  }
 .writerUser .el-tabs--border-card{
   border:0;
   box-shadow: none;

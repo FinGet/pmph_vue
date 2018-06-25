@@ -433,7 +433,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: Math.max.apply(null, this.stSchoolPresetPersons),
+                max: Math.max.apply(null, this.stSchoolChosenPersons),
                 minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -454,7 +454,7 @@ export default {
               }
             ]
           })
-          // console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
+           console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
        }
      })
     },

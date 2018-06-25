@@ -893,10 +893,10 @@
               }
 
             }).catch(() => {
-              this.$message({
+              /*this.$message({
                 type: 'info',
                 message: '已取消删除'
-              });
+              });*/
             });
         },
         /**

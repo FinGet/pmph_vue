@@ -7,15 +7,16 @@
                     <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
                 </div>
             </div>
-            <div class="searchBox-wrapper searchBox-radio">
+           <!-- <div class="searchBox-wrapper searchBox-radio">
                 <div class="searchName">检查结果:<span></span></div>
                 <el-radio-group v-model="result" class="radio-group" @change="change">
 									<el-radio :label="null">全部</el-radio>
 									<el-radio :label="true">存在问题</el-radio>
 									<el-radio :label="false">无问题</el-radio>
 								</el-radio-group>
-            </div>
-            <div class="searchBox-wrapper searchBtn">
+            </div>-->
+            <div class="searchBox-wrapper searchBtn" >
+                <el-button  type="primary"   @click="exportExcel">导出</el-button>
                 <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
             </div>
         </el-row>
@@ -105,6 +106,16 @@ export default {
           }
         });
     },
+    /**
+     *
+     *  导出
+     *  */
+
+    exportExcel(){
+      let url = '/pmpheep/bookCorrection/exportBookCheck?bookname='+this.title;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
     /** 搜索*/
     search() {
       this.pageSize = 20;
@@ -130,6 +141,9 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    width:200px;
+  }
 .search-title {
   margin: 10px 0 0 10px;
   font-size: 16px;

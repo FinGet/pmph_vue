@@ -160,10 +160,10 @@
                       }
                     })
                 }).catch(() => {
-                  this.$message({
+                  /*this.$message({
                     type: 'warning',
                     message: '已取消操作'
-                  });
+                  });*/
                 });
            }else{
              return false;

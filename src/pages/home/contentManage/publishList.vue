@@ -167,7 +167,7 @@
                     <el-button type="text" :disabled="scope.row.authStatus==1" v-if="scope.row.authStatus!=0"  @click="examineContent(scope.row,0)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
-                  <el-button type="text" @click="recommend(scope.row)">推荐</el-button>
+                  <el-button type="text" :disabled="scope.row.authStatus==1" @click="recommend(scope.row)">推荐</el-button>
                 </template>
             </el-table-column>
 
@@ -245,7 +245,7 @@
 
         <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
           <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
-          <el-button  @click="recommendreset"  type="primary" icon="search" >重置</el-button>
+          <!--<el-button  @click="recommendreset"  type="primary" icon="search" >重置</el-button>-->
           <el-button  @click="recommendSearch"  type="primary" icon="search" >搜索</el-button>
         </div>
         <el-table :data="recommendData" border>
@@ -778,10 +778,10 @@ export default {
                 });
             })
             .catch(() => {
-              this.$message({
+             /* this.$message({
                 type: "info",
                 message: "已取消操作"
-              });
+              });*/
             });
       }else{
         this.$prompt('请输入退回原因', '提示', {
@@ -819,10 +819,10 @@ export default {
                   }
                 });
         }).catch(() => {
-          this.$message({
+         /* this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
       }
     },
@@ -852,7 +852,7 @@ export default {
           currentCmsId:this.recommendSearchForm.currentCmsId,
           recommendPageSize:this.recommendSearchForm.recommendPageSize,
           recommendPageNumber:this.recommendSearchForm.recommendPageNumber,
-          relationCms:this.recommendSearchForm.relationCms,
+          relationCms:this.recommendSearchForm.relationCms?this.recommendSearchForm.relationCms:null,
           cmsAuthorName:this.recommendSearchForm.cmsAuthorName
 
         }})
@@ -921,10 +921,10 @@ export default {
             });
         })
         .catch(() => {
-          this.$message({
+          /*this.$message({
             type: "info",
             message: "已取消删除"
-          });
+          });*/
         });
     },
     handleSizeChange(val) {

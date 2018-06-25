@@ -183,10 +183,10 @@
                    }
                })
             }).catch(() => {
-            this.$message({
+            /*this.$message({
                 type: 'info',
                 message: '已取消删除'
-             });
+             });*/
             });
           },
           handleClick(tab, event){
@@ -243,10 +243,10 @@
                       }
                   })
                 }).catch(() => {
-                this.$message({
+                /*this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });
+                });*/
             });
           },
           /* 操作分页 */
