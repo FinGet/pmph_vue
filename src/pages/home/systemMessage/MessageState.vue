@@ -45,6 +45,12 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            prop="orgusername"
+            label="机构账号"
+            align="center"
+            width="200">
+          </el-table-column>
+          <el-table-column
             prop="dptname"
             label="机构名称"
             align="center"

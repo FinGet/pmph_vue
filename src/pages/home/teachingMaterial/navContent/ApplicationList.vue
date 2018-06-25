@@ -28,6 +28,9 @@
           <el-table-column
             type="index" label="序号" align="center"
             width="70">
+            <template scope="scope">
+              {{(scope.$index+1)+searchForm.pageSize*(searchForm.pageNumber-1)}}
+            </template>
           </el-table-column>
             <el-table-column label="教材名称">
                 <template scope="scope">
@@ -123,7 +126,7 @@
         </el-table>
       <div class="pagination-wrapper">
         <el-pagination
-          v-if="totalNum>searchForm.pageSize"
+          v-if="totalNum"
           @size-change="handleSizeChange"
           @current-change="getTableData"
           :current-page.sync="searchForm.pageNumber"

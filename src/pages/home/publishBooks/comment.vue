@@ -190,7 +190,13 @@
        * 获取表格数据
        */
       getTableData(){
-        this.$axios.get('/pmpheep/bookusercomment/list',{params:this.searchForm})
+        this.$axios.post('/pmpheep/bookusercomment/list',this.$initPostData({
+          name:this.searchForm.name,
+          isAuth:this.searchForm.isAuth,
+          pageSize:this.searchForm.pageSize,
+          pageNumber:this.searchForm.pageNumber,
+          isLong:this.searchForm.isLong
+        }))
           .then(response=>{
             var res = response.data;
             if(res.code==1){

@@ -156,7 +156,7 @@ export default {
         title: "",
         categoryId: "",
         isStick:true,
-        apporpc:0,
+        apporpc:"0",
         content: "",
         file: [],
         imgFile:[],

@@ -17,8 +17,9 @@
       size="tiny"
       >
       <div class=" marginB10">
-        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" :disabled="able" @click="submit">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+
       </div>
       <div class="table-wrapper" style="height: 700px; overflow-y: scroll;">
         <el-table

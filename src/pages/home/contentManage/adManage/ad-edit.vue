@@ -11,6 +11,14 @@
         <el-form-item label="广告位置:">
           <el-input v-model="formData.adname" :disabled="true"></el-input>
         </el-form-item>
+        <!--<el-form-item  label="应用类型：">
+          <el-select v-model="formData.apporpc"  placeholder="请选择">
+            <el-option label="全部" value="0"></el-option>
+            <el-option label="pc端" value="1"></el-option>
+            <el-option label="移动端" value="2"></el-option>
+
+          </el-select>
+        </el-form-item>-->
         <el-form-item label="点击跳转链接:">
           <el-input v-model="formData.url" placeholder="输入地址:http://www.xxx.com"></el-input>
         </el-form-item>
@@ -20,6 +28,7 @@
             <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+
         <el-form-item label="备注:">
           <el-input type="textarea" v-model="formData.note" :autosize="{ minRows: 3}"></el-input>
         </el-form-item>
@@ -174,6 +183,7 @@
           note:'',
           style:'',
           type:0,
+          apporpc:"0",
           autoPlay:true,
           navigationColor:'',
           isNavigation:'',
@@ -445,6 +455,7 @@
           animationInterval:this.formData.animationInterval*1000||'',
           animationEffect:this.formData.animationEffect||'',
           isShowHeading:this.formData.isShowHeading||false,
+          apporpc:this.formData.apporpc,
           isDisplay:false,
           imageId:adIds.join(','),
           disable:disableIds.join(',')
@@ -526,6 +537,7 @@
          this.formData.animationInterval=this.formData.animationInterval/1000;
         this.adId = this.currentAdData.id;
         this.imageLibs = this.formData.image||[];
+        this.formData.apporpc =  this.formData.apporpc+'';
       }
 
       if(this.formData.type===0){
