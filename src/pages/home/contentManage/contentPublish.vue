@@ -311,10 +311,10 @@ export default {
         }).then(() => {
           this.ContentSubmit(num);
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消发布'
-          });
+          });*/
         });
     }
     },
@@ -457,10 +457,10 @@ export default {
             });
         })
         .catch(() => {
-          this.$message({
+          /*this.$message({
             type: "info",
             message: "已取消操作"
-          });
+          });*/
         });
           } else {
             return false;

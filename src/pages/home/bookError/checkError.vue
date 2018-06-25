@@ -141,6 +141,9 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    width:200px;
+  }
 .search-title {
   margin: 10px 0 0 10px;
   font-size: 16px;

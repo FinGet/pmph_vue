@@ -237,10 +237,10 @@
                    }
                  })
               }).catch(() => {
-                this.$message({
+                /*this.$message({
                   type: 'info',
                   message: '已取消操作'
-                });
+                });*/
             });
          }else{
            this.$confirm('请至少选中一个敏感词', "提示",{
