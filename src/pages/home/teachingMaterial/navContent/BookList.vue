@@ -344,12 +344,12 @@ export default {
       save(next){
         var bookList = [];
         if(!this.checkDataIsOk()){
-          this.$confirm('请正确填写每本书籍数据', "提示",{
+          /*this.$confirm('请正确填写每本书籍数据', "提示",{
           	confirmButtonText: "确定",
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          });
+          });*/
           return;
         }
         this.extendListData.map(iterm=>{

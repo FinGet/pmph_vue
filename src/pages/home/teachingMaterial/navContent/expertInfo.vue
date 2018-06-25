@@ -681,6 +681,7 @@
           </div>
           退回将会同时 <font color="red" >撤销遴选</font>，是否确认退回？
         </div>
+        <div><font  v-if="emptyReturnCauseTipShow" color="red">退回原因不可为空!</font><font>&emsp;</font></div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button :type="expertChoosen?'danger':'primary'" @click="onlineCheckPass(offlineProgressType)">确 定</el-button>
@@ -765,6 +766,7 @@
               onlineProgressBtn:[],
               //教材信息
               material:{},
+              emptyReturnCauseTipShow:false,
 
               //退回给个人弹窗
               showOfflineProgress:false,
@@ -1326,12 +1328,13 @@
          */
         onlineCheckPass(type){
           if ((type == 5||type==4)&&this.offlineProgressText == '') {
-            this.$confirm('请输入退回原因!', "提示",{
+            /*this.$confirm('请输入退回原因!', "提示",{
             	confirmButtonText: "确定",
             	cancelButtonText: "取消",
             	showCancelButton: false,
             	type: "error"
-            });
+            });*/
+            this.emptyReturnCauseTipShow = true;
             return;
           }
           this.$axios.get(this.api_online_check,{params:{
@@ -1388,7 +1391,9 @@
         },
         setOnlineCheckPassType(num){
           this.offlineProgressType = num||4;
+          this.emptyReturnCauseTipShow =false;
           this.showOfflineProgress=true;
+
         },
         // 登录
         login(){

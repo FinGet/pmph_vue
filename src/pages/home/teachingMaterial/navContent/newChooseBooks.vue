@@ -1326,12 +1326,12 @@ export default {
 
           } else {
 
-            this.$confirm('输入的内容不正确，请正确填写', "提示",{
+            /*this.$confirm('输入的内容不正确，请正确填写', "提示",{
             	confirmButtonText: "确定",
             	cancelButtonText: "取消",
             	showCancelButton: false,
             	type: "error"
-            });
+            });*/
 
            this.$nextTick(this.focuFuntion)
             return false;
