@@ -142,6 +142,7 @@
         pageSize: 20,
         title: '',
         dataTotal: 0,
+        logUserInfo:this.$getUserData().userInfo,
       }
     },
     computed:{

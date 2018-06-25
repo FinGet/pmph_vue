@@ -235,7 +235,7 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" :rules="dialogRules" label-width="140px" class="form">
-          <el-form-item label="是否分类置顶：" required>
+          <el-form-item label="是否首页置顶：" required>
             <el-radio-group v-model="form.isStick">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -396,7 +396,7 @@
           currentBookId:0,
           checkList:[],
           name:'',
-          recommendPageSize:30,
+          recommendPageSize:10,
           recommendPageNumber:1
         },
         checkNameArray:['教材关联图书','相关推荐','人卫推荐'],

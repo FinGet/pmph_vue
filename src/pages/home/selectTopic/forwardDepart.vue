@@ -5,11 +5,18 @@
        <el-input class="input" v-model="searchParams.bookname"  placeholder="请输入选题名称"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.submitTime"
+            v-model="searchParams.submitTime1"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
+      <span>至：</span>
+      <el-date-picker
+        v-model="searchParams.submitTime2"
+        class="input"
+        type="date"
+        placeholder="选择日期">
+      </el-date-picker>
         <el-button type="primary" icon="search" @click="search">搜索</el-button>
     </p>
     <el-table
@@ -153,7 +160,8 @@ export default {
         bookname: "",
         pageSize: 10,
         pageNumber: 1,
-        submitTime: ""
+        submitTime1: "",
+        submitTime2: ""
       },
       bookname:'',
       pageTotal: 0,
@@ -193,7 +201,8 @@ export default {
     /* 获取列表数据 */
     getListData() {
 //    console.log(this.$commonFun.formatDate(+new Date(this.searchParams.submitTime)).substring(0,10));
-      this.searchParams.submitTime = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime)).substring(0,10);
+      this.searchParams.submitTime1 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime1)).substring(0,10);
+      this.searchParams.submitTime2 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime2)).substring(0,10);
       this.$axios
       .get(this.listDataUrl, {
         params: this.searchParams
@@ -309,7 +318,7 @@ export default {
   overflow: hidden;
 }
 .forward_depart .header_p .input {
-  width: 217px;
+  width: 130px;
   margin-right: 10px;
 }
 .forward_depart .dialog .el-dialog {
