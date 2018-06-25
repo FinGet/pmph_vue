@@ -15,7 +15,7 @@
 									<el-radio :label="false">无问题</el-radio>
 								</el-radio-group>
             </div>-->
-            <div class="searchBox-wrapper searchBtn" style="width:200px;">
+            <div class="searchBox-wrapper searchBtn" >
                 <el-button  type="primary"   @click="exportExcel">导出</el-button>
                 <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
             </div>

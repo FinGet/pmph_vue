@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="searchBox-wrapper searchBtn">
+     <div class="searchBox-wrapper searchBtn " >
       <el-button type="primary"  @click="exportExcel">导出</el-button>
       <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
     </div>
@@ -1033,6 +1033,9 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    width:200px;
+  }
 .writerUser .el-tabs--border-card{
   border:0;
   box-shadow: none;

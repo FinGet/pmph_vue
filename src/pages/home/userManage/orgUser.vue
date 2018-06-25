@@ -367,15 +367,16 @@
 						</el-select>
 					</div>
 				</div>
-				<div class="searchBox-wrapper searchBtn">
-					<el-button type="primary" icon="search" @click="search">搜索</el-button>
-				</div>
-        <div class="searchBox-wrapper searchBtn">
+
+
+
+        <div class="searchBox-wrapper searchBtn" >
+          <el-button type="primary" icon="search" @click="search">搜索</el-button>
           <el-button type="primary" @click="clearSearch">清空搜索</el-button>
-        </div>
         <el-button type="primary"  @click="exportAdminExcel">导出</el-button>
 				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">通过</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">退回</el-button>
+        </div>
 
 			</el-col>
 		</el-row>
@@ -1354,6 +1355,11 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    float: right;
+    text-align:right;
+    width:500px;
+  }
 .orgUser .header_p {
   overflow: hidden;
 }
