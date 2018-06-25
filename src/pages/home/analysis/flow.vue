@@ -9,7 +9,7 @@
           <i class="fa  fa-area-chart fa-lg"></i>
           统计开通日期：2016-12-22
           <div class="pull-right fontsize-normal">
-            <a class="link" href="https://tongji.baidu.com/web/24785489/homepage/index" target="_blank">点击查看更多统计数据 >></a>
+            <!--<a class="link" href="https://tongji.baidu.com/web/24785489/homepage/index" target="_blank">点击查看更多统计数据 >></a>-->
           </div>
         </div>
         <div class="table-wrapper">

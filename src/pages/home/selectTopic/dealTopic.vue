@@ -49,14 +49,14 @@
                 <el-form-item
                 label="预估字数："
               >
-              <p>{{data.wordNumber}}</p>
+              <p>{{data.wordNumber.toFixed(2)}}(千字)</p>
               </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="预估图数："
               >
-              <p>{{data.pictureNumber}}</p>
+              <p>{{data.pictureNumber}}(副)</p>
               </el-form-item>
           </div>
           <div class="percent50">
@@ -127,7 +127,7 @@
                 <el-form-item
                 label="(二)出版价值："
               >
-              <p>{{topicExtra.price}}</p>
+              <p>{{topicExtra.price}}(元)</p>
               </el-form-item>
           </div>
           <div class="percent50">

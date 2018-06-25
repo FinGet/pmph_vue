@@ -502,7 +502,7 @@
        */
       sortChange(type,row){
         if(type==1){
-          if(row.isZhubian&&!(row.zhubianSort&&this.$commonFun.checkType(row.zhubianSort,'number')&&parseInt(row.zhubianSort)<999)){
+          if(row.isZhubian&&!(row.zhubianSort&&this.$commonFun.checkType(row.zhubianSort,'number')&&parseInt(row.zhubianSort)<=255)){
             row.zhubianSortIsOk=false;
           }else{
             row.zhubianSortIsOk=true;
@@ -511,7 +511,7 @@
 
 
         if(type==2){
-          if(row.isFuzhubian&&!(row.fuzhubianSort&&this.$commonFun.checkType(row.fuzhubianSort,'number')&&parseInt(row.fuzhubianSort)<999)){
+          if(row.isFuzhubian&&!(row.fuzhubianSort&&this.$commonFun.checkType(row.fuzhubianSort,'number')&&parseInt(row.fuzhubianSort)<=255)){
             row.fuzhubianSortIsOk=false;
           }else{
             row.fuzhubianSortIsOk=true;
@@ -532,13 +532,13 @@
           if(iterm.isZhubian){
             if(!this.$commonFun.Empty(iterm.zhubianSort))zhubianLength++;
             if(!isNaN(parseInt(iterm.zhubianSort))) zhubianSortList.push(parseInt(iterm.zhubianSort));
-            is_zhubianSort = isNaN(parseInt(iterm.zhubianSort))?true:false;
+            is_zhubianSort = (isNaN(parseInt(iterm.zhubianSort))||(parseInt(iterm.zhubianSort)>255))?true:false;
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
             if(!this.$commonFun.Empty(iterm.fuzhubianSort))fubianLength++;
             if(!isNaN(parseInt(iterm.fuzhubianSort))) fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
-            is_fuzhubianSort = isNaN(parseInt(iterm.fuzhubianSort))?true:false;
+            is_fuzhubianSort = (isNaN(parseInt(iterm.fuzhubianSort))||(parseInt(iterm.zhubianSort)>255))?true:false;
             fuzhubianData.push(iterm);
           }
         })
@@ -559,7 +559,7 @@
            	type: "error"
            });
          }else{
-           this.$confirm((is_zhubianSort?'主编':'副主编')+'排序码必须是整数', "提示",{
+           this.$confirm((is_zhubianSort?'主编':'副主编')+'排序码必须是不大于255的整数', "提示",{
            	confirmButtonText: "确定",
            	cancelButtonText: "取消",
            	showCancelButton: false,

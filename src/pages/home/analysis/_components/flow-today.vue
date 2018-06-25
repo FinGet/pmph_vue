@@ -7,7 +7,7 @@
     tooltip-effect="dark"
     style="width: 100%">
     <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
-    <el-table-column label="浏览量(PV)"  align="center">
+    <el-table-column label="浏览量(PV)"  align="center" >
       <template scope="scope">{{scope.row.pv_count}}</template>
     </el-table-column>
     <el-table-column label="访客数(UV)"  align="center">
