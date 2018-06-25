@@ -19,6 +19,7 @@ methods: refresh 刷新当前树状图
       <el-tree :data="treeData"
                :highlight-current=true
                :expand-on-click-node=false
+               :auto-expand-parent=true
                :props="defaultProps"
                @node-click="_handleNodeClick"
                :lazy="true"
@@ -98,7 +99,7 @@ methods: refresh 刷新当前树状图
       /**
        * 请求组织树
        */
-      _getTree(id='',callback) {
+      _getTree(id='-1',callback) {
         let _this = this;
         this.$axios.get(this.api_pmph_list,{params:{
             parentId:id
@@ -109,17 +110,17 @@ methods: refresh 刷新当前树状图
               if(callback){
                 callback(res.data);
               }
-              if(id!=''){
+              if(id!='-1'){
                 return;
               }
-              if(id!=0){
+              /*if(id!=0){*/
 
                 _this.treeData = [res.data];
 
                 if(_this.treeData.length>0){
-                  _this.default_expanded_keys = [_this.treeData[0].id];
+                  _this.default_expanded_keys.push(_this.treeData[0].id);
                 }
-              }
+              //}
 
             }
           })
@@ -163,9 +164,9 @@ methods: refresh 刷新当前树状图
               if (res.data.code == 1) {
                 _this.default_expanded_keys.push(_this.dialogForm.parentId);
 
-                this._getTree();
-                this.dialogVisible = false;
-                this.$message.success("添加成功");
+                _this._getTree("-1");
+                _this.dialogVisible = false;
+                _this.$message.success("添加成功");
               } else {
                 this.$confirm(res.data.msg.msgTrim(), "提示",{
                 	confirmButtonText: "确定",
@@ -206,7 +207,8 @@ methods: refresh 刷新当前树状图
                   this.$message.success("删除成功");
                   _this.default_expanded_keys=[this.currentClickedParentId];
 
-                  _this._getTree();
+                  _this._getTree("-1");
+                  //_this.$router.go(0);
                   this.$emit('delete-node');
                 }else{
                   this.$confirm(res.data.msg.msgTrim(), "提示",{
@@ -236,11 +238,11 @@ methods: refresh 刷新当前树状图
        *
        */
       refresh(){
-        this._getTree();
+        this._getTree("-1");
       }
     },
     created(){
-      this._getTree();
+      this._getTree("-1");
     },
 	}
 </script>
