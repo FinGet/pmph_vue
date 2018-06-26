@@ -36,14 +36,14 @@
                     </el-table-column>
                     <el-table-column prop="authorReply" label="主编回复"  align="center">
                     </el-table-column>
-                    <el-table-column prop="result" label="核查结果" width="95" align="center">
+                    <!--<el-table-column prop="result" label="核查结果" width="95" align="center">
 											<template scope="scope">
 												<p v-if="scope.row.isEditorReplied">{{scope.row.result == true?'存在问题':scope.row.result == false?'无问题':'-'}}</p>
 											</template>
-                    </el-table-column>
+                    </el-table-column>-->
 										<el-table-column label="操作" width="80" align="center">
 											<template scope="scope">
-												<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id,type:(scope.row.result&&scope.row.editorReply!='')?'detail':'check'}}">{{(scope.row.result&&scope.row.editorReply!='')?'查看':'审核'}}</router-link>
+												<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id,type:(scope.row.result&&scope.row.editorReply!='')?'detail':'check'}}">{{(scope.row.result&&scope.row.editorReply!='')?'查看':'待审核'}}</router-link>
 											</template>
                     </el-table-column>
                 </el-table>
