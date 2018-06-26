@@ -1083,16 +1083,15 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          if(value.length>40){
-            this.$message.warning('不能超过40个字');
-          }else{
-           // this.backReason = value;
+          if(value&&value.length<=40||!value){
             let param = {
               progress: progress,
               orgUserIds: orgUserIds,
               backReason:value
             };
             this.passorback(param);
+          }else{
+            this.$message.warning('不能超过40个字');
           }
 
         })
@@ -1112,7 +1111,7 @@ export default {
           this.getOrgsList();
           this.$message({
             showClose: true,
-            message: "审核成功!",
+            message: param.progress==1?"审核成功!":"退回成功",
             type: "success"
           });
         }else if (res.code == '2') {
