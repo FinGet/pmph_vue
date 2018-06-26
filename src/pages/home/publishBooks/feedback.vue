@@ -97,6 +97,9 @@
         /** 导出Excel */
 
         let url = '/pmpheep/bookCorrection/exportfeedback?result='+this.result;
+        if(this.$commonFun.Empty(this.result)){
+          url = '/pmpheep/bookCorrection/exportfeedback?result='
+        }
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
