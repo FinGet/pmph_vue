@@ -114,28 +114,33 @@
             this.formData.files=res.data.materialNoteAttachments?res.data.materialNoteAttachments:[];
             res.data.materialContacts=res.data.materialContacts?res.data.materialContacts:[];
 
-            //简介
-            content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
-            content += `<p></p>`;
-            //邮寄地址
-            content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
-            content += `<p></p>`;
-            //联系人
-            let contactsHtml = '';
-            for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
-              if(i==0){
-                contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Email：${res.data.materialContacts[i].contactEmail})</p>`
-              }else{
-                contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Email：${res.data.materialContacts[i].contactEmail})</p>`
+
+            if(!res.data.content){ //若无保存内容，按如下格式生成消息内容
+              //简介
+              content += `<p>简介：${res.data.materialExtra?res.data.materialExtra.notice:''}</p>`;
+              content += `<p></p>`;
+              //邮寄地址
+              content += `<p>邮寄地址：${res.data.materialName.mailAddress}</p>`;
+              content += `<p></p>`;
+              //联系人
+              let contactsHtml = '';
+              for(let i = 0, len = res.data.materialContacts.length; i < len; i++){
+                if(i==0){
+                  contactsHtml+=`<p>联&nbsp;系&nbsp;人：${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Email：${res.data.materialContacts[i].contactEmail})</p>`
+                }else{
+                  contactsHtml+=`<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${res.data.materialContacts[i].contactUserName} (电话：${res.data.materialContacts[i].contactPhone}，Email：${res.data.materialContacts[i].contactEmail})</p>`
+                }
               }
-            }
-            content+=contactsHtml;
-            content += `<p></p>`;
-            //备注
-            content+=`<p>备注：${res.data.materialExtra?(res.data.materialExtra.note?res.data.materialExtra.note:''):''}</p>`;
-           /*  /* 底部图片 */
-            for(var i in this.formData.image){
-              content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+              content+=contactsHtml;
+              content += `<p></p>`;
+              //备注
+              content+=`<p>备注：${res.data.materialExtra?(res.data.materialExtra.note?res.data.materialExtra.note:''):''}</p>`;
+             /*  /* 底部图片 */
+              for(var i in this.formData.image){
+                content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+              }
+            }else{ //若由保存在mdb的内容 显示所保存内容
+              content = res.data.content
             }
             this.formData.content = content;
             this.$refs.editor.setContent(this.formData.content);
@@ -155,6 +160,7 @@
        * 保存下一步
        */
       saveNextStep(){
+        let _this = this;
         this.formData.content = this.$refs.editor.getContent();
         //验证表单是否正确
         if(!(this.formData.title&&this.formData.title.length<50&&this.formData.content)){
@@ -164,6 +170,7 @@
           	showCancelButton: false,
           	type: "error"
           });
+          return;
         }
 
         this.$confirm("确定保存通知详情？", "提示",{
@@ -172,16 +179,16 @@
           type: "warning"
         })
           .then(()=>{
-            this.$axios.put(this.api_msg_save,this.$commonFun.initPostData({
-              materialId:this.formData.materialId,
-              content:this.formData.content,
-              materialName:this.formData.title,
+            _this.$axios.put(this.api_msg_save,this.$commonFun.initPostData({
+              materialId:_this.formData.materialId,
+              content:_this.formData.content,
+              materialName:_this.formData.title,
             }))
               .then((response)=>{
                 let res = response.data
                 if (res.code == '1'){
-                  this.$message.success('保存成功！');
-                  this.$router.push({name:'设置书目录'});
+                  _this.$message.success('保存成功！');
+                  _this.$router.push({name:'设置书目录'});
                 }
               })
               .catch(e=>{
