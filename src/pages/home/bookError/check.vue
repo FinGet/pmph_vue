@@ -162,8 +162,8 @@ export default {
                 this.$initPostData({
                   id: this.id,
                   result: this.ruleForm.result,
-                  authorReply: this.ruleForm.authorReply,
-                  editorReply: this.ruleForm.editorReply
+                  authorReply: this.ruleForm.authorReply||'',
+                  editorReply: this.ruleForm.editorReply||''
                 })
               )
               .then(response => {

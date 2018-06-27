@@ -132,8 +132,9 @@
       </el-input>
 
       <div class="pull-right marginT10 marginB10">
-        <el-button type="primary" @click="returnReasonqx ">取消</el-button>
         <el-button type="danger" @click="examineContent($router.currentRoute.params.cmsContent,1)">退回</el-button>
+        <el-button type="primary" @click="returnReasonqx ">取消</el-button>
+
       </div>
     </el-dialog>
     <!--examineContent($router.currentRoute.params.cmsContent,1)-->
@@ -751,7 +752,7 @@ export default {
 }
 .previewTitle{
   color: #14232e;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
 }
 .content_publish .center_box{

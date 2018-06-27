@@ -373,7 +373,7 @@
         <div class="searchBox-wrapper searchBtn" >
           <el-button type="primary" icon="search" @click="search">搜索</el-button>
           <el-button type="primary" @click="clearSearch">清空搜索</el-button>
-        <el-button type="primary"  @click="exportAdminExcel">导出</el-button>
+        <el-button type="primary"  @click="exportAdminExcel">导出名单</el-button>
 				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">通过</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">退回</el-button>
         </div>
