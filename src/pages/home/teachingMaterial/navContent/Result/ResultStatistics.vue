@@ -122,7 +122,8 @@
               >
                 <template scope="scope">
                 <div class="content-rowspan">
-                <div v-for="value in scope.row.rownnum">{{ value.rownnum }}</div>
+                  {{scope.row.rownnum}}
+                <!--<div v-for="value in scope.row.rownnum">{{ value.rownnum }}</div>-->
                 </div>
                 </template>
               </el-table-column>
@@ -136,9 +137,11 @@
                 prop="bookname"
                 label="书籍名称"
               align="center">
+
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.bookname">{{ value.bookname }}</div>
+                    {{scope.row.bookname}}
+                    <!--<div v-for="value in scope.row.bookname">{{ value.bookname }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -148,7 +151,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.editorList">{{ value.editorList }}</div>
+                    {{scope.row.editorList}}
+                    <!--<div v-for="value in scope.row.editorList">{{ value.editorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -158,7 +162,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.subEditorList">{{ value.subEditorList }}</div>
+                    {{scope.row.subEditorList}}
+                    <!--<div v-for="value in scope.row.subEditorList">{{ value.subEditorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -168,7 +173,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.editorialList">{{ value.editorialList }}</div>
+                    {{scope.row.editorialList}}
+                    <!--<div v-for="value in scope.row.editorialList">{{ value.editorialList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -178,7 +184,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.isDigitalEditorList">{{ value.isDigitalEditorList }}</div>
+                    {{scope.row.isDigitalEditorList}}
+                    <!--<div v-for="value in scope.row.isDigitalEditorList">{{ value.isDigitalEditorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -236,14 +243,14 @@ export default {
      sortType(){
        this.getSchoolTableData();
      },
-    schoolTableData:{
+    /*schoolTableData:{
       //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
       handler:function(newValue,oldVal){
        // debugger;
-          // this.objectSpanMethod();
+          this.objectSpanMethod2();
       },
       deep:true
-    }
+    }*/
   },
   created(){
     this.schoolParams.materialId=this.bookParams.materialId=this.$route.params.materialId;
@@ -251,9 +258,9 @@ export default {
     this.getSchoolTableData()
     this.getBooksTableData()
     var _this = this;
-    // this.$nextTick(setTimeout(function () {
-    //   _this.objectSpanMethod();
-    // },2000))
+     /*this.$nextTick(setTimeout(function () {
+       _this.objectSpanMethod2();
+     },2000))*/
 
   },
   methods: {
@@ -359,6 +366,40 @@ export default {
 
     },
     /**
+     * 用隐藏和columspan处理单元格
+     * */
+    objectSpanMethod2() {
+      let _this = this;
+      let tdArr = _this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+      let m = 0;
+      let rowspanIndex = 0;
+      let schoolN = _this.schoolTableData[0].schoolName;
+      if(!_this.$commonFun.Empty(tdArr)) {
+        for (let rowIndex = 0; rowIndex <= _this.schoolTableData.length; rowIndex++) {
+          let tableSN = rowIndex == _this.schoolTableData.length?"xxx":_this.schoolTableData[rowIndex].schoolName;
+          if (tableSN != schoolN) {
+            tdArr[rowspanIndex].getElementsByTagName("td")[1].setAttribute("rowspan", m);
+            if (m > 1) {
+              let delrowspanIndex = rowspanIndex + 1;
+              for (let j = 0; j < m - 1; j++) {
+                //tdArr[delrowspanIndex].deleteCell(1); //删除数据需要加一个钥匙
+                tdArr[delrowspanIndex].getElementsByTagName("td")[1].style.display="none";
+                delrowspanIndex++;
+              }
+
+
+            }
+            m = 0;
+            rowspanIndex = rowIndex;
+            schoolN = rowIndex == _this.schoolTableData.length?"xxx":_this.schoolTableData[rowIndex].schoolName;
+          }
+          m++;
+        }
+      }
+
+    },
+
+    /**
      * 搜索
      * */
     getSchoolTableDataFun(){
@@ -370,6 +411,19 @@ export default {
        * 按学校统计获取表格数据
        */
     getSchoolTableData() {
+      let _this = this;
+      if(this.$refs.table){ //表格生成后，每次重新加载数据前，恢复被objectSpanMethod2合并的单元格
+        let mtd = this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("td");
+        let mtr = this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+        for(var i=0;i<mtd.length;i++){
+          mtd[i].style.display="table-cell";
+        }
+        for(var i=0;i<mtr.length;i++){
+          mtr[i].rowspan="1";
+        }
+      }
+
       this.$axios.get(this.schoolResultUrl+(this.sortType?'/schoolListChosen':'/schoolListPreset'),{
        params:this.schoolParams
      }).then((res)=>{
@@ -377,8 +431,15 @@ export default {
        if(res.data.code==1){
           var resData = res.data.data;
           this.schoolTotal=resData.total;
-          this.schoolTableData=this.dataArray(resData.rows);
+         this.schoolTableData=resData.rows;
+         this.schoolTableData.forEach((item,index) =>{
+           item.rownnum = (_this.schoolParams.pageNumber - 1)*_this.schoolParams.pageSize + index+1;
+         });
+          //this.schoolTableData=this.dataArray(resData.rows);
        }
+        this.$nextTick(
+         _this.objectSpanMethod2() //数据加载后再次合并单元格
+       )
 
      }).then(()=>{
         console.log(2222222222222222222);
