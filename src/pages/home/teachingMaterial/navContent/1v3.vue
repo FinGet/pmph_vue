@@ -48,7 +48,19 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
 
-        <el-button type="primary" circle  @click="allPageSelectSwitch(true)" id="select_all_btn" :disabled="!isGetTableDataDone" :title="allPageSelected?'取消全选':'全分页选中'" ><i :class="allPageSelected?'el-icon-check':'css-not-pageSelected'"></i></el-button>
+        <span v-if=""
+              :class="allPageSelected?'el-checkbox__input is-checked':'el-checkbox__input'"
+              id="select_all_checkbox_wrapper"
+              :title="allPageSelected?'取消全选':'全分页选中'"
+        >
+          <span class="el-checkbox__inner"></span>
+          <input type="checkbox" id="select_all_checkbox" @click="allPageSelectSwitch(true)" :disabled="!isGetTableDataDone"/>
+          <span class="select_all_text">{{allPageSelected?'取消全选':'分页全选'}}</span>
+        </span>
+
+
+        <!--<el-button type="primary" circle  @click="allPageSelectSwitch(true)" id="select_all_btn" :disabled="!isGetTableDataDone" :title="allPageSelected?'取消全选':'全分页选中'" ><i :class="allPageSelected?'el-icon-check':'css-not-pageSelected'"></i></el-button>-->
+        <!--<input type="checkbox" @click="allPageSelectSwitch(true)" id="select_all_checkbox" :disabled="!isGetTableDataDone" :title="allPageSelected?'取消全选':'全分页选中'" >-->
         <el-button :type="forceEnd?'primary':'danger'" :disabled="allTextbookPublished || !hasPower(7,tableData)" @click="isForceEnd">{{forceEnd?'恢复':'强制结束'}}</el-button>
         <!-- :disabled="selected.length===0"--> <el-button type="primary"  @click="exportEditor">主编/副主编批量导出</el-button>
         <!--|| isSelected-->  <el-button type="primary" v-if="materialInfo.role==2||materialInfo.role==1" :disabled="forceEnd || allTextbookPublished" @click="pushAllChecked(1)">批量发布主编/副主编</el-button>
@@ -1069,6 +1081,39 @@
     padding: 10px 3px;
     margin-left: 5px;
   }
+  #select_all_checkbox_wrapper {
+    float: left;
+    border-radius: 4px;
+    height: 36px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 9px 0px 9px 15px;
+    background-color: #1ab194;
+    color: white;
+    cursor: inherit;
+  }
+  #select_all_checkbox_wrapper .el-checkbox__inner{
+    float: left;
+  }
+  input#select_all_checkbox {
+    position: relative;
+    left: -84px;
+    width: 18px;
+    height: 18px;
+    right: 0px;
+    z-index: 1;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  #select_all_checkbox_wrapper .select_all_text{
+    height: 18px;
+    line-height: 18px;
+    display: inline-block;
+    float: left;
+    cursor: default;
+    margin-left:10px;
+  }
   .el-button{
     min-width: 20px;
   }
@@ -1080,4 +1125,5 @@
     background-color: #ffff;
     border-radius: 100%;
   }
+
 </style>

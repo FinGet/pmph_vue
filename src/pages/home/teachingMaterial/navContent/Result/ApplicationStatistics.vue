@@ -62,11 +62,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getBookTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -164,11 +164,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getSchoolTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -336,6 +336,10 @@ export default {
         }
       })
     },
+    getSchoolTableDataFun(){
+      this.schoolParams.pageNumber=1;
+      this.getSchoolTableData();
+    },
     /* 获取学校申报情况统计数据 */
     getSchoolTableData(){
      this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
@@ -474,6 +478,10 @@ export default {
            console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
        }
      })
+    },
+    getBookTableDataFun(){
+      this.bookParmas.pageNumber=1;
+      this.getBookTableData();
     },
     /* 获取按书名统计申报情况 */
     getBookTableData(){
