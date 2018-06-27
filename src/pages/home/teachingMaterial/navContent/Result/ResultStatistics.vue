@@ -9,11 +9,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getBooksTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getBooksTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -81,11 +81,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getSchoolTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -259,7 +259,7 @@ export default {
   methods: {
     // 拿到数据 重新进行组装
     dataArray(data){
-      debugger;
+      //debugger;
       let  schoolN = data.length>0?data[0].schoolName:"";
       let  returnData = [];
       let index_array = [];
@@ -309,7 +309,7 @@ export default {
           schoolN = iterm.schoolName;
         }
         index_array.push({
-          "rownnum":rowIndex
+          "rownnum":iterm.row
         })
         bookname_array.push({
           "bookname":iterm.bookname
@@ -359,6 +359,14 @@ export default {
 
     },
     /**
+     * 搜索
+     * */
+    getSchoolTableDataFun(){
+      this.schoolParams.pageNumber=1;
+      this.getSchoolTableData();
+    },
+
+    /**
        * 按学校统计获取表格数据
        */
     getSchoolTableData() {
@@ -377,6 +385,15 @@ export default {
 
       })
     },
+
+    /**
+     * 有搜索条件的搜索 从第一页重新搜索
+     * */
+    getBooksTableDataFun(){
+      this.bookParams.pageNumber=1;
+      this.getBooksTableData();
+    },
+
     /**按数据统计获取表格数据 */
     getBooksTableData(){
       this.$axios.get(this.bookResultUrl,{
