@@ -418,7 +418,7 @@
   }
   .previewTitle {
     color: #14232e;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 500;
   }
 </style>

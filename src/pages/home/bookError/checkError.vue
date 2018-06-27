@@ -16,8 +16,9 @@
 								</el-radio-group>
             </div>-->
             <div class="searchBox-wrapper searchBtn" >
-                <el-button  type="primary"   @click="exportExcel">导出</el-button>
+
                 <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
+              <el-button  type="primary"   @click="exportExcel">导出</el-button>
             </div>
         </el-row>
         <el-row>
@@ -43,8 +44,11 @@
                     </el-table-column>-->
 										<el-table-column label="操作" width="80" align="center">
 											<template scope="scope">
-												<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id,type:(scope.row.result&&scope.row.editorReply!='')?'detail':'check'}}">{{(scope.row.result&&scope.row.editorReply!='')?'查看':'待审核'}}</router-link>
-											</template>
+												<!--<router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id,type:(scope.row.result&&scope.row.editorReply!='')?'detail':'check'}}">{{(scope.row.result&&scope.row.editorReply!='')?'查看':'审核'}}</router-link>
+										-->
+                        <router-link type="text" class="link" size="small" :to="{name:'纠错审核',query:{id: scope.row.id,type:'check'}}">审核</router-link>
+
+                      </template>
                     </el-table-column>
                 </el-table>
             </el-col>
