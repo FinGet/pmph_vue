@@ -208,7 +208,7 @@
             <el-input v-model="form.email"></el-input>
           </el-form-item>
           <el-form-item label="所属地区："  prop="areaId">
-          <el-select v-model="form.areaId" placeholder="请选择">
+          <el-select v-model="form.areaId" filterable  placeholder="请选择或搜索">
             <el-option
               v-for="item in area"
               :key="item.id"
