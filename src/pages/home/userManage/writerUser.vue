@@ -866,16 +866,15 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          if(value.length>40){
-            this.$message.warning('不能超过40个字');
-          }else{
-            // this.backReason = value;
+          if(value&&value.length<=40||!value){
             let param = {
               progress: progress,
               userIds: userIds.join(','),
               backReason:value
             };
             this.passorback(param);
+          }else{
+            this.$message.warning('不能超过40个字');
           }
 
         })
