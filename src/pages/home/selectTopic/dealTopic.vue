@@ -49,7 +49,7 @@
                 <el-form-item
                 label="预估字数："
               >
-              <p>{{data.wordNumber.toFixed(2)}}(千字)</p>
+              <p>{{data.wordNumber}}(千字)</p>
               </el-form-item>
           </div>
           <div class="percent50">
