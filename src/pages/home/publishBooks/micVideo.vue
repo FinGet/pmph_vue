@@ -145,17 +145,17 @@
            </el-form-item>
        </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo" :disabled="isdisabled">{{isUploadVideo?'转码中':'确 定'}}</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
             </span>
     </el-dialog>
     <!-- 审核视频弹框 -->
         <el-dialog title="审核" :visible.sync="examDialogVisible" width="25%" size="tiny">
         <span style="font-size:15px;">确定审核该视频吗？</span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="examDialogVisible = false">取 消</el-button>
-                <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
-                <el-button type="primary" @click="examSubmit(true)">通过</el-button>
+              <el-button type="primary" @click="examSubmit(true)">通过</el-button>
+              <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
+              <el-button @click="examDialogVisible = false">取 消</el-button>
             </span>
     </el-dialog>
     <!-- 查看视频弹框 -->

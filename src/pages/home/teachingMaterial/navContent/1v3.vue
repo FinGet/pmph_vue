@@ -257,8 +257,9 @@
         </el-table-column>
       </el-table>
       <div class="pull-right marginT10 marginB10">
-        <el-button @click="groupVisiable=false">取消</el-button>
+
         <el-button type="primary" @click="submitGroup">确定</el-button>
+        <el-button @click="groupVisiable=false">取消</el-button>
       </div>
     </el-dialog>
   </div>

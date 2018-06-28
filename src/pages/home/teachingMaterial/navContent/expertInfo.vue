@@ -654,8 +654,8 @@
         <p class="tip-text" v-if="250-inputMsg.length<20">还可输入{{250-inputMsg.length}}个字符</p>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="closeInputMsg">取 消</el-button>
         <el-button type="primary" @click="sendmsg">发 送</el-button>
+        <el-button @click="closeInputMsg">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog

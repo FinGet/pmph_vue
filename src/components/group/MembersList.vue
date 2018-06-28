@@ -177,8 +177,9 @@
       </el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
-       <el-button @click="againDialogVisible = false">取 消</el-button>
+
         <el-button type="primary" @click="addNewSubmit" :loading="isLoadingUp">{{isLoadingUp?'正在提交':'确 定'}}</el-button>
+        <el-button @click="againDialogVisible = false">取 消</el-button>
   </div>
      </el-dialog>
   </div>

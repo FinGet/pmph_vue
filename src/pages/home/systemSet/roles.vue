@@ -96,8 +96,8 @@
             </div>
 
             <span slot="footer" class="dialog-footer" v-if="!isSeePower">
-                <el-button @click="powerTreeVisible = false">取 消</el-button>
-                <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
+              <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
+              <el-button @click="powerTreeVisible = false">取 消</el-button>
             </span>
             <span v-else style="color:#ff4949">tips：勾选中的即为当前角色拥有权限</span>
         </el-dialog>
