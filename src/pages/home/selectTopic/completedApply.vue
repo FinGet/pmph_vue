@@ -49,9 +49,13 @@
      </el-table-column>
      <el-table-column
       label="完成日期"
-      prop="deadline"
+      prop="authDate"
       width="120"
      >
+       <template scope="scope">
+
+        {{$commonFun.formatDate(scope.row.authDate,'yyyy-MM-dd')}}
+       </template>
      </el-table-column>
      <el-table-column
       label="图书类别"

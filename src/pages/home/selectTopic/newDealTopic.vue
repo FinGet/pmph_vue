@@ -193,7 +193,7 @@
                  <td>预计读者及购买力</td>
                  <td colspan="3">{{data.readerQuantity}}</td>
                  <td>作者购书</td>
-                 <td colspan="3">{{data.purchase}}</td>
+                 <td colspan="3">{{data.purchase}}(本)</td>
               </tr>
               <tr>
                  <td>可能的宣传方式</td>
@@ -265,12 +265,12 @@
                   <td></td>
               </tr>
           </table>
-            <el-form label-width="140px" :model="data" :rules="formRules"  class="form_box">
+            <el-form label-width="140px" :model="data" ref="ruleForm" :rules="formRules"  class="form_box">
                     <el-form-item
                     label="选题会审核意见："
                     prop="authFeedback"
                     >
-                    <el-input type="textarea" v-if="type=='check'"  :rows="4" v-model="data.authFeedback"></el-input>
+                    <el-input type="textarea" v-if="type=='check'"   :rows="4" v-model="data.authFeedback"></el-input>
                     <p v-else>{{data.authFeedback}}</p>
                     </el-form-item>
         </el-form>
@@ -301,6 +301,7 @@ export default {
       isAccepted: true ,//编辑是否接受办理
       formRules:{
         authFeedback:[
+          { required: false, message: "审核意见不能为空", trigger: "change,blur" },
           {min:0,max:200,message:'审核意见不能超过200个字符',trigger:'change,blur'}
         ]
       }
@@ -311,7 +312,8 @@ export default {
     this.type = this.$route.query.type;
     this.active = this.$route.query.active || "";
     this.routerName = this.$route.query.name || null;
-    this.getData();
+
+    this.getData()
   },
   methods: {
     getData() {
@@ -334,8 +336,11 @@ export default {
             this.topicSimilarBooks=res.data.topicSimilarBooks;
             //this.data.sourceType=['社策划']
             console.log(this.data);
+
           }
-        });
+        }).then(l=>{
+        this.formRules.authFeedback[0].required = true;
+      });;
     },
     keySwitchVale(key){
       let ret = '';
@@ -351,37 +356,52 @@ export default {
     },
     // 审核
     check(authProgress) {
-      this.$axios
-        .put(
-          "/pmpheep/topic/put/editorHandling",
-          this.$initPostData({
-            id: this.id,
-            authProgress: authProgress, // 审核进度
-            authFeedback: this.data.authFeedback || ''
-          })
-        )
-        .then(response => {
-          let res = response.data;
-          if (res.code == '1') {
-            this.$message.success("操作成功！");
-            this.goBack();
-          } else {
-            this.$confirm(res.msg.msgTrim(), "提示",{
-            	confirmButtonText: "确定",
-            	cancelButtonText: "取消",
-            	showCancelButton: false,
-            	type: "error"
+      let _this = this;
+      this.formRules.authFeedback[0].required = true;
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          this.$axios
+            .put(
+              "/pmpheep/topic/put/editorHandling",
+              this.$initPostData({
+                id: this.id,
+                authProgress: authProgress, // 审核进度
+                authFeedback: this.data.authFeedback || '',
+                deadline:this.$commonFun.getcurrentDate()
+              })
+            )
+            .then(response => {
+              let res = response.data;
+              if (res.code == '1') {
+                this.$message.success("操作成功！");
+                this.goBack();
+              } else {
+                this.$confirm(res.msg.msgTrim(), "提示",{
+                  confirmButtonText: "确定",
+                  cancelButtonText: "取消",
+                  showCancelButton: false,
+                  type: "error"
+                });
+              }
+            })
+            .catch(err => {
+              this.$confirm("操作错误，请稍后再试！", "提示",{
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                showCancelButton: false,
+                type: "error"
+              });
             });
-          }
-        })
-        .catch(err => {
-          this.$confirm("操作错误，请稍后再试！", "提示",{
-          	confirmButtonText: "确定",
-          	cancelButtonText: "取消",
-          	showCancelButton: false,
-          	type: "error"
-          });
-        });
+        } else {
+          this.$nextTick(this.focuFuntion);
+          return false;
+        }
+      });
+
+    },
+    funFocus(){
+      var ss= this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+      ss.focus();
     },
     /**返回上一级 */
     goBack() {

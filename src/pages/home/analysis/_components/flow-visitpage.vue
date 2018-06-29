@@ -46,6 +46,10 @@
         this.searchParams.startDate=this.startDate;
         this.searchParams.endDate=this.endDate;
         this.getData();
+      },endDate(){
+        this.searchParams.startDate=this.startDate;
+        this.searchParams.endDate=this.endDate;
+        this.getData();
       }
     },
     methods:{
