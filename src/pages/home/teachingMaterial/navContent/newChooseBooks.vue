@@ -882,7 +882,12 @@ export default {
                   );
                }
            }
-
+         /* if(!this.$commonFun.Empty(this.ruleForm.materialContacts)&&!this.$commonFun.Empty(this.material.materialContacts)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
           console.log('12312',this.ruleForm.materialContacts);
          }
          else if(this.classify == "director"){
@@ -891,6 +896,12 @@ export default {
                 // this.ruleForm['material.director']=this.projectDirectorData[0].id;
                  this.material.director=this.projectDirectorData[0].id;
                  this.$refs.ruleForm.validateField('director');
+          /*if(!this.$commonFun.Empty(this.projectDirectorData)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
            console.log('主任',this.projectDirectorData,this.material.director)
          }
          else if(this.classify == 'editor'){
@@ -902,12 +913,15 @@ export default {
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
+          /*if(!this.$commonFun.Empty(this.ruleForm.materialProjectEditors)&&!this.$commonFun.Empty(this.material.materialProjectEditors)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
            console.log('项目编辑',typeof(this.material.materialProjectEditors));
          }
-       this.$message({
-        message: `添加成功！`,
-        type: "success"
-      });
+
        this.chooseVisiable=false;
       },
       /* 数组去重 */
