@@ -23,22 +23,22 @@
                 <el-table :data="tableData" stripe border style="width: 100%">
                     <el-table-column prop="ruleName" label="积分规则名称">
                     </el-table-column>
-                    <el-table-column prop="ruleCode" label="积分规则标识">
+                    <el-table-column prop="ruleCode" label="积分规则标识" width="120">
                     </el-table-column>
                     <el-table-column prop="point" label="积分值" >
                     </el-table-column>
-                    <el-table-column prop="thirdName" label="目标平台名称" >
+                    <el-table-column prop="thirdName" label="目标平台名称" width="120">
                     </el-table-column>
-                    <el-table-column prop="exchangePoint" label="兑换三方积分" >
+                    <el-table-column prop="exchangePoint" label="兑换三方积分" width="120">
                     </el-table-column>
                     <el-table-column prop="description" label="规则描述">
                     </el-table-column>
-										<el-table-column prop="isExchange" label="是否用于平台兑换" align="center">
+										<el-table-column prop="isExchange" label="是否用于平台兑换" width="150" align="center">
                       <template scope="scope">
                         <p>{{scope.row.isExchange?'是':'否'}}</p>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
+                    <el-table-column prop="isDisabled" label="启用状态" width="100" align="center">
                       <template scope="scope">
                         <p>{{scope.row.isDisabled?'否':'是'}}</p>
                       </template>

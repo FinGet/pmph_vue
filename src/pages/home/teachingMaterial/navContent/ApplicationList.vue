@@ -38,12 +38,12 @@
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="120" >
+            <el-table-column label="显示结束日期" width="128" >
                 <template scope="scope">
                     <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="120">
+            <el-table-column label="实际结束日期" width="128">
                 <template scope="scope">
                     <p>
                         {{scope.row.actualDeadline}}
@@ -81,12 +81,12 @@
                   </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="70">
+            <el-table-column prop="status" label="状态" width="65">
                 <template scope="scope">
                     {{scope.row.state}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="178">
+            <el-table-column label="操作" width="168">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>

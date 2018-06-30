@@ -69,7 +69,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 label="文章标题"
-                align="center"
+                align="center" min-width="100"
                 >
                 <template scope="scope">
                     <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
@@ -80,7 +80,7 @@
                 prop="authorname"
                 label="文章来源"
                 align="center"
-                width="90"
+                width="100"
                 >
             </el-table-column>
         <el-table-column
@@ -94,7 +94,7 @@
         prop="apporpc"
         label="应用类型"
         align="center"
-        width="90"
+        width="100"
       >
             <template scope="scope">
               {{applyType[scope.row.apporpc]}}
@@ -103,7 +103,7 @@
             <el-table-column
                 label="创建时间"
                 align="center"
-                width="140"
+                width="120"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
@@ -112,7 +112,7 @@
             <el-table-column
                 label="审核时间"
                 align="center"
-                width="140"
+                width="120"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
