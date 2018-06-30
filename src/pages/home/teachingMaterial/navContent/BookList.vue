@@ -318,8 +318,12 @@ export default {
        */
       checkDataIsOk(){
         var flag = true;
+
         this.extendListData.map(iterm=>{
           if(iterm.textbookName==''&&iterm.textbookRound==''&&iterm.sort==''){
+            iterm.roundIsOk=false;
+            iterm.sortIsOk=false;
+            iterm.nameIsOk=false;
                 flag = false;
           }else{
             if(!iterm.textbookRound || !this.$commonFun.checkType(iterm.textbookRound,'number')){

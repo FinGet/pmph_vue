@@ -561,7 +561,9 @@ export default {
             xAxis: [
               {
                 name: "书籍名称",
+                left:"10px;",
                 type: "category",
+
                 data: this.stBooks,
                 axisPointer: {
                   type: "shadow"

@@ -50,7 +50,7 @@
      <el-table-column
       label="预计交稿日期"
       prop="deadline"
-      width="120"
+      width="170"
      >
      </el-table-column>
      <el-table-column
