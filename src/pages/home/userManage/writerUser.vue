@@ -866,7 +866,9 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          if(value&&value.length<=40||!value){
+          if(!value){
+            this.check(2);
+          }else if(value&&value.length<=40||!value){
             let param = {
               progress: progress,
               userIds: userIds.join(','),
