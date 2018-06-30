@@ -82,7 +82,7 @@
           prop="apporpc"
           label="应用类型"
           align="center"
-          width="90"
+          width="100"
         >
           <template scope="scope">
             {{applyType[scope.row.apporpc]}}

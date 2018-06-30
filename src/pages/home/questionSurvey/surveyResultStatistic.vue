@@ -10,9 +10,9 @@
        </el-table-column>
        <el-table-column label="调查概述" prop="intro">
        </el-table-column>
-       <el-table-column label="调查开始日期" prop="startDate" width="120">
+       <el-table-column label="调查开始日期" prop="startDate" width="140">
        </el-table-column>
-       <el-table-column label="调查结束日期" prop="endDate" width="120">
+       <el-table-column label="调查结束日期" prop="endDate" width="140">
        </el-table-column>
        <el-table-column label="调查对象" prop="surveyName"  width="110">
        </el-table-column>
