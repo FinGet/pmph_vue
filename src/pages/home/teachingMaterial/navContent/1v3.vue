@@ -48,14 +48,15 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
 
+
         <span v-if=""
-              :class="allPageSelected?'el-checkbox__input is-checked':'el-checkbox__input'"
+              :class="isGetTableDataDone?(allPageSelected?'el-checkbox__input is-checked':'el-checkbox__input'):'selecting_all'"
               id="select_all_checkbox_wrapper"
               :title="allPageSelected?'取消全选':'全分页选中'"
         >
           <span class="el-checkbox__inner"></span>
           <input type="checkbox" id="select_all_checkbox" @click="allPageSelectSwitch(true)" :disabled="!isGetTableDataDone"/>
-          <span class="select_all_text">{{allPageSelected?'取消全选':'分页全选'}}</span>
+          <span class="select_all_text">{{isGetTableDataDone?(allPageSelected?'取消全选':'分页全选'):'正在读取'}}</span>
         </span>
 
 
@@ -1129,4 +1130,7 @@
     border-radius: 100%;
   }
 
+  .selecting_all span.el-checkbox__inner {
+    background: gray;
+  }
 </style>
