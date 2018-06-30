@@ -126,8 +126,10 @@
         <el-table-column
           label="遴选主编/副主编" min-width="170">
           <template scope="scope">
-            <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
-            <span v-else>待遴选</span>
+            <div style="display: inline-block;">
+              <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
+              <span v-else>待遴选</span>
+            </div>
             <router-link :to="{name:'遴选',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',
               q:scope.row.myPower,opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished||forceEnd)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
@@ -1045,7 +1047,7 @@
 </script>
 <style>
   .editors_sql_label{
-    display:inline-block;
+    display:block;
   }
   .scopeSpan1{
     display: inline-block;
