@@ -36,7 +36,7 @@
         <el-table-column
           prop="isStick"
           label="是否置顶"
-          width="94">
+          width="100">
           <template scope="scope">
             {{scope.row.isStick?'是':'否'}}
           </template>

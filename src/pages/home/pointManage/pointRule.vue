@@ -34,7 +34,7 @@
                         <p>{{scope.row.isExchange?'是':'否'}}</p>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
+                    <el-table-column prop="isDisabled" label="启用状态" width="100" align="center">
                       <template scope="scope">
                         <p>{{scope.row.isDisabled?'否':'是'}}</p>
                       </template>
