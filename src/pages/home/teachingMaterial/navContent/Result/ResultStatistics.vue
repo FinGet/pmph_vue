@@ -9,11 +9,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParams.bookName" @keyup.enter.native="getBooksTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getBooksTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getBooksTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -30,6 +30,7 @@
                 prop="row"
                 label="序号"
                 align="center"
+                style = "padding-right:0;padding-left: 0;"
                 width="68">
               </el-table-column>
               <el-table-column
@@ -80,11 +81,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getSchoolTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -106,28 +107,41 @@
                 <!--align="center"-->
                 <!--width="68">-->
               <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--type="index"-->
+                <!--label="序号"-->
+                <!--align="center"-->
+                <!--width="68"-->
+                <!--&gt;-->
+              <!--</el-table-column>-->
               <el-table-column
-                type="index"
+                type="rownnum"
                 label="序号"
                 align="center"
                 width="68"
-                >
+              >
+                <template scope="scope">
+                <div class="content-rowspan">
+                  {{scope.row.rownnum}}
+                <!--<div v-for="value in scope.row.rownnum">{{ value.rownnum }}</div>-->
+                </div>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="schoolName"
+                align="center"
                 label="申报单位" >
-                <!--<template scope="scope">-->
-                <!--<div class="content-rowspan">-->
-                  <!--<div v-for="value in scope.row.schoolName">{{ value.schoolName }}</div>-->
-                <!--</div>-->
-                <!--</template>-->
+
               </el-table-column>
               <el-table-column
                 prop="bookname"
-                label="书籍名称" >
+                label="书籍名称"
+              align="center">
+
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.bookname">{{ value.bookname }}</div>
+                    {{scope.row.bookname}}
+                    <!--<div v-for="value in scope.row.bookname">{{ value.bookname }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -137,7 +151,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.editorList">{{ value.editorList }}</div>
+                    {{scope.row.editorList}}
+                    <!--<div v-for="value in scope.row.editorList">{{ value.editorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -147,7 +162,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.subEditorList">{{ value.subEditorList }}</div>
+                    {{scope.row.subEditorList}}
+                    <!--<div v-for="value in scope.row.subEditorList">{{ value.subEditorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -157,7 +173,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.editorialList">{{ value.editorialList }}</div>
+                    {{scope.row.editorialList}}
+                    <!--<div v-for="value in scope.row.editorialList">{{ value.editorialList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -167,7 +184,8 @@
                 align="center">
                 <template scope="scope">
                   <div class="content-rowspan">
-                    <div v-for="value in scope.row.isDigitalEditorList">{{ value.isDigitalEditorList }}</div>
+                    {{scope.row.isDigitalEditorList}}
+                    <!--<div v-for="value in scope.row.isDigitalEditorList">{{ value.isDigitalEditorList }}</div>-->
                   </div>
                 </template>
               </el-table-column>
@@ -225,14 +243,14 @@ export default {
      sortType(){
        this.getSchoolTableData();
      },
-    schoolTableData:{
+    /*schoolTableData:{
       //注意：当观察的数据为对象或数组时，curVal和oldVal是相等的，因为这两个形参指向的是同一个数据对象
       handler:function(newValue,oldVal){
        // debugger;
-          // this.objectSpanMethod();
+          this.objectSpanMethod2();
       },
       deep:true
-    }
+    }*/
   },
   created(){
     this.schoolParams.materialId=this.bookParams.materialId=this.$route.params.materialId;
@@ -240,16 +258,18 @@ export default {
     this.getSchoolTableData()
     this.getBooksTableData()
     var _this = this;
-    // this.$nextTick(setTimeout(function () {
-    //   _this.objectSpanMethod();
-    // },2000))
+     /*this.$nextTick(setTimeout(function () {
+       _this.objectSpanMethod2();
+     },2000))*/
 
   },
   methods: {
     // 拿到数据 重新进行组装
     dataArray(data){
+      //debugger;
       let  schoolN = data.length>0?data[0].schoolName:"";
       let  returnData = [];
+      let index_array = [];
       let bookname_array = [];
       let editorList_array = [];
       let subEditorList_array = [];
@@ -261,6 +281,7 @@ export default {
         if(rowIndex >= data.length){
           returnData.push({
             "schoolName":schoolN,
+            "rownnum":index_array,
             "bookname":bookname_array,
             "editorList":editorList_array,
             "subEditorList": subEditorList_array,
@@ -273,19 +294,30 @@ export default {
         if(iterm.schoolName!=schoolN){
           returnData.push({
             "schoolName":schoolN,
+              "rownnum":index_array,
             "bookname":bookname_array,
             "editorList":editorList_array,
             "subEditorList": subEditorList_array,
             "editorialList":editorialList_array,
             "isDigitalEditorList":isDigitalEditorList_array
           });
+          index_array=[];
+          index_array.length =0;
+          bookname_array =[];
           bookname_array.length = 0;
+          editorList_array =[];
           editorList_array.length = 0;
+          subEditorList_array=[];
            subEditorList_array.length = 0;
+          editorialList_array =[];
            editorialList_array.length = 0;
+          isDigitalEditorList_array=[];
            isDigitalEditorList_array.length = 0;
           schoolN = iterm.schoolName;
         }
+        index_array.push({
+          "rownnum":iterm.row
+        })
         bookname_array.push({
           "bookname":iterm.bookname
         })
@@ -334,9 +366,64 @@ export default {
 
     },
     /**
+     * 用隐藏和columspan处理单元格
+     * */
+    objectSpanMethod2() {
+      let _this = this;
+      let tdArr = _this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+      let m = 0;
+      let rowspanIndex = 0;
+      let schoolN = _this.schoolTableData[0].schoolName;
+      if(!_this.$commonFun.Empty(tdArr)) {
+        for (let rowIndex = 0; rowIndex <= _this.schoolTableData.length; rowIndex++) {
+          let tableSN = rowIndex == _this.schoolTableData.length?"xxx":_this.schoolTableData[rowIndex].schoolName;
+          if (tableSN != schoolN) {
+            tdArr[rowspanIndex].getElementsByTagName("td")[1].setAttribute("rowspan", m);
+            if (m > 1) {
+              let delrowspanIndex = rowspanIndex + 1;
+              for (let j = 0; j < m - 1; j++) {
+                //tdArr[delrowspanIndex].deleteCell(1); //删除数据需要加一个钥匙
+                tdArr[delrowspanIndex].getElementsByTagName("td")[1].style.display="none";
+                delrowspanIndex++;
+              }
+
+
+            }
+            m = 0;
+            rowspanIndex = rowIndex;
+            schoolN = rowIndex == _this.schoolTableData.length?"xxx":_this.schoolTableData[rowIndex].schoolName;
+          }
+          m++;
+        }
+      }
+
+    },
+
+    /**
+     * 搜索
+     * */
+    getSchoolTableDataFun(){
+      this.schoolParams.pageNumber=1;
+      this.getSchoolTableData();
+    },
+
+    /**
        * 按学校统计获取表格数据
        */
     getSchoolTableData() {
+      let _this = this;
+      if(this.$refs.table){ //表格生成后，每次重新加载数据前，恢复被objectSpanMethod2合并的单元格
+        let mtd = this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("td");
+        let mtr = this.$refs.table.$el.getElementsByClassName("el-table__body-wrapper")[0].getElementsByTagName("table")[0].getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+        for(var i=0;i<mtd.length;i++){
+          mtd[i].style.display="table-cell";
+        }
+        for(var i=0;i<mtr.length;i++){
+          mtr[i].rowspan="1";
+        }
+      }
+
       this.$axios.get(this.schoolResultUrl+(this.sortType?'/schoolListChosen':'/schoolListPreset'),{
        params:this.schoolParams
      }).then((res)=>{
@@ -344,14 +431,30 @@ export default {
        if(res.data.code==1){
           var resData = res.data.data;
           this.schoolTotal=resData.total;
-          this.schoolTableData=this.dataArray(resData.rows);
+         this.schoolTableData=resData.rows;
+         this.schoolTableData.forEach((item,index) =>{
+           item.rownnum = (_this.schoolParams.pageNumber - 1)*_this.schoolParams.pageSize + index+1;
+         });
+          //this.schoolTableData=this.dataArray(resData.rows);
        }
+        this.$nextTick(
+         _this.objectSpanMethod2() //数据加载后再次合并单元格
+       )
 
      }).then(()=>{
         console.log(2222222222222222222);
 
       })
     },
+
+    /**
+     * 有搜索条件的搜索 从第一页重新搜索
+     * */
+    getBooksTableDataFun(){
+      this.bookParams.pageNumber=1;
+      this.getBooksTableData();
+    },
+
     /**按数据统计获取表格数据 */
     getBooksTableData(){
       this.$axios.get(this.bookResultUrl,{
@@ -412,10 +515,20 @@ export default {
 </script>
 
 <style scoped>
+ /*.el-table__body-wrapper td div:first-child{*/
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+    /*text-align: center;*/
+  /*}*/
   .content-rowspan div {
-    padding-left: 13px;
+    /*padding-left: 13px;*/
     line-height: 46px;
+    white-space:nowrap;
     border-bottom: 1px solid #ECEDEE;
+
+    text-align: center;
+      /*margin-left: 18px;*/
+      /*margin-right: 18px;*/
   }
   .content-rowspan div:last-child {
     border-bottom: 0;

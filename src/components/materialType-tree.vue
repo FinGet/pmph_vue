@@ -1,5 +1,5 @@
 /**
-封装社内用户树状图组件，提供两个功能，查询和对树结构的修改。通过参数控制是否显示增加删除操作按钮
+封装教材分类树状图组件，提供两个功能，查询和对树结构的修改。通过参数控制是否显示增加删除操作按钮
 props: manage 是否显示操作按钮（即'添加子部门'和'删除'按钮），默认为false
 
 events:(1) node-click 当点击节点时触发，参数data为当前节点数据
@@ -8,20 +8,21 @@ events:(1) node-click 当点击节点时触发，参数data为当前节点数据
 methods: refresh 刷新当前树状图
 */
 <template>
-	<div class="pmph-tree">
+	<div class="materialType-tree">
     <div class="clearfix" v-if="manage">
       <div class="operation-wrapper">
-        <el-button type="primary" @click="_openAddDialog" :disabled="!hasSelected"> 添加子部门 </el-button>
-        <el-button type="danger" @click="_del" :disabled="!hasSelected"> 删除 </el-button>
+        <el-button type="primary" @click="_openAddDialog" :disabled="!hasSelected"> 添加子分类 </el-button>
+        <el-button type="danger" @click="_del" :disabled="!hasSelected||!dialogForm.isLeaf"> 删除 </el-button>
       </div>
     </div>
     <div class="table-wrapper">
       <el-tree :data="treeData"
                :highlight-current=true
                :expand-on-click-node=false
+               :auto-expand-parent=true
                :props="defaultProps"
                @node-click="_handleNodeClick"
-               lazy
+               :lazy="true"
                :load="_loadNode"
                node-key="id"
                :default-expanded-keys="default_expanded_keys"
@@ -29,10 +30,10 @@ methods: refresh 刷新当前树状图
     </div>
 
     <!-- 添加弹框 -->
-    <el-dialog title="新增部门" :visible.sync="dialogVisible" size="tiny">
+    <el-dialog title="新增分类" :visible.sync="dialogVisible" size="tiny">
       <el-form :model="dialogForm" :rules="dialogRules" ref="dialogForm" label-width="110px">
-        <el-form-item label="部门名称：" prop="dpName">
-          <el-input placeholder="请填写部门名称" v-model.trim="dialogForm.dpName"></el-input>
+        <el-form-item label="分类名称：" prop="typeName">
+          <el-input placeholder="请填写分类名称" v-model.trim="dialogForm.typeName"></el-input>
         </el-form-item>
         <el-form-item label="显示顺序：" prop="sort">
           <el-input placeholder="请填写阿拉伯数字" v-model.trim="dialogForm.sort"></el-input>
@@ -45,7 +46,6 @@ methods: refresh 刷新当前树状图
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="_add">确 定</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
-
       </div>
     </el-dialog>
 	</div>
@@ -61,28 +61,30 @@ methods: refresh 刷新当前树状图
     },
 		data() {
 			return {
-			  api_pmph_list:'/pmpheep/departments/tree',
-        api_pmph_add:'/pmpheep/departments/add',
-        api_pmph_delete:'/pmpheep/departments/delete',
+			  api_pmph_list:'/pmpheep/materialType/tree',
+        api_pmph_add:'/pmpheep/materialType/addbelow',
+        api_pmph_delete:'/pmpheep/materialType/delete',
         treeData:[],
         defaultProps:{
-          children: "sonDepartment",
-          label: "dpName",
+          children: "childrenMaterialTypeVO",
+          label: "typeName",
           isLeaf: 'isLeaf'
         },
-        default_expanded_keys:[427],//默认展开人卫社（人卫社id为427）
+        default_expanded_keys:[0],//默认展开层
         hasSelected: false,
         dialogVisible: false,
+        currentClickedParentId:"",
         dialogForm: {
-          dpName: "",
+          typeName: "",
           sort: "",
           note: "",
           parentId: "",
-          path: ""
+          path: "",
+          isLeaf:""
         },
         dialogRules: {
-          dpName: [
-            this.$formRules.required('请填写部门名称','blur'),
+          typeName: [
+            this.$formRules.required('请填写分类名称','blur'),
             this.$formRules.name('名称不能超过20字符','change,blur')
           ],
           sort: [
@@ -97,9 +99,10 @@ methods: refresh 刷新当前树状图
       /**
        * 请求组织树
        */
-      _getTree(id='',callback) {
+      _getTree(id='-1',callback) {
+        let _this = this;
         this.$axios.get(this.api_pmph_list,{params:{
-          id:id
+            parentId:id
         }})
           .then(response => {
             let res = response.data;
@@ -107,13 +110,18 @@ methods: refresh 刷新当前树状图
               if(callback){
                 callback(res.data);
               }
-              if(id!=''){
+              if(id!='-1'){
                 return;
               }
-              this.treeData = [res.data];
-              if(this.treeData.length>0){
-                this.default_expanded_keys = [this.treeData[0].id];
-              }
+              /*if(id!=0){*/
+
+                _this.treeData = [res.data];
+
+                if(_this.treeData.length>0){
+                  _this.default_expanded_keys.push(_this.treeData[0].id);
+                }
+              //}
+
             }
           })
           .catch(error => {
@@ -127,6 +135,8 @@ methods: refresh 刷新当前树状图
         this.hasSelected = true;
         this.dialogForm.path = data.path;
         this.dialogForm.parentId = data.id;
+        this.dialogForm.isLeaf=data.isLeaf;
+        this.currentClickedParentId = data.parentId;
         this.$emit('node-click',data)
       },
       /**
@@ -134,13 +144,16 @@ methods: refresh 刷新当前树状图
        */
       _loadNode(node, resolve){
         this._getTree(node.key,(data)=>{
-          resolve(data.sonDepartment);
+
+          resolve(data.childrenMaterialTypeVO);
+
         })
       },
       /**
-       * 添加子部门
+       * 添加子分类
        */
       _add(){
+        let _this = this;
         this.$refs.dialogForm.validate(valid => {
           if (valid) {
             this.$axios({
@@ -149,9 +162,11 @@ methods: refresh 刷新当前树状图
               data: this.$initPostData(this.dialogForm)
             }).then(res => {
               if (res.data.code == 1) {
-                this._getTree();
-                this.dialogVisible = false;
-                this.$message.success("添加成功");
+                _this.default_expanded_keys.push(_this.dialogForm.parentId);
+
+                _this._getTree("-1");
+                _this.dialogVisible = false;
+                _this.$message.success("添加成功");
               } else {
                 this.$confirm(res.data.msg.msgTrim(), "提示",{
                 	confirmButtonText: "确定",
@@ -173,7 +188,8 @@ methods: refresh 刷新当前树状图
        * 删除子节点
        */
       _del(){
-        this.$confirm("确定删除选中部门吗?", "提示", {
+        let _this = this;
+        this.$confirm("确定删除选中分类吗?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -188,8 +204,12 @@ methods: refresh 刷新当前树状图
               .then(res => {
                 console.log(res);
                 if (res.data.code == 1) {
+                  _this.hasSelected = false;
                   this.$message.success("删除成功");
-                  this._getTree();
+                  _this.default_expanded_keys=[this.currentClickedParentId];
+
+                  _this._getTree("-1");
+                  //_this.$router.go(0);
                   this.$emit('delete-node');
                 }else{
                   this.$confirm(res.data.msg.msgTrim(), "提示",{
@@ -219,11 +239,11 @@ methods: refresh 刷新当前树状图
        *
        */
       refresh(){
-        this._getTree();
+        this._getTree("-1");
       }
     },
     created(){
-      this._getTree();
+      this._getTree("-1");
     },
 	}
 </script>

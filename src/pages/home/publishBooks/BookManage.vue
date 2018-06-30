@@ -146,10 +146,10 @@
           </my-upload>
         </el-tooltip>
         <a href="/static/配套图书导入模版.xls"><el-button type="primary">配套图书导入模板下载</el-button></a>
-        <el-button type="primary" @click="syncBook(1)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书全量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
+        <!--<el-button type="primary" @click="syncBook(1)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书全量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>-->
         <el-button type="primary" @click="syncBook(2)" :disabled="bookSyncVisible">{{bookSyncVisible?'正在同步中...':'图书增量同步'}}<i v-if="bookSyncVisible" class="fa fa-spinner fa-pulse loading"></i></el-button>
         <el-button type="primary" :disabled="!selectData.length" @click="bulkEditInfo">批量修改</el-button>
-      </div>
+    </div>
     </div>
     <div class="table-wrapper clearfix">
       <el-table
@@ -206,6 +206,7 @@
           label="操作"
           width="120">
           <template scope="scope">
+            <el-button type="text" @click="recommend(scope.row)">推荐</el-button>
             <el-button type="text" @click="editInfo(scope.row)">修改</el-button>
             <el-button type="text" @click="deleteBook(scope.row)">删除</el-button>
           </template>
@@ -234,6 +235,12 @@
       size="tiny">
       <div>
         <el-form ref="form" :model="form" :rules="dialogRules" label-width="140px" class="form">
+          <el-form-item label="是否首页置顶：" required>
+            <el-radio-group v-model="form.isStick">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="是否新书推荐：" required>
             <el-radio-group v-model="form.isNew">
               <el-radio :label="true">是</el-radio>
@@ -293,9 +300,73 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="update">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
       </span>
+    </el-dialog>
+
+
+    <el-dialog
+
+      :visible.sync="recommendDialogVisible"
+      fullscreen = "true"
+      width="100%"
+
+     >
+      <span slot="title" class="el-dialog__title">{{recommendBookName}}</span>
+      <div class="searchBox-wrapper" style="display:inline-block;">
+        <div class="searchName">书籍名称/ISBN：<span></span></div>
+        <div class="searchInput" >
+          <el-input placeholder="请输入" class="searchInputEle"  @keyup.enter.native="recommendSearch" v-model.trim="recommendSearchForm.name"></el-input>
+        </div>
+
+      </div>
+      <div style="display:inline-block;line-height: 36px;">
+        <el-checkbox-group v-model="recommendSearchForm.checkList">
+          <el-checkbox label="教材关联图书"></el-checkbox>
+          <el-checkbox label="相关推荐"></el-checkbox>
+          <el-checkbox label="人卫推荐"></el-checkbox>
+        </el-checkbox-group>
+      </div>
+
+
+
+      <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
+       <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
+        <el-button  @click="recommendSearch"  type="primary" icon="search" >搜索</el-button>
+      </div>
+      <el-table :data="recommendData" border  >
+        <el-table-column property="bookname" label="书籍名称" width="150" align="center"></el-table-column>
+        <el-table-column property="isbn" label="ISBN" width="150" align="center"></el-table-column>
+        <el-table-column   label="教材关联图书" width="150" align="center">
+          <template scope="scope">
+          <el-checkbox v-model="scope.row.ischeckteachbook" @change="checkboxChange(1,scope.row)"></el-checkbox>
+        </template>
+        </el-table-column>
+        <el-table-column   label="相关推荐"width="200" align="center">
+          <template scope="scope">
+            <el-checkbox v-model="scope.row.ischeckxgcommend" @change="checkboxChange(2,scope.row)"></el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column     label="人卫推荐" align="center" >
+          <template scope="scope">
+          <el-checkbox  v-model="scope.row.ischeckrwcommend" @change="checkboxChange(3,scope.row)"></el-checkbox>
+        </template>
+        </el-table-column>
+      </el-table>
+      <!--分页-->
+      <div class="pagination-wrapper" style="padding-top:10px;padding-bottom:10px;">
+        <el-pagination
+          v-if="recommendTotalNum "
+          :page-sizes="[10,20,30, 40]"
+          :page-size="recommendSearchForm.recommendPageSize"
+          :current-page.sync="recommendSearchForm.recommendPageNumber"
+          @size-change="recommendPaginationSizeChange"
+          @current-change="getRecommendTableData"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="recommendTotalNum">
+        </el-pagination>
+      </div>
     </el-dialog>
 
      <!--同步弹窗-->
@@ -313,6 +384,7 @@
         api_upload: '/pmpheep/books/bookExcel',
 			  form:{
 			    bookId:'',
+          isStick:true,
           isNew:true,
           isPromote:true,
           isOnSale:true,
@@ -320,10 +392,18 @@
           typeId:[],
           materialId:'',
         },
+        recommendData: [],
+        recommendSearchForm:{
+          currentBookId:0,
+          checkList:[],
+          name:'',
+          recommendPageSize:10,
+          recommendPageNumber:1
+        },
+        checkNameArray:['教材关联图书','相关推荐','人卫推荐'],
         bookSyncVisible:false,
         bookSyncData:[],
 			  searchForm:{
-          name:'',
           typeId:[],
           isNew:'',
           isPromote:'',
@@ -332,6 +412,9 @@
           pageNumber:1
         },
         totalNum:0,
+        recommendTotalNum:0,
+        recommendDialogVisible:false,
+        recommendBookName:'',
         dialogVisible:false,
         powerSearch:true,
         powerSearchValue:1,
@@ -389,6 +472,88 @@
       }
 		},
     methods:{
+		  typeZh(val){
+		    switch(typeof(val)){
+          case 'boolean':
+            return val;
+          case 'String':
+            if(val='true'){
+              return true;
+            }else{
+              return false;
+            }
+        }
+        return false;
+      },
+      recommendPaginationSizeChange(val){
+        this.recommendSearchForm.recommendPageSize=val;
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.getRecommendTableData();
+      },
+      checkboxChange(selectType,row){
+        this.$axios.get('/pmpheep/books/recommendcheck',{params:{
+            currentBookId:this.recommendSearchForm.currentBookId,
+            selectType:selectType,
+            recommendBookId:row.id,
+            ischeckteachbook:row.ischeckteachbook,
+            ischeckxgcommend:row.ischeckxgcommend,
+            ischeckrwcommend:row.ischeckrwcommend
+          }}).then(response=>{
+          var res = response.data;
+          if(res.code==1){ // 返回数据没有异常 回显数据 避免重复点击 数据操作异常
+            switch (selectType) {
+              case 1:
+                row.ischeckteachbook = res.data;break;
+              case 2:
+                row.ischeckxgcommend = res.data; break;
+              case 3:
+                row.ischeckrwcommend = res.data;break;
+            }
+          }
+
+        })
+      },
+      getRecommendTableData(){
+        console.log(this.recommendSearchForm.checkList);
+        let ischeckteachbook ;
+        let ischeckxgcommend ;
+        let ischeckrwcommend ;
+        debugger;
+       if(this.recommendSearchForm.checkList.find((n)=>n=='教材关联图书') != undefined){
+         ischeckteachbook = true;
+       }
+       if(this.recommendSearchForm.checkList.find((n)=>n=='相关推荐') != undefined){
+         ischeckxgcommend = true;
+       }
+
+        if(this.recommendSearchForm.checkList.find((n)=>n=='人卫推荐') != undefined){
+          ischeckrwcommend = true;
+        }
+        this.$axios.get('/pmpheep/books/recommendlist',{params:{
+          name:this.recommendSearchForm.name,
+            currentBookId:this.recommendSearchForm.currentBookId,
+            recommendPageSize:this.recommendSearchForm.recommendPageSize,
+            recommendPageNumber:this.recommendSearchForm.recommendPageNumber,
+            ischeckteachbook:ischeckteachbook,
+            ischeckxgcommend:ischeckxgcommend,
+            ischeckrwcommend:ischeckrwcommend
+          }})
+          .then(response=>{
+              var res = response.data;
+              if(res.code==1){
+                this.recommendTotalNum = res.data.total;
+                this.recommendData = res.data.rows;
+
+              }
+
+          }).catch(e=>{
+          console.log(e);
+        })
+      },
+      recommendSearch(){
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.getRecommendTableData();
+      },
       /**
        * 获取表格数据
        */
@@ -468,6 +633,14 @@
       handleSelectionChange(val) {
         this.selectData = val;
       },
+
+      recommend(row){
+        this.recommendSearchForm.recommendPageNumber=1;
+        this.recommendBookName = row.bookname;
+        this.recommendSearchForm.currentBookId = row.id;
+        this.recommendDialogVisible = true;
+        this.getRecommendTableData();
+      },
       /**
        * 点击表格中的修改按钮
        * @param row
@@ -480,6 +653,7 @@
         this.form.isOnSale = row.isOnSale;
         this.form.isPromote = row.isPromote;
         this.form.materialId = row.materialId;
+        this.form.isStick = row.stick;
         typelist = row.path?row.path.split('-'):[];
         typelist.forEach((t,i)=>{
           typelist[i]=parseInt(t);
@@ -502,6 +676,7 @@
         this.form.isNew = true;
         this.form.isOnSale = true;
         this.form.isPromote = true;
+        this.form.isStick = true;
         this.form.typeId = [];
       },
       /**
@@ -520,7 +695,12 @@
        */
       update(){
         if(!this.form.typeId.length){
-            this.$message.error('请选择书籍类别！');
+            this.$confirm('请选择书籍类别！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return;
         }
         let type = this.form.typeId[this.form.typeId.length-1];
@@ -532,6 +712,7 @@
           isPromote:this.form.isPromote,
           isOnSale:this.form.isOnSale,
           isKey:this.form.isKey,
+          isStick:this.form.isStick,
           type:type,
           materialId:this.form.materialId||'',
         }))
@@ -542,12 +723,22 @@
               this.dialogVisible=false;
               this.getTableData();
             }else{
-              this.$message.error('修改失败，请重试！');
+              this.$confirm('修改失败，请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('修改失败，请重试！');
+            this.$confirm('修改失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       /**
@@ -570,12 +761,22 @@
                   this.$message.success('删除成功');
                   this.getTableData();
                 }else{
-                  this.$message.error('删除失败，请重试！');
+                  this.$confirm('删除失败，请重试！', "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('删除失败，请重试！');
+                this.$confirm('删除失败，请重试！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})
@@ -636,22 +837,42 @@
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
-          this.$message.error("请按照模板格式的文档上传文件");
+          this.$confirm("请按照模板格式的文档上传文件", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+          this.$confirm("文件名不能超过40个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$confirm("文件大小不能小于1bt", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$confirm("文件大小不能超过100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
 
@@ -665,7 +886,12 @@
         if (res.code == '1') {
           this.$message.success('上传成功!');
         }else{
-          this.$message.error(res.data.msg.msgTrim());
+          this.$confirm(res.data.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
         this.uploadLoading = false;
       },
@@ -674,7 +900,12 @@
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error(err.msg.msgTrim());
+        this.$confirm(err.msg.msgTrim(), "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.uploadLoading = false;
       },
       /**
@@ -693,10 +924,20 @@
           let res = response.data;
           if (res.code == 1) {
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         }).catch(error => {
-          this.$message.error('同步错误，请稍后再试!');
+          this.$confirm('同步错误，请稍后再试!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         })
       },
       syncProgress(){
@@ -772,9 +1013,16 @@
 	}
 </script>
 
-<style scoped>
+<style>
+  .el-dialog--small {
+    width: 70% !important;
+  }
+</style>
+<style   scoped>
+
   .searchBox-wrapper{
       width: 340px;
+    padding-left:0px;
     }
   .searchBox-wrapper .searchName{
     width: 110px;

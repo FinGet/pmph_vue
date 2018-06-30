@@ -85,12 +85,22 @@
                   self.state = self.defaultState.completed;
                 }else{
                   self.state = self.defaultState.error;
-                  self.$message.error(res.msg.msgTrim());
+                  self.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch((error) => {
                 self.state = self.defaultState.error;
-                self.$message.error('发送消息失败，请重试');
+                self.$confirm('发送消息失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
           },
         },

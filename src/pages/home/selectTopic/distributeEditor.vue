@@ -5,11 +5,18 @@
        <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称"  @keyup.enter.native="search"></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.date"
+            v-model="searchParams.submitTime1"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
+      <span>至：</span>
+      <el-date-picker
+        v-model="searchParams.submitTime2"
+        class="input"
+        type="date"
+        placeholder="选择日期">
+      </el-date-picker>
         <el-button type="primary" icon="search" @click="search()">搜索</el-button>
     </p>
     <el-table
@@ -65,7 +72,7 @@
         label="退回理由"
       >
         <template scope="scope">
-          <span>{{scope.row.reasonEditor || '-'}}</span>
+          <span>{{scope.row.reasonEditor || ''}}</span>
         </template>
       </el-table-column>
      <el-table-column
@@ -141,8 +148,9 @@
 				v-model="distributeParams.reasonDirector">
 			</el-input>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="backDialogVislble = false">取 消</el-button>
           <el-button type="primary" @click="directorHandling(2)">确 定</el-button>
+          <el-button @click="backDialogVislble = false">取 消</el-button>
+
         </span>
 		</el-dialog>
   </div>
@@ -153,7 +161,8 @@ export default {
     return {
       searchParams: {
 				name:'',
-        date: "",
+        submitTime1: "",
+        submitTime2:"",
         pageSize: 10,
         pageNumber: 1
       },
@@ -204,12 +213,14 @@ export default {
      },
 		/**获取表格数据 */
 		getTableData(){
-      this.searchParams.date = this.$commonFun.formatDate(+new Date(this.searchParams.date)).substring(0,10);
-			this.$axios.get('/pmpheep/topic/listDirector',{
+      this.searchParams.submitTime1 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime1)).substring(0,10);
+      this.searchParams.submitTime2 = this.$commonFun.formatDate(+new Date(this.searchParams.submitTime2)).substring(0,10);
+      this.$axios.get('/pmpheep/topic/listDirector',{
 				params:{
 					bookname: this.searchParams.name,
 					sessionId: this.$getUserData().sessionId,
-					submitTime: this.searchParams.date,
+					submitTime1: this.searchParams.submitTime1,
+          submitTime2: this.searchParams.submitTime2,
 					pageSize: this.searchParams.pageSize,
 					pageNumber: this.searchParams.pageNumber
 				}
@@ -266,10 +277,10 @@ export default {
           this.distributeParams.openid = obj.openid;
           this.directorHandling(i);
         }).catch(() => {
-          this.$message({
+         /* this.$message({
             type: 'warning',
             message: '已取消操作'
-          });
+          });*/
         });
     },
 		directorHandling(i){
@@ -277,6 +288,7 @@ export default {
       this.distributeParams.editorId=(i==1?this.distributeParams.editorId:'');
       this.distributeParams.openid=(i==1?this.distributeParams.openid:'');
       this.distributeParams.bookname =(i==1?this.distributeParams.bookname:'');
+      this.distributeParams.adminId =(i==1?this.distributeParams.editorId:'');
 			this.$axios.put('/pmpheep/topic/put/directorHandling',
       this.$initPostData(
         this.distributeParams
@@ -289,7 +301,12 @@ export default {
           this.$emit('change'); // 通知父组件 再次身份判断
 					this.getTableData();
 				} else {
-					this.$message.error(res.msg.msgTrim());
+					this.$confirm(res.msg.msgTrim(), "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err=>{
 
@@ -334,7 +351,7 @@ export default {
   overflow: hidden;
 }
 .distribute_editor .header_p .input {
-  width: 217px;
+  width: 130px;
   margin-right: 10px;
 }
 .distribute_editor .dialog .el-dialog {

@@ -99,8 +99,9 @@
 						</el-form-item>
 					</el-form>
 					<div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submit">确 定</el-button>
 						<el-button @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary" @click="submit">确 定</el-button>
+
 					</div>
 				</el-dialog>
   </div>
@@ -196,7 +197,12 @@ export default {
 					this.tableData = res.data.rows;
 				}
 			}).catch(err => {
-				this.$message.error('请稍后再试！');
+				this.$confirm('请稍后再试！', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**搜索 */
@@ -230,10 +236,20 @@ export default {
 					this.dialogFormVisible = false;
 					this.getPointRule();
 				} else{
-					this.$message.error('新增失败,稍后再试!');
+					this.$confirm('新增失败,稍后再试!', "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
-				this.$message.error('请求错误，请稍后再试!');
+				this.$confirm('请求错误，请稍后再试!', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**修改积分规则 */
@@ -255,10 +271,20 @@ export default {
 					this.dialogFormVisible = false;
 					this.getPointRule();
 				} else{
-					this.$message.error('修改失败!');
+					this.$confirm('修改失败!', "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
-				this.$message.error('请求错误，请稍后再试!');
+				this.$confirm('请求错误，请稍后再试!', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**
@@ -295,10 +321,20 @@ export default {
               this.$message.success('删除成功!');
               this.getPointRule();
 						} else {
-							this.$message.error(res.msg.msgTrim());
+							this.$confirm(res.msg.msgTrim(), "提示",{
+								confirmButtonText: "确定",
+								cancelButtonText: "取消",
+								showCancelButton: false,
+								type: "error"
+							});
 						}
 					}).catch(err => {
-						this.$message.error('请求错误,请稍后再试!');
+						this.$confirm('请求错误,请稍后再试!', "提示",{
+							confirmButtonText: "确定",
+							cancelButtonText: "取消",
+							showCancelButton: false,
+							type: "error"
+						});
 					})
 				})
 		},

@@ -135,7 +135,13 @@
        * 点击发送按钮，当消息为空时触发此方法
        */
       sendMessageIsEmpty(){
-        this.$message.error('消息不能为空');
+        this.$confirm('消息不能为空', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
+
       },
       /**
        * 当聊天窗口中上传文件组件上传成功后执行此回调
@@ -150,22 +156,46 @@
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("请勿上传可执行文件!");
+          this.$confirm("请勿上传可执行文件!", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           flag = false;
         }
         //文件名不超过40个字符
         if(file.name.length>50){
-          this.$message.error("文件名称不能超过50个字符");
+          this.$confirm("文件名称不能超过50个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能为0kb");
+          this.$confirm("文件大小不能为0kb", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件上传最大为100M！");
+          this.$confirm("文件上传最大为100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           flag = false;
         }
         console.log(flag)
@@ -183,7 +213,14 @@
           this.fileUploading=false;
           bus.$emit('group-file:add');
         }else{
-          this.$message.error(response.msg.msgTrim());
+          this.$confirm(response.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
+
         }
       },
       /**

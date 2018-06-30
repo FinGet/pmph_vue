@@ -282,7 +282,12 @@
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('获取小组文件失败');
+            this.$confirm('获取小组文件失败', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       getGroupList(){
@@ -295,7 +300,12 @@
             if (res.code == '1') {
               this.groupListData = res.data;
             }else{
-              this.$message.error(res.msg.msgTrim());
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
@@ -350,11 +360,21 @@
                   this.$message.success('成功删除小组文件');
                   this.getFilelistData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
-                this.$message.error('删除小组文件失败，请重试');
+                this.$confirm('删除小组文件失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})
@@ -380,22 +400,42 @@
         }
         //文件名不超过40个字符
         if(file.name.length>50){
-          this.$message.error("文件名称不能超过50个字符");
+          this.$confirm("文件名称不能超过50个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 类型判断
         if(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif'){
-          this.$message.error("请勿上传可执行文件!");
+          this.$confirm("请勿上传可执行文件!", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能为0kb");
+          this.$confirm("文件大小不能为0kb", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件上传最大为100M！");
+          this.$confirm("文件上传最大为100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.newGroupData.filename=undefined;
           flag = false;
         }
@@ -412,7 +452,12 @@
           this.getFilelistData();
           this.dialogChooseGroup=false;
         }else{
-          this.$message.error(response.msg.msgTrim());
+          this.$confirm(response.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       },
       /**

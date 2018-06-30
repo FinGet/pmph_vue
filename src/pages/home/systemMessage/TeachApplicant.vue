@@ -101,8 +101,9 @@
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="send">发 送</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+
       </span>
     </el-dialog>
   </div>
@@ -249,7 +250,12 @@
               self.$router.push({name: '消息列表'});
               return;
             }else{
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
             this.submiting=false;
           })
@@ -281,7 +287,12 @@
       var routerQuery = this.$route.query;
       console.log(routerParams);
       if((!routerParams.content&&!routerParams.title)&&!routerParams.msgId){
-        this.$message.error('页面未收到发送消息内容');
+        this.$confirm('页面未收到发送消息内容', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.$router.push({name: '编辑消息'});
       }
       if(routerQuery.type=='reissue'){

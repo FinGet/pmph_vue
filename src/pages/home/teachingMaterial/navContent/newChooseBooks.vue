@@ -882,7 +882,12 @@ export default {
                   );
                }
            }
-
+         /* if(!this.$commonFun.Empty(this.ruleForm.materialContacts)&&!this.$commonFun.Empty(this.material.materialContacts)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
           console.log('12312',this.ruleForm.materialContacts);
          }
          else if(this.classify == "director"){
@@ -891,6 +896,12 @@ export default {
                 // this.ruleForm['material.director']=this.projectDirectorData[0].id;
                  this.material.director=this.projectDirectorData[0].id;
                  this.$refs.ruleForm.validateField('director');
+          /*if(!this.$commonFun.Empty(this.projectDirectorData)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
            console.log('主任',this.projectDirectorData,this.material.director)
          }
          else if(this.classify == 'editor'){
@@ -902,12 +913,15 @@ export default {
                }
            }
            this.$refs.ruleForm.validateField('materialProjectEditors');
+          /*if(!this.$commonFun.Empty(this.ruleForm.materialProjectEditors)&&!this.$commonFun.Empty(this.material.materialProjectEditors)){
+            this.$message({
+              message: `添加成功！`,
+              type: "success"
+            });
+          }*/
            console.log('项目编辑',typeof(this.material.materialProjectEditors));
          }
-       this.$message({
-        message: `添加成功！`,
-        type: "success"
-      });
+
        this.chooseVisiable=false;
       },
       /* 数组去重 */
@@ -958,13 +972,23 @@ export default {
     imgBeforeUpload(file){
        for(var i in this.ruleForm.materialNoticeAttachments){
          if(this.ruleForm.materialNoticeAttachments[i].name==file.name){
-           this.$message.error('请勿多次上传同一图片');
+           this.$confirm('请勿多次上传同一图片', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
          }
        }
        for(var i in this.material.noticeFiles){
          if(this.material.noticeFiles[i].name==file.name){
-           this.$message.error('请勿多次上传同一图片');
+           this.$confirm('请勿多次上传同一图片', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
          }
        }
@@ -972,22 +996,42 @@ export default {
       var exStr=file.name.split('.').pop().toLowerCase();
       var exSize=file.size?file.size:1;
       if(exSize/ 1024 / 1024 > 20){
-        this.$message.error('图片的大小不能超过20MB！');
+        this.$confirm('图片的大小不能超过20MB！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(exSize==0){
-        this.$message.error('请勿上传空文件！');
+        this.$confirm('请勿上传空文件！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
-        this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+        this.$confirm('图片的格式必须为png或者jpg或者jpeg格式！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noticeFiles.pop();
         return false;
       }
       if(file.name.length>80){
-        this.$message.error('图片名称不能超过80个字符！');
+        this.$confirm('图片名称不能超过80个字符！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         //this.material.noticeFiles.pop();
         return false;
       }
@@ -1013,13 +1057,23 @@ export default {
     fileBeforeUpload(file){
         for(var i in this.ruleForm.materialNoteAttachments){
          if(this.ruleForm.materialNoteAttachments[i].name==file.name){
-           this.$message.error('请勿多次上传同一附件');
+           this.$confirm('请勿多次上传同一附件', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
          }
        }
        for(var i in this.material.noteFiles){
          if(this.material.noteFiles[i].name==file.name){
-           this.$message.error('请勿多次上传同一附件');
+           this.$confirm('请勿多次上传同一附件', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
            return false;
          }
        }
@@ -1027,22 +1081,42 @@ export default {
      var exStr=file.name.split('.').pop().toLowerCase();
      var exSize=file.size?file.size:1;
      if(exSize/1024/1024>100){
-        this.$message.error('附件大小不能超过100MB！');
+        this.$confirm('附件大小不能超过100MB！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
        // this.material.noteFiles.pop();
         return false;
      }
      if(exSize==0){
-        this.$message.error('请勿上传空文件！');
+        this.$confirm('请勿上传空文件！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         //this.material.noteFiles.pop();
         return false;
      }
      if(exStr=='bat'||exStr=='com'||exStr=='exe'){
-        this.$message.error('请勿上传可执行文件');
+        this.$confirm('请勿上传可执行文件', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         //this.material.noteFiles.pop();
         return false;
      }
      if(file.name.length>80){
-        this.$message.error('附件名称不能超过80个字符');
+        this.$confirm('附件名称不能超过80个字符', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         //this.material.noteFiles.pop();
         return false;
      }
@@ -1235,7 +1309,12 @@ export default {
         this.$refs.ruleForm.validate((valid) => {
           if (valid&&this.formTableChecked()) {
             if(!this.dateOptionsChecked()){
-              this.$message.error('实际结束日期应大于展示结束日期');
+              this.$confirm('实际结束日期应大于展示结束日期', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
                return false;
                 }
 
@@ -1249,14 +1328,24 @@ export default {
                       // this.$message.success('已保存教材通知');
                       this.$router.push({name:'编辑通知详情',params:{materialId:res.data.data}});
                     }else{
-                      this.$message.error(res.data.msg.msgTrim());
+                      this.$confirm(res.data.msg.msgTrim(), "提示",{
+                      	confirmButtonText: "确定",
+                      	cancelButtonText: "取消",
+                      	showCancelButton: false,
+                      	type: "error"
+                      });
                     }
                   })
 
 
           } else {
 
-            this.$message.error('输入的内容不正确，请正确填写');
+            /*this.$confirm('输入的内容不正确，请正确填写', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });*/
 
            this.$nextTick(this.focuFuntion)
             return false;

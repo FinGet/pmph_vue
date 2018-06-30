@@ -207,7 +207,12 @@
                 this.sendTable = res.data.rows;
               }
             }).catch(error => {
-              this.$message.error('请求错误请稍后再试！');
+              this.$confirm('请求错误请稍后再试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             })
           },
           /* 分页改变 */

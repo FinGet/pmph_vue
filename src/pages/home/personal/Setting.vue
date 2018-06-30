@@ -230,24 +230,44 @@
         if(!ext){return;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'&&ext!='gif'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          this.$confirm("图片的格式必须为png或者jpg或者jpeg或者gif格式！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.userHeadImage.filename=undefined;
           return;
         }
         //文件名不超过40个字符
         if(file.name.length>50){
-          this.$message.error("文件名不能超过50个字符");
+          this.$confirm("文件名不能超过50个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("图片大小不能为0kb");
+          this.$confirm("图片大小不能为0kb", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.userHeadImage.filename=undefined;
           return;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
-          this.$message.error("图片大小不能大于10M");
+          this.$confirm("图片大小不能大于10M", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.userHeadImage.filename=undefined;
           return;
         }
@@ -271,25 +291,45 @@
         var exStr=file.name.split('.').pop().toLowerCase();
         var exSize=file.size?file.size:1;
         if(exSize/ 1024 / 1024 > 20){
-          this.$message.error('图片的大小不能超过20MB！');
+          this.$confirm('图片的大小不能超过20MB！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         // this.material.noticeFiles.pop();
           return false;
         }
         if(exSize==0){
-          this.$message.error('请勿上传空文件！');
+          this.$confirm('请勿上传空文件！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         // this.material.noticeFiles.pop();
           return false;
         }
         if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
-          this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！');
+          this.$confirm('图片的格式必须为png或者jpg或者jpeg格式！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         // this.material.noticeFiles.pop();
           return false;
         }
         if(file.name.length>80){
-          this.$message.error('图片名称不能超过80个字符！');
+          this.$confirm('图片名称不能超过80个字符！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           //this.material.noticeFiles.pop();
           return false;
-        } 
+        }
       },
       /**
        * 创建小组请求成功的回调
@@ -307,7 +347,12 @@
        * 创建小组请求失败的回调
        */
       /* uploadError(err, file, fileList){
-        this.$message.error('创建小组失败');
+        this.$confirm('创建小组失败', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }, */
       /**
        * 点击修改按钮
@@ -322,7 +367,12 @@
           if (valid) {
             this.updateUserInfo();
           } else {
-            this.$message.error('请完善表单！');
+            this.$confirm('请完善表单！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
             return false;
           }
         });
@@ -351,12 +401,22 @@
               this.$message.success('修改成功!');
               this.getUserInfo();
             } else {
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch( (error)=> {
             console.log(error);
-            this.$message.error('请求失败，请重试!');
+            this.$confirm('请求失败，请重试!', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           });
       },
       /**
@@ -396,12 +456,22 @@
                 if (res.code === 1) {
                   self.$message.success('修改成功!');
                 } else {
-                  self.$message.error(res.msg.msgTrim());
+                  self.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(function (error) {
                 console.log(error);
-                self.$message.error('请求失败，请重试!');
+                self.$confirm('请求失败，请重试!', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
           } else {
             console.log('error submit!!');

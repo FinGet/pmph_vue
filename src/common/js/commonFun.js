@@ -596,7 +596,6 @@ export function parseURL(url) {
 
 
 }
-
 /*
  * 判断变量是否空值
  * undefined, null, '', false, 0, [], {} 均返回true，否则返回false

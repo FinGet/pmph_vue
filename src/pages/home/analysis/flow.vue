@@ -9,7 +9,38 @@
           <i class="fa  fa-area-chart fa-lg"></i>
           统计开通日期：2016-12-22
           <div class="pull-right fontsize-normal">
-            <a class="link" href="https://tongji.baidu.com/web/24785489/homepage/index" target="_blank">点击查看更多统计数据 >></a>
+            <!--<a class="link" href="https://tongji.baidu.com/web/24785489/homepage/index" target="_blank">点击查看更多统计数据 >></a>-->
+            <el-tooltip class="item" effect="dark" content="即Page View，页面浏览量或点击量，用户每次刷新即被计算一次，总共有被浏览多少个页面，它是重复累计的，同一个页面被重复浏览也被计入PV" placement="top-start">
+            <span class="flow-title" style="border:none">
+
+              <i class="iconfont  icon-liulanliang "></i>
+              浏览量
+            </span>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="即Unique Visitor，独立访客是网站被多少台电脑访问过，以用户电脑的Cookie作为统计依据。一天内相同的客户端只被计算一次" placement="top-start">
+            <span class="flow-title" style="border:none">
+              <i class="iconfont  icon-fangkeshu"></i>
+              访客数
+            </span>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="即Internet Protocol，独立IP是指访问过某站点的IP总数，以用户的IP地址作为统计依据，一天内相同IP地址只被计算一次" placement="top-start">
+            <span class="flow-title" style="border:none">
+              <i class="iconfont  icon-ipshu"></i>
+              IP数
+            </span>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="浏览一个页面就离开的访问次数 / 该页面的全部访问次数" placement="top-start">
+            <span class="flow-title" style="border:none">
+              <i class="iconfont  icon-tiaochushuai "></i>
+              跳出率
+            </span>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="平均每次访问(会话)在网站上的停留时间。平均访问时长=访问时长/访问次数。体现网站对访客的吸引程度" placement="top-start">
+            <span class="flow-title" style="border:none">
+              <i class="iconfont  icon-fangwenshichang-"></i>
+              平均访问时长
+            </span>
+            </el-tooltip>
           </div>
         </div>
         <div class="table-wrapper">
@@ -24,6 +55,21 @@
         </div>
         <div class="paddingT20 paddingB20">
           <span>选择时间：</span>
+          <div class="inline-block" style="padding-right: 10px;">
+
+            <el-date-picker
+              v-model="startDate1"
+              type="date"
+              @change="dateChange1"
+              placeholder="开始日期" >
+            </el-date-picker>
+            <span>至：</span>
+            <el-date-picker
+              v-model="endDate1"
+              type="date"
+              @change="dateChange2"
+              placeholder="结束日期">
+            </el-date-picker>
           <div class="inline-block">
             <el-radio-group v-model="time" @change="changeSelectDate">
               <el-radio :label="0">今天</el-radio>
@@ -33,7 +79,10 @@
               <el-radio :label="30">近30天(单位:小时)</el-radio>
             </el-radio-group>
           </div>
+
+          </div>
         </div>
+
 
         <div class="flow-section">
           <ul class="clearfix panel-box">
@@ -77,6 +126,9 @@
         timeline:(new Date()),
         endDate:this.$commonFun.getcurrentDate(this.timeline),
         startDate:this.$commonFun.getcurrentDate(this.timeline),
+        endDate1:'',
+        startDate1:''
+
       }
 		},
     components:{
@@ -88,6 +140,27 @@
     },
 
     methods:{
+		  dateChange1(val){
+        if(val){
+          this.startDate=val;
+        }else{
+          this.startDate='';
+        }
+
+      },
+      /**
+       * 时间变化
+       * @param val
+       */
+      dateChange2(val){
+        if(val){
+          this.endDate=val;
+        }else{
+          this.endDate='';
+        }
+
+      },
+
       changeSelectDate(){
 
         let days = this.time*24*60*60*1000;

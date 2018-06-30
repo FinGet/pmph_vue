@@ -134,16 +134,36 @@ export default {
       const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
       const nameLen = file.name.length <= 50;
       if (file.size / 1024 / 1024==0) {
-        this.$message.error('文件大小不能为0kb!');
+        this.$confirm('文件大小不能为0kb!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       if (file.size / 1024 / 1024>100) {
-        this.$message.error('文件上传最大为100M！');
+        this.$confirm('文件上传最大为100M！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-        this.$message.error('请勿上传可执行文件!');
+        this.$confirm('请勿上传可执行文件!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       if (!nameLen) {
-        this.$message.error('文件名称不能超过50个字符!');
+        this.$confirm('文件名称不能超过50个字符!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       return isLt0M&&nameLen&&!(ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif')
     },
@@ -185,7 +205,12 @@ export default {
      */
     nextStep(){
       if(!this.$refs.editor.getContent()){
-        this.$message.error('内容不能为空');
+        this.$confirm('内容不能为空', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
       this.$refs['messageForm'].validate((valid) => {
@@ -244,7 +269,12 @@ export default {
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('获取当前系统消息失败！');
+          this.$confirm('获取当前系统消息失败！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         })
     },
     /**
@@ -272,12 +302,22 @@ export default {
             this.$message.success('修改成功！');
             this.$router.push({name: '消息列表'});
           }else{
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('提交失败，请重试！');
+          this.$confirm('提交失败，请重试！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         })
           }
       })
@@ -380,7 +420,7 @@ export default {
 }
 .previewTitle{
   color: #14232e;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
 }
 .previewContent{

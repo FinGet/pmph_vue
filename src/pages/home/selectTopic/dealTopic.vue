@@ -49,14 +49,14 @@
                 <el-form-item
                 label="预估字数："
               >
-              <p>{{data.wordNumber}}</p>
+              <p>{{data.wordNumber}}(千字)</p>
               </el-form-item>
           </div>
           <div class="percent50">
                 <el-form-item
                 label="预估图数："
               >
-              <p>{{data.pictureNumber}}</p>
+              <p>{{data.pictureNumber}}(副)</p>
               </el-form-item>
           </div>
           <div class="percent50">
@@ -127,7 +127,7 @@
                 <el-form-item
                 label="(二)出版价值："
               >
-              <p>{{topicExtra.price}}</p>
+              <p>{{topicExtra.price}}(元)</p>
               </el-form-item>
           </div>
           <div class="percent50">
@@ -329,11 +329,21 @@ export default {
             this.$message.success("操作成功！");
             this.goBack();
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(err => {
-          this.$message.error("操作错误，请稍后再试！");
+          this.$confirm("操作错误，请稍后再试！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         });
     },
     /**返回上一级 */
@@ -346,7 +356,12 @@ export default {
     textSize(){
       var val = this.data.authFeedback;
       if (val.length > 200) {
-        this.$message.error('审核意见不能超过200个字');
+        this.$confirm('审核意见不能超过200个字', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
     }
   }

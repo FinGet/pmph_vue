@@ -81,8 +81,8 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible=false">取消</el-button>
           <el-button type="primary" @click="createNewGroup">确 定</el-button>
+          <el-button @click="dialogVisible=false">取 消</el-button>
         </span>
     </el-dialog>
   </div>
@@ -188,28 +188,57 @@
         if(!ext){return false;}
         // gif在IE浏览器暂时无法显示
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          this.$confirm("图片的格式必须为png或者jpg或者jpeg或者gif格式！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           self.newGroupData.filename=undefined;
           return false;
         }
         //文件名不超过40个字符
         if(file.name.length>50){
-          this.$message.error("文件名称不能超过50个字符");
+          this.$confirm("文件名称不能超过50个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           return false;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size==0){
-          this.$message.error("文件大小不能为0kb");
+          this.$confirm("文件大小不能为0kb", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           self.newGroupData.filename=undefined;
           return false;
         }
         if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-          this.$message.error('请勿上传可执行文件!');
+          this.$confirm('请勿上传可执行文件!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           return false;
         }
         // 判断文件大小是否符合 文件不大于10M
         if(file.size/1024/1024 > 10){
-          this.$message.error("图片大小不能大于10M");
+          this.$confirm("图片大小不能大于10M", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
           self.newGroupData.filename=undefined;
           return false;
         }
@@ -238,7 +267,14 @@
           this.newGroupData.imgUrl='/pmpheep/'+response.data;
           this.newGroupData.currentFile=file.file;
         }else{
-          this.$message.error(response.msg.msgTrim());
+          this.$confirm(response.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
+
+
         }
       },
       /**
@@ -253,7 +289,12 @@
       createNewGroup(){
         //小组名称不能为空
         if(!this.newGroupData.name){
-          this.$message.error('请输入小组名称');
+          this.$confirm('请输入小组名称', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         console.log(this.newGroupData);
@@ -271,14 +312,32 @@
                   self.getGroupData();
                   self.dialogVisible=false;
                 }else{
-                  self.$message.error(res.msg.msgTrim());
+                  self.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
+
                 }
               })
               .catch((error) => {
-                self.$message.error('创建小组失败');
+                self.$confirm('创建小组失败', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
+
               });
           } else {
-            self.$message.error('请完善表单后再添加！');
+            self.$confirm('请完善表单后再添加！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
+
             return false;
           }
         });

@@ -54,7 +54,7 @@
           </div>
         </TableShort>
       </el-tab-pane>
-      <el-tab-pane label="长评管理" name="second">
+     <!-- <el-tab-pane label="长评管理" name="second">
         <TableLong :data.sync="tableData" @selection-change="handleSelectionChange" @audit="getTableData" @stateChange="getTableData" @show-comment-detail="showCommentDetail">
           <div class="clearfix" slot="searchBox">
             <div class="searchBox-wrapper">
@@ -79,7 +79,7 @@
             <div class="searchBox-wrapper searchBtn">
               <el-button  type="primary" icon="search" @click="search">搜索</el-button>
             </div>
-            <!--操作按钮-->
+            &lt;!&ndash;操作按钮&ndash;&gt;
             <div class="pull-right">
               <el-button type="primary" :disabled="!selectData.length" @click="setState('isStick')">置顶</el-button>
               <el-button type="warning" :disabled="!selectData.length" @click="setState('cancel')">取消置顶</el-button>
@@ -104,7 +104,7 @@
             </el-pagination>
           </div>
         </TableLong>
-      </el-tab-pane>
+      </el-tab-pane>-->
     </el-tabs>
 
     <el-dialog
@@ -190,7 +190,13 @@
        * 获取表格数据
        */
       getTableData(){
-        this.$axios.get('/pmpheep/bookusercomment/list',{params:this.searchForm})
+        this.$axios.post('/pmpheep/bookusercomment/list',this.$initPostData({
+          name:this.searchForm.name,
+          isAuth:this.searchForm.isAuth,
+          pageSize:this.searchForm.pageSize,
+          pageNumber:this.searchForm.pageNumber,
+          isLong:this.searchForm.isLong
+        }))
           .then(response=>{
             var res = response.data;
             if(res.code==1){
@@ -242,7 +248,12 @@
                   this.$message.success('删除成功!');
                   this.getTableData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
@@ -284,12 +295,22 @@
                   this.$message.success('提交成功');
                   this.getTableData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('操作失败请重试！');
+                this.$confirm('操作失败请重试！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
           })
           .catch(e=>{})
@@ -319,12 +340,22 @@
               this.$message.success('提交成功');
               this.getTableData();
             }else{
-              this.$message.error('操作失败请重试！');
+              this.$confirm('操作失败请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('操作失败请重试！');
+            this.$confirm('操作失败请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       /**
@@ -387,7 +418,7 @@
   }
   .previewTitle {
     color: #14232e;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 500;
   }
 </style>
