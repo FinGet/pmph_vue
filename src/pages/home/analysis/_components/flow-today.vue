@@ -7,7 +7,7 @@
     tooltip-effect="dark"
     style="width: 100%">
     <el-table-column label="统计日期"  prop="date" width="100"></el-table-column>
-    <el-table-column label="浏览量(PV)"  align="center">
+    <el-table-column label="浏览量(PV)"  align="center" >
       <template scope="scope">{{scope.row.pv_count}}</template>
     </el-table-column>
     <el-table-column label="访客数(UV)"  align="center">
@@ -56,7 +56,12 @@
               let data = JSON.parse(res.data);
               callback&&callback(data);
             }else{
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{

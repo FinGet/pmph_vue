@@ -11,6 +11,14 @@
         <el-form-item label="广告位置:">
           <el-input v-model="formData.adname" :disabled="true"></el-input>
         </el-form-item>
+        <!--<el-form-item  label="应用类型：">
+          <el-select v-model="formData.apporpc"  placeholder="请选择">
+            <el-option label="全部" value="0"></el-option>
+            <el-option label="pc端" value="1"></el-option>
+            <el-option label="移动端" value="2"></el-option>
+
+          </el-select>
+        </el-form-item>-->
         <el-form-item label="点击跳转链接:">
           <el-input v-model="formData.url" placeholder="输入地址:http://www.xxx.com"></el-input>
         </el-form-item>
@@ -20,6 +28,7 @@
             <el-radio :label="true">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+
         <el-form-item label="备注:">
           <el-input type="textarea" v-model="formData.note" :autosize="{ minRows: 3}"></el-input>
         </el-form-item>
@@ -174,6 +183,7 @@
           note:'',
           style:'',
           type:0,
+          apporpc:"0",
           autoPlay:true,
           navigationColor:'',
           isNavigation:'',
@@ -247,24 +257,49 @@
         const isLt0M = 0 < file.size / 1024 / 1024 && file.size / 1024 / 1024<100;
         const nameLen = file.name.length <= 60;
         if (file.size / 1024 / 1024==0) {
-          this.$message.error('文件大小不能为0kb!');
+          this.$confirm('文件大小不能为0kb!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         if (file.size / 1024 / 1024>10) {
-          this.$message.error('文件上传最大为10M！');
+          this.$confirm('文件上传最大为10M！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         if (ext=='exe'||ext=='bat'||ext=='com'||ext=='lnk'||ext=='pif') {
-          this.$message.error('不能上传可执行文件!');
+          this.$confirm('不能上传可执行文件!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         if (!nameLen) {
-          this.$message.error('文件名称不能超过50个字符!');
+          this.$confirm('文件名称不能超过50个字符!', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         // 上传图片格式
         if(ext!='png'&&ext!='jpg'&&ext!='jpeg'&&ext!='gif'){
-          this.$message.error("图片的格式必须为png或者jpg或者jpeg或者gif格式！");
+          this.$confirm("图片的格式必须为png或者jpg或者jpeg或者gif格式！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           flag = false;
         }
         if(flag){
@@ -278,7 +313,12 @@
         this.checkAdSizeIsOk(this.adId, response.data.image)
       },
       uploadError(){
-        this.$message.error('上传失败，请重试！');
+        this.$confirm('上传失败，请重试！', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.uploadBtnLoading=false;
       },
       /**
@@ -338,11 +378,21 @@
            if (res.code == '1') {
 
             }else{
-             this.$message.error(res.msg.msgTrim());
+             this.$confirm(res.msg.msgTrim(), "提示",{
+             	confirmButtonText: "确定",
+             	cancelButtonText: "取消",
+             	showCancelButton: false,
+             	type: "error"
+             });
           }
           })
           .catch(e=>{
-            this.$message.error('删除失败，请重试！');
+            this.$confirm('删除失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
        },
 
@@ -352,12 +402,22 @@
        */
       saveAd(){
         if(!this.formData.adname){
-          this.$message.error('广告位置名称不能为空！');
+          this.$confirm('广告位置名称不能为空！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         var regex =/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
         if(this.formData.url&&!regex.test(this.formData.url)){
-          this.$message.error('请输入正确的跳转链接！');
+          this.$confirm('请输入正确的跳转链接！', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return false;
         }
         let adIds = [];
@@ -395,6 +455,7 @@
           animationInterval:this.formData.animationInterval*1000||'',
           animationEffect:this.formData.animationEffect||'',
           isShowHeading:this.formData.isShowHeading||false,
+          apporpc:this.formData.apporpc,
           isDisplay:false,
           imageId:adIds.join(','),
           disable:disableIds.join(',')
@@ -410,11 +471,21 @@
               }
               this.$router.push({name:'广告管理'});
             }else{
-              this.$message.error(res.msg.msgTrim());
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
-            this.$message.error('保存失败，请重试！');
+            this.$confirm('保存失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
 
       },
@@ -466,6 +537,7 @@
          this.formData.animationInterval=this.formData.animationInterval/1000;
         this.adId = this.currentAdData.id;
         this.imageLibs = this.formData.image||[];
+        this.formData.apporpc =  this.formData.apporpc+'';
       }
 
       if(this.formData.type===0){

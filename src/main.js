@@ -7,6 +7,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import '../static/theme/index.css'
 import '../static/font-awesome/css/font-awesome.min.css'
+import '../static/font-awesome/fonts/iconfont.css'
 import 'common/css/common.css'
 require('es6-promise').polyfill();//解决axios ie9不兼容问题
 import axios from 'axios'
@@ -46,6 +47,7 @@ Vue.prototype.$config = config;
 Vue.prototype.$commonFun = commonFun;
 Vue.prototype.$formCheckedRules = formCheckedRules;
 Vue.prototype.$formRules = formRules;
+//Vue.prototype.$message.alert = commonFun.myAlert;
 //全局封装一个获取用户信息方法
 var getUserData=function () {
   var sessionData = commonFun.mySessionStorage.get('currentUser', 'json')||{};

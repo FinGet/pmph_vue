@@ -23,22 +23,22 @@
                 <el-table :data="tableData" stripe border style="width: 100%">
                     <el-table-column prop="ruleName" label="积分规则名称">
                     </el-table-column>
-                    <el-table-column prop="ruleCode" label="积分规则标识">
+                    <el-table-column prop="ruleCode" label="积分规则标识" width="120">
                     </el-table-column>
                     <el-table-column prop="point" label="积分值" >
                     </el-table-column>
-                    <el-table-column prop="thirdName" label="目标平台名称" >
+                    <el-table-column prop="thirdName" label="目标平台名称" width="120">
                     </el-table-column>
-                    <el-table-column prop="exchangePoint" label="兑换三方积分" >
+                    <el-table-column prop="exchangePoint" label="兑换三方积分" width="120">
                     </el-table-column>
                     <el-table-column prop="description" label="规则描述">
                     </el-table-column>
-										<el-table-column prop="isExchange" label="是否用于平台兑换" align="center">
+										<el-table-column prop="isExchange" label="是否用于平台兑换" width="150" align="center">
                       <template scope="scope">
                         <p>{{scope.row.isExchange?'是':'否'}}</p>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="isDisabled" label="启用状态" width="95" align="center">
+                    <el-table-column prop="isDisabled" label="启用状态" width="100" align="center">
                       <template scope="scope">
                         <p>{{scope.row.isDisabled?'否':'是'}}</p>
                       </template>
@@ -99,8 +99,9 @@
 						</el-form-item>
 					</el-form>
 					<div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submit">确 定</el-button>
 						<el-button @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary" @click="submit">确 定</el-button>
+
 					</div>
 				</el-dialog>
   </div>
@@ -196,7 +197,12 @@ export default {
 					this.tableData = res.data.rows;
 				}
 			}).catch(err => {
-				this.$message.error('请稍后再试！');
+				this.$confirm('请稍后再试！', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**搜索 */
@@ -230,10 +236,20 @@ export default {
 					this.dialogFormVisible = false;
 					this.getPointRule();
 				} else{
-					this.$message.error('新增失败,稍后再试!');
+					this.$confirm('新增失败,稍后再试!', "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
-				this.$message.error('请求错误，请稍后再试!');
+				this.$confirm('请求错误，请稍后再试!', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**修改积分规则 */
@@ -255,10 +271,20 @@ export default {
 					this.dialogFormVisible = false;
 					this.getPointRule();
 				} else{
-					this.$message.error('修改失败!');
+					this.$confirm('修改失败!', "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
-				this.$message.error('请求错误，请稍后再试!');
+				this.$confirm('请求错误，请稍后再试!', "提示",{
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showCancelButton: false,
+					type: "error"
+				});
 			})
 		},
 		/**
@@ -295,10 +321,20 @@ export default {
               this.$message.success('删除成功!');
               this.getPointRule();
 						} else {
-							this.$message.error(res.msg.msgTrim());
+							this.$confirm(res.msg.msgTrim(), "提示",{
+								confirmButtonText: "确定",
+								cancelButtonText: "取消",
+								showCancelButton: false,
+								type: "error"
+							});
 						}
 					}).catch(err => {
-						this.$message.error('请求错误,请稍后再试!');
+						this.$confirm('请求错误,请稍后再试!', "提示",{
+							confirmButtonText: "确定",
+							cancelButtonText: "取消",
+							showCancelButton: false,
+							type: "error"
+						});
 					})
 				})
 		},

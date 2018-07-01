@@ -60,8 +60,9 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
                 <el-button @click="resetDialogForm()">取 消</el-button>
-                <el-button type="primary" @click="rolesSubmit()">确 定</el-button>
+
             </span>
         </el-dialog>
         <!-- 权限树弹框 -->
@@ -95,8 +96,8 @@
             </div>
 
             <span slot="footer" class="dialog-footer" v-if="!isSeePower">
-                <el-button @click="powerTreeVisible = false">取 消</el-button>
-                <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
+              <el-button type="primary" @click="reviseSubmit()">确 定</el-button>
+              <el-button @click="powerTreeVisible = false">取 消</el-button>
             </span>
             <span v-else style="color:#ff4949">tips：勾选中的即为当前角色拥有权限</span>
         </el-dialog>
@@ -410,7 +411,12 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 } else {
-                  _this.$message.error(res.data.msg.msgTrim());
+                  _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(function(err) {
@@ -436,7 +442,12 @@ export default {
                   _this.getListData();
                   _this.rolesDialogVisible = false;
                 }else{
-                   _this.$message.error(res.data.msg.msgTrim());
+                   _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                   	confirmButtonText: "确定",
+                   	cancelButtonText: "取消",
+                   	showCancelButton: false,
+                   	type: "error"
+                   });
                 }
               })
               .catch(function(err) {
@@ -479,7 +490,12 @@ export default {
             _this.getListData();
             _this.$message.success("更新成功");
           } else {
-            _this.$message.error(res.data.msg.msgTrim());
+            _this.$confirm(res.data.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
           _this.powerTreeVisible = false;
         })

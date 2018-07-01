@@ -49,8 +49,10 @@
       </div>
     </div>
 
-    <div class="searchBox-wrapper searchBtn">
+     <div class="searchBox-wrapper searchBtn " >
+
       <el-button type="primary" icon="search" @click="searchWriter">搜索</el-button>
+       <el-button type="primary"  @click="exportExcel">导出名单</el-button>
     </div>
             <!--操作按钮-->
     <!-- <div class="pull-right" style="margin-right:10px;">
@@ -190,8 +192,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button @click="dialogVisible=false">取消</el-button>
+
       </span>
     </el-dialog>
     <!-- 查看详情 -->
@@ -673,14 +676,19 @@ export default {
            if(res.data.code==1){
              this.$message.success('密码已重置');
            }else{
-             this.$message.error(res.data.msg.msgTrim());
+             this.$confirm(res.data.msg.msgTrim(), "提示",{
+             	confirmButtonText: "确定",
+             	cancelButtonText: "取消",
+             	showCancelButton: false,
+             	type: "error"
+             });
            }
         })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
     },
     zhiTop(index,obj){
@@ -693,7 +701,12 @@ export default {
           this.$message.success('操作成功');
           this.tableData[index].isTop = !obj.isTop;
         }else{
-          this.$message.error(res.data.msg.msgTrim());
+          this.$confirm(res.data.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(() => {
 
@@ -721,7 +734,12 @@ export default {
               message: "添加成功"
             });
           }else{
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(function(error) {
@@ -848,16 +866,17 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          if(value.length>40){
-            this.$message.warning('不能超过40个字');
-          }else{
-            // this.backReason = value;
+          if(!value){
+            this.check(2);
+          }else if(value&&value.length<=40||!value){
             let param = {
               progress: progress,
               userIds: userIds.join(','),
               backReason:value
             };
             this.passorback(param);
+          }else{
+            this.$message.warning('不能超过40个字');
           }
 
         })
@@ -877,7 +896,12 @@ export default {
             type: 'success'
           });
         }else if(res.code ==2){
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(error => {
         console.log(error.msg)
@@ -890,6 +914,13 @@ export default {
       this.pageSize = 10;
       this.pageNumber = 1;
       this.getWritersList()
+    },
+    exportExcel(){
+      /** 导出Excel */
+
+      let url = '/pmpheep/users/writer/list/exportWriterUser?name='+this.params.name+'&rank='+this.params.rank+"&orgName="+this.params.orgName+"&handphone="+this.params.handphone+"&email="+this.params.email;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
     },
     searchWriter(){
       this.params.pageSize = 10;
@@ -974,10 +1005,20 @@ export default {
 //          window.location.href = res.data;
           window.open(res.data);
         } else {
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(error => {
-        this.$message.error('登录失败，请稍后再试!');
+        this.$confirm('登录失败，请稍后再试!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     }
   },
@@ -994,6 +1035,9 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    width:200px;
+  }
 .writerUser .el-tabs--border-card{
   border:0;
   box-shadow: none;

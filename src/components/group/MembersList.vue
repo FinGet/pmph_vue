@@ -14,9 +14,10 @@
         <beauty-scroll ref="beautyScroll">
           <div class="MemberHead" v-for="(item,index) in memberListData" :key="item.id">
             <div class="MemberHead-inner">
-              <span class="MemberHeadImg">
+              <el-tooltip class="item MemberHeadImg" effect="dark" placement="left" >
+                <div slot="content" >{{item.nickname}}<br/>{{item.handphone}}<br/>{{item.email}}</div>
                 <img :src="item.avatar?$config.DEFAULT_BASE_URL+item.avatar:defaultImage" alt="小组头像">
-              </span>
+              </el-tooltip>
               <div class="MemberHeadName">
                 <span>{{item.displayName}}</span>
               </div>
@@ -176,8 +177,9 @@
       </el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
-       <el-button @click="againDialogVisible = false">取 消</el-button>
+
         <el-button type="primary" @click="addNewSubmit" :loading="isLoadingUp">{{isLoadingUp?'正在提交':'确 定'}}</el-button>
+        <el-button @click="againDialogVisible = false">取 消</el-button>
   </div>
      </el-dialog>
   </div>
@@ -259,6 +261,12 @@ export default {
       }).then(function(res) {
         if (res.data.code == 1) {
           _this.memberListData = res.data.data;
+          _this.memberListData.forEach(item => {
+            let avarInfo = item.avatarInfo.split("<br/>");
+            item["nickname"] = avarInfo[0];
+            item["handphone"] = avarInfo[1];
+            item["email"] = avarInfo[2];
+          })
           _this.$emit('getGroupMemberList',res.data.data);
         }
       })
@@ -339,7 +347,12 @@ export default {
                this.$emit('refreshMange');
                this.$message.success('添加成功');
           }else{
-            this.$message.error(res.data.msg.msgTrim());
+            this.$confirm(res.data.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
              this.isLoadingUp=false;
      })

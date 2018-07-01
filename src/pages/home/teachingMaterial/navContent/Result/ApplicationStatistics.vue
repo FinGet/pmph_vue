@@ -62,11 +62,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">书    名：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="bookParmas.bookName" @keyup.enter.native="getBookTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getBookTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getBookTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right" @click="exportBookExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -164,11 +164,11 @@
             <div class="searchBox-wrapper">
               <div class="searchName">单位名称：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableData"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="schoolParams.schoolName" @keyup.enter.native="getSchoolTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
-              <el-button  type="primary" icon="search" @click="getSchoolTableData">搜索</el-button>
+              <el-button  type="primary" icon="search" @click="getSchoolTableDataFun">搜索</el-button>
             </div>
             <el-button type="primary" class="pull-right marginL10" @click="exportSchoolExcel">
               <i class="fa fa-cloud-upload" aria-hidden="true"></i>
@@ -336,6 +336,10 @@ export default {
         }
       })
     },
+    getSchoolTableDataFun(){
+      this.schoolParams.pageNumber=1;
+      this.getSchoolTableData();
+    },
     /* 获取学校申报情况统计数据 */
     getSchoolTableData(){
      this.$axios.get(this.schoolSituationUrl+(this.sortType?'/schoolResultsChosen':'/schoolResultsPreset'),{
@@ -387,7 +391,24 @@ export default {
               show: true,
               right: '5%',
               feature: {
-                dataView: { show: true, readOnly: false},
+                dataView: { show: true, readOnly: false,optionToContent: function(opt) {
+                    var axisData = opt.xAxis[0].data;
+                    var series = opt.series;
+                    var table = '<table border="1" style="width:50%;margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>'
+                      + '<td></td>'
+                      + '<td style="padding: 0 10px">' + series[0].name + '</td>'
+                      + '<td style="padding: 0 10px">' + series[1].name + '</td>'
+                      + '</tr>';
+                    for (var i = 0, l = axisData.length; i < l; i++) {
+                      table += '<tr>'
+                        + '<td style="padding: 0 10px">' + axisData[i] + '</td>'
+                        + '<td style="padding: 0 10px">' + series[0].data[i] + '</td>'
+                        + '<td style="padding: 0 10px">' + series[1].data[i] + '</td>'
+                        + '</tr>';
+                    }
+                    table += '</tbody></table>';
+                    return table;
+                  } },
                 magicType: { show: true, type: ["line", "bar"] },
                 restore: { show: true },
                 saveAsImage: { show: true }
@@ -433,7 +454,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: Math.max.apply(null, this.stSchoolPresetPersons),
+                max: Math.max.apply(null, this.stSchoolChosenPersons),
                 minInterval: 1,
                 axisLabel: {
                   formatter: "{value} 人"
@@ -454,9 +475,13 @@ export default {
               }
             ]
           })
-          // console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
+           console.log(this.stSchools,this.stSchoolPresetPersons,this.stSchoolChosenPersons);
        }
      })
+    },
+    getBookTableDataFun(){
+      this.bookParmas.pageNumber=1;
+      this.getBookTableData();
     },
     /* 获取按书名统计申报情况 */
     getBookTableData(){
@@ -536,7 +561,9 @@ export default {
             xAxis: [
               {
                 name: "书籍名称",
+                left:"10px;",
                 type: "category",
+
                 data: this.stBooks,
                 axisPointer: {
                   type: "shadow"

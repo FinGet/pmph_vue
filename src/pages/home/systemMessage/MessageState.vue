@@ -31,11 +31,24 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
+            label="用户名"
+            align="center"
+            width="120"
+            prop="username"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
             label="姓名"
             align="center"
             width="120"
             prop="name"
             show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="orgusername"
+            label="机构账号"
+            align="center"
+            width="200">
           </el-table-column>
           <el-table-column
             prop="dptname"

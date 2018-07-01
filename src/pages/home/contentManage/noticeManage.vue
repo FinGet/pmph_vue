@@ -78,6 +78,16 @@
             label="作者"
             width="110">
             </el-table-column>
+        <el-table-column
+          prop="apporpc"
+          label="应用类型"
+          align="center"
+          width="100"
+        >
+          <template scope="scope">
+            {{applyType[scope.row.apporpc]}}
+          </template>
+        </el-table-column>
             <el-table-column
                 prop="gmtCreate"
                 label="创建时间"
@@ -222,6 +232,7 @@ export default {
           label:'发布时间'
         }
       ],
+      applyType:['全部','PC端','移动端'],
       tableData: [],
       selectedOptions: [],
       contentSelectData: [],
@@ -303,6 +314,7 @@ export default {
               res.data.rows[i].gmtCreate = this.$commonFun.formatDate(
                 res.data.rows[i].gmtCreate
               );
+              //res.data.rows[i].apporpc = this.applyType[res.data.rows[i].apporpc]
             }
             this.tableData = res.data.rows;
             // console.log(this.tableData)
@@ -339,18 +351,28 @@ export default {
                 this.$message.success("删除成功");
                 this.getContentLists();
               } else {
-                this.$message.error("删除失败");
+                this.$confirm("删除失败", "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
             .catch(e => {
-              this.$message.error("请求失败，请重试");
+              this.$confirm("请求失败，请重试", "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             });
         })
         .catch(() => {
-          this.$message({
+          /*this.$message({
             type: "info",
             message: "已取消删除"
-          });
+          });*/
         });
     },
     /**
@@ -419,14 +441,19 @@ export default {
                    this.getContentLists();
                    this.showContentDetail=false;
                 }else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
     },
     /* 查看详情 */
@@ -514,7 +541,7 @@ export default {
 }
 .previewTitle {
   color: #14232e;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
 }
 .content_exam .center_box {

@@ -5,11 +5,11 @@
          问卷信息
        <span></span>
        </p>
-       </div>      
+       </div>
       <div style="width:100%;float:left;">
       <el-form :model="surveyForm" ref="surveyForm" :rules="rules"  label-width="120px" style="margin:30px 0;width:80%;">
           <el-form-item label="调查问卷名称:" prop="templateName">
-             <el-input placeholder="请输入调查问卷名称" v-model="surveyForm.templateName"></el-input> 
+             <el-input placeholder="请输入调查问卷名称" v-model="surveyForm.templateName"></el-input>
           </el-form-item>
           <el-form-item label="调查对象:" prop="typeId">
              <el-select v-model="surveyForm.typeId"  placeholder="请选择调查对象" style="width:50%">
@@ -19,18 +19,18 @@
                     :label="item.surveyName"
                     :value="item.id">
                     </el-option>
-                </el-select> 
+                </el-select>
                 <el-button type="text" style="margin-left:10px;color:#337ab7" v-if="$route.params.type!='check'"  @click="objDialogVisible=true">编辑调查对象</el-button>
           </el-form-item>
           <el-form-item label="调查概述:" prop="intro">
-             <el-input type="textarea" :rows="3" v-model="surveyForm.intro"  placeholder="调查概述"></el-input> 
-          </el-form-item>  
+             <el-input type="textarea" :rows="3" v-model="surveyForm.intro"  placeholder="调查概述"></el-input>
+          </el-form-item>
       </el-form>
       <!-- 调查对象弹框 -->
      <el-dialog :visible.sync="objDialogVisible" title="调查类型（对象）列表" size="tiny" class="obj_dialog table-wrapper">
         <p style="overflow:hidden;">
-            <el-button type="primary" style="float:right" @click="addObjInfo">增加对象</el-button> 
-        </p> 
+            <el-button type="primary" style="float:right" @click="addObjInfo">增加对象</el-button>
+        </p>
             <el-table class="table-wrapper" :data="objTableData" border>
                 <el-table-column  label="对象名称" prop="surveyName">
                 </el-table-column>
@@ -42,7 +42,7 @@
                         <el-button type="text" @click="deleteObjInfo(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
-            </el-table>        
+            </el-table>
      </el-dialog>
 
   <!-- 增加/修改 对象弹框 -->
@@ -58,8 +58,8 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="isEditObj=false">取 消</el-button>
-                <el-button type="primary" @click="submitObjEdit()">确 定</el-button>
+              <el-button type="primary" @click="submitObjEdit()">确 定</el-button>
+              <el-button @click="isEditObj=false">取 消</el-button>
             </span>
         </el-dialog>
 
@@ -166,15 +166,16 @@
                  <el-form-item label-width="0">
                     <el-input placeholder="请输入选项" class="dialog_input"></el-input>
                     <el-button type="text"  style="color:#ff4949">删除</el-button>
-                 </el-form-item> -->  
+                 </el-form-item> -->
 
                    <el-button type="primary" size="small" @click="addDialogOption">添加选项</el-button>
 
                </el-form-item>
            </el-form>
          <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="upLoadFormItem">确 定</el-button>
+
+           <el-button type="primary" @click="upLoadFormItem">确 定</el-button>
+           <el-button @click="dialogVisible = false">取 消</el-button>
          </span>
       </el-dialog>
   </div>
@@ -229,13 +230,13 @@ export default {
         title:'',
         type:'',
         direction:'' ,
-        sort:'',   
+        sort:'',
           surveyQuestionOptionList:[
               {
-                 optionContent:'' 
+                 optionContent:''
               },
               {
-                 optionContent:'' 
+                 optionContent:''
               },
           ]
         },
@@ -243,7 +244,7 @@ export default {
         rules:{
             templateName:[
                { required: true, message: '请输入问卷名称', trigger: 'blur' },
-               {min:1,max:50,message:'问卷名称不能超过50个字符',trigger:'change,blur'} 
+               {min:1,max:50,message:'问卷名称不能超过50个字符',trigger:'change,blur'}
             ],
             typeId:[
                 {type:'number', required: true, message: '请选择调查对象', trigger: 'blur' },
@@ -281,7 +282,7 @@ export default {
              direction:[
                   {min:0,max:100,message:'备注不能超过100个字符',trigger:'change,blur'}
              ]
-             
+
         }
 
     }
@@ -330,10 +331,10 @@ export default {
       /* 确定提交按钮 */
       submitTemplate(){
        if(this.$route.params.surveryData&&this.$route.params.typ!=='add'){
-          this.updateTemplate('edit'); 
+          this.updateTemplate('edit');
        }
        else{
-          this.updateTemplate('add'); 
+          this.updateTemplate('add');
        }
       },
       /* 新增或修改 */
@@ -343,9 +344,9 @@ export default {
           var arr=[];
           for(var i in this.surveyForm.questionAnswerJosn){
               arr[i]=this.surveyForm.questionAnswerJosn[i];
-              this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]); 
+              this.surveyForm.questionAnswerJosn[i]=JSON.stringify(this.surveyForm.questionAnswerJosn[i]);
           }
-          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';                 
+          this.surveyForm.questionAnswerJosn='['+this.surveyForm.questionAnswerJosn+']';
                     this.$axios(
                         {
                             url:str=='add'?this.addTemplateUrl:this.editTemplateUrl,
@@ -359,11 +360,16 @@ export default {
                         this.$router.push({name:'调查问卷模板设置'});
 
                         }else{
-                            this.$message.error(res.data.msg.msgTrim());
+                            this.$confirm(res.data.msg.msgTrim(), "提示",{
+                            	confirmButtonText: "确定",
+                            	cancelButtonText: "取消",
+                            	showCancelButton: false,
+                            	type: "error"
+                            });
                         }
                     })
                     this.surveyForm.questionAnswerJosn=arr;
-                    
+
              }else{
                  return false;
              }
@@ -381,7 +387,7 @@ export default {
       /* 修改对象 */
       editObjInfo(obj){
        for(var i in obj){
-         this.editObjForm[i]=obj[i]+'';   
+         this.editObjForm[i]=obj[i]+'';
        }
        this.isAddNewObj=false;
        this.isEditObj=true;
@@ -394,23 +400,28 @@ export default {
         }).then(() => {
             this.$axios.delete(this.deleteObjUrl+obj.id+'/remove').then((res)=>{
                 if(res.data.code==1){
-                    this.isEditObj=false; 
+                    this.isEditObj=false;
                    this.objDialogVisible=false;
                     this.getObjList();
                     this.$message.success('删除成功')
                 }else{
-                    this.$message.error(res.data.msg.msgTrim());
+                    this.$confirm(res.data.msg.msgTrim(), "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                 }
             })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
+          });*/
         });
       },
       /* 提交对象编辑 */
-      submitObjEdit(){ 
+      submitObjEdit(){
           this.$refs.editObjForm.validate((valid) => {
            if(valid){
                 if(this.isAddNewObj){
@@ -419,11 +430,16 @@ export default {
                     ).then((res)=>{
                         console.log(res);
                         if(res.data.code==1){
-                        this.isEditObj=false; 
+                        this.isEditObj=false;
                         this.getObjList();
                         this.$message.success('新增成功');
                         }else{
-                            this.$message.error(res.data.msg.msgTrim());
+                            this.$confirm(res.data.msg.msgTrim(), "提示",{
+                            	confirmButtonText: "确定",
+                            	cancelButtonText: "取消",
+                            	showCancelButton: false,
+                            	type: "error"
+                            });
                         }
                     })
                 }else{
@@ -434,16 +450,21 @@ export default {
                         if(res.data.code==1){
                         this.isEditObj=false;
                         this.getObjList();
-                        this.$message.success('修改成功');  
+                        this.$message.success('修改成功');
                         }else{
-                        this.$message.error(res.data.msg.msgTrim());
+                        this.$confirm(res.data.msg.msgTrim(), "提示",{
+                        	confirmButtonText: "确定",
+                        	cancelButtonText: "取消",
+                        	showCancelButton: false,
+                        	type: "error"
+                        });
                         }
                     })
                 }
            }else{
                return false;
            }
-          })        
+          })
 
       },
       /* 添加题目 */
@@ -466,7 +487,7 @@ export default {
           this.isEdit=true;
           this.editIndex=index;
       for(var i in item){
-        this.dialogForm[i]=item[i]; 
+        this.dialogForm[i]=item[i];
       }
       this.dialogVisible=true;
       },
@@ -486,14 +507,14 @@ export default {
                      isPass=false;
                  }
               })
-               
+
           }
           }
           return isPass;
       },
       /* 确定添加题目 */
       upLoadFormItem(){
-         this.dialogValid(); 
+         this.dialogValid();
         this.$refs.dialogForm.validate((valid)=>{
               if(valid&&this.dialogValid()){
                     if(this.isEdit){
@@ -502,7 +523,12 @@ export default {
                     if(this.checkOrderNumber(this.dialogForm)){
                      this.surveyForm.questionAnswerJosn.push(this.dialogForm);
                     }else{
-                        this.$message.error('该问题序号已存在');
+                        this.$confirm('该问题序号已存在', "提示",{
+                        	confirmButtonText: "确定",
+                        	cancelButtonText: "取消",
+                        	showCancelButton: false,
+                        	type: "error"
+                        });
                         return ;
                     }
                 }
@@ -510,13 +536,13 @@ export default {
                             title:'',
                             type:'',
                             direction:'',
-                            sort:'',    
+                            sort:'',
                             surveyQuestionOptionList:[
                                 {
-                                    optionContent:'' 
+                                    optionContent:''
                                 },
                                 {
-                                    optionContent:'' 
+                                    optionContent:''
                                 },
                             ]
                             }
@@ -524,21 +550,21 @@ export default {
             }else{
                 return false;
             }
-          })         
+          })
       },
       /* 清空dialog */
       reloadDialog(done){
         this.dialogForm={
                     title:'',
                     type:'',
-                    direction:'', 
-                    sort:'',   
+                    direction:'',
+                    sort:'',
                     surveyQuestionOptionList:[
                         {
-                            optionContent:'' 
+                            optionContent:''
                         },
                         {
-                            optionContent:'' 
+                            optionContent:''
                         },
                     ]
                     }
@@ -567,7 +593,7 @@ export default {
   width: 18%;
   float: left;
   box-sizing: border-box;
-  
+
 }
 .add_new_model .left_header_p{
     padding:0 30px;
@@ -612,7 +638,7 @@ export default {
    border-left:1px solid #dadada;
    min-height:765px;
    box-sizing: border-box;
-} 
+}
 .add_new_model .form_list h3{
     font-size: 18px;
     line-height:36px;

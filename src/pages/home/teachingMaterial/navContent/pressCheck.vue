@@ -238,7 +238,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="120">
+        <el-table-column label="申报单位/工作单位" min-width="200">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
@@ -250,13 +250,13 @@
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" min-width="160">
+        <el-table-column label="联系方式" min-width="150">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职位" min-width="220">
+        <el-table-column label="所选书籍与职位" min-width="140">
           <template scope="scope">
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
@@ -594,7 +594,12 @@
               this.$message.success(num==2?'已确认收到纸质表！':'已取消收到纸质表！');
               row.offlineProgress=num;
             }else{
-              this.$message.error(res.msg.msgTrim())
+              this.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              })
             }
           })
           .catch(e=>{
@@ -662,7 +667,12 @@
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('导出失败，请重试！')
+            this.$confirm('导出失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
           })
       },
       exportWordStart(id){
@@ -694,7 +704,12 @@
             console.log(e);
             this.exportDialog=false;
             clearInterval(this.handleExportWordtimer);
-            this.$message.error('导出失败，请重试！')
+            this.$confirm('导出失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            })
           })
       },
       exportWordProgress(id){
@@ -716,7 +731,12 @@
             .catch(e=>{
               console.log(e);
               if(this.exportDialog){
-                this.$message.error('导出失败，请重试！');
+                this.$confirm('导出失败，请重试！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 this.exportDialog=false;
                 clearInterval(this.handleExportWordtimer);
                 this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
@@ -724,7 +744,12 @@
             })
           //超时提醒
             if(useTime>timeout){
-              this.$message.error('导出请求超时，请重试！');
+              this.$confirm('导出请求超时，请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               clearInterval(this.handleExportWordtimer);
               this.exportLoadingTimerHandle&&this.exportLoadingTimerHandle.end();
             }

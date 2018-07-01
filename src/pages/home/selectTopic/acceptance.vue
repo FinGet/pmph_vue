@@ -5,11 +5,18 @@
        <el-input class="input" v-model="searchParams.name" placeholder="请输入选题名称" @keyup.enter.native='search'></el-input>
        <span>提交日期：</span>
        <el-date-picker
-            v-model="searchParams.date"
+            v-model="searchParams.date1"
             class="input"
             type="date"
             placeholder="选择日期">
         </el-date-picker>
+      <span>至：</span>
+      <el-date-picker
+        v-model="searchParams.date2"
+        class="input"
+        type="date"
+        placeholder="选择日期">
+      </el-date-picker>
         <el-button type="primary" icon="search" @click="search">搜索</el-button>
     </p>
     <el-table
@@ -89,8 +96,10 @@
 				placeholder="请输入内容"
 				v-model="reasonEditor">
 			</el-input>
-			<el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
-			<el-button class="pull-right marginB10 marginT10">取消</el-button>
+      <el-button class="pull-right marginB10 marginT10 marginL10" type="primary" @click="makeSure">确定</el-button>
+      <el-button class="pull-right marginB10 marginT10">取消</el-button>
+
+
 		</el-dialog>
   </div>
 </template>
@@ -100,7 +109,8 @@ export default {
     return {
       searchParams: {
 				name:'',
-        date: "",
+        date1: "",
+        date2: "",
         pageSize: 10,
         pageNumber: 1
       },
@@ -126,14 +136,16 @@ export default {
   methods: {
 		/**获取表格数据 */
 		getTableData(){
-      this.searchParams.date = this.$commonFun.formatDate(+new Date(this.searchParams.date)).substring(0,10);
+      this.searchParams.date1 = this.$commonFun.formatDate(+new Date(this.searchParams.date1)).substring(0,10);
+      this.searchParams.date2 = this.$commonFun.formatDate(+new Date(this.searchParams.date2)).substring(0,10);
 			this.$axios.get('/pmpheep/topic/listEditor',{
 				params:{
 					pageSize: this.searchParams.pageSize,
 					pageNumber: this.searchParams.pageNumber,
 					sessionId: this.$getUserData().sessionId,
 					bookname: this.searchParams.name,
-					submitTime: this.searchParams.date
+					submitTime1: this.searchParams.date1,
+          submitTime2: this.searchParams.date2
 				}
 			}).then(response => {
 				let res = response.data;
@@ -175,7 +187,12 @@ export default {
             this.$emit('changeActive','second');
           }
 				} else {
-					this.$message.error(res.msg.msgTrim());
+					this.$confirm(res.msg.msgTrim(), "提示",{
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						showCancelButton: false,
+						type: "error"
+					});
 				}
 			}).catch(err => {
 			})
@@ -203,7 +220,7 @@ export default {
   overflow: hidden;
 }
 .acceptance .header_p .input {
-  width: 217px;
+  width: 130px;
   margin-right: 10px;
 }
 </style>

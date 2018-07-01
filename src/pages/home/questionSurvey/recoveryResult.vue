@@ -119,7 +119,12 @@
                         this.formTop=res.data.data.Survey;
                         this.questionList=res.data.data.SurveyQuestionAnswer;
                     }else{
-                        this.$message.error(res.data.msg.msgTrim());
+                        this.$confirm(res.data.msg.msgTrim(), "提示",{
+                        	confirmButtonText: "确定",
+                        	cancelButtonText: "取消",
+                        	showCancelButton: false,
+                        	type: "error"
+                        });
                     }
                 })
             }

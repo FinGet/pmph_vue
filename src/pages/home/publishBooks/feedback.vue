@@ -15,14 +15,17 @@
           <el-radio :label="0">未审核</el-radio>
         </el-radio-group>
       </div>
-     <!-- <div class="searchBox-wrapper searchBtn">
-        <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
-      </div>-->
+      <div class="searchBox-wrapper searchBtn" style="float:right;">
+        <el-button type="primary" @click="exportExcel">导出</el-button>
+       <!-- <el-button  type="primary"  icon="search" @click="search">搜索</el-button>-->
+      </div>
     </el-row>
     <el-row>
       <el-col>
         <el-table :data="tableData" stripe border style="width: 100%;text-align: center">
           <el-table-column prop="bookname" label="书名"  align="left">
+          </el-table-column>
+          <el-table-column prop="isbn" label="isbn" align="center">
           </el-table-column>
           <el-table-column prop="feedBackName" label="反馈人" align="center">
           </el-table-column>
@@ -90,6 +93,16 @@
       this.getBooks();
     },
     methods: {
+      exportExcel(){
+        /** 导出Excel */
+
+        let url = '/pmpheep/bookCorrection/exportfeedback?result='+this.result;
+        if(this.$commonFun.Empty(this.result)){
+          url = '/pmpheep/bookCorrection/exportfeedback?result='
+        }
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
+      },
       getBooks() {
         this.$axios
           .get("/pmpheep/bookCorrection/bookList", {

@@ -71,12 +71,22 @@
               this.$message.success('退出成功');
               this.$router.push({name: '登录'});
             }else{
-              this.$message.error('退出登录失败，请重试');
+              this.$confirm('退出登录失败，请重试', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e);
-            this.$message.error('退出登录失败，请重试');
+            this.$confirm('退出登录失败，请重试', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       wxClick(){

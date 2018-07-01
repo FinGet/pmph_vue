@@ -145,17 +145,17 @@
            </el-form-item>
        </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="addVideoSubmit" :loading="isUploadVideo" :disabled="isdisabled">{{isUploadVideo?'转码中':'确 定'}}</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
             </span>
     </el-dialog>
     <!-- 审核视频弹框 -->
         <el-dialog title="审核" :visible.sync="examDialogVisible" width="25%" size="tiny">
         <span style="font-size:15px;">确定审核该视频吗？</span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="examDialogVisible = false">取 消</el-button>
-                <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
-                <el-button type="primary" @click="examSubmit(true)">通过</el-button>
+              <el-button type="primary" @click="examSubmit(true)">通过</el-button>
+              <el-button type="danger" @click="examSubmit(false)">不通过</el-button>
+              <el-button @click="examDialogVisible = false">取 消</el-button>
             </span>
     </el-dialog>
     <!-- 查看视频弹框 -->
@@ -313,7 +313,12 @@
                   this.getList();
                   this.examDialogVisible=false;
               }else{
-                  this.$message.error(res.data.msg.msgTrim());
+                  this.$confirm(res.data.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
               }
           })
          },
@@ -334,10 +339,10 @@
                       }
                   })
                 }).catch(() => {
-                this.$message({
+                /*this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });
+                });*/
                 });
          },
          /* 添加上传视频图片 */
@@ -352,22 +357,42 @@
             var exStr=file.name.split('.').pop().toLowerCase();
             var exSize=file.size?file.size:1;
             if(exSize/ 1024 / 1024 > 20){
-                this.$message.error('图片的大小不能超过20MB！');
+                this.$confirm('图片的大小不能超过20MB！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 this.dialogForm.imgList.pop();
                 return false;
             }
             if(exSize==0){
-                this.$message.error('请勿上传空文件！');
+                this.$confirm('请勿上传空文件！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 this.dialogForm.imgList.pop();
                 return false;
             }
             if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
-                this.$message.error('图片的格式必须为png或者jpg或者jpeg格式！')
+                this.$confirm('图片的格式必须为png或者jpg或者jpeg格式！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                })
                 this.dialogForm.imgList.pop();
                 return false;
             }
             if(file.name.length>80){
-                this.$message.error('图片名称不能超过80个字符！');
+                this.$confirm('图片名称不能超过80个字符！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 this.dialogForm.imgList.pop();
                 return false;
             }
@@ -388,19 +413,39 @@
             var exStr=file.name.split('.').pop().toLowerCase();
             var exSize=file.size?file.size:1;
             /* if(exSize/ 1024 / 1024 > 20){
-                this.$message.error('图片的大小不能超过20MB！');
+                this.$confirm('图片的大小不能超过20MB！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
             } */
             if(exSize==0){
-                this.$message.error('请勿上传空文件！');
+                this.$confirm('请勿上传空文件！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
             }
             if(exStr!='avi'&&exStr!='mpg'&&exStr!='wmv'&&exStr!='3gp'&&exStr!='mov'&&exStr!='mp4'&&exStr!='asf'&&exStr!='asx'&&exStr!='flv'){
-                this.$message.error('图片的格式必须为以下格式之一：avi,mpg,wmv,3gp,mov,mp4,asf,asx或flv！');
+                this.$confirm('图片的格式必须为以下格式之一：avi,mpg,wmv,3gp,mov,mp4,asf,asx或flv！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
             }
             if(file.name.length>80){
-                this.$message.error('视频名称不能超过80个字符！');
+                this.$confirm('视频名称不能超过80个字符！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
                 return false;
             }
          },
@@ -428,7 +473,12 @@
                         this.dialogForm.transCoding=res.data.data;
                      }else{
                          /* 转码失败 */
-                        this.$message.error('视频转码失败，请检查视频格式后再重新上传');
+                        this.$confirm('视频转码失败，请检查视频格式后再重新上传', "提示",{
+                        	confirmButtonText: "确定",
+                        	cancelButtonText: "取消",
+                        	showCancelButton: false,
+                        	type: "error"
+                        });
                         this.dialogForm.videoList=[];
                         this.isUploadVideo=false;
                      }
@@ -439,7 +489,12 @@
                      }, 1000);
                  }
                }else{
-                   this.$message.error(res.data.msg);
+                   this.$confirm(res.data.msg, "提示",{
+                   	confirmButtonText: "确定",
+                   	cancelButtonText: "取消",
+                   	showCancelButton: false,
+                   	type: "error"
+                   });
                }
            })
          },
@@ -482,7 +537,12 @@
 
                         }
                         else{
-                         this.$message.error(res.data.msg.msgTrim());
+                         this.$confirm(res.data.msg.msgTrim(), "提示",{
+                         	confirmButtonText: "确定",
+                         	cancelButtonText: "取消",
+                         	showCancelButton: false,
+                         	type: "error"
+                         });
                         }
                      }).catch((error)=>{
                        this.isdisabled = false;

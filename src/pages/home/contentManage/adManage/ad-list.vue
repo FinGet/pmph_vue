@@ -9,6 +9,11 @@
         tooltip-effect="dark"
         style="width: 100%">
         <el-table-column label="广告位置"  prop="adname" min-width="100"></el-table-column>
+        <!--<el-table-column label="应用类型" prop="apporpc" min-width="100" >
+          <template scope="scope">
+            {{applyType[scope.row.apporpc]}}
+          </template>
+        </el-table-column>-->
         <el-table-column label="预览" min-width="180">
           <template scope="scope">
 
@@ -56,6 +61,7 @@
 		data() {
 			return {
 			  api_ad_list:'/pmpheep/cms/cmsAdvertisement/list',
+        applyType:['全部','PC端','移动端'],
 			  tableData:[],
       }
 		},
@@ -73,7 +79,12 @@
               });
               this.tableData=res.data;
             }else{
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
       },

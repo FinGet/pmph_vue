@@ -45,7 +45,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="commonTotal">
             </el-pagination>
-            </div>    
+            </div>
 
     </el-tab-pane>
     <el-tab-pane label="操作手册上传" name="second">
@@ -69,7 +69,7 @@
          </el-table-column>
          <el-table-column  label="创建时间"  width="120" >
              <template scope="scope">
-               {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}  
+               {{$commonFun.formatDate(scope.row.gmtCreate,'yyyy-MM-dd')}}
              </template>
          </el-table-column>
          <el-table-column  label="备注" prop="note">
@@ -94,15 +94,15 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="operationTotal">
             </el-pagination>
-        </div>        
+        </div>
     </el-tab-pane>
-  </el-tabs>    
+  </el-tabs>
   </div>
 </template>
 <script type="text/javascript">
     export default{
         data(){
-            return{ 
+            return{
                commonListUrl:'/pmpheep/help/list',      //常见问题列表url
                operationListUrl:'/pmpheep/cms/manual/list',         //操作手册列表url
                activeName:'first',
@@ -128,10 +128,10 @@
         created () {
             this.activeName=this.$route.params.activeName?this.$route.params.activeName:'first';
             if(this.activeName=='first'){
-                  this.getCommonList(); 
+                  this.getCommonList();
             }else{
                  this.getOperationList();
-            } 
+            }
         },
         methods:{
           /* 获取常见问题列表 */
@@ -174,20 +174,25 @@
                        this.$message.success('问题已删除');
                        this.getCommonList();
                    }else{
-                       this.$message.error(res.data.msg.msgTrim());
+                       this.$confirm(res.data.msg.msgTrim(), "提示",{
+                       	confirmButtonText: "确定",
+                       	cancelButtonText: "取消",
+                       	showCancelButton: false,
+                       	type: "error"
+                       });
                    }
-               }) 
+               })
             }).catch(() => {
-            this.$message({
+            /*this.$message({
                 type: 'info',
                 message: '已取消删除'
-             });          
+             });*/
             });
           },
           handleClick(tab, event){
               console.log(tab);
               if(tab.name=='first'){
-                this.getCommonList();  
+                this.getCommonList();
               }else{
                 this.getOperationList();
               }
@@ -229,14 +234,19 @@
                           this.$message.success('成功删除');
                           this.getOperationList();
                       }else{
-                          this.$message.error(res.data.msg.msgTrim());
+                          this.$confirm(res.data.msg.msgTrim(), "提示",{
+                          	confirmButtonText: "确定",
+                          	cancelButtonText: "取消",
+                          	showCancelButton: false,
+                          	type: "error"
+                          });
                       }
                   })
                 }).catch(() => {
-                this.$message({
+                /*this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });          
+                });*/
             });
           },
           /* 操作分页 */
@@ -248,14 +258,14 @@
           operationCurrentChange(val){
              this.operationParams.pageNumber=val;
              this.getOperationList();
-          }  
+          }
         }
     }
 </script>
 <style scoped>
 .help_manage .el-tabs{
    border:none;
-   box-shadow: none; 
+   box-shadow: none;
 }
 .help_manage .header_p {
   overflow: hidden;

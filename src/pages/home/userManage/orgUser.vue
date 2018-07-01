@@ -208,7 +208,7 @@
             <el-input v-model="form.email"></el-input>
           </el-form-item>
           <el-form-item label="所属地区："  prop="areaId">
-          <el-select v-model="form.areaId" placeholder="请选择">
+          <el-select v-model="form.areaId" filterable  placeholder="请选择或搜索">
             <el-option
               v-for="item in area"
               :key="item.id"
@@ -228,8 +228,9 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
+           <el-button type="primary" @click="submit">确 定</el-button>
           <el-button @click="dialogVisible=false">取 消</el-button>
-          <el-button type="primary" @click="submit">确 定</el-button>
+
         </span>
 
       </el-dialog>
@@ -366,14 +367,16 @@
 						</el-select>
 					</div>
 				</div>
-				<div class="searchBox-wrapper searchBtn">
-					<el-button type="primary" icon="search" @click="search">搜索</el-button>
-				</div>
-        <div class="searchBox-wrapper searchBtn">
+
+
+
+        <div class="searchBox-wrapper searchBtn" >
+          <el-button type="primary" icon="search" @click="search">搜索</el-button>
           <el-button type="primary" @click="clearSearch">清空搜索</el-button>
-        </div>
+        <el-button type="primary"  @click="exportAdminExcel">导出名单</el-button>
 				<el-button class="pull-right marginL10" type="success" @click="check(1)" :disabled="isSelected">通过</el-button>
 				<el-button class="pull-right" type="danger" @click="check(2)" :disabled="isSelected">退回</el-button>
+        </div>
 
 			</el-col>
 		</el-row>
@@ -677,12 +680,22 @@ export default {
               this.form.orgTypeId = this.orgTypeList[0].id;
             }
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('获取机构类型数据失败');
+          this.$confirm('获取机构类型数据失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         });
     },
     //点击修改按钮执行方法
@@ -762,14 +775,19 @@ export default {
            if(res.data.code==1){
              this.$message.success('密码已重置');
            }else{
-             this.$message.error(res.data.msg.msgTrim());
+             this.$confirm(res.data.msg.msgTrim(), "提示",{
+             	confirmButtonText: "确定",
+             	cancelButtonText: "取消",
+             	showCancelButton: false,
+             	type: "error"
+             });
            }
         })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
     },
 
@@ -842,12 +860,22 @@ export default {
             this.area = data;
             // console.log(this.area)
           } else {
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(e=>{
           console.log(e);
-          this.$message.error('获取机构类型数据失败');
+          this.$confirm('获取机构类型数据失败', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         });
     },
     /**
@@ -891,7 +919,12 @@ export default {
               message: "添加成功"
             });
           } else {
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(function(error) {
@@ -923,7 +956,12 @@ export default {
               message: "修改成功"
             });
           } else {
-            self.$message.error(res.msg.msgTrim());
+            self.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
         .catch(function(error) {
@@ -986,6 +1024,16 @@ export default {
         });
     },
     /**
+     *
+     *  管理员导出
+     *  */
+
+    exportAdminExcel(){
+      let url = '/pmpheep/auth/exportOrgUser?orgName='+this.orgName+'&realname='+this.realname+"&progress="+this.progress;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
+    /**
      * 搜索
      */
     search() {
@@ -1035,16 +1083,15 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          if(value.length>40){
-            this.$message.warning('不能超过40个字');
-          }else{
-           // this.backReason = value;
+          if(value&&value.length<=40||!value){
             let param = {
               progress: progress,
               orgUserIds: orgUserIds,
               backReason:value
             };
             this.passorback(param);
+          }else{
+            this.$message.warning('不能超过40个字');
           }
 
         })
@@ -1064,7 +1111,7 @@ export default {
           this.getOrgsList();
           this.$message({
             showClose: true,
-            message: "审核成功!",
+            message: param.progress==1?"审核成功!":"退回成功",
             type: "success"
           });
         }else if (res.code == '2') {
@@ -1167,10 +1214,20 @@ export default {
 //          window.location.href = res.data;
           window.open(res.data);
         } else {
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       }).catch(error => {
-        this.$message.error('登录失败，请稍后再试!');
+        this.$confirm('登录失败，请稍后再试!', "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       })
     },
     /**
@@ -1201,22 +1258,42 @@ export default {
       var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
       // 类型判断
       if(!(ext=='xls'||ext=='xlsx')){
-        this.$message.error("请按照模板格式的文档上传文件");
+        this.$confirm("请按照模板格式的文档上传文件", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
       //文件名不超过40个字符
       /* if(file.name.length>40){
-       this.$message.error("文件名不能超过40个字符");
+       this.$confirm("文件名不能超过40个字符", "提示",{
+       	confirmButtonText: "确定",
+       	cancelButtonText: "取消",
+       	showCancelButton: false,
+       	type: "error"
+       });
        return;
        } */
       // 判断文件大小是否符合 文件不为0
       if(file.size<1){
-        this.$message.error("文件大小不能小于1bt");
+        this.$confirm("文件大小不能小于1bt", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
       // 判断文件大小是否符合 文件不大于100M
       if(file.size/1024/1024 > 100){
-        this.$message.error("文件大小不能超过100M！");
+        this.$confirm("文件大小不能超过100M！", "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         return;
       }
 
@@ -1233,7 +1310,12 @@ export default {
         this.uuid=res.data.uuid;
         console.log(res);
       }else{
-        this.$message.error(res.msg.msgTrim());
+        this.$confirm(res.msg.msgTrim(), "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
       }
       this.uploadLoading = false;
     },
@@ -1242,7 +1324,12 @@ export default {
      */
     uploadError(err, file, fileList){
       console.log(err);
-      this.$message.error(err.msg.msgTrim());
+      this.$confirm(err.msg.msgTrim(), "提示",{
+      	confirmButtonText: "确定",
+      	cancelButtonText: "取消",
+      	showCancelButton: false,
+      	type: "error"
+      });
       this.uploadLoading = false;
     },
     importExcel(){
@@ -1267,6 +1354,11 @@ export default {
 };
 </script>
 <style scoped>
+  .searchBtn{
+    float: right;
+    text-align:right;
+    width:500px;
+  }
 .orgUser .header_p {
   overflow: hidden;
 }

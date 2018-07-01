@@ -79,6 +79,16 @@
                 align="center"
                 >
             </el-table-column>
+        <el-table-column
+          prop="apporpc"
+          label="应用类型"
+          align="center"
+          width="100"
+        >
+          <template scope="scope">
+            {{applyType[scope.row.apporpc]}}
+          </template>
+        </el-table-column>
            <el-table-column
                 label="创建时间"
                 align="center"
@@ -214,7 +224,7 @@
 }
 .previewTitle {
   color: #14232e;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
 }
 .out_content_manage .center_box {
@@ -246,6 +256,7 @@ export default {
         startAuDate: '',
         endAuDate:''
       },
+      applyType:['全部','PC端','移动端'],
       bookOptions:[],
       totalPage: 10,
       options: [],
@@ -309,6 +320,7 @@ export default {
     };
   },
   methods: {
+
     /* 获取内容列表 */
     getOutContentList() {
       this.contentParams.startCreateDate = this.$commonFun.formatDate(+new Date(this.contentParams.startCreateDate));
@@ -382,14 +394,19 @@ export default {
                    this.getOutContentList();
                    this.showContentDetail=false;
                 }else {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             })
         }).catch(() => {
-          this.$message({
+          /*this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
     },
     /* 查看详情 */
@@ -427,7 +444,12 @@ export default {
           let res = response.data
           if (res.code == 1) {
             if(res.data.content == null) {
-              this.$message.error('此快报内容为空，错误数据，不能调转！');
+              this.$confirm('此快报内容为空，错误数据，不能调转！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
               return;
             } else {
               this.$router.push({
@@ -454,15 +476,20 @@ export default {
                 this.getOutContentList();
                 this.$message.success("内容已删除");
               } else {
-                tthis.$message.error(res.data.msg);
+                tthis.$confirm(res.data.msg, "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
         })
         .catch(() => {
-          this.$message({
+          /*this.$message({
             type: "info",
             message: "已取消删除"
-          });
+          });*/
         });
     },
     /* 栏目选项改变 */

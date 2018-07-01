@@ -69,7 +69,7 @@
       <el-table :data="tableData" class="table-wrapper" border style="margin:15px 0;">
             <el-table-column
                 label="文章标题"
-                align="center"
+                align="center" min-width="100"
                 >
                 <template scope="scope">
                     <p class="link"  @click="contentDetail(scope.row)">{{scope.row.title}}</p>
@@ -80,7 +80,7 @@
                 prop="authorname"
                 label="文章来源"
                 align="center"
-                width="90"
+                width="100"
                 >
             </el-table-column>
         <el-table-column
@@ -90,10 +90,20 @@
           width="90"
         >
         </el-table-column>
+          <el-table-column
+        prop="apporpc"
+        label="应用类型"
+        align="center"
+        width="100"
+      >
+            <template scope="scope">
+              {{applyType[scope.row.apporpc]}}
+            </template>
+      </el-table-column>
             <el-table-column
                 label="创建时间"
                 align="center"
-                width="180"
+                width="120"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.gmtCreate)}}
@@ -102,7 +112,7 @@
             <el-table-column
                 label="审核时间"
                 align="center"
-                width="180"
+                width="120"
                 >
                 <template scope="scope">
                     {{$commonFun.formatDate(scope.row.authDate)}}
@@ -111,7 +121,7 @@
             <el-table-column
                 label="审核状态"
                 align="center"
-                width="110"
+                width="100"
                 >
                 <template scope="scope">
                     <p v-if="scope.row.authStatus==0">未发布</p>
@@ -157,6 +167,7 @@
                     <el-button type="text" :disabled="scope.row.authStatus==1" v-if="scope.row.authStatus!=0"  @click="examineContent(scope.row,0)">撤销</el-button>
                     <!-- <el-button type="text" @click="hideContent(scope.row)">隐藏</el-button> -->
                     <el-button type="text" @click="deleteContent(scope.row)">删除</el-button>
+                  <el-button type="text" :disabled="scope.row.authStatus==1" @click="recommend(scope.row)">推荐</el-button>
                 </template>
             </el-table-column>
 
@@ -207,6 +218,60 @@
             <el-button type="primary" :disabled="contentDetailData.listObj.authStatus!=0"  @click="examineContent(contentDetailData.listObj,2)" >通过</el-button>
             </div>
         </div>
+    </el-dialog>
+
+    <!--文章推荐-->
+    <el-dialog
+
+      :visible.sync="recommendDialogVisible"
+      fullscreen = "true"
+      min-width="800px"
+      width="100%"
+    >
+      <span slot="title" class="el-dialog__title">相关文章推荐配置【{{recommendCmsTitle}}】</span>
+      <div class="searchBox-wrapper" style="line-height: 36px;float:left;width: 635px">
+        <div  style="display:inline-block;width: 310px;">
+            <div  style="width: 80px;display:inline-block;">文章标题：</div>
+            <el-input placeholder="请输入" style="display:inline-block;width: 200px;"  @keyup.enter.native="recommendSearch" v-model.trim="recommendSearchForm.cmsTitle"></el-input>
+          </div>
+        <div style="display:inline-block;width: 300px;">
+          <div style="width: 50px;display:inline-block;">作者：</div>
+          <el-input placeholder="请输入" style="display:inline-block;width: 200px;"  @keyup.enter.native="recommendSearch" v-model.trim="recommendSearchForm.cmsAuthorName"></el-input>
+        </div>
+        </div>
+        <div style="line-height: 36px;float:left;">
+            <el-checkbox label="相关文章" v-model="recommendSearchForm.relationCms"></el-checkbox>
+        </div>
+
+        <div style="text-align:right;margin-bottom:15px;display:inline-block;float:right;">
+          <!-- <el-button @click="recommendDialogVisible = false">取 消</el-button>-->
+          <!--<el-button  @click="recommendreset"  type="primary" icon="search" >重置</el-button>-->
+          <el-button  @click="recommendSearch"  type="primary" icon="search" >搜索</el-button>
+        </div>
+        <el-table :data="recommendData" border>
+          <el-table-column property="cmsTitle" label="文章标题"  align="center"></el-table-column>
+          <el-table-column  property="cmsAuthorName" label="作者" width="150" align="center" >
+          </el-table-column>
+          <el-table-column   label="相关文章"width="200" align="center" >
+            <template scope="scope">
+              <el-checkbox v-model="scope.row.relationCms"  @change="checkboxChange(scope.row)"></el-checkbox>
+            </template>
+          </el-table-column>
+
+      </el-table>
+      <!--分页-->
+      <div class="pagination-wrapper" style="padding-top:10px;padding-bottom:10px;">
+        <el-pagination
+          v-if="recommendTotalNum "
+          :page-sizes="[10,20,30, 40]"
+          :page-size="recommendSearchForm.recommendPageSize"
+          :current-page.sync="recommendSearchForm.recommendPageNumber"
+          @size-change="recommendPaginationSizeChange"
+          @current-change="getRecommendTableData"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="recommendTotalNum">
+        </el-pagination>
+      </div>
     </el-dialog>
    <!-- 同步弹框 -->
     <el-dialog title="稿件同步"
@@ -423,6 +488,7 @@ export default {
           label:'发布时间'
         }
       ],
+      applyType:['全部','PC端','移动端'],
       showContentDetail: false,
       syncDialogVisible:false,
       isSyncLoading:false,
@@ -434,6 +500,19 @@ export default {
         content: ""
       },
       tableData: [],
+      recommendData: [],
+      recommendSearchForm:{
+        currentCmsId:0,
+        relationCms:null,
+        cmsTitle:'',
+        cmsAuthorName:'',
+        recommendPageSize:10,
+        recommendPageNumber:1
+      },
+      recommendTotalNum:0,
+      recommendDialogVisible:false,
+      recommendCmsTitle:'',
+
       contentUsername:'',
       selectValue: "",
       currentPage: 1,
@@ -589,7 +668,12 @@ export default {
             this.$message.success('删除成功!');
             this.getCommentList()
           }else{
-            this.$message.error(res.msg.msgTrim());
+            this.$confirm(res.msg.msgTrim(), "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         })
       })
@@ -634,7 +718,12 @@ export default {
             this.$message.success("文章已发布");
             this.getPublicList();
           } else {
-            this.$message.error(res.data.msg);
+            this.$confirm(res.data.msg, "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
         });
     },
@@ -679,15 +768,20 @@ export default {
                     this.showContentDetail = false;
                     this.getPublicList();
                   } else {
-                    this.$message.error(res.data.msg);
+                    this.$confirm(res.data.msg, "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                   }
                 });
             })
             .catch(() => {
-              this.$message({
+             /* this.$message({
                 type: "info",
                 message: "已取消操作"
-              });
+              });*/
             });
       }else{
         this.$prompt('请输入退回原因', '提示', {
@@ -716,16 +810,89 @@ export default {
                     this.showContentDetail = false;
                     this.getPublicList();
                   } else {
-                    this.$message.error(res.data.msg);
+                    this.$confirm(res.data.msg, "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                   }
                 });
         }).catch(() => {
-          this.$message({
+         /* this.$message({
             type: 'info',
             message: '已取消操作'
-          });
+          });*/
         });
       }
+    },
+    recommendPaginationSizeChange(val){
+      this.recommendSearchForm.recommendPageSize=val;
+      this.recommendSearchForm.recommendPageNumber=1;
+      this.getRecommendTableData();
+    },
+    checkboxChange(row){
+      this.$axios.get('/pmpheep/cms/recommendcheck',{params:{
+          currentCmsId:this.recommendSearchForm.currentCmsId,
+          relationCmsId:row.id,
+          relationCms:row.relationCms,
+
+        }}).then(response=>{
+        var res = response.data;
+        if(res.code==1){ // 返回数据没有异常 回显数据 避免重复点击 数据操作异常
+          row.relationCms = res.data;
+        }
+
+      })
+    },
+    getRecommendTableData(){
+
+      this.$axios.get('/pmpheep/cms/recommendlist',{params:{
+          cmsTitle:this.recommendSearchForm.cmsTitle,
+          currentCmsId:this.recommendSearchForm.currentCmsId,
+          recommendPageSize:this.recommendSearchForm.recommendPageSize,
+          recommendPageNumber:this.recommendSearchForm.recommendPageNumber,
+          relationCms:this.recommendSearchForm.relationCms?this.recommendSearchForm.relationCms:null,
+          cmsAuthorName:this.recommendSearchForm.cmsAuthorName
+
+        }})
+        .then(response=>{
+          var res = response.data;
+          if(res.code==1){
+            this.recommendTotalNum = res.data.total;
+            this.recommendData = res.data.rows;
+            this.recommendData.forEach(row=>{
+              row.relationCms = row.relationCms == 1?true:false;
+            })
+          }
+
+        }).catch(e=>{
+        console.log(e);
+      })
+    },
+    recommendSearch(){
+      this.recommendSearchForm.recommendPageNumber=1;
+      this.getRecommendTableData();
+    },
+    recommendreset(){
+      this.recommendSearchForm.cmsTitle = '';
+      this.recommendSearchForm.cmsAuthorName='';
+      this.recommendSearchForm.relationCms=null;
+      this.recommendSearchForm.recommendPageNumber=1;
+      this.getRecommendTableData();
+    },
+    /**推荐*/
+    recommend(row){
+      this.recommendData=[];
+      this.recommendSearchForm.cmsTitle = '';
+      this.recommendSearchForm.cmsAuthorName='';
+      this.recommendSearchForm.relationCms=null;
+      this.recommendSearchForm.recommendPageNumber=1;
+      this.recommendCmsTitle = row.title;
+      this.recommendSearchForm.currentCmsId = row.id;
+      this.recommendDialogVisible = true;
+      this.recommendTotalNum=0;
+      this.getRecommendTableData();
     },
     /* 删除内容 */
     deleteContent(obj) {{
@@ -744,15 +911,20 @@ export default {
                 this.getPublicList();
                 this.$message.success("删除操作成功");
               } else {
-                this.$message.error(res.data.msg.msgTrim());
+                this.$confirm(res.data.msg.msgTrim(), "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             });
         })
         .catch(() => {
-          this.$message({
+          /*this.$message({
             type: "info",
             message: "已取消删除"
-          });
+          });*/
         });
     },
     handleSizeChange(val) {
@@ -793,7 +965,12 @@ export default {
 
         }else{
           this.isSyncLoading=false;
-          this.$message.error(res.data.msg.msgTrim());
+          this.$confirm(res.data.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
       })
     },
@@ -823,7 +1000,12 @@ export default {
            }
        }else{
          this.isSyncLoading=false;
-         this.$message.error(res.data.msg.msgTrim());
+         this.$confirm(res.data.msg.msgTrim(), "提示",{
+         	confirmButtonText: "确定",
+         	cancelButtonText: "取消",
+         	showCancelButton: false,
+         	type: "error"
+         });
        }
      })
     }
@@ -839,7 +1021,22 @@ export default {
   }
 };
 </script>
+<style >
+  .el-dialog--small {
+    width: 70% !important;
+  }
+  .el-dialog__title{
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 400px;
+    text-overflow: ellipsis;
+    line-height: 20px;
+  }
+  </style>
 <style scoped>
+
+
 .publish_list .header_p {
   overflow: hidden;
 }
@@ -874,7 +1071,7 @@ export default {
 }
 .previewTitle {
   color: #14232e;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
 }
 .publish_list .center_box {

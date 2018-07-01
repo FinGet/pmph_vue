@@ -22,7 +22,12 @@
       methods:{
         getMsgContent(){
             if(!this.msgId){
-              this.$message.error('未读取到消息id，请重试!');
+              this.$confirm('未读取到消息id，请重试!', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
             this.$axios.get('/pmpheep/messages/message/content',{params:{
                 userMsgId:this.msgId
@@ -39,12 +44,22 @@
                   this.previewData.sendTime = this.$commonFun.formatDate(res.data.senderDate);
                   this.previewData.files = res.data.MessageAttachment||[];
                 }else{
-                    this.$message.error(res.msg.msgTrim());
+                    this.$confirm(res.msg.msgTrim(), "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                 }
               })
               .catch(e=>{
                 console.log(e);
-                this.$message.error('页面内容加载失败，请重试!');
+                this.$confirm('页面内容加载失败，请重试!', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               })
         }
       },
@@ -66,7 +81,7 @@
   }
   .previewTitle{
     color: #14232e;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 500;
   }
   .previewContent{

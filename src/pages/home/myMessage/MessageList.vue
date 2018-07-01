@@ -145,12 +145,22 @@
               this.totalNum = res.data.total||0;
               this.tableData=res.data.rows;
             }else{
-              this.$message.error('获取数据失败，请重试！');
+              this.$confirm('获取数据失败，请重试！', "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{
             console.log(e)
-            this.$message.error('获取数据失败，请重试！');
+            this.$confirm('获取数据失败，请重试！', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           })
       },
       /**
@@ -181,7 +191,12 @@
                 this.getTableData();
                 this.$message.success('删除成功！');
               }else{
-                this.$message.error('删除失败，请重试！');
+                this.$confirm('删除失败，请重试！', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               }
             }).catch((error) => {
             this.$message.success('删除失败，请重试！');

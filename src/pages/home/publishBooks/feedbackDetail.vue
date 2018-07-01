@@ -110,7 +110,7 @@
                 "/pmpheep/bookCorrection/replyBookFeedBackWriter",
                 this.$initPostData({
                   id: this.id,
-                  authorReply: this.ruleForm.authorReply
+                  authorReply: this.ruleForm.authorReply==null?'':this.ruleForm.authorReply
                 })
               )
               .then(response => {
@@ -119,11 +119,21 @@
                   this.$message.success("提交成功！");
                   this.back();
                 } else {
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(err => {
-                this.$message.error("提交失败，请稍后再试！");
+                this.$confirm("提交失败，请稍后再试！", "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
 //          } else {
 //            this.$message.error("主编没有回复，不能提交！");

@@ -39,6 +39,11 @@
         this.searchParams.startDate=this.startDate;
         this.searchParams.endDate=this.endDate;
         this.getData();
+      },
+      endDate(){
+        this.searchParams.startDate=this.startDate;
+        this.searchParams.endDate=this.endDate;
+        this.getData();
       }
     },
     methods:{
@@ -50,7 +55,12 @@
               let data = JSON.parse(res.data);
               this.handleResultFlow(data);
             }else{
-              self.$message.error(res.msg.msgTrim());
+              self.$confirm(res.msg.msgTrim(), "提示",{
+              	confirmButtonText: "确定",
+              	cancelButtonText: "取消",
+              	showCancelButton: false,
+              	type: "error"
+              });
             }
           })
           .catch(e=>{

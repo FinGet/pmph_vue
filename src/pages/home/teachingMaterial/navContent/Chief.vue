@@ -463,7 +463,12 @@
                   if(type===1&&res.msg.msgTrim()=='遴选职位为空'){
                     this.$router.go(-1);
                   }else{
-                    this.$message.error(res.msg.msgTrim());
+                    this.$confirm(res.msg.msgTrim(), "提示",{
+                    	confirmButtonText: "确定",
+                    	cancelButtonText: "取消",
+                    	showCancelButton: false,
+                    	type: "error"
+                    });
                   }
 
                 }
@@ -497,7 +502,7 @@
        */
       sortChange(type,row){
         if(type==1){
-          if(row.isZhubian&&!(row.zhubianSort&&this.$commonFun.checkType(row.zhubianSort,'number')&&parseInt(row.zhubianSort)<999)){
+          if(row.isZhubian&&!(row.zhubianSort&&this.$commonFun.checkType(row.zhubianSort,'number')&&parseInt(row.zhubianSort)<=255)){
             row.zhubianSortIsOk=false;
           }else{
             row.zhubianSortIsOk=true;
@@ -506,7 +511,7 @@
 
 
         if(type==2){
-          if(row.isFuzhubian&&!(row.fuzhubianSort&&this.$commonFun.checkType(row.fuzhubianSort,'number')&&parseInt(row.fuzhubianSort)<999)){
+          if(row.isFuzhubian&&!(row.fuzhubianSort&&this.$commonFun.checkType(row.fuzhubianSort,'number')&&parseInt(row.fuzhubianSort)<=255)){
             row.fuzhubianSortIsOk=false;
           }else{
             row.fuzhubianSortIsOk=true;
@@ -527,13 +532,13 @@
           if(iterm.isZhubian){
             if(!this.$commonFun.Empty(iterm.zhubianSort))zhubianLength++;
             if(!isNaN(parseInt(iterm.zhubianSort))) zhubianSortList.push(parseInt(iterm.zhubianSort));
-            is_zhubianSort = isNaN(parseInt(iterm.zhubianSort))?true:false;
+            is_zhubianSort = (isNaN(parseInt(iterm.zhubianSort))||(parseInt(iterm.zhubianSort)>255))?true:false;
             zhubianData.push(iterm);
           }
           if(iterm.isFuzhubian){
             if(!this.$commonFun.Empty(iterm.fuzhubianSort))fubianLength++;
             if(!isNaN(parseInt(iterm.fuzhubianSort))) fuzhubianSortList.push(parseInt(iterm.fuzhubianSort));
-            is_fuzhubianSort = isNaN(parseInt(iterm.fuzhubianSort))?true:false;
+            is_fuzhubianSort = (isNaN(parseInt(iterm.fuzhubianSort))||(parseInt(iterm.zhubianSort)>255))?true:false;
             fuzhubianData.push(iterm);
           }
         })
@@ -547,13 +552,28 @@
 
         if(is_zhubianSort||is_fuzhubianSort){
          if((is_zhubianSort&&zhubianLength==0)||(is_fuzhubianSort&&fubianLength==0)) {
-           this.$message.error((is_zhubianSort&&zhubianLength==0)?'请输入主编排序':'请输入副主编排序');
+           this.$confirm((is_zhubianSort&&zhubianLength==0)?'请输入主编排序':'请输入副主编排序', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
          }else{
-           this.$message.error((is_zhubianSort?'主编':'副主编')+'排序码必须是整数');
+           this.$confirm((is_zhubianSort?'主编':'副主编')+'排序码必须是不大于255的整数', "提示",{
+           	confirmButtonText: "确定",
+           	cancelButtonText: "取消",
+           	showCancelButton: false,
+           	type: "error"
+           });
          }
 
         }else if(sumbit_2){
-            this.$message.error("请选择一个"+((zhubianSortList.length==0)?'主编':'副主编')+'发布');
+            this.$confirm("请选择一个"+((zhubianSortList.length==0)?'主编':'副主编')+'发布', "提示",{
+            	confirmButtonText: "确定",
+            	cancelButtonText: "取消",
+            	showCancelButton: false,
+            	type: "error"
+            });
           }
 
       //  return (zhubianSortIsOk&&fuzhubianSortIsOk)

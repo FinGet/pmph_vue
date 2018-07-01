@@ -318,8 +318,12 @@ export default {
        */
       checkDataIsOk(){
         var flag = true;
+
         this.extendListData.map(iterm=>{
           if(iterm.textbookName==''&&iterm.textbookRound==''&&iterm.sort==''){
+            iterm.roundIsOk=false;
+            iterm.sortIsOk=false;
+            iterm.nameIsOk=false;
                 flag = false;
           }else{
             if(!iterm.textbookRound || !this.$commonFun.checkType(iterm.textbookRound,'number')){
@@ -344,7 +348,12 @@ export default {
       save(next){
         var bookList = [];
         if(!this.checkDataIsOk()){
-          this.$message.error('请正确填写每本书籍数据');
+          /*this.$confirm('请正确填写每本书籍数据', "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });*/
           return;
         }
         this.extendListData.map(iterm=>{
@@ -389,11 +398,21 @@ export default {
                     this.getBookList();
                   }
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch((error) => {
-                this.$message.error('保存失败，请重试');
+                this.$confirm('保存失败，请重试', "提示",{
+                	confirmButtonText: "确定",
+                	cancelButtonText: "取消",
+                	showCancelButton: false,
+                	type: "error"
+                });
               });
           })
           .catch(e=>{})
@@ -409,22 +428,42 @@ export default {
         var ext=file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase();
         // 类型判断
         if(!(ext=='xls'||ext=='xlsx')){
-          this.$message.error("请按照模板格式的文档上传文件");
+          this.$confirm("请按照模板格式的文档上传文件", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         //文件名不超过40个字符
         if(file.name.length>40){
-          this.$message.error("文件名不能超过40个字符");
+          this.$confirm("文件名不能超过40个字符", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不为0
         if(file.size<1){
-          this.$message.error("文件大小不能小于1bt");
+          this.$confirm("文件大小不能小于1bt", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
         // 判断文件大小是否符合 文件不大于100M
         if(file.size/1024/1024 > 100){
-          this.$message.error("文件大小不能超过100M！");
+          this.$confirm("文件大小不能超过100M！", "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
           return;
         }
 
@@ -449,7 +488,12 @@ export default {
             })
           })
         }else{
-          this.$message.error(res.msg.msgTrim());
+          this.$confirm(res.msg.msgTrim(), "提示",{
+          	confirmButtonText: "确定",
+          	cancelButtonText: "取消",
+          	showCancelButton: false,
+          	type: "error"
+          });
         }
 
         this.uploadLoading = false;
@@ -459,7 +503,12 @@ export default {
        */
       uploadError(err, file, fileList){
         console.log(err);
-        this.$message.error(err.msg.msgTrim());
+        this.$confirm(err.msg.msgTrim(), "提示",{
+        	confirmButtonText: "确定",
+        	cancelButtonText: "取消",
+        	showCancelButton: false,
+        	type: "error"
+        });
         this.uploadLoading = false;
       },
     },

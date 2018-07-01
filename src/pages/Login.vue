@@ -21,12 +21,20 @@
         <p>最高权限:admin </p>
         <p> 密码：123</p>
       </div> -->
+
     </div>
+
+    <!--<alert @close = "close" v-if="showAlert" :show="showAlert">-->
+      <!--<div>{{alertMessage}}</div>-->
+    <!--</alert>-->
+
   </div>
+
 </template>
 
 <script>
 //  初始化一些数据
+import alert from "components/Alert"
 export default {
   data() {
     return {
@@ -46,10 +54,17 @@ export default {
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
         ]
-      }
+      },
+      // showAlert: false,
+      // alertMessage:''
     }
   },
   methods: {
+    // close(){
+    //   console.log(222222);
+    //   this.showAlert = false;
+    // },
+
     submit() {
       var _this=this;
       this.$refs['loginForm'].validate((valid) => {
@@ -77,11 +92,28 @@ export default {
           _this.$commonFun.Cookie.set('token',res.data.data.sessionPmphUserToken,2);
           _this.$router.push(_this.from?{path:_this.from}:{name:'个人中心'});
         }else{
-          _this.$message.error('账号/密码错误');
+
+
+          _this.$confirm("账号/密码错误", "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          })
+          // _this.showAlert = true;
+          // _this.alertMessage = "账号/密码错误";
+
         }
       }).catch(function(err) {
         console.log(err)
-        _this.$message.error('登录失败');
+
+        _this.$confirm("登录失败", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        })
+          .then(()=>{})
       })
     },
   },
@@ -107,6 +139,9 @@ export default {
     if(window._hmt){
       _hmt.push(['_trackPageview', '/login']);
     }
+  },
+  components:{
+    alert
   }
 }
 </script>

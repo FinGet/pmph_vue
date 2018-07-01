@@ -25,18 +25,25 @@
         <el-table :data="tableData" style="width:100%" class="table_list table-wrapper" stripe border>
             <!--<el-table-column type="selection" width="55">-->
             <!--</el-table-column>-->
+          <el-table-column
+            type="index" label="序号" align="center"
+            width="70">
+            <template scope="scope">
+              {{(scope.$index+1)+searchForm.pageSize*(searchForm.pageNumber-1)}}
+            </template>
+          </el-table-column>
             <el-table-column label="教材名称">
                 <template scope="scope">
                     <el-button type="text" style="color:#337ab7;white-space: normal;text-align:left;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.materialName}}</el-button>
                     <p v-else>{{scope.row.materialName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="显示结束日期" width="120" >
+            <el-table-column label="显示结束日期" width="128" >
                 <template scope="scope">
                     <p>{{scope.row.deadline}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="实际结束日期" width="120">
+            <el-table-column label="实际结束日期" width="128">
                 <template scope="scope">
                     <p>
                         {{scope.row.actualDeadline}}
@@ -74,12 +81,12 @@
                   </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="70">
+            <el-table-column prop="status" label="状态" width="65">
                 <template scope="scope">
                     {{scope.row.state}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="178">
+            <el-table-column label="操作" width="168">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>
@@ -119,7 +126,7 @@
         </el-table>
       <div class="pagination-wrapper">
         <el-pagination
-          v-if="totalNum>searchForm.pageSize"
+          v-if="totalNum"
           @size-change="handleSizeChange"
           @current-change="getTableData"
           :current-page.sync="searchForm.pageNumber"
@@ -326,7 +333,12 @@ export default {
                   this.$message.success('删除成功!');
                   this.getTableData();
                 }else{
-                  this.$message.error(res.msg.msgTrim());
+                  this.$confirm(res.msg.msgTrim(), "提示",{
+                  	confirmButtonText: "确定",
+                  	cancelButtonText: "取消",
+                  	showCancelButton: false,
+                  	type: "error"
+                  });
                 }
               })
               .catch(e=>{
