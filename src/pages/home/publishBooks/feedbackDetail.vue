@@ -26,7 +26,7 @@
             <el-form-item label="提交时间:">
               <p>{{ruleForm.gmtCreate}}</p>
             </el-form-item>
-            <el-form-item label="回复:" >
+            <el-form-item label="回复:" prop="authorReply">
               <el-input
                 type="textarea"
                 :disabled="type=='detail'"
@@ -62,7 +62,7 @@
         rules: {
           authorReply: [
             {
-              type: "string",
+
               required: true,
               message: "请输入回复内容",
               trigger: "blur"
@@ -140,10 +140,22 @@
 //          }
           } else {
             console.log("错误提交，请检查输入内容!!");
+            this.$nextTick(this.focuFuntion(formName));
             return false;
           }
         });
       },
+    focuFuntion(formName){
+      let _this = this;
+      console.log(this.$refs[formName].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
+      if(this.$refs[formName].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0){
+        var ss= this.$refs[formName].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+        ss.focus();
+      }else if(this.$refs[formName].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea").length>0){
+        var ss= this.$refs[formName].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea")[0];
+        ss.focus();
+      }
+    },
       /** 返回上一步*/
       back() {
         this.$router.go(-1);
