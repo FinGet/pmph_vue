@@ -261,7 +261,7 @@
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态">
+        <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":(scope.row.orgId==0&&scope.row.onlineProgress==3?"出版社已审核":stateList[scope.row.onlineProgress])}}</p>
           </template>
