@@ -868,9 +868,9 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           beforeClose: (action, instance, done) => {
-            let $el_message_box_errormsg = instance.$el.children["0"].children[1].children[2].children[1];
-            let value = instance.$children[2].$el.children[0].value;
-            if (action === 'confirm') {
+            let $el_message_box_errormsg = instance.$el.children["0"].children[1].children[2].children[1];//错误信息提醒div
+            let value = instance.$children[2].$el.children[0].value; //输入框内容
+            if (action === 'confirm') {  //点击的是确认
               //instance.confirmButtonLoading = true;
               //instance.confirmButtonText = '执行中...';
               //console.log(instance.$children[2].$el.children[0].value)
@@ -885,7 +885,7 @@ export default {
                   };
                   $el_message_box_errormsg.style.visibility="hidden";
                   $el_message_box_errormsg.innerHTML="";
-                  done();
+                  done();     //关闭提示框
                   _this.passorback(param);
                 }else{
                   $el_message_box_errormsg.style.visibility="visible";
@@ -895,7 +895,7 @@ export default {
             } else {
               $el_message_box_errormsg.style.visibility="hidden";
               $el_message_box_errormsg.innerHTML="";
-              done();
+              done();     //关闭提示框
             }
           },
 
