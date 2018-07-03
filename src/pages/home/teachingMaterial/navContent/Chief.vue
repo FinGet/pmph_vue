@@ -19,9 +19,10 @@
         </div>
         <div class="operation-wrapper">
           <el-button type="primary" @click="submit(2)"  v-if="showPublishBtn" :disabled="disabledPublishBtn">发布</el-button><!--||isChiefPublished-->
-          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission([2,3])||tableData.length==0))" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
-          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission([2,3])||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
-          <el-button type="warning" @click="reset" :disabled="!hasPermission([2,3])" v-if="!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">恢复到上次保存结果</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="((!hasPermission(2)||tableData.length==0))" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
+          <el-button type="primary" @click="submit(1)" :disabled="!hasPermission(3)||tableData.length==0" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">暂存</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission(2)" v-if="type=='zb'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">恢复到上次保存结果</el-button>
+          <el-button type="warning" @click="reset" :disabled="!hasPermission(3)" v-if="type=='bw'&&!(materialInfo.isForceEnd||materialInfo.isAllTextbookPublished)&&optionsType!='view'">恢复到上次保存结果</el-button>
           <el-button type="primary" @click="dialogVisible = true"> 查看历史记录 </el-button>
         </div>
       </div>
@@ -199,7 +200,7 @@
         //是否有主编
         const hasZhubian =  this.hasZhubian;
         //是否有遴选权限
-        const hasPermission = this.hasPermission([2,3]);
+        const hasPermission = this.hasPermission(2);
         //是否有后选人员
         const select_length = this.tableData.length>0;
 
@@ -213,7 +214,8 @@
 
         //return !(hasZhubian&&hasPermission&&select_length) || (isChiefPublished&&!hasChanged);
         //return !(hasPermission) || (isChiefPublished&&!hasChanged);
-        return !(hasPermission) ;
+        return !(hasPermission&&select_length)
+        //return !(hasPermission) ;
       },
     },
     created(){

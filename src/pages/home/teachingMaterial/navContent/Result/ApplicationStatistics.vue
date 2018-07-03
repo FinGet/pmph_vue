@@ -563,14 +563,16 @@ export default {
                 name: "书籍名称",
                 left:"10px;",
                 type: "category",
-
+                nameTextStyle:{/*color:"red",*/padding:[0,0,0,20]},
                 data: this.stBooks,
                 axisPointer: {
                   type: "shadow"
                 },
                 axisLabel: {
                   interval: 0,
-                  boundaryGap: [0, 0.01],
+                  boundaryGap: [0, 0.01],textStyle:{
+
+                             },
                   formatter: function(value) {
                     return value.split("").join("\n");
                   }

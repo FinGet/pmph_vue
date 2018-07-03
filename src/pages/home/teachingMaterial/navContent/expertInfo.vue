@@ -633,6 +633,13 @@
         </div>
       </div>
 
+      <div  class="yxyj" >
+        <div>院校推荐意见:</div>
+        <div style="height:145px;"></div>
+        <div style="text-align:right;"> <span style="padding-right:50px;">负责人签字</span> <span>(院校盖章)</span></div>
+        <div style="text-align:right;">年&nbsp;月&nbsp;日</div>
+      </div>
+
     </div>
 
 
@@ -641,7 +648,8 @@
       :visible.sync="showSendMsg"
       :before-close="clearInputMsg"
       size="tiny">
-      <div class="relative">
+      <el-form :model="ruleForm2"  :rules="rules2" ref="ruleForm2"  >
+      <el-form-item class="relative" prop="inputMsg">
         <el-input
           autofocus
           type="textarea"
@@ -649,14 +657,19 @@
           placeholder="请输入内容"
           @input.native="changeTextarea"
           @keyup.native.enter="sendmsg"
-          v-model="inputMsg">
+          v-model="ruleForm2.inputMsg">
         </el-input>
-        <p class="tip-text" v-if="250-inputMsg.length<20">还可输入{{250-inputMsg.length}}个字符</p>
-      </div>
-      <span slot="footer" class="dialog-footer">
+        <p class="tip-text" v-if="250-ruleForm2.inputMsg.length<20">还可输入{{250-ruleForm2.inputMsg.length}}个字符</p>
+      </el-form-item>
+      <!--<span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="sendmsg">发 送</el-button>
         <el-button @click="closeInputMsg">取 消</el-button>
-      </span>
+      </span>-->
+        <el-form-item align="right">
+          <el-button type="primary" @click="sendmsg('ruleForm2')">发 送</el-button>
+          <el-button @click="closeInputMsg">取 消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
     <el-dialog
       title="退回原因："
@@ -756,7 +769,17 @@
               addBookList:[],
               hasBookListChanged:false,
               showSendMsg:false,
-              inputMsg:'',
+              ruleForm2: {
+                inputMsg:'',
+              },
+              rules2: {
+                inputMsg: [
+                  {required: true,message: "请输入回复内容",trigger: "blur"},
+                  { min: 1, max: 250, message: "不能超过200个字符", trigger: "change,blur" }
+                ]
+
+              },
+
               rankList:['无','国际','国家','省部','市级'],
               national_plan_rankList:['无','教育部十二五','国家卫计委十二五','教育部十二五&&国家卫计委十二五'],
               textbook_rankList:['无','其他教材','教育部规划','卫计委规划','区域规划','创新教材'],
@@ -1252,7 +1275,7 @@
          * 发送消息
          */
         sendmsg(){
-          if(!this.inputMsg){
+          /*if(!this.inputMsg){
             this.$confirm('发送内容不能为空！', "提示",{
             	confirmButtonText: "确定",
             	cancelButtonText: "取消",
@@ -1260,9 +1283,11 @@
             	type: "error"
             });
             return;
-          }
+          }*/
+          this.$refs.ruleForm2.validate((valid) => {
+              if (valid) {
           this.$axios.post(this.api_send_msg,this.$commonFun.initPostData({
-            content:this.inputMsg,
+            content:this.ruleForm2.inputMsg,
             sessionId:this.$getUserData().userInfo.id,
             receiverId:this.expertInfoData.userId
           }))
@@ -1290,14 +1315,19 @@
               });
               this.closeInputMsg();
             })
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+          });
         },
         /**
          * 当聊天输入框发生变化
          */
         changeTextarea(){
-          if(this.inputMsg.length>250){
+          if(this.ruleForm2.inputMsg.length>250){
             this.$nextTick(() => {
-              this.inputMsg=this.inputMsg.substring(0,250);
+              this.ruleForm2.inputMsg=this.ruleForm2.inputMsg.substring(0,250);
             })
           }
         },
@@ -1305,11 +1335,11 @@
          * 清除已输入文字
          */
         clearInputMsg(done){
-          this.inputMsg='';
+          this.ruleForm2.inputMsg='';
           done();
         },
         closeInputMsg(){
-          this.inputMsg='';
+          this.ruleForm2.inputMsg='';
           this.showSendMsg=false;
         },
         /**
@@ -1320,6 +1350,7 @@
           document.title = this.materialInfo.materialName;
 
           window.print();
+
           return false;
         },
         /**
@@ -1459,7 +1490,18 @@
       },
     }
 </script>
+<style>
+  .yxyj{
+    display:none;
+  }
+  @media print{
+    .yxyj{
+      border:1px solid #5b6877;padding:5px;display: block;
+    }}
+</style>
 <style scoped>
+
+
   .info-wrapper{
     /*width: 1100px;*/
     padding-bottom: 20px;

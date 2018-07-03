@@ -174,7 +174,7 @@ export default new Router({
                   path: 'presscheck',
                   name: '申报表审核',
                   component: PressCheck,
-                  meta: {applicationName: 'presscheck', replaceName: false}
+                  meta: {applicationName: 'presscheck'}
                 },
                 {
                   path: 'presscheck-pmph',
