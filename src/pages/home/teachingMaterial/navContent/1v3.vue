@@ -48,14 +48,15 @@
       <!--操作按钮-->
       <div class="operation-wrapper">
 
+
         <span v-if=""
-              :class="allPageSelected?'el-checkbox__input is-checked':'el-checkbox__input'"
+              :class="isGetTableDataDone?(allPageSelected?'el-checkbox__input is-checked':'el-checkbox__input'):'selecting_all'"
               id="select_all_checkbox_wrapper"
               :title="allPageSelected?'取消全选':'全分页选中'"
         >
           <span class="el-checkbox__inner"></span>
           <input type="checkbox" id="select_all_checkbox" @click="allPageSelectSwitch(true)" :disabled="!isGetTableDataDone"/>
-          <span class="select_all_text">{{allPageSelected?'取消全选':'分页全选'}}</span>
+          <span class="select_all_text">{{isGetTableDataDone?(allPageSelected?'取消全选':'分页全选'):'正在读取'}}</span>
         </span>
 
 
@@ -126,8 +127,10 @@
         <el-table-column
           label="遴选主编/副主编" min-width="170">
           <template scope="scope">
-            <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
-            <span v-else>待遴选</span>
+            <div style="display: inline-block;">
+              <span v-if="scope.row.editorsAndAssociateEditors" v-html="scope.row.editorsAndAssociateEditors"></span>
+              <span v-else>待遴选</span>
+            </div>
             <router-link :to="{name:'遴选',query:{bookid:scope.row.textBookId,bookname:scope.row.textbookName,type:'zb',
               q:scope.row.myPower,opt:(((scope.row.isLocked&&materialInfo.role!==2&&materialInfo.role!==1)||scope.row.allTextbookPublished||forceEnd)?'view':'edit'),isChiefPublished:scope.row.isChiefPublished}}">
               <el-button type="text">
@@ -1045,7 +1048,7 @@
 </script>
 <style>
   .editors_sql_label{
-    display:inline-block;
+    display:block;
   }
   .scopeSpan1{
     display: inline-block;
@@ -1127,4 +1130,7 @@
     border-radius: 100%;
   }
 
+  .selecting_all span.el-checkbox__inner {
+    background: gray;
+  }
 </style>
