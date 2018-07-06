@@ -400,9 +400,21 @@ export default {
 
 
         } else {
+
+          this.$nextTick(this.focuFuntion);
          return false;
         }
       });
+    },focuFuntion(){
+      let _this = this;
+      console.log(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
+      if(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0){
+        var ss= this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+        ss.focus();
+      }else if(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea").length>0){
+        var ss= this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea")[0];
+        ss.focus();
+      }
     },
     download(url){
       console.log("url"+url);
@@ -464,6 +476,7 @@ export default {
           });*/
         });
           } else {
+            this.$nextTick(this.focuFuntion);
             return false;
           }
       });

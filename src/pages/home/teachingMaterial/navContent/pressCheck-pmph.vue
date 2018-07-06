@@ -214,7 +214,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="120">
+        <el-table-column label="申报单位/工作单位" min-width="200">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
@@ -226,23 +226,23 @@
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" min-width="160">
+        <el-table-column label="联系方式" min-width="150">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职位" min-width="220">
+        <el-table-column label="所选书籍与职位" min-width="140">
           <template scope="scope">
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态">
+        <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="是否收到纸质表">
+        <el-table-column label="是否收到纸质表" width="135">
           <template scope="scope">
             <p type="text" v-if="scope.row.offlineProgress==0" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
 
