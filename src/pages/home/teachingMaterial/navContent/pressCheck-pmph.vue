@@ -208,13 +208,13 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          min-width="110">
+          min-width="80">
           <template scope="scope">
             {{scope.row.username}}
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="200">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
@@ -240,6 +240,11 @@
         <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{stateList[scope.row.onlineProgress]}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="提交时间" min-width="100">
+          <template scope="scope">
+            <p>{{$commonFun.formatDate(scope.row.commitDate)}}</p>
           </template>
         </el-table-column>
         <el-table-column label="是否收到纸质表" width="135">

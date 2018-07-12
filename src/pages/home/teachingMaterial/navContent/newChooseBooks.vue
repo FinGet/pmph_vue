@@ -904,10 +904,10 @@ export default {
            this.$refs.ruleForm.validateField('materialProjectEditors');
            console.log('项目编辑',typeof(this.material.materialProjectEditors));
          }
-       this.$message({
+       /*this.$message({
         message: `添加成功！`,
         type: "success"
-      });
+      });*/
        this.chooseVisiable=false;
       },
       /* 数组去重 */

@@ -39,11 +39,17 @@
       size="300"
       top="5%"
     >
+      <div  v-if="!isUserId" style="width: 200px;">
       <el-input v-model="userId" placeholder="请输入微信企业号用户名" @keyup.enter.native="submit"></el-input>
-       <span slot="footer" class="dialog-footer">
+       <div  style="padding-top:20px;text-align: center;">
          <el-button type="primary" @click="submit">确 定</el-button>
          <el-button type="primary" @click="close">取 消</el-button>
-      </span>
+      </div>
+      </div>
+      <div v-if="isUserId" >
+        <div style="text-align: center;">您当前userId为:{{userId}}</div>
+        <div style="color:red;padding-top: 10px;" ><a href="#" style="color:red;" @click="unblind">>>解除绑定</a></div>
+      </div>
     </el-dialog>
   </div>
 
@@ -72,7 +78,8 @@
         sidebarFlod: true,
         userData: undefined,
         initQCode: '',
-        detailVisible:false
+        detailVisible:false,
+        isUserId:false
       }
     },
     computed: {
@@ -163,7 +170,21 @@
           })
       },
       showWx(){
-        this.detailVisible = true;
+        this.$axios.get('/pmpheep/wx/IsUserId') .then(response => {
+          let res = response.data;
+          console.log(res);
+          if(res.data.isUserId){
+            this.isUserId = true;
+            this.userId = res.data.userId;
+
+          }else{
+            this.isUserId = false;
+            this.userId = '';
+          }
+          this.detailVisible = true;
+        }).catch(e => {
+          this.detailVisible = true;
+        })
       },
       close(){
         this.detailVisible = false;
@@ -181,6 +202,26 @@
               this.detailVisible = false;
             }else{
               this.$message.success("绑定失败");
+            }
+
+          })
+          .catch(e => {
+            console.log(e);
+          })
+      },
+      unblind(){
+        var params = {
+          userId:this.userId
+        };
+        this.$axios.get('/pmpheep/wx/unblind', {params: params})
+          .then(response => {
+            let res = response.data;
+            console.log(res);
+            if(res.code==1){
+              this.$message.success("解绑成功");
+              this.detailVisible = false;
+            }else{
+              this.$message.success("解绑失败");
             }
 
           })
