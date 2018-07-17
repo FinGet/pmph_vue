@@ -77,7 +77,7 @@
             :file-list="fileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
-            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
+            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过200M</div>
           </my-upload>
         </div>
       </el-form-item>
@@ -491,9 +491,9 @@ export default {
     beforeAvatarUpload(file){
       console.log(file);
       console.log(typeof file);
-      const isLt100M = file.size / 1024 / 1024 <= 100;
+      const isLt100M = file.size / 1024 / 1024 <= 200;
        if (!isLt100M) {
-          this.$confirm('上传文件大小不能超过 100MB!', "提示",{
+          this.$confirm('上传文件大小不能超过 200MB!', "提示",{
           	confirmButtonText: "确定",
           	cancelButtonText: "取消",
           	showCancelButton: false,
