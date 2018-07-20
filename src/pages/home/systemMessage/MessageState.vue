@@ -1,7 +1,19 @@
 <template>
   <div class="messagestate">
     <el-row>
+
+
+
+
       <el-col :span="24">
+        <el-col :span="3">
+          <el-col :span="23" class="search-10">
+            <el-select v-model="personalOrOrg" placeholder="请选择" @change="search">
+              <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-col>
         <el-col :span="8">
           <el-col :span="14" class="search-10">
             <el-input v-model.trim="name" placeholder="请输入姓名/机构名称" @keyup.enter.native="search"></el-input>
@@ -30,13 +42,13 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange">
-          <el-table-column
+          <!--<el-table-column
             label="用户名"
             align="center"
             width="120"
             prop="username"
             show-overflow-tooltip>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             label="姓名"
             align="center"
@@ -45,16 +57,35 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            label="工作单位"
+            align="center"
+            width="120"
+            prop="workplace"
+            show-overflow-tooltip>
+          </el-table-column>
+          <!--<el-table-column
             prop="orgusername"
             label="机构账号"
             align="center"
             width="200">
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             prop="dptname"
             label="机构名称"
             align="center"
             width="200">
+          </el-table-column>
+          <el-table-column
+            prop="orgusername"
+            label="管理员姓名"
+            align="center"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="handphone"
+            align="center"
+            label="联系方式"
+          >
           </el-table-column>
           <el-table-column
             prop="sendTime"
@@ -68,12 +99,7 @@
             label="接收时间"
           >
           </el-table-column>
-          <el-table-column
-            prop="handphone"
-            align="center"
-            label="联系方式"
-          >
-          </el-table-column>
+
           <el-table-column
             label="状态"
             width="80"
@@ -112,7 +138,26 @@
         pageSize: 20,
         name: '',
         dataTotal: 0,
-        senderId:0
+        senderId:0,
+        personalOrOrg:'0',
+        state: [
+          {
+            value: '0',
+            label: '全部'
+          },
+          {
+            value: '1',
+            label: '社内用户'
+          },
+          {
+            value: '2',
+            label: '作家用户'
+          },
+          {
+            value: '3',
+            label: '机构管理员'
+          }
+        ],
       }
     },
     mounted() {
@@ -138,6 +183,7 @@
             senderId:this.senderId,
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
+            receiverType:this.personalOrOrg,
             isRead: this.isRead==0?'':this.isRead==1?true:false
           }
         }).then((response) => {
@@ -209,5 +255,8 @@
   height:36px;
   line-height:36px;
   margin:10px 0 0 10px;
+}
+.el-select{
+  width: 100%;
 }
 </style>

@@ -238,19 +238,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="200">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" min-width="120" >
+        <el-table-column label="职务/职称" min-width="100" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" min-width="150">
+        <el-table-column label="联系方式" min-width="120">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
@@ -264,6 +264,11 @@
         <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":(scope.row.orgId==0&&scope.row.onlineProgress==3?"出版社已审核":stateList[scope.row.onlineProgress])}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="提交时间" min-width="100">
+          <template scope="scope">
+            <p>{{$commonFun.formatDate(scope.row.commitDate)}}</p>
           </template>
         </el-table-column>
         <el-table-column label="是否收到纸质表" width="135">

@@ -1,10 +1,17 @@
 <template>
   <div class="message-list">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="15">
         <div class="search-title">标题:</div>
-        <el-col :span="8" class="search-10">
+        <el-col :span="7" class="search-10">
           <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
+        </el-col>
+        <div class="search-title">发送对象:</div>
+        <el-col :span="5" class="search-10">
+          <el-select v-model="receiverFilterType" placeholder="请选择发送对象" @change="search">
+            <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-col>
         <el-button class="btn" type="primary"  icon="search" @click="search">搜索</el-button>
       </el-col>
@@ -44,6 +51,20 @@
           prop="sendName"
           align="center"
           label="发送者">
+        </el-table-column>
+        <el-table-column
+          prop="receiverFilterType"
+          align="center"
+          label="发送对象">
+          <template scope="scope">
+            {{scope.row.receiverFilterType==1?'学校管理员':(
+              scope.row.receiverFilterType==2?'所有人':(
+              scope.row.receiverFilterType==3?'特定对象':(
+              scope.row.receiverFilterType==4?'教材报名者':''
+            )
+            )
+            )}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="sendTime"
@@ -144,6 +165,29 @@
         title: '',
         dataTotal: 0,
         logUserInfo:this.$getUserData().userInfo,
+        receiverFilterType:"",
+        state: [
+          {
+            value: '',
+            label: '全部'
+          },
+          {
+            value: '1',
+            label: '学校管理员'
+          },
+          {
+            value: '2',
+            label: '所有人'
+          },
+          {
+            value: '3',
+            label: '特定对象'
+          },
+          {
+            value: '4',
+            label: '教材报名者'
+          }
+        ],
       }
     },
     computed:{
@@ -172,7 +216,8 @@
             sessionId: this.$getUserData().sessionId,
             title: this.title,
             pageNumber: this.pageNumber,
-            pageSize: this.pageSize
+            pageSize: this.pageSize,
+            receiverFilterType:this.receiverFilterType
           }
         }).then((response) => {
           let res = response.data
