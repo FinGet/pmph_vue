@@ -81,7 +81,7 @@
                   </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="65">
+            <el-table-column prop="status" label="状态" width="68">
                 <template scope="scope">
                     {{scope.row.state}}
                 </template>
@@ -367,6 +367,12 @@ export default {
 }
 
 </script>
+<!--<style>
+  .el-table .cell {
+    padding-left:8px;
+    padding-right: 8px;
+  }
+</style-->>
 <style scoped>
 .application_list {
     width: 100%;
