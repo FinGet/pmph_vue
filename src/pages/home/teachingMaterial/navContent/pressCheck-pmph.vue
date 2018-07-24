@@ -107,6 +107,23 @@
             </el-select>
           </div>
         </div>
+        <div class="searchBox-wrapper" style="width:550px;">
+          <div class="searchName">提交时间：<span></span></div>
+          <div class="searchInput">
+            <el-date-picker
+              v-model="startCommitDate"
+              type="datetime"
+              placeholder="选择提交开始时间"
+            >
+            </el-date-picker>
+            <el-date-picker
+              v-model="endCommitDate"
+              type="datetime"
+              placeholder="选择提交结束时间"
+            >
+            </el-date-picker>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
@@ -411,8 +428,11 @@
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
-          haveFile:''
+          haveFile:'',
+
         },
+        startCommitDate:'',
+        endCommitDate:'',
         tableData: [],
         totalNum:0,
         exportDialog:false,
@@ -482,6 +502,8 @@
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
           haveFile:this.searchParams.haveFile,
+          startCommitDate:this.$commonFun.formatDate(+new Date(this.startCommitDate)),
+          endCommitDate:this.$commonFun.formatDate(+new Date(this.endCommitDate))
         }})
           .then(response=>{
             var res = response.data;
