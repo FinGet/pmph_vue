@@ -122,6 +122,24 @@
             </el-select>
           </div>
         </div>
+
+        <div class="searchBox-wrapper" style="width:550px;">
+          <div class="searchName">提交时间：<span></span></div>
+          <div class="searchInput">
+          <el-date-picker
+            v-model="startCommitDate"
+            type="datetime"
+            placeholder="选择提交开始时间"
+            >
+          </el-date-picker>
+          <el-date-picker
+            v-model="endCommitDate"
+            type="datetime"
+            placeholder="选择提交结束时间"
+            >
+          </el-date-picker>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
@@ -197,6 +215,21 @@
                 :value="item.value">
               </el-option>
             </el-select>
+            <!--<div class="searchBox-wrapper" v-else-if="powerSearchValue==11">
+              <el-date-picker
+                v-model="startCreateDate"
+                type="datetime"
+                placeholder="选择提交开始时间"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+              <el-date-picker
+                v-model="endCreateDate"
+                type="datetime"
+                placeholder="选择提交结束时间"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </div>-->
+
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===0"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===3"></el-input>
@@ -377,9 +410,19 @@
           },{
             value:9,
             label:'教材大纲'
+          },{
+            value:10,
+            label:'是否被遴选'
+          },{
+            value:11,
+            label:'提交时间'
           }
-
         ],
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          }
+        },
         powerSearchValue:0,
         positionValue:[
           {
@@ -451,8 +494,11 @@
           onlineProgress:'',
           offlineProgress:'',
           haveFile:'',
-          isSelect:''
+          isSelect:'',
+
         },
+        startCommitDate:'',
+        endCommitDate:'',
         tableData: [],
         totalNum:0,
         exportDialog:false,
@@ -529,7 +575,9 @@
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
           haveFile:this.searchParams.haveFile,
-            isSelect:this.searchParams.isSelect
+          isSelect:this.searchParams.isSelect,
+          startCommitDate:this.$commonFun.formatDate(+new Date(this.startCommitDate)),
+          endCommitDate:this.$commonFun.formatDate(+new Date(this.endCommitDate))
         }})
           .then(response=>{
             var res = response.data;
