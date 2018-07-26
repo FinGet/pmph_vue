@@ -25,12 +25,14 @@
       </div>
     </div>
     <div class="app-main" ref="main">
-      <div class="app-main-inner" :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
-        <transition name="fade" mode="out-in">
-          <router-view></router-view>
-        </transition>
+      <div class="app-main-border-box">
+        <div class="app-main-inner" :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </div>
+        <div class="back_to_top" v-if="isShowBackTop" @click="backToTop"></div>
       </div>
-      <div class="back_to_top" v-if="isShowBackTop" @click="backToTop"></div>
     </div>
     <el-dialog
       title="微信绑定"
@@ -277,7 +279,7 @@
     transition: all .28s ease-out;
     margin-left: 200px;
     margin-top: 38px;
-    padding: 15px 20px;
+    /*padding: 15px 20px;*/
     transition: all .3s;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -304,6 +306,13 @@
     float: left;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .app-main-border-box{
+    padding: 15px 20px;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
 
   .app_main_border {
