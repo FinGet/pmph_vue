@@ -1,0 +1,825 @@
+<template>
+
+  <div class="ClinicalDecision_nav">
+    <div class="tab_nav_outbox" >
+      <div style="float:left;"><div class="div_img"><img :src="productImage" style="width: 30px;height: 30px;"/></div> <span type="text"  class="back_button">{{productName[product.product_type]}}</span></div>
+      <div class="div_publicInfo" v-if="product.is_published">发布人：{{product.publisher}}，发布时间：{{product.gmt_publish}}，状态：已发布</div>
+      <div class="div_publicInfo" v-if="!product.is_published">发布人：无，发布时间：无，状态：待发布</div>
+    </div>
+
+    <div class="bottom_tab_content" ref="bottom_tab_content" :style="{'min-height':contentH}">
+    <div class="newChoose">
+      <el-form :model="product" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
+        <el-form-item label="产品名称：" prop="productName" style="">
+         {{productName[product.product_type]}}
+        </el-form-item>
+
+        <el-form-item label="审核人:"  prop="auditorList">
+          <el-col :span="24">
+            <el-button type="primary"  size="small" @click="chooseProjectAuditor" style="margin-right:10px;">选择</el-button>
+            <el-tag
+              class="marginR10"
+              v-for="(tag,index) in ruleForm.auditorList"
+              :key="index"
+              :closable="true"
+              type="info"
+              @close="handleAuditorClose(index)"
+            >
+              {{tag.auditor_name}}
+            </el-tag>
+            <br>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="选项：">
+          <el-col>
+            <el-table
+              :data="listTableData"
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="名称"
+              >
+              </el-table-column>
+              <el-table-column
+                label="是否使用"
+                width="150"
+                align="center"
+              >
+                <template scope="scope">
+                  <el-checkbox v-model="scope.row.usecheck" @change="optionChange(scope.row)"></el-checkbox>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="是否必填"
+                width="150"
+                align="center">
+                <template scope="scope">
+                  <el-checkbox v-if="!scope.row.show" v-model="scope.row.needcheck" :disabled="scope.row.usecheck?false:true"></el-checkbox>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="扩展项：">
+          <el-col :span="12">
+            <el-button type="primary"  size="small" @click="addExtend">新增扩展项</el-button>
+            <br>
+            <el-table
+              :data.sync="ruleForm.ProductExtensionList"
+              border
+              style="width: 100%">
+              <el-table-column label="名称">
+              <template scope="scope">
+                <el-form :model="scope.row" :ref="'extensionName'+scope.$index" :rules="rules" style="margin:18px 0;">
+                  <el-form-item prop="extensionName" style="margin:18px 0;">
+                    <el-input v-model="ruleForm.ProductExtensionList[scope.$index].extensionName" placeholder="请输入名称" @keyup.enter.native="submitForm"></el-input>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+              <el-table-column
+                label="是否必填"
+                align="center"
+                width="150">
+                <template scope="scope">
+                  <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                align="center"
+                width="150">
+                <template scope="scope">
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="handleDelete(scope.$index, ruleForm.ProductExtensionList)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item label="产品简介：" required >
+          <el-col :span="24">
+              <Editor ref="editor" :config="editorConfig" ></Editor>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="上传通知扫描图片：" prop="producntImg">
+          <my-upload
+            class="upload"
+            :auto-upload="true"
+            name="files"
+            action="/pmpheep/material/upTempFile"
+            :on-remove="imgUploadChange"
+            :on-success="imgUploadSuccess"
+            :before-upload="imgBeforeUpload"
+            :file-list="product.producntImg">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </my-upload>
+        </el-form-item>
+        <el-form-item label="备注："  >
+          <el-col :span="24">
+              <EditorNote ref="editorNote" :config="editorNoteConfig" ></EditorNote>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item label="附件：" prop="productAttachment">
+          <el-col :span="12">
+            <my-upload
+              class="upload"
+              action="/pmpheep/material/upTempFile"
+              name="files"
+              :auto-upload="true"
+              :on-remove="fileUploadChange"
+              :before-upload="fileBeforeUpload"
+              :on-success="fileUploadSuccess"
+              :file-list="product.productAttachment">
+              <el-button size="small" type="primary" >点击上传</el-button>
+            </my-upload>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item class="text-center">
+          <el-button type="primary"  >预览</el-button>
+          <el-button type="primary" @click="submitForm(0)" :disabled = "isDisabled">暂存</el-button>
+          <el-button type="primary" @click="submitForm" >发布</el-button>
+        </el-form-item>
+      </el-form>
+
+
+      <el-dialog :title="chooseTitle" :visible.sync="chooseVisiable" size="large" top="5%" @close="closeDialog">
+        <user-pmph select :radio="!Multichoice" :clearTableSelect.sync="clearTableSelect"  @selection-change="conactPersonChange">
+          <el-button  type="primary" @click="addCheckedConact()">增加</el-button>
+        </user-pmph>
+      </el-dialog>
+    </div>
+    </div>
+  </div>
+
+</template>
+
+<script type="text/ecmascript-6">
+import 'url-search-params-polyfill';
+import userPmph from "components/user-pmph";
+import Editor from "../../../../components/Editor.vue";
+ import EditorNote from  "../../../../components/EditorNote.vue";
+export default {
+  data() {
+    return {
+      editProductUrl:'/pmpheep/product/init',
+      submitProductUrl:'/pmpheep/product/save/',
+      chooseVisiable: false, // 选择弹窗
+      chooseTitle: "", // 选择弹出窗的title
+      Multichoice: true, // 是否可以多选，传递给Departments子组件
+      productName:['','人卫临床助手','人卫用药助手','人卫中医助手'],
+      contentH:'auto',
+      productImage:'../../../../../static/static-image/rwej01.png',
+      labelPosition: "right",
+      /*isloading:false,*/
+      clearTableSelect:false,
+      rules: {
+        auditorList:[{type:'array', required: true,message:'请至少选择一个申请人' ,trigger: "change" }],
+        extensionName:[
+          {required: true, message: "请填写名称", trigger: "blur" },
+          {min:1,max:100,message:'不能超过100个字符',trigger:'change,blur'}
+        ],
+        producntImg:[
+          {type:'array',required: false, message: "请至少上传一张图片", trigger: "blur" },
+        ],
+        productAttachment:[
+          {type:'array',required: true, message: "请至少上传一个文件", trigger: "blur" },
+        ],
+
+      },
+      ruleForm: {
+        auditorList:[], //审核人
+        ProductExtensionList:[],   //扩展项
+        producntImgList:[],
+        productAttachmentList:[],
+        descriptionContent :{},
+        noteContent:{},
+      },
+      editorConfig: {
+        initialFrameWidth: null,
+        initialFrameHeight: 200
+      },
+      editorNoteConfig:{
+        initialFrameWidth: null,
+        initialFrameHeight: 200
+      },
+      isDisabled:false,
+      product:{
+        id:'',
+        product_type: this.$route.query.clinicaltype,
+        auditorList:[], //审核人
+        descriptionContent :{},
+        noteContent:{},
+        producntImg:[],
+        productAttachment:[],
+        is_published:false,
+        publisher:'',
+        gmt_publish:''
+      },
+      listTableData: [
+        {
+          name: "所在单位意见",
+          key: "is_unit_advise_used",
+          usecheck: false,
+          show: true
+        },
+        {
+          name: "主要学习经历",
+          key:'is_edu_exp_used',
+          requiredKey:'is_edu_exp_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主要工作经历",
+          key:'is_work_exp_used',
+          requiredKey:'is_work_exp_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主要学术兼职",
+          key:'is_acade_used',
+          requiredKey:'is_acade_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "人卫社教材编写情况",
+          key:'is_pmph_textbook_used',
+          requiredKey:'is_pmph_textbook_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "主编学术专著情况",
+          key:'is_monograph_used',
+          requiredKey:'is_monograph_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+        name: "主编或参编图书情况",
+        key:'is_edit_book_used',
+        requiredKey:'is_edit_book_required',
+        usecheck: false,
+        needcheck: false
+    },
+
+
+      ],
+
+    };
+  },
+  computed:{
+
+  },
+  watch:{
+
+  },
+  created() {
+    this.initEditData();
+  },
+  mounted () {
+    document.onkeydown = function() {
+      if(window.event.keyCode==13) {
+        return false;
+      }
+    }
+    //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
+    var windowH = document.documentElement.clientHeight;
+    this.contentH = windowH-100+'px';
+    switch (this.$route.query.clinicaltype) {
+      case '1': this.productImage = '../../../../../static/static-image/rwej01.png';break;
+      case '2': this.productImage = '../../../../../static/static-image/rwej02.png';break;
+      case '3': this.productImage = '../../../../../static/static-image/rwej03.png';break;
+      default: this.productImage = '../../../../../static/static-image/rwej03.png';break;
+    }
+  },
+
+  methods: {
+
+    //修改教材初始化
+    initEditData(){
+        this.$axios.get(this.editProductUrl,{
+          params:{
+            type:this.product.product_type
+          }
+        }).then((res)=>{
+          if(res.data.code==1){
+            // 获取到 相应的数据
+            this.product.id = res.data.data.id;
+            this.product.is_published=res.data.data.is_published;
+            this.isDisabled = res.data.data.is_published&&!this.$commonFun.Empty(this.product.id);
+            if(this.product.is_published){
+              this.product.publisher = res.data.data.publisher;
+              this.product.gmt_publish = this.$commonFun.formatDate(res.data.data.gmt_publish);
+            }
+
+            //选项赋值
+            for(var i in this.listTableData){
+              this.listTableData[i].usecheck=res.data.data[this.listTableData[i].key];
+              console.log(this.listTableData[i].usecheck);
+              if(this.listTableData[i].requiredKey){
+                this.listTableData[i].needcheck=res.data.data[this.listTableData[i].requiredKey];
+              }
+            }
+            //项目编辑赋值
+            console.log(res.data.data.auditorList);
+            for(var i in res.data.data.auditorList){
+              this.product.auditorList.push(res.data.data.auditorList[i]);
+              this.ruleForm.auditorList.push(res.data.data.auditorList[i]);
+            }
+            //扩展项赋值
+            this.ruleForm.ProductExtensionList=res.data.data.productExtensionList||[];
+            //文件赋值
+            var noticeArr=res.data.data.producntImgList;
+            for(var i in noticeArr){
+              this.ruleForm.producntImgList.push({
+                id:noticeArr[i].id,
+                attachment:noticeArr[i].attachment,
+                name:noticeArr[i].name,
+              })
+              this.product.producntImg.push({
+                id:noticeArr[i].id,
+                product_id:this.product.id,
+                name:noticeArr[i].name,
+                url:noticeArr[i].attachment,
+                is_scan_img:true
+              })
+            }
+            var noteArr=res.data.data.productAttachmentList;
+            for(var i in noteArr){
+              this.ruleForm.productAttachmentList.push({
+                id:noteArr[i].id,
+                attachment:noteArr[i].attachment,
+                name:noteArr[i].name,
+              })
+              this.product.productAttachment.push({
+                id:noteArr[i].id,
+                product_id:this.product.id,
+                name:noteArr[i].name,
+                url:noteArr[i].attachment,
+                is_scan_img:false
+              })
+            }
+             //内容备注赋值
+            this.product.noteContent=res.data.data.noteContent||{};
+            this.product.descriptionContent=res.data.data.descriptionContent||{};
+            this.ruleForm.noteContent=res.data.data.noteContent||{};
+            this.ruleForm.descriptionContent=res.data.data.descriptionContent||{};
+            var _this=this;
+            setTimeout(function() {
+              if(!_this.$commonFun.Empty(res.data.data.noteContent)){_this.$refs.editorNote.setContent(res.data.data.noteContent.content)}else{
+                _this.$refs.editorNote.setContent("");
+              };
+              if(!_this.$commonFun.Empty(res.data.data.descriptionContent)){
+                _this.$refs.editor.setContent(res.data.data.descriptionContent.content)
+              }
+              else{
+                _this.$refs.editor.setContent("");
+              };
+            },1000);
+          }
+        })
+
+    },/* 字符串转数组 */
+    stringToArray(str){
+      var arr=str.replace(/\[|\]/g,'').split('},');
+      var result=[];
+      if(arr[0]!=''){
+        for(var j=0;j<arr.length;j++){
+          result.push((j==arr.length-1)?(JSON.parse(arr[j])):(JSON.parse(arr[j]+'}')));
+        }
+      }
+      return result;
+    },
+    handleDelete(index, data) {
+      data.splice(index, 1);
+    },
+    addExtend() {
+      this.ruleForm.ProductExtensionList.push({
+        id:null,
+        productId:this.product.id,
+        extensionName: "",
+        isRequired: false
+      });
+    },
+    /* 选项checkbox改变 */
+    optionChange(obj){
+      if(!obj.usecheck){
+        obj.needcheck=false;
+      }
+    },
+    chooseProjectAuditor() {
+      this.chooseVisiable = true;
+      this.chooseTitle = "审核人设置";
+      this.Multichoice = true;
+    },
+    /**
+     * 删除选中的项目编辑
+     */
+    handleAuditorClose(val) {
+      this.ruleForm.auditorList.splice(val, 1);
+      this.product.auditorList.splice(val, 1);
+      this.$refs.ruleForm.validateField('auditorList');
+    },
+    /**
+     * 关闭弹出层
+     */
+    closeDialog() {
+      this.clearTableSelect=!this.clearTableSelect;
+    },
+    /* 联系人选择 */
+    conactPersonChange(val){
+      this.checkedConactPersonData=val;
+      console.log(this.checkedConactPersonData);
+    },
+    /* 增加 */
+    addCheckedConact(){
+
+        for(var i in this.checkedConactPersonData){
+          /* 去重 */
+          if(this.removeRepeat(this.ruleForm.auditorList,this.checkedConactPersonData[i])){
+            this.product.auditorList.push({product_id:this.product.id,auditor_id:this.checkedConactPersonData[i].id,auditor_name:this.checkedConactPersonData[i].realname});
+            this.ruleForm.auditorList.push({product_id:this.product.id,auditor_id:this.checkedConactPersonData[i].id,auditor_name:this.checkedConactPersonData[i].realname});
+          }
+          this.$refs.ruleForm.validateField('auditorList');
+      }
+      this.chooseVisiable=false;
+    },
+    /* 数组去重 */
+    removeRepeat(arr,obj){
+      for(var i in arr){
+        if(arr[i].auditor_id==obj.id){
+          return false;
+        }
+      }
+      return true;
+    },
+    /* 文件上传改变 */
+    /* 图片 */
+    imgUploadChange(file,filelist){
+      this.product.producntImg=filelist;   //表单验证用
+      this.ruleForm.producntImgList=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.producntImgList.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name,is_scan_img:true});
+      })
+      console.log(file,filelist);
+      this.$refs.ruleForm.validateField('producntImg');
+    },
+    imgBeforeUpload(file){
+      for(var i in this.ruleForm.producntImgList){
+        if(this.ruleForm.producntImgList[i].name==file.name){
+          this.$confirm('请勿多次上传同一图片', "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          });
+          return false;
+        }
+      }
+      for(var i in this.product.producntImg){
+        if(this.product.producntImg[i].name==file.name){
+          this.$confirm('请勿多次上传同一图片', "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          });
+          return false;
+        }
+      }
+
+      var exStr=file.name.split('.').pop().toLowerCase();
+      var exSize=file.size?file.size:1;
+      if(exSize/ 1024 / 1024 > 20){
+        this.$confirm('图片的大小不能超过20MB！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        // this.product.producntImgList.pop();
+        return false;
+      }
+      if(exSize==0){
+        this.$confirm('请勿上传空文件！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        // this.product.producntImgList.pop();
+        return false;
+      }
+      if(exStr!='png'&&exStr!='jpg'&&exStr!='jpeg'){
+        this.$confirm('图片的格式必须为png或者jpg或者jpeg格式！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        // this.product.producntImgList.pop();
+        return false;
+      }
+      if(file.name.length>80){
+        this.$confirm('图片名称不能超过80个字符！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        //this.product.producntImgList.pop();
+        return false;
+      }
+    },
+    imgUploadSuccess(res,file,filelist){
+      console.log(res,file,filelist);
+      this.product.producntImg=filelist;   //表单验证用
+      this.ruleForm.producntImgList=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.producntImgList.push({id:item.id?item.id:null,product_id:this.product.id,attachment:item.response?item.response.data[0]:item.url,name:item.name,is_scan_img:true});
+      })
+      this.$refs.ruleForm.validateField('producntImg');
+    },
+    /* 文件 */
+    fileUploadChange(file,filelist){
+      this.product.productAttachment=filelist;   //表单验证用
+      this.ruleForm.productAttachmentList=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.productAttachmentList.push({id:item.id?item.id:null,product_id:this.product.id,attachment:item.response?item.response.data[0]:item.url,name:item.name,is_scan_img:false});
+      })
+      this.$refs.ruleForm.validateField('productAttachment');
+    },
+    fileBeforeUpload(file){
+      for(var i in this.ruleForm.productAttachmentList){
+        if(this.ruleForm.productAttachmentList[i].name==file.name){
+          this.$confirm('请勿多次上传同一附件', "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          });
+          return false;
+        }
+      }
+      for(var i in this.product.productAttachment){
+        if(this.product.productAttachment[i].name==file.name){
+          this.$confirm('请勿多次上传同一附件', "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          });
+          return false;
+        }
+      }
+
+      var exStr=file.name.split('.').pop().toLowerCase();
+      var exSize=file.size?file.size:1;
+      if(exSize/1024/1024>100){
+        this.$confirm('附件大小不能超过100MB！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        // this.product.productAttachmentList.pop();
+        return false;
+      }
+      if(exSize==0){
+        this.$confirm('请勿上传空文件！', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        //this.product.productAttachmentList.pop();
+        return false;
+      }
+      if(exStr=='bat'||exStr=='com'||exStr=='exe'){
+        this.$confirm('请勿上传可执行文件', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        //this.product.productAttachmentList.pop();
+        return false;
+      }
+      if(file.name.length>80){
+        this.$confirm('附件名称不能超过80个字符', "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        //this.product.productAttachmentList.pop();
+        return false;
+      }
+    },
+    fileUploadSuccess(res,file,filelist){
+      console.log(res,file,filelist);
+      this.product.productAttachment=filelist;   //表单验证用
+      this.ruleForm.productAttachmentList=[];
+      filelist.forEach((item)=>{
+        this.ruleForm.productAttachmentList.push({id:item.id?item.id:null,attachment:item.response?item.response.data[0]:item.url,name:item.name,is_scan_img:false});
+      })
+      this.$refs.ruleForm.validateField('productAttachment');
+    },
+    /* 选项合并到中 */
+    optionMerge(){
+      for(var i in this.listTableData){
+        this.ruleForm[this.listTableData[i].key]=this.listTableData[i].usecheck;
+        if(this.listTableData[i].requiredKey){
+          this.ruleForm[this.listTableData[i].requiredKey]=this.listTableData[i].needcheck;
+        }
+      }
+    },
+    /* 合并product  ruleForm */
+    mergeForms(){
+      for(var i in this.product){
+        /*if(typeof(this.product[i])=='object'){
+          this.ruleForm[i] = {};
+          for(var j in this.product[i]){
+            this.ruleForm[i][j]= this.product[i][j];
+          }
+        }else{*/
+        debugger;
+        if(i=="descriptionContent"||i=="noteContent"){
+          continue;
+        }else{
+          this.ruleForm[i]=this.product[i];
+        }
+
+        //}
+
+      }
+      console.log(this.ruleForm);
+    },
+    /* 表单内表格验证 */
+    formTableChecked(){
+      var checked=true;
+      //扩展项验证
+      for(var j in this.ruleForm.ProductExtensionList){
+        this.$refs['extensionName'+j].validate((valid)=>{
+          if(!valid){
+            checked=false;
+          }
+        })
+      }
+
+      return checked;
+    },
+    /* 表单处理 */
+    uploadFormMerge(obj){
+      var paramdata = new URLSearchParams();
+      //var formdata=new FormData();
+      debugger;
+      for(var i in obj){
+        if(typeof(obj[i])=='object'){
+          if(i=="descriptionContent"||i=="noteContent"){
+            paramdata.append(i,JSON.stringify(obj[i]));
+          }else{
+            var arr=[];
+            for(var j in obj[i]){
+              arr.push(typeof(obj[i][j])=='object'?JSON.stringify(obj[i][j]):obj[i][j]);
+            }
+            paramdata.append(i,'['+arr.join()+']');
+          }
+
+        }else{
+          paramdata.append(i,obj[i])
+        }
+      }
+      console.log("uploadFormMerge");
+      console.log(paramdata.toString());
+      return paramdata;
+    },
+
+    /* 提交表单 */
+    submitForm(type){
+      debugger;
+      this.product.noteContent["content"] = this.$refs.editorNote.getContent();
+      this.product.descriptionContent["content"] = this.$refs.editor.getContent();
+      this.ruleForm.noteContent["content"] = this.$refs.editorNote.getContent();
+      this.ruleForm.descriptionContent["content"] = this.$refs.editor.getContent();
+      this.optionMerge();  //选项合并
+      this.mergeForms();   //表单合并
+      if (!this.$refs.editor.getContent()) {
+        this.$confirm(" 产品简介不能为空", "提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          showCancelButton: false,
+          type: "error"
+        });
+        return false;
+      }
+
+      debugger;
+      this.$refs.ruleForm.validate((valid) => {
+        alert(valid);
+
+        if (valid&&this.formTableChecked()) {
+          alert(1111);
+         /* this.isloading=true;*/
+          //提交
+          var formdate=JSON.parse(JSON.stringify(this.ruleForm));
+          delete formdate['producntImg'];
+          delete formdate['productAttachment'];
+          delete formdate['gmt_publish'];
+          this.$axios.post(this.submitProductUrl+(type==0?"noPub":"pub"),
+            formdate).then((res)=>{
+            console.log(res);
+           /* this.isloading=false;*/
+            if(res.data.code==1){
+              this.isDisabled = !this.$commonFun.Empty(res.data.data.id)&&res.data.data.is_published;
+              this.$message.success('保存成功');
+            }else{
+              this.$confirm(res.data.msg.msgTrim(), "提示",{
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                showCancelButton: false,
+                type: "error"
+              });
+            }
+          })
+
+
+        } else {
+          this.$nextTick(this.focuFuntion)
+          return false;
+        }
+      });
+    },
+    focuFuntion(){
+      let _this = this;
+      console.log(_this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
+      if(this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0){
+        var ss= _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+        ss.focus();
+      }else if(this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea").length>0){
+        var ss= _this.$refs.ruleForm.$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea")[0];
+        ss.focus();
+      }
+    }
+  },
+  components: {
+    userPmph,
+    Editor,
+    EditorNote
+  }
+};
+</script>
+
+<style scoped>
+
+  .ClinicalDecision_nav{
+    width:100%;
+  }
+  .bottom_tab_content{
+    padding-top:20px;
+    background-color: #fff;
+    clear:both;
+  }
+  .ClinicalDecision_nav .tab_nav_outbox{
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    background-color: rgb(238, 241, 246);
+    border: 1px solid rgb(209, 217, 229);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    /* position: relative; */
+  }
+  .ClinicalDecision_nav .tab_nav_outbox .back_button{
+    /*margin: 20px;*/
+    line-height: 40px;
+    /* padding: 20px; */
+    font-size: 16px;
+  }
+  .div_img{
+    display: table-cell;
+    vertical-align: middle;
+    float: left;
+    margin-right: 10px;
+    line-height: 36px;
+  }
+  .div_publicInfo{
+    float: right;
+    font-size: 16px;
+    line-height: 40px;
+  }
+
+
+
+
+</style>

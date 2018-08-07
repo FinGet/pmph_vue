@@ -186,6 +186,24 @@ export default {
         {
           label: "教材申报",
           id: 2,
+        },{
+          label: "临床决策",
+          id: 44,
+          children: [
+            {
+              label: "临床助手申报表",
+              id: 45
+            },{
+              label: "用药助手申报表",
+              id: 46
+            },{
+              label: "中医助手申报表",
+              id: 47
+            },{
+              label: "申报分类维护",
+              id: 48
+            }
+          ]
         },
         {
           label: "我的小组",

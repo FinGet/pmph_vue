@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <script id="editor" type="text/plain" ref="editor" name="editor" ></script>
+    <script id="editorNote" type="text/plain" ref="editorNote" name="editorNote"></script>
   </div>
 </template>
 <script>
@@ -8,7 +8,7 @@
   import '../../static/ueditor/ueditor.all.min.js'
   import '../../static/ueditor/lang/zh-cn/zh-cn.js'
   export default {
-    name: 'Editor',
+    name: 'EditorNote',
     props: {
       defaultMsg: {
         type: String
@@ -19,8 +19,8 @@
     },
     data(){
       return {
-        editor: null,
-        editorHasReady:false,
+        editorNote: null,
+        editorNoteHasReady:false,
       }
     },
     computed:{
@@ -35,43 +35,45 @@
     },
     mounted(){
       const _this = this;
-      this.editor = UE.getEditor('editor', this.editorConfig); // 初始化UE
-      this.editor.addListener("ready", function () {
-
+      //UE.delEditor('editorNote');
+      this.editorNote = UE.getEditor('editorNote', this.editorConfig); // 初始化UE
+      console.log("editorNote set content");
+      this.editorNote.addListener("ready", function () {
+        console.log("editorNote set content");
         if(_this.defaultMsg){
-          _this.editor.setContent(_this.defaultMsg);
+          _this.editorNote.setContent(_this.defaultMsg);
         }
-        _this.editorHasReady=true;
+        _this.editorNoteHasReady=true;
         //_this.setHeight(400); //设置ue的固定高度
-        _this.$emit('editor_ready');
+        //_this.$emit('editor_ready');
       });
     },
     methods: {
       getContent() { // 获取内容方法
-        if(this.editor){
-          return this.editor.getContent();
+        if(this.editorNote){
+          return this.editorNote.getContent();
         }
         return '';
       },
       setContent(Msg){
         var timer;
-        if(!this.editorHasReady){
+        if(!this.editorNoteHasReady){
           timer = setInterval(()=>{
-            this.editor.setContent(Msg);
+            this.editorNote.setContent(Msg);
             clearInterval(timer);
           },50);
           return;
         }
-        this.editor.setContent(Msg);
+        this.editorNote.setContent(Msg);
       },
       destroy(){
-        this.editor.destroy();
-        this.editor=undefined;
+        this.editorNote.destroy();
+        this.editorNote=undefined;
       },
     },
     destroyed(){
-      if(this.editorHasReady&&this.editor){
-        this.editor.destroy();
+      if(this.editorNoteHasReady&&this.editorNote){
+        this.editorNote.destroy();
       }
     }
   }

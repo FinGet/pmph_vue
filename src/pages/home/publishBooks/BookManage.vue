@@ -932,12 +932,12 @@
             });
           }
         }).catch(error => {
-          this.$confirm('同步错误，请稍后再试!', "提示",{
+       /*   this.$confirm('同步错误，请稍后再试!', "提示",{
           	confirmButtonText: "确定",
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          });
+          });*/
         })
       },
       syncProgress(){

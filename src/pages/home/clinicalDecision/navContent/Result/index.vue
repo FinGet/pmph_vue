@@ -1,0 +1,592 @@
+<template>
+	<div class="material-result">
+    <el-tabs v-model="activeName" @tab-click="handleClick" >
+      <el-tab-pane label="学科分类" name="first">
+        <div class="applicationStatistics-byBookName">
+        <!--搜索-->
+        <div class="clearfix">
+          <div class="searchBox-wrapper">
+            <div class="searchName">学科分类：<span></span></div>
+            <div class="searchInput">
+              <el-input placeholder="请输入" class="searchInputEle" v-model.trim="subject.typeName" @keyup.enter.native="getSubjectTableDataFun"></el-input>
+            </div>
+          </div>
+          <div class="searchBox-wrapper searchBtn">
+            <el-button  type="primary" icon="search" @click="getSubjectTableDataFun">搜索</el-button>
+          </div>
+          <el-button type="primary" class="pull-right" @click="exportSubjectExcel">
+            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            导出
+          </el-button>
+        </div>
+        <!--表格-->
+        <div class="table-wrapper">
+          <el-table
+            :data="subjectTableData"
+            border
+            style="width: 100%">
+            <el-table-column
+              prop="typeName"
+              label="学科分类">
+            </el-table-column>
+            <el-table-column
+              prop="countSubmit"
+              label="申报人数"
+              align="center"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              prop="countSuccess"
+              label="通过人数"
+              align="center"
+              width="120">
+            </el-table-column>
+          </el-table>
+        </div>
+        <!--分页-->
+        <div class="pagination-wrapper">
+          <el-pagination
+            v-if="subjectTotal>subject.pageSize"
+            @size-change="subjectSizeChange"
+            @current-change="subjectCurrentChange"
+            :page-sizes="[10,20,30, 50, 100]"
+            :page-size="subject.pageSize"
+            :current-page="subject.pageNumber"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="subjectTotal">
+          </el-pagination>
+        </div>
+       <!-- <div class="echart-wrapper" ref="echart_wrapper">
+          <div id="echarts1" style="width: 100%;height:600px;" ref="echarts1"></div>
+        </div>-->
+      </div>
+      </el-tab-pane>
+      <el-tab-pane label="内容分类" name="second">
+        <div class="applicationStatistics-byContent">
+          <!--搜索-->
+          <div class="clearfix">
+            <div class="searchBox-wrapper">
+              <div class="searchName">内容分类：<span></span></div>
+              <div class="searchInput">
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="content.typeName" @keyup.enter.native="getContentTableDataFun"></el-input>
+              </div>
+            </div>
+            <div class="searchBox-wrapper searchBtn">
+              <el-button  type="primary" icon="search" @click="getContentTableDataFun">搜索</el-button>
+            </div>
+            <el-button type="primary" class="pull-right marginL10" @click="exportContentExcel">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>
+          </div>
+          <!--表格-->
+          <div class="table-wrapper">
+            <el-table
+              :data="contentTableData"
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="typeName"
+                label="内容分类">
+              </el-table-column>
+              <el-table-column
+                prop="countSubmit"
+                label="申报人数"
+                align="center"
+                width="110">
+              </el-table-column>
+              <el-table-column
+                prop="countSuccess"
+                label="通过人数"
+                align="center"
+                width="120">
+              </el-table-column>
+            </el-table>
+          </div>
+          <!--分页-->
+          <div class="pagination-wrapper">
+            <el-pagination
+              v-if="contentTotal>content.pageSize"
+              @size-change="contentSizeChange"
+              @current-change="contentCurrentChange"
+              :page-sizes="[10,20,30, 50,100]"
+              :page-size="content.pageSize"
+              :current-page="content.pageNumber"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="contentTotal">
+            </el-pagination>
+          </div>
+          <!--<div class="echart-wrapper">
+            <div id="echarts2" style="width: 100%;height:600px;" ref="echarts2"></div>
+          </div>-->
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+	</div>
+</template>
+
+<script>
+  import echarts from "../../../../../../static/echarts/echarts.common.min";
+	export default {
+    props:['productType'],
+		data() {
+			return {
+        activeName: 'second',
+        contentSituationUrl:'/pmpheep/expertation/count/2/'   ,  //内容统计URL
+        subjectSituationUrl:'/pmpheep/expertation/count/1/',   //学科统计URL
+        stSubjects:[], // 申报情况统计 - 按学科统计 - 书籍
+        stPresetPersons:[], // 申报情况统计 - 按学科统计 - 申报人数
+        stChosenPersons:[], // 申报情况统计 - 按学科统计 - 通过人数
+
+        stContents:[], // 申报情况统计 - 按内容统计 - 内容
+        stContentPresetPersons:[], // 申报情况统计 - 按内容统计 - 申报人数
+        stContentChosenPersons:[], // 申报情况统计 - 按内容统计 - 通过人数
+        content:{
+        pageNumber:1,
+          pageSize:10,
+          typeName:''
+      },
+        contentTotal:1,
+        contentTableData:[],
+        subject:{
+        pageNumber:1,
+          pageSize:10,
+          typeName:''
+      },
+        subjectTotal:1,
+        subjectTableData:[],
+
+    };
+		},methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      getContentTableDataFun(){
+        this.content.pageNumber=1;
+        this.getContentTableData();
+      },
+      /* 获取内容申报情况统计数据 */
+      getContentTableData(){
+        this.$axios.get(this.contentSituationUrl+this.productType,{
+          params:this.content
+        }).then((res)=>{
+          if(res.data.code==1){
+            var resData = res.data.data;
+            this.contentTotal=resData.total;
+            this.contentTableData=resData.rows;
+          }
+        })
+      },
+      /* 获取内容申报情况统计数据图表 */
+     /* getContentEchart(){
+        var myChart2 = echarts.init(this.$refs.echarts2);
+        this.$axios.get(this.contentSituationUrl,{
+          params:{
+            pageNumber:1,
+            pageSize:20,
+            productType:this.content.productType,
+            typeName:''
+          }
+        }).then((res)=>{
+          if(res.data.code==1){
+            var resData = res.data.data;
+            resData.rows.forEach(item => {
+              this.stContents.push(item.typeName)
+              this.stContentPresetPersons.push(item.presetPersons)
+              this.stContentChosenPersons.push(item.chosenPersons)
+            })
+            console.log(myChart2);
+            myChart2.clear();
+            myChart2.setOption({
+              title: {
+                show: "true",
+                text: "申报人数统计图表"
+              },
+              tooltip: {
+                show: true,
+                trigger: "axis",
+                axisPointer: {
+                  type: "cross",
+                  crossStyle: {
+                    color: "#999"
+                  }
+                }
+              },
+              toolbox: {
+                show: true,
+                right: '5%',
+                feature: {
+                  dataView: { show: true, readOnly: false,optionToContent: function(opt) {
+                      var axisData = opt.xAxis[0].data;
+                      var series = opt.series;
+                      var table = '<table border="1" style="width:50%;margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>'
+                        + '<td></td>'
+                        + '<td style="padding: 0 10px">' + series[0].name + '</td>'
+                        + '<td style="padding: 0 10px">' + series[1].name + '</td>'
+                        + '</tr>';
+                      for (var i = 0, l = axisData.length; i < l; i++) {
+                        table += '<tr>'
+                          + '<td style="padding: 0 10px">' + axisData[i] + '</td>'
+                          + '<td style="padding: 0 10px">' + series[0].data[i] + '</td>'
+                          + '<td style="padding: 0 10px">' + series[1].data[i] + '</td>'
+                          + '</tr>';
+                      }
+                      table += '</tbody></table>';
+                      return table;
+                    } },
+                  magicType: { show: true, type: ["line", "bar"] },
+                  restore: { show: true },
+                  saveAsImage: { show: true }
+                }
+              },
+              legend: {
+                data: ["申报人数", "通过人数"]
+              },
+              xAxis: [
+                {
+                  name: "申报单位",
+                  type: "category",
+                  data: this.stContents,
+                  axisPointer: {
+                    type: "shadow"
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    boundaryGap: [0, 0.01],
+                    formatter: function(value) {
+                      return value.split("").join("\n");
+                    }
+                  }
+                }
+              ],
+              grid: {
+                left: "10%",
+                bottom: "35%"
+              },
+              yAxis: [
+                {
+                  type: "value",
+                  name: "申报人数",
+                  min: 0,
+
+                  max: Math.max.apply(null, this.stContentPresetPersons),
+                  minInterval: 1,
+                  axisLabel: {
+                    formatter: "{value} 人"
+                  }
+                },
+                {
+                  type: "value",
+                  name: "通过人数",
+                  min: 0,
+                  max: Math.max.apply(null, this.stContentChosenPersons),
+                  minInterval: 1,
+                  axisLabel: {
+                    formatter: "{value} 人"
+                  }
+                }
+              ],
+              series: [
+                {
+                  name: "申报人数",
+                  type: "bar",
+                  data: this.stContentPresetPersons
+                },
+                {
+                  name: "当选人数",
+                  type: "line",
+                  yAxisIndex: 1,
+                  data: this.stContentChosenPersons
+                }
+              ]
+            })
+            console.log(this.stContents,this.stContentPresetPersons,this.stContentChosenPersons);
+          }
+        })
+      },*/
+      getSubjectTableDataFun(){
+        this.subject.pageNumber=1;
+        this.getSubjectTableData();
+      },
+      /* 获取按学科统计申报情况 */
+      getSubjectTableData(){
+        this.$axios.get(this.subjectSituationUrl+this.productType,{
+          params:this.subject
+        }).then((res)=>{
+          console.log(res)
+          console.log(this.subjectTableData)
+          if(res.data.code==1){
+            this.subjectTotal=res.data.data.total;
+            this.subjectTableData=res.data.data.rows;
+          }
+        })
+      },
+      /* 获取按学科统计申报情况图表 */
+     /* getSubjectEchart(){
+        var myChart = echarts.init(this.$refs.echarts1);
+        this.$axios.get(this.subjectSituationUrl,{
+          params:{
+            pageNumber:1,
+            pageSize:20,
+            productType:this.productType,
+            typeName:''
+          }
+        }).then((res)=>{
+          if(res.data.code==1){
+            res.data.data.rows.forEach(item => {
+              this.stSubjects.push(item.typeName); // 书籍
+              this.stPresetPersons.push(item.presetPersons); // 申报人数
+              this.stChosenPersons.push(item.chosenPersons); // 当选人数
+            })
+            myChart.setOption({
+              title: {
+                show: "true",
+                text: "申报人数统计图表"
+              },
+              tooltip: {
+                show: true,
+                trigger: "axis",
+                axisPointer: {
+                  type: "cross",
+                  crossStyle: {
+                    color: "#999"
+                  }
+                }
+              },
+              toolbox: {
+                show: true,
+                right: '5%',
+                feature: {
+                  dataView: { show: true, readOnly: false,optionToContent: function(opt) {
+                      var axisData = opt.xAxis[0].data;
+                      var series = opt.series;
+                      var table = '<table border="1" style="width:50%;margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>'
+                        + '<td></td>'
+                        + '<td style="padding: 0 10px">' + series[0].name + '</td>'
+                        + '<td style="padding: 0 10px">' + series[1].name + '</td>'
+                        + '</tr>';
+                      for (var i = 0, l = axisData.length; i < l; i++) {
+                        table += '<tr>'
+                          + '<td style="padding: 0 10px">' + axisData[i] + '</td>'
+                          + '<td style="padding: 0 10px">' + series[0].data[i] + '</td>'
+                          + '<td style="padding: 0 10px">' + series[1].data[i] + '</td>'
+                          + '</tr>';
+                      }
+                      table += '</tbody></table>';
+                      return table;
+                    } },
+                  magicType: { show: true, type: ["line", "bar"] },
+                  restore: { show: true },
+                  saveAsImage: { show: true }
+                }
+              },
+              legend: {
+                data: ["申报人数", "当选人数"]
+              },
+              xAxis: [
+                {
+                  name: "书籍名称",
+                  left:"10px;",
+                  type: "category",
+                  nameTextStyle:{/!*color:"red",*!/padding:[0,0,0,20]},
+                  data: this.stSubjects,
+                  axisPointer: {
+                    type: "shadow"
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    boundaryGap: [0, 0.01],textStyle:{
+
+                    },
+                    formatter: function(value) {
+                      return value.split("").join("\n");
+                    }
+                  }
+                }
+              ],
+              grid: {
+                left: "10%",
+                bottom: "35%"
+              },
+              yAxis: [
+                {
+                  type: "value",
+                  name: "申报人数",
+                  min: 0,
+                  max: Math.max.apply(null, this.stPresetPersons),
+                  minInterval:1,
+                  axisLabel: {
+                    formatter: "{value} 人"
+                  }
+                },
+                {
+                  type: "value",
+                  name: "当选人数",
+                  min: 0,
+                  max: Math.max.apply(null, this.stPresetPersons),
+                  minInterval:1,
+                  axisLabel: {
+                    formatter: "{value} 人"
+                  }
+                }
+              ],
+              series: [
+                {
+                  name: "申报人数",
+                  type: "bar",
+                  data: this.stPresetPersons
+                },
+                {
+                  name: "当选人数",
+                  type: "line",
+                  yAxisIndex: 1,
+                  data: this.stChosenPersons
+                }
+              ]
+            })
+          }
+        })
+      },*/
+      /* 分页切换 */
+      contentSizeChange(val){
+        this.content.pageSize=val;
+        this.content.pageNumber=1;
+        this.getContentTableData();
+      },
+      contentCurrentChange(val){
+        this.content.pageNumber=val;
+        this.getContentTableData();
+      },
+      subjectSizeChange(val){
+        this.subject.pageSize=val;
+        this.subject.pageNumber=1;
+        this.getSubjectTableData();
+      },
+      subjectCurrentChange(val){
+        this.subject.pageNumber=val;
+        this.getSubjectTableData();
+      },
+      /**
+       * 获取表格数据
+       */
+      getTableData() {},
+      /**
+       * 点击tabs切换
+       */
+      handleTabsClick(tab, event) {
+        console.log(tab,event);
+        this.subject.typeName='';
+        this.content.typeName='';
+        if(tab.name=='first'){
+          this.getSubjectTableData();
+        }else{
+          this.getContentTableData();
+        }
+      },
+      /** 导出Excel */
+      exportSubjectExcel(){
+        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&typeName=' + this.subject.typeName;
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
+      },
+      exportContentExcel(){
+        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&typeName=' + this.content.typeName  ;
+        // console.log(url)
+        this.$commonFun.downloadFile(url);
+      }
+    },
+    components:{
+
+
+    },
+    created(){
+      this.getContentTableData();
+      this.getSubjectTableData();
+    },
+    mounted() {
+      var echartWidth =
+        (document.documentElement.clientWidth || document.body.clientWeight) -
+        300;
+     /* this.$refs.echarts1.style.width = echartWidth + "px";
+      this.$refs.echarts2.style.width = echartWidth + "px";*/
+      console.log(echartWidth);
+      // 指定图表的配置项和数据
+      //this.getSubjectEchart();
+     // this.getContentEchart();
+    }
+	}
+</script>
+
+<style scoped>
+  .title {
+    margin-bottom: 18px;
+    margin-left: 20px;
+    font-size: 15px;
+    color: #8a8585;
+  }
+  .num-chart-iterm {
+    display: inline-block;
+    width: 180px;
+  }
+  .num-chart-iterm > div {
+    margin: 0 auto;
+    width: 104px;
+    height: 62px;
+    border-bottom: none !important;
+    border-radius: 68px 68px 0 0;
+    text-align: center;
+    line-height: 20px;
+  }
+  .num-chart-iterm > div > span {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .num-chart-iterm > div > span.small {
+    font-size: 18px;
+  }
+  .num-chart-iterm > p {
+    background: #fff;
+    border: 1px solid #ccc;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    width: 140px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .num-chart-iterm:nth-of-type(n + 1) > div {
+    border: 8px solid #c24fb7;
+    color: #c24fb7;
+  }
+  .num-chart-iterm:nth-of-type(n + 2) > div {
+    border: 8px solid #ff9f40;
+    color: #ff9f40;
+  }
+  .num-chart-iterm:nth-of-type(n + 3) > div {
+    border: 8px solid #ff685f;
+    color: #ff685f;
+  }
+  .num-chart-iterm:nth-of-type(n + 4) > div {
+    border: 8px solid #25a3de;
+    color: #25a3de;
+  }
+  .num-chart-iterm:nth-of-type(n + 5) > div {
+    border: 8px solid #2dc183;
+    color: #2dc183;
+  }
+  .num-chart-iterm:nth-of-type(n + 6) > div {
+    border: 8px solid #357ab3;
+    color: #357ab3;
+  }
+  .echart-wrapper {
+    padding: 60px 0 0;
+  }
+  .gray{
+    color:#8a8585;
+    font-weight: normal;
+  }
+  .marginspan{
+    display: inline-block;
+    margin-top: 27px;
+  }
+</style>
