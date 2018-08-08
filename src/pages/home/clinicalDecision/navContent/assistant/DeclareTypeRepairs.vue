@@ -1,6 +1,6 @@
 <template>
 	<div class="material-result">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName" @tab-click="handleTabsClick">
       <el-tab-pane label="学科分类" name="subject">
         <div class="applicationStatistics-byBookName">
         <!--搜索-->
@@ -58,6 +58,9 @@
               label="创建时间"
               align="center"
               width="120">
+              <template scope="scope">
+                {{$commonFun.formatDate(scope.row.gmt_create,'yyyy-MM-dd')}}
+              </template>
             </el-table-column>
             <el-table-column label="操作" width="168">
               <template scope="scope">
@@ -176,7 +179,7 @@
     props:['productType'],
 		data() {
 			return {
-        activeName: 'content',
+        activeName:"content",
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
         deleteUrl:'/pmpheep/productType/',
@@ -247,6 +250,7 @@
          /* this.excelVisible = true;
           this.excelTableData = res.data.list;
           this.uuid=res.data.uuid;*/
+         this.getContentTableDataFun();
           console.log(res);
         }else{
           this.$confirm(res.msg.msgTrim(), "提示",{
@@ -373,12 +377,11 @@
           this.getContentTableData();
         }
       },
-      /** 导入Excel */
-      importSubjectExcel(){
 
-      },
-      importContentExcel(){
-
+    },
+    watch:{
+      productType(val,oldval){
+        alert(val);
       }
     },
     components:{
@@ -387,7 +390,7 @@
     },
     created(){
       this.getContentTableData();
-      this.getSubjectTableData();
+
     },
     mounted() {
 
