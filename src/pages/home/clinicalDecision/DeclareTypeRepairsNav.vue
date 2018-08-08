@@ -1,15 +1,15 @@
 <template>
 	<div class="clinicalDecision_router">
       <div class="tab_nav_outbox">
-        <el-tabs type="border-card"  class="tab_nav" v-model="activeTagName" >
-          <el-tab-pane label="人卫临床助手"  name="1">
-            <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
+        <el-tabs type="border-card"  class="tab_nav" v-model="activeTagName"  @tab-click="handleClick">
+          <el-tab-pane label="人卫临床助手"  name="first">
+            <DeclareTypeRepairs :productType="1"  ref="de1"></DeclareTypeRepairs>
           </el-tab-pane>
-          <el-tab-pane label="人卫用药助手" name="2">
-          <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
+          <el-tab-pane label="人卫用药助手" name="second">
+          <DeclareTypeRepairs :productType="2"  ref="de2"></DeclareTypeRepairs>
           </el-tab-pane>
-          <el-tab-pane label="人卫中医助手" name="3">
-            <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
+          <el-tab-pane label="人卫中医助手" name="third">
+            <DeclareTypeRepairs :productType="3"  ref="de3"></DeclareTypeRepairs>
           </el-tab-pane>
 
         </el-tabs>
@@ -26,10 +26,28 @@ export default {
 	data() {
 		return {
       contentH:'auto',
-      activeTagName:'1',
+      activeTagName:'first',
+      content:"content"
 		}
 	},
 	methods: {
+    handleClick(){
+
+      if(this.activeTagName=="first"){
+        console.log(this.$refs.de1);
+        //this.$refs.de1.activeName = "content";
+        this.$refs.de1.getContentTableData();
+      }else if(this.activeTagName == "second"){
+        console.log(this.$refs.de3);
+        //this.$refs.de2.activeName = "content";
+        this.$refs.de2.getContentTableData();
+      }else{
+        console.log(this.$refs.de3);
+        //this.$refs.de3.activeName = "content";
+        this.$refs.de3.getContentTableData();
+      }
+    }
+
   },
   watch:{
 

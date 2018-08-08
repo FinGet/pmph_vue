@@ -1,14 +1,14 @@
 <template>
 	<div class="material-result">
-    <el-tabs v-model="activeName" @tab-click="handleClick" >
-      <el-tab-pane label="学科分类" name="first">
+    <el-tabs v-model="activeChilidName" @tab-click="handleTabsClick" >
+      <el-tab-pane label="学科分类" name="subject">
         <div class="applicationStatistics-byBookName">
         <!--搜索-->
         <div class="clearfix">
           <div class="searchBox-wrapper">
             <div class="searchName">学科分类：<span></span></div>
             <div class="searchInput">
-              <el-input placeholder="请输入" class="searchInputEle" v-model.trim="subject.typeName" @keyup.enter.native="getSubjectTableDataFun"></el-input>
+              <el-input placeholder="请输入" class="searchInputEle" v-model.trim="subject.type_name" @keyup.enter.native="getSubjectTableDataFun"></el-input>
             </div>
           </div>
           <div class="searchBox-wrapper searchBtn">
@@ -26,7 +26,7 @@
             border
             style="width: 100%">
             <el-table-column
-              prop="typeName"
+              prop="type_name"
               label="学科分类">
             </el-table-column>
             <el-table-column
@@ -61,14 +61,14 @@
         </div>
       </div>
       </el-tab-pane>
-      <el-tab-pane label="内容分类" name="second">
+      <el-tab-pane label="内容分类" name="content">
         <div class="applicationStatistics-byContent">
           <!--搜索-->
           <div class="clearfix">
             <div class="searchBox-wrapper">
               <div class="searchName">内容分类：<span></span></div>
               <div class="searchInput">
-                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="content.typeName" @keyup.enter.native="getContentTableDataFun"></el-input>
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="content.type_name" @keyup.enter.native="getContentTableDataFun"></el-input>
               </div>
             </div>
             <div class="searchBox-wrapper searchBtn">
@@ -86,7 +86,7 @@
               border
               style="width: 100%">
               <el-table-column
-                prop="typeName"
+                prop="type_name"
                 label="内容分类">
               </el-table-column>
               <el-table-column
@@ -131,7 +131,7 @@
     props:['productType'],
 		data() {
 			return {
-        activeName: 'second',
+        activeChilidName: 'subject',
         contentSituationUrl:'/pmpheep/expertation/count/2/'   ,  //内容统计URL
         subjectSituationUrl:'/pmpheep/expertation/count/1/',   //学科统计URL
         stSubjects:[], // 申报情况统计 - 按学科统计 - 书籍
@@ -144,23 +144,21 @@
         content:{
         pageNumber:1,
           pageSize:10,
-          typeName:''
+          type_name:''
       },
         contentTotal:1,
         contentTableData:[],
         subject:{
         pageNumber:1,
           pageSize:10,
-          typeName:''
+          type_name:''
       },
         subjectTotal:1,
         subjectTableData:[],
 
     };
 		},methods: {
-      handleClick(tab, event) {
-        console.log(tab, event);
-      },
+
       getContentTableDataFun(){
         this.content.pageNumber=1;
         this.getContentTableData();
@@ -186,7 +184,7 @@
           if(res.data.code==1){
             var resData = res.data.data;
             resData.rows.forEach(item => {
-              this.stContents.push(item.typeName)
+              this.stContents.push(item.type_name)
               this.stContentPresetPersons.push(item.countSubmit)
               this.stContentChosenPersons.push(item.countSuccess)
             })
@@ -324,7 +322,7 @@
         }).then((res)=>{
           if(res.data.code==1){
             res.data.data.rows.forEach(item => {
-              this.stSubjects.push(item.typeName); // 书籍
+              this.stSubjects.push(item.type_name); // 书籍
               this.stPresetPersons.push(item.countSubmit); // 申报人数
               this.stChosenPersons.push(item.countSuccess); // 当选人数
             })
@@ -461,22 +459,24 @@
        */
       handleTabsClick(tab, event) {
         console.log(tab,event);
-        this.subject.typeName='';
-        this.content.typeName='';
-        if(tab.name=='first'){
+        this.subject.type_name='';
+        this.content.type_name='';
+        if(tab.name=='subject'){
           this.getSubjectTableData();
+          this.getSubjectEchart();
         }else{
           this.getContentTableData();
+          this.getContentEchart();
         }
       },
       /** 导出Excel */
       exportSubjectExcel(){
-        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&typeName=' + this.subject.typeName;
+        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&type_name=' + this.subject.type_name;
         // console.log(url)
         this.$commonFun.downloadFile(url);
       },
       exportContentExcel(){
-        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&typeName=' + this.content.typeName  ;
+        let url = '/pmpheep/expertation/exportExpertationCount/?ptype='+ this.productType + '&type_name=' + this.content.type_name  ;
         // console.log(url)
         this.$commonFun.downloadFile(url);
       }
@@ -486,8 +486,9 @@
 
     },
     created(){
-      this.getContentTableData();
       this.getSubjectTableData();
+      this.getContentTableData();
+
     },
     mounted() {
       var echartWidth =
@@ -497,8 +498,8 @@
       this.$refs.echarts2.style.width = echartWidth + "px";
       console.log(echartWidth);
       // 指定图表的配置项和数据
-      this.getSubjectEchart();
       this.getContentEchart();
+      this.getSubjectEchart();
     }
 	}
 </script>
