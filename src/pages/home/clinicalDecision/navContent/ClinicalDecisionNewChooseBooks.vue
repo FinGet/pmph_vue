@@ -726,10 +726,10 @@ export default {
 
       debugger;
       this.$refs.ruleForm.validate((valid) => {
-        alert(valid);
+       // alert(valid);
 
         if (valid&&this.formTableChecked()) {
-          alert(1111);
+         // alert(1111);
          /* this.isloading=true;*/
           //提交
           var formdate=JSON.parse(JSON.stringify(this.ruleForm));

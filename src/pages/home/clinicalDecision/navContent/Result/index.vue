@@ -56,9 +56,9 @@
             :total="subjectTotal">
           </el-pagination>
         </div>
-       <!-- <div class="echart-wrapper" ref="echart_wrapper">
+       <div class="echart-wrapper" ref="echart_wrapper">
           <div id="echarts1" style="width: 100%;height:600px;" ref="echarts1"></div>
-        </div>-->
+        </div>
       </div>
       </el-tab-pane>
       <el-tab-pane label="内容分类" name="second">
@@ -116,9 +116,9 @@
               :total="contentTotal">
             </el-pagination>
           </div>
-          <!--<div class="echart-wrapper">
+         <div class="echart-wrapper">
             <div id="echarts2" style="width: 100%;height:600px;" ref="echarts2"></div>
-          </div>-->
+          </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -178,22 +178,17 @@
         })
       },
       /* 获取内容申报情况统计数据图表 */
-     /* getContentEchart(){
+      getContentEchart(){
         var myChart2 = echarts.init(this.$refs.echarts2);
-        this.$axios.get(this.contentSituationUrl,{
-          params:{
-            pageNumber:1,
-            pageSize:20,
-            productType:this.content.productType,
-            typeName:''
-          }
+        this.$axios.get(this.contentSituationUrl+this.productType,{
+          params:this.content
         }).then((res)=>{
           if(res.data.code==1){
             var resData = res.data.data;
             resData.rows.forEach(item => {
               this.stContents.push(item.typeName)
-              this.stContentPresetPersons.push(item.presetPersons)
-              this.stContentChosenPersons.push(item.chosenPersons)
+              this.stContentPresetPersons.push(item.countSubmit)
+              this.stContentChosenPersons.push(item.countSuccess)
             })
             console.log(myChart2);
             myChart2.clear();
@@ -293,7 +288,7 @@
                   data: this.stContentPresetPersons
                 },
                 {
-                  name: "当选人数",
+                  name: "通过人数",
                   type: "line",
                   yAxisIndex: 1,
                   data: this.stContentChosenPersons
@@ -303,7 +298,7 @@
             console.log(this.stContents,this.stContentPresetPersons,this.stContentChosenPersons);
           }
         })
-      },*/
+      },
       getSubjectTableDataFun(){
         this.subject.pageNumber=1;
         this.getSubjectTableData();
@@ -322,21 +317,16 @@
         })
       },
       /* 获取按学科统计申报情况图表 */
-     /* getSubjectEchart(){
+      getSubjectEchart(){
         var myChart = echarts.init(this.$refs.echarts1);
-        this.$axios.get(this.subjectSituationUrl,{
-          params:{
-            pageNumber:1,
-            pageSize:20,
-            productType:this.productType,
-            typeName:''
-          }
+        this.$axios.get(this.subjectSituationUrl+this.productType,{
+          params:this.subject
         }).then((res)=>{
           if(res.data.code==1){
             res.data.data.rows.forEach(item => {
               this.stSubjects.push(item.typeName); // 书籍
-              this.stPresetPersons.push(item.presetPersons); // 申报人数
-              this.stChosenPersons.push(item.chosenPersons); // 当选人数
+              this.stPresetPersons.push(item.countSubmit); // 申报人数
+              this.stChosenPersons.push(item.countSuccess); // 当选人数
             })
             myChart.setOption({
               title: {
@@ -381,14 +371,14 @@
                 }
               },
               legend: {
-                data: ["申报人数", "当选人数"]
+                data: ["申报人数", "通过人数"]
               },
               xAxis: [
                 {
                   name: "书籍名称",
                   left:"10px;",
                   type: "category",
-                  nameTextStyle:{/!*color:"red",*!/padding:[0,0,0,20]},
+                  nameTextStyle:{padding:[0,0,0,20]},
                   data: this.stSubjects,
                   axisPointer: {
                     type: "shadow"
@@ -421,9 +411,9 @@
                 },
                 {
                   type: "value",
-                  name: "当选人数",
+                  name: "通过人数",
                   min: 0,
-                  max: Math.max.apply(null, this.stPresetPersons),
+                  max: Math.max.apply(null, this.stChosenPersons),
                   minInterval:1,
                   axisLabel: {
                     formatter: "{value} 人"
@@ -437,7 +427,7 @@
                   data: this.stPresetPersons
                 },
                 {
-                  name: "当选人数",
+                  name: "通过人数",
                   type: "line",
                   yAxisIndex: 1,
                   data: this.stChosenPersons
@@ -446,7 +436,7 @@
             })
           }
         })
-      },*/
+      },
       /* 分页切换 */
       contentSizeChange(val){
         this.content.pageSize=val;
@@ -466,10 +456,6 @@
         this.subject.pageNumber=val;
         this.getSubjectTableData();
       },
-      /**
-       * 获取表格数据
-       */
-      getTableData() {},
       /**
        * 点击tabs切换
        */
@@ -507,12 +493,12 @@
       var echartWidth =
         (document.documentElement.clientWidth || document.body.clientWeight) -
         300;
-     /* this.$refs.echarts1.style.width = echartWidth + "px";
-      this.$refs.echarts2.style.width = echartWidth + "px";*/
+     this.$refs.echarts1.style.width = echartWidth + "px";
+      this.$refs.echarts2.style.width = echartWidth + "px";
       console.log(echartWidth);
       // 指定图表的配置项和数据
-      //this.getSubjectEchart();
-     // this.getContentEchart();
+      this.getSubjectEchart();
+      this.getContentEchart();
     }
 	}
 </script>

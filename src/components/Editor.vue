@@ -43,7 +43,7 @@
         }
         _this.editorHasReady=true;
         //_this.setHeight(400); //设置ue的固定高度
-        _this.$emit('editor_ready');
+        //_this.$emit('editor_ready');
       });
     },
     methods: {

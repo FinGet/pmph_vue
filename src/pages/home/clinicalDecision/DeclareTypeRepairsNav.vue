@@ -3,13 +3,13 @@
       <div class="tab_nav_outbox">
         <el-tabs type="border-card"  class="tab_nav" v-model="activeTagName" >
           <el-tab-pane label="人卫临床助手"  name="1">
-            <ClinicalAssistant :productType="activeTagName"></ClinicalAssistant>
+            <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
           </el-tab-pane>
           <el-tab-pane label="人卫用药助手" name="2">
-          <MedicineAssistant :productType="activeTagName"></MedicineAssistant>
+          <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
           </el-tab-pane>
           <el-tab-pane label="人卫中医助手" name="3">
-            <ChineseMedicineAssistant :productType="activeTagName"></ChineseMedicineAssistant>
+            <DeclareTypeRepairs :productType="activeTagName"></DeclareTypeRepairs>
           </el-tab-pane>
 
         </el-tabs>
@@ -21,10 +21,7 @@
 </template>
 
 <script type="text/ecmascript">
-  import bus from 'common/eventBus/bus.js'
-  import ClinicalAssistant from "./navContent/assistant/ClinicalAssistant";
-  import MedicineAssistant from "./navContent/assistant/MedicineAssistant";
-  import ChineseMedicineAssistant from "./navContent/assistant/ChineseMedicineAssistant";
+  import DeclareTypeRepairs from "./navContent/assistant/DeclareTypeRepairs";
 export default {
 	data() {
 		return {
@@ -46,9 +43,7 @@ export default {
 
   },
   components:{
-    ChineseMedicineAssistant,
-    MedicineAssistant,
-    ClinicalAssistant
+    DeclareTypeRepairs
   },
 
 }

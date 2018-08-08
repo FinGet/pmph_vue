@@ -598,7 +598,7 @@ export default {
                 type: "value",
                 name: "当选人数",
                 min: 0,
-                max: Math.max.apply(null, this.stPresetPersons),
+                max: Math.max.apply(null, this.stChosenPersons),
                 minInterval:1,
                 axisLabel: {
                   formatter: "{value} 人"
