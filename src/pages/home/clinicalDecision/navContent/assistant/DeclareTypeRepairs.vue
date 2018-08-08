@@ -21,7 +21,7 @@
           <my-upload
             class="pull-right "
             ref="upload"
-            :action="api_upload"
+            :action="api_upload_subject"
             :before-upload="beforeUploadFile"
             :on-success="upLoadFileSuccess"
             :on-error="uploadError"
@@ -101,7 +101,7 @@
             <my-upload
               class="pull-right "
               ref="upload"
-              :action="api_upload"
+              :action="api_upload_content"
               :before-upload="beforeUploadFile"
               :on-success="upLoadFileSuccess"
               :on-error="uploadError"
@@ -180,7 +180,8 @@
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
         deleteUrl:'/pmpheep/productType/',
-        api_upload: '/pmpheep/productType/'+this.productType+'/'+this.activeName+'/importExcel',
+        api_upload_content: '/pmpheep/productType/'+this.productType+'/content/importExcel',
+        api_upload_subject: '/pmpheep/productType/'+this.productType+'/subject/importExcel',
         content:{
         pageNumber:1,
           pageSize:10,
