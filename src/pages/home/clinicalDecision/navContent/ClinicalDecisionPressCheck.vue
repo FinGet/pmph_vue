@@ -86,7 +86,16 @@
             {{scope.row.username}}
           </template>
         </el-table-column>
-
+        <el-table-column label="学科分类" min-width="160">
+          <template scope="scope">
+            <p v-for="(item, index) in scope.row.productSubjectTypeList" :key="index"><i class="fa fa-tags"></i>{{item.type_name}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="内容分类" min-width="160">
+          <template scope="scope">
+            <p v-for="(item, index) in scope.row.productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{item.type_name}}</p>
+          </template>
+        </el-table-column>
         <el-table-column label="工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.org_name}}</p>

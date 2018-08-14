@@ -232,10 +232,10 @@ export default new Router({
             {path: 'medicineAssistant', name: '用药助手申报', component: MedicineAssistantRouter, meta: {replaceName: false, authorityId: 46}},
             {path: 'chineseMedicineAssistant', name: '中医助手申报', component: ChineseMedicineAssistantRouter, meta: {replaceName: false, authorityId: 47}},
 
-            {path: 'clinicalAssistantTable',name: '临床助手申报表', component: ClinicalAssistantTableRouter,meta: {replaceName: false}},
-            {path: 'medicineAssistantTable',name: '用药助手申报表', component: MedicineAssistantTableRouter,meta: {replaceName: false}},
-            {path: 'chineseMedicineAssistantTable',name: '中医助手申报表', component: ChineseMedicineAssistantTableRouter,meta: {replaceName: false}},
-            {path: 'clinicalDecisionNewChooseBooks', name: '临床决策专家申报', component: ClinicalDecisionNewChooseBooks, meta: {isShowTags: true}},
+            {path: 'clinicalAssistantTable',name: '临床助手申报表', component: ClinicalAssistantTableRouter,meta: { authorityId: 49}},
+            {path: 'medicineAssistantTable',name: '用药助手申报表', component: MedicineAssistantTableRouter,meta: { authorityId: 50}},
+            {path: 'chineseMedicineAssistantTable',name: '中医助手申报表', component: ChineseMedicineAssistantTableRouter,meta: { authorityId: 51}},
+            {path: 'clinicalDecisionNewChooseBooks', name: '临床决策专家申报', component: ClinicalDecisionNewChooseBooks, meta: {isShowTags: true,authorityId:true}},
             {
               path: 'clinicalDecisionNav',
               name: '临床决策专家申报审核',

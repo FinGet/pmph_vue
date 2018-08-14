@@ -26,7 +26,7 @@
             border
             style="width: 100%">
             <el-table-column
-              prop="type_name"
+              prop="typeName"
               label="学科分类">
             </el-table-column>
             <el-table-column
@@ -86,7 +86,7 @@
               border
               style="width: 100%">
               <el-table-column
-                prop="type_name"
+                prop="typeName"
                 label="内容分类">
               </el-table-column>
               <el-table-column
@@ -183,8 +183,11 @@
         }).then((res)=>{
           if(res.data.code==1){
             var resData = res.data.data;
+            this.stContents = [];
+            this.stContentPresetPersons =[];
+            this.stContentChosenPersons = [];
             resData.rows.forEach(item => {
-              this.stContents.push(item.type_name)
+              this.stContents.push(item.typeName)
               this.stContentPresetPersons.push(item.countSubmit)
               this.stContentChosenPersons.push(item.countSuccess)
             })
@@ -237,7 +240,7 @@
               },
               xAxis: [
                 {
-                  name: "申报单位",
+                  name: "内容分类",
                   type: "category",
                   data: this.stContents,
                   axisPointer: {
@@ -247,7 +250,26 @@
                     interval: 0,
                     boundaryGap: [0, 0.01],
                     formatter: function(value) {
-                      return value.split("").join("\n");
+                      var ret = "";//拼接加\n返回的类目项
+                      var maxLength = 2;//每项显示文字个数
+                      var valLength = value.length;//X轴类目项的文字个数
+                      var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                      if (rowN > 1)//如果类目项的文字大于3,
+                      {
+                        for (var i = 0; i < rowN; i++) {
+                          var temp = "";//每次截取的字符串
+                          var start = i * maxLength;//开始截取的位置
+                          var end = start + maxLength;//结束截取的位置
+                          //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                          temp = value.substring(start, end) + "\n";
+                          ret += temp; //凭借最终的字符串
+                        }
+                        return ret;
+                      }
+                      else {
+                        return value;
+                      }
+
                     }
                   }
                 }
@@ -321,8 +343,11 @@
           params:this.subject
         }).then((res)=>{
           if(res.data.code==1){
+            this.stSubjects = [];
+            this.stPresetPersons =[];
+            this.stChosenPersons =[];
             res.data.data.rows.forEach(item => {
-              this.stSubjects.push(item.type_name); // 书籍
+              this.stSubjects.push(item.typeName); // 书籍
               this.stPresetPersons.push(item.countSubmit); // 申报人数
               this.stChosenPersons.push(item.countSuccess); // 当选人数
             })
@@ -373,7 +398,7 @@
               },
               xAxis: [
                 {
-                  name: "书籍名称",
+                  name: "学科分类",
                   left:"10px;",
                   type: "category",
                   nameTextStyle:{padding:[0,0,0,20]},
@@ -387,7 +412,26 @@
 
                     },
                     formatter: function(value) {
-                      return value.split("").join("\n");
+                      var ret = "";//拼接加\n返回的类目项
+                      var maxLength = 2;//每项显示文字个数
+                      var valLength = value.length;//X轴类目项的文字个数
+                      var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                      if (rowN > 1)//如果类目项的文字大于3,
+                      {
+                        for (var i = 0; i < rowN; i++) {
+                          var temp = "";//每次截取的字符串
+                          var start = i * maxLength;//开始截取的位置
+                          var end = start + maxLength;//结束截取的位置
+                          //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                          temp = value.substring(start, end) + "\n";
+                          ret += temp; //凭借最终的字符串
+                        }
+                        return ret;
+                      }
+                      else {
+                        return value;
+                      }
+
                     }
                   }
                 }

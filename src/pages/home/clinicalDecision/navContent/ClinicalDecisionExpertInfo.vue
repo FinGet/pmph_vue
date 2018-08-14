@@ -126,9 +126,30 @@
             </table>
           </div>
         </div>
+        <!--主要学术兼职-->
+        <div class="expert-info-box" v-if="!$commonFun.Empty(decAcadeList)">
+          <p class="info-box-title">主要学术兼职</p>
+          <div class="no-padding">
+            <table class="expert-info-table" border="1">
+              <tr>
+                <th><div>兼职学术组织</div></th>
+                <th><div>级别</div></th>
+                <th><div>职务</div></th>
+                <th><div>备注</div></th>
+              </tr>
+              <tr v-for="(iterm,index) in decAcadeList">
+                <td><div>{{iterm.orgName}}</div></td>
+                <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
+                <td><div>{{iterm.position}}</div></td>
+                <td><div>{{iterm.note}}</div></td>
+              </tr>
+            </table>
+            <!--<div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>-->
+          </div>
+        </div>
 
 
-        <!--主要工作经历-->
+      <!--  &lt;!&ndash;主要工作经历&ndash;&gt;
         <div class="expert-info-box" v-if="!$commonFun.Empty(decWorkExpList)">
           <p class="info-box-title">主要工作经历</p>
           <div class="no-padding">
@@ -147,10 +168,10 @@
               </tr>
             </table>
           </div>
-        </div>
+        </div>-->
 
         <!--主编国家级规划教材情况-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decNationalPlanList)">
+        <!--<div class="expert-info-box" v-if="!$commonFun.Empty(decNationalPlanList)">
           <p class="info-box-title">主编国家级规划教材情况</p>
           <div class="no-padding">
             <table class="expert-info-table" border="1">
@@ -163,18 +184,18 @@
               <tr v-for="(iterm,index) in decNationalPlanList">
                 <td><div>{{iterm.materialName}}</div></td>
                 <td><div>{{iterm.isbn}}</div></td>
-                <!--  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> -->
+                &lt;!&ndash;  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> &ndash;&gt;
                 <td><div>{{iterm.rankText}}</div></td>
                 <td><div>{{iterm.note}}</div></td>
               </tr>
             </table>
-            <!--<div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>-->
+            &lt;!&ndash;<div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>&ndash;&gt;
           </div>
-        </div>
+        </div>-->
 
         <!--其他社教材编写情况-->
         <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookList)">
-          <p class="info-box-title">其他社教材编写情况</p>
+          <p class="info-box-title">人卫社教材编写情况</p>
           <div class="no-padding">
             <table class="expert-info-table" border="1">
               <tr>
@@ -229,27 +250,6 @@
           </div>
         </div>
 
-        <!--主要学术兼职-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decAcadeList)">
-          <p class="info-box-title">主要学术兼职</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>兼职学术组织</div></th>
-                <th><div>级别</div></th>
-                <th><div>职务</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decAcadeList">
-                <td><div>{{iterm.orgName}}</div></td>
-                <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
-                <td><div>{{iterm.position}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-            <!--<div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>-->
-          </div>
-        </div>
 
     </div>
   </div>

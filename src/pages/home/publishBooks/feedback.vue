@@ -25,7 +25,7 @@
         <el-table :data="tableData" stripe border style="width: 100%;text-align: center">
           <el-table-column prop="bookname" label="书名"  align="left">
           </el-table-column>
-          <el-table-column prop="isbn" label="isbn" align="center">
+          <el-table-column prop="isbn" label="ISBN" align="center">
           </el-table-column>
           <el-table-column prop="feedBackName" label="反馈人" align="center">
           </el-table-column>

@@ -17,7 +17,7 @@
             }
         },
       created() {
-        this.$router.push({name:'临床决策专家申报表审核',query:{clinicalTabletype:'1'}});
+        this.$router.push({name:'临床决策专家申报表审核',query:{clinicalTabletype:'1',queryName:'临床助手申报表'}});
       }
     }
 </script>
