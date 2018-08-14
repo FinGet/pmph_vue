@@ -1,7 +1,7 @@
 <template>
 	<div class="clinicalDecision_router">
       <div class="tab_nav_outbox">
-        <el-tabs type="border-card"  class="tab_nav" v-model="activeTagName" @tab-click="handleClick">
+        <el-tabs type="border-card"   v-model="activeTagName" @tab-click="handleClick">
           <el-tab-pane label="申报表审核"  name="clinicalDecisionPressCheck">
             <clinical-decision-press-check :productType="product.productType" ref="clinicalDecisionPressCheck" v-if="isShow" @toExpertInfoData="toExpertInfoData"></clinical-decision-press-check>
             <ClinicalDecisionExpertInfo  ref="expert" v-if="!isShow" :expertInfoId="expertInfoId"></ClinicalDecisionExpertInfo>
