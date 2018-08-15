@@ -243,6 +243,7 @@
                   name: "内容分类",
                   type: "category",
                   data: this.stContents,
+                  nameTextStyle:{padding:[0,0,0,20]},
                   axisPointer: {
                     type: "shadow"
                   },

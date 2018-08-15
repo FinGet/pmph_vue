@@ -124,7 +124,7 @@
         if (str == 'materialrouter' || str == 'groupmanage' || str == 'auth' || this.$router.currentRoute.name == '评论审核') {
           this.isShowBorder = false;
         }
-        if (this.$router.currentRoute.name == "临床决策专家申报"||str == 'user' && this.$router.currentRoute.name != '社内用户' || this.$router.currentRoute.name == '文章管理' || this.$router.currentRoute.name == '帮助管理' || this.$router.currentRoute.name == '常见问题' || this.$router.currentRoute.name == '操作手册上传' || str == "topic" || this.$router.currentRoute.name == '问卷模板新增' || this.$router.currentRoute.name == '结果明细' || this.$router.currentRoute.name == '发起调查' || this.$router.currentRoute.name == '问卷回收结果') {
+        if (this.$router.currentRoute.name == "临床决策专家申报审核"||this.$router.currentRoute.name == "临床决策专家申报"||str == 'user' && this.$router.currentRoute.name != '社内用户' || this.$router.currentRoute.name == '文章管理' || this.$router.currentRoute.name == '帮助管理' || this.$router.currentRoute.name == '常见问题' || this.$router.currentRoute.name == '操作手册上传' || str == "topic" || this.$router.currentRoute.name == '问卷模板新增' || this.$router.currentRoute.name == '结果明细' || this.$router.currentRoute.name == '发起调查' || this.$router.currentRoute.name == '问卷回收结果') {
           this.isPadding = true;
         }
         if (this.$router.currentRoute.name == "通知列表") {

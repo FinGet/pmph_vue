@@ -824,7 +824,7 @@ export default {
                 gmt_publish:''
               };
               this.initEditData();
-              this.$message.success('提交成功');
+              this.$message.success(type==0?'暂存成功':'提交成功');
             }else{
               this.$confirm(res.data.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",
