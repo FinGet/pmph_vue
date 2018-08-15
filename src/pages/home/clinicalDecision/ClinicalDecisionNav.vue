@@ -87,5 +87,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .clinicalDecision_router .el-tabs--border-card {
+    border: 0;
+    box-shadow: none;
+  }
 </style>
