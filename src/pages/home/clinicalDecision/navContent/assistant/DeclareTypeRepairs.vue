@@ -26,7 +26,7 @@
             :on-success="upLoadFileSuccess"
             :on-error="uploadError"
             :show-file-list="false">
-            <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+            <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading" >{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
           </my-upload>
           <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/学科分类导入模板.xlsx">模板下载.xls</a></span>
         </div>
@@ -123,12 +123,12 @@
                 type="index" label="序号" align="center"
                 width="70">
                 <template scope="scope">
-                  {{(scope.$index+1)+subject.pageSize*(subject.pageNumber-1)}}
+                  {{(scope.$index+1)+content.pageSize*(content.pageNumber-1)}}
                 </template>
               </el-table-column>
               <el-table-column
                 prop="type_name"
-                label="学科分类">
+                label="内容分类">
               </el-table-column>
               <el-table-column
                 prop="data_sources"
@@ -175,10 +175,13 @@
 </template>
 
 <script>
+  import { Loading } from 'element-ui';
 	export default {
     props:['productType'],
 		data() {
 			return {
+       // fullscreenLoading: false,
+        loadingInstance:undefined,
         activeName:"content",
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
@@ -203,6 +206,17 @@
 
     };
 		},methods: {
+      /*openFullScreen2() {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2000);
+      },*/
       /**
        * 当上传按钮添加excel
        * @param file
@@ -242,6 +256,7 @@
           });
           return;
         }
+        this.loadingInstance = Loading.service({ fullscreen: true });
         },
       /**
        * 上传文件请求成功的回调
@@ -251,7 +266,13 @@
          /* this.excelVisible = true;
           this.excelTableData = res.data.list;
           this.uuid=res.data.uuid;*/
-         this.getContentTableDataFun();
+          if(this.activeName=="content"){
+            this.getContentTableDataFun();
+          }else{
+            this.getSubjectTableDataFun();
+          }
+
+         this.$message.success("解析成功");
           console.log(res);
         }else{
           this.$confirm(res.msg.msgTrim(), "提示",{
@@ -261,6 +282,10 @@
             type: "error"
           });
         }
+        var _this = this;
+        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          _this.loadingInstance.close();
+        });
         this.uploadLoading = false;
       },
       /**
@@ -273,6 +298,10 @@
           cancelButtonText: "取消",
           showCancelButton: false,
           type: "error"
+        });
+        var _this = this;
+        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          _this.loadingInstance.close();
         });
         this.uploadLoading = false;
       },
