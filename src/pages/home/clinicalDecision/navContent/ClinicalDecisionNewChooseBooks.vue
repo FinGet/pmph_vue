@@ -143,8 +143,8 @@
 
         <el-form-item class="text-center">
           <el-button type="primary"  @click="openPreventDialog">预览</el-button>
-          <el-button type="primary" @click="submitForm(0)" :disabled = "isDisabled">暂存</el-button>
-          <el-button type="primary" @click="submitForm" >发布</el-button>
+          <el-button type="primary" @click="submitForm(0)" :disabled = "isDisabled" :loading="isloadingZC">暂存</el-button>
+          <el-button type="primary" @click="submitForm(1)" :loading="isloadingFB">发布</el-button>
         </el-form-item>
       </el-form>
 
@@ -162,7 +162,7 @@
         :visible.sync="showPreventDialog"
         size="large">
         <div style="padding:0 10%;">
-          <h5 class="previewTitle text-center">{{productName[ruleForm.product_type]}}申报说明</h5>
+          <!--<h5 class="previewTitle text-center">{{productName[ruleForm.product_type]}}申报说明</h5>
           <p class="senderInfo text-center paddingT10" v-if="ruleForm.is_published">
             <span class="marginR10">发布人：{{ruleForm.publisher}}</span>
             <span class="marginR10">发布时间：{{ruleForm.gmt_publish}}</span>
@@ -172,7 +172,7 @@
             <span class="marginR10">发布人：{{'无'}}</span>
             <span class="marginR10">发布时间：{{'无'}}</span>
             <span>{{'状态：待发布'}}</span>
-          </p>
+          </p>-->
           <el-form label-width="125px">
             <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
@@ -212,7 +212,8 @@ export default {
       contentH:'auto',
       productImage:'../../../../../static/static-image/rwej01.png',
       labelPosition: "right",
-      /*isloading:false,*/
+      isloadingZC:false,
+      isloadingFB:false,
       clearTableSelect:false,
       rules: {
         auditorList:[{type:'array', required: true,message:'请至少选择一个审核人' ,trigger: "change" }],
@@ -228,6 +229,7 @@ export default {
         ],
 
       },
+
       ruleForm: {
         id:'',
         auditorList:[], //审核人
@@ -768,14 +770,11 @@ export default {
           paramdata.append(i,obj[i])
         }
       }
-      console.log("uploadFormMerge");
-      console.log(paramdata.toString());
       return paramdata;
     },
 
     /* 提交表单 */
     submitForm(type){
-      debugger;
       //this.product.noteContent["content"] = this.$refs.editorNote.getContent();
       //this.product.descriptionContent["content"] = this.$refs.editor.getContent();
       this.ruleForm.noteContent["content"] = this.$refs.editorNote.getContent();
@@ -791,14 +790,15 @@ export default {
         });
         return false;
       }
-
-      debugger;
       this.$refs.ruleForm.validate((valid) => {
-       // alert(valid);
 
         if (valid&&this.formTableChecked()) {
-         // alert(1111);
-         /* this.isloading=true;*/
+          if(type==0){
+            this.isloadingZC=true;
+          }else{
+            this.isloadingFB=true;
+          }
+
           //提交
           var formdate=JSON.parse(JSON.stringify(this.ruleForm));
         //  delete formdate['producntImg'];
@@ -807,7 +807,8 @@ export default {
           this.$axios.post(this.submitProductUrl+(type==0?"noPub":"pub"),
             formdate).then((res)=>{
             console.log(res);
-           /* this.isloading=false;*/
+            this.isloadingZC=false;
+            this.isloadingFB=false;
             if(res.data.code==1){
               this.isDisabled = !this.$commonFun.Empty(res.data.data.id)&&res.data.data.is_published;
               this.ruleForm={
@@ -824,7 +825,7 @@ export default {
                 gmt_publish:''
               };
               this.initEditData();
-              this.$message.success(type==0?'暂存成功':'提交成功');
+              this.$message.success(type==0?'保存成功':'发布成功');
             }else{
               this.$confirm(res.data.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",
