@@ -259,6 +259,16 @@
           })
       },
       /**
+       * 分页每页显示条数发生改变
+       * @param val
+       */
+      handleSizeChange(val){
+        this.searchParams.pageSize=val;
+        this.searchParams.pageNumber=1;
+        this.getTableData();
+      },
+
+      /**
        * 导出excel
        */
       exportExcel(){

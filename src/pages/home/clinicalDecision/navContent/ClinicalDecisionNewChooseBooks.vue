@@ -143,8 +143,8 @@
 
         <el-form-item class="text-center">
           <el-button type="primary"  @click="openPreventDialog">预览</el-button>
-          <el-button type="primary" @click="submitForm(0)" :disabled = "isDisabled" :loading="isloadingZC">暂存</el-button>
-          <el-button type="primary" @click="submitForm(1)" :loading="isloadingFB">发布</el-button>
+          <!--<el-button type="primary" @click="submitForm(0)" :disabled = "isDisabled" :loading="isloadingZC">暂存</el-button>-->
+          <el-button type="primary" @click="submitForm(0)" :loading="isloading">下一步</el-button>
         </el-form-item>
       </el-form>
 
@@ -212,8 +212,8 @@ export default {
       contentH:'auto',
       productImage:'../../../../../static/static-image/rwej01.png',
       labelPosition: "right",
-      isloadingZC:false,
-      isloadingFB:false,
+      //isloadingZC:false,
+      isloading:false,
       clearTableSelect:false,
       rules: {
         auditorList:[{type:'array', required: true,message:'请至少选择一个审核人' ,trigger: "change" }],
@@ -253,7 +253,7 @@ export default {
       },
       preventContent:"",
       noteText:"",
-      isDisabled:false,
+     // isDisabled:false,
       /*product:{
         id:'',
         product_type: this.$route.query.clinicaltype,
@@ -791,13 +791,13 @@ export default {
         return false;
       }
       this.$refs.ruleForm.validate((valid) => {
-
         if (valid&&this.formTableChecked()) {
-          if(type==0){
+         /* if(type==0){
             this.isloadingZC=true;
           }else{
             this.isloadingFB=true;
-          }
+          }*/
+         this.isloading = true;
 
           //提交
           var formdate=JSON.parse(JSON.stringify(this.ruleForm));
@@ -807,25 +807,27 @@ export default {
           this.$axios.post(this.submitProductUrl+(type==0?"noPub":"pub"),
             formdate).then((res)=>{
             console.log(res);
-            this.isloadingZC=false;
-            this.isloadingFB=false;
+           /* this.isloadingZC=false;
+            this.isloadingFB=false;*/
+            this.isloading = false;
             if(res.data.code==1){
-              this.isDisabled = !this.$commonFun.Empty(res.data.data.id)&&res.data.data.is_published;
-              this.ruleForm={
-                id:'',
-                auditorList:[], //审核人
-                productExtensionList:[],   //扩展项
-                producntImgList:[],
-                productAttachmentList:[],
-                descriptionContent :{},
-                noteContent:{},
-                product_type: this.$route.query.clinicaltype,
-                is_published:false,
-                publisher:'',
-                gmt_publish:''
-              };
-              this.initEditData();
-              this.$message.success(type==0?'保存成功':'发布成功');
+              //this.isDisabled = !this.$commonFun.Empty(res.data.data.id)&&res.data.data.is_published;
+              // this.ruleForm={
+              //   id:'',
+              //   auditorList:[], //审核人
+              //   productExtensionList:[],   //扩展项
+              //   producntImgList:[],
+              //   productAttachmentList:[],
+              //   descriptionContent :{},
+              //   noteContent:{},
+              //   product_type: this.$route.query.clinicaltype,
+              //   is_published:false,
+              //   publisher:'',
+              //   gmt_publish:''
+              // };
+              // this.initEditData();
+              // this.$message.success(type==0?'保存成功':'发布成功');
+              this.$router.push({name:'临床决策申报选择学校',params:{productId:res.data.data.id,type:'reEdit'}});
             }else{
               this.$confirm(res.data.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",

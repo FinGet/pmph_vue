@@ -272,7 +272,7 @@
             this.getSubjectTableDataFun();
           }
 
-         this.$message.success("解析成功");
+         this.$message.success("导入成功");
           console.log(res);
         }else{
           this.$confirm(res.msg.msgTrim(), "提示",{
@@ -389,6 +389,13 @@
             }else{
               this.getSubjectTableDataFun();
             }
+          }else{
+            this.$confirm(res.data.msg.msgTrim(), "提示",{
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              showCancelButton: false,
+              type: "error"
+            });
           }
         }).catch(e=>{console.log(e)})
           })

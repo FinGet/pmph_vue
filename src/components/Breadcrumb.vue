@@ -22,9 +22,10 @@
       }
     },
     methods:{
+
       //面包屑
       initBreadData(){
-       // console.log(this.$router.currentRoute.matched);
+        //console.log(this.$router);
        this.breadData=this.$router.currentRoute.matched;
       },
       breadName(item){
@@ -32,7 +33,9 @@
            return this.$route.params.materialId=='new'?'新建通知':'修改通知';
         }else if(item.name=='临床决策专家申报审核'){
           //alert(this.clinicalTableName[this.clinicalTabletype])
-          //return this.clinicalTableName[this.clinicalTabletype];
+          //console.log(this.$router.currentRoute.fullPath)
+          return decodeURI((this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.fullPath.lastIndexOf('=')+1))) ;
+
         }else{
 
         }

@@ -1,152 +1,172 @@
+
 <template>
   <div class="teachingMaterial expert_info" id="printArea">
-      <div class="info-wrapper">
-        <!--操作按钮-->
-        <div class="paddingB10 text-right print-none">
-          <el-button type="primary"  @click="check(3)" v-if="expertInfoData.online_progress!=3 && expertInfoData.online_progress!=2">
-            {{'通过'}}
-          </el-button>
-          <el-button type="danger"  @click="check(2)" v-if="expertInfoData.online_progress!=3 && expertInfoData.online_progress!=2">
-            {{'驳回'}}
-          </el-button>
-          <el-button type="primary"   icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
-        </div>
-        <div class="expert-info-box user-info-wrapper">
-          <p class="info-box-title">专家信息</p>
-          <div>
-            <div class="info-iterm-text">
-              <div>姓名：<span></span></div>
-              <div>{{expertInfoData.realname}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>性别：<span></span></div>
-              <div>{{expertInfoData.sex}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>出生年月：<span></span></div>
-              <div>{{expertInfoData.birthday}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>教龄(年)：<span></span></div>
-              <div>{{expertInfoData.experience}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>工作单位：<span></span></div>
-              <div><span :title="expertInfoData.org_name" class="one_line_limit">{{expertInfoData.org_name}}</span></div>
-            </div>
-            <div class="info-iterm-text">
-              <div>职务：<span></span></div>
-              <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
-            </div>
-            <div class="info-iterm-text">
-              <div> 职称：<span></span></div>
-              <div>{{expertInfoData.title}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>邮编：<span></span></div>
-              <div>{{expertInfoData.postcode}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>地址：<span></span></div>
-              <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
-            </div>
-            <div class="info-iterm-text">
-              <div>联系电话：<span></span></div>
-              <div>{{expertInfoData.telephone}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>传真：<span></span></div>
-              <div>{{expertInfoData.fax}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>手机：<span></span></div>
-              <div>{{expertInfoData.handphone}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>Email：<span></span></div>
-              <div>{{expertInfoData.email}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>证件类型：<span></span></div>
-              <div v-if="expertInfoData.idtype==0">身份证</div>
-              <div v-if="expertInfoData.idtype==1">护照</div>
-              <div v-if="expertInfoData.idtype==2">军官证</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>证件号码：<span></span></div>
-              <div>{{expertInfoData.idcard}}</div>
-            </div>
-            <div class="info-iterm-text">
-              <div>学历：<span></span></div>
-              <div>{{degree[expertInfoData.degree]}}</div>
-            </div>
+    <div class="info-wrapper">
+      <!--操作按钮-->
+      <div class="paddingB10 text-right print-none">
+        <el-button type="primary" :disabled="!!onlineProgressBtn_Pass" @click="check(3)" v-if="expertInfoData.org_id == 0" >
+          {{'审核通过'}}
+        </el-button>
+        <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(expertInfoData.org_id!=0)" >
+          {{'退回给学校'}}
+        </el-button>
+        <el-button type="danger"  :disabled="!onlineProgressBtn_Back" @click="check(5)" >
+          {{'退回给个人'}}
+        </el-button>
 
+        <el-button type="primary"  @click="print" >
+          {{'打印'}}
+        </el-button>
+        <el-button type="primary"  @click="login">
+          {{'登录'}}
+        </el-button>
+        <el-button type="primary"   icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
+      </div>
+      <div class="expert-info-box user-info-wrapper">
+        <p class="info-box-title">专家信息</p>
+        <div>
+          <div class="info-iterm-text">
+            <div>姓名：<span></span></div>
+            <div>{{expertInfoData.realname}}</div>
           </div>
-        </div>
+          <div class="info-iterm-text">
+            <div>性别：<span></span></div>
+            <div>{{expertInfoData.sex}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>出生年月：<span></span></div>
+            <div>{{expertInfoData.birthday}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>教龄(年)：<span></span></div>
+            <div>{{expertInfoData.experience}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>工作单位：<span></span></div>
+            <div><span :title="expertInfoData.org_name" class="one_line_limit">{{expertInfoData.org_name}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div>职务：<span></span></div>
+            <div><span :title="expertInfoData.position" class="one_line_limit">{{expertInfoData.position}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div> 职称：<span></span></div>
+            <div>{{expertInfoData.title}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>邮编：<span></span></div>
+            <div>{{expertInfoData.postcode}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>地址：<span></span></div>
+            <div class="lineheight-normal paddingT10"><span :title="expertInfoData.address" class="one_line_limit">{{expertInfoData.address}}</span></div>
+          </div>
+          <div class="info-iterm-text">
+            <div>联系电话：<span></span></div>
+            <div>{{expertInfoData.telephone}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>传真：<span></span></div>
+            <div>{{expertInfoData.fax}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>手机：<span></span></div>
+            <div>{{expertInfoData.handphone}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>Email：<span></span></div>
+            <div>{{expertInfoData.email}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>证件类型：<span></span></div>
+            <div v-if="expertInfoData.idtype==0">身份证</div>
+            <div v-if="expertInfoData.idtype==1">护照</div>
+            <div v-if="expertInfoData.idtype==2">军官证</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>证件号码：<span></span></div>
+            <div>{{expertInfoData.idcard}}</div>
+          </div>
+          <div class="info-iterm-text">
+            <div>学历：<span></span></div>
+            <div>{{degree[expertInfoData.degree]}}</div>
+          </div>
+          <div class="info-iterm-text"  style="width: 66%">
+            <div>银行卡号：<span></span></div>
+            <div>{{expertInfoData.banknumber}}</div>
+          </div>
 
-        <!--主要学习经历-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decEduExpList)">
-          <p class="info-box-title">主要学习经历</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>起止时间</div></th>
-                <th><div>学校名称</div></th>
-                <th><div>专业</div></th>
-                <th><div>学历</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decEduExpList" :key="index">
-                <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
-                <td><div>{{iterm.schoolName}}</div></td>
-                <td><div>{{iterm.major}}</div></td>
-                <td><div>{{iterm.degree}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
+          <div class="info-iterm-text">
+            <div style="width: 180px; ">银行地址（开户行）：<span></span></div>
+            <div>{{expertInfoData.bankaddress}}</div>
           </div>
+
         </div>
-        <!--主要工作经历-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decWorkExpList)">
-          <p class="info-box-title">主要工作经历</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>起止时间</div></th>
-                <th><div>工作单位</div></th>
-                <th><div>职位</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decWorkExpList">
-                <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
-                <td><div>{{iterm.orgName}}</div></td>
-                <td><div>{{iterm.position}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-          </div>
+      </div>
+
+      <!--主要学习经历-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decEduExpList)">
+        <p class="info-box-title">主要学习经历</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>学校名称</div></th>
+              <th><div>专业</div></th>
+              <th><div>学历</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decEduExpList" :key="index">
+              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
+              <td><div>{{iterm.schoolName}}</div></td>
+              <td><div>{{iterm.major}}</div></td>
+              <td><div>{{iterm.degree}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
         </div>
-        <!--主要学术兼职-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decAcadeList)">
-          <p class="info-box-title">主要学术兼职</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>兼职学术组织</div></th>
-                <th><div>级别</div></th>
-                <th><div>职务</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decAcadeList">
-                <td><div>{{iterm.orgName}}</div></td>
-                <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
-                <td><div>{{iterm.position}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-            <!--<div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>-->
-          </div>
+      </div>
+      <!--主要工作经历-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decWorkExpList)">
+        <p class="info-box-title">主要工作经历</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>起止时间</div></th>
+              <th><div>工作单位</div></th>
+              <th><div>职位</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decWorkExpList">
+              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
         </div>
+      </div>
+      <!--主要学术兼职-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decAcadeList)">
+        <p class="info-box-title">主要学术兼职</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>兼职学术组织</div></th>
+              <th><div>级别</div></th>
+              <th><div>职务</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decAcadeList">
+              <td><div>{{iterm.orgName}}</div></td>
+              <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
+              <td><div>{{iterm.position}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!academicExperience.length">暂无数据</div>-->
+        </div>
+      </div>
 
 
       <!--  &lt;!&ndash;主要工作经历&ndash;&gt;
@@ -170,277 +190,440 @@
           </div>
         </div>-->
 
-        <!--主编国家级规划教材情况-->
-        <!--<div class="expert-info-box" v-if="!$commonFun.Empty(decNationalPlanList)">
-          <p class="info-box-title">主编国家级规划教材情况</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>规划教材名</div></th>
-                <th><div>标准书号</div></th>
-                <th><div>教材级别</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decNationalPlanList">
-                <td><div>{{iterm.materialName}}</div></td>
-                <td><div>{{iterm.isbn}}</div></td>
-                &lt;!&ndash;  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> &ndash;&gt;
-                <td><div>{{iterm.rankText}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-            &lt;!&ndash;<div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>&ndash;&gt;
-          </div>
-        </div>-->
+      <!--主编国家级规划教材情况-->
+      <!--<div class="expert-info-box" v-if="!$commonFun.Empty(decNationalPlanList)">
+        <p class="info-box-title">主编国家级规划教材情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>规划教材名</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>教材级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decNationalPlanList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
+              &lt;!&ndash;  <td><div>{{iterm.rank&&iterm.rank<4?national_plan_rankList[iterm.rank]:'无'}}</div></td> &ndash;&gt;
+              <td><div>{{iterm.rankText}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          &lt;!&ndash;<div class="text-center lineheight-24" v-if="!nationalPlan.length">暂无数据</div>&ndash;&gt;
+        </div>
+      </div>-->
 
-        <!--其他社教材编写情况-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookList)">
-          <p class="info-box-title">人卫社教材编写情况</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>教材名称</div></th>
-                <th><div>级别</div></th>
-                <th><div>编写职务</div></th>
-                <th><div>出版社</div></th>
-                <th><div>数字编委</div></th>
-                <th><div>出版时间</div></th>
-                <th><div>标准书号</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decTextbookList">
-                <td><div>{{iterm.materialName}}</div></td>
-                <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
-                <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
-                <td><div>{{iterm.publisher}}</div></td>
-                <td><div>{{iterm.digitalEditor?'是':'否'}}</div></td>
-                <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
-                <td><div>{{iterm.isbn}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-            <!--<div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>-->
+      <!--其他社教材编写情况-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookList)">
+        <p class="info-box-title">人卫社教材编写情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>教材名称</div></th>
+              <th><div>级别</div></th>
+              <th><div>编写职务</div></th>
+              <th><div>出版社</div></th>
+              <th><div>数字编委</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>标准书号</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decTextbookList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
+              <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{iterm.digitalEditor?'是':'否'}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
+              <td><div>{{iterm.isbn}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!textbook.length">暂无数据</div>-->
+        </div>
+      </div>
+
+
+      <!--主编学术专著情况表-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+        <p class="info-box-title">主编学术专著情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>专著名称</div></th>
+              <th><div>专著发表日期</div></th>
+              <th><div>出版方式</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decMonographList">
+              <td><div>{{iterm.monographName}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.monographDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
+              <td><div>{{iterm.isSelfPaid?'自费':'公费'}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+
+      <!--主编或参编图书情况-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decEditorBookList)">
+        <p class="info-box-title">主编或参编图书情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>图书名称</div></th>
+              <th><div>出版单位</div></th>
+              <th><div>出版时间</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decMonographList">
+              <td><div>{{iterm.materialName}}</div></td>
+              <td><div>{{iterm.publisher}}</div></td>
+              <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div v-if="decExtensionList.length">
+        <!--扩展项-->
+        <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
+          <p class="info-box-title">{{iterm.extension_name?iterm.extension_name:'更多信息'}}</p>
+          <div>
+            <p class="achievements">
+              {{iterm.content}}
+            </p>
           </div>
         </div>
+      </div>
 
 
-        <!--主编学术专著情况表-->
-        <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
-          <p class="info-box-title">主编学术专著情况</p>
-          <div class="no-padding">
-            <table class="expert-info-table" border="1">
-              <tr>
-                <th><div>专著名称</div></th>
-                <th><div>专著发表日期</div></th>
-                <th><div>出版方式</div></th>
-                <th><div>出版单位</div></th>
-                <th><div>出版时间</div></th>
-                <th><div>备注</div></th>
-              </tr>
-              <tr v-for="(iterm,index) in decMonographList">
-                <td><div>{{iterm.monographName}}</div></td>
-                <td><div>{{$commonFun.formatDate(iterm.monographDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
-                <td><div>{{iterm.isSelfPaid?'自费':'公费'}}</div></td>
-                <td><div>{{iterm.publisher}}</div></td>
-                <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
-                <td><div>{{iterm.note}}</div></td>
-              </tr>
-            </table>
-            <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
-          </div>
+      <!--学科分类-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+        <p class="info-box-title">学科分类</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <p v-for="(iterm,index) in productSubjectTypeList" :key="index"><i class="fa fa-tags"></i>  {{iterm.type_name}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
+      </div>
+
+      <!--内容分类-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+        <p class="info-box-title">内容分类</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <p v-for="(iterm,index) in productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+
+      <!--所在单位意见-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+        <p class="info-box-title">所在单位意见</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1" style="padding: 20px 10px;">
+            <p style="" @click="downloadImage(expertInfoData.unit_advise)">{{expertInfoData.syllabus_name}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+
+      <!--申报单位-->
+      <div class="expert-info-box" >
+        <p class="info-box-title">申报单位</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <p style="padding: 20px 10px;"><strong>申报单位:  </strong>{{expertInfoData.declare_name}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
 
 
     </div>
   </div>
 </template>
 <script type="text/javascript">
-    import bus from 'common/eventBus/bus.js'
-    export default{
-         props:["expertInfoId"],
-        data(){
-            return{
-              api_info:'/pmpheep/expertation/get',
-              api_online_check:'/pmpheep/expertation/onlineProgress',
-              materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
-              degree:['无','专科','本科','硕士','博士'],
-              positionList:['无','主编','副主编','编委'],
-              rankList:['无','国际','国家','省部','市级'],
-              expertInfoData:{},
-              decEduExpList:[],
-              decWorkExpList: [],
-              productSubjectTypeList:[],
-              productContentTypeList:[],
-              productSubjectTypeStr:"",
-              productContentTypeStr:"",
-              decNationalPlanList:[],
-              decTextbookList:[],
-              decMonographList:[],
-              decAcadeList:[],
-
-
-            }
+  import bus from 'common/eventBus/bus.js'
+  export default{
+    props:["expertInfoId"],
+    data(){
+      return{
+        api_info:'/pmpheep/expertation/get',
+        api_online_check:'/pmpheep/expertation/onlineProgress',
+        materialLevel:['无','国家','省部','协编','校本','其他','教育部规划','卫计委规划','区域规划','创新教材'],
+        degree:['无','专科','本科','硕士','博士'],
+        positionList:['无','主编','副主编','编委'],
+        rankList:['无','国际','国家','省部','市级'],
+        expertInfoData:{
+          org_id:'',
+          userId:'',
+          username:'',
+          realname:'',
+          org_name:'',
+          sex:'男',
+          birthday:'',
+          orgName:'',
+          position:'',
+          title:'',
+          address:'',
+          postcode:'',
+          handphone:'',
+          email:'',
+          telephone:'',
+          idcard:'',
+          experience:'',
+          online_progress:'',
+          degree:0,
+          banknumber:'',
+          bankaddress:'',
+          declare_name:'',
         },
-      watch:{
-        /*expertInfoId(val, oldVal){//普通的watch监听
-          console.log("expertInfoInfo: "+val, oldVal);
-           // this.getExpertInfoData();
-          alert(2222);
-        },*/
-      },
-        computed:{
-        },
+        decEduExpList:[],
+        decWorkExpList: [],
+        productSubjectTypeList:[],
+        productContentTypeList:[],
+        productSubjectTypeStr:"",
+        productContentTypeStr:"",
+        decNationalPlanList:[],
+        decTextbookList:[],
+        decMonographList:[],
+        decEditorBookList:[],
+        decExtensionList:[],
+        decAcadeList:[],
 
-      methods:{
 
-        /**
-         *审核
-         */
-        check(progress) {
-          var title='';
-          if(progress==3) {
-            title = "是否确认通过?"
-            this.$confirm(title, "提示",{
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }).then(() => {
+      }
+    },
+    watch:{
+      /*expertInfoId(val, oldVal){//普通的watch监听
+        console.log("expertInfoInfo: "+val, oldVal);
+         // this.getExpertInfoData();
+        alert(2222);
+      },*/
+    },
+    computed:{
+    },
+
+    methods:{
+
+      /**
+       *审核
+       */
+      check(progress) {
+        var title='';
+        if(progress==3) {
+          title = "是否确认通过?"
+          this.$confirm(title, "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            let param = {
+              id:this.expertInfoId,
+              onlineProgress:progress,
+              returnCause:""
+            };
+            this.onlineCheckPass(param,progress);
+          })
+        }
+        else {
+
+          //  title = "是否确认退回?"
+          this.$prompt('请输入退回原因', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+          }).then(({ value }) => {
+            if(value&&value.length<=40||!value){
               let param = {
                 id:this.expertInfoId,
                 onlineProgress:progress,
-                returnCause:""
+                returnCause:value
               };
               this.onlineCheckPass(param,progress);
-            })
-          }
-          else {
+            }else{
+              this.$message.warning('不能超过40个字');
+            }
 
-            //  title = "是否确认退回?"
-            this.$prompt('请输入退回原因', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-            }).then(({ value }) => {
-              if(value&&value.length<=40||!value){
-                let param = {
-                  id:this.expertInfoId,
-                  onlineProgress:progress,
-                  returnCause:value
-                };
-                this.onlineCheckPass(param,progress);
-              }else{
-                this.$message.warning('不能超过40个字');
-              }
+          })
 
-            })
-
-          }
-        },
-        /**
-         * 点击审核通过
-         */
-        onlineCheckPass(params,type){
-          this.$axios.get(this.api_online_check,{params:params})
-            .then(response=>{
-              var res = response.data;
-              if(res.code==1){
-                this.$set(this.expertInfoData,"online_progress",type);
-                this.$message.success(type==3?'已通过！':'已退回！')
-                this.getTableData();
-              }else{
-                this.$confirm(res.msg.msgTrim(), "提示",{
-                  confirmButtonText: "确定",
-                  cancelButtonText: "取消",
-                  showCancelButton: false,
-                  type: "error"
-                })
-              }
-            })
-            .catch(e=>{
-              console.log(e);
-              this.$confirm('请求失败，请重试！', "提示",{
+        }
+      },
+      /**
+       * 点击审核通过
+       */
+      onlineCheckPass(params,type){
+        this.$axios.get(this.api_online_check,{params:params})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              this.$set(this.expertInfoData,"online_progress",type);
+              this.$message.success(type==3?'已通过！':'已退回！')
+              this.getTableData();
+            }else{
+              this.$confirm(res.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 showCancelButton: false,
                 type: "error"
-              });
-            })
-        },
-        /**
-         * 获取专家信息数据
-         */
-        getTableData(){
-          //this.expertInfoId = val;
-          this.$axios.get(this.api_info,{params:{
-              id:this.expertInfoId
-            }})
-            .then(response=>{
-              var res = response.data;
-              if(res.code==1){
-                //初始化专家身份信息
-                debugger;
-                res.data.sex=res.data.sex?'男':'女';
-                res.data.birthday = this.$commonFun.formatDate(res.data.birthday).split(' ')[0];
-                for(var i in res.data){
-                  if(i != "productSubjectTypeStr"&& i!="productSubjectTypeStr" && typeof i !="object"){
-                    this.expertInfoData[i] = res.data[i]||"";
-                  }
+              })
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+            this.$confirm('请求失败，请重试！', "提示",{
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              showCancelButton: false,
+              type: "error"
+            });
+          })
+      },
+      downloadImage(url){
+        this.$commonFun.downloadFile('/pmpheep/image/'+url);
+      },
+      /**
+       * 获取专家信息数据
+       */
+      getTableData(){
+        //this.expertInfoId = val;
+        this.$axios.get(this.api_info,{params:{
+            id:this.expertInfoId
+          }})
+          .then(response=>{
+            var res = response.data;
+            if(res.code==1){
+              //初始化专家身份信息
+              debugger;
+              res.data.sex=res.data.sex?'男':'女';
+              res.data.birthday = this.$commonFun.formatDate(res.data.birthday).split(' ')[0];
+              // 获取当前专家账号
+              this.username = res.data.username;
+              for(var i in res.data){
+                if(i != "productSubjectTypeStr"&& i!="productSubjectTypeStr" && typeof i !="object"){
+                  this.expertInfoData[i] = res.data[i]||"";
                 }
-
-                //初始化主要学习经历
-                this.decEduExpList = res.data.decEduExpList||[];
-
-                //初始化主要工作经历
-                this.decWorkExpList = res.data.decWorkExpList||[];
-
-                //
-                this.productSubjectTypeList = res.data.productSubjectTypeList||[];
-
-                //
-                this.productContentTypeList = res.data.productContentTypeList||[];
-
-                //
-                this.productSubjectTypeStr = res.data.productSubjectTypeStr||"";
-
-                //
-                this.productContentTypeStr = res.data.productContentTypeStr||"";
-
-                //
-                this.decNationalPlanList = res.data.decNationalPlanList||[];
-
-                //
-                this.decTextbookList = res.data.decTextbookList||[];
-
-                //
-                this.decMonographList = res.data.decMonographList||[];
-
-                //
-                this.decAcadeList = res.data.decAcadeList||[];
-              }else{
-                this.$confirm(res.msg.msgTrim(), "提示",{
-                  confirmButtonText: "确定",
-                  cancelButtonText: "取消",
-                  showCancelButton: false,
-                  type: "error"
-                })
               }
-            })
-            .catch(e=>{
-              console.log(e);
-            })
-        },
+
+              //初始化主要学习经历
+              this.decEduExpList = res.data.decEduExpList||[];
+
+              //初始化主要工作经历
+              this.decWorkExpList = res.data.decWorkExpList||[];
+
+              //
+              this.productSubjectTypeList = res.data.productSubjectTypeList||[];
+
+              //
+              this.productContentTypeList = res.data.productContentTypeList||[];
+
+              //
+              this.productSubjectTypeStr = res.data.productSubjectTypeStr||"";
+
+              //
+              this.productContentTypeStr = res.data.productContentTypeStr||"";
+
+              //
+              this.decNationalPlanList = res.data.decNationalPlanList||[];
+
+              //
+              this.decTextbookList = res.data.decTextbookList||[];
+
+              //
+              this.decMonographList = res.data.decMonographList||[];
+
+              //
+              this.decAcadeList = res.data.decAcadeList||[];
+
+              // 扩展项
+              this.decExtensionList = res.data.decExtensionList||[];
+
+              // 编或参编图书情况
+              this.decEditorBookList = res.data.decEditorBookList||[];
+            }else{
+              this.$confirm(res.msg.msgTrim(), "提示",{
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                showCancelButton: false,
+                type: "error"
+              })
+            }
+          })
+          .catch(e=>{
+            console.log(e);
+          })
       },
-      created(){
-        console.log(this.expertInfoId);
-        this.getTableData();
-        //alert(this.expertInfoId)
-
+      onlineProgressBtn_Pass(){
+        var l = [0,2,3,4,5];
+        return (l.includes(this.expertInfoData.online_progress))
       },
-
-      beforeDestroy(){
-
-
+      onlineProgressBtn_Back(){
+        let l = [0,2,5].includes(this.expertInfoData.online_progress);
+        return !l;
       },
-    }
+      /**
+       * 打印
+       */
+      print(){
+//          console.log(this.materialInfo);
+        document.title = '申报详情';
+
+        window.print();
+
+        return false;
+      },
+      // 登录
+      login(){
+//          console.log(userName);
+        this.$axios.get('pmpheep/pmph/keyToLand',{
+          params:{
+            userName: this.username,
+            userType: 1
+          }
+        }).then(response => {
+          let res = response.data;
+          if (res.code == 1) {
+//          window.location.href = res.data;
+            window.open(res.data);
+          } else {
+            this.$confirm(res.msg.msgTrim(), "提示",{
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              showCancelButton: false,
+              type: "error"
+            });
+          }
+        }).catch(error => {
+          this.$confirm('登录失败，请稍后再试!', "提示",{
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: false,
+            type: "error"
+          });
+        })
+      }
+    },
+    created(){
+      console.log(this.expertInfoId);
+      this.getTableData();
+      //alert(this.expertInfoId)
+
+    },
+
+    beforeDestroy(){
+
+
+    },
+  }
 </script>
 <style>
   .yxyj{
