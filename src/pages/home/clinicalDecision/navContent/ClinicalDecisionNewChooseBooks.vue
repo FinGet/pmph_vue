@@ -177,12 +177,12 @@
             <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
             </el-form-item>
-            <el-form-item label="扫描图片："  v-if="ruleForm.producntImgList">
+           <!-- <el-form-item label="扫描图片："  v-if="ruleForm.producntImgList">
               <p v-for="(item,index) in ruleForm.producntImgList" :key="index"><img  :src="item.attachment"  /></p>
             </el-form-item>
             <el-form-item label="备注：" >
               <div style="margin:0 auto;width:800px;"> <p v-html="noteText" class="p_content"></p></div>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="附件：" >
               <p type="text" style="color:#337ab7" v-for="(item,index) in ruleForm.productAttachmentList" :key="index" @click="download(item.url)">{{item.name}}</p>
             </el-form-item>
@@ -268,11 +268,32 @@ export default {
       },*/
       showPreventDialog:false,
       listTableData: [
+        // {
+        //   name: "所在单位意见",
+        //   key: "is_unit_advise_used",
+        //   usecheck: false,
+        //   show: true
+        // },
         {
-          name: "所在单位意见",
-          key: "is_unit_advise_used",
+          name: "学科分类",
+          key:'is_subject_type_used',
+          requiredKey:'is_subject_type_required',
           usecheck: false,
-          show: true
+          needcheck: false
+        },
+        {
+          name: "内容分类",
+          key:'is_content_type_used',
+          requiredKey:'is_content_type_required',
+          usecheck: false,
+          needcheck: false
+        },
+        {
+          name: "专业分类",
+          key:'is_profession_type_used',
+          requiredKey:'is_profession_type_required',
+          usecheck: false,
+          needcheck: false
         },
         {
           name: "主要学习经历",
@@ -303,19 +324,31 @@ export default {
           needcheck: false
         },
         {
-          name: "主编学术专著情况",
+          name: "图书出版情况", //主编学术专著情况
           key:'is_monograph_used',
           requiredKey:'is_monograph_required',
           usecheck: false,
           needcheck: false
         },
         {
-        name: "主编或参编图书情况",
-        key:'is_edit_book_used',
-        requiredKey:'is_edit_book_required',
-        usecheck: false,
-        needcheck: false
-    },
+          name: "主编或参编图书情况",
+          key:'is_edit_book_used',
+          requiredKey:'is_edit_book_required',
+          usecheck: false,
+          needcheck: false
+        },{
+          name: "文章发表情况",
+          key:'is_article_published_used',
+          requiredKey:'is_article_published_required',
+          usecheck: false,
+          needcheck: false
+        },{
+          name: "本专业获奖情况",
+          key:'is_profession_award_used',
+          requiredKey:'is_profession_award_required',
+          usecheck: false,
+          needcheck: false
+        },
 
 
       ],

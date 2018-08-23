@@ -37,10 +37,10 @@
             <div>出生年月：<span></span></div>
             <div>{{expertInfoData.birthday}}</div>
           </div>
-          <div class="info-iterm-text">
+          <!--<div class="info-iterm-text">
             <div>教龄(年)：<span></span></div>
             <div>{{expertInfoData.experience}}</div>
-          </div>
+          </div>-->
           <div class="info-iterm-text">
             <div>工作单位：<span></span></div>
             <div><span :title="expertInfoData.org_name" class="one_line_limit">{{expertInfoData.org_name}}</span></div>
@@ -91,7 +91,7 @@
             <div>学历：<span></span></div>
             <div>{{degree[expertInfoData.degree]}}</div>
           </div>
-          <div class="info-iterm-text"  style="width: 66%">
+          <div class="info-iterm-text"  style="width: 33%">
             <div>银行卡号：<span></span></div>
             <div>{{expertInfoData.banknumber}}</div>
           </div>
@@ -214,7 +214,7 @@
       </div>-->
 
       <!--其他社教材编写情况-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookList)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookPmphList)">
         <p class="info-box-title">人卫社教材编写情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -222,18 +222,16 @@
               <th><div>教材名称</div></th>
               <th><div>级别</div></th>
               <th><div>编写职务</div></th>
-              <th><div>出版社</div></th>
               <th><div>数字编委</div></th>
               <th><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in decTextbookList">
+            <tr v-for="(iterm,index) in decTextbookPmphList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
-              <td><div>{{iterm.publisher}}</div></td>
-              <td><div>{{iterm.digitalEditor?'是':'否'}}</div></td>
+              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -384,6 +382,7 @@
           experience:'',
           online_progress:'',
           degree:0,
+          idtype:0,
           banknumber:'',
           bankaddress:'',
           declare_name:'',
@@ -395,7 +394,7 @@
         productSubjectTypeStr:"",
         productContentTypeStr:"",
         decNationalPlanList:[],
-        decTextbookList:[],
+        decTextbookPmphList:[],
         decMonographList:[],
         decEditorBookList:[],
         decExtensionList:[],
@@ -513,6 +512,9 @@
                   this.expertInfoData[i] = res.data[i]||"";
                 }
               }
+              this.expertInfoData.degree = res.data.degree;
+              this.expertInfoData.idtype = res.data.idtype;
+
 
               //初始化主要学习经历
               this.decEduExpList = res.data.decEduExpList||[];
@@ -536,7 +538,7 @@
               this.decNationalPlanList = res.data.decNationalPlanList||[];
 
               //
-              this.decTextbookList = res.data.decTextbookList||[];
+              this.decTextbookPmphList = res.data.decTextbookPmphList||[];
 
               //
               this.decMonographList = res.data.decMonographList||[];

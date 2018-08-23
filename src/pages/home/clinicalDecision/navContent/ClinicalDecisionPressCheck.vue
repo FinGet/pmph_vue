@@ -86,7 +86,7 @@
             {{scope.row.username}}
           </template>
         </el-table-column>
-        <el-table-column label="学科分类" min-width="160">
+        <!--<el-table-column label="学科分类" min-width="160">
           <template scope="scope">
             <p v-for="(item, index) in scope.row.productSubjectTypeList" :key="index"><i class="fa fa-tags"></i>{{item.type_name}}</p>
           </template>
@@ -95,7 +95,9 @@
           <template scope="scope">
             <p v-for="(item, index) in scope.row.productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{item.type_name}}</p>
           </template>
-        </el-table-column>
+        </el-table-column>-->
+
+
         <el-table-column label="工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.org_name}}</p>
@@ -105,6 +107,17 @@
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="审核状态" min-width="100">
+          <template scope="scope">
+            <p>{{scope.row.org_id==0&&scope.row.online_progress==1?"待出版社审核":(scope.row.org_id==0&&scope.row.online_progress==3?"出版社已审核":stateList[scope.row.online_progress])}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="提交时间" min-width="100">
+          <template scope="scope">
+            <p>{{$commonFun.formatDate(scope.row.commit_date)}}</p>
           </template>
         </el-table-column>
         <el-table-column label="联系方式" min-width="120">
@@ -156,6 +169,7 @@
         exportLoadingTimerHandle:undefined,
         api_clinicalDecision_list:'/pmpheep/expertation/list',
         api_export_excel:'/pmpheep/expertation/exportExpertation',
+        stateList:['未提交','待学校审核','被学校退回','学校已审核','待学校审核','被出版社退回'],
         searchParams:{
           pageNumber:1,
           pageSize:20,

@@ -84,6 +84,92 @@
         </div>
       </div>
       </el-tab-pane>
+      <el-tab-pane label="申报专业" name="declareMajor">
+        <div class="applicationStatistics-byContent">
+          <!--搜索-->
+          <div class="clearfix">
+            <div class="searchBox-wrapper">
+              <div class="searchName">申报专业：<span></span></div>
+              <div class="searchInput">
+                <el-input placeholder="请输入" class="searchInputEle" v-model.trim="declareMajor.type_name" @keyup.enter.native="getDeclareMajorTableDataFun"></el-input>
+              </div>
+            </div>
+            <div class="searchBox-wrapper searchBtn">
+              <el-button  type="primary" icon="search" @click="getDeclareMajorTableDataFun">搜索</el-button>
+            </div>
+            <!--<el-button type="primary" class="pull-right marginL10" @click="importContentExcel">
+              <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+              导出
+            </el-button>-->
+            <my-upload
+              class="pull-right "
+              ref="upload"
+              :action="api_upload_declareMajor"
+              :before-upload="beforeUploadFile"
+              :on-success="upLoadFileSuccess"
+              :on-error="uploadError"
+              :show-file-list="false">
+              <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+            </my-upload>
+            <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/申报专业导入模板.xlsx">模板下载.xls</a></span>
+          </div>
+          <!--表格-->
+          <div class="table-wrapper">
+            <el-table
+              :data="declareMajorTableData"
+              border
+              style="width: 100%">
+              <el-table-column
+                type="index" label="序号" align="center"
+                width="70">
+                <template scope="scope">
+                  {{(scope.$index+1)+declareMajor.pageSize*(declareMajor.pageNumber-1)}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="type_name"
+                label="申报专业">
+              </el-table-column>
+              <el-table-column
+                prop="data_sources"
+                label="数据来源"
+                align="center"
+                width="110" >
+              </el-table-column>
+
+              <el-table-column
+                prop="gmt_create"
+                label="创建时间"
+                align="center"
+                width="120">
+                <template scope="scope">
+                  {{$commonFun.formatDate(scope.row.gmt_create,'yyyy-MM-dd')}}
+                </template>
+              </el-table-column>
+
+              <el-table-column label="操作" width="168">
+                <template scope="scope">
+                  <el-button type="text" @click="deleteOperation(scope.row.id,'declareMajor')">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <!--分页-->
+          <div class="pagination-wrapper">
+            <el-pagination
+              v-if="declareMajorTotal>declareMajor.pageSize"
+              @size-change="declareMajorSizeChange"
+              @current-change="declareMajorCurrentChange"
+              :page-sizes="[10,20,30, 50,100]"
+              :page-size="declareMajor.pageSize"
+              :current-page="declareMajor.pageNumber"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="declareMajorTotal">
+            </el-pagination>
+          </div>
+
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="内容分类" name="content">
         <div class="applicationStatistics-byContent">
           <!--搜索-->
@@ -170,6 +256,8 @@
 
         </div>
       </el-tab-pane>
+
+
     </el-tabs>
 	</div>
 </template>
@@ -183,11 +271,13 @@
        // fullscreenLoading: false,
         loadingInstance:undefined,
         activeName:"content",
+        declareMajorUrl:'/pmpheep/productType/'+this.productType+'/declareMajor/list'   ,  //内容统计URL
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
         deleteUrl:'/pmpheep/productType/',
         api_upload_content: '/pmpheep/productType/'+this.productType+'/content/importExcel',
         api_upload_subject: '/pmpheep/productType/'+this.productType+'/subject/importExcel',
+        api_upload_declareMajor: '/pmpheep/productType/'+this.productType+'/declareMajor/importExcel',
         content:{
         pageNumber:1,
           pageSize:10,
@@ -203,6 +293,13 @@
       },
         subjectTotal:1,
         subjectTableData:[],
+        declareMajor:{
+          pageNumber:1,
+          pageSize:10,
+          type_name:''
+        },
+        declareMajorTotal:1,
+        declareMajorTableData:[],
 
     };
 		},methods: {
@@ -309,6 +406,26 @@
       handleClick(tab, event) {
         console.log(tab, event);
       },
+      getDeclareMajorTableDataFun(){
+        this.declareMajor.pageNumber=1;
+        this.getDeclareMajorTableData();
+      },
+      /* 获取内容申报情况统计数据 */
+      getDeclareMajorTableData(){
+        this.$axios.get(this.declareMajorUrl,{
+          params:this.declareMajor
+        }).then((res)=>{
+          if(res.data.code==1){
+            var resData = res.data.data;
+            this.declareMajorTotal=resData.total;
+            resData.rows.forEach(iterm=>{
+              iterm["data_sources"]="导入";
+            });
+            this.declareMajorTableData=resData.rows;
+
+          }
+        })
+      },
       getContentTableDataFun(){
         this.content.pageNumber=1;
         this.getContentTableData();
@@ -352,6 +469,16 @@
       },
 
       /* 分页切换 */
+      declareMajorSizeChange(val){
+        this.declareMajor.pageSize=val;
+        this.declareMajor.pageNumber=1;
+        this.getDeclareMajortTableData();
+      },
+      declareMajorCurrentChange(val){
+        this.declareMajor.pageNumber=val;
+        this.getDeclareMajorTableData();
+      },
+      /* 分页切换 */
       contentSizeChange(val){
         this.content.pageSize=val;
         this.content.pageNumber=1;
@@ -386,8 +513,10 @@
             this.$message.success('删除成功');
             if(type=="content"){
               this.getContentTableDataFun();
-            }else{
+            }else if(type == "subject"){
               this.getSubjectTableDataFun();
+            }else{
+              this.getDeclareMajorTableDataFun();
             }
           }else{
             this.$confirm(res.data.msg.msgTrim(), "提示",{
@@ -410,8 +539,10 @@
         this.content.type_name='';
         if(tab.name=='subject'){
           this.getSubjectTableData();
-        }else{
+        }else if(tab.name = "content"){
           this.getContentTableData();
+        }else{
+          this.getDeclareMajorTableData();
         }
       },
 
