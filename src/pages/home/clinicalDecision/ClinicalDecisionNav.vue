@@ -6,7 +6,7 @@
             <clinical-decision-press-check :productType="product.productType" ref="clinicalDecisionPressCheck" v-if="isShow" @toExpertInfoData="toExpertInfoData"></clinical-decision-press-check>
             <ClinicalDecisionExpertInfo  ref="expert" v-if="!isShow" :expertInfoId="expertInfoId"></ClinicalDecisionExpertInfo>
           </el-tab-pane>
-          <el-tab-pane label="结果统计" name="clinicalDecisionResult" v-if="isShowResultSituation">
+          <el-tab-pane label="结果统计" name="clinicalDecisionResult">
             <result :productType="product.productType" ref="clinicalDecisionResult"></result>
           </el-tab-pane>
 
@@ -30,8 +30,11 @@ export default {
       activeTagName:'clinicalDecisionPressCheck',
       productName:['','人卫临床助手','人卫用药助手','人卫中医助手'],
       isShow:true,
-      isShowResultSituation:true,
+     // isShowResultSituation:true,
        expertInfoId:'',
+      api_showTabs:'/pmpheep/expertation/showTabs',
+      notShowTabArray:[],
+      showTabArray:[],
       product:{
         productType: this.$route.query.clinicalTabletype,
 
@@ -46,12 +49,14 @@ export default {
     }*/
     handleClick(){
       if(this.activeTagName=="clinicalDecisionPressCheck"){
-        console.log(this.$refs.clinicalDecisionPressCheck);
+        //console.log(this.$refs.clinicalDecisionPressCheck);
         //this.$refs.clinicalDecisionPressCheck.getContentTableData();
       }else{
-        console.log(this.$refs.clinicalDecisionResult);
+       // console.log(this.$refs.clinicalDecisionResult);
         this.$refs.clinicalDecisionResult.getSubjectEchart();
         this.$refs.clinicalDecisionResult.getSubjectTableData();
+        /*this.hideTabs(this.notShowTabArray);
+        this.$refs.clinicalDecisionResult.activeFun(this.showTabArray[0]);*/
       }
     },
     toExpertInfoData(id) {
@@ -60,23 +65,44 @@ export default {
       this.expertInfoId = id;
 
     },
-    isShowResultSituationFun(){
-        //this.isShowResultSituation = false;
-      this.hideTabs([1]);
-    },
-    hideTabs(childArray) {
-      var _this = this;
-      console.log(111);
-      console.log(this.$refs.clinicalDecisionResult);
-      childArray.forEach(iterm=>{
-        //_this.$refs.clinicalDecisionResult.$children[iterm].$el.style.display = 'none';
-      })
 
-    }
+   /* hideTabs(childArray) {
+      var _this = this;
+      for(var iterm in childArray){
+        if(iterm == 'subject'){
+          _this.$refs.clinicalDecisionResult.subjectShowFun();
+        }
+
+        if(iterm == 'content'){
+          _this.$refs.clinicalDecisionResult.contentShowFun();
+        }
+
+        if(iterm == 'profession'){
+          _this.$refs.clinicalDecisionResult.professionShowFun();
+        }
+      }
+
+
+    },*/
+   /* showTabsFun(){
+      this.$axios.get(this.api_showTabs,{params:{productType:parseInt(this.product.productType)}})
+        .then(response=>{
+          var res = response.data;
+          alert(1111);
+          console.log(res);
+          this.isShowResultSituation = !this.$commonFun.Empty(res.notShowTabList);
+          this.showTabArray = res.data.showTabList;
+          this.notShowTabArray = res.data.notShowTabList;
+        })
+        .catch(e=>{
+          alert(2222);
+          console.log(e);
+        })
+    }*/
   },
   watch:{
     expertInfoId(val, oldVal){//普通的watch监听
-      console.log("expertInfo: "+val, oldVal);
+      //console.log("expertInfo: "+val, oldVal);
      // this.getExpertInfoData();
     },
   },
@@ -85,12 +111,12 @@ export default {
       if(window._hmt){
         _hmt.push(['_trackPageview', '/material-application']);
       }
-      this.isShowResultSituationFun();
     },
   mounted(){
     //初始化页面高度，当页面内容很少时也要保证页面拉满整个屏幕
     var windowH = document.documentElement.clientHeight;
     this.contentH = windowH-100+'px';
+    //this.showTabsFun();
 
   },
   components:{
