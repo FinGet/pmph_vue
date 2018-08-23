@@ -1,7 +1,8 @@
 <template>
 	<div class="material-result">
     <el-tabs v-model="activeName" @tab-click="handleTabsClick">
-      <el-tab-pane label="学科分类" name="subject">
+      <el-tab-pane label="学科分类" :name="'subject'">
+
         <div class="applicationStatistics-byBookName">
         <!--搜索-->
         <div class="clearfix">
@@ -84,7 +85,7 @@
         </div>
       </div>
       </el-tab-pane>
-      <el-tab-pane label="申报专业" name="declareMajor">
+      <el-tab-pane label="申报专业" :name="'declareMajor'">
         <div class="applicationStatistics-byContent">
           <!--搜索-->
           <div class="clearfix">
@@ -103,7 +104,7 @@
             </el-button>-->
             <my-upload
               class="pull-right "
-              ref="upload"
+
               :action="api_upload_declareMajor"
               :before-upload="beforeUploadFile"
               :on-success="upLoadFileSuccess"
@@ -170,7 +171,7 @@
 
         </div>
       </el-tab-pane>
-      <el-tab-pane label="内容分类" name="content">
+      <el-tab-pane label="内容分类" :name="'content'">
         <div class="applicationStatistics-byContent">
           <!--搜索-->
           <div class="clearfix">
@@ -271,13 +272,13 @@
        // fullscreenLoading: false,
         loadingInstance:undefined,
         activeName:"content",
-        declareMajorUrl:'/pmpheep/productType/'+this.productType+'/declareMajor/list'   ,  //内容统计URL
+        declareMajorUrl:'/pmpheep/productType/'+this.productType+'/profession/list'   ,  //内容统计URL
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
         deleteUrl:'/pmpheep/productType/',
         api_upload_content: '/pmpheep/productType/'+this.productType+'/content/importExcel',
         api_upload_subject: '/pmpheep/productType/'+this.productType+'/subject/importExcel',
-        api_upload_declareMajor: '/pmpheep/productType/'+this.productType+'/declareMajor/importExcel',
+        api_upload_declareMajor: '/pmpheep/productType/'+this.productType+'/profession/importExcel',
         content:{
         pageNumber:1,
           pageSize:10,
@@ -365,8 +366,10 @@
           this.uuid=res.data.uuid;*/
           if(this.activeName=="content"){
             this.getContentTableDataFun();
-          }else{
+          }else if(this.activeName=="subject"){
             this.getSubjectTableDataFun();
+          }else{
+            this.getDeclareMajorTableDataFun();
           }
 
          this.$message.success("导入成功");
@@ -403,9 +406,7 @@
         this.uploadLoading = false;
       },
 
-      handleClick(tab, event) {
-        console.log(tab, event);
-      },
+
       getDeclareMajorTableDataFun(){
         this.declareMajor.pageNumber=1;
         this.getDeclareMajorTableData();
@@ -538,19 +539,17 @@
         this.subject.type_name='';
         this.content.type_name='';
         if(tab.name=='subject'){
-          this.getSubjectTableData();
-        }else if(tab.name = "content"){
-          this.getContentTableData();
+          this.getSubjectTableDataFun();
+        }else if(tab.name == "content"){
+          this.getContentTableDataFun();
         }else{
-          this.getDeclareMajorTableData();
+          this.getDeclareMajorTableDataFun();
         }
       },
 
     },
     watch:{
-      productType(val,oldval){
-        alert(val);
-      }
+
     },
     components:{
 
