@@ -120,13 +120,16 @@ axios.interceptors.request.use(function (config) {
   if (config.method.toLowerCase() == 'get' ){
     config.params._timer=+(new Date());
   }
-   loadingInstance2 = ElementUI.Loading.service({
-    // target:box,
-     lock: true,
-     text: 'Loading',
-     spinner: 'el-icon-loading',
-     background: 'rgba(0, 0, 0, 0.7)'
-   });
+  if(config.url != '/pmpheep/pmph/login'){
+    loadingInstance2 = ElementUI.Loading.service({
+      // target:box,
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  }
+
   return config;
 }, function (error) {
   //当出现请求错误时的操作
@@ -148,9 +151,15 @@ axios.interceptors.response.use(function (response) {
       window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
     }
   }
-  loadingInstance2.close();
+  if(!commonFun.Empty(loadingInstance2)){
+    loadingInstance2.close();
+  }
+
   return response;
 }, function (error) {
+  if(!commonFun.Empty(loadingInstance2)){
+    loadingInstance2.close();
+  }
   //对返回的错误进行一些处理
   return Promise.reject(error);
 });

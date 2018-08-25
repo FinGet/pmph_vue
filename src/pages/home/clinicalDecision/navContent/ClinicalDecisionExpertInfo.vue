@@ -4,13 +4,13 @@
     <div class="info-wrapper">
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
-        <el-button type="primary" :disabled="!!onlineProgressBtn_Pass" @click="check(3)" v-if="expertInfoData.org_id == 0" >
+        <el-button type="primary"  :disabled="!!onlineProgressBtn_Pass" @click="check(3)" v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" >
           {{'审核通过'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(expertInfoData.org_id!=0)" >
+        <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back" @click="check(5)" >
+        <el-button type="danger"  :disabled="!onlineProgressBtn_Back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
           {{'退回给个人'}}
         </el-button>
 
@@ -315,7 +315,7 @@
       </div>
 
       <!-- 本专业获奖情况-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(DecProfessionAwardList)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decProfessionAwardList)">
         <p class="info-box-title">本专业获奖情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -324,7 +324,7 @@
               <th><div>级别</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in DecProfessionAwardList">
+            <tr v-for="(iterm,index) in decProfessionAwardList">
               <td><div>{{iterm.title}}</div></td>
               <td><div>{{rankList2[iterm.rank?iterm.rank:0]}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -433,6 +433,8 @@
           declare_name:'',
           expertise:''
         },
+        amIAnAuditor:true,
+        isAdmin:'',
         decEduExpList:[],
         decWorkExpList: [],
         productSubjectTypeList:[],
@@ -550,9 +552,10 @@
             var res = response.data;
             if(res.code==1){
               //初始化专家身份信息
-              debugger;
+             // debugger;
               res.data.sex=res.data.sex?'男':'女';
               res.data.birthday = this.$commonFun.formatDate(res.data.birthday).split(' ')[0];
+              this.amIAnAuditor = res.data.amIAnAuditor?true:false;
               // 获取当前专家账号
               this.username = res.data.username;
               for(var i in res.data){
@@ -671,6 +674,7 @@
       console.log(this.expertInfoId);
       this.getTableData();
       //alert(this.expertInfoId)
+      this.isAdmin = this.$getUserData().userInfo.isAdmin;
 
     },
 
