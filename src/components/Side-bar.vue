@@ -15,7 +15,7 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">教材申报</span>
       </el-menu-item>
-      <el-submenu index="/clinicalDecisionRouter" v-if="isShowSide(44)||isShowSide(45)||isShowSide(46)||isShowSide(47)||isShowSide(48)">
+      <el-submenu index="/clinicalDecisionRouter" v-if="isShowSide(44)||isShowSide(45)||isShowSide(46)||isShowSide(47)||isShowSide(48)||isShowSide(49)||isShowSide(50)||isShowSide(51)">
         <template slot="title">
           <i class="iconfont icon-linchuangjuecetubiao"></i>
           <span slot="title">临床决策</span>
@@ -171,6 +171,10 @@
        //判断是否显示导航栏
        isShowSide(num){
          var isShow=false;
+         if(num >= 40){
+           debugger;
+         }
+
          this.PermissionIds.forEach(function(item) {
            if(item==num){
              isShow=true;
