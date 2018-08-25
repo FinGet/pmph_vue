@@ -87,9 +87,13 @@
             <div>证件号码：<span></span></div>
             <div>{{expertInfoData.idcard}}</div>
           </div>
-          <div class="info-iterm-text">
+          <div class="info-iterm-text" >
             <div>学历：<span></span></div>
             <div>{{degree[expertInfoData.degree]}}</div>
+          </div>
+          <div class="info-iterm-text" style="width: 33%">
+            <div>特长：<span></span></div>
+            <div>{{expertInfoData.expertise}}</div>
           </div>
           <div class="info-iterm-text"  style="width: 33%">
             <div>银行卡号：<span></span></div>
@@ -213,7 +217,7 @@
         </div>
       </div>-->
 
-      <!--其他社教材编写情况-->
+      <!--人卫社教材编写情况-->
       <div class="expert-info-box" v-if="!$commonFun.Empty(decTextbookPmphList)">
         <p class="info-box-title">人卫社教材编写情况</p>
         <div class="no-padding">
@@ -244,7 +248,7 @@
 
       <!--主编学术专著情况表-->
       <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
-        <p class="info-box-title">主编学术专著情况</p>
+        <p class="info-box-title"> 图书出版情况</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <tr>
@@ -289,6 +293,46 @@
         </div>
       </div>
 
+      <!--文章发表情况-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(decArticlePublishedList)">
+        <p class="info-box-title">文章发表情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>题目</div></th>
+              <th><div>期刊名称</div></th>
+              <th><div>期刊级别（SCI或国内核心期刊）</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in decArticlePublishedList">
+              <td><div>{{iterm.title}}</div></td>
+              <td><div>{{iterm.periodicalTitle}}</div></td>
+              <td><div>{{iterm.periodicalLevel}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 本专业获奖情况-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(DecProfessionAwardList)">
+        <p class="info-box-title">本专业获奖情况</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <tr>
+              <th><div>题目</div></th>
+              <th><div>级别</div></th>
+              <th><div>备注</div></th>
+            </tr>
+            <tr v-for="(iterm,index) in DecProfessionAwardList">
+              <td><div>{{iterm.title}}</div></td>
+              <td><div>{{rankList2[iterm.rank?iterm.rank:0]}}</div></td>
+              <td><div>{{iterm.note}}</div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
       <div v-if="decExtensionList.length">
         <!--扩展项-->
         <div class="expert-info-box" v-for="(iterm,index) in decExtensionList">
@@ -303,7 +347,7 @@
 
 
       <!--学科分类-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(productSubjectTypeList)">
         <p class="info-box-title">学科分类</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -314,7 +358,7 @@
       </div>
 
       <!--内容分类-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(productContentTypeList)">
         <p class="info-box-title">内容分类</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
@@ -325,7 +369,7 @@
       </div>
 
       <!--所在单位意见-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(decMonographList)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise)">
         <p class="info-box-title">所在单位意见</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1" style="padding: 20px 10px;">
@@ -362,6 +406,7 @@
         degree:['无','专科','本科','硕士','博士'],
         positionList:['无','主编','副主编','编委'],
         rankList:['无','国际','国家','省部','市级'],
+        rankList2:['无','国家','省部','市级'],
         expertInfoData:{
           org_id:'',
           userId:'',
@@ -386,6 +431,7 @@
           banknumber:'',
           bankaddress:'',
           declare_name:'',
+          expertise:''
         },
         decEduExpList:[],
         decWorkExpList: [],
@@ -399,6 +445,8 @@
         decEditorBookList:[],
         decExtensionList:[],
         decAcadeList:[],
+        decArticlePublishedList:[],
+        decProfessionAwardList:[],
 
 
       }
@@ -551,6 +599,11 @@
 
               // 编或参编图书情况
               this.decEditorBookList = res.data.decEditorBookList||[];
+
+              // 文章发表情况
+              this.decArticlePublishedList = res.data.decArticlePublishedList||[];
+              // 本专业获奖情况
+              this.decProfessionAwardList = res.data.decProfessionAwardList||[];
             }else{
               this.$confirm(res.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",

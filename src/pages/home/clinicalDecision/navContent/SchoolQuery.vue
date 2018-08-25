@@ -7,6 +7,7 @@
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
       </el-button>
+      <el-button type="primary"   icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
     </clinical-choose-school>
 
 
@@ -118,7 +119,7 @@
           if (res.code == '1') {
             this.$message.success('发布成功！');
 
-            //this.$router.push({name:'通知列表'});
+            this.$router.go(-1);
           } else {
             this.$confirm(res.msg.msgTrim(), "提示",{
             	confirmButtonText: "确定",

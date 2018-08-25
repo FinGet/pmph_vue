@@ -228,7 +228,7 @@ export default new Router({
           path: 'clinicalDecisionRouter',
           name: '临床决策',
           component: ClinicalDecisionRouter,
-          meta: {replaceName: '临床决策', authorityId: 44},
+          meta: {replaceName: '临床决策', authorityId: true},
           children: [
             {path: 'clinicalAssistant', name: '临床助手申报', component: ClinicalAssistantRouter, meta: {replaceName: false, authorityId: 45}},
             {path: 'medicineAssistant', name: '用药助手申报', component: MedicineAssistantRouter, meta: {replaceName: false, authorityId: 46}},
