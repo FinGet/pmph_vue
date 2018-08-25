@@ -354,7 +354,7 @@
           });
           return;
         }
-        this.loadingInstance = Loading.service({ fullscreen: true });
+        //this.loadingInstance = Loading.service({ fullscreen: true });
         },
       /**
        * 上传文件请求成功的回调
@@ -383,9 +383,9 @@
           });
         }
         var _this = this;
-        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-          _this.loadingInstance.close();
-        });
+        // this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+        //   _this.loadingInstance.close();
+        // });
         this.uploadLoading = false;
       },
       /**
@@ -400,9 +400,9 @@
           type: "error"
         });
         var _this = this;
-        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-          _this.loadingInstance.close();
-        });
+        // this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+        //   _this.loadingInstance.close();
+        // });
         this.uploadLoading = false;
       },
 
