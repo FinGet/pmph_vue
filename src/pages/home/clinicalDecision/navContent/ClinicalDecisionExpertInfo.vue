@@ -1,16 +1,16 @@
 
 <template>
-  <div class="teachingMaterial expert_info" id="printArea">
+  <div class="teachingMaterial clic_expert_info" id="clicprintArea">
     <div class="info-wrapper">
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
-        <el-button type="primary"   :disabled="!onlineProgressBtn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
+        <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
           {{'审核通过'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
+        <el-button type="danger"  :disabled="btn_back||expertInfoData.org_id===0||(expertInfoData.org_id!=0&&(expertInfoData.online_progress===1||expertInfoData.online_progress===4))" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
+        <el-button type="danger"  :disabled="btn_back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
           {{'退回给个人'}}
         </el-button>
 
@@ -362,7 +362,7 @@
         <p class="info-box-title">内容分类</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
-            <p v-for="(iterm,index) in productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
+            <p v-for="(iterm,index) in productContentTypeList" :key="index" style="padding: 5px;"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -373,7 +373,7 @@
         <p class="info-box-title">申报专业</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
-            <p v-for="(iterm,index) in productProfessionTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.typeName}}</p>
+            <p v-for="(iterm,index) in productProfessionTypeList" :key="index" style="padding: 5px;"><i class="fa fa-bullseye"></i>{{iterm.typeName}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -382,9 +382,9 @@
       <!--所在单位意见-->
       <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise)">
         <p class="info-box-title">所在单位意见</p>
-        <div class="no-padding">
+        <div >
           <table class="expert-info-table" border="1" style="padding: 20px 10px;">
-            <p style="" @click="downloadImage(expertInfoData.unit_advise)">{{expertInfoData.syllabus_name}}</p>
+            <a style="" @click="downloadImage(expertInfoData.unit_advise)" style="padding: 10px;margin-top:10px;" href="#">{{expertInfoData.syllabus_name}}</a>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -444,6 +444,8 @@
           declare_name:'',
           expertise:''
         },
+        btn_Pass:false,
+        btn_back:false,
         amIAnAuditor:true,
         isAdmin:'',
         decEduExpList:[],
@@ -550,7 +552,7 @@
           })
       },
       downloadImage(url){
-        this.$commonFun.downloadFile('/pmpheep/image/'+url);
+        this.$commonFun.downloadFile('/pmpheep/file/download/'+url);
       },
       /**
        * 获取专家信息数据
@@ -622,6 +624,11 @@
               this.decArticlePublishedList = res.data.decArticlePublishedList||[];
               // 本专业获奖情况
               this.decProfessionAwardList = res.data.decProfessionAwardList||[];
+
+              this.onlineProgressBtn_Pass(res.data.online_progress);
+
+              this.onlineProgressBtn_Back(res.data.online_progress);
+
             }else{
               this.$confirm(res.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",
@@ -630,23 +637,22 @@
                 type: "error"
               })
             }
+
+
           })
           .catch(e=>{
             console.log(e);
           })
       },
-      onlineProgressBtn_Pass(){
-          let l = [0,2,3,4,5].includes(this.expertInfoData.online_progress);
-        //   debugger;
-        // console.log("---------------");
-        //   console.log(l);
-        //
-        // console.log(this.expertInfoData.online_progress);
-        return !l;
+      onlineProgressBtn_Pass(progress){
+       let L = [0,2,3,4,5].includes(progress);
+       this.btn_Pass = L;
+        //return !l;
       },
-      onlineProgressBtn_Back(){
-        let l = [0,2,5].includes(this.expertInfoData.online_progress);
-        return !l;
+      onlineProgressBtn_Back(progress){
+        let L = [0,2,5].includes(progress);
+        this.btn_back = L;
+        //return !l;
       },
       /**
        * 打印
@@ -704,15 +710,7 @@
     },
   }
 </script>
-<style>
-  .yxyj{
-    display:none;
-  }
-  @media print{
-    .yxyj{
-      border:1px solid #5b6877;padding:5px;display: block;
-    }}
-</style>
+
 <style scoped>
 
 

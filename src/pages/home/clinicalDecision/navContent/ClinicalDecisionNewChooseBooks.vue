@@ -374,8 +374,8 @@ export default {
     var windowH = document.documentElement.clientHeight;
     this.contentH = windowH-100+'px';
     switch (this.$route.query.clinicaltype) {
-      case '1': this.productImage = '../../../../../static/static-image/rwej01.png';break;
-      case '2': this.productImage = '../../../../../static/static-image/rwej02.png';break;
+      case '1': this.productImage = '../../../../../static/static-image/rwej05.png';break;
+      case '2': this.productImage = '../../../../../static/static-image/rwej04.png';break;
       case '3': this.productImage = '../../../../../static/static-image/rwej03.png';break;
       default: this.productImage = '../../../../../static/static-image/rwej03.png';break;
     }
@@ -899,7 +899,9 @@ export default {
 </script>
 
 <style scoped>
-
+ .newChoose{
+   padding-right: 20px;
+ }
   .ClinicalDecision_nav{
     width:100%;
   }

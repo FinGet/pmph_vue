@@ -98,9 +98,11 @@
         </el-table-column>-->
 
 
-        <el-table-column label="工作单位" min-width="160">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
+            <p><i class="fa fa-briefcase"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-university"></i>{{scope.row.org_name}}</p>
+
           </template>
         </el-table-column>
         <el-table-column label="职务/职称" min-width="100" >

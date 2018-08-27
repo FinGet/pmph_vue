@@ -171,9 +171,7 @@
        //判断是否显示导航栏
        isShowSide(num){
          var isShow=false;
-         if(num >= 40){
-           debugger;
-         }
+
 
          this.PermissionIds.forEach(function(item) {
            if(item==num){
