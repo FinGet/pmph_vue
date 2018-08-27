@@ -394,7 +394,7 @@ export default {
           if(res.data.code==1){
             // 获取到 相应的数据
             this.ruleForm.id = res.data.data.id;
-            this.ruleForm.is_published=res.data.data.is_published;
+            this.ruleForm.is_published=this.$commonFun.Empty(res.data.data.is_published)?false:res.data.data.is_published;
             this.isDisabled = res.data.data.is_published&&!this.$commonFun.Empty(this.ruleForm.id);
             if(this.ruleForm.is_published){
               this.ruleForm.publisher = res.data.data.publisher;

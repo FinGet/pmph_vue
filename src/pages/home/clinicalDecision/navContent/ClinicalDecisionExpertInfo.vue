@@ -4,7 +4,7 @@
     <div class="info-wrapper">
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
-        <el-button type="primary"  :disabled="!!onlineProgressBtn_Pass" @click="check(3)" v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" >
+        <el-button type="primary"   :disabled="!onlineProgressBtn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
           {{'审核通过'}}
         </el-button>
         <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
@@ -351,7 +351,7 @@
         <p class="info-box-title">学科分类</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
-            <p v-for="(iterm,index) in productSubjectTypeList" :key="index"><i class="fa fa-tags"></i>  {{iterm.type_name}}</p>
+            <p v-for="(iterm,index) in productSubjectTypeList" :key="index" style="padding: 5px;"><i class="fa fa-tags"></i>  {{iterm.type_name}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -363,6 +363,17 @@
         <div class="no-padding">
           <table class="expert-info-table" border="1">
             <p v-for="(iterm,index) in productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+
+      <!--申报专业-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(productProfessionTypeList)">
+        <p class="info-box-title">申报专业</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1">
+            <p v-for="(iterm,index) in productProfessionTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.typeName}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -439,6 +450,7 @@
         decWorkExpList: [],
         productSubjectTypeList:[],
         productContentTypeList:[],
+        productProfessionTypeList:[],
         productSubjectTypeStr:"",
         productContentTypeStr:"",
         decNationalPlanList:[],
@@ -554,7 +566,7 @@
               //初始化专家身份信息
              // debugger;
               res.data.sex=res.data.sex?'男':'女';
-              res.data.birthday = this.$commonFun.formatDate(res.data.birthday).split(' ')[0];
+              res.data.birthday = res.data.birthday;
               this.amIAnAuditor = res.data.amIAnAuditor?true:false;
               // 获取当前专家账号
               this.username = res.data.username;
@@ -573,11 +585,14 @@
               //初始化主要工作经历
               this.decWorkExpList = res.data.decWorkExpList||[];
 
-              //
+              // 学科分类
               this.productSubjectTypeList = res.data.productSubjectTypeList||[];
 
-              //
+              // 内容分类
               this.productContentTypeList = res.data.productContentTypeList||[];
+
+              //申报专业
+              this.productProfessionTypeList = res.data.productProfessionTypeList||[];
 
               //
               this.productSubjectTypeStr = res.data.productSubjectTypeStr||"";
@@ -621,8 +636,13 @@
           })
       },
       onlineProgressBtn_Pass(){
-        var l = [0,2,3,4,5];
-        return (l.includes(this.expertInfoData.online_progress))
+          let l = [0,2,3,4,5].includes(this.expertInfoData.online_progress);
+        //   debugger;
+        // console.log("---------------");
+        //   console.log(l);
+        //
+        // console.log(this.expertInfoData.online_progress);
+        return !l;
       },
       onlineProgressBtn_Back(){
         let l = [0,2,5].includes(this.expertInfoData.online_progress);
