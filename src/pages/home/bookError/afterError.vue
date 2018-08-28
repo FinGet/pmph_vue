@@ -2,7 +2,7 @@
   <div class="affter_error" style="height:100%;">
 		<el-row>
             <div class="searchBox-wrapper">
-                <div class="searchName">书名:<span></span></div>
+                <div class="searchName">书名/ISBN:<span></span></div>
                 <div class="searchInput">
                     <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
                 </div>
@@ -16,16 +16,18 @@
 								</el-radio-group>
             </div>
             <div class="searchBox-wrapper searchBtn">
-                <el-button  type="primary"  icon="search" @click="search">搜索</el-button>							
+                <el-button  type="primary"  icon="search" @click="search">搜索</el-button>
             </div>
 						<div class="searchBox-wrapper searchBtn">
-                <el-button  type="primary" @click="exportExcel">导出EXCEL</el-button>								
+                <el-button  type="primary" @click="exportExcel">导出EXCEL</el-button>
             </div>
         </el-row>
         <el-row>
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
                     <el-table-column prop="bookname" label="书名" >
+                    </el-table-column>
+                    <el-table-column prop="isbn" label="ISBN" >
                     </el-table-column>
                     <el-table-column prop="dpName" label="编辑部门">
                     </el-table-column>
@@ -50,7 +52,7 @@
 										<el-table-column label="是否回复" width="95" align="center">
 											<template scope="scope">
 												{{scope.row.isEditorRepliedString}}
-											</template>	
+											</template>
                     </el-table-column>
                 </el-table>
             </el-col>

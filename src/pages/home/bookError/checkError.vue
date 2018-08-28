@@ -2,7 +2,7 @@
   <div class="check_error" style="height:100%;">
 		<el-row>
             <div class="searchBox-wrapper">
-                <div class="searchName">书名:<span></span></div>
+                <div class="searchName">书名/ISBN:<span></span></div>
                 <div class="searchInput">
                     <el-input v-model.trim="title" placeholder="请输入" @keyup.enter.native="search"></el-input>
                 </div>
@@ -25,6 +25,8 @@
             <el-col>
                 <el-table :data="tableData" stripe border style="width: 100%">
                     <el-table-column prop="bookname" label="书名"  align="center">
+                    </el-table-column>
+                    <el-table-column prop="isbn" label="ISBN"  align="center">
                     </el-table-column>
                     <el-table-column prop="content" label="纠错信息" align="center">
 											<template scope="scope">
