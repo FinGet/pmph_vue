@@ -14,9 +14,9 @@
           {{'退回给个人'}}
         </el-button>
 
-        <el-button type="primary"  @click="print" >
-          {{'打印'}}
-        </el-button>
+        <!--<el-button type="primary"  @click="print" >-->
+          <!--{{'打印'}}-->
+        <!--</el-button>-->
         <el-button type="primary"  @click="login">
           {{'登录'}}
         </el-button>
@@ -89,19 +89,19 @@
           </div>
           <div class="info-iterm-text" >
             <div>学历：<span></span></div>
-            <div>{{degree[expertInfoData.degree]}}</div>
+            <div>{{degree[expertInfoData.education]}}</div>
           </div>
-          <div class="info-iterm-text" style="width: 33%">
-            <div>特长：<span></span></div>
+          <div class="info-iterm-text" style="width: 99%;max-width: 900px;">
+            <div style="width: 230px; ">专业特长（疾病诊治及研究方向）：<span></span></div>
             <div>{{expertInfoData.expertise}}</div>
           </div>
           <div class="info-iterm-text"  style="width: 33%">
-            <div>银行卡号：<span></span></div>
+            <div>卡号：<span></span></div>
             <div>{{expertInfoData.banknumber}}</div>
           </div>
 
           <div class="info-iterm-text">
-            <div style="width: 180px; ">银行地址（开户行）：<span></span></div>
+            <div >开户行：<span></span></div>
             <div>{{expertInfoData.bankaddress}}</div>
           </div>
 
@@ -283,7 +283,7 @@
               <th><div>出版时间</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in decMonographList">
+            <tr v-for="(iterm,index) in decEditorBookList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
@@ -384,7 +384,7 @@
         <p class="info-box-title">所在单位意见</p>
         <div >
           <table class="expert-info-table" border="1" style="padding: 20px 10px;">
-            <a style="" @click="downloadImage(expertInfoData.unit_advise)" style="padding: 10px;margin-top:10px;" href="#">{{expertInfoData.syllabus_name}}</a>
+            <a style="" @click="downloadImage(expertInfoData.unit_advise)" style="padding: 10px;margin-top:10px;" >{{expertInfoData.syllabus_name}}</a>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -438,6 +438,7 @@
           experience:'',
           online_progress:'',
           degree:0,
+          education:0,
           idtype:0,
           banknumber:'',
           bankaddress:'',

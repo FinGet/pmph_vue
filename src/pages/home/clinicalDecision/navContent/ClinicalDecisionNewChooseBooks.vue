@@ -177,12 +177,12 @@
             <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
             </el-form-item>
-           <!-- <el-form-item label="扫描图片："  v-if="ruleForm.producntImgList">
-              <p v-for="(item,index) in ruleForm.producntImgList" :key="index"><img  :src="item.attachment"  /></p>
+            <el-form-item label=""  v-if="ruleForm.producntImgList">
+              <p v-for="(item,index) in ruleForm.producntImgList" :key="index" style="text-align: center;"><img  :src="item.attachment"  /></p>
             </el-form-item>
-            <el-form-item label="备注：" >
+            <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="noteText" class="p_content"></p></div>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="附件：" >
               <p type="text" style="color:#337ab7" v-for="(item,index) in ruleForm.productAttachmentList" :key="index" @click="download(item.url)">{{item.name}}</p>
             </el-form-item>
