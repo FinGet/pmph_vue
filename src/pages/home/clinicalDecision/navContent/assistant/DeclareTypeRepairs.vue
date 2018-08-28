@@ -27,7 +27,8 @@
             :on-success="upLoadFileSuccess"
             :on-error="uploadError"
             :show-file-list="false">
-            <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading" >{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+            <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading" v-if="productbtn">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+            <el-button type="primary" :disabled="!productbtn"  v-else>{{'请先维护产品信息'}}</el-button>
           </my-upload>
           <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/学科分类导入模板.xlsx">模板下载.xls</a></span>
         </div>
@@ -110,8 +111,8 @@
               :on-success="upLoadFileSuccess"
               :on-error="uploadError"
               :show-file-list="false">
-              <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
-            </my-upload>
+              <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading" v-if="productbtn">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+              <el-button type="primary" :disabled="!productbtn"  v-else>{{'请先维护产品信息'}}</el-button> </my-upload>
             <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/申报专业导入模板.xlsx">模板下载.xls</a></span>
           </div>
           <!--表格-->
@@ -196,7 +197,9 @@
               :on-success="upLoadFileSuccess"
               :on-error="uploadError"
               :show-file-list="false">
-              <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+              <el-button type="primary" :disabled="uploadLoading"  :loading="uploadLoading" v-if="productbtn">{{uploadLoading?'上传解析中...':'点击导入'}}</el-button>
+              <el-button type="primary" :disabled="!productbtn"  v-else>{{'请先维护产品信息'}}</el-button>
+
             </my-upload>
             <span class="pull-right"><a style="color: #337ab7;line-height:36px;margin-right:10px;" href="/static/内容分类导入模板.xlsx">模板下载.xls</a></span>
           </div>
@@ -285,6 +288,7 @@
           type_name:''
       },
         uploadLoading:false,
+        productbtn:true,
         contentTotal:1,
         contentTableData:[],
         subject:{
@@ -354,6 +358,8 @@
           });
           return;
         }
+        this.uploadLoading=flag;
+        return flag;
         //this.loadingInstance = Loading.service({ fullscreen: true });
         },
       /**
@@ -546,10 +552,31 @@
           this.getDeclareMajorTableDataFun();
         }
       },
+      getBtnStatus(){
+        this.$axios.get('/pmpheep/productType/getBtnStatus',{
+          params:{
+            productType:this.productType
+          }
+        }).then((res)=>{
+          if(res.data.code==1){
+            this.productbtn =res.data.data.subject?true:false;
+          }else{
+            this.$confirm(res.data.msg.msgTrim(), "提示",{
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              showCancelButton: false,
+              type: "error"
+            });
+          }
+        }).catch(e=>{console.log(e)})
+      }
 
     },
     watch:{
-
+    //   productType(val,old){
+    //     alert(111);
+    //   this.getBtnStatus();
+    // }
     },
     components:{
 
@@ -557,6 +584,7 @@
     },
     created(){
       this.getContentTableData();
+        this.getBtnStatus();
 
     },
     mounted() {
