@@ -177,12 +177,12 @@
             <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="preventContent" class="p_content"></p></div>
             </el-form-item>
-           <!-- <el-form-item label="扫描图片："  v-if="ruleForm.producntImgList">
-              <p v-for="(item,index) in ruleForm.producntImgList" :key="index"><img  :src="item.attachment"  /></p>
+            <el-form-item label=""  v-if="ruleForm.producntImgList">
+              <p v-for="(item,index) in ruleForm.producntImgList" :key="index" style="text-align: center;"><img  :src="item.attachment"  /></p>
             </el-form-item>
-            <el-form-item label="备注：" >
+            <el-form-item label="" >
               <div style="margin:0 auto;width:800px;"> <p v-html="noteText" class="p_content"></p></div>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="附件：" >
               <p type="text" style="color:#337ab7" v-for="(item,index) in ruleForm.productAttachmentList" :key="index" @click="download(item.url)">{{item.name}}</p>
             </el-form-item>
@@ -374,8 +374,8 @@ export default {
     var windowH = document.documentElement.clientHeight;
     this.contentH = windowH-100+'px';
     switch (this.$route.query.clinicaltype) {
-      case '1': this.productImage = '../../../../../static/static-image/rwej01.png';break;
-      case '2': this.productImage = '../../../../../static/static-image/rwej02.png';break;
+      case '1': this.productImage = '../../../../../static/static-image/rwej05.png';break;
+      case '2': this.productImage = '../../../../../static/static-image/rwej04.png';break;
       case '3': this.productImage = '../../../../../static/static-image/rwej03.png';break;
       default: this.productImage = '../../../../../static/static-image/rwej03.png';break;
     }
@@ -899,7 +899,9 @@ export default {
 </script>
 
 <style scoped>
-
+ .newChoose{
+   padding-right: 20px;
+ }
   .ClinicalDecision_nav{
     width:100%;
   }

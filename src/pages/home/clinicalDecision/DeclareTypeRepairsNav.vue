@@ -3,13 +3,13 @@
       <div class="tab_nav_outbox">
         <el-tabs type="border-card"  class="tab_nav" v-model="activeTagName"  @tab-click="handleClick">
           <el-tab-pane label="人卫临床助手"  name="first">
-            <DeclareTypeRepairs :productType="1"  ref="de1"></DeclareTypeRepairs>
+            <DeclareTypeRepairs :productType="t1"  ref="de1"></DeclareTypeRepairs>
           </el-tab-pane>
           <el-tab-pane label="人卫用药助手" name="second">
-          <DeclareTypeRepairs :productType="2"  ref="de2"></DeclareTypeRepairs>
+          <DeclareTypeRepairs :productType="t2"  ref="de2"></DeclareTypeRepairs>
           </el-tab-pane>
           <el-tab-pane label="人卫中医助手" name="third">
-            <DeclareTypeRepairs :productType="3"  ref="de3"></DeclareTypeRepairs>
+            <DeclareTypeRepairs :productType="t3"  ref="de3"></DeclareTypeRepairs>
           </el-tab-pane>
 
         </el-tabs>
@@ -27,7 +27,10 @@ export default {
 		return {
       contentH:'auto',
       activeTagName:'first',
-      content:"content"
+      content:"content",
+      t1:1,
+      t2:2,
+      t3:3
 		}
 	},
 	methods: {
@@ -37,14 +40,17 @@ export default {
         console.log(this.$refs.de1);
         //this.$refs.de1.activeName = "content";
         this.$refs.de1.getContentTableData();
+        this.$refs.de1.getBtnStatus();
       }else if(this.activeTagName == "second"){
         console.log(this.$refs.de3);
         //this.$refs.de2.activeName = "content";
         this.$refs.de2.getContentTableData();
+        this.$refs.de2.getBtnStatus();
       }else{
         console.log(this.$refs.de3);
         //this.$refs.de3.activeName = "content";
         this.$refs.de3.getContentTableData();
+        this.$refs.de3.getBtnStatus();
       }
     }
 

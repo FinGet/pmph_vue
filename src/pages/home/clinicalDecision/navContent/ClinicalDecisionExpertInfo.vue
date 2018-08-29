@@ -1,22 +1,22 @@
 
 <template>
-  <div class="teachingMaterial expert_info" id="printArea">
+  <div class="teachingMaterial clic_expert_info" id="clicprintArea">
     <div class="info-wrapper">
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
-        <el-button type="primary"   :disabled="!onlineProgressBtn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
+        <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
           {{'审核通过'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back||(expertInfoData.org_id!=0&&expertInfoData.online_progress===1)" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
+        <el-button type="danger"  :disabled="btn_back||expertInfoData.org_id===0||(expertInfoData.org_id!=0&&(expertInfoData.online_progress===1||expertInfoData.online_progress===4))" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
         </el-button>
-        <el-button type="danger"  :disabled="!onlineProgressBtn_Back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
+        <el-button type="danger"  :disabled="btn_back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
           {{'退回给个人'}}
         </el-button>
 
-        <el-button type="primary"  @click="print" >
-          {{'打印'}}
-        </el-button>
+        <!--<el-button type="primary"  @click="print" >-->
+          <!--{{'打印'}}-->
+        <!--</el-button>-->
         <el-button type="primary"  @click="login">
           {{'登录'}}
         </el-button>
@@ -89,19 +89,19 @@
           </div>
           <div class="info-iterm-text" >
             <div>学历：<span></span></div>
-            <div>{{degree[expertInfoData.degree]}}</div>
+            <div>{{degree[expertInfoData.education]}}</div>
           </div>
-          <div class="info-iterm-text" style="width: 33%">
-            <div>特长：<span></span></div>
+          <div class="info-iterm-text" style="width: 99%;max-width: 900px;">
+            <div style="width: 230px; ">专业特长（疾病诊治及研究方向）：<span></span></div>
             <div>{{expertInfoData.expertise}}</div>
           </div>
           <div class="info-iterm-text"  style="width: 33%">
-            <div>银行卡号：<span></span></div>
+            <div>卡号：<span></span></div>
             <div>{{expertInfoData.banknumber}}</div>
           </div>
 
           <div class="info-iterm-text">
-            <div style="width: 180px; ">银行地址（开户行）：<span></span></div>
+            <div >开户行：<span></span></div>
             <div>{{expertInfoData.bankaddress}}</div>
           </div>
 
@@ -283,7 +283,7 @@
               <th><div>出版时间</div></th>
               <th><div>备注</div></th>
             </tr>
-            <tr v-for="(iterm,index) in decMonographList">
+            <tr v-for="(iterm,index) in decEditorBookList">
               <td><div>{{iterm.materialName}}</div></td>
               <td><div>{{iterm.publisher}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd')}}</div></td>
@@ -362,7 +362,7 @@
         <p class="info-box-title">内容分类</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
-            <p v-for="(iterm,index) in productContentTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
+            <p v-for="(iterm,index) in productContentTypeList" :key="index" style="padding: 5px;"><i class="fa fa-bullseye"></i>{{iterm.type_name}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -373,7 +373,7 @@
         <p class="info-box-title">申报专业</p>
         <div class="no-padding">
           <table class="expert-info-table" border="1">
-            <p v-for="(iterm,index) in productProfessionTypeList" :key="index"><i class="fa fa-bullseye"></i>{{iterm.typeName}}</p>
+            <p v-for="(iterm,index) in productProfessionTypeList" :key="index" style="padding: 5px;"><i class="fa fa-bullseye"></i>{{iterm.typeName}}</p>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -382,9 +382,9 @@
       <!--所在单位意见-->
       <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise)">
         <p class="info-box-title">所在单位意见</p>
-        <div class="no-padding">
+        <div >
           <table class="expert-info-table" border="1" style="padding: 20px 10px;">
-            <p style="" @click="downloadImage(expertInfoData.unit_advise)">{{expertInfoData.syllabus_name}}</p>
+            <a style="" @click="downloadImage(expertInfoData.unit_advise)" style="padding: 10px;margin-top:10px;" >{{expertInfoData.syllabus_name}}</a>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -438,12 +438,15 @@
           experience:'',
           online_progress:'',
           degree:0,
+          education:0,
           idtype:0,
           banknumber:'',
           bankaddress:'',
           declare_name:'',
           expertise:''
         },
+        btn_Pass:false,
+        btn_back:false,
         amIAnAuditor:true,
         isAdmin:'',
         decEduExpList:[],
@@ -550,7 +553,7 @@
           })
       },
       downloadImage(url){
-        this.$commonFun.downloadFile('/pmpheep/image/'+url);
+        this.$commonFun.downloadFile('/pmpheep/file/download/'+url);
       },
       /**
        * 获取专家信息数据
@@ -622,6 +625,11 @@
               this.decArticlePublishedList = res.data.decArticlePublishedList||[];
               // 本专业获奖情况
               this.decProfessionAwardList = res.data.decProfessionAwardList||[];
+
+              this.onlineProgressBtn_Pass(res.data.online_progress);
+
+              this.onlineProgressBtn_Back(res.data.online_progress);
+
             }else{
               this.$confirm(res.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",
@@ -630,23 +638,22 @@
                 type: "error"
               })
             }
+
+
           })
           .catch(e=>{
             console.log(e);
           })
       },
-      onlineProgressBtn_Pass(){
-          let l = [0,2,3,4,5].includes(this.expertInfoData.online_progress);
-        //   debugger;
-        // console.log("---------------");
-        //   console.log(l);
-        //
-        // console.log(this.expertInfoData.online_progress);
-        return !l;
+      onlineProgressBtn_Pass(progress){
+       let L = [0,2,3,4,5].includes(progress);
+       this.btn_Pass = L;
+        //return !l;
       },
-      onlineProgressBtn_Back(){
-        let l = [0,2,5].includes(this.expertInfoData.online_progress);
-        return !l;
+      onlineProgressBtn_Back(progress){
+        let L = [0,2,5].includes(progress);
+        this.btn_back = L;
+        //return !l;
       },
       /**
        * 打印
