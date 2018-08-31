@@ -672,6 +672,7 @@
 //          console.log(this.materialInfo);
         document.title = '申报详情';
 
+
         window.print();
 
         return false;
@@ -721,8 +722,17 @@
     },
   }
 </script>
-
 <style scoped>
+  .yxyj{
+    display:none;
+  }
+  @media print{
+    .yxyj{
+      border:1px solid #5b6877;padding:5px;display: block;
+    }}
+</style>
+<style scoped>
+
 
 
   .info-wrapper{

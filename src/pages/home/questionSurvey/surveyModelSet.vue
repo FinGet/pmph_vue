@@ -179,18 +179,41 @@
             })
            },
           deleteSurvey(templateId,surveyId){
-            this.$axios.delete('/pmpheep/survey/'+surveyId+'/remove',{
-              params:{
-                templateId:templateId,
-                surveyId:surveyId
-              }
-            }).then((res)=>{
-              console.log(res);
-              if(res.data.code==1){
-                this.$message.success("删除成功！");
-                this.getSurveyList();
-              }
+            let _this = this;
+            this.$confirm("确定删除选中问卷吗?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
             })
+              .then(() => {
+                _this.$axios.delete('/pmpheep/survey/'+surveyId+'/remove',{
+                  params:{
+                    templateId:templateId,
+                    surveyId:surveyId
+                  }
+                }).then((res)=>{
+                  console.log(res);
+                  if(res.data.code==1){
+                    _this.$message.success("删除成功！");
+                    _this.getSurveyList();
+                  }else{
+                    _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                      confirmButtonText: "确定",
+                      cancelButtonText: "取消",
+                      showCancelButton: false,
+                      type: "error"
+                    });
+                  }
+                })
+
+
+
+              })
+              .catch(() => {});
+
+
+
+
           },
             startDateChange(val){
              this.searchParams.startTime=val;
