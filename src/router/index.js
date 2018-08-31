@@ -251,7 +251,7 @@ export default new Router({
             ]
             },
 
-            {path: 'declareTypeRepairs', name: '申报分类维护', component: DeclareTypeRepairsNav, meta: {replaceName: false, authorityId: 48}},
+            {path: 'declareTypeRepairs', name: '申报分类维护', component: DeclareTypeRepairsNav, meta: {replaceName: '申报分类维护', authorityId: 48}},
           ]
         } ,
         {
