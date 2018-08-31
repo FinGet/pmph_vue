@@ -860,7 +860,7 @@ export default {
               // };
               // this.initEditData();
               // this.$message.success(type==0?'保存成功':'发布成功');
-              this.$router.push({name:'临床决策申报选择学校',params:{productId:res.data.data.id,type:'reEdit'}});
+              this.$router.push({name:'临床决策申报选择学校',query:{productId:res.data.data.id,type:'reEdit'}});
             }else{
               this.$confirm(res.data.msg.msgTrim(), "提示",{
                 confirmButtonText: "确定",

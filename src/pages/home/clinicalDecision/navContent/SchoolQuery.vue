@@ -153,7 +153,7 @@
       ClinicalChooseSchool
     },
     created(){
-      this.productId = this.$route.params.productId
+      this.productId = this.$route.query.productId
       // console.log(this.$route.params)
     },
 
