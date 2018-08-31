@@ -517,13 +517,16 @@
             confirmButtonText: '确定',
             cancelButtonText: '取消',
           }).then(({ value }) => {
-            if(value&&value.length<=40||!value){
+            //debugger;
+            if(!this.$commonFun.Empty(value)&&value.length<=40){
               let param = {
                 id:this.expertInfoId,
                 onlineProgress:progress,
                 returnCause:value
               };
               this.onlineCheckPass(param,progress);
+            }else if(this.$commonFun.Empty(value)){
+              this.$message.warning('退回原因不能为空');
             }else{
               this.$message.warning('不能超过40个字');
             }

@@ -274,7 +274,7 @@
 			return {
        // fullscreenLoading: false,
         loadingInstance:undefined,
-        activeName:"content",
+        activeName:"subject",
         declareMajorUrl:'/pmpheep/productType/'+this.productType+'/profession/list'   ,  //内容统计URL
         contentUrl:'/pmpheep/productType/'+this.productType+'/content/list'   ,  //内容统计URL
         subjectUrl:'/pmpheep/productType/'+this.productType+'/subject/list',   //学科统计URL
@@ -478,7 +478,7 @@
       /* 分页切换 */
       declareMajorSizeChange(val){
         this.declareMajor.pageSize=val;
-        //this.declareMajor.pageNumber=1;
+        this.declareMajor.pageNumber=1;
         this.getDeclareMajorTableData();
       },
       declareMajorCurrentChange(val){
@@ -583,7 +583,8 @@
 
     },
     created(){
-      this.getContentTableData();
+      //this.getContentTableData();
+      this.getSubjectTableDataFun();
         this.getBtnStatus();
 
     },
