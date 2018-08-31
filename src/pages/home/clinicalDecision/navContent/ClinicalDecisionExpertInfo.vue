@@ -578,7 +578,7 @@
             if(res.code==1){
               //初始化专家身份信息
              // debugger;
-              res.data.sex=res.data.sex?'男':'女';
+              res.data.sex=res.data.sex=='2'?'女':'男';
               res.data.birthday = res.data.birthday;
               this.amIAnAuditor = res.data.amIAnAuditor?true:false;
               // 获取当前专家账号
