@@ -4,7 +4,7 @@
     <div class="info-wrapper">
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
-        <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)&&expertInfoData.org_id == 0" @click="check(3)">
+        <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)" @click="check(3)">
           {{'审核通过'}}
         </el-button>
         <el-button type="danger"  :disabled="btn_back||expertInfoData.org_id===0||(expertInfoData.org_id!=0&&(expertInfoData.online_progress===1||expertInfoData.online_progress===4))" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
@@ -91,7 +91,7 @@
             <div>学历：<span></span></div>
             <div>{{degree[expertInfoData.education]}}</div>
           </div>
-          <div class="info-iterm-text" style="width: 99%;max-width: 900px;">
+          <div class="info-iterm-text2" style="width: 99%;">
             <div style="width: 230px; ">专业特长（疾病诊治及研究方向）：<span></span></div>
             <div>{{expertInfoData.expertise}}</div>
           </div>
@@ -121,7 +121,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in decEduExpList" :key="index">
-              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
+              <td style="width: 200px;"><div > {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.schoolName}}</div></td>
               <td><div>{{iterm.major}}</div></td>
               <td><div>{{iterm.degree}}</div></td>
@@ -142,7 +142,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in decWorkExpList">
-              <td><div> {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
+              <td style="width: 200px"><div  > {{$commonFun.formatDate(iterm.dateBegin,'yyyy.MM.dd')}} &nbsp;-&nbsp; {{$commonFun.formatDate(iterm.dateEnd,'yyyy.MM.dd')}}</div></td>
               <td><div>{{iterm.orgName}}</div></td>
               <td><div>{{iterm.position}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -162,7 +162,7 @@
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in decAcadeList">
-              <td><div>{{iterm.orgName}}</div></td>
+              <td ><div>{{iterm.orgName}}</div></td>
               <td><div>{{iterm.rank&&iterm.rank<5?rankList[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -224,18 +224,18 @@
           <table class="expert-info-table" border="1">
             <tr>
               <th><div>教材名称</div></th>
-              <th><div>级别</div></th>
-              <th><div>编写职务</div></th>
-              <th><div>数字编委</div></th>
-              <th><div>出版时间</div></th>
+              <th style="min-width: 70px;"><div>级别</div></th>
+              <th style="min-width: 100px;"><div>编写职务</div></th>
+              <th style="min-width: 100px;"><div>数字编委</div></th>
+              <th style="min-width: 110px;"><div>出版时间</div></th>
               <th><div>标准书号</div></th>
               <th><div>备注</div></th>
             </tr>
             <tr v-for="(iterm,index) in decTextbookPmphList">
-              <td><div>{{iterm.materialName}}</div></td>
+              <td style="max-width: 300px;"><div>{{iterm.materialName}}</div></td>
               <td><div> {{iterm.rank?materialLevel[iterm.rank]:'无'}}</div></td>
               <td><div>{{iterm.position&&iterm.position<4?positionList[iterm.position]:'无'}}</div></td>
-              <td><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
+              <td style="text-align: center;"><div>{{iterm.isDigitalEditor?'是':'否'}}</div></td>
               <td><div>{{$commonFun.formatDate(iterm.publishDate,'yyyy.MM.dd').substring(0,10)}}</div></td>
               <td><div>{{iterm.isbn}}</div></td>
               <td><div>{{iterm.note}}</div></td>
@@ -380,11 +380,20 @@
       </div>
 
       <!--所在单位意见-->
-      <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise)">
+      <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise_online)">
         <p class="info-box-title">所在单位意见</p>
-        <div >
-          <table class="expert-info-table" border="1" style="padding: 20px 10px;">
-            <a style="" @click="downloadImage(expertInfoData.unit_advise)" style="padding: 10px;margin-top:10px;" >{{expertInfoData.syllabus_name}}</a>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1" style="padding: 20px 10px;" >
+            <p style="padding: 10px;" >{{expertInfoData.unit_advise_online}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+      <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise)">
+        <p class="info-box-title">上传扫描附件</p>
+        <div style="padding: 20px 10px;">
+          <table class="expert-info-table" border="1" >
+            <a href="javascript:void(0)" @click="downloadImage(expertInfoData.unit_advise)" style="margin-top:10px;color: #70BBC2;cursor: pointer;text-decoration: underline;" >{{expertInfoData.syllabus_name}}</a>
           </table>
           <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
         </div>
@@ -443,7 +452,8 @@
           banknumber:'',
           bankaddress:'',
           declare_name:'',
-          expertise:''
+          expertise:'',
+          unit_advise_online:''
         },
         btn_Pass:false,
         btn_back:false,
@@ -662,6 +672,7 @@
 //          console.log(this.materialInfo);
         document.title = '申报详情';
 
+
         window.print();
 
         return false;
@@ -711,8 +722,17 @@
     },
   }
 </script>
-
 <style scoped>
+  .yxyj{
+    display:none;
+  }
+  @media print{
+    .yxyj{
+      border:1px solid #5b6877;padding:5px;display: block;
+    }}
+</style>
+<style scoped>
+
 
 
   .info-wrapper{
@@ -746,6 +766,14 @@
     height: 36px;
     width: 33%;
     max-width: 410px;
+    line-height: 36px;
+    vertical-align: middle;
+  }
+  .info-iterm-text2{
+    display: inline-block;
+    height: 36px;
+    width: 33%;
+    /*max-width: 410px;*/
     line-height: 36px;
     vertical-align: middle;
   }

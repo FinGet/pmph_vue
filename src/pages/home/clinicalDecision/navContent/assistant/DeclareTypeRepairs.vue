@@ -478,8 +478,8 @@
       /* 分页切换 */
       declareMajorSizeChange(val){
         this.declareMajor.pageSize=val;
-        this.declareMajor.pageNumber=1;
-        this.getDeclareMajortTableData();
+        //this.declareMajor.pageNumber=1;
+        this.getDeclareMajorTableData();
       },
       declareMajorCurrentChange(val){
         this.declareMajor.pageNumber=val;
