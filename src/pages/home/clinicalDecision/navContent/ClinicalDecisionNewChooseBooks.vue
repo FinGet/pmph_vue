@@ -231,7 +231,7 @@ export default {
       },
 
       ruleForm: {
-        id:'',
+        id:this.$route.query.productId,
         auditorList:[], //审核人
         productExtensionList:[],   //扩展项
         producntImgList:[],
@@ -388,12 +388,13 @@ export default {
 
         this.$axios.get(this.editProductUrl,{
           params:{
-            type:this.ruleForm.product_type
+            type:this.ruleForm.product_type,
+            id:this.ruleForm.id
           }
         }).then((res)=>{
           if(res.data.code==1){
             // 获取到 相应的数据
-            this.ruleForm.id = res.data.data.id;
+            //this.ruleForm.id = res.data.data.id;
             this.ruleForm.is_published=this.$commonFun.Empty(res.data.data.is_published)?false:res.data.data.is_published;
             this.isDisabled = res.data.data.is_published&&!this.$commonFun.Empty(this.ruleForm.id);
             if(this.ruleForm.is_published){

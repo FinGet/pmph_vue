@@ -286,7 +286,8 @@ export default {
       operation(type,materialData){
         switch (type){
           case 'edit':
-            this.$router.push({name:'新建通知',params:{materialId:materialData.id,type:'reEdit'}});
+            this.$router.push({name:'临床决策专家申报',query:{clinicaltype:materialData.product_type,productId:materialData.id}});
+            //this.$router.push({name:'新建通知',params:{materialId:materialData.id,type:'reEdit'}});
             break;
           case 'delete':
             this.delete(materialData.id);
