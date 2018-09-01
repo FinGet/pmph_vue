@@ -37,7 +37,7 @@
               </tr>
               <tr>
                   <td>估计字数</td>
-                  <td width="8.4%">{{(data.wordNumber/1000).toFixed(3)}}(千字)</td>
+                  <td width="8.4%">{{data.wordNumber}}(千字)</td>
                   <td width="8.4%">估计图数</td>
                   <td width="16.8%">{{data.pictureNumber}}(副)</td>
                   <td width="8.4%">预计交稿时间</td>

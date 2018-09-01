@@ -39,17 +39,20 @@ export default {
       if(this.activeTagName=="first"){
         console.log(this.$refs.de1);
         //this.$refs.de1.activeName = "content";
-        this.$refs.de1.getContentTableData();
+        //this.$refs.de1.getContentTableData();
+        this.$refs.de1.getSubjectTableDataFun();
         this.$refs.de1.getBtnStatus();
       }else if(this.activeTagName == "second"){
         console.log(this.$refs.de3);
         //this.$refs.de2.activeName = "content";
-        this.$refs.de2.getContentTableData();
+        //this.$refs.de2.getContentTableData();
+        this.$refs.de2.getSubjectTableDataFun();
         this.$refs.de2.getBtnStatus();
       }else{
         console.log(this.$refs.de3);
         //this.$refs.de3.activeName = "content";
-        this.$refs.de3.getContentTableData();
+        //this.$refs.de3.getContentTableData();
+        this.$refs.de3.getSubjectTableDataFun();
         this.$refs.de3.getBtnStatus();
       }
     }
