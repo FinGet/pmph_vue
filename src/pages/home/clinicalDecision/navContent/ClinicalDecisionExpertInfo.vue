@@ -7,6 +7,9 @@
         <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)" @click="check(3)">
           {{'审核通过'}}
         </el-button>
+        <el-button type="primary" :disabled="btn_notPass"  v-if="(isAdmin||amIAnAuditor)" @click="check(2)">
+          {{'审核不通过'}}
+        </el-button>
         <el-button type="danger"  :disabled="btn_back_school" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
         </el-button>
@@ -546,8 +549,8 @@
           .then(response=>{
             var res = response.data;
             if(res.code==1){
-              this.$set(this.expertInfoData,"online_progress",type);
-              this.$message.success(type==3?'已通过！':'已退回！')
+             // this.$set(this.expertInfoData,"online_progress",type);
+              this.$message.success('操作成功');
               this.getTableData();
             }else{
               this.$confirm(res.msg.msgTrim(), "提示",{

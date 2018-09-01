@@ -158,8 +158,8 @@
         </div>
         <!--操作按钮-->
         <div class="operation-wrapper">
-          <el-button type="danger" :disabled="!tableData.length" @click="exportExcel">批量审核通过</el-button>
-          <el-button type="danger" :disabled="!tableData.length" @click="exportExcel">批量审核通过</el-button>
+          <!--<el-button type="danger" :disabled="!tableData.length" @click="exportExcel">批量审核通过</el-button>
+          <el-button type="danger" :disabled="!tableData.length" @click="exportExcel">批量最终结果公布</el-button>-->
           <el-button type="primary" :disabled="!tableData.length" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
