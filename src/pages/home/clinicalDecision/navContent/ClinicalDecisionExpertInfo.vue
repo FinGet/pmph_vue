@@ -7,10 +7,10 @@
         <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)" @click="check(3)">
           {{'审核通过'}}
         </el-button>
-        <el-button type="danger"  :disabled="btn_back||expertInfoData.org_id===0||(expertInfoData.org_id!=0&&(expertInfoData.online_progress===1||expertInfoData.online_progress===4))" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
+        <el-button type="danger"  :disabled="btn_back_school" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
         </el-button>
-        <el-button type="danger"  :disabled="btn_back" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
+        <el-button type="danger"  :disabled="btn_back_person" @click="check(5)" v-if="(isAdmin||amIAnAuditor)">
           {{'退回给个人'}}
         </el-button>
 
@@ -456,6 +456,9 @@
           unit_advise_online:''
         },
         btn_Pass:false,
+        btn_notPass:false,
+        btn_back_person:false,
+        btn_back_school:false,
         btn_back:false,
         amIAnAuditor:true,
         isAdmin:'',
@@ -639,9 +642,12 @@
               // 本专业获奖情况
               this.decProfessionAwardList = res.data.decProfessionAwardList||[];
 
-              this.onlineProgressBtn_Pass(res.data.online_progress);
-
-              this.onlineProgressBtn_Back(res.data.online_progress);
+              //this.onlineProgressBtn_Pass(res.data.online_progress);
+              this.btn_Pass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 1)||(res.data.org_id !=0 && res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 3)
+              this.btn_notPass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 1)
+              this.btn_back_person = !(res.data.finalResult == 0 && res.data.pmphAudit ==0 && ( res.data.online_progress == 1  ||res.data.online_progress==3 || res.data.online_progress==4))
+              this.btn_back_school = !(res.data.finalResult == 0 && res.data.pmphAudit ==0  && (res.data.online_progress == 1 ||res.data.online_progress==3))
+              //this.onlineProgressBtn_Back(res.data.online_progress);
 
             }else{
               this.$confirm(res.msg.msgTrim(), "提示",{
