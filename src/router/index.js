@@ -48,6 +48,7 @@ const ClinicalDecisionExpertInfo = () => import('../pages/home/clinicalDecision/
 const ClinicalDecisionResult = () => import('../pages/home/clinicalDecision/navContent/Result/index')
 
 const DeclareTypeRepairsNav = () => import('../pages/home/clinicalDecision/DeclareTypeRepairsNav')
+const ClinicalProductList = () => import('../pages/home/clinicalDecision/navContent/ClinicalProductList.vue')
 
 
 /* 小组 */
@@ -238,6 +239,7 @@ export default new Router({
             {path: 'medicineAssistantTable',name: '用药助手申报表', component: MedicineAssistantTableRouter,meta: { authorityId: 50}},
             {path: 'chineseMedicineAssistantTable',name: '中医助手申报表', component: ChineseMedicineAssistantTableRouter,meta: { authorityId: 51}},
             {path: 'clinicalDecisionNewChooseBooks', name: '临床决策专家申报', component: ClinicalDecisionNewChooseBooks, meta: {isShowTags: true,authorityId:true}},
+            {path: 'clinicalProductList', name: '临床决策专家申报列表', component: ClinicalProductList, meta: {isShowTags: true,authorityId:true}},
             { path: 'clinicalschoolquery',name: '临床决策申报选择学校',component: ClinicalSchoolQuery, meta: {isShowTags: true}},
             {
               path: 'clinicalDecisionNav',
