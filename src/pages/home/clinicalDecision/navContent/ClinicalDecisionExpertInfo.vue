@@ -501,8 +501,8 @@
        */
       check(progress) {
         var title='';
-        if(progress==3) {
-          title = "是否确认通过?"
+        if(progress==3||progress==2) {
+          title = "是否确认"+(progress==3?'':'不')+"通过?"
           this.$confirm(title, "提示",{
             confirmButtonText: "确定",
             cancelButtonText: "取消",
@@ -646,8 +646,8 @@
               this.decProfessionAwardList = res.data.decProfessionAwardList||[];
 
               //this.onlineProgressBtn_Pass(res.data.online_progress);
-              this.btn_Pass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 1)||(res.data.org_id !=0 && res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 3)
-              this.btn_notPass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && res.data.online_progress == 1)
+              this.btn_Pass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && (res.data.online_progress == 1 || res.data.online_progress == 3) )
+              this.btn_notPass =!(res.data.finalResult == 0 && res.data.pmphAudit==0 && (res.data.online_progress == 1 || res.data.online_progress == 3) )
               this.btn_back_person = !(res.data.finalResult == 0 && res.data.pmphAudit ==0 && ( res.data.online_progress == 1  ||res.data.online_progress==3 || res.data.online_progress==4))
               this.btn_back_school = !(res.data.finalResult == 0 && res.data.pmphAudit ==0  && (res.data.online_progress == 1 ||res.data.online_progress==3))
               //this.onlineProgressBtn_Back(res.data.online_progress);

@@ -220,7 +220,7 @@
             <p>{{$commonFun.formatDate(scope.row.commit_date)}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="学校审核/出版社审核"  width="100">
+        <el-table-column label="学校审核/出版社审核" >
           <template scope="scope">
             <p><i class="fa fa-briefcase"></i>{{scope.row.schoolStautsText}}</p>
             <p><i class="fa fa-university"></i>{{scope.row.pmphStautsText}}</p>
@@ -252,9 +252,9 @@
 
         <el-table-column label="操作" >
           <template scope="scope">
-            <p style="text-align: center"> <el-button type="text" v-if="scope.row.passbtn" @click="pressCheckOpt(1,scope.row.id)" >{{"审核通过"}} </el-button></p>
+            <p style="text-align: center"> <el-button type="text" v-if="scope.row.passbtn" @click="pressCheckOpt(1,scope.row.id)" >{{"通过"}} </el-button></p>
 
-            <p style="text-align: center"> <el-button type="text" v-if="scope.row.notPassbtn" @click="pressCheckOpt(2,scope.row.id)" >{{"取消通过"}} </el-button></p>
+            <p style="text-align: center"> <el-button type="text" v-if="scope.row.notPassbtn" @click="pressCheckOpt(2,scope.row.id)" >{{"不通过"}} </el-button></p>
 
             <p style="text-align: center"><el-button type="text" v-if="scope.row.recall" @click="pressCheckOpt(0,scope.row.id)" >{{"撤回"}} </el-button></p>
 
@@ -503,20 +503,31 @@
               this.tableData = res.data.rows;
               this.tableData.forEach(iterm=>{
                 debugger;
-                    iterm["recall"] = (iterm["finalResult"]==false && iterm["pmphAudit"]==1);
-                    iterm["passbtn"] = (iterm["finalResult"]==false && iterm["pmphAudit"]==0 && iterm["online_progress"]==1 )
-                      ||(iterm["org_id"] !=0 && iterm["finalResult"] ==false && iterm["pmphAudit"] ==0 && iterm["online_progress"] == 3);
-                    iterm["notPassbtn"] = iterm["finalResult"] ==false && iterm["pmphAudit"]==0 && iterm["online_progress"]== 1;
+                    iterm["recall"] = (iterm["finalResult"]==false && iterm["pmphAudit"]!=0);
+
+
+                    iterm["passbtn"] = ( iterm["finalResult"] ==false && iterm["pmphAudit"] ==0 && (iterm["online_progress"] == 3 || iterm["online_progress"] == 1) );
+
+
+                    iterm["notPassbtn"] = (iterm["finalResult"]==false && iterm["pmphAudit"]==0 && iterm["online_progress"]==1 )
+                      ||(iterm["org_id"] !=0 && iterm["finalResult"] ==false && iterm["pmphAudit"] ==0 && (iterm["online_progress"] == 3 || iterm["online_progress"] == 1) );
+
+                iterm["pubtn"]=  iterm["finalResult"] == false && !(iterm["online_progress"] == 4||iterm["online_progress"] == 5||iterm["online_progress"] == 2);
+
+
                 iterm["schoolStautsText"] = (iterm["org_id"] != 0 && iterm["online_progress"]==1)?"待审核"
                 :((iterm["org_id"] != 0 && iterm["online_progress"]==3)?"审核通过":
                     (iterm["org_id"] !=0 && iterm["pmphAudit"] ==0  && (iterm["online_progress"]  == 4||iterm["online_progress"] == 5)?
                       "出版社退回":(iterm["org_id"]==0?"":"")));
+
+
                 iterm["pmphStautsText"] = (iterm["pmphAudit"]==1?"通过":
                                           (iterm["pmphAudit"]==2)?"不通过":
                                             ((iterm["online_progress"]==2||iterm["online_progress"]==4||iterm["online_progress"]==5 )?"出版社退回"
-                                              :((iterm["pmphAudit"]==0  && iterm["org_id"]==0 !=0 && iterm["online_progress"] == 1) || (iterm["org_id"]==0 && iterm["pmphAudit"]==0))?"待审核":""
+                                              :((iterm["pmphAudit"]==0  && iterm["org_id"]!=0  && (iterm["online_progress"] == 1||iterm["online_progress"] == 3 )) || (iterm["org_id"]==0 && iterm["pmphAudit"]==0))?"待审核":""
                                             ));
-                iterm["pubtn"]=  iterm["finalResult"] == false && !(iterm["online_progress"] == 4||iterm["online_progress"] == 5||iterm["online_progress"] == 2)
+
+
 
               });
 
