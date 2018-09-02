@@ -1,13 +1,14 @@
 <template>
   <div class="school-query">
     <clinical-choose-school ref="chooseSchool" @selectChange="selectChange" :default-history-id="productId">
+      <el-checkbox v-model="is_active" class="check" >查看当前公告<span style="color:red;">*</span></el-checkbox>
       <el-button type="primary" @click="exportExcel"  size="large">导出已发布学校名单</el-button>
 
       <el-button type="primary" @click="publishBtn" size="large" :disabled="!hasCheckedOrgList.length>0">
         发布
         <span v-if="hasCheckedOrgList.length>0">({{hasCheckedOrgList.length}})</span>
       </el-button>
-      <el-button type="primary"   icon="arrow-left" @click="$router.go(-1)">返回上一步</el-button>
+      <el-button type="primary"   icon="arrow-left" @click="back()">返回上一步</el-button>
     </clinical-choose-school>
 
 
@@ -57,6 +58,8 @@
       return {
         api_export_excel:'/pmpheep/clinical/excel/published/org',
         type:'new',
+        product_type:'',
+        is_active:true,
         able: false,
         reissueFormData:{
           id:'',
@@ -105,6 +108,16 @@
         this.hasCheckedOrgList = list;
         this.able=false;
       },
+      back(){
+        let queryName = '';
+        switch (this.product_type) {
+          case '1' : queryName = '临床助手申报列表';break;
+          case '2' : queryName = '用药助手申报列表';break;
+          case '3' : queryName = '中医助手申报列表';break;
+          default: queryName = '';
+        }
+        this.$router.push({name:'临床决策专家申报列表',query:{clinicaltype:this.product_type,queryName:queryName}});
+      },
       /**
        * 确认提交表单
        */
@@ -113,7 +126,8 @@
         this.$axios.post('/pmpheep/product/published',this.$initPostData({
           productId: this.productId,
           orgIds: this.orgIds,
-          sessionId:this.$getUserData().sessionId
+          sessionId:this.$getUserData().sessionId,
+          is_active:this.is_active
         })).then(response => {
           let res = response.data
           if (res.code == '1') {
@@ -153,7 +167,8 @@
       ClinicalChooseSchool
     },
     created(){
-      this.productId = this.$route.params.productId
+      this.productId = this.$route.query.productId;
+      this.product_type = this.$route.query.product_type;
       // console.log(this.$route.params)
     },
 

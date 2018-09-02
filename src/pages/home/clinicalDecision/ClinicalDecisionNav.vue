@@ -3,11 +3,11 @@
       <div class="tab_nav_outbox">
         <el-tabs type="border-card"   v-model="activeTagName" ref="tabs" @tab-click="handleClick">
           <el-tab-pane label="申报表审核"  name="clinicalDecisionPressCheck">
-            <clinical-decision-press-check :productType="product.productType" ref="clinicalDecisionPressCheck" v-if="isShow" @toExpertInfoData="toExpertInfoData"></clinical-decision-press-check>
+            <clinical-decision-press-check :productType="product.productType" :product_id ="product.product_id" ref="clinicalDecisionPressCheck" v-if="isShow" @toExpertInfoData="toExpertInfoData"></clinical-decision-press-check>
             <ClinicalDecisionExpertInfo  ref="expert" v-if="!isShow" :expertInfoId="expertInfoId"></ClinicalDecisionExpertInfo>
           </el-tab-pane>
           <el-tab-pane label="结果统计" name="clinicalDecisionResult">
-            <result :productType="product.productType" ref="clinicalDecisionResult"></result>
+            <result :productType="product.productType" :product_id = "product.product_id" ref="clinicalDecisionResult"></result>
           </el-tab-pane>
 
         </el-tabs>
@@ -37,6 +37,7 @@ export default {
       showTabArray:[],
       product:{
         productType: this.$route.query.clinicalTabletype,
+        product_id: this.$route.query.product_id,
 
       },
 

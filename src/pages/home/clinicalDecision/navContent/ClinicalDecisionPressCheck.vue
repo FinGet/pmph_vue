@@ -294,7 +294,7 @@
 <script>
   import bus from 'common/eventBus/bus.js'
   export default {
-    props:['productType'],
+    props:['productType','product_id'],
     data() {
       return {
         powerSearch:true,
@@ -461,7 +461,8 @@
           schoolStauts:'',
           pmphStauts:'',
           handphone:'',
-          finalResult:''
+          finalResult:'',
+
 
         }
       },
@@ -481,7 +482,7 @@
        */
       getTableData(){
         this.$axios.get(this.api_clinicalDecision_list,{params:{
-            id:this.searchParams.productId,
+            product_id:this.product_id,
             pageNumber:this.searchParams.pageNumber,
             pageSize:this.searchParams.pageSize,
             realname:this.searchParams.realname,
@@ -565,7 +566,7 @@
         });
 
         let params = {
-          id:this.searchParams.productId,
+          product_id:this.$commonFun.Empty(this.product_id)?"":this.product_id,
           realname:this.searchParams.realname,
           position:this.searchParams.position,
           title:this.searchParams.title,
@@ -594,10 +595,10 @@
 
     },
     created() {
-      this.getTableData();
       this.isDirector = this.$getUserData().userInfo.isDirector;
       this.isAdmin = this.$getUserData().userInfo.isAdmin;
-      this.searchParams.productId = this.$route.query.product_id;
+      //this.searchParams.productId = this.$route.query.product_id;
+      this.getTableData();
     }
   }
 

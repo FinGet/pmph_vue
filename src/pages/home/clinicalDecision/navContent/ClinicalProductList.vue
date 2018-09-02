@@ -6,7 +6,7 @@
                 </el-option>
             </el-select>
             <el-input class="input" v-model.trim="searchForm.product_name" @keyup.enter.native="handleSearchCLick" v-if="selectValue==1"></el-input>
-            <el-input class="input" v-model.trim="searchForm.contactUserName" @keyup.enter.native="handleSearchCLick" v-if="selectValue==2"></el-input>
+            <!--<el-input class="input" v-model.trim="searchForm.contactUserName" @keyup.enter.native="handleSearchCLick" v-if="selectValue==2"></el-input>-->
             <span style="margin-left:25px;">状态：</span>
             <el-select v-model="searchForm.is_published" class="select_input" @change="handleSearchCLick" style="float:none;" placeholder="全部">
                 <el-option label="全部" value=""></el-option>
@@ -16,7 +16,7 @@
             <el-button type="primary" class="button" icon="search" @click="handleSearchCLick">搜索</el-button>
             <!--<el-checkbox v-model="searchForm.isMy" class="check" @change="handleSearchCLick">仅查看我的</el-checkbox>-->
             <el-checkbox v-model="searchForm.is_active" class="check" @change="handleSearchCLick">查看当前公告</el-checkbox>
-            <router-link :to="{name:'新建通知',params:{materialId:'new'}}">
+            <router-link :to="{name:'临床决策专家申报',query:{product_id:'new',clinicaltype:product_type}}">
                 <el-button class="right_button" type="primary">新建通知</el-button>
             </router-link>
         </p>
@@ -52,13 +52,20 @@
           <el-table-column label="发布日期" width="110">
             <template scope="scope">
               <p>
-                {{scope.row.gmtPublish}}
+               {{scope.row.gmtPublish}}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="报名截止日期" width="120">
+            <template scope="scope">
+              <p>
+                {{scope.row.actualDeadline}}
               </p>
             </template>
           </el-table-column>
           <el-table-column prop="status" label="状态" width="100">
             <template scope="scope">
-              {{scope.row.is_published?'已发布':'已暂存'}}
+              {{scope.row.is_published?'已发布':'未发布'}}
             </template>
           </el-table-column>
           <el-table-column label="创建人" width="80">
@@ -93,14 +100,14 @@
             </template>
 
           </el-table-column>
-            <el-table-column label="操作" width="168">
+            <el-table-column label="操作" width="120">
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>
-                        <span class="op_span">|</span>
+                        <!--<span class="op_span">|</span>
                         <el-button type="text" class="op_button" @click="operation('publish',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">通知发布</el-button>
                         <span class="op_span">|</span>
-                        <el-button type="text" class="op_button" @click="operation('msg',scope.row)">通知详情</el-button>
+                        <el-button type="text" class="op_button" @click="operation('msg',scope.row)">通知详情</el-button>-->
                         <!--<el-dropdown trigger="click">
                             <span class="el-dropdown-link more_button">
                                 更多
@@ -133,7 +140,7 @@
         </el-table>
       <div class="pagination-wrapper">
         <el-pagination
-          v-if="totalNum"
+          v-if="totalNum>searchForm.pageSize"
           @size-change="handleSizeChange"
           @current-change="getTableData"
           :current-page.sync="searchForm.pageNumber"
@@ -180,16 +187,16 @@ export default {
             product_type: this.$route.query.clinicaltype,
 
             api_product_list:'/pmpheep/product/list',
-            api_material_del:'/pmpheep/material/delete',
-            api_export_excel:'/pmpheep/excel/published/org',
+            /*api_material_del:'/pmpheep/material/delete',
+            api_export_excel:'/pmpheep/excel/published/org',*/
             searchForm:{
               pageSize:20,
               pageNumber:1,
-              isMy:false,
+              //isMy:false,
               is_active:'',
               product_type:this.$route.query.clinicaltype,
               is_published:'',
-              contactUserName:'',
+             // contactUserName:'',
               product_name:'',
             },
             totalNum:0,
@@ -197,10 +204,10 @@ export default {
             selectOptions: [{
                 value: 1,
                 label: '临床申报名称'
-            }, {
+            }/*, {
                 value: 2,
                 label: '联系人'
-            }],
+            }*/],
             tableData: [],
           dialogVisible:false,
           moreContactUserList:[],
@@ -254,10 +261,10 @@ export default {
        * 显示更多联系人
        * @param list 联系人列表
        */
-      showMoreContact(list){
+      /*showMoreContact(list){
         this.moreContactUserList = list;
         this.dialogVisible=true;
-      },
+      },*/
       /**
        * 是否有权限访问
        * @param index 权限表下标
@@ -265,7 +272,7 @@ export default {
        */
       hasAccessAuthority(index,row,endShow){
         return true;
-        if(!row.isMy){
+        /*if(!row.isMy){
           return false;
         }
         //如果传的是boolean类型，就直接返回
@@ -275,7 +282,7 @@ export default {
 
         let rolesAccessAuthority = this.$commonFun.materialPower(index,row.myPower);
 
-        return (row.isMy && rolesAccessAuthority && (endShow || !(row.isForceEnd||row.isAllTextbookPublished)));
+        return (row.isMy && rolesAccessAuthority && (endShow || !(row.isForceEnd||row.isAllTextbookPublished)));*/
       },
       /**
        * 点击操作按钮，
@@ -283,13 +290,14 @@ export default {
        *                        结果统计：result, 设置选题号：setTopic, 删除：delete, 遴选办理：select
        * * @param materialData  当前教材数据
        */
-      operation(type,materialData){
+      operation(type,prodcutData){
+        //console.log(materialData)
         switch (type){
           case 'edit':
-            this.$router.push({name:'临床决策专家申报',query:{clinicaltype:materialData.product_type,productId:materialData.id}});
+            this.$router.push({name:'临床决策专家申报',query:{clinicaltype:prodcutData.product_type,product_id:prodcutData.id}});
             //this.$router.push({name:'新建通知',params:{materialId:materialData.id,type:'reEdit'}});
             break;
-          case 'delete':
+          /*case 'delete':
             this.delete(materialData.id);
             break;
           case 'publish':
@@ -315,13 +323,13 @@ export default {
             break;
           case 'setTopic':
             this.$router.push({name:'设置选题号',params:{materialId:materialData.id}});
-            break;
+            break;*/
           case 'toProcess':
-            this.$router.push({name:'临床决策专家申报审核',query:{clinicalTabletype:materialData.product_type,queryName:materialData.product_name,product_id:materialData.id}});
+            this.$router.push({name:'临床决策专家申报审核',query:{clinicalTabletype:prodcutData.product_type,product_id:prodcutData.id,queryName:'临床决策专家申报审核-'+prodcutData.product_name}});
             //this.$router.push({name:'申报表审核',params:{materialId:materialData.id}});
             break;
           case 'exportExcel':
-            this.exportExcel(materialData.id);
+            this.exportExcel(prodcutData.id);
             break;
           default:
             throw new error('没有该类型操作');
@@ -331,7 +339,7 @@ export default {
        * 删除通知
        * @param id
        */
-      delete(id){
+      /*delete(id){
         this.$confirm("确定删除教材通知？", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -361,21 +369,21 @@ export default {
           })
           .catch(e=>{})
 
-      },
+      },*/
       /**
        * 导出学校列表
        * @param id 教材id
        */
-      exportExcel(id){
+      /*exportExcel(id){
         let url = this.api_export_excel+"?materialId="+id
         this.$commonFun.downloadFile(url);
-      }
+      }*/
     },
     created() {
       /* 是否从首页跳转过来 */
-      if(this.$route.params.productName){
+     /* if(this.$route.params.productName){
         this.searchForm.productName=this.$route.params.productName;
-      }
+      }*/
       this.getTableData();
     }
 }
