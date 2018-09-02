@@ -379,6 +379,17 @@
         </div>
       </div>
 
+      <!--备注-->
+      <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise_online)">
+        <p class="info-box-title">备注</p>
+        <div class="no-padding">
+          <table class="expert-info-table" border="1" style="padding: 20px 10px;" >
+            <p style="padding: 10px;" >{{expertInfoData.remark}}</p>
+          </table>
+          <!--<div class="text-center lineheight-24" v-if="!monograph.length">暂无数据</div>-->
+        </div>
+      </div>
+
       <!--所在单位意见-->
       <div class="expert-info-box" v-if="!$commonFun.Empty(expertInfoData.unit_advise_online)">
         <p class="info-box-title">所在单位意见</p>
@@ -453,7 +464,8 @@
           bankaddress:'',
           declare_name:'',
           expertise:'',
-          unit_advise_online:''
+          unit_advise_online:'',
+          remark:''
         },
         btn_Pass:false,
         btn_back:false,
