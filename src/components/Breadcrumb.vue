@@ -1,6 +1,6 @@
 <template>
   <el-breadcrumb separator="/" class="my-breadcrumb">
-    <el-breadcrumb-item v-for="(item, index) in breadData" v-if="item.meta.replaceName!=false" :to="{ name: item.meta.replaceName?item.meta.replaceName:item.name }" :key="index">{{breadName(item)}}</el-breadcrumb-item>
+    <el-breadcrumb-item v-for="(item, index) in breadData" v-if="item.meta.replaceName!=false" :to="{ name: (item.meta.replaceName?item.meta.replaceName:item.name) }" :key="index">{{breadName(item)}}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
@@ -8,7 +8,10 @@
 	export default {
 		data() {
 			return {
-        breadData:[]
+        breadData:[],
+        queryName:this.$route.query.queryName,
+        clinicalTabletype:this.$route.query.clinicalTabletype,
+        clinicalTableName:['','临床助手申报表','用药助手申报表','中医助手申报表']
       }
 		},
     computed:{
@@ -19,15 +22,22 @@
       }
     },
     methods:{
+
       //面包屑
       initBreadData(){
+        //console.log(this.$router);
        this.breadData=this.$router.currentRoute.matched;
       },
       breadName(item){
         if(item.name=='新建通知'){
            return this.$route.params.materialId=='new'?'新建通知':'修改通知';
+        }else if(item.name=='临床决策专家申报审核'){
+          //alert(this.clinicalTableName[this.clinicalTabletype])
+          //console.log(this.$router.currentRoute.fullPath)
+          return decodeURI((this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.fullPath.lastIndexOf('=')+1))) ;
+
         }else{
-           
+
         }
         return item.meta.replaceName?item.meta.replaceName:item.name;
       }

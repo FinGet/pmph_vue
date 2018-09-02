@@ -97,7 +97,8 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-
+var loadingInstance2;
+var box = document.getElementsByClassName("app-main-inner app_main_border")[0];
 //添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
   var currentLocation = window.location.hash.replace('#','');
@@ -109,7 +110,8 @@ axios.interceptors.request.use(function (config) {
     router.push({name:'登录',query:{f:currentLocation}});
 
   }
-
+    console.log(config);
+   console.log(router);
      /* 解决IE缓存添加一个随机时间戳 */
   if (config.params){
 
@@ -119,6 +121,16 @@ axios.interceptors.request.use(function (config) {
   if (config.method.toLowerCase() == 'get' ){
     config.params._timer=+(new Date());
   }
+  if(config.url != '/pmpheep/pmph/login'){
+    loadingInstance2 = ElementUI.Loading.service({
+      // target:box,
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  }
+
   return config;
 }, function (error) {
   //当出现请求错误时的操作
@@ -131,6 +143,7 @@ axios.interceptors.response.use(function (response) {
   //对返回的数据进行一些处理
   // console.log("response.data  ")
   // console.log(response.data);
+
   if (response.data.code == 30 ){
     ElementUI.Message.error('当前登录已过期，请重新登录');
     if(config.IS_DEBUG){
@@ -139,8 +152,15 @@ axios.interceptors.response.use(function (response) {
       window.location.href='http://sso.pmph.com/sso/logon/password.jsp'
     }
   }
+  if(!commonFun.Empty(loadingInstance2)){
+    loadingInstance2.close();
+  }
+
   return response;
 }, function (error) {
+  if(!commonFun.Empty(loadingInstance2)){
+    loadingInstance2.close();
+  }
   //对返回的错误进行一些处理
   return Promise.reject(error);
 });

@@ -322,8 +322,11 @@
          </el-select>
          <el-button type="primary" icon="search" @click="searchComment">搜索</el-button>
 
-            <el-button type="danger" style="float:right;" :disabled="!isCommentSelected" @click="deleteComment()">批量删除</el-button>
       </p>
+    <p >
+      <el-button type="primary" icon="search" style="float:right;margin:10px 10px;"  @click="exportExcel">导出</el-button>
+      <el-button type="danger" style="float:right;margin:10px 0;" :disabled="!isCommentSelected" @click="deleteComment()">批量删除</el-button>
+    </p>
       <el-table :data="commentTableData" class="table-wrapper" @selection-change="commentSelectChange" border style="margin:15px 0;">
             <el-table-column
                 type="selection"
@@ -555,6 +558,12 @@ export default {
     }
   },
   methods: {
+    exportExcel(){
+      /** 导出Excel */
+      let url = '/pmpheep/bookCorrection/exportComments?title='+this.searchTitle+'&username='+this.contentUsername+"&authStatus="+this.selectValue;
+      // console.log(url)
+      this.$commonFun.downloadFile(url);
+    },
     /* 获取内容列表 */
     getPublicList() {
       this.$axios

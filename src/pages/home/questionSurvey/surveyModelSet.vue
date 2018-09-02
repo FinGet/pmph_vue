@@ -66,7 +66,7 @@
      </el-table-column>
      <el-table-column
       label="操作"
-      width="300"
+      :width="isAdmin?350:300"
      >
      <template scope="scope">
        <el-button type="text" :disabled="scope.row.status!=0"  @click="updataTemplate(scope.row.templateId,scope.row.id)">修改</el-button>
@@ -75,6 +75,8 @@
        <span>|</span>
        <el-button type="text" @click="$router.push({name:'发起调查',params:{surveyId:scope.row.id,surverData:scope.row}})">发起调查</el-button>
        <span>|</span>
+       <el-button v-if="isAdmin" type="text" @click="deleteSurvey(scope.row.templateId,scope.row.id)">删除</el-button>
+       <span v-if="isAdmin">|</span>
        <!--<el-button type="text" @click="$router.push({name:'问卷模板新增',params:{type:'add'}})">添加问卷</el-button>-->
        <el-button type="text" @click="showSend(scope.row.id)">查看发送对象</el-button>
      </template>
@@ -122,6 +124,7 @@
             return{
                 surveyLsitUrl:'/pmpheep/survey/list', //调查问卷列表url
                 editTemplateUrl:'/pmpheep/survey/template/question/look', //获取修改信息url
+
                 searchParams:{
                     title:'',
                     startTime:'',
@@ -135,10 +138,12 @@
                 sendTable: [],
               sendPageSize: 20,
               sendPageNumber: 1,
-              sendTotal: 0
+              sendTotal: 0,
+              isAdmin:false,
             }
         },
         created(){
+          this.isAdmin = this.$getUserData().userInfo.isAdmin;
          this.getSurveyList();
         },
         methods:{
@@ -173,6 +178,43 @@
                 }
             })
            },
+          deleteSurvey(templateId,surveyId){
+            let _this = this;
+            this.$confirm("确定删除选中问卷吗?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            })
+              .then(() => {
+                _this.$axios.delete('/pmpheep/survey/'+surveyId+'/remove',{
+                  params:{
+                    templateId:templateId,
+                    surveyId:surveyId
+                  }
+                }).then((res)=>{
+                  console.log(res);
+                  if(res.data.code==1){
+                    _this.$message.success("删除成功！");
+                    _this.getSurveyList();
+                  }else{
+                    _this.$confirm(res.data.msg.msgTrim(), "提示",{
+                      confirmButtonText: "确定",
+                      cancelButtonText: "取消",
+                      showCancelButton: false,
+                      type: "error"
+                    });
+                  }
+                })
+
+
+
+              })
+              .catch(() => {});
+
+
+
+
+          },
             startDateChange(val){
              this.searchParams.startTime=val;
             },

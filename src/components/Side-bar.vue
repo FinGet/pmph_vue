@@ -15,6 +15,19 @@
         <i class="fa fa-book fa-fw"></i>
         <span slot="title">教材申报</span>
       </el-menu-item>
+      <el-submenu index="/clinicalDecisionRouter" v-if="isShowSide(44)||isShowSide(45)||isShowSide(46)||isShowSide(47)||isShowSide(48)||isShowSide(49)||isShowSide(50)||isShowSide(51)">
+        <template slot="title">
+          <i class="iconfont icon-linchuangjuecetubiao"></i>
+          <span slot="title">临床决策</span>
+        </template>
+        <el-menu-item index="/clinicalDecisionRouter/clinicalAssistant" v-if="isShowSide(44)||isShowSide(45)">临床助手申报</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/medicineAssistant" v-if="isShowSide(44)||isShowSide(46)">用药助手申报</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/chineseMedicineAssistant" v-if="isShowSide(44)||isShowSide(47)">中医助手申报</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/clinicalAssistantTable" v-if="isShowSide(44)||isShowSide(49)">临床助手申报表</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/medicineAssistantTable" v-if="isShowSide(44)||isShowSide(50)">用药助手申报表</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/chineseMedicineAssistantTable" v-if="isShowSide(44)||isShowSide(51)">中医助手申报表</el-menu-item>
+        <el-menu-item index="/clinicalDecisionRouter/declareTypeRepairs" v-if="isShowSide(44)||isShowSide(48)">申报分类维护</el-menu-item>
+      </el-submenu>
       <el-menu-item index="/groupmanage" v-if="isShowSide(3)">
         <i class="fa fa-group fa-fw"></i>
         <span slot="title">我的小组</span>
@@ -158,6 +171,8 @@
        //判断是否显示导航栏
        isShowSide(num){
          var isShow=false;
+
+
          this.PermissionIds.forEach(function(item) {
            if(item==num){
              isShow=true;

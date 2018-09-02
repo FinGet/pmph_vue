@@ -25,12 +25,14 @@
       </div>
     </div>
     <div class="app-main" ref="main">
-      <div class="app-main-inner" :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
-        <transition name="fade" mode="out-in">
-          <router-view></router-view>
-        </transition>
+      <div class="app-main-border-box">
+        <div class="app-main-inner" :class="{'app_main_border':isShowBorder,'app_main_padding':isPadding}">
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </div>
+        <div class="back_to_top" v-if="isShowBackTop" @click="backToTop"></div>
       </div>
-      <div class="back_to_top" v-if="isShowBackTop" @click="backToTop"></div>
     </div>
     <el-dialog
       title="微信绑定"
@@ -39,11 +41,17 @@
       size="300"
       top="5%"
     >
+      <div  v-if="!isUserId" style="width: 200px;">
       <el-input v-model="userId" placeholder="请输入微信企业号用户名" @keyup.enter.native="submit"></el-input>
-       <span slot="footer" class="dialog-footer">
+       <div  style="padding-top:20px;text-align: center;">
          <el-button type="primary" @click="submit">确 定</el-button>
          <el-button type="primary" @click="close">取 消</el-button>
-      </span>
+      </div>
+      </div>
+      <div v-if="isUserId" >
+        <div style="text-align: center;">您当前userId为:{{userId}}</div>
+        <div style="color:red;padding-top: 10px;" ><a href="#" style="color:red;" @click="unblind">>>解除绑定</a></div>
+      </div>
     </el-dialog>
   </div>
 
@@ -72,7 +80,8 @@
         sidebarFlod: true,
         userData: undefined,
         initQCode: '',
-        detailVisible:false
+        detailVisible:false,
+        isUserId:false
       }
     },
     computed: {
@@ -108,14 +117,15 @@
         }
       },
       initIsShowBorder() {
-        // console.log(this.$router.currentRoute);
+          // console.log(this.$router.currentRoute.fullPath.split('/'));
         var str = this.$router.currentRoute.fullPath.split('/')[1];
+        var str2 = this.$router.currentRoute.fullPath.split('/')[2];
         this.isShowBorder = true;
         this.isPadding = false;
         if (str == 'materialrouter' || str == 'groupmanage' || str == 'auth' || this.$router.currentRoute.name == '评论审核') {
           this.isShowBorder = false;
         }
-        if (str == 'user' && this.$router.currentRoute.name != '社内用户' || this.$router.currentRoute.name == '文章管理' || this.$router.currentRoute.name == '帮助管理' || this.$router.currentRoute.name == '常见问题' || this.$router.currentRoute.name == '操作手册上传' || str == "topic" || this.$router.currentRoute.name == '问卷模板新增' || this.$router.currentRoute.name == '结果明细' || this.$router.currentRoute.name == '发起调查' || this.$router.currentRoute.name == '问卷回收结果') {
+        if (str2 == 'clinicalDecisionNav' ||this.$router.currentRoute.name == "临床决策专家申报审核"||this.$router.currentRoute.name == "临床决策专家申报"||str == 'user' && this.$router.currentRoute.name != '社内用户' || this.$router.currentRoute.name == '文章管理' || this.$router.currentRoute.name == '帮助管理' || this.$router.currentRoute.name == '常见问题' || this.$router.currentRoute.name == '操作手册上传' || str == "topic" || this.$router.currentRoute.name == '问卷模板新增' || this.$router.currentRoute.name == '结果明细' || this.$router.currentRoute.name == '发起调查' || this.$router.currentRoute.name == '问卷回收结果') {
           this.isPadding = true;
         }
         if (this.$router.currentRoute.name == "通知列表") {
@@ -163,7 +173,21 @@
           })
       },
       showWx(){
-        this.detailVisible = true;
+        this.$axios.get('/pmpheep/wx/IsUserId') .then(response => {
+          let res = response.data;
+          console.log(res);
+          if(res.data.isUserId){
+            this.isUserId = true;
+            this.userId = res.data.userId;
+
+          }else{
+            this.isUserId = false;
+            this.userId = '';
+          }
+          this.detailVisible = true;
+        }).catch(e => {
+          this.detailVisible = true;
+        })
       },
       close(){
         this.detailVisible = false;
@@ -181,6 +205,26 @@
               this.detailVisible = false;
             }else{
               this.$message.success("绑定失败");
+            }
+
+          })
+          .catch(e => {
+            console.log(e);
+          })
+      },
+      unblind(){
+        var params = {
+          userId:this.userId
+        };
+        this.$axios.get('/pmpheep/wx/unblind', {params: params})
+          .then(response => {
+            let res = response.data;
+            console.log(res);
+            if(res.code==1){
+              this.$message.success("解绑成功");
+              this.detailVisible = false;
+            }else{
+              this.$message.success("解绑失败");
             }
 
           })
@@ -236,7 +280,7 @@
     transition: all .28s ease-out;
     margin-left: 200px;
     margin-top: 38px;
-    padding: 15px 20px;
+    /*padding: 15px 20px;*/
     transition: all .3s;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -263,6 +307,13 @@
     float: left;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .app-main-border-box{
+    padding: 15px 20px;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
 
   .app_main_border {

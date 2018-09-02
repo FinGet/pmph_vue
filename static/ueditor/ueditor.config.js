@@ -112,7 +112,7 @@ import {BASE_URL} from '../../src/common/config'
          'date',
          'time',
         'spechars',
-         'snapscreen',
+         //'snapscreen',
          'wordimage',
          '|',
          'inserttable',

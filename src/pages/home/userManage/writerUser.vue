@@ -541,7 +541,8 @@ export default {
         rankName:"",
         isDisabled:"",
         note:""
-      } // 详情数据
+      }, // 详情数据
+
     };
   },
   computed:{
@@ -835,6 +836,7 @@ export default {
 		 *审核
 		 */
 		check(progress){
+		  let _this = this;
 			this.visible1 = false
 			this.visible2 = false
 			//console.log(this.selections)
@@ -865,8 +867,40 @@ export default {
         this.$prompt('请输入退回原因', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            let $el_message_box_errormsg = instance.$el.children["0"].children[1].children[2].children[1];//错误信息提醒div
+            let value = instance.$children[2].$el.children[0].value; //输入框内容
+            if (action === 'confirm') {  //点击的是确认
+              //instance.confirmButtonLoading = true;
+              //instance.confirmButtonText = '执行中...';
+              //console.log(instance.$children[2].$el.children[0].value)
+                if(!value){
+                  $el_message_box_errormsg.style.visibility="visible";
+                  $el_message_box_errormsg.innerHTML="退回原因必填";
+                }else if(value&&value.length<=40||!value){
+                  let param = {
+                    progress: progress,
+                    userIds: userIds.join(','),
+                    backReason:value
+                  };
+                  $el_message_box_errormsg.style.visibility="hidden";
+                  $el_message_box_errormsg.innerHTML="";
+                  done();     //关闭提示框
+                  _this.passorback(param);
+                }else{
+                  $el_message_box_errormsg.style.visibility="visible";
+                  $el_message_box_errormsg.innerHTML="不能超过40个字";
+                }
+
+            } else {
+              $el_message_box_errormsg.style.visibility="hidden";
+              $el_message_box_errormsg.innerHTML="";
+              done();     //关闭提示框
+            }
+          },
+
         }).then(({ value }) => {
-          if(!value){
+          /*if(!value){
             this.check(2);
           }else if(value&&value.length<=40||!value){
             let param = {
@@ -877,7 +911,8 @@ export default {
             this.passorback(param);
           }else{
             this.$message.warning('不能超过40个字');
-          }
+          }*/
+          //_this.myValidateBeforeClose(value);
 
         })
       }
@@ -907,11 +942,12 @@ export default {
         console.log(error.msg)
       })
     },
+    myValidateBeforeClose(){},
     /**
      * 搜索
      */
     search() {
-      this.pageSize = 10;
+      //this.pageSize = 10;
       this.pageNumber = 1;
       this.getWritersList()
     },

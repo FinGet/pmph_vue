@@ -122,6 +122,24 @@
             </el-select>
           </div>
         </div>
+
+        <div class="searchBox-wrapper" style="width:550px;">
+          <div class="searchName">提交时间：<span></span></div>
+          <div class="searchInput">
+          <el-date-picker
+            v-model="startCommitDate"
+            type="datetime"
+            placeholder="选择提交开始时间"
+            >
+          </el-date-picker>
+          <el-date-picker
+            v-model="endCommitDate"
+            type="datetime"
+            placeholder="选择提交结束时间"
+            >
+          </el-date-picker>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
@@ -197,6 +215,21 @@
                 :value="item.value">
               </el-option>
             </el-select>
+            <!--<div class="searchBox-wrapper" v-else-if="powerSearchValue==11">
+              <el-date-picker
+                v-model="startCreateDate"
+                type="datetime"
+                placeholder="选择提交开始时间"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+              <el-date-picker
+                v-model="endCreateDate"
+                type="datetime"
+                placeholder="选择提交结束时间"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </div>-->
+
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.realname" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===0"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.unitName" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===2"></el-input>
             <el-input placeholder="请输入" class="searchInputEle" v-model.trim="searchParams.position" @keyup.enter.native="handleSearchCLick" v-else-if="powerSearchValue===3"></el-input>
@@ -238,19 +271,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="200">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职称" min-width="120" >
+        <el-table-column label="职务/职称" min-width="100" >
           <template scope="scope">
             <p><i class="fa fa-tags"></i>{{scope.row.position}}</p>
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" min-width="150">
+        <el-table-column label="联系方式" min-width="120">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
@@ -261,9 +294,14 @@
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态">
+        <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{scope.row.orgId==0&&scope.row.onlineProgress==1?"待出版社审核":(scope.row.orgId==0&&scope.row.onlineProgress==3?"出版社已审核":stateList[scope.row.onlineProgress])}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="提交时间" min-width="100">
+          <template scope="scope">
+            <p>{{$commonFun.formatDate(scope.row.commitDate)}}</p>
           </template>
         </el-table-column>
         <el-table-column label="是否收到纸质表" width="135">
@@ -372,9 +410,19 @@
           },{
             value:9,
             label:'教材大纲'
+          },{
+            value:10,
+            label:'是否被遴选'
+          },{
+            value:11,
+            label:'提交时间'
           }
-
         ],
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          }
+        },
         powerSearchValue:0,
         positionValue:[
           {
@@ -446,8 +494,11 @@
           onlineProgress:'',
           offlineProgress:'',
           haveFile:'',
-          isSelect:''
+          isSelect:'',
+
         },
+        startCommitDate:'',
+        endCommitDate:'',
         tableData: [],
         totalNum:0,
         exportDialog:false,
@@ -524,7 +575,9 @@
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
           haveFile:this.searchParams.haveFile,
-            isSelect:this.searchParams.isSelect
+          isSelect:this.searchParams.isSelect,
+          startCommitDate:this.$commonFun.formatDate(+new Date(this.startCommitDate)),
+          endCommitDate:this.$commonFun.formatDate(+new Date(this.endCommitDate))
         }})
           .then(response=>{
             var res = response.data;

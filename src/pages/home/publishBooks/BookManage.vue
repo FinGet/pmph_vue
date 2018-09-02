@@ -167,7 +167,7 @@
         </el-table-column>
         <el-table-column
           prop="bookname"
-          label="书籍名称">
+          label="书籍名称" min-width="120">
         </el-table-column>
         <el-table-column
           prop="isbn"
@@ -197,7 +197,7 @@
         </el-table-column>
         <el-table-column
           label="书籍类别"
-          width="200">
+          min-width="120">
           <template scope="scope">
             {{scope.row.typeName}}
           </template>
@@ -932,12 +932,12 @@
             });
           }
         }).catch(error => {
-          this.$confirm('同步错误，请稍后再试!', "提示",{
+       /*   this.$confirm('同步错误，请稍后再试!', "提示",{
           	confirmButtonText: "确定",
           	cancelButtonText: "取消",
           	showCancelButton: false,
           	type: "error"
-          });
+          });*/
         })
       },
       syncProgress(){
@@ -1061,7 +1061,7 @@
     z-index:10000;
     background: rgba(0,0,0,.5);
     width: 100%;
-    height:200%;
+    height:100%;
     top:0;
     left:0;
   }

@@ -137,7 +137,7 @@
               content+=`<p>备注：${res.data.materialExtra?(res.data.materialExtra.note?res.data.materialExtra.note:''):''}</p>`;
              /*  /* 底部图片 */
               for(var i in this.formData.image){
-                content+='<br/><p ><img  src="'+teachPicUrl+this.formData.image[i].attachment+'"/><p/>'
+                content+='<br/><p ><img  src="'+this.formData.image[i].attachment+'"/><p/>'
               }
             }else{ //若由保存在mdb的内容 显示所保存内容
               content = res.data.content

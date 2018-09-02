@@ -24,6 +24,11 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="isbn"
+          label="ISBN"
+          width="145">
+        </el-table-column>
+        <el-table-column
           prop="gmtCreate"
           label="评论时间"
           width="168">

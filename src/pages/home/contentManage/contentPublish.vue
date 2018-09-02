@@ -77,7 +77,7 @@
             :file-list="fileList">
                   <span>
               <i class="fa fa-paperclip fa-lg"></i> 添加附件</span>
-            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过100M</div>
+            <div slot="tip" class="el-upload__tip" style="line-height:1;">文件大小不超过200M</div>
           </my-upload>
         </div>
       </el-form-item>
@@ -400,9 +400,21 @@ export default {
 
 
         } else {
+
+          this.$nextTick(this.focuFuntion);
          return false;
         }
       });
+    },focuFuntion(){
+      let _this = this;
+      console.log(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0]);
+      if(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input").length>0){
+        var ss= this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("input")[0];
+        ss.focus();
+      }else if(this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea").length>0){
+        var ss= this.$refs["addForm"].$el.getElementsByClassName("el-form-item is-error is-required")[0].getElementsByTagName("textarea")[0];
+        ss.focus();
+      }
     },
     download(url){
       console.log("url"+url);
@@ -464,6 +476,7 @@ export default {
           });*/
         });
           } else {
+            this.$nextTick(this.focuFuntion);
             return false;
           }
       });
@@ -478,9 +491,9 @@ export default {
     beforeAvatarUpload(file){
       console.log(file);
       console.log(typeof file);
-      const isLt100M = file.size / 1024 / 1024 <= 100;
+      const isLt100M = file.size / 1024 / 1024 <= 200;
        if (!isLt100M) {
-          this.$confirm('上传文件大小不能超过 100MB!', "提示",{
+          this.$confirm('上传文件大小不能超过 200MB!', "提示",{
           	confirmButtonText: "确定",
           	cancelButtonText: "取消",
           	showCancelButton: false,

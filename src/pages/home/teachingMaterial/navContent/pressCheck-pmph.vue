@@ -107,6 +107,23 @@
             </el-select>
           </div>
         </div>
+        <div class="searchBox-wrapper" style="width:550px;">
+          <div class="searchName">提交时间：<span></span></div>
+          <div class="searchInput">
+            <el-date-picker
+              v-model="startCommitDate"
+              type="datetime"
+              placeholder="选择提交开始时间"
+            >
+            </el-date-picker>
+            <el-date-picker
+              v-model="endCommitDate"
+              type="datetime"
+              placeholder="选择提交结束时间"
+            >
+            </el-date-picker>
+          </div>
+        </div>
         <!--姓名搜索-->
         <div class="searchBox-wrapper searchBtn">
           <el-button  type="primary" icon="search" @click="handleSearchCLick">搜索</el-button>
@@ -208,13 +225,13 @@
         </el-table-column>
         <el-table-column
           label="账号"
-          min-width="110">
+          min-width="80">
           <template scope="scope">
             {{scope.row.username}}
           </template>
         </el-table-column>
 
-        <el-table-column label="申报单位/工作单位" min-width="120">
+        <el-table-column label="申报单位/工作单位" min-width="160">
           <template scope="scope">
             <p><i class="fa fa-university"></i>{{scope.row.unitName}}</p>
             <p><i class="fa fa-briefcase"></i>{{scope.row.orgName}}</p>
@@ -226,23 +243,28 @@
             <p><i class="fa fa-graduation-cap"></i>{{scope.row.title}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="联系方式" min-width="160">
+        <el-table-column label="联系方式" min-width="150">
           <template scope="scope">
             <p v-if="scope.row.handphone"><i class="fa fa-phone fa-fw"></i>{{scope.row.handphone}}</p>
             <p v-if="scope.row.email"><i class="fa fa-envelope fa-fw"></i>{{scope.row.email}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="所选书籍与职位" min-width="220">
+        <el-table-column label="所选书籍与职位" min-width="140">
           <template scope="scope">
             <p v-html="scope.row.chooseBooksAndPostions"></p>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态">
+        <el-table-column label="审核状态" min-width="100">
           <template scope="scope">
             <p>{{stateList[scope.row.onlineProgress]}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="是否收到纸质表">
+        <el-table-column label="提交时间" min-width="100">
+          <template scope="scope">
+            <p>{{$commonFun.formatDate(scope.row.commitDate)}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否收到纸质表" width="135">
           <template scope="scope">
             <p type="text" v-if="scope.row.offlineProgress==0" class="link" @click="confirmPaperList(scope.row)">确认收到纸质表</p>
 
@@ -406,8 +428,11 @@
           positionType:'',
           onlineProgress:'',
           offlineProgress:'',
-          haveFile:''
+          haveFile:'',
+
         },
+        startCommitDate:'',
+        endCommitDate:'',
         tableData: [],
         totalNum:0,
         exportDialog:false,
@@ -477,6 +502,8 @@
           onlineProgress:this.searchParams.onlineProgress,
           offlineProgress:this.searchParams.offlineProgress,
           haveFile:this.searchParams.haveFile,
+          startCommitDate:this.$commonFun.formatDate(+new Date(this.startCommitDate)),
+          endCommitDate:this.$commonFun.formatDate(+new Date(this.endCommitDate))
         }})
           .then(response=>{
             var res = response.data;
