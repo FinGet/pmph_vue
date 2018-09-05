@@ -5,10 +5,10 @@
       <!--操作按钮-->
       <div class="paddingB10 text-right print-none">
         <el-button type="primary" :disabled="btn_Pass"  v-if="(isAdmin||amIAnAuditor)" @click="check(3)">
-          {{'审核通过'}}
+          {{'通过'}}
         </el-button>
         <el-button type="primary" :disabled="btn_notPass"  v-if="(isAdmin||amIAnAuditor)" @click="check(2)">
-          {{'审核不通过'}}
+          {{'不通过'}}
         </el-button>
         <el-button type="danger"  :disabled="btn_back_school" @click="check(4)" v-if="(isAdmin||amIAnAuditor)&&(expertInfoData.org_id!=0)" >
           {{'退回给学校'}}
@@ -95,7 +95,7 @@
             <div>{{degree[expertInfoData.education]}}</div>
           </div>
           <div class="info-iterm-text2" style="width: 99%;">
-            <div style="width: 230px; ">专业特长（疾病诊治及研究方向）：<span></span></div>
+            <div style="width: 230px;display: inline-block;vertical-align: middle;float: left; text-align: justify; ">专业特长（疾病诊治及研究方向）：<span></span></div>
             <div>{{expertInfoData.expertise}}</div>
           </div>
           <div class="info-iterm-text"  style="width: 33%">

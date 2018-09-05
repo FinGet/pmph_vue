@@ -11,16 +11,26 @@
     <div class="newChoose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" :label-position="labelPosition">
         <el-row>
-          <el-col :span="16">
-        <el-form-item label="产品名称：" prop="product_name" style="">
-          <el-input v-model="ruleForm.product_name" @keyup.enter.native="submitForm"></el-input>
-        </el-form-item>
+          <el-col :span="24">
+              <el-form-item label="产品名称：" prop="product_name" style="">
+                <el-input v-model="ruleForm.product_name" @keyup.enter.native="submitForm"></el-input>
+              </el-form-item>
           </el-col>
+        </el-row>
+
+        <el-row>
           <el-col :span="8">
             <el-form-item label="报名截止日期：" prop="actualDeadline" >
               <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.actualDeadline"   format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
+
+          <el-col :span="16">
+            <el-form-item label="是否当前申报公告：" required style="margin-left: 30px">
+              <el-checkbox v-model="ruleForm.is_active" class="check" ><span style="margin-left:20px;color: red;">(注意:用于设置当前产品为可申报的公告)</span></el-checkbox>
+            </el-form-item>
+          </el-col>
+
         </el-row>
 
         <el-form-item label="审核人:"  prop="auditorList">
@@ -71,7 +81,7 @@
           </el-col>
         </el-form-item>
         <el-form-item label="扩展项：">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-button type="primary"  size="small" @click="addExtend">新增扩展项</el-button>
             <br>
             <el-table
@@ -110,7 +120,7 @@
           </el-col>
         </el-form-item>
 
-        <el-form-item label="产品简介：" required >
+        <el-form-item label="产品简介："  >
           <el-col :span="24">
               <Editor ref="editor" :config="editorConfig" ></Editor>
           </el-col>
@@ -257,7 +267,8 @@ export default {
         publisher:'',
         gmt_publish:'',
         actualDeadline:'',
-        product_name:''
+        product_name:'',
+        is_active:false,
       },
       editorConfig: {
         initialFrameWidth: null,
@@ -429,6 +440,7 @@ export default {
             this.isDisabled = res.data.data.is_published&&!this.$commonFun.Empty(this.ruleForm.id);
             this.ruleForm.product_name = res.data.data.product_name;
             this.ruleForm.actualDeadline =new Date(res.data.data.actualDeadline);
+            this.ruleForm.is_active = res.data.data.is_active;
             if(this.ruleForm.is_published){
               this.ruleForm.publisher = res.data.data.publisher;
               this.ruleForm.gmt_publish = this.$commonFun.formatDate(res.data.data.gmt_publish);
@@ -847,7 +859,7 @@ export default {
       this.ruleForm.descriptionContent["content"] = this.$refs.editor.getContent();
       this.optionMerge();  //选项合并
      // this.mergeForms();   //表单合并
-      if (!this.$refs.editor.getContent()) {
+      /*if (!this.$refs.editor.getContent()) {
         this.$confirm(" 产品简介不能为空", "提示",{
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -855,7 +867,7 @@ export default {
           type: "error"
         });
         return false;
-      }
+      }*/
       this.$refs.ruleForm.validate((valid) => {
         if (valid&&this.formTableChecked()) {
          /* if(type==0){

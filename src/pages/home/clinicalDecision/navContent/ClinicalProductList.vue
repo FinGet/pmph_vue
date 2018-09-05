@@ -31,7 +31,7 @@
               {{(scope.$index+1)+searchForm.pageSize*(searchForm.pageNumber-1)}}
             </template>
           </el-table-column>
-            <el-table-column label="临床申报名称">
+            <el-table-column label="临床申报名称" width="120">
                 <template scope="scope">
                     <el-button type="text" style="color:#337ab7;white-space: normal;text-align:left;" @click="operation('toProcess',scope.row)" v-if="hasAccessAuthority(true,scope.row)">{{scope.row.product_name}}</el-button>
                     <p v-else>{{scope.row.product_name}}</p>
@@ -63,12 +63,12 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="100">
+          <el-table-column prop="status" label="状态" width="80">
             <template scope="scope">
               {{scope.row.is_published?'已发布':'未发布'}}
             </template>
           </el-table-column>
-          <el-table-column label="创建人" width="80">
+          <el-table-column label="创建人" >
               <template scope="scope">
                   <p>
                       {{scope.row.founder}}
@@ -100,7 +100,7 @@
             </template>
 
           </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column label="操作" >
                 <template scope="scope">
                     <p class="operation_p">
                         <el-button type="text" class="op_button" @click="operation('edit',scope.row)" :disabled="!hasAccessAuthority(0,scope.row)">修改</el-button>
